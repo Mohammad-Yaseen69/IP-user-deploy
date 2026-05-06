@@ -11,6 +11,7 @@ import SidebarIcon from "./SbNIcon";
 import { MENU } from "./SbNMenu";
 import SidebarSubMenu from "./SbNSubMenu";
 import "./sm.css";
+import { usePermission } from "../../hooks/GeneralUse/usePermission";
 
 const SidebarNew = ({ setShowModal, showModal }) => {
     const { t } = useTranslation()
@@ -129,7 +130,7 @@ const SidebarNew = ({ setShowModal, showModal }) => {
                                                         <li style={{ width: togglSidebar ? "100%" : "auto" }} className={item.className}>
                                                             <SidebarSubMenu
                                                                 userDetails={userDetails}
-                                                                
+
                                                                 menu={item.menu} isOpen={isOpen} setIsOpen={setIsOpen} level={0} setShowModal={setShowModal} profileCompletedPercentage={profileCompletedPercentage} showModal={showModal} inheritSize={inheritSize} />
                                                         </li>
                                                     </Fragment>
