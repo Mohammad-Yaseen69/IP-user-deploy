@@ -72,7 +72,7 @@ function TableItem({ setMenuOpenFor, width, item, index, menuOpenFor, isRole, se
         }
     })
 
-    console.log(item,"itemdata")
+    console.log(item, "itemdata")
     return (
         <div
             className={`${styles.tr} ${styles.dataRow}`}
@@ -118,7 +118,7 @@ function TableItem({ setMenuOpenFor, width, item, index, menuOpenFor, isRole, se
                     )}
 
                     <div style={{ flex: isPhone ? 0.25 : 0.18, ...ellipsisStyle }} className={styles.td}>
-                        {item?.first_name + item?.last_name || "—"}
+                        {item?.first_name + " " + item?.last_name || "—"}
                     </div>
 
                     <div style={{ flex: isPhone ? 0.40 : 0.18, ...ellipsisStyle }} className={styles.td}>
@@ -141,24 +141,40 @@ function TableItem({ setMenuOpenFor, width, item, index, menuOpenFor, isRole, se
                                 <span style={{ fontSize: "12px" }}>{t("Updating...")}</span>
                             ) : (
                                 <select
+                                    disabled={item?.status === "pending"}
                                     value={item?.status || ""}
                                     onChange={(e) => updateStatus(e.target.value)}
                                     style={{
-                                        background: item?.status === "active" ? "#e6f9ed" :
-                                                   item?.status === "inactive" ? "#ffeaea" :
-                                                   item?.status === "suspended" ? "#fff3e0" : "#f0f0f0",
-                                        color: item?.status === "active" ? "#1a8a3c" :
-                                               item?.status === "inactive" ? "#c0392b" :
-                                               item?.status === "suspended" ? "#e67e22" : "#444",
+                                        background: item?.status === "pending"
+                                            ? "#e0e0e0"
+                                            : item?.status === "active"
+                                                ? "#e6f9ed"
+                                                : item?.status === "inactive"
+                                                    ? "#ffeaea"
+                                                    : item?.status === "suspended"
+                                                        ? "#fff3e0"
+                                                        : "#f0f0f0",
+
+                                        color: item?.status === "pending"
+                                            ? "#888"
+                                            : item?.status === "active"
+                                                ? "#1a8a3c"
+                                                : item?.status === "inactive"
+                                                    ? "#c0392b"
+                                                    : item?.status === "suspended"
+                                                        ? "#e67e22"
+                                                        : "#444",
+
                                         padding: "2px 8px",
                                         borderRadius: "12px",
                                         fontSize: "12px",
                                         fontWeight: 600,
                                         border: "none",
                                         outline: "none",
-                                        cursor: "pointer",
+                                        cursor: item?.status === "pending" ? "not-allowed" : "pointer",
                                         textTransform: "capitalize",
-                                        width: "100%"
+                                        width: "100%",
+                                        opacity: item?.status === "pending" ? 0.7 : 1
                                     }}
                                 >
                                     <option value="pending">{t("Pending")}</option>

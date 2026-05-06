@@ -182,6 +182,14 @@ export const MENU = [
                 url: `${window.location.origin}/delegate-access`,
                 showOnly: "business"
             },
+            {
+                title: "Activity Feed",
+                icon: < img loading="lazy" src={analytics} style={{ marginRight: "12px" }} />,
+                activeIcon: <img loading="lazy" src={analytics_a} style={{ marginRight: "12px" }} />,
+                type: "link",
+                url: `${window.location.origin}/activity`,
+                showOnly: "business"
+            },
             // {
             //     title: "Store",
             //     icon: <img loading="lazy" src={shopingcard} style={{ marginRight: "12px" }} />,

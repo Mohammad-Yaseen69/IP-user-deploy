@@ -9,6 +9,8 @@ import RoleModal from "./Components/RoleModal"
 import DelegateTable from "./Components/Table"
 import styles from "./styles/index.module.css"
 import AgentsModal from "./Components/AgentsModal"
+import Paginations from "../../Common/Component/Paginations"
+
 const DelegateAccess = () => {
     const width = useWindowWidth()
     const { t } = useTranslation()
@@ -29,7 +31,7 @@ const DelegateAccess = () => {
 
         queryFn: () =>
             apiWrapper({
-                endpoint: `/api/business-agents/roles/${page}/${limit}/${search}`,
+                endpoint: `/api/business-agents/roles/${page}/${limit}/${search || ""}`,
                 method: "GET",
                 isEncrypted: false,
                 isDecrypted: true
@@ -59,7 +61,9 @@ const DelegateAccess = () => {
     }, [search])
     const roles = rolesData?.data?.roles || []
     const agents = agentsData?.data?.agents || []
-    console.log(agents, "agents data")
+    const totalPages = isRole
+        ? (rolesData?.data?.totalPages > 0 ? rolesData?.data?.totalPages : 1)
+        : (agentsData?.data?.totalPages > 0 ? agentsData?.data?.totalPages : 1)
     return (
         <div className={styles.container}>
             <div className={styles.top}>
@@ -188,6 +192,9 @@ const DelegateAccess = () => {
                     />
                 )
             )}
+            <Paginations page={page} totalPages={totalPages} setPage={setPage}
+                limit={limit} setLimit={setLimit} />
+
         </div>
     )
 }
