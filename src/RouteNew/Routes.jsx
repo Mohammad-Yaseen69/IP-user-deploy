@@ -65,6 +65,8 @@ const PlansSubscription = lazy(() => import("../Components/PlansSubscriptions"))
 const StoreCreate = lazy(() => import("../Components/StoreCreate"))
 const GuestLogin = lazy(() => import("../Components/guestDashboard/auth"))
 const DelegateAccess = lazy(() => import("../Components/DelegateAccess"))
+const CreateAgentPassword = lazy(() => import("../Components/CreateAgentPassword"))
+const AgentLogin = lazy(() => import("../Components/Auth/AgentLogin"))
 
 
 export const routes = [
@@ -145,10 +147,12 @@ export const publicRoutes = [
     { path: "/invoice/:username/:invoiceId", component: <InvoicePayment /> },
     { path: "/invoice/qr/:username/:invoiceId", component: <InvoicePaymentQr /> },
     { path: "/pay/subscription/:subscriptionId", component: <PlansSubscription /> },
+    { path: "/create-agent-password/:token", component: <CreateAgentPassword /> },
     { path: "*", component: <NotFound type='Page' /> }
 ]
 export const authRoutes = [
     { path: `/login`, component: <Auth /> },
+    { path: `/agent-login`, component: <Auth /> },
     { path: `/forgot-password`, component: <AuthNew /> },
     { path: `/signup`, component: <Auth /> },
     { path: `/signup/:code`, component: <Auth /> },
