@@ -28,6 +28,13 @@
         "description": "View Insights Dashboard"
     },
     {
+        "module": "notifications",
+        "feature": null,
+        "action": "view",
+        "key": "notifications.view",
+        "description": "View Notifications"
+    },
+    {
         "module": "wallet",
         "feature": null,
         "action": "view",
@@ -455,24 +462,24 @@
         "description": "View Analytics Reports"
     },
     {
-        "module": "qr_sticker",
+        "module": "qr-sticker",
         "feature": null,
         "action": "view",
-        "key": "qr_sticker.view",
+        "key": "qr-sticker.view",
         "description": "View QR Code Stickers"
     },
     {
-        "module": "qr_sticker",
+        "module": "qr-sticker",
         "feature": null,
         "action": "update",
-        "key": "qr_sticker.update",
+        "key": "qr-sticker.update",
         "description": "Update QR Code Sticker"
     },
     {
-        "module": "qr_sticker",
+        "module": "qr-sticker",
         "feature": null,
         "action": "download",
-        "key": "qr_sticker.download",
+        "key": "qr-sticker.download",
         "description": "Download QR Code Sticker"
     },
     {
@@ -511,31 +518,31 @@
         "description": "Share Portfolio Item"
     },
     {
-        "module": "payment_address",
+        "module": "payment-address",
         "feature": null,
         "action": "view",
-        "key": "payment_address.view",
+        "key": "payment-address.view",
         "description": "View Payment Address"
     },
     {
-        "module": "payment_address",
+        "module": "payment-address",
         "feature": null,
         "action": "update",
-        "key": "payment_address.update",
+        "key": "payment-address.update",
         "description": "Update Payment Address Details"
     },
     {
-        "module": "payment_address",
+        "module": "payment-address",
         "feature": null,
         "action": "download",
-        "key": "payment_address.download",
+        "key": "payment-address.download",
         "description": "Download Payment Address QR Code"
     },
     {
-        "module": "payment_address",
+        "module": "payment-address",
         "feature": null,
         "action": "share",
-        "key": "payment_address.share",
+        "key": "payment-address.share",
         "description": "Share Payment Address Link"
     },
     {
@@ -567,24 +574,24 @@
         "description": "Decline Quotation"
     },
     {
-        "module": "payment_requests",
+        "module": "payment-request",
         "feature": null,
         "action": "view",
-        "key": "payment_requests.view",
+        "key": "payment-request.view",
         "description": "View Payment Requests"
     },
     {
-        "module": "payment_requests",
+        "module": "payment-request",
         "feature": null,
         "action": "accept",
-        "key": "payment_requests.accept",
+        "key": "payment-request.accept",
         "description": "Accept Payment Request"
     },
     {
-        "module": "payment_requests",
+        "module": "payment-request",
         "feature": null,
         "action": "decline",
-        "key": "payment_requests.decline",
+        "key": "payment-request.decline",
         "description": "Decline Payment Request"
     },
     {
@@ -621,6 +628,13 @@
         "action": "update",
         "key": "geo-fencing.update",
         "description": "Update Geo-Fencing Access"
+    },
+    {
+        "module": "settings",
+        "feature": null,
+        "action": "view",
+        "key": "settings.view",
+        "description": "View Settings Menu"
     },
     {
         "module": "settings",
