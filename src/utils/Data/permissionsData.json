@@ -1,0 +1,905 @@
+[
+    {
+        "module": "dashboard",
+        "feature": null,
+        "action": "view",
+        "key": "dashboard.view",
+        "description": "View Dashboard"
+    },
+    {
+        "module": "dashboard",
+        "feature": "balance",
+        "action": "view",
+        "key": "dashboard.balance.view",
+        "description": "View Dashboard Balance"
+    },
+    {
+        "module": "dashboard",
+        "feature": "recent-transactions",
+        "action": "view",
+        "key": "dashboard.recent-transactions.view",
+        "description": "View Recent Transactions"
+    },
+    {
+        "module": "dashboard",
+        "feature": "insights",
+        "action": "view",
+        "key": "dashboard.insights.view",
+        "description": "View Insights Dashboard"
+    },
+    {
+        "module": "notifications",
+        "feature": null,
+        "action": "view",
+        "key": "notifications.view",
+        "description": "View Notifications"
+    },
+    {
+        "module": "wallet",
+        "feature": null,
+        "action": "view",
+        "key": "wallet.view",
+        "description": "View Wallets Page"
+    },
+    {
+        "module": "wallet",
+        "feature": "list",
+        "action": "view",
+        "key": "wallet.list.view",
+        "description": "View Wallets List"
+    },
+    {
+        "module": "wallet",
+        "feature": "limits",
+        "action": "view",
+        "key": "wallet.limits.view",
+        "description": "View Wallets Limits"
+    },
+    {
+        "module": "wallet",
+        "feature": "currencies",
+        "action": "add",
+        "key": "wallet.currencies.add",
+        "description": "Add new currency wallet"
+    },
+    {
+        "module": "wallet",
+        "feature": "limits",
+        "action": "update",
+        "key": "wallet.limits.update",
+        "description": "Update Wallets Limits"
+    },
+    {
+        "module": "wallet",
+        "feature": "payment",
+        "action": "withdraw",
+        "key": "wallet.payment.withdraw",
+        "description": "Withdraw Funds from Wallet"
+    },
+    {
+        "module": "wallet",
+        "feature": "payment",
+        "action": "topup",
+        "key": "wallet.payment.topup",
+        "description": "Add Funds to Wallet"
+    },
+    {
+        "module": "wallet",
+        "feature": "payment",
+        "action": "conversion",
+        "key": "wallet.payment.conversion",
+        "description": "Convert Currencies in Wallet"
+    },
+    {
+        "module": "wallet",
+        "feature": "payment",
+        "action": "bank-transfer",
+        "key": "wallet.payment.bank-transfer",
+        "description": "Payments using bank transfer"
+    },
+    {
+        "module": "wallet",
+        "feature": "payment",
+        "action": "card",
+        "key": "wallet.payment.card",
+        "description": "Payments using card"
+    },
+    {
+        "module": "wallet",
+        "feature": "payment",
+        "action": "mobile-wallet",
+        "key": "wallet.payment.mobile-wallet",
+        "description": "Payments using mobile wallet"
+    },
+    {
+        "module": "wallet",
+        "feature": "payment",
+        "action": "paypal",
+        "key": "wallet.payment.paypal",
+        "description": "Payments using paypal"
+    },
+    {
+        "module": "wallet",
+        "feature": "payment",
+        "action": "crypto",
+        "key": "wallet.payment.crypto",
+        "description": "Payments using crypto"
+    },
+    {
+        "module": "wallet",
+        "feature": "payment",
+        "action": "bank-deposit",
+        "key": "wallet.payment.bank-deposit",
+        "description": "Payments using bank-deposit"
+    },
+    {
+        "module": "transactions",
+        "feature": "wallet",
+        "action": "list",
+        "key": "transactions.wallet.list",
+        "description": "View wallet transactions"
+    },
+    {
+        "module": "transactions",
+        "feature": "wallet",
+        "action": "export",
+        "key": "transactions.wallet.export",
+        "description": "Export wallet transactions"
+    },
+    {
+        "module": "transactions",
+        "feature": "main",
+        "action": "view",
+        "key": "transactions.main.view",
+        "description": "View Main Transactions"
+    },
+    {
+        "module": "transactions",
+        "feature": "main",
+        "action": "export",
+        "key": "transactions.main.export",
+        "description": "Export main Transactions"
+    },
+    {
+        "module": "transactions",
+        "feature": "category",
+        "action": "add",
+        "key": "transactions.category.add",
+        "description": "Add Category"
+    },
+    {
+        "module": "mastercard",
+        "feature": null,
+        "action": "view",
+        "key": "mastercard.view",
+        "description": "View Mastercard Page"
+    },
+    {
+        "module": "mastercard",
+        "feature": "card",
+        "action": "create",
+        "key": "mastercard.card.create",
+        "description": "Add/Purchase new Mastercard"
+    },
+    {
+        "module": "mastercard",
+        "feature": "card",
+        "action": "activate",
+        "key": "mastercard.card.activate",
+        "description": "Activate Mastercard"
+    },
+    {
+        "module": "mastercard",
+        "feature": "card",
+        "action": "freeze",
+        "key": "mastercard.card.freeze",
+        "description": "Freeze Mastercard"
+    },
+    {
+        "module": "mastercard",
+        "feature": "details",
+        "action": "view",
+        "key": "mastercard.details.view",
+        "description": "View Sensitive Card Details"
+    },
+    {
+        "module": "mastercard",
+        "feature": "details",
+        "action": "balance",
+        "key": "mastercard.details.balance",
+        "description": "View Card Balance"
+    },
+    {
+        "module": "mastercard",
+        "feature": "details",
+        "action": "copy",
+        "key": "mastercard.details.copy",
+        "description": "Copy Card Details"
+    },
+    {
+        "module": "mastercard",
+        "feature": "funds",
+        "action": "add",
+        "key": "mastercard.funds.add",
+        "description": "Add Funds to Mastercard"
+    },
+    {
+        "module": "mastercard",
+        "feature": "transfer",
+        "action": "card-to-card",
+        "key": "mastercard.transfer.card-to-card",
+        "description": "Transfer from Card to Card"
+    },
+    {
+        "module": "mastercard",
+        "feature": "transfer",
+        "action": "card-to-wallet",
+        "key": "mastercard.transfer.card-to-wallet",
+        "description": "Transfer from Card to Wallet"
+    },
+    {
+        "module": "mastercard",
+        "feature": "statement",
+        "action": "download",
+        "key": "mastercard.statement.download",
+        "description": "Download Mastercard Statement"
+    },
+    {
+        "module": "mastercard",
+        "feature": "transactions",
+        "action": "view",
+        "key": "mastercard.transactions.view",
+        "description": "View Mastercard Transactions"
+    },
+    {
+        "module": "invoices",
+        "feature": null,
+        "action": "view",
+        "key": "invoices.view",
+        "description": "View Invoices List"
+    },
+    {
+        "module": "invoices",
+        "feature": null,
+        "action": "create",
+        "key": "invoices.create",
+        "description": "Create New Invoice"
+    },
+    {
+        "module": "invoices",
+        "feature": null,
+        "action": "edit",
+        "key": "invoices.edit",
+        "description": "Edit Existing Invoice"
+    },
+    {
+        "module": "invoices",
+        "feature": null,
+        "action": "delete",
+        "key": "invoices.delete",
+        "description": "Delete Invoice"
+    },
+    {
+        "module": "invoices",
+        "feature": null,
+        "action": "download",
+        "key": "invoices.download",
+        "description": "Download Invoice"
+    },
+    {
+        "module": "invoices",
+        "feature": "payment",
+        "action": "pay",
+        "key": "invoices.payment.pay",
+        "description": "Pay Invoice"
+    },
+    {
+        "module": "payments",
+        "feature": null,
+        "action": "view",
+        "key": "payments.view",
+        "description": "View Payments Menu"
+    },
+    {
+        "module": "payments",
+        "feature": "international",
+        "action": "send",
+        "key": "payments.international.send",
+        "description": "Send International Transfer"
+    },
+    {
+        "module": "payments",
+        "feature": "wallet",
+        "action": "send",
+        "key": "payments.wallet.send",
+        "description": "Send Wallet to Wallet Transfer"
+    },
+    {
+        "module": "payments",
+        "feature": "qr",
+        "action": "send",
+        "key": "payments.qr.send",
+        "description": "Send QR Code Payment"
+    },
+    {
+        "module": "payments",
+        "feature": "non-instapay",
+        "action": "send",
+        "key": "payments.non-instapay.send",
+        "description": "Send to Non-InstaPay User"
+    },
+    {
+        "module": "payments",
+        "feature": "money",
+        "action": "request",
+        "key": "payments.money.request",
+        "description": "Request Money"
+    },
+    {
+        "module": "payments",
+        "feature": "quote",
+        "action": "send",
+        "key": "payments.quote.send",
+        "description": "Send A Quote"
+    },
+    {
+        "module": "payments",
+        "feature": "airtime",
+        "action": "topup",
+        "key": "payments.airtime.topup",
+        "description": "Topup Mobile Airtime"
+    },
+    {
+        "module": "payments",
+        "feature": "crypto",
+        "action": "send",
+        "key": "payments.crypto.send",
+        "description": "Send Crypto"
+    },
+    {
+        "module": "payments",
+        "feature": "esim",
+        "action": "buy",
+        "key": "payments.esim.buy",
+        "description": "Purchase eSIM"
+    },
+    {
+        "module": "payments",
+        "feature": "esim",
+        "action": "manage",
+        "key": "payments.esim.manage",
+        "description": "Manage purchased eSIMs"
+    },
+    {
+        "module": "schedules",
+        "feature": null,
+        "action": "view",
+        "key": "schedules.view",
+        "description": "View Subscriptions & Scheduled Transactions"
+    },
+    {
+        "module": "schedules",
+        "feature": null,
+        "action": "cancel",
+        "key": "schedules.cancel",
+        "description": "Cancel Subscription or Scheduled Transaction"
+    },
+    {
+        "module": "eshop",
+        "feature": null,
+        "action": "view",
+        "key": "eshop.view",
+        "description": "View eShop"
+    },
+    {
+        "module": "eshop",
+        "feature": null,
+        "action": "create",
+        "key": "eshop.create",
+        "description": "Create eShop"
+    },
+    {
+        "module": "beneficiaries",
+        "feature": null,
+        "action": "view",
+        "key": "beneficiaries.view",
+        "description": "View Beneficiaries"
+    },
+    {
+        "module": "beneficiaries",
+        "feature": null,
+        "action": "add",
+        "key": "beneficiaries.add",
+        "description": "Add Beneficiary"
+    },
+    {
+        "module": "beneficiaries",
+        "feature": null,
+        "action": "edit",
+        "key": "beneficiaries.edit",
+        "description": "Edit Beneficiary"
+    },
+    {
+        "module": "beneficiaries",
+        "feature": null,
+        "action": "delete",
+        "key": "beneficiaries.delete",
+        "description": "Delete Beneficiary"
+    },
+    {
+        "module": "referrals",
+        "feature": null,
+        "action": "view",
+        "key": "referrals.view",
+        "description": "View Referrals"
+    },
+    {
+        "module": "referrals",
+        "feature": "commission",
+        "action": "withdraw",
+        "key": "referrals.commission.withdraw",
+        "description": "Withdraw Commission Externally"
+    },
+    {
+        "module": "referrals",
+        "feature": "commission",
+        "action": "convert",
+        "key": "referrals.commission.convert",
+        "description": "Convert Commission to Main Balance"
+    },
+    {
+        "module": "referrals",
+        "feature": "link",
+        "action": "share",
+        "key": "referrals.link.share",
+        "description": "Share Referral Link"
+    },
+    {
+        "module": "analytics",
+        "feature": null,
+        "action": "view",
+        "key": "analytics.view",
+        "description": "View Analytics Reports"
+    },
+    {
+        "module": "qr-sticker",
+        "feature": null,
+        "action": "view",
+        "key": "qr-sticker.view",
+        "description": "View QR Code Stickers"
+    },
+    {
+        "module": "qr-sticker",
+        "feature": null,
+        "action": "update",
+        "key": "qr-sticker.update",
+        "description": "Update QR Code Sticker"
+    },
+    {
+        "module": "qr-sticker",
+        "feature": null,
+        "action": "download",
+        "key": "qr-sticker.download",
+        "description": "Download QR Code Sticker"
+    },
+    {
+        "module": "portfolio",
+        "feature": null,
+        "action": "view",
+        "key": "portfolio.view",
+        "description": "View Portfolio"
+    },
+    {
+        "module": "portfolio",
+        "feature": null,
+        "action": "add",
+        "key": "portfolio.add",
+        "description": "Add Portfolio Item"
+    },
+    {
+        "module": "portfolio",
+        "feature": null,
+        "action": "edit",
+        "key": "portfolio.edit",
+        "description": "Edit Portfolio Item"
+    },
+    {
+        "module": "portfolio",
+        "feature": null,
+        "action": "delete",
+        "key": "portfolio.delete",
+        "description": "Delete Portfolio Item"
+    },
+    {
+        "module": "portfolio",
+        "feature": null,
+        "action": "share",
+        "key": "portfolio.share",
+        "description": "Share Portfolio Item"
+    },
+    {
+        "module": "payment-address",
+        "feature": null,
+        "action": "view",
+        "key": "payment-address.view",
+        "description": "View Payment Address"
+    },
+    {
+        "module": "payment-address",
+        "feature": null,
+        "action": "update",
+        "key": "payment-address.update",
+        "description": "Update Payment Address Details"
+    },
+    {
+        "module": "payment-address",
+        "feature": null,
+        "action": "download",
+        "key": "payment-address.download",
+        "description": "Download Payment Address QR Code"
+    },
+    {
+        "module": "payment-address",
+        "feature": null,
+        "action": "share",
+        "key": "payment-address.share",
+        "description": "Share Payment Address Link"
+    },
+    {
+        "module": "quotations",
+        "feature": null,
+        "action": "view",
+        "key": "quotations.view",
+        "description": "View Quotations"
+    },
+    {
+        "module": "quotations",
+        "feature": null,
+        "action": "accept",
+        "key": "quotations.accept",
+        "description": "Accept Quotation"
+    },
+    {
+        "module": "quotations",
+        "feature": null,
+        "action": "bargain",
+        "key": "quotations.bargain",
+        "description": "Bargain Quotation"
+    },
+    {
+        "module": "quotations",
+        "feature": null,
+        "action": "decline",
+        "key": "quotations.decline",
+        "description": "Decline Quotation"
+    },
+    {
+        "module": "payment-request",
+        "feature": null,
+        "action": "view",
+        "key": "payment-request.view",
+        "description": "View Payment Requests"
+    },
+    {
+        "module": "payment-request",
+        "feature": null,
+        "action": "accept",
+        "key": "payment-request.accept",
+        "description": "Accept Payment Request"
+    },
+    {
+        "module": "payment-request",
+        "feature": null,
+        "action": "decline",
+        "key": "payment-request.decline",
+        "description": "Decline Payment Request"
+    },
+    {
+        "module": "user-profile",
+        "feature": null,
+        "action": "view",
+        "key": "user-profile.view",
+        "description": "View User Profile"
+    },
+    {
+        "module": "user-profile",
+        "feature": null,
+        "action": "update",
+        "key": "user-profile.update",
+        "description": "Update User Profile Settings"
+    },
+    {
+        "module": "user-profile",
+        "feature": null,
+        "action": "share",
+        "key": "user-profile.share",
+        "description": "Share User Profile"
+    },
+    {
+        "module": "geo-fencing",
+        "feature": null,
+        "action": "view",
+        "key": "geo-fencing.view",
+        "description": "View Geo-Fencing Settings"
+    },
+    {
+        "module": "geo-fencing",
+        "feature": null,
+        "action": "update",
+        "key": "geo-fencing.update",
+        "description": "Update Geo-Fencing Access"
+    },
+    {
+        "module": "settings",
+        "feature": null,
+        "action": "view",
+        "key": "settings.view",
+        "description": "View Settings Menu"
+    },
+    {
+        "module": "settings",
+        "feature": "basic-info",
+        "action": "view",
+        "key": "settings.basic-info.view",
+        "description": "View Basic Info Settings"
+    },
+    {
+        "module": "settings",
+        "feature": "basic-info",
+        "action": "update",
+        "key": "settings.basic-info.update",
+        "description": "Update Basic Info Settings"
+    },
+    {
+        "module": "settings",
+        "feature": "password",
+        "action": "view",
+        "key": "settings.password.view",
+        "description": "View Password Settings"
+    },
+    {
+        "module": "settings",
+        "feature": "password",
+        "action": "update",
+        "key": "settings.password.update",
+        "description": "Update Password Settings"
+    },
+    {
+        "module": "settings",
+        "feature": "security-questions",
+        "action": "view",
+        "key": "settings.security-questions.view",
+        "description": "View Security Questions Settings"
+    },
+    {
+        "module": "settings",
+        "feature": "security-questions",
+        "action": "update",
+        "key": "settings.security-questions.update",
+        "description": "Update Security Questions Settings"
+    },
+    {
+        "module": "settings",
+        "feature": "2fa",
+        "action": "view",
+        "key": "settings.2fa.view",
+        "description": "View Two Factor Authentication Settings"
+    },
+    {
+        "module": "settings",
+        "feature": "2fa",
+        "action": "update",
+        "key": "settings.2fa.update",
+        "description": "Update Two Factor Authentication Settings"
+    },
+    {
+        "module": "settings",
+        "feature": "nominee",
+        "action": "view",
+        "key": "settings.nominee.view",
+        "description": "View Nominee Information"
+    },
+    {
+        "module": "settings",
+        "feature": "nominee",
+        "action": "update",
+        "key": "settings.nominee.update",
+        "description": "Update Nominee Information"
+    },
+    {
+        "module": "settings",
+        "feature": "notifications",
+        "action": "view",
+        "key": "settings.notifications.view",
+        "description": "View Notifications Settings"
+    },
+    {
+        "module": "settings",
+        "feature": "notifications",
+        "action": "update",
+        "key": "settings.notifications.update",
+        "description": "Update Notifications Settings"
+    },
+    {
+        "module": "settings",
+        "feature": "identity-verification",
+        "action": "view",
+        "key": "settings.identity-verification.view",
+        "description": "View Identity Verification Settings"
+    },
+    {
+        "module": "settings",
+        "feature": "identity-verification",
+        "action": "update",
+        "key": "settings.identity-verification.update",
+        "description": "Update Identity Verification Settings"
+    },
+    {
+        "module": "settings",
+        "feature": "business-verification",
+        "action": "view",
+        "key": "settings.business-verification.view",
+        "description": "View Business Verification Settings"
+    },
+    {
+        "module": "settings",
+        "feature": "business-verification",
+        "action": "update",
+        "key": "settings.business-verification.update",
+        "description": "Update Business Verification Settings"
+    },
+    {
+        "module": "settings",
+        "feature": "social-accounts",
+        "action": "view",
+        "key": "settings.social-accounts.view",
+        "description": "View Social Accounts Settings"
+    },
+    {
+        "module": "settings",
+        "feature": "social-accounts",
+        "action": "update",
+        "key": "settings.social-accounts.update",
+        "description": "Update Social Accounts Settings"
+    },
+    {
+        "module": "settings",
+        "feature": "login-activity",
+        "action": "view",
+        "key": "settings.login-activity.view",
+        "description": "View Login Activity Settings"
+    },
+    {
+        "module": "settings",
+        "feature": "login-activity",
+        "action": "delete",
+        "key": "settings.login-activity.delete",
+        "description": "Delete Login Sessions"
+    },
+    {
+        "module": "settings",
+        "feature": "receiving-accounts",
+        "action": "view",
+        "key": "settings.receiving-accounts.view",
+        "description": "View Receiving Accounts Settings"
+    },
+    {
+        "module": "settings",
+        "feature": "receiving-accounts",
+        "action": "add",
+        "key": "settings.receiving-accounts.add",
+        "description": "Add Receiving Account"
+    },
+    {
+        "module": "settings",
+        "feature": "receiving-accounts",
+        "action": "delete",
+        "key": "settings.receiving-accounts.delete",
+        "description": "Delete Receiving Account"
+    },
+    {
+        "module": "settings",
+        "feature": "payment-threshold",
+        "action": "view",
+        "key": "settings.payment-threshold.view",
+        "description": "View Payment Threshold Settings"
+    },
+    {
+        "module": "settings",
+        "feature": "payment-threshold",
+        "action": "update",
+        "key": "settings.payment-threshold.update",
+        "description": "Update Payment Threshold Settings"
+    },
+    {
+        "module": "settings",
+        "feature": "download-data",
+        "action": "view",
+        "key": "settings.download-data.view",
+        "description": "View Download Data Settings"
+    },
+    {
+        "module": "settings",
+        "feature": "download-data",
+        "action": "download",
+        "key": "settings.download-data.download",
+        "description": "Download Account Data"
+    },
+    {
+        "module": "settings",
+        "feature": "delete-account",
+        "action": "view",
+        "key": "settings.delete-account.view",
+        "description": "View Delete Account Settings"
+    },
+    {
+        "module": "settings",
+        "feature": "delete-account",
+        "action": "delete",
+        "key": "settings.delete-account.delete",
+        "description": "Delete Account"
+    },
+    {
+        "module": "settings",
+        "feature": "api-key",
+        "action": "view",
+        "key": "settings.api-key.view",
+        "description": "View API Key Settings"
+    },
+    {
+        "module": "settings",
+        "feature": "api-key",
+        "action": "update",
+        "key": "settings.api-key.update",
+        "description": "Update API Key Settings"
+    },
+    {
+        "module": "settings",
+        "feature": "api-key",
+        "action": "generate",
+        "key": "settings.api-key.generate",
+        "description": "Generate API Key"
+    },
+    {
+        "module": "settings",
+        "feature": "saved-cards",
+        "action": "view",
+        "key": "settings.saved-cards.view",
+        "description": "View Saved Cards Settings"
+    },
+    {
+        "module": "settings",
+        "feature": "saved-cards",
+        "action": "delete",
+        "key": "settings.saved-cards.delete",
+        "description": "Delete Saved Card"
+    },
+    {
+        "module": "settings",
+        "feature": "financial-info",
+        "action": "view",
+        "key": "settings.financial-info.view",
+        "description": "View Financial Info Settings"
+    },
+    {
+        "module": "settings",
+        "feature": "financial-info",
+        "action": "update",
+        "key": "settings.financial-info.update",
+        "description": "Update Financial Info Settings"
+    },
+    {
+        "module": "settings",
+        "feature": "how-others-find-you",
+        "action": "view",
+        "key": "settings.how-others-find-you.view",
+        "description": "View How Others Find You Settings"
+    },
+    {
+        "module": "settings",
+        "feature": "how-others-find-you",
+        "action": "update",
+        "key": "settings.how-others-find-you.update",
+        "description": "Update How Others Find You Settings"
+    }
+]

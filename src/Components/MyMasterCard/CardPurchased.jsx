@@ -45,7 +45,7 @@ import { apiWrapper } from '../../utils/Functions/apiWrapper';
 import { localCurrency } from '../../utils/Functions';
 import { formatCurrency } from '../../Helper/AmountFormat';
 
-export const Toggle = ({ checked, onChange, isCheckbox = false, disabled = false, bottom }) => (
+export const Toggle = ({ checked, onChange, isCheckbox = false, disabled = false, bottom , ref}) => (
     <label disabled={disabled} className={isCheckbox ? styles.checkbox : styles.toggle}>
 
         <input
@@ -53,6 +53,7 @@ export const Toggle = ({ checked, onChange, isCheckbox = false, disabled = false
             checked={checked}
             onChange={onChange}
             disabled={disabled}
+            ref={ref || null}
         />
 
         <span className={isCheckbox ? styles.checkmark : styles.slider}>
