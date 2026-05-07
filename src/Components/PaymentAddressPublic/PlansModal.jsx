@@ -95,6 +95,11 @@ const PlansModal = ({ isOpen, toggle, plansData, dataHandler, isLoading, user, u
     }
 
 
+    const truncate = (text, max) => {
+        if (!text) return "";
+        return text.length > max ? `${text.slice(0, max)}...` : text;
+    }
+
     console.log(showGuestModal, "guest modal")
     return (
         <>
@@ -119,7 +124,7 @@ const PlansModal = ({ isOpen, toggle, plansData, dataHandler, isLoading, user, u
                                         <div key={plan._id} className={`${styles.item} ${isActive && width > 1000 ? styles.active : ''}`}>
                                             <div className={styles.itemHeader} onClick={onClick}>
                                                 <div>
-                                                    <h3>{plan.title}</h3>
+                                                    <h3>{truncate(plan.title,20)}</h3>
                                                     <div className={styles.price}>
                                                         <h5>{wallet.symbol || wallet.code} {formatCurrency(plan.price, true)}</h5>
                                                         <span>/ {t(plan.billingCycle)?.toLowerCase()}</span>
