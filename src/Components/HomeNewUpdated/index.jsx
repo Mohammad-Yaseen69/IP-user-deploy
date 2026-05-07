@@ -238,7 +238,7 @@ const HomeNewUpdated = () => {
                                 <RecentTrans currentWallet={selectedWallet} />
                             )}
 
-                            {can("dashboard.recent-transactions.view") && (
+                            {can("dashboard.insights.view") && (
                                 <Stats
                                     currentWallet={selectedWallet}
                                 />
