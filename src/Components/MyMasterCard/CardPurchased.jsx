@@ -45,7 +45,7 @@ import { apiWrapper } from '../../utils/Functions/apiWrapper';
 import { localCurrency } from '../../utils/Functions';
 import { formatCurrency } from '../../Helper/AmountFormat';
 
-export const Toggle = ({ checked, onChange, isCheckbox = false, disabled = false, bottom , ref}) => (
+export const Toggle = ({ checked, onChange, isCheckbox = false, disabled = false, bottom, ref }) => (
     <label disabled={disabled} className={isCheckbox ? styles.checkbox : styles.toggle}>
 
         <input
@@ -231,6 +231,7 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
             }
         } catch (error) {
             const dec = decryptData(error?.response?.data?.data)
+            toast.error(dec?.message || "We are unable to process your request at the moment, please try again later")
             console.log(dec)
         }
         setFreezeLoading(false);

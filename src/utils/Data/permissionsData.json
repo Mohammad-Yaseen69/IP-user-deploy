@@ -133,6 +133,20 @@
         "description": "Payments using bank-deposit"
     },
     {
+        "module": "wallet",
+        "feature": "status",
+        "action": "update",
+        "key": "wallet.status.update",
+        "description": "Update Wallet Status (Activate/Deactivate/Block)"
+    },
+    {
+        "module": "wallet",
+        "feature": "analytics",
+        "action": "view",
+        "key": "wallet.analytics.view",
+        "description": "View Wallets Analytics Breakdown"
+    },
+    {
         "module": "transactions",
         "feature": "wallet",
         "action": "list",
@@ -159,6 +173,13 @@
         "action": "export",
         "key": "transactions.main.export",
         "description": "Export main Transactions"
+    },
+    {
+        "module": "transactions",
+        "feature": "main",
+        "action": "view-details",
+        "key": "transactions.main.details.view",
+        "description": "View transaction details (expansion)"
     },
     {
         "module": "transactions",

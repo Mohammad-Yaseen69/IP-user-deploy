@@ -5,10 +5,15 @@ import TransactionsTable from "./TransactionsTable";
 import { useContext } from "react";
 import { UserContext } from "../../Context/UserContext";
 
+import { usePermission } from "../../hooks/GeneralUse/usePermission";
+
 const TransactionsNewApi = () => {
     const { t } = useTranslation()
     const { userDetails } = useContext(UserContext);
+    const can = usePermission();
     
+    if (!can("transactions.main.view")) return null;
+
     return (
         <>
             {

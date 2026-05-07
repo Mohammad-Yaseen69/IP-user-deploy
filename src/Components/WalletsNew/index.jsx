@@ -207,6 +207,8 @@ const WalletsNew = () => {
         return userWallets?.filter(item => !item?.qrCode?.url) ?? []
     }, [userWallets])
 
+    if (!can("wallet.view")) return null;
+
     return (
         <>
             {
@@ -244,13 +246,17 @@ const WalletsNew = () => {
                                     />
                                 )
                             }
-                            <CenterContainer categories={categories} setCategories={setCategories} currentType={currentType} setCurrentType={setCurrentType} currentWallet={currentWallet} />
+                            {can("wallet.analytics.view") && (
+                                <CenterContainer categories={categories} setCategories={setCategories} currentType={currentType} setCurrentType={setCurrentType} currentWallet={currentWallet} />
+                            )}
 
-                            <TransactionsTable
-                                currentWallet={currentWallet}
-                                filtered={filtered}
-                                setFiltered={setFiltered}
-                            />
+                            {can("transactions.wallet.list") && (
+                                <TransactionsTable
+                                    currentWallet={currentWallet}
+                                    filtered={filtered}
+                                    setFiltered={setFiltered}
+                                />
+                            )}
                         </div>
                     </div>
                     :
@@ -270,9 +276,6 @@ const WalletsNew = () => {
                                 data={data}
                             />
                             {
-                                can("")
-                            }
-                            {
                                 can("wallet.limits.view") && (
 
                                     <AccountLimits
@@ -283,12 +286,16 @@ const WalletsNew = () => {
                                     />)
                             }
 
-                            <CenterContainer categories={categories} setCategories={setCategories} currentType={currentType} setCurrentType={setCurrentType} currentWallet={currentWallet} />
-                            <TransactionsTable
-                                currentWallet={currentWallet}
-                                filtered={filtered}
-                                setFiltered={setFiltered}
-                            />
+                            {can("wallet.analytics.view") && (
+                                <CenterContainer categories={categories} setCategories={setCategories} currentType={currentType} setCurrentType={setCurrentType} currentWallet={currentWallet} />
+                            )}
+                            {can("transactions.wallet.list") && (
+                                <TransactionsTable
+                                    currentWallet={currentWallet}
+                                    filtered={filtered}
+                                    setFiltered={setFiltered}
+                                />
+                            )}
                         </div>
                     </div>
             }

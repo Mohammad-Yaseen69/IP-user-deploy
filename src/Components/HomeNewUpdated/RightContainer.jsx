@@ -18,6 +18,7 @@ import { BsFillPlayFill } from "react-icons/bs"
 import { Link } from 'react-router-dom';
 import BusinessModal from '../BusinessModal';
 import { isSafari } from "react-device-detect"
+import { usePermission } from '../../hooks/GeneralUse/usePermission';
 
 const RightContainer = ({ setCurrentWallet, showBusinessModal, setShowBusinessModal }) => {
     const [activeDot, setActiveDot] = useState(0)
@@ -25,6 +26,7 @@ const RightContainer = ({ setCurrentWallet, showBusinessModal, setShowBusinessMo
     const { userWallets, getUserWallets } = useContext(UserContext)
     const { userDetails } = useContext(UserContext)
     const swiperRef = useRef(null)
+    const can = usePermission()
 
     useEffect(() => {
         getUserWallets()
@@ -39,25 +41,29 @@ const RightContainer = ({ setCurrentWallet, showBusinessModal, setShowBusinessMo
             name: "Top Up",
             img: opt1,
             width: "31px",
-            link: `/add-funds?type=${userWallets?.[activeDot]?.wallet_type === "crypto" ? "crypto" : "wallet"}&wallet_address=${userWallets?.[activeDot]?.wallet_id}`
+            link: `/add-funds?type=${userWallets?.[activeDot]?.wallet_type === "crypto" ? "crypto" : "wallet"}&wallet_address=${userWallets?.[activeDot]?.wallet_id}`,
+            permission: "wallet.payment.topup"
         },
         {
             name: "Summary",
             img: opt2,
             width: "25px",
-            link: `/wallets?action=download&wallet_address=${userWallets?.[activeDot]?.wallet_id}`
+            link: `/wallets?action=download&wallet_address=${userWallets?.[activeDot]?.wallet_id}`,
+            permission: "transactions.wallet.export"
         },
         {
             name: "Withdraw",
             img: opt3,
             width: "20px",
-            link: `/wallets?action=withdraw&wallet_address=${userWallets?.[activeDot]?.wallet_id}`
+            link: `/wallets?action=withdraw&wallet_address=${userWallets?.[activeDot]?.wallet_id}`,
+            permission: "wallet.payment.withdraw"
         },
         {
             name: "More",
             img: opt4,
             width: "22px",
-            link: `/wallets?wallet_address=${userWallets?.[activeDot]?.wallet_id}`
+            link: `/wallets?wallet_address=${userWallets?.[activeDot]?.wallet_id}`,
+            permission: "wallet.view"
         },
     ]), [userWallets])
 
@@ -75,79 +81,85 @@ const RightContainer = ({ setCurrentWallet, showBusinessModal, setShowBusinessMo
         }}>
             <div className={`${cardsStyle.container}`}>
                 <h4 className='d_r_head'>{t("My Wallets")}</h4>
-                <Swiper
-                    effect={isSafari ? "fade" : "cards"}
-                    grabCursor={true}
-                    speed={isSafari && 1000}
-                    modules={[isSafari ? EffectFade : EffectCards]}
-                    cardsEffect={{
-                        rotate: false
-                    }}
-                    style={{ minWidth: "250px", cursor: "none" }}
-                    className="mySwiper"
-                    onSlideChange={e => {
-                        setActiveDot(e.activeIndex)
-                        setCurrentWallet(userWallets?.[e.activeIndex])
-                    }}
-                    ref={swiperRef}
-                >
-                    {
-                        userWallets.length > 0
-                            ?
-                            userWallets.map((data, index) => (
-                                <SwiperSlide key={index} style={{
-                                    cursor: "none",
-                                    borderRadius: "10px",
-                                }}>
-                                    <ADCard data={data} isActive={activeDot === index} />
-                                </SwiperSlide>
-                            ))
-                            : ""
-                    }
-                </Swiper>
-                <div style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    gap: '10px',
-                }} className={`d_r_act_dot ${cardsStyle.dots}`}>
-                    {
-                        userWallets.map((_, index) => <span
-                            key={index * Date.now()}
-                            style={{
-                                height: "7px",
-                                width: activeDot === index ? "30px" : "7px",
-                                borderRadius: "30px",
-                                // background: activeDot === index ? "#5926f0" : "#e64067",
-                                background: activeDot === index ? "#5926f0" : "#666666",
-                                cursor: "pointer"
-                            }}
-                            onClick={() => {
-                                setActiveDot(index)
-                                setCurrentWallet(userWallets?.[index])
-                                swiperRef?.current?.swiper?.slideTo(index)
-                            }}
-                        />)
-                    }
-                </div>
+                {can("wallet.list.view") && (
+                    <Swiper
+                        effect={isSafari ? "fade" : "cards"}
+                        grabCursor={true}
+                        speed={isSafari && 1000}
+                        modules={[isSafari ? EffectFade : EffectCards]}
+                        cardsEffect={{
+                            rotate: false
+                        }}
+                        style={{ minWidth: "250px", cursor: "none" }}
+                        className="mySwiper"
+                        onSlideChange={e => {
+                            setActiveDot(e.activeIndex)
+                            setCurrentWallet(userWallets?.[e.activeIndex])
+                        }}
+                        ref={swiperRef}
+                    >
+                        {
+                            userWallets.length > 0
+                                ?
+                                userWallets.map((data, index) => (
+                                    <SwiperSlide key={index} style={{
+                                        cursor: "none",
+                                        borderRadius: "10px",
+                                    }}>
+                                        <ADCard data={data} isActive={activeDot === index} />
+                                    </SwiperSlide>
+                                ))
+                                : ""
+                        }
+                    </Swiper>
+                )}
+                {can("wallet.list.view") && (
+                    <div style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        gap: '10px',
+                    }} className={`d_r_act_dot ${cardsStyle.dots}`}>
+                        {
+                            userWallets.map((_, index) => <span
+                                key={index * Date.now()}
+                                style={{
+                                    height: "7px",
+                                    width: activeDot === index ? "30px" : "7px",
+                                    borderRadius: "30px",
+                                    // background: activeDot === index ? "#5926f0" : "#e64067",
+                                    background: activeDot === index ? "#5926f0" : "#666666",
+                                    cursor: "pointer"
+                                }}
+                                onClick={() => {
+                                    setActiveDot(index)
+                                    setCurrentWallet(userWallets?.[index])
+                                    swiperRef?.current?.swiper?.slideTo(index)
+                                }}
+                            />)
+                        }
+                    </div>
+                )}
                 <div style={{ display: "flex", gap: ".5rem", justifyContent: "space-around" }} className={`d_r_c_opt_con ${cardsStyle.options}`}>
                     {
                         optionsData.map(opt => (
-                            <Link key={opt.link} to={opt.link}>
-                                <div style={{ display: 'flex', flexDirection: "column", alignItems: "center", gap: ".5rem" }}>
-                                    <div key={opt} className={`d_r_c_opt ${cardsStyle.action}`} style={{
-                                        background: "radial-gradient(124.63% 259.09% at 48.48% 152.15%, rgba(230, 64, 103, 0.10) 0%, rgba(89, 38, 240, 0.10) 55.65%, rgba(72, 40, 160, 0.10) 100%), #FFF",
-                                        display: "flex", justifyContent: "center", alignItems: "center",
-                                        borderRadius: "10px",
-                                        // border: "1.11414px solid rgba(0, 0, 0, 0.08)",
-                                        boxShadow: "0px 11.288448333740234px 11.288448333740234px -6.271359920501709px rgba(109, 41, 220, 0.15)",
-                                        cursor: "pointer",
-                                        transition: "100ms ease-in-out"
-                                    }}>
-                                        <img src={opt.img} style={{ width: opt.width }} />
+                            can(opt.permission) && (
+                                <Link key={opt.link} to={opt.link}>
+                                    <div style={{ display: 'flex', flexDirection: "column", alignItems: "center", gap: ".5rem" }}>
+                                        <div key={opt} className={`d_r_c_opt ${cardsStyle.action}`} style={{
+                                            background: "radial-gradient(124.63% 259.09% at 48.48% 152.15%, rgba(230, 64, 103, 0.10) 0%, rgba(89, 38, 240, 0.10) 55.65%, rgba(72, 40, 160, 0.10) 100%), #FFF",
+                                            display: "flex", justifyContent: "center", alignItems: "center",
+                                            borderRadius: "10px",
+                                            // border: "1.11414px solid rgba(0, 0, 0, 0.08)",
+                                            boxShadow: "0px 11.288448333740234px 11.288448333740234px -6.271359920501709px rgba(109, 41, 220, 0.15)",
+                                            cursor: "pointer",
+                                            transition: "100ms ease-in-out"
+                                        }}>
+                                            <img src={opt.img} style={{ width: opt.width }} />
+                                        </div>
+                                        <span style={{ fontWeight: 600, fontSize: ".7rem", color: "#3c3c3c" }}>{t(opt.name)}</span>
                                     </div>
-                                    <span style={{ fontWeight: 600, fontSize: ".7rem", color: "#3c3c3c" }}>{t(opt.name)}</span>
-                                </div>
-                            </Link>
+                                </Link>
+                            )
                         ))
                     }
                 </div>
@@ -182,7 +194,7 @@ const RightContainer = ({ setCurrentWallet, showBusinessModal, setShowBusinessMo
             </Card>
             <Card style={{ boxShadow: "0px 2px 5px 0px rgba(38, 51, 77, 0.03)", border: "1px solid rgba(0,0,0,.1)", borderRadius: "30px", marginBottom: 0, flex: 1 }}>
                 <CardBody style={{ padding: window.innerWidth > 1800 ? "1.5rem" : "20px" }}> */}
-            <CurConversion />
+            {can("wallet.payment.conversion") && <CurConversion />}
             {/* </CardBody>
             </Card> */}
         </div>
