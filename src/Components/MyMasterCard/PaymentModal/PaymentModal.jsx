@@ -28,8 +28,6 @@ const PLACEHOLDER_CARD_TYPE = {
 }
 
 
-
-
 const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay, googlePay }) => {
   const [step, setStep] = useState(1)
   const { userWallets, getUserWallets, userDetails, authHeader, setProfileLockTime } = useContext(UserContext)
@@ -317,36 +315,41 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay,
 
   useEffect(() => {
     const getFee = async (method) => {
-
       try {
-        const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/mastercard/get-vvc-fee/${walletState?.wallet_id ? walletState?.wallet_id : defaultWallet?.wallet_id}/${(applePay || googlePay) ? "vcc_premium_plus_virtual" : vvcCardType === "premium" ? "vcc_premium_virtual" : "vcc_standard_virtual"}/${method}`, {
-          headers: authHeader
-        })
+        const walletId = walletState?.wallet_id || defaultWallet?.wallet_id
+
+        // ← yahan check 
+        if (!walletId) {
+          console.log("No wallet ID available")
+          return
+        }
+
+        const res = await axios.get(
+          `${import.meta.env.VITE_IP_DEV_API}/api/mastercard/get-vvc-fee/${walletId}/${(applePay || googlePay)
+            ? "vcc_premium_plus_virtual"
+            : vvcCardType === "premium"
+              ? "vcc_premium_virtual"
+              : "vcc_standard_virtual"
+          }/${method}`,
+          { headers: authHeader }
+        )
 
         const dec = decryptData(res.data.data)
-        console.log(dec)
         setFeeDetails(dec.data)
       } catch (error) {
-        const dec = decryptData(error?.response?.data?.data)
-        console.log(dec)
-      }
-
-    }
-
-
-    if (walletState.wallet_id) {
-      if (paymentType === "card") {
-        getFee("card")
-      }
-      else if (paymentType === "wallet") {
-        getFee("wallet")
-      }
-      else if (paymentType === "paypal") {
-        getFee("paypal")
+        console.log(error)
       }
     }
-  }, [paymentType, walletState])
 
+    const walletId = walletState?.wallet_id || defaultWallet?.wallet_id
+
+    if (walletId && paymentType) {
+      if (paymentType === "card") getFee("card")
+      else if (paymentType === "wallet") getFee("wallet")
+      else if (paymentType === "paypal") getFee("paypal")
+    }
+
+  }, [paymentType, walletState?.wallet_id, defaultWallet?.wallet_id])
   useEffect(() => {
     const disabledBtn = () => {
       switch (paymentType) {
