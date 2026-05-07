@@ -174,7 +174,7 @@
         "key": "transactions.main.export",
         "description": "Export main Transactions"
     },
-    {
+    { 
         "module": "transactions",
         "feature": "main",
         "action": "view-details",
