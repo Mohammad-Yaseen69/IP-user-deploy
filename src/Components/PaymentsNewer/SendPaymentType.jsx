@@ -3,6 +3,7 @@ import InternationalTransfer from "./InternationalTransfer"
 import WalletTransfer from "./WalletTransfer"
 import { useContext, useState } from "react"
 import { UserContext } from "../../Context/UserContext"
+import { usePermission } from "../../hooks/GeneralUse/usePermission"
 import QrPayment from "./QrPayment"
 import InternationFlow from "./InternationalFlow"
 import WalletToWalletFlow from "./WalletToWalletFlow"
@@ -14,6 +15,16 @@ const SendPaymentType = ({ sendPaymentType, setStep, setSendPaymentType }) => {
     const [isInternational, setIsInternational] = useState(false)
     const [isWallet, setIsWallet] = useState(false)
     const { userDetails } = useContext(UserContext)
+    const can = usePermission();
+
+    // Permission: payments.international.send
+    const canSendInternational = can("payments.international.send");
+    // Permission: payments.wallet.send
+    const canSendWallet = can("payments.wallet.send");
+    // Permission: payments.qr.send
+    const canSendQr = can("payments.qr.send");
+    // Permission: payments.non-instapay.send
+    const canSendNonInstapay = can("payments.non-instapay.send");
 
     return (
         <div style={{ display: "flex", gap: sendPaymentType ? ".5rem" : "2rem", width: "fit-content" }}>
@@ -33,7 +44,7 @@ const SendPaymentType = ({ sendPaymentType, setStep, setSendPaymentType }) => {
                             userDetails?.level?.international_transfer?.cash_pickup
                             ||
                             userDetails?.level?.international_transfer?.mobile_money
-                    )
+                    ) && canSendInternational
                     ?
                     // <InternationalTransfer sendPaymentType={sendPaymentType} setStep={setStep} setSendPaymentType={setSendPaymentType} setIsInternational={setIsInternational} />
                     <InternationFlow
@@ -45,7 +56,7 @@ const SendPaymentType = ({ sendPaymentType, setStep, setSendPaymentType }) => {
                     : ""
             }
             {
-                (!isInternational && userDetails?.level?.wallet_to_wallet?.send)
+                (!isInternational && userDetails?.level?.wallet_to_wallet?.send && canSendWallet)
                 &&
                 // <WalletTransfer sendPaymentType={sendPaymentType} setStep={setStep} setSendPaymentType={setSendPaymentType} setIsWallet={setIsWallet} />
                 <WalletToWalletFlow
@@ -56,7 +67,7 @@ const SendPaymentType = ({ sendPaymentType, setStep, setSendPaymentType }) => {
                 />
             }
             {
-                (!isInternational && !isWallet && userDetails?.level?.qr_pay?.send)
+                (!isInternational && !isWallet && userDetails?.level?.qr_pay?.send && canSendQr)
                     ?
                     // <QrPayment sendPaymentType={sendPaymentType} setStep={setStep} setSendPaymentType={setSendPaymentType} />
                     <QRFlow
@@ -68,13 +79,13 @@ const SendPaymentType = ({ sendPaymentType, setStep, setSendPaymentType }) => {
                     : ""
             }
 
-            {
+            {canSendNonInstapay && (
                 <NonInstapayPayment
                     sendPaymentType={sendPaymentType}
                     setStep={setStep}
                     setSendPaymentType={setSendPaymentType}
                 />
-            }
+            )}
         </div>
     )
 }

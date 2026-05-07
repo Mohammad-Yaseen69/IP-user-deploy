@@ -44,6 +44,7 @@ import q_m_i from "./files/q.svg";
 import a_m_i from "./files/airtime.svg";
 import int_m_i from "./files/int.svg";
 import ni_m_i from "./files/non_ip.svg";
+import { usePermission } from "../../hooks/GeneralUse/usePermission";
 
 
 const PaymentsNewer = () => {
@@ -55,6 +56,33 @@ const PaymentsNewer = () => {
     const send_type = queryParams.get("send_type")
 
     const { t } = useTranslation()
+    const can = usePermission();
+
+    // Permission: payments.international.send
+    const canSendInternational = can("payments.international.send");
+    // Permission: payments.wallet.send
+    const canSendWallet = can("payments.wallet.send");
+    // Permission: payments.qr.send
+    const canSendQr = can("payments.qr.send");
+    // Permission: payments.non-instapay.send
+    const canSendNonInstapay = can("payments.non-instapay.send");
+    const canSendMoney = canSendInternational || canSendWallet || canSendQr || canSendNonInstapay;
+
+    // Permission: payments.money.request
+    const canMoneyRequest = can("payments.money.request");
+    // Permission: payments.quote.send
+    const canQuoteSend = can("payments.quote.send");
+
+    // Permission: payments.crypto.send
+    const canSendCrypto = can("payments.crypto.send");
+
+    // Permission: payments.airtime.topup
+    const canAirtimeTopup = can("payments.airtime.topup");
+    // Permission: payments.esim.buy
+    const canEsimBuy = can("payments.esim.buy");
+    // Permission: payments.esim.manage
+    const canEsimManage = can("payments.esim.manage");
+    const canAirtimeOrEsim = canAirtimeTopup || canEsimBuy || canEsimManage;
     // step info
     const [step, setStep] = useState(1)
 
@@ -154,6 +182,9 @@ const PaymentsNewer = () => {
             window.history.replaceState(null, null, `?payment_action=${action}&send_type=${sendPaymentType}`)
         }
     }, [sendPaymentType])
+
+
+
     return (
         <>
             <div className={styles.container}>
@@ -198,7 +229,7 @@ const PaymentsNewer = () => {
                 }
 
                 {
-                    (step === 2 && action === "send_money")
+                    (step === 2 && action === "send_money" && canSendMoney)
                     &&
                     <SendPaymentType setSendPaymentType={setSendPaymentType} sendPaymentType={sendPaymentType} setStep={setStep} />
                 }
@@ -208,26 +239,28 @@ const PaymentsNewer = () => {
                     &&
                     action === "airtime"
                     &&
+                    canAirtimeOrEsim
+                    &&
                     <Airtime setCurrentFlow={setCurrentFlow} setAction={setAction} setStep={setStep} />
                 }
 
                 {
-                    (step === 2 && action === "req_money")
+                    (step === 2 && action === "req_money" && canMoneyRequest)
                     &&
                     <RequestMoney setAction={setAction} setStep={setStep} />
                 }
                 {
-                    (step === 2 && action === "send_quote")
+                    (step === 2 && action === "send_quote" && canQuoteSend)
                     &&
                     <SendQuotation setAction={setAction} setStep={setStep} />
                 }
                 {
-                    (step === 2 && action === "send_crypto")
+                    (step === 2 && action === "send_crypto" && canSendCrypto)
                     &&
                     <SendCrypto />
                 }
                 {
-                    (step === 2 && action === "crypto_fiat")
+                    (step === 2 && action === "crypto_fiat" && canSendCrypto)
                     &&
                     <CryptoFiat />
                 }
@@ -454,38 +487,46 @@ const PaymentsNewer = () => {
                         <>
                             {
                                 sendPaymentType === "international"
+                                && canSendInternational
                                 && <International setStep={setStep} step={step} setCurrentFlow={setCurrentFlow} setSendPaymentType={setSendPaymentType} sendPaymentType={sendPaymentType} setAction={setAction} />
                             }
                             {
                                 sendPaymentType === "wallet_to_wallet"
+                                && canSendWallet
                                 && <WalletTransferMobile setStep={setStep} step={step} setCurrentFlow={setCurrentFlow} setSendPaymentType={setSendPaymentType} sendPaymentType={sendPaymentType} setAction={setAction} />
                             }
                             {
                                 sendPaymentType === "qr_pay"
+                                && canSendQr
                                 && <QRPayment setStep={setStep} step={step} setCurrentFlow={setCurrentFlow} setSendPaymentType={setSendPaymentType} sendPaymentType={sendPaymentType} setAction={setAction} />
                             }
                             {
                                 sendPaymentType === "non-instapay"
+                                && canSendNonInstapay
                                 && <NonInstapayPayment setStep={setStep} step={step} setCurrentFlow={setCurrentFlow} setSendPaymentType={setSendPaymentType} sendPaymentType={sendPaymentType} setAction={setAction} />
                             }
                             {
                                 action === "req_money"
                                 &&
+                                canMoneyRequest &&
                                 <RequestMoneyMobile step={step} setStep={setStep} setCurrentFlow={setCurrentFlow} setAction={setAction} />
                             }
                             {
                                 action === "send_quote"
                                 &&
+                                canQuoteSend &&
                                 <SendQuote step={step} setStep={setStep} setCurrentFlow={setCurrentFlow} setAction={setAction} />
                             }
                             {
                                 action === "send_crypto"
                                 &&
+                                canSendCrypto &&
                                 <CryptoFiatMobile step={step} setStep={setStep} setCurrentFlow={setCurrentFlow} setAction={setAction} />
                             }
                             {
                                 action === "airtime"
                                 &&
+                                canAirtimeOrEsim &&
                                 <AirtimeMobile step={step} setStep={setStep} setCurrentFlow={setCurrentFlow} setAction={setAction} />
                             }
                         </>
