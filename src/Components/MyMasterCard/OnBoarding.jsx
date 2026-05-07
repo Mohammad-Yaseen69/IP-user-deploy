@@ -8,6 +8,7 @@ import PaymentModal from "./PaymentModal/PaymentModal.jsx"
 import Stepfour from "./Stepfour.jsx"
 import { useNavigate } from "react-router"
 import { useTranslation } from "react-i18next"
+import MissingInfoModal from "./MissingInfoModal.jsx"
 
 
 
@@ -18,6 +19,10 @@ const OnBoarding = ({ alreadyHaveCard, setCardPurchased, setReRender }) => {
     const [step, setStep] = useState(1)
     const { userDetails } = useContext(UserContext)
     const [showPaymentModal, setShowPaymentModal] = useState(false)
+    const [missingModal, setMissingModal] = useState({
+        email: false,
+        phone: false
+    })
     const navigate = useNavigate()
     const paymentModalRef = useRef(null)
     const { t } = useTranslation()
@@ -28,6 +33,8 @@ const OnBoarding = ({ alreadyHaveCard, setCardPurchased, setReRender }) => {
             setApplePay(false)
         }
     }, [cardType])
+
+    console.log(userDetails.company)
     return (
         <div className={styles.container}>
             {step === 1 &&
@@ -68,6 +75,18 @@ const OnBoarding = ({ alreadyHaveCard, setCardPurchased, setReRender }) => {
                 )
             }
 
+            {(missingModal.email || missingModal.phone) && (
+                <MissingInfoModal
+                    isOpen={missingModal.email || missingModal.phone}
+                    toggle={() => setMissingModal({
+                        email: false,
+                        phone: false
+                    })}
+                    missingType={missingModal.email ? "email" : "phone"}
+                    setShowPaymentModal={setShowPaymentModal}
+                />
+            )}
+
             {showPaymentModal &&
                 <PaymentModal
                     vvcCardType={cardType}
@@ -79,6 +98,9 @@ const OnBoarding = ({ alreadyHaveCard, setCardPurchased, setReRender }) => {
                     ref={paymentModalRef}
                 />
             }
+
+
+
             {step === 4 &&
                 <Stepfour />
             }
@@ -111,8 +133,15 @@ const OnBoarding = ({ alreadyHaveCard, setCardPurchased, setReRender }) => {
                                     setStep(prev => prev += 1)
                                 }
                                 else {
-                                    if (userDetails?.account_type === "individual" ? userDetails?.user?.kyc_status === "approved" : userDetails.company.kyb_status === "approved") {
-                                        setShowPaymentModal(true)
+                                    if (userDetails?.account_type === "individual" ? userDetails?.user?.kyc_status === "approved" : userDetails.company?.kyb_status === "approved") {
+                                        if (!userDetails?.phone || !userDetails?.email) {
+                                            setMissingModal({
+                                                email: !userDetails?.email,
+                                                phone: !userDetails?.phone
+                                            })
+                                        } else {
+                                            setShowPaymentModal(true)
+                                        }
                                     }
                                     else {
                                         navigate("/settings?tab=verification")
