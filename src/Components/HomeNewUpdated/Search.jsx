@@ -11,6 +11,7 @@ import axios from "axios"
 import { Link } from "react-router-dom"
 import InstaPayLoader from "../Loader"
 import Notifications from "../Notifications"
+import { usePermission } from "../../hooks/GeneralUse/usePermission"
 
 const SearchComponent = ({ showS = false, showOthers = true }) => {
     const { t } = useTranslation();
@@ -20,6 +21,7 @@ const SearchComponent = ({ showS = false, showOthers = true }) => {
     const [debounceTimeout, setDebounceTimeout] = useState(null);
     const [isLoading, setIsLoading] = useState(false)
     const [users, setUsers] = useState([])
+    const can = usePermission()
 
     useEffect(() => {
         setIsLoading(true)
@@ -202,7 +204,9 @@ const SearchComponent = ({ showS = false, showOthers = true }) => {
                             }}>
                                 <img src={msg} alt="" />
                             </Col> */}
-                                <Notifications />
+                                {can("notifications.view") && (
+                                    <Notifications />
+                                )}
                                 <LanguagePicker />
                             </div>
                         }
