@@ -11,6 +11,7 @@ import useWindowWidth from "../../utils/useWindowWidth";
 import { AnimatePresence, motion } from "framer-motion";
 import { Modal, ModalBody, ModalFooter, ModalHeader, Button } from "reactstrap";
 import { ButtonForRequests } from "./UI/FormElements";
+import { usePermission } from "../../hooks/GeneralUse/usePermission";
 
 const InvoiceItem = ({ sn, inv, badgeClass, setEditModal, setMenuOpenFor, menuOpenFor }) => {
   const [expanded, setExpanded] = useState({});
@@ -18,6 +19,7 @@ const InvoiceItem = ({ sn, inv, badgeClass, setEditModal, setMenuOpenFor, menuOp
   const { t } = useTranslation();
   const queryClient = useQueryClient();
   const width = useWindowWidth();
+  const can = usePermission();
 
   const toggleExpand = (invoiceId) => {
     setExpanded((prev) => ({ ...prev, [invoiceId]: !prev[invoiceId] }));
@@ -125,31 +127,42 @@ const InvoiceItem = ({ sn, inv, badgeClass, setEditModal, setMenuOpenFor, menuOp
               >
                 {t("View")}
               </div>
-              <div
-                className={styles.menuItem}
-                onClick={() => {
-                  setEditModal({
-                    open: true,
-                    invoice: inv,
-                  });
-                  setMenuOpenFor(null);
-                }}
-              >
-                {t("Edit")}
-              </div>
-              <div className={styles.menuItem} onClick={() => { }}>
-                {t("Download")}
-              </div>
-              {inv.status?.toLowerCase() !== "accepted" && <div
-                className={`${styles.menuItem} ${styles.danger}`}
-                onClick={() => {
-                  setMenuOpenFor(null);
-                  setExpanded((prev) => ({ ...prev, [inv.invoiceId]: false }));
-                  setShowConfirm(true);
-                }}
-              >
-                {t("Delete")}
-              </div>}
+              {can("invoices.edit") && (
+                <div
+                  className={styles.menuItem}
+                  onClick={() => {
+                    setEditModal({
+                      open: true,
+                      invoice: inv,
+                    });
+                    setMenuOpenFor(null);
+                  }}
+                >
+                  {t("Edit")}
+                </div>
+              )}
+
+              {/* Permission: invoices.download */}
+              {can("invoices.download") && (
+                <div className={styles.menuItem} onClick={() => { }}>
+                  {t("Download")}
+                </div>
+              )}
+
+              {/* Permission: invoices.delete */}
+              {can("invoices.delete") &&
+                inv.status?.toLowerCase() !== "accepted" && (
+                  <div
+                    className={`${styles.menuItem} ${styles.danger}`}
+                    onClick={() => {
+                      setMenuOpenFor(null);
+                      setExpanded((prev) => ({ ...prev, [inv.invoiceId]: false }));
+                      setShowConfirm(true);
+                    }}
+                  >
+                    {t("Delete")}
+                  </div>
+                )}
             </div>
           )}
         </div>
@@ -175,18 +188,22 @@ const InvoiceItem = ({ sn, inv, badgeClass, setEditModal, setMenuOpenFor, menuOp
           >
             {t("Cancel")}
           </button>
-          {inv.status?.toLowerCase() !== "accepted" && <ButtonForRequests
-            onClick={() => {
-              if (!isPending) {
-                mutateAsync(inv.invoiceId).finally(() => {
-                  setShowConfirm(false);
-                });
-              }
-            }}
-            isLoading={isPending}
-          >
-            {t("Delete")}
-          </ButtonForRequests>}
+          {/* Permission: invoices.delete */}
+          {can("invoices.delete") &&
+            inv.status?.toLowerCase() !== "accepted" && (
+              <ButtonForRequests
+                onClick={() => {
+                  if (!isPending) {
+                    mutateAsync(inv.invoiceId).finally(() => {
+                      setShowConfirm(false);
+                    });
+                  }
+                }}
+                isLoading={isPending}
+              >
+                {t("Delete")}
+              </ButtonForRequests>
+            )}
         </ModalFooter>
       </Modal>
 

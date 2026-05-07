@@ -29,6 +29,7 @@ import { UserContext } from "../../../Context/UserContext"
 import ShippingDetails from "./ShippingDetails"
 import { apiErrorMessage } from "../../PaymentsNewer/InternationalFlow"
 import { isInIframe, openInNewTab } from "../../../utils/Functions"
+import { usePermission } from "../../../hooks/GeneralUse/usePermission"
 
 const initialData = {
     step: 1,
@@ -78,6 +79,7 @@ const InvoicePaymentQr = () => {
     const navigate = useNavigate()
     const { country } = useCountryLocation()
     const { userDetails } = useContext(UserContext)
+    const can = usePermission();
 
     const dataHandler = (field, value) => {
         dispatch({ type: "UPDATE_FIELD", field, value })
@@ -269,6 +271,8 @@ const InvoicePaymentQr = () => {
             dataHandler("country", country)
         }
     }, [country])
+
+
     return (
         <>
             <div style={{ position: 'relative' }} className={styles.cont}>

@@ -9,10 +9,14 @@ import { DownloadButton } from "../UI/FormElements"
 import ShareableLink from "../UI/ShareableLink"
 import useWindowWidth from "../../../utils/useWindowWidth"
 import { formatCurrency } from "../../../Helper/AmountFormat"
+import { usePermission } from "../../../hooks/GeneralUse/usePermission";
 
 const Preview = ({ invoiceId, data, isPending, uploadData, mutate }) => {
     const { t } = useTranslation()
     const { userDetails } = useContext(UserContext)
+    const can = usePermission();
+
+    const canDownloadInvoice = can("invoices.download");
 
 
     const qrCodeUrl = useMemo(() => {
@@ -59,7 +63,7 @@ const Preview = ({ invoiceId, data, isPending, uploadData, mutate }) => {
 
                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12 }}>
                         <QrDetails inInvoice={true} invoiceId={invoiceId} username={userDetails?.username} />
-                        <DownloadButton url={uploadData?.url} />
+                        {canDownloadInvoice && <DownloadButton url={uploadData?.url} />}
                     </div>
 
                 </div>
