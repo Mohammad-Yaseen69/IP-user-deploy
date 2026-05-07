@@ -7,7 +7,7 @@ import useWindowWidth from "../../utils/useWindowWidth"
 import TopRight from "../topRight"
 import RoleModal from "./Components/RoleModal"
 import DelegateTable from "./Components/Table"
-import styles from "./styles/index.module.css"
+import styles from "./styles/Index.module.css"
 import AgentsModal from "./Components/AgentsModal"
 import Paginations from "../../Common/Component/Paginations"
 
