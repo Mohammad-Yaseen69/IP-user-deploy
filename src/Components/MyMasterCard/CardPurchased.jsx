@@ -882,7 +882,7 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
                                     >
                                         <img src={plus} alt="" />
                                         <span>{t('Add Funds')}</span>
-                                        {cardStatus === "deactive" && <div className="disabled-overlay" style={{ display: 'none', position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}><DisabledOverlay t={t} message="Your card is freeze" /></div>}
+                                        {cardStatus === "deactive" && <div className="disabled-overlay" style={{ display: 'none', position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}><DisabledOverlay t={t} message="Your card is frozen" /></div>}
                                     </div>
                                     <div
                                         onClick={() => {
@@ -899,7 +899,7 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
                                     >
                                         <img src={CreditCardR} alt="" />
                                         <span>{t('Card to Card Transfer')}</span>
-                                        {cardStatus === "deactive" && <div className="disabled-overlay" style={{ display: 'none', position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}><DisabledOverlay t={t} message="Your card is freeze" /></div>}
+                                        {cardStatus === "deactive" && <div className="disabled-overlay" style={{ display: 'none', position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}><DisabledOverlay t={t} message="Your card is frozen" /></div>}
                                     </div>
                                 </div>
                                 <div style={{ display: "flex", flexDirection: "column", gap: '12px', justifyContent: "center", flex: 1 }}>
@@ -918,7 +918,7 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
                                     >
                                         <img src={Wallet2} alt="" />
                                         <span>{t('Card to Wallet Transfer')}</span>
-                                        {cardStatus === "deactive" && <div className="disabled-overlay" style={{ display: 'none', position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}><DisabledOverlay t={t} message="Your card is freeze" /></div>}
+                                        {cardStatus === "deactive" && <div className="disabled-overlay" style={{ display: 'none', position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}><DisabledOverlay t={t} message="Your card is frozen" /></div>}
                                     </div>
                                     <div onClick={() => openModal("download")} style={{ cursor: "pointer" }} className={styles.iconBox}>
                                         <img src={FileDown} alt="" />
