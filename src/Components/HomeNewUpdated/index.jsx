@@ -33,6 +33,7 @@ import eth from "../PaymentsNewer/files/eth.webp";
 import usdt from "../PaymentsNewer/files/usdt.webp";
 import crown from "./files/crown.svg";
 import chat from "./files/chat.svg";
+import { usePermission } from "../../hooks/GeneralUse/usePermission";
 
 
 const HomeNewUpdated = () => {
@@ -81,6 +82,7 @@ const HomeNewUpdated = () => {
             inc_color: "white"
         },
     ])
+    const can = usePermission()
 
     useEffect(() => {
         const getCryptoRates = async () => {
@@ -194,7 +196,10 @@ const HomeNewUpdated = () => {
                                 </div>
                                 <div className={styles.balance_currencies}>
                                     <div style={{ display: "flex" }} className={styles.min_gap}>
-                                        <BalanceComponent />
+                                        {can("dashboard.balance.view") && (
+                                            <BalanceComponent />
+                                        )}
+
                                         <ReferalRewards />
                                     </div>
                                     {
@@ -229,10 +234,16 @@ const HomeNewUpdated = () => {
                             </div>
                         </div>
                         <div className={styles.middle}>
-                            <RecentTrans currentWallet={selectedWallet} />
-                            <Stats
-                                currentWallet={selectedWallet}
-                            />
+                            {can("dashboard.recent-transactions.view") && (
+                                <RecentTrans currentWallet={selectedWallet} />
+                            )}
+
+                            {can("dashboard.recent-transactions.view") && (
+                                <Stats
+                                    currentWallet={selectedWallet}
+                                />
+                            )}
+
                             <QuickLinksNew />
                         </div>
                     </div>
