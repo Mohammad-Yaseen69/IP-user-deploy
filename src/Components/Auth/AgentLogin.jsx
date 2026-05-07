@@ -623,21 +623,21 @@ const AgentLogin = ({ country, setIsLoginForm, setIsAgentForm }) => {
 
         console.log("Final Login History Data:", historyData);
 
-        // try {
-        //     await createLoginHistory.mutateAsync(historyData);
-        // } catch (err) {
-        //     console.error("Login history creation failed:", err);
-        // } finally {
-        //     const path = sessionStorage.getItem("path") && sessionStorage.getItem("path") !== "undefined" ? sessionStorage.getItem("path") : redirect || ""
-        //     if (path && path !== "undefined") {
-        //         navigate(path)
-        //     } else {
-        //         navigate("/")
-        //     }
-        //     sessionStorage.clear()
-        //     setIsPressed(false)
-        //     setBiometricLoading(false)
-        // }
+        try {
+            await createLoginHistory.mutateAsync(historyData);
+        } catch (err) {
+            console.error("Login history creation failed:", err);
+        } finally {
+            const path = sessionStorage.getItem("path") && sessionStorage.getItem("path") !== "undefined" ? sessionStorage.getItem("path") : redirect || ""
+            if (path && path !== "undefined") {
+                navigate(path)
+            } else {
+                navigate("/")
+            }
+            sessionStorage.clear()
+            setIsPressed(false)
+            setBiometricLoading(false)
+        }
     }
     const [resendTimer, setResendTimer] = useState(0)
     const numberOfFields = 6;
