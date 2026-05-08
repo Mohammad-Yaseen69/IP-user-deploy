@@ -202,8 +202,8 @@ const HomeNewUpdated = () => {
 
                                         <ReferalRewards />
                                     </div>
-                                    {
-                                        userWallets.some(item => item?.balance?.reserved)
+                                     {
+                                        can("dashboard.balance.view") && userWallets.some(item => item?.balance?.reserved)
                                         &&
                                         <OtherBalance />
                                     }
@@ -238,7 +238,7 @@ const HomeNewUpdated = () => {
                                 <RecentTrans currentWallet={selectedWallet} />
                             )}
 
-                            {can("dashboard.recent-transactions.view") && (
+                            {can("dashboard.insights.view") && (
                                 <Stats
                                     currentWallet={selectedWallet}
                                 />
@@ -248,11 +248,13 @@ const HomeNewUpdated = () => {
                         </div>
                     </div>
                     <div className={styles.right}>
-                        <RightContainer
-                            setCurrentWallet={setSelectedWallet}
-                            showBusinessModal={showBusinessModal}
-                            setShowBusinessModal={setShowBusinessModal}
-                        />
+                        {can("wallet.list.view") && (
+                            <RightContainer
+                                setCurrentWallet={setSelectedWallet}
+                                showBusinessModal={showBusinessModal}
+                                setShowBusinessModal={setShowBusinessModal}
+                            />
+                        )}
                         <a href="https://api.whatsapp.com/send/?phone=41783192428" target="_blank" style={{ width: "100%", flex: 1, display: "flex" }} rel="noreferrer">
                             <div style={{
                                 minHeight: "75px",
@@ -315,9 +317,11 @@ const HomeNewUpdated = () => {
                     <TopBar />
                     <EarnMoneyBanner />
                     <RecentBeneficiaries />
-                    <WalletsMobile
-                        setCurrentWallet={setSelectedWallet}
-                    />
+                    {can("wallet.list.view") && (
+                        <WalletsMobile
+                            setCurrentWallet={setSelectedWallet}
+                        />
+                    )}
                     {/* crypto */}
                     <div className={styles.crypto}>
                         <h5>{t("crypto wallet balance").split(" ")?.map(item => service_name_formatter(item))?.join(" ")}</h5>
@@ -348,12 +352,16 @@ const HomeNewUpdated = () => {
                         }
                     </div>
                     <QuickLinksMobile />
-                    <Stats
-                        currentWallet={selectedWallet}
-                    />
-                    <TransDetails
-                        selectedWallet={selectedWallet}
-                    />
+                    {can("dashboard.insights.view") && (
+                        <Stats
+                            currentWallet={selectedWallet}
+                        />
+                    )}
+                    {can("dashboard.insights.view") && (
+                        <TransDetails
+                            selectedWallet={selectedWallet}
+                        />
+                    )}
                     <CurConversion />
                 </div>
             }

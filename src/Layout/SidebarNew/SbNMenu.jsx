@@ -302,24 +302,28 @@ export const SEARCHMENU = [
                 icon: <Home />,
                 type: "link",
                 url: `${window.location.origin}/dashboard/default`,
+                permission: "dashboard.view"
             },
             {
                 title: "Transactions",
                 icon: <CreditCard />,
                 type: "link",
                 url: `${window.location.origin}/transactions`,
+                permission: "transactions.main.view"
             },
             {
                 title: "Payments",
                 icon: <DollarSign />,
                 type: "link",
                 url: `${window.location.origin}/ecommerce/payment-details`,
+                permission: "payments.view"
             },
             {
                 title: "Referrals",
                 icon: <User />,
                 type: "link",
                 url: `${window.location.origin}/users/userCards`,
+                permission: "referrals.view"
             },
         ],
     },

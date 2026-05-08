@@ -13,10 +13,12 @@ import { Button } from "reactstrap"
 import ImageSwiperView from "../ImageSwiperView"
 import { UserContext } from "../../Context/UserContext"
 import { formatCurrency } from "../../Helper/AmountFormat"
+import { usePermission } from "../../hooks/GeneralUse/usePermission";
 
 const TransactionItemDetails = ({ item, badgeColor, desc, internationalReceiver, selectedCategory, setSelectedCategory, isEditMode, showCategories = false, addCategoriesToTransaction, message, setMessage, setIsEditMode, isSaving, note, setNote, fromReferral = false, vvc, amount, cardNo }) => {
     const { t } = useTranslation()
     const { userDetails } = useContext(UserContext)
+    const can = usePermission();
 
     const country = useMemo(() => {
         return countries.find(item => internationalReceiver?.country_iso_code ? item.alpha3 === internationalReceiver?.country_iso_code : item?.receiver?.country_iso_code === item.alpha3)
@@ -345,7 +347,9 @@ const TransactionItemDetails = ({ item, badgeColor, desc, internationalReceiver,
                     &&
                     <div className={styles.r_item}>
                         <span>{t("Category")}:</span>
-                        <CatDown selectedCategories={selectedCategory} setSelectedCategories={setSelectedCategory} isEditMode={isEditMode} item={item} />
+                        {can("transactions.category.add") && (
+                            <CatDown selectedCategories={selectedCategory} setSelectedCategories={setSelectedCategory} isEditMode={isEditMode} item={item} />
+                        )}
                     </div>
                 }
                 {!item.cardNo &&
@@ -382,7 +386,11 @@ const TransactionItemDetails = ({ item, badgeColor, desc, internationalReceiver,
                             {
                                 isEditMode
                                     ?
-                                    <input type="text" value={note} onChange={e => setNote(e.target.value)} style={{ width: "100%", borderRadius: "6px", border: "none", outline: "none", padding: ".6rem 1rem" }} />
+                                    <>
+                                        {can("transactions.category.add") && (
+                                            <input type="text" value={note} onChange={e => setNote(e.target.value)} style={{ width: "100%", borderRadius: "6px", border: "none", outline: "none", padding: ".6rem 1rem" }} />
+                                        )}
+                                    </>
                                     :
                                     <p className={styles.note}>{note}</p>
                             }
@@ -453,31 +461,39 @@ const TransactionItemDetails = ({ item, badgeColor, desc, internationalReceiver,
                         {
                             isEditMode
                                 ?
-                                <Button style={{
-                                    background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
-                                    border: "none",
-                                    outline: "none",
-                                    borderRadius: "10px"
-                                }}
-                                    onClick={addCategoriesToTransaction}
-                                    disabled={isSaving || (selectedCategory.length < 1 && !note)}
-                                >
-                                    {isSaving ? t("Saving") : t("Save")}
-                                </Button>
+                                <>
+                                    {can("transactions.category.add") && (
+                                        <Button style={{
+                                            background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+                                            border: "none",
+                                            outline: "none",
+                                            borderRadius: "10px"
+                                        }}
+                                            onClick={addCategoriesToTransaction}
+                                            disabled={isSaving || (selectedCategory.length < 1 && !note)}
+                                        >
+                                            {isSaving ? t("Saving") : t("Save")}
+                                        </Button>
+                                    )}
+                                </>
                                 :
-                                <Button style={{
-                                    background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
-                                    border: "none",
-                                    outline: "none",
-                                    borderRadius: "10px"
-                                }}
-                                    onClick={() => {
-                                        setIsEditMode(true)
-                                        setMessage("")
-                                    }}
-                                >
-                                    {t("Edit")}
-                                </Button>
+                                <>
+                                    {can("transactions.category.add") && (
+                                        <Button style={{
+                                            background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+                                            border: "none",
+                                            outline: "none",
+                                            borderRadius: "10px"
+                                        }}
+                                            onClick={() => {
+                                                setIsEditMode(true)
+                                                setMessage("")
+                                            }}
+                                        >
+                                            {t("Edit")}
+                                        </Button>
+                                    )}
+                                </>
                         }
                     </div>}
             </div>
