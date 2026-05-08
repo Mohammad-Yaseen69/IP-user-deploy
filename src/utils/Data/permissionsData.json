@@ -429,6 +429,13 @@
     {
         "module": "beneficiaries",
         "feature": null,
+        "action": "view-all",
+        "key": "beneficiaries.view-all",
+        "description": "View all beneficiaries, if left uncheck agent can only view his own beneficiaries"
+    },
+    {
+        "module": "beneficiaries",
+        "feature": null,
         "action": "add",
         "key": "beneficiaries.add",
         "description": "Add Beneficiary"
