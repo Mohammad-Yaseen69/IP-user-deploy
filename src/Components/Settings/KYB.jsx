@@ -67,6 +67,7 @@ const KYB = () => {
     const [partnerEmail, setPartnerEmail] = useState("")
     const [partnerDesignation, setPartnerDesignation] = useState("")
     const [showAdditionalModal, setShowAdditionalModal] = useState(false)
+    const [showProcessSuccessModal, setShowProcessSuccessModal] = useState(false)
     const [partners, setPartners] = useState([])
     const [companyType, setCompanyType] = useState("")
     const [compnanyFiles, setCompanyFiles] = useState([])
@@ -87,11 +88,7 @@ const KYB = () => {
             method: "POST"
         }),
         onSuccess: (res) => {
-            if (res.partnersProcessed) {
-                toast.success("Your KYB status has been updated to Initiated, and Emails have been sent to all the directors.")
-            } else {
-                toast.info("Your KYB has been processed successfully.")
-            }
+            setShowProcessSuccessModal(true)
             verifyToken(true)
         },
         onError: (error) => {
@@ -622,8 +619,39 @@ const KYB = () => {
                         </div>
                     </ModalBody>
                 </Modal>
-            )
-            }
+            )}
+            {showProcessSuccessModal && (
+                <Modal isOpen={showProcessSuccessModal} toggle={() => setShowProcessSuccessModal(false)}>
+                    <ModalHeader toggle={() => setShowProcessSuccessModal(false)}>
+                        {t("Payment Successful!")}
+                    </ModalHeader>
+                    <ModalBody>
+                        <div className="text-center">
+                            <CheckCircle size={64} className="text-success" style={{ marginBottom: "1rem" }} />
+                            <h5 className='modal-title' style={{ marginBottom: "1rem" }}>
+                                {t("Payment Successful!")}
+                            </h5>
+                            <p>
+                                {t("Thank you for submitting the required documents for business verification. An email has been sent to the business directors to complete their KYC verification.")}
+                                <br /><br />
+                                {t("Once the business documents and directors’ KYC are successfully validated, your business account will be verified.")}
+                            </p>
+                            <Button
+                                style={{
+                                    border: "none",
+                                    outline: "none",
+                                    background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+                                    borderRadius: "6px",
+                                    marginTop: "1.5rem"
+                                }}
+                                onClick={() => setShowProcessSuccessModal(false)}
+                            >
+                                {t("Close")}
+                            </Button>
+                        </div>
+                    </ModalBody>
+                </Modal>
+            )}
 
         </Card >
     )
