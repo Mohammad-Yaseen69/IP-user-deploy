@@ -6,10 +6,11 @@ import { useTranslation } from 'react-i18next';
 
 
 export const paymentInfoJSX = (feeDetails, addFunds, title, t) => (
+
     <div className={styles.paymentInfo}>
         <div style={{ display: "flex", flexDirection: "column", gap: "7px" }}>
             <p>{title || t("You Have to Pay")}</p>
-            <h1>{!addFunds ? feeDetails?.fee : feeDetails?.feeDetails?.totalAmount ?? feeDetails?.feeDetails?.amount}{!addFunds ? feeDetails.currency : feeDetails?.feeDetails?.currency}</h1>
+            <h1>{!addFunds ? (feeDetails?.totalFee ?? feeDetails?.fee) : feeDetails?.feeDetails?.totalAmount ?? feeDetails?.feeDetails?.amount}{!addFunds ? feeDetails.currency : feeDetails?.feeDetails?.currency}</h1>
         </div>
         <img src={Svg} style={{ position: "absolute", right: "10px", top: "0px" }} alt="" />
     </div>
