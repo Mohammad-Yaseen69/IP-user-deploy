@@ -124,10 +124,10 @@ const PlansModal = ({ isOpen, toggle, plansData, dataHandler, isLoading, user, u
                                         <div key={plan._id} className={`${styles.item} ${isActive && width > 1000 ? styles.active : ''}`}>
                                             <div className={styles.itemHeader} onClick={onClick}>
                                                 <div>
-                                                    <h3>{truncate(plan.title,20)}</h3>
+                                                    <h3>{truncate(plan?.title,20)}</h3>
                                                     <div className={styles.price}>
-                                                        <h5>{wallet.symbol || wallet.code} {formatCurrency(plan.price, true)}</h5>
-                                                        <span>/ {t(plan.billingCycle)?.toLowerCase()}</span>
+                                                        <h5>{wallet.symbol || wallet?.code} {formatCurrency(plan.price, true)}</h5>
+                                                        <span>/ {t(plan?.billingCycle)?.toLowerCase()}</span>
                                                     </div>
                                                 </div>
                                                 {width < 1000 && chevron(isActive)}
@@ -137,8 +137,8 @@ const PlansModal = ({ isOpen, toggle, plansData, dataHandler, isLoading, user, u
                                                 <div
                                                     className={styles.right}
                                                 >
-                                                    <div className={styles.heading}>{plan.title}</div>
-                                                    <div className={styles.desc}>{plan.description}</div>
+                                                    <div className={styles.heading}>{plan?.title}</div>
+                                                    <div className={styles.desc}>{plan?.description}</div>
 
                                                     <div className={styles.termsLabel}>{t('Terms & Conditions')}:</div>
                                                     <textarea

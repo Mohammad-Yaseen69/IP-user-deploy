@@ -318,7 +318,6 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay,
       try {
         const walletId = walletState?.wallet_id || defaultWallet?.wallet_id
 
-        // ← yahan check 
         if (!walletId) {
           console.log("No wallet ID available")
           return
