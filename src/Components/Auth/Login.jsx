@@ -49,7 +49,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
     const [isPressed, setIsPressed] = useState(false)
     const [loginToken, setLoginToken] = useState("")
     const [step, setStep] = useState(1)
-    const { profileLockTIme, setProfileLockTime, setUserDetails, setShowInactivityModal } = useContext(UserContext)
+    const { profileLockTIme, setProfileLockTime, setUserDetails, setShowInactivityModal, setMissingTabsData } = useContext(UserContext)
     const [loginMethod, setLoginMethod] = useState("phone")
     const [currentActiveInput, setCurrentActiveInput] = useState(1)
     const [isOtpCorrect, setIsOtpCorrect] = useState(false)
@@ -621,6 +621,20 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
 
         const encryptedWithLocation = encryptData(historyData);
 
+        if (!userAccount?.tfa) {
+            setMissingTabsData(prev => prev.includes("tfa") ? prev : [...prev, "tfa"]);
+        }
+        const isKycMissing = userAccount?.account_type === 'business'
+            ? (userAccount?.company?.kyb_status === "declined" || !userAccount.company?.kyb_status)
+            : (userAccount?.user?.kyc_status === "declined" || !userAccount.user?.kyc_status);
+
+        if (isKycMissing) {
+            setMissingTabsData(prev => prev.includes("kyc") ? prev : [...prev, "kyc"]);
+        }
+        if (!userAccount?.insta_username && !userAccount?.telegram_bot) {
+            setMissingTabsData(prev => prev.includes("social") ? prev : [...prev, "social"]);
+        }
+
         try {
             await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/login/create-login-history`, {
                 data: encryptedWithLocation
@@ -1071,7 +1085,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                                 <PhoneInput
                                                     phone={email}
                                                     setPhone={setEmail}
-                                                    country={country}                                           
+                                                    country={country}
                                                 />
                                                 :
                                                 <input type="email" placeholder={t("eg: john@doe.org")} value={email} onChange={e => setEmail(e.target.value?.toLowerCase())} autoComplete="off" name="email" />
