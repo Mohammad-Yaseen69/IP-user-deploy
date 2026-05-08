@@ -19,7 +19,7 @@ const PhoneInput = ({ setPhone, country, setCountry = () => { }, disabled = fals
     //         setNumber("")
     //     }
     // }, [phone])
-
+    // Yeh effect add karo existing effects ke saath
     useEffect(() => {
         const dial_code = extractNumber(selectedCountry?.dial_code)
         if (!number || number.trim() === "") {

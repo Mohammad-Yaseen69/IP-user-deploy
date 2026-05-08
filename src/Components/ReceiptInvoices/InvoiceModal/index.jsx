@@ -13,6 +13,7 @@ import { toast } from 'react-toastify'
 import { ButtonForRequests } from '../UI/FormElements'
 import { formatCurrency } from '../../../Helper/AmountFormat'
 import useWindowWidth from '../../../utils/useWindowWidth'
+import { usePermission } from '../../../hooks/GeneralUse/usePermission'
 
 const initialData = {
     amount: "",
@@ -49,6 +50,10 @@ const InvoiceModal = ({ isOpen, toggle, isEdit, inv }) => {
     const queryClient = useQueryClient()
     const width = useWindowWidth()
     const { userWallets } = useContext(UserContext)
+    const can = usePermission();
+
+    const canCreateInvoice = can("invoices.create");
+    const canEditInvoice = can("invoices.edit");
     // handlers
 
     const dataHandler = (field, value) => {
@@ -181,18 +186,40 @@ const InvoiceModal = ({ isOpen, toggle, isEdit, inv }) => {
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: width > 600 ? "center" : "stretch", marginTop: ".5rem", flexDirection: width < 600 && "column-reverse", gap: "20px" }}>
                     <ContactBox />
 
-                    <ButtonForRequests
-                        isLoading={isInvalid || isPending || uploadPending || isEditing || (data.mode === "preview" ? !uploadData : false)}
-                        onClick={() => {
-                            if (data.mode === "form") {
-                                isEdit ? handleEditInvoice() : handleAddInvoice()
-                            } else {
-                                onClose()
-                            }
-                        }}
-                    >
-                        {data.mode === "preview" ? t('Close') : isEdit ? t('Save') : t('Generate New Invoice')}
-                    </ButtonForRequests>
+                    {data.mode === "preview" ? (
+                        <ButtonForRequests
+                            isLoading={isInvalid || isPending || uploadPending || isEditing || !uploadData}
+                            onClick={onClose}
+                        >
+                            {t('Close')}
+                        </ButtonForRequests>
+                    ) : isEdit ? (
+                        canEditInvoice ? (
+                            <ButtonForRequests
+                                isLoading={isInvalid || isPending || uploadPending || isEditing || false}
+                                onClick={handleEditInvoice}
+                            >
+                                {t('Save')}
+                            </ButtonForRequests>
+                        ) : (
+                            <ButtonForRequests isLoading={false} onClick={onClose}>
+                                {t('Close')}
+                            </ButtonForRequests>
+                        )
+                    ) : (
+                        canCreateInvoice ? (
+                            <ButtonForRequests
+                                isLoading={isInvalid || isPending || uploadPending || isEditing || false}
+                                onClick={handleAddInvoice}
+                            >
+                                {t('Generate New Invoice')}
+                            </ButtonForRequests>
+                        ) : (
+                            <ButtonForRequests isLoading={false} onClick={onClose}>
+                                {t('Close')}
+                            </ButtonForRequests>
+                        )
+                    )}
                 </div>
             </ModalBody>
         </Modal>

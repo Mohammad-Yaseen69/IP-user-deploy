@@ -12,6 +12,7 @@ import statuses from "./files/thunesTransactionStatus.json"
 import TransactionItemDetails from "./TransactionItemDetails.jsx"
 import CitiesData from "../CitiesDropDown/CitiesData.json"
 import { formatCurrency } from "../../Helper/AmountFormat.js"
+import { usePermission } from "../../hooks/GeneralUse/usePermission";
 
 export const service_name_formatter = (itemName) => {
     if (itemName) {
@@ -23,6 +24,7 @@ export const service_name_formatter = (itemName) => {
 
 const TransactionItem = ({ item, activeItem, setActiveItem, index, fromReferral = false, vvc = false, cardNo }) => {
     const { t, i18n } = useTranslation()
+    const can = usePermission();
     const [selectedCategory, setSelectedCategory] = useState([]);
     const { authHeader, beneficiaries } = useContext(UserContext)
     const [note, setNote] = useState(item?.note)
@@ -215,6 +217,7 @@ const TransactionItem = ({ item, activeItem, setActiveItem, index, fromReferral 
         <div>
             <div className={styles.body_item} onClick={() => {
                 // if(vvc) return
+                if (!can("transactions.main.details.view")) return;
                 if (!activeItem || activeItem !== index + 1) {
                     setActiveItem(index + 1)
                 } else {
@@ -277,26 +280,29 @@ const TransactionItem = ({ item, activeItem, setActiveItem, index, fromReferral 
             {
                 activeItem === index + 1
                 &&
-                <TransactionItemDetails
-                    fromReferral={fromReferral}
-                    badgeColor={badgeColor}
-                    desc={externalStatusDescription}
-                    internationalReceiver={internationalReceiver}
-                    isEditMode={isEditMode}
-                    item={item}
-                    selectedCategory={selectedCategory}
-                    setSelectedCategory={setSelectedCategory}
-                    showCategories={true}
-                    addCategoriesToTransaction={addCategoriesToTransaction}
-                    isSaving={isSaving}
-                    message={message}
-                    setIsEditMode={setIsEditMode}
-                    setMessage={setMessage}
-                    note={note}
-                    setNote={setNote}
-                    cardNo={cardNo}
-                    vvc={vvc}
-                />
+                // Permission: transactions.main.details.view
+                (can("transactions.main.details.view") && (
+                    <TransactionItemDetails
+                        fromReferral={fromReferral}
+                        badgeColor={badgeColor}
+                        desc={externalStatusDescription}
+                        internationalReceiver={internationalReceiver}
+                        isEditMode={isEditMode}
+                        item={item}
+                        selectedCategory={selectedCategory}
+                        setSelectedCategory={setSelectedCategory}
+                        showCategories={true}
+                        addCategoriesToTransaction={addCategoriesToTransaction}
+                        isSaving={isSaving}
+                        message={message}
+                        setIsEditMode={setIsEditMode}
+                        setMessage={setMessage}
+                        note={note}
+                        setNote={setNote}
+                        cardNo={cardNo}
+                        vvc={vvc}
+                    />
+                ))
             }
         </div>
     )

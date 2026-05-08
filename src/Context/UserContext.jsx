@@ -104,6 +104,10 @@ const initialUserContext = {
     processReceivingNonIpFunds: () => { },
     showAnotherLoginModal: false,
     setShowAnotherLoginModal: () => { },
+    setAgentDetails: () => { },
+    agentDetails: null,
+    setIsAgentLogin: () => { },
+    isAgentLogin: false,
 };
 
 const createImage = (url) =>

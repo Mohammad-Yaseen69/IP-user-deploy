@@ -9,12 +9,14 @@ import ADCard from './ADCard'
 import { EffectCards, EffectFade } from 'swiper'
 import OtherBalance from './OtherBalance'
 import { isSafari } from "react-device-detect"
+import { usePermission } from '../../hooks/GeneralUse/usePermission'
 
 
 const WalletsMobile = ({ setCurrentWallet }) => {
     const { t } = useTranslation()
     const { userWallets, totalReferralAmount, available: totalBalance, balanceLoading: isLoading } = useContext(UserContext)
     const [activeDot, setActiveDot] = useState(0)
+    const can = usePermission()
 
 
     useEffect(() => {
@@ -25,20 +27,24 @@ const WalletsMobile = ({ setCurrentWallet }) => {
             <h5>{t("My Wallets")}</h5>
             <div className={styles.details}>
                 <div className={styles.left}>
-                    <span>{t("Total Balance")}</span>
-                    {
-                        isLoading
-                            ?
-                            <div className="d-flex justify-content-center">
+                    {can("dashboard.balance.view") && (
+                        <>
+                            <span>{t("Total Balance")}</span>
+                            {
+                                isLoading
+                                    ?
+                                    <div className="d-flex justify-content-center">
                                 <div className="spinner-border" color='primary' role="status">
-                                    <span className="sr-only">Loading...</span>
-                                </div>
-                            </div>
-                            :
-                            <h4>${totalBalance?.toFixed(2) || "0.00"}</h4>
-                    }
+                                            <span className="sr-only">Loading...</span>
+                                        </div>
+                                    </div>
+                                    :
+                                    <h4>${totalBalance?.toFixed(2) || "0.00"}</h4>
+                            }
+                        </>
+                    )}
                     {
-                        userWallets.some(item => item?.balance?.reserved)
+                        can("dashboard.balance.view") && userWallets.some(item => item?.balance?.reserved)
                         &&
                         <OtherBalance />
                     }

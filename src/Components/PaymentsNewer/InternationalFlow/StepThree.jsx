@@ -38,7 +38,7 @@ const StepThree = ({ data, dataHandler }) => {
             return thunesReasons
         }
         return data.neemaReasons
-    }, [data?.payoutChannel])
+    }, [data?.payoutChannel, data.neemaReasons])
 
     return (
         <>

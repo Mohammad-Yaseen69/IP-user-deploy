@@ -9,9 +9,11 @@ import { decryptData } from "../../../Helper/EssentilaMethods/Decryption"
 import TransactionItemDetails from "../TransactionItemDetails.jsx"
 import statuses from "../files/thunesTransactionStatus.json"
 import { capitalizeStatus } from "../../PendingNew/ItemMobile.jsx"
+import { usePermission } from "../../../hooks/GeneralUse/usePermission";
 
 const TransactionItemMobile = ({ item, activeItem, setActiveItem, index, fromReferral = false, vvc = false }) => {
     const { t, i18n } = useTranslation()
+    const can = usePermission();
     const [selectedCategory, setSelectedCategory] = useState([]);
     const { authHeader, beneficiaries } = useContext(UserContext)
     const [note, setNote] = useState(item?.note)
@@ -161,7 +163,13 @@ const TransactionItemMobile = ({ item, activeItem, setActiveItem, index, fromRef
 
     return (
         <div className={styles.item} onClick={(() => console.log(item, (item?.service_type === "payment_address" && item?.guest_details)))}>
-            <div className={styles.top} onClick={() => setActiveItem(activeItem === index + 1 ? 0 : index + 1)}>
+            <div
+                className={styles.top}
+                onClick={() => {
+                    if (!can("transactions.main.details.view")) return;
+                    setActiveItem(activeItem === index + 1 ? 0 : index + 1)
+                }}
+            >
                 <div className={styles.left}>
                     <div className={styles.dp}>
                         {displayInitial[0]}
@@ -207,24 +215,27 @@ const TransactionItemMobile = ({ item, activeItem, setActiveItem, index, fromRef
             {
                 activeItem === index + 1
                 &&
-                <TransactionItemDetails
-                    badgeColor={badgeColor}
-                    desc={externalStatusDescription}
-                    internationalReceiver={internationalReceiver}
-                    isEditMode={isEditMode}
-                    item={item}
-                    selectedCategory={selectedCategory}
-                    setSelectedCategory={setSelectedCategory}
-                    showCategories={true}
-                    addCategoriesToTransaction={addCategoriesToTransaction}
-                    isSaving={isSaving}
-                    message={message}
-                    note={note}
-                    setIsEditMode={setIsEditMode}
-                    setMessage={setMessage}
-                    setNote={setNote}
-                    fromReferral={fromReferral}
-                />
+
+                (can("transactions.main.details.view") && (
+                    <TransactionItemDetails
+                        badgeColor={badgeColor}
+                        desc={externalStatusDescription}
+                        internationalReceiver={internationalReceiver}
+                        isEditMode={isEditMode}
+                        item={item}
+                        selectedCategory={selectedCategory}
+                        setSelectedCategory={setSelectedCategory}
+                        showCategories={true}
+                        addCategoriesToTransaction={addCategoriesToTransaction}
+                        isSaving={isSaving}
+                        message={message}
+                        note={note}
+                        setIsEditMode={setIsEditMode}
+                        setMessage={setMessage}
+                        setNote={setNote}
+                        fromReferral={fromReferral}
+                    />
+                ))
             }
         </div>
     )
