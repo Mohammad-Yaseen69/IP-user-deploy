@@ -6,7 +6,7 @@ import LanguagePicker from "../LanguagePicker"
 import Notifications from "../Notifications"
 
 const TopRight = ({ position = "absolute" }) => {
-    const { userDetails, croppedImages } = useContext(UserContext)
+    const { userDetails, croppedImages, isAgentLogin, agentDetails } = useContext(UserContext)
 
 
     const renderName = () => {
@@ -47,10 +47,10 @@ const TopRight = ({ position = "absolute" }) => {
                                 ?
                                 renderName()
                                 :
-                                userDetails?.company?.company_name
+                                isAgentLogin ? `${agentDetails?.first_name} ${agentDetails?.last_name}` : userDetails?.company?.company_name
                         }
                     </p>
-                    <span style={{ padding: 0, margin: 0, fontSize: ".6rem", color: "#a0a0a0" }}>{userDetails?.email || ""}</span>
+                    <span style={{ padding: 0, margin: 0, fontSize: ".6rem", color: "#a0a0a0" }}>{isAgentLogin ? agentDetails?.email : userDetails?.email || ""}</span>
                 </div>
                 {
                     userDetails?.profileImage?.url
@@ -77,7 +77,7 @@ const TopRight = ({ position = "absolute" }) => {
                                     ?
                                     userDetails?.user?.first_name?.[0]?.toUpperCase()
                                     :
-                                    userDetails?.company?.company_name?.[0]?.toUpperCase()
+                                    isAgentLogin ?  agentDetails?.first_name?.[0]?.toUpperCase() :  userDetails?.company?.company_name?.[0]?.toUpperCase()
                             }</div>
                 }
             </Col>

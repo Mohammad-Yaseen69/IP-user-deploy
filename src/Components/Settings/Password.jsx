@@ -32,7 +32,7 @@ const passwordPatterns = [
 ]
 
 const Password = () => {
-    const { userDetails, authHeader, setProfileLockTime } = useContext(UserContext)
+    const { userDetails, authHeader, setProfileLockTime, isAgentLogin, agentDetails } = useContext(UserContext)
     const navigate = useNavigate()
     const { t } = useTranslation()
     const [state, setState] = useState({
@@ -79,8 +79,9 @@ const Password = () => {
             const data = {
                 data: {
                     oldPassword: state.current,
-                    accountId: userDetails?._id,
+                    accountId: isAgentLogin ? agentDetails?._id : userDetails?._id,
                     newPassword: state.new,
+                    isAgent: isAgentLogin ? true : false
                 },
                 type: codeType
             }

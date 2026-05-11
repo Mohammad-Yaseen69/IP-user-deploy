@@ -122,8 +122,8 @@ export const routes = [
     { path: "/update-pin", component: <UpdatePin /> },
     { path: "/invoices", component: <PermissionRoute permission="invoices.view"><ReceiptInvoice /></PermissionRoute> },
     { path: "/store-create", component: <StoreCreate /> },
-    { path: "/delegate-access", component: <DelegateAccess /> },
-    { path: "/activity", component: <LogActivity /> },
+    { path: "/delegate-access", component: <PermissionRoute permission="delegate-access.view"><DelegateAccess /></PermissionRoute> },
+    { path: "/activity", component: <PermissionRoute permission="activity-logs.view"><LogActivity /></PermissionRoute> },
     { path: "*", component: <NotFound type='Page' /> }
 ]
 export const publicRoutes = [
@@ -164,6 +164,7 @@ export const authRoutes = [
     { path: `/login`, component: <Auth /> },
     { path: `/agent-login`, component: <Auth /> },
     { path: `/forgot-password`, component: <AuthNew /> },
+    { path: `/forgot-password/agent`, component: <AuthNew /> },
     { path: `/signup`, component: <Auth /> },
     { path: `/signup/:code`, component: <Auth /> },
     { path: "*", component: <NotFound type='Page' /> }
