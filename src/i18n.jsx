@@ -133,7 +133,7 @@ i18n
     },
     saveMissing: true,
     missingKeyHandler: (lngs, ns, key) => {
-      console.log(lngs, ns, key, "missing thing");
+      // console.log(lngs, ns, key, "missing thing");
     }
   });
 

@@ -14,6 +14,7 @@ import { apiWrapper } from "../../../utils/Functions/apiWrapper";
 import { decryptData } from "../../../Helper/EssentilaMethods/Decryption";
 import { toast } from "react-toastify";
 import { countriesInDiffLangs } from "../../../Data/CountriesWithTranslations/countries";
+import { usePermission } from "../../../hooks/GeneralUse/usePermission";
 
 const InvoiceItemDetails = ({ inv }) => {
   const { t, i18n } = useTranslation();
@@ -22,6 +23,7 @@ const InvoiceItemDetails = ({ inv }) => {
   const queryClient = useQueryClient();
   const width = useWindowWidth();
   const [active, setActive] = useState(inv.active)
+  const can = usePermission();
 
   const country = inv?.countryIsoCode ? countriesInDiffLangs[i18n.language]?.find(c => c.alpha3 === inv.countryIsoCode) : null
   const { mutateAsync, isPending } = useMutation({
@@ -53,10 +55,15 @@ const InvoiceItemDetails = ({ inv }) => {
         <span style={{ fontWeight: 600, fontSize: "20px" }}>
           {t("Active")}
         </span>
-        <Toggle
-          checked={active}
-          onChange={() => !isPending && mutateAsync().then(() => setActive(!active))}
-        />
+        {can("invoices.edit") && (
+          <Toggle
+            checked={active}
+            onChange={() =>
+              !isPending &&
+              mutateAsync().then(() => setActive(!active))
+            }
+          />
+        )}
       </div>
       <div className={`${styles.expandItem} ${styles.amount} `}>
         <div
@@ -103,10 +110,12 @@ const InvoiceItemDetails = ({ inv }) => {
               invoiceId={inv.invoiceId}
               username={userDetails.username}
             />
-            <DownloadButton
-              style={{ alignSelf: "auto" }}
-              url={inv.qrCode?.url}
-            />
+            {can("invoices.download") && (
+              <DownloadButton
+                style={{ alignSelf: "auto" }}
+                url={inv.qrCode?.url}
+              />
+            )}
           </div>
         </InfoItem>
 

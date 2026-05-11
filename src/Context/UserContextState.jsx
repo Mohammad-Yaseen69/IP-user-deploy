@@ -80,6 +80,8 @@ const UserState = ({ children }) => {
     const [available, setAvailable] = useState(0)
     const [blocked, setBlocked] = useState(0)
     const [showAnotherLoginModal, setShowAnotherLoginModal] = useState(false)
+    const [isAgentLogin, setIsAgentLogin] = useState(false)
+    const [agentDetails, setAgentDetails] = useState(null)
     const base_url = window.location.origin || 'https://my.insta-pay.ch';
 
 
@@ -209,9 +211,18 @@ const UserState = ({ children }) => {
 
     const verifyToken = (isFetchRequired = false) => {
         if ((!window.location.pathname.includes("auth") && !userDetails && Object.keys(userDetails || {}).length === 0) || isFetchRequired) {
-            axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/account/auth/${token}`)
+            const isAgentLoginCheck = localStorage.getItem("isAgentLogin")
+            const url = isAgentLoginCheck ? `/api/business-agents/agents/auth/${token}` : `/api/account/auth/${token}`
+
+            axios.get(`${import.meta.env.VITE_IP_DEV_API}${url}`)
                 .then(res => {
                     const decrypted = decryptData(res.data.data)
+
+                    if (isAgentLoginCheck) {
+                        setIsAgentLogin(true)
+                        setAgentDetails(decrypted?.agentDetails)
+                    }
+
                     setUserDetails(decrypted)
                     if (!decrypted?.country?.status) {
                         sessionStorage.setItem("country_status_error", "Service not available in your country!")
@@ -277,10 +288,16 @@ const UserState = ({ children }) => {
 
     // check auth
     const checkAuth = () => {
-        axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/account/auth/${token}`)
+        const isAgentLoginCheck = localStorage.getItem("isAgentLogin")
+        const url = isAgentLoginCheck ? `/api/business-agents/agents/auth/${token}` : `/api/account/auth/${token}`
+        axios.get(`${import.meta.env.VITE_IP_DEV_API}${url}`)
             .then(res => {
                 const decrypted = decryptData(res.data.data)
                 setUserDetails(decrypted)
+                if (isAgentLoginCheck) {
+                    setIsAgentLogin(true)
+                    setAgentDetails(decrypted?.agentDetails)
+                }
                 if (!decrypted?.country?.status) {
                     sessionStorage.setItem("country_status_error", "Service not available in your country!")
                     const coun = localStorage.getItem("ip_country")
@@ -661,7 +678,7 @@ const UserState = ({ children }) => {
 
 
     return (
-        <UserContext.Provider value={{ userDetails, setUserDetails, userWallets, setUserWallets, token, authHeader, beneficiaries, setBeneficiaries, userTransactions, setUserTransactions, searchQuery, setSearchQuery, apiDates, setApiDates, userSecurityQues, referralLink, userSessions, allowedFeatures, verifyToken, userWithdrawals, setUserWithdrawals, allowedWithdrawals, registeredBeneficiaries, profileCompleted, allowedCountries, userPortfolio, profileIncompleteReason, setUserPortfolio, setUserVideos, getUserVideos, userVideos, checkRegisteredBenficiaries, getAllActiveCountries, getUserWallets, getUserBeneficiaries, getUserDocuments, checkAuth, getSecurityQuestions, getInvitationLink, getSessions, profileCompletedPercentage, getWithdrawals, getReferralCommission, totalReferralAmount, validateSendingLimits, validateReceivingLimits, validateTransactionsCount, profileLockTIme, setProfileLockTime, showInactivityModal, setShowInactivityModal, is30Days, setIs30Days, threeDaysReminder, set3DaysReminder, is30DaysInfo, setIs30DaysInfo, threeDaysReminderInfo, set3DaysReminderInfo, clearData, croppedImages, updateCoordinates, setCroppedImages, missingTabsData, setMissingTabsData, setAvailable, available, setBlocked, blocked, benLoading, balanceLoading, showModalState, setShowModalState, processReceivingNonIpFunds: processReceivingNonIpFunds.mutateAsync, showAnotherLoginModal, setShowAnotherLoginModal }}>
+        <UserContext.Provider value={{ userDetails, setUserDetails, userWallets, setUserWallets, token, authHeader, beneficiaries, setBeneficiaries, userTransactions, setUserTransactions, searchQuery, setSearchQuery, apiDates, setApiDates, userSecurityQues, referralLink, userSessions, allowedFeatures, verifyToken, userWithdrawals, setUserWithdrawals, allowedWithdrawals, registeredBeneficiaries, profileCompleted, allowedCountries, userPortfolio, profileIncompleteReason, setUserPortfolio, setUserVideos, getUserVideos, userVideos, checkRegisteredBenficiaries, getAllActiveCountries, getUserWallets, getUserBeneficiaries, getUserDocuments, checkAuth, getSecurityQuestions, getInvitationLink, getSessions, profileCompletedPercentage, getWithdrawals, getReferralCommission, totalReferralAmount, validateSendingLimits, validateReceivingLimits, validateTransactionsCount, profileLockTIme, setProfileLockTime, showInactivityModal, setShowInactivityModal, is30Days, setIs30Days, threeDaysReminder, set3DaysReminder, is30DaysInfo, setIs30DaysInfo, threeDaysReminderInfo, set3DaysReminderInfo, clearData, croppedImages, updateCoordinates, setCroppedImages, missingTabsData, setMissingTabsData, setAvailable, available, setBlocked, blocked, benLoading, balanceLoading, showModalState, setShowModalState, processReceivingNonIpFunds: processReceivingNonIpFunds.mutateAsync, showAnotherLoginModal, setShowAnotherLoginModal, isAgentLogin, setIsAgentLogin, agentDetails, setAgentDetails }}>
             {((showModalState || Boolean(isSessionExpired)) && !location.pathname.startsWith("/pay/")) &&
                 <SessionExpireModal
                     isOpen={(showModalState || Boolean(isSessionExpired))}

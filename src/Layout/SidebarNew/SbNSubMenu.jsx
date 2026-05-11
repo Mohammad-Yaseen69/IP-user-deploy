@@ -9,6 +9,7 @@ import { UserContext } from "../../Context/UserContext";
 import { useQuery } from "@tanstack/react-query";
 import { apiWrapper } from "../../utils/Functions/apiWrapper";
 import { openInNewTab } from "../../utils/Functions";
+import { usePermission } from "../../hooks/GeneralUse/usePermission";
 
 const SidebarSubMenu = ({ menu, className, setIsOpen, isOpen, level, showModal, setShowModal, profileCompletedPercentage, inheritSize }) => {
     const { togglSidebar } = useContext(CustomizerContext)
@@ -16,6 +17,8 @@ const SidebarSubMenu = ({ menu, className, setIsOpen, isOpen, level, showModal, 
     const { pathname } = useLocation();
     const navigate = useNavigate()
     const { t } = useTranslation();
+    const checkPermission = usePermission()
+
 
     const { data, isError } = useQuery({
         queryKey: ['UserStore'],
@@ -63,11 +66,16 @@ const SidebarSubMenu = ({ menu, className, setIsOpen, isOpen, level, showModal, 
         }
     }
 
-
+    const filteredMenu = menu?.filter(item => {
+        if (item.showOnly === "business") {
+            return userDetails?.account_type === "business"
+        }
+        return true
+    })
     return (
         // <ul className={`${className ? className : ""}`} onClick={verifyToken}>
         <ul style={{ width: togglSidebar ? "100%" : "auto" }} className={`${className ? className : ""}`}>
-            {menu.map((item, i) => {
+            {filteredMenu?.map((item, i) => {
                 return (
                     <>
                         {
@@ -89,50 +97,52 @@ const SidebarSubMenu = ({ menu, className, setIsOpen, isOpen, level, showModal, 
                                     // opacity: togglSidebar ? 0 : 1
                                 }}>{t(item.title)}</li>
                                 :
-                                <li
-                                    key={i}
-                                    className={`${className ? '' : 'sidebar-link sidebar-title'}  ${(item.menu ? item.menu.map((innerItem) => ActiveNavLinkUrl(innerItem.url)).includes(true) : ActiveNavLinkUrl(item.url)) || isOpen[level] === item.title ? 'active' : ''}`}
-                                    onClick={() => {
-                                        if (item?.type === "external_eshop") {
-                                            handleEshopClick()
-                                        } else if (item.title.toLowerCase().includes("logout")) {
-                                            const coun = localStorage.getItem("ip_country")
-                                            localStorage.clear()
-                                            localStorage.setItem("ip_country", coun)
-                                            clearData()
-                                        } else if (profileCompletedPercentage < 100 && !showModal) {
-                                            setShowModal(true)
-                                        }
-                                        window.scrollTo({ top: 0, behavior: "smooth" })
-                                    }}
-                                >
-                                    <Link
-                                        className={`${className ? "" : "sidebar-link sidebar-title"}  ${(item.menu ? item.menu.map((innerItem) => ActiveNavLinkUrl(innerItem.url)).includes(true) : ActiveNavLinkUrl(item.url)) || isOpen[level] === item.title ? "active" : ""}`}
-                                        to={item?.type === "external_eshop" ? "#" : (item.url ? item.url : Href)}
-                                        onClick={(e) => {
+                                checkPermission(item?.permission) ?
+                                    <li
+                                        key={i}
+                                        className={`${className ? '' : 'sidebar-link sidebar-title'}  ${(item.menu ? item.menu.map((innerItem) => ActiveNavLinkUrl(innerItem.url)).includes(true) : ActiveNavLinkUrl(item.url)) || isOpen[level] === item.title ? 'active' : ''}`}
+                                        onClick={() => {
                                             if (item?.type === "external_eshop") {
-                                                e.preventDefault()
+                                                handleEshopClick()
+                                            } else if (item.title.toLowerCase().includes("logout")) {
+                                                const coun = localStorage.getItem("ip_country")
+                                                localStorage.clear()
+                                                localStorage.setItem("ip_country", coun)
+                                                clearData()
+                                            } else if (profileCompletedPercentage < 100 && !showModal) {
+                                                setShowModal(true)
                                             }
-                                            const temp = isOpen;
-                                            temp[level] = item.title !== temp[level] && item.title;
-                                            setIsOpen(temp);
+                                            window.scrollTo({ top: 0, behavior: "smooth" })
                                         }}
                                     >
-                                        {
-                                            item.menu ? item.menu.map((innerItem) => ActiveNavLinkUrl(innerItem.url)).includes(true) : ActiveNavLinkUrl(item.url) || isOpen[level] === item.title ? item?.activeIcon : item?.icon
-                                        }
-                                        <span className={`${item.class ? item.class : ""}`}
-                                            style={{ color: "#848484", }}
+                                        <Link
+                                            className={`${className ? "" : "sidebar-link sidebar-title"}  ${(item.menu ? item.menu.map((innerItem) => ActiveNavLinkUrl(innerItem.url)).includes(true) : ActiveNavLinkUrl(item.url)) || isOpen[level] === item.title ? "active" : ""}`}
+                                            to={item?.type === "external_eshop" ? "#" : (item.url ? item.url : Href)}
+                                            onClick={(e) => {
+                                                if (item?.type === "external_eshop") {
+                                                    e.preventDefault()
+                                                }
+                                                const temp = isOpen;
+                                                temp[level] = item.title !== temp[level] && item.title;
+                                                setIsOpen(temp);
+                                            }}
                                         >
-                                            {t(item.title)}
-                                        </span>
-                                        {item.menu && (<div className="according-menu"><i className="fa fa-angle-right"></i></div>)}
-                                    </Link>
-                                    {item.menu && (
-                                        <SidebarSubMenu menu={item.menu} isOpen={isOpen} setIsOpen={setIsOpen} level={level + 1} className="sidebar-submenu "
-                                        />
-                                    )}
-                                </li>
+                                            {
+                                                item.menu ? item.menu.map((innerItem) => ActiveNavLinkUrl(innerItem.url)).includes(true) : ActiveNavLinkUrl(item.url) || isOpen[level] === item.title ? item?.activeIcon : item?.icon
+                                            }
+                                            <span className={`${item.class ? item.class : ""}`}
+                                                style={{ color: "#848484", }}
+                                            >
+                                                {t(item.title)}
+                                            </span>
+                                            {item.menu && (<div className="according-menu"><i className="fa fa-angle-right"></i></div>)}
+                                        </Link>
+                                        {item.menu && (
+                                            <SidebarSubMenu menu={item.menu} isOpen={isOpen} setIsOpen={setIsOpen} level={level + 1} className="sidebar-submenu "
+                                            />
+                                        )}
+                                    </li> :
+                                    null
                         }
                     </>
                 )

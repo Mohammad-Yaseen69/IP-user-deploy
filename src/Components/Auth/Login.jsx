@@ -31,7 +31,7 @@ import InstaPayLoader from "../Loader";
 import { logger } from "@sentry/react";
 import VpnModal from "./VpnModal";
 import LocationDeniedModal from "./LocationDeniedModal";
-const Login = ({ country, setIsLoginForm, setIsForgot }) => {
+const Login = ({ country, setIsLoginForm, setIsAgentForm }) => {
     const navigate = useNavigate()
     const { t } = useTranslation()
     const location = useLocation();
@@ -1210,9 +1210,15 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                 {t("Back")}
                             </button>
                         }
-                        <div className={styles.bottom_text}>
-                            <span>{t("Don't Have an Account? Sign Up").split("?")?.[0]} </span>
-                            <Link to={"/signup"} onClick={() => setIsLoginForm(false)}>{t("Sign Up")}</Link>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', alignItems: 'flex-start' }}>
+                            <div className={styles.bottom_text}>
+                                <span>{t("Don't Have an Account? Sign Up").split("?")?.[0]} </span>
+                                <Link to={"/signup"} onClick={() => setIsLoginForm(false)}>{t("Sign Up")}</Link>
+                            </div>
+                            <div className={styles.bottom_text}>
+                                <span>{t("Are you an Agent?")} </span>
+                                <Link to={"/agent-login"} onClick={() => {setIsAgentForm(true); setIsLoginForm(false)}}>{t("Sign in as Agent")}</Link>
+                            </div>
                         </div>
                         <div className={styles.btns}>
                             {
@@ -1524,9 +1530,15 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                         {t("Back")}
                                     </button>
                                 }
-                                <div className={styles.bottom_text}>
-                                    <span>{t("Don't Have an Account? Sign Up").split("?")?.[0]} </span>
-                                    <Link to={"/signup"} onClick={() => setIsLoginForm(false)}>{t("Sign Up")}</Link>
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', alignItems: 'flex-start' }}>
+                                    <div className={styles.bottom_text}>
+                                        <span>{t("Don't Have an Account? Sign Up").split("?")?.[0]} </span>
+                                        <Link to={"/signup"} onClick={() => setIsLoginForm(false)}>{t("Sign Up")}</Link>
+                                    </div>
+                                    <div className={styles.bottom_text}>
+                                        <span>{t("Are you an Agent?")} </span>
+                                        <Link to={"/agent-login"} onClick={() => {setIsAgentForm(true); setIsLoginForm(false)}}>{t("Sign in as Agent")}</Link>
+                                    </div>
                                 </div>
                                 <div className={styles.btns}>
                                     {

@@ -79,6 +79,19 @@ const BeneficiaryCard = ({ user }) => {
                             {/* </Link> */}
                             <img src={flagSrc} alt={country?.alpha3 || user?.country_name || "flag"} style={{ borderRadius: "4px", boxShadow: "0 0 10px rgba(0,0,0,.3)", }} className={styles.flag} draggable="false" onError={() => setFlagSrc(ins)} loading="lazy" />
                             <div className={styles.type_badge}>{t(user?.beneficiary_type[0]?.toUpperCase() + user?.beneficiary_type?.slice(1)?.toLowerCase())}</div>
+                            {user?.agent?.first_name && (
+                                <p
+                                    style={{
+                                        fontSize: "13px",
+                                        color: "black",
+                                        fontWeight: 600,
+                                        marginBottom: "0px"
+                                    }}
+                                >
+
+                                    ( {t("Created By:")} <span style={{color: "#6829de"}} > {`${user?.agent?.first_name}  ${user?.agent?.last_name}`} </span> )
+                                </p>
+                            )}
                         </div>
                         <button className={styles.toggle} onClick={e => {
                             e.stopPropagation()
