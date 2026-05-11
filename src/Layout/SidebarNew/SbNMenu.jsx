@@ -196,7 +196,8 @@ export const MENU = [
                 activeIcon: <img loading="lazy" src={analytics_a} style={{ marginRight: "12px" }} />,
                 type: "link",
                 url: `${window.location.origin}/delegate-access`,
-                showOnly: "business"
+                showOnly: "business",
+                permission: "delegate-access.view"
             },
             {
                 title: "Activity Feed",
@@ -204,7 +205,8 @@ export const MENU = [
                 activeIcon: <img loading="lazy" src={analytics_a} style={{ marginRight: "12px" }} />,
                 type: "link",
                 url: `${window.location.origin}/activity`,
-                showOnly: "business"
+                showOnly: "business",
+                permission: "activity-logs.view"
             },
             // {
             //     title: "Store",

@@ -7,11 +7,13 @@ import DeleteConfirmModal from './DeleteConfirmModal';
 import { useState } from 'react';
 import ViewDetailModal from './ViewDetailModal';
 import { toast } from 'react-toastify';
+import { usePermission } from '../../../hooks/GeneralUse/usePermission';
 
 function TableItem({ setMenuOpenFor, width, item, index, menuOpenFor, isRole, setEditData, setShowModal }) {
     const { t } = useTranslation()
     const isPhone = width <= 700;
     const queryClient = useQueryClient()
+    const hasPermission = usePermission()
     const [isDeleteModal, setIsDeleteModal] = useState(false)
     const [isViewModal, setIsViewModal] = useState(false)
     const ellipsisStyle = {
@@ -158,7 +160,7 @@ function TableItem({ setMenuOpenFor, width, item, index, menuOpenFor, isRole, se
                                 <span style={{ fontSize: "12px" }}>{t("Updating...")}</span>
                             ) : (
                                 <select
-                                    disabled={item?.status === "pending"}
+                                    disabled={item?.status === "pending" || !hasPermission("delegate-access.agents.status.update")}
                                     value={item?.status || ""}
                                     onChange={(e) => updateStatus(e.target.value)}
                                     style={{
@@ -188,10 +190,10 @@ function TableItem({ setMenuOpenFor, width, item, index, menuOpenFor, isRole, se
                                         fontWeight: 600,
                                         border: "none",
                                         outline: "none",
-                                        cursor: item?.status === "pending" ? "not-allowed" : "pointer",
+                                        cursor: (item?.status === "pending" || !hasPermission("delegate-access.agents.status.update")) ? "not-allowed" : "pointer",
                                         textTransform: "capitalize",
                                         width: "100%",
-                                        opacity: item?.status === "pending" ? 0.7 : 1
+                                        opacity: (item?.status === "pending" || !hasPermission("delegate-access.agents.status.update")) ? 0.7 : 1
                                     }}
                                 >
                                     <option value="pending">{t("Pending")}</option>
@@ -223,30 +225,36 @@ function TableItem({ setMenuOpenFor, width, item, index, menuOpenFor, isRole, se
 
                 {menuOpenFor === item?._id && (
                     <div className={styles.actionsMenu} onClick={(e) => e.stopPropagation()}>
-                        <div className={styles.menuItem} onClick={() => {
-                            setIsViewModal(true)
-                            setMenuOpenFor(null)
-                        }}>
-                            {t("View")}
-                        </div>
-                        <div className={styles.menuItem} onClick={() => {
-                            setMenuOpenFor(null);
-                            setEditData(item);
-                            setShowModal(true);
-                        }}>
-                            {t("Edit")}
-                        </div>
-                        {!isRole && item?.status === "pending" && (
+                        {hasPermission(isRole ? "delegate-access.roles.view-details" : "delegate-access.agents.view-details") && (
+                            <div className={styles.menuItem} onClick={() => {
+                                setIsViewModal(true)
+                                setMenuOpenFor(null)
+                            }}>
+                                {t("View")}
+                            </div>
+                        )}
+                        {hasPermission(isRole ? "delegate-access.roles.edit" : "delegate-access.agents.edit") && (
+                            <div className={styles.menuItem} onClick={() => {
+                                setMenuOpenFor(null);
+                                setEditData(item);
+                                setShowModal(true);
+                            }}>
+                                {t("Edit")}
+                            </div>
+                        )}
+                        {!isRole && item?.status === "pending" && hasPermission("delegate-access.agents.email.resend") && (
                             <div className={styles.menuItem} onClick={() => resendEmail()}>
                                 {isResending ? t("Resending...") : t("Resend Email")}
                             </div>
                         )}
-                        <div className={`${styles.menuItem} ${styles.danger}`} onClick={() => {
-                            setIsDeleteModal(true)
-                            setMenuOpenFor(null)
-                        }}>
-                            {isDeleting ? t("Deleting...") : t("Delete")}
-                        </div>
+                        {hasPermission(isRole ? "delegate-access.roles.delete" : "delegate-access.agents.delete") && (
+                            <div className={`${styles.menuItem} ${styles.danger}`} onClick={() => {
+                                setIsDeleteModal(true)
+                                setMenuOpenFor(null)
+                            }}>
+                                {isDeleting ? t("Deleting...") : t("Delete")}
+                            </div>
+                        )}
                     </div>
                 )}
 

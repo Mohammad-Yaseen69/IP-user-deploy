@@ -419,7 +419,7 @@ const AgentLogin = ({ country, setIsLoginForm, setIsAgentForm }) => {
                     setRestoreLoading(false)
                 }
                 const decrypted = error?.response?.data?.data ? decryptData(error.response.data.data) : (error?.message ? { message: error.message } : error);
-                if (decrypted.message === "Account not found!" || decrypted.message === "Incorrect Password!" || decrypted.message?.toLowerCase()?.includes("incorrect") || decrypted.message === "User not found!") {
+                if (decrypted.message === "Account not found!" || decrypted.message === "Incorrect Password!" || decrypted.message?.toLowerCase()?.includes("incorrect") || decrypted.message === "User not found!" || decrypted.message === "Agent not found") {
                     setIsLoginError(`Uh-Oh! The password/${credentialIsEmail ? "email" : "phone number"} you entered is wrong.`)
                 }
                 else if (decrypted.message?.toLowerCase()?.includes("inactive")) {
@@ -1153,7 +1153,7 @@ const AgentLogin = ({ country, setIsLoginForm, setIsAgentForm }) => {
                                         }
                                     </div>
                                 </div>
-                                <Link to={"/forgot-password"} className={styles.forgot_pass}>
+                                <Link to={"/forgot-password/agent"} className={styles.forgot_pass}>
                                     {t("Forgot Password?")}
                                 </Link>
                             </div>
@@ -1190,7 +1190,7 @@ const AgentLogin = ({ country, setIsLoginForm, setIsAgentForm }) => {
                         }
                         <div className={styles.bottom_text}>
                             <span>{t("Are you a User?")} </span>
-                            <Link to={"/login"} onClick={() => {setIsAgentForm(false); setIsLoginForm(true)}}>{t("Sign in as User")}</Link>
+                            <Link to={"/login"} onClick={() => { setIsAgentForm(false); setIsLoginForm(true) }}>{t("Sign in as User")}</Link>
                         </div>
                         <div className={styles.btns}>
                             {
@@ -1504,7 +1504,7 @@ const AgentLogin = ({ country, setIsLoginForm, setIsAgentForm }) => {
                                 }
                                 <div className={styles.bottom_text}>
                                     <span>{t("Are you a User?")} </span>
-                                    <Link to={"/login"} onClick={() => {setIsAgentForm(false); setIsLoginForm(true)}}>{t("Sign in as User")}</Link>
+                                    <Link to={"/login"} onClick={() => { setIsAgentForm(false); setIsLoginForm(true) }}>{t("Sign in as User")}</Link>
                                 </div>
                                 <div className={styles.btns}>
                                     {

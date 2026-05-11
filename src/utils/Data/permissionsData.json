@@ -174,7 +174,7 @@
         "key": "transactions.main.export",
         "description": "Export main Transactions"
     },
-    { 
+    {
         "module": "transactions",
         "feature": "main",
         "action": "view-details",
@@ -750,20 +750,6 @@
     },
     {
         "module": "settings",
-        "feature": "identity-verification",
-        "action": "view",
-        "key": "settings.identity-verification.view",
-        "description": "View Identity Verification Settings"
-    },
-    {
-        "module": "settings",
-        "feature": "identity-verification",
-        "action": "update",
-        "key": "settings.identity-verification.update",
-        "description": "Update Identity Verification Settings"
-    },
-    {
-        "module": "settings",
         "feature": "business-verification",
         "action": "view",
         "key": "settings.business-verification.view",
@@ -929,5 +915,103 @@
         "action": "update",
         "key": "settings.how-others-find-you.update",
         "description": "Update How Others Find You Settings"
+    },
+    {
+        "module": "delegate-access",
+        "feature": null,
+        "action": "view",
+        "key": "delegate-access.view",
+        "description": "View Delegate Access Page"
+    },
+    {
+        "module": "delegate-access",
+        "feature": "roles",
+        "action": "view",
+        "key": "delegate-access.roles.view",
+        "description": "View Roles"
+    },
+    {
+        "module": "delegate-access",
+        "feature": "roles",
+        "action": "add",
+        "key": "delegate-access.roles.add",
+        "description": "Add New Role"
+    },
+    {
+        "module": "delegate-access",
+        "feature": "roles",
+        "action": "edit",
+        "key": "delegate-access.roles.edit",
+        "description": "Edit Existing Role"
+    },
+    {
+        "module": "delegate-access",
+        "feature": "roles",
+        "action": "delete",
+        "key": "delegate-access.roles.delete",
+        "description": "Delete Role"
+    },
+    {
+        "module": "delegate-access",
+        "feature": "roles",
+        "action": "view-details",
+        "key": "delegate-access.roles.view-details",
+        "description": "View Role Details"
+    },
+    {
+        "module": "delegate-access",
+        "feature": "agents",
+        "action": "view",
+        "key": "delegate-access.agents.view",
+        "description": "View Agents"
+    },
+    {
+        "module": "delegate-access",
+        "feature": "agents",
+        "action": "add",
+        "key": "delegate-access.agents.add",
+        "description": "Add New Agent"
+    },
+    {
+        "module": "delegate-access",
+        "feature": "agents",
+        "action": "edit",
+        "key": "delegate-access.agents.edit",
+        "description": "Edit Existing Agent"
+    },
+    {
+        "module": "delegate-access",
+        "feature": "agents",
+        "action": "delete",
+        "key": "delegate-access.agents.delete",
+        "description": "Delete Agent"
+    },
+    {
+        "module": "delegate-access",
+        "feature": "agents",
+        "action": "status-update",
+        "key": "delegate-access.agents.status.update",
+        "description": "Update Agent Status"
+    },
+    {
+        "module": "delegate-access",
+        "feature": "agents",
+        "action": "resend-email",
+        "key": "delegate-access.agents.email.resend",
+        "description": "Resend Agent Invitation Email"
+    },
+    {
+        "module": "delegate-access",
+        "feature": "agents",
+        "action": "view-details",
+        "key": "delegate-access.agents.view-details",
+        "description": "View Agent Details"
+    },
+    {
+        "module": "activity-logs",
+        "feature": null,
+        "action": "view",
+        "key": "activity-logs.view",
+        "description": "View Activity Logs"
     }
 ]

@@ -42,6 +42,7 @@ const ForgotPassword = ({ setIsLoginForm, setIsForgot, country }) => {
     const [resendTimer, setResendTimer] = useState(90);
     const [isLoginError, setIsLoginError] = useState("")
     const [showToolTip, setShowTooltip] = useState("")
+    const [isAgent] = useState(window?.location?.href?.includes("agent") ? true : false)
     const [passwords, setPasswords] = useState({
         password: {
             value: "",
@@ -121,6 +122,11 @@ const ForgotPassword = ({ setIsLoginForm, setIsForgot, country }) => {
             if ((method === "whatsapp") && data.phone) {
                 data.platform = "whatsapp"
             }
+
+            if (isAgent) {
+                data.isAgent = true
+            }
+
             const response = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/account/send-forgot-password-otp`, {
                 data: encryptData(data)
             })
@@ -274,7 +280,7 @@ const ForgotPassword = ({ setIsLoginForm, setIsForgot, country }) => {
                                                 onClick={() => {
                                                     setIsForgot(false)
                                                     setIsLoginForm(true)
-                                                    navigate("/login")
+                                                    navigate(isAgent ? "/agent-login" : "/login")
                                                 }}
                                             >{t("Back to Login")}</div>
                                         </div>
@@ -420,7 +426,7 @@ const ForgotPassword = ({ setIsLoginForm, setIsForgot, country }) => {
                                     onClick={() => {
                                         setIsForgot(false)
                                         setIsLoginForm(true)
-                                        navigate("/login")
+                                        navigate(isAgent ? "/agent-login" : "/login")
                                     }}
                                 >{t("Back to Login")}</div>
                             </div>

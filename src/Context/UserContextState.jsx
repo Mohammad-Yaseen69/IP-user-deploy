@@ -162,6 +162,8 @@ const UserState = ({ children }) => {
         setProfileCompleted(null)
         setProfileCompletedPercentage(0)
         setProfileIncompleteReason("")
+        setIsAgentLogin(false)
+        setAgentDetails(null)
     }
 
     const getImage = async (dp, c, type, name) => {

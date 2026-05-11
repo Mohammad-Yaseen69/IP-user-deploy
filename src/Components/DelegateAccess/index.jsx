@@ -10,10 +10,12 @@ import DelegateTable from "./Components/Table"
 import styles from "./styles/Index.module.css"
 import AgentsModal from "./Components/AgentsModal"
 import Paginations from "../../Common/Component/Paginations"
+import { usePermission } from "../../hooks/GeneralUse/usePermission"
 
 const DelegateAccess = () => {
     const width = useWindowWidth()
     const { t } = useTranslation()
+    const hasPermission = usePermission()
     const [search, setSearch] = useState("")
     const [isRole, setIsRole] = useState(false)
     const [showModal, setShowModal] = useState(false)
@@ -96,21 +98,23 @@ const DelegateAccess = () => {
                             >
                                 {width > 500 && t("Manage Agents")}
                             </button>
-                            <button
-                                onClick={handleModalOpen}
-                                style={width < 500 ? {
-                                    justifyContent: "center",
-                                    alignItems: "center",
-                                    display: "flex",
-                                    width: "40px",
-                                    height: "40px"
-                                } : {}}
-                            >
-                                <span style={{ fontSize: width < 500 ? "24px" : '14px', marginLeft: width < 500 && "5px" }}>
-                                    +
-                                </span>
-                                {width > 500 && t("Add Role")}
-                            </button>
+                            {hasPermission("delegate-access.roles.add") && (
+                                <button
+                                    onClick={handleModalOpen}
+                                    style={width < 500 ? {
+                                        justifyContent: "center",
+                                        alignItems: "center",
+                                        display: "flex",
+                                        width: "40px",
+                                        height: "40px"
+                                    } : {}}
+                                >
+                                    <span style={{ fontSize: width < 500 ? "24px" : '14px', marginLeft: width < 500 && "5px" }}>
+                                        +
+                                    </span>
+                                    {width > 500 && t("Add Role")}
+                                </button>
+                            )}
                         </div> : <div className={styles.roleContainer}>
                             <button
                                 onClick={handleRoleAgentToggle}
@@ -124,21 +128,23 @@ const DelegateAccess = () => {
                             >
                                 {width > 500 && t("Manage Roles")}
                             </button>
-                            <button
-                                onClick={handleModalOpen}
+                            {hasPermission("delegate-access.agents.add") && (
+                                <button
+                                    onClick={handleModalOpen}
 
-                                style={width < 500 ? {
-                                    justifyContent: "center",
-                                    alignItems: "center",
-                                    display: "flex",
-                                    width: "40px",
-                                    height: "40px"
-                                } : {}}
-                            >                                <span style={{ fontSize: width < 500 ? "24px" : '14px', marginLeft: width < 500 && "5px" }}>
-                                    +
-                                </span>
-                                {width > 500 && t("Add Agent")}
-                            </button>
+                                    style={width < 500 ? {
+                                        justifyContent: "center",
+                                        alignItems: "center",
+                                        display: "flex",
+                                        width: "40px",
+                                        height: "40px"
+                                    } : {}}
+                                >                                <span style={{ fontSize: width < 500 ? "24px" : '14px', marginLeft: width < 500 && "5px" }}>
+                                        +
+                                    </span>
+                                    {width > 500 && t("Add Agent")}
+                                </button>
+                            )}
                         </div>
                     }
                 </div>
