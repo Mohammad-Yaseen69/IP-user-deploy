@@ -76,6 +76,8 @@ const Login = ({ country, setIsLoginForm, setIsAgentForm }) => {
     const [pendingLoginData, setPendingLoginData] = useState(null)
     const [capturedSecurityData, setCapturedSecurityData] = useState(null)
     const [isDataLoaded, setIsDataLoaded] = useState(false);
+
+
     const normalizeCredential = (value) => (value ?? "").toString().trim().toLowerCase();
     const getResolvedCredential = () => {
         const fromState = normalizeCredential(email);
