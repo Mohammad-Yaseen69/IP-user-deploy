@@ -33,7 +33,6 @@ const CreateAgentPassword = () => {
     const [showPassword, setShowPassword] = useState(false)
     const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
-    // Mutations
     const { mutateAsync: sendPassword, isPending: sendingPassword } = useMutation({
         mutationFn: () => apiWrapper({
             method: "POST",

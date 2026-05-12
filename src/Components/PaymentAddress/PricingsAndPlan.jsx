@@ -178,7 +178,9 @@ const PricingsAndPlan = () => {
             }
 
             {plans?.length > 0 && window.innerWidth > 700 &&
-                <div style={{ overflowX: 'auto', width: '100%' }}>
+                <div style={{
+                    overflowX: 'auto', width: '100%', minHeight: '400px',
+                }}>
                     <table style={{ width: '100%', borderCollapse: 'collapse', background: '#FFF', minWidth: 680 }}>
                         <thead>
                             <tr style={{ color: '#5B5B5B', fontWeight: 600, fontSize: 14 }}>

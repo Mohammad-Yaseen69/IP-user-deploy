@@ -47,7 +47,6 @@ const ReferralsNew = () => {
 
         setCopied(true);
 
-        // Reset the copied state after a brief delay
         setTimeout(() => {
             setCopied(false);
         }, 4000);
