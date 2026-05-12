@@ -3,9 +3,47 @@ import { apiWrapper } from '../../../utils/Functions/apiWrapper'
 import { toast } from 'react-toastify'
 import { useTranslation } from 'react-i18next'
 import styles from './styles/pendingRequests.module.scss'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import GeneralNoticeModal from '../GeneralNoticeModal'
 import { Modal, ModalBody } from "reactstrap"
+import { service_name_formatter } from '../../TransactionsNewApi/TransactionItem'
+
+const ExpiresIn = ({ createdAt }) => {
+    const { t } = useTranslation()
+    const [timeLeft, setTimeLeft] = useState("")
+
+    useEffect(() => {
+        const calculate = () => {
+            const expirationDate = new Date(createdAt);
+            expirationDate.setDate(expirationDate.getDate() + 40);
+            const now = new Date();
+            const difference = expirationDate - now;
+
+            if (difference <= 0) {
+                setTimeLeft(t("Will expire soon"));
+                return;
+            }
+
+            const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+
+            if (days > 0) {
+                setTimeLeft(`${days}days ${hours}hours`);
+            } else if (hours > 0) {
+                setTimeLeft(`${hours}hours ${minutes}minutes`);
+            } else {
+                setTimeLeft(`${minutes}minutes`);
+            }
+        }
+
+        calculate();
+        const interval = setInterval(calculate, 60000);
+        return () => clearInterval(interval);
+    }, [createdAt, t]);
+
+    return <>{timeLeft}</>
+}
 
 const PendingRequests = () => {
     const { t } = useTranslation()
@@ -105,6 +143,9 @@ const PendingRequests = () => {
                                     <h4 className={styles.amount}>
                                         {request.originalReceivingFunds.currency} {request.originalReceivingFunds.amount.toFixed(2)}
                                     </h4>
+                                    <span className={styles.expiresIn}>
+                                        {t("Expires in")}: <ExpiresIn createdAt={request.createdAt} />
+                                    </span>
                                 </div>
                                 <button
                                     onClick={() => {
@@ -137,12 +178,21 @@ const PendingRequests = () => {
                                     <span>{selectedRequest.transactionId.amount} {selectedRequest.transactionId.currency.code}</span>
                                 </div>
                                 <div className={styles.detailRow}>
-                                    <span>{t("Recipient Receives")}</span>
-                                    <span>{selectedRequest.originalReceivingFunds.amount.toFixed(2)} {selectedRequest.originalReceivingFunds.currency}</span>
-                                </div>
-                                <div className={styles.detailRow}>
                                     <span>{t("Fee")}</span>
                                     <span>{selectedRequest.transactionId.fee} {selectedRequest.transactionId.currency.code}</span>
+                                </div>
+                                <div className={styles.detailRow}>
+                                    <span>{t("Total")}</span>
+                                    <span>{selectedRequest.transactionId.total} {selectedRequest.transactionId.currency.code}</span>
+                                </div>
+                                <div className={styles.detailRow}>
+                                    <span>{t("Payment Type")}</span>
+                                    <span>{service_name_formatter(selectedRequest.transactionId.payment_type)}</span>
+                                </div>
+
+                                <div className={styles.detailRow}>
+                                    <span>{t("Recipient Receives")}</span>
+                                    <span>{selectedRequest.originalReceivingFunds.amount.toFixed(2)} {selectedRequest.originalReceivingFunds.currency}</span>
                                 </div>
                                 <div className={styles.detailRow}>
                                     <span>{t("Reference ID")}</span>
@@ -151,6 +201,12 @@ const PendingRequests = () => {
                                 <div className={styles.detailRow}>
                                     <span>{t("Date")}</span>
                                     <span>{new Date(selectedRequest.createdAt).toLocaleString()}</span>
+                                </div>
+                                <div className={styles.detailRow}>
+                                    <span>{t("Expires In")}</span>
+                                    <span style={{ color: "#dc3545" }}>
+                                        <ExpiresIn createdAt={selectedRequest.createdAt} />
+                                    </span>
                                 </div>
                             </div>
                             <div className={styles.modalActions}>
