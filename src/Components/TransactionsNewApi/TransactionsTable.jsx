@@ -334,11 +334,17 @@ const TransactionsTable = () => {
 
     const location = useLocation()
     const queryParams = new URLSearchParams(location.search)
+    const search = queryParams.get("search")
     const currentIndex = queryParams.get("current-index")
 
     useEffect(() => {
-        setActiveItem(currentIndex)
-    }, [])
+        if (search) {
+            setIsLoading(true)
+            setPage(1)
+            setActive("All")
+            setSearchQuery(search)
+        }
+    }, [search])
 
 
 

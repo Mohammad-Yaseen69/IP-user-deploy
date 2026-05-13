@@ -637,13 +637,6 @@
         "description": "Update User Profile Settings"
     },
     {
-        "module": "user-profile",
-        "feature": null,
-        "action": "share",
-        "key": "user-profile.share",
-        "description": "Share User Profile"
-    },
-    {
         "module": "geo-fencing",
         "feature": null,
         "action": "view",
@@ -651,7 +644,7 @@
         "description": "View Geo-Fencing Settings"
     },
     {
-        "module": "geo-fencing",
+        "module": "geo-fencing",  
         "feature": null,
         "action": "update",
         "key": "geo-fencing.update",

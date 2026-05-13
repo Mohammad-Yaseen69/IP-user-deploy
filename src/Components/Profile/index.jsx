@@ -1,15 +1,16 @@
-import ProfileComponent from "./ProfileComponent"
-import styles from "../TransactionsNewApi/styles/index.module.scss"
-import { useTranslation } from "react-i18next"
-import TopRight from "../topRight"
 import { useContext } from "react"
-import { UserContext } from "../../Context/UserContext"
-import { Card, CardBody, CardText } from "reactstrap"
+import { useTranslation } from "react-i18next"
 import { Link } from "react-router-dom"
+import { Card, CardBody, CardText } from "reactstrap"
+import { UserContext } from "../../Context/UserContext"
+import TopRight from "../topRight"
+import styles from "../TransactionsNewApi/styles/index.module.scss"
+import ProfileComponent from "./ProfileComponent"
 
 const ProfileTest = () => {
     const { t } = useTranslation()
     const { userDetails } = useContext(UserContext)
+
     return (
         <>
             {

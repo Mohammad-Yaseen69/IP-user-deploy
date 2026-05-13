@@ -10,6 +10,7 @@ import { decryptData } from '../../Helper/EssentilaMethods/Decryption'
 import { toast } from 'react-toastify'
 import { encryptData } from '../../Helper/EssentilaMethods/Encryption'
 import axios from 'axios'
+import { usePermission } from '../../hooks/GeneralUse/usePermission.jsx'
 
 
 const questionsArray = [
@@ -74,6 +75,8 @@ const FinancialInfo = () => {
     const [editMode, setEditMode] = useState(false)
     const [apiQuestions, setApiQuestions] = useState(questionsArray)
     const [loading, setLoading] = useState(false)
+    const can = usePermission()
+    const isEdit = can("settings.financial-info.update")
 
 
 
@@ -177,7 +180,7 @@ const FinancialInfo = () => {
 
     return (
         <div style={{ backgroundColor: 'white' }} className={styles.container}>
-            {!editMode && <button onClick={() => setEditMode(true)} className={styles.editBtn}>{t("Edit")}</button>}
+            {!editMode && <button onClick={() => setEditMode(true)} disabled={!isEdit} className={styles.editBtn}>{t("Edit")}</button>}
             {questions?.map((question, idx) => (
                 <div key={idx} className={styles.contentBox}>
                     <span className={styles.label}>{t(question?.question)}</span>
