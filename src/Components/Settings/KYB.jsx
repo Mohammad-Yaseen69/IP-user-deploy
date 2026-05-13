@@ -434,6 +434,7 @@ const KYB = () => {
                                 className="form-control custom-datepicker"
                                 clearable
                                 autoOk
+                                maxDate={new Date()}
                                 disabled={isReadOnly}
                                 style={{
                                     background: "#fff",

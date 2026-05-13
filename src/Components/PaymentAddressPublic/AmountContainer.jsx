@@ -7,13 +7,14 @@ import CryptoPay from "../HomeNewUpdated/files/CryptoPay.svg"
 import logo from "../../assets/images/logo/logo.webp"
 import { formatCurrency } from '../../Helper/AmountFormat'
 import { isInIframe, flagCheck } from '../../utils/Functions'
+import { useEffect, useState } from 'react'
 
 
 
 const AmountContainer = ({ state, url, toggleCreditModal, dataHandler, handleBlur, handleKeyUp, isEditable, paidInvoice = false, toggleCryptoModal = () => { }, userDetails }) => {
     const width = useWindowWidth()
     const { t } = useTranslation()
-
+    const [localAmount, setLocalAmount] = useState(state.formattedAmount || "")
     const openInNewTab = (url) => {
         const newWindow = window.open(url, "_blank", "noopener,noreferrer");
         if (!newWindow || newWindow.closed || typeof newWindow.closed === "undefined") {
@@ -27,7 +28,16 @@ const AmountContainer = ({ state, url, toggleCreditModal, dataHandler, handleBlu
             document.body.removeChild(a);
         }
     };
+    useEffect(() => {
+        setLocalAmount(state.formattedAmount || "")
+    }, [state.formattedAmount])
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            dataHandler("formattedAmount", localAmount)
+        }, 500)
 
+        return () => clearTimeout(timer)
+    }, [localAmount])
     return (
         <div style={{ backgroundColor: 'white', borderRadius: "16px", maxHeight: "100%" }}>
             <div style={{ marginBottom: "0px", gap: "0px", height: "100%" }} className={vpa_styles.container}>
@@ -46,9 +56,9 @@ const AmountContainer = ({ state, url, toggleCreditModal, dataHandler, handleBlu
 
                             {isEditable ? <input
                                 type="text"
-                                value={state.formattedAmount}
+                                value={localAmount}
                                 maxLength={12}
-                                onChange={(e) => dataHandler("formattedAmount", e.target.value)}
+                                onChange={(e) => setLocalAmount(e.target.value)}
                                 onKeyUp={handleKeyUp}
                                 onBlur={handleBlur}
                                 placeholder="10.00"

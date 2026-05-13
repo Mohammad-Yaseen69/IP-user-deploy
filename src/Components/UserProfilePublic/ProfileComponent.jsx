@@ -7,7 +7,6 @@ import styles from "./styles/index.module.scss"
 import countries from "../PaymentsNewer/CountriesData.json"
 import copy from "./files/copy.svg"
 import download from "./files/download.svg"
-import Rating from "react-rating"
 import { useContext, useEffect, useState } from "react"
 import axios from "axios"
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption"
@@ -29,6 +28,7 @@ import { Swiper, SwiperSlide } from 'swiper/react'
 import { Pagination } from 'swiper'
 import 'swiper/css'
 import 'swiper/css/pagination'
+import { Rating } from "@mui/material"
 
 export const reviews = [
     {
@@ -403,8 +403,15 @@ const ProfileComponent = () => {
                                                 <p>{t("Overall Ratings")}</p>
                                                 <h4>{currentRevTab === "Seller" ? averageRatingAsSeller?.toFixed(1) : averageRatingAsBuyer?.toFixed(1)}/5.0</h4>
                                                 <div>
-                                                    <Rating initialRating={currentRevTab === "Seller" ? averageRatingAsSeller : averageRatingAsBuyer} emptySymbol="fa fa-star-o fa-2x" fullSymbol="fa fa-star fa-2x" readonly></Rating>
-                                                </div>
+                                                    <Rating
+                                                        value={
+                                                            currentRevTab === "Seller"
+                                                                ? averageRatingAsSeller
+                                                                : averageRatingAsBuyer
+                                                        }
+                                                        precision={0.5}
+                                                        readOnly
+                                                    />                                                </div>
                                                 <span>{currentRevTab === "Seller" ? totalReviewsAsSeller : totalReviewsAsBuyer} {t("ratings")}</span>
                                             </div>
                                             <div className={styles.actions}>

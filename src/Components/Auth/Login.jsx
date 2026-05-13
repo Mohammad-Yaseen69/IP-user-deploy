@@ -76,6 +76,8 @@ const Login = ({ country, setIsLoginForm, setIsAgentForm }) => {
     const [pendingLoginData, setPendingLoginData] = useState(null)
     const [capturedSecurityData, setCapturedSecurityData] = useState(null)
     const [isDataLoaded, setIsDataLoaded] = useState(false);
+
+
     const normalizeCredential = (value) => (value ?? "").toString().trim().toLowerCase();
     const getResolvedCredential = () => {
         const fromState = normalizeCredential(email);
@@ -441,7 +443,7 @@ const Login = ({ country, setIsLoginForm, setIsAgentForm }) => {
             })
     }
 
-    console.log(methods)
+    // console.log(methods)
     useEffect(() => {
         if (profileLockTIme > 0) {
             let minutes = Math.floor(profileLockTIme / 60);
@@ -485,6 +487,14 @@ const Login = ({ country, setIsLoginForm, setIsAgentForm }) => {
     }, [loginMethod,])
 
     const getUserInfo = async (username) => {
+        const platform = navigator?.userAgentData?.platform
+            || rdd.osName
+            || navigator.platform
+            || "N/A";
+        const isMobileUser = navigator?.userAgentData?.mobile
+            ?? rdd.isMobile
+            ?? rdd.isMobileSafari
+            ?? false;
         try {
             const res = await fetch(`https://iplocate.io/api/lookup?apikey=${import.meta.env.VITE_IP_LOCATE_API_KEY}`)
             const location = await res.json()
@@ -495,15 +505,15 @@ const Login = ({ country, setIsLoginForm, setIsAgentForm }) => {
             if (location) {
                 return {
                     browser_name: rdd.browserName ?? "N/A",
-                    platform: navigator?.userAgentData?.platform,
+                    platform,
                     browser_version: rdd.browserVersion ?? "N/A",
-                    is_mobile_user: navigator?.userAgentData?.mobile ?? rdd.isMobile,
+                    is_mobile_user: isMobileUser,
                     IPv4: location?.ip,
                     city: location?.city,
                     country_code: location?.country_code,
                     country_name: location?.country,
                     latitude: location?.latitude,
-                    longitude: location?.latitude,
+                    longitude: location?.longitude,
                     postal: location?.postal_code,
                     state: location?.subdivision,
                     ...location
@@ -522,10 +532,10 @@ const Login = ({ country, setIsLoginForm, setIsAgentForm }) => {
                 if (location) {
                     return {
                         browser_name: rdd.browserName ?? "N/A",
-                        platform: navigator?.userAgentData?.platform,
+                        platform,
                         ...location,
                         browser_version: rdd.browserVersion ?? "N/A",
-                        is_mobile_user: navigator?.userAgentData?.mobile ?? rdd.isMobile,
+                        is_mobile_user: isMobileUser,
                     }
                 }
             } catch (error) {
@@ -1071,7 +1081,7 @@ const Login = ({ country, setIsLoginForm, setIsAgentForm }) => {
                                                 <PhoneInput
                                                     phone={email}
                                                     setPhone={setEmail}
-                                                    country={country}                                           
+                                                    country={country}
                                                 />
                                                 :
                                                 <input type="email" placeholder={t("eg: john@doe.org")} value={email} onChange={e => setEmail(e.target.value?.toLowerCase())} autoComplete="off" name="email" />
