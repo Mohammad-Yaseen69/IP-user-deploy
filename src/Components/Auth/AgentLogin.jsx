@@ -1188,7 +1188,8 @@ const AgentLogin = ({ country, setIsLoginForm, setIsAgentForm }) => {
                                 {t("Back")}
                             </button>
                         }
-                       <span></span>
+                        <span></span>
+ 
                         <div className={styles.btns}>
                             {
                                 (emailVerified && width > 1000)
