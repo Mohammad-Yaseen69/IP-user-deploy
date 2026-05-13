@@ -12,6 +12,7 @@ import DeclineQuotation from './DeclineQuotation'
 import BargainQuotation from './BargainQuotation'
 import AcceptQuotation from './AcceptQuotation'
 import AcceptBargainedAmount from './AcceptBaragainedAmount'
+import { usePermission } from '../../hooks/GeneralUse/usePermission'
 
 const QuotationSentItem = ({ item, activeItem, setActiveItem, index }) => {
     const { t } = useTranslation()
@@ -20,7 +21,12 @@ const QuotationSentItem = ({ item, activeItem, setActiveItem, index }) => {
     const [showDeleteModal, setShowDeleteModal] = useState(false)
     const [showAcceptModal, setShowAcceptModal] = useState(false)
     const [showDetails, setShowDetails] = useState(false)
+    const can = usePermission()
+    const canAcceptQuotation = can("quotations.accept")
 
+    const canBargainQuotation = can("quotations.bargain")
+
+    const canDeclineQuotation = can("quotations.decline")
     useEffect(() => {
         setStatus(item?.status)
     }, [item])
@@ -146,20 +152,20 @@ const QuotationSentItem = ({ item, activeItem, setActiveItem, index }) => {
                                 item?.bargain && item?.status === "bargain"
                                 &&
                                 <>
-                                    <img style={{ cursor: "pointer", height: "30px", width: "30px", objectFit: "contain" }} title='Accept quotation' src={accept} alt="" onClick={(w) => {
+                                    {canAcceptQuotation && <img style={{ cursor: "pointer", height: "30px", width: "30px", objectFit: "contain" }} title='Accept quotation' src={accept} alt="" onClick={(w) => {
                                         w.stopPropagation()
                                         setShowAcceptModal(true)
-                                    }} />
-                                    <img style={{ cursor: "pointer", height: "30px", width: "30px", objectFit: "contain" }} title='Bargain quotation' src={bargain} alt="" onClick={(w) => {
+                                    }} />}
+                                    {canBargainQuotation && <img style={{ cursor: "pointer", height: "30px", width: "30px", objectFit: "contain" }} title='Bargain quotation' src={bargain} alt="" onClick={(w) => {
                                         w.stopPropagation()
                                         setShowReviseModal(true)
-                                    }} />
+                                    }} />}
                                 </>
                             }
-                            <img style={{ cursor: "pointer", height: "30px", width: "30px", objectFit: "contain" }} title='Decline quotation' src={decline} alt="" onClick={(w) => {
+                            {canDeclineQuotation && <img style={{ cursor: "pointer", height: "30px", width: "30px", objectFit: "contain" }} title='Decline quotation' src={decline} alt="" onClick={(w) => {
                                 w.stopPropagation()
                                 setShowDeleteModal(true)
-                            }} />
+                            }} />}
                         </div>
                         :
                         <div>{t("No Actions")}</div>

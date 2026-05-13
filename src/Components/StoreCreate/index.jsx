@@ -16,11 +16,13 @@ import bg from "../ReceiptInvoices/files/Footer Section.png"
 import styles from "./index.module.scss"
 import TopRight from '../topRight'
 import TermsModal from "./TermsModal"
+import { usePermission } from "../../hooks/GeneralUse/usePermission"
 const StoreCreate = () => {
     const { t } = useTranslation()
     const width = useWindowWidth()
     const { userDetails } = useContext(UserContext)
     const [showModal, setShowModal] = useState(false);
+    const can = usePermission()
 
     const StepData = [
         {
@@ -106,7 +108,10 @@ const StoreCreate = () => {
                             </div>
                         ))}
                     </div>
-                    <button onClick={() => setShowModal(true)}>{t("Get Started / Create Shop")}</button>
+                    {
+                        can("eshop.create") &&
+                        <button onClick={() => setShowModal(true)}>{t("Get Started / Create Shop")}</button>
+                    }
                     {/* <p className={styles.links}>
                         <span className={styles.link}>
                             {t("eShop Guide")}

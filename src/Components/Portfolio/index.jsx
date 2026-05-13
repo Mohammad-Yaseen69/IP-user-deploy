@@ -8,6 +8,7 @@ import AddPortfolioItem from "./AddPortfolioItem"
 import { UserContext } from "../../Context/UserContext"
 import InstructionsModal from "./InstructionModal"
 import { Info } from "react-feather"
+import { usePermission } from "../../hooks/GeneralUse/usePermission"
 
 
 const Portfolio = () => {
@@ -16,6 +17,8 @@ const Portfolio = () => {
     const { userPortfolio, setUserPortfolio, getUserDocuments, userDetails } = useContext(UserContext);
     const dragRef = useRef(null)
     const dragOverRef = useRef(null)
+    const can = usePermission()
+    const canAddPortfolio = can("portfolio.add")
 
     useEffect(() => {
         if (userDetails) {
@@ -40,7 +43,6 @@ const Portfolio = () => {
         const draggedContent = _userPortfolio.splice(dragRef?.current, 1)[0];
         _userPortfolio.splice(dragOverRef?.current, 0, draggedContent);
 
-        // Create order map and save to localStorage
         const orderMap = {};
         _userPortfolio.forEach((item, index) => {
             orderMap[item._id] = index;
@@ -77,13 +79,13 @@ const Portfolio = () => {
                     <div className={styles.card_header}>
                         <h4>{t("Add/Manage Portfolio")}</h4>
                         <div className={styles.ch_right}>
-                            <button className={`${styles.chr_btn} ${styles.chr_btn_grad}`} onClick={() => setShowAddModal(!showAddModal)} style={{
+                            {canAddPortfolio && <button className={`${styles.chr_btn} ${styles.chr_btn_grad}`} onClick={() => setShowAddModal(!showAddModal)} style={{
                                 minWidth: "112px",
                                 maxHeight: "40px"
                             }}>
                                 <img src={plus} alt="add" loading="lazy" />
                                 <span>{t("Add New")}</span>
-                            </button>
+                            </button>}
                         </div>
                     </div>
                     <div className={styles.card_body}>
