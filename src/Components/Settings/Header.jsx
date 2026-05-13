@@ -12,6 +12,7 @@ import { toast } from 'react-toastify'
 import ReactApexChart from 'react-apexcharts'
 import change_dp from "./change_img.svg"
 import AdjustModal from './AdjustModal'
+import { usePermission } from '../../hooks/GeneralUse/usePermission'
 
 const Header = () => {
     const { userDetails, authHeader, verifyToken, profileCompletedPercentage, croppedImages, setCroppedImages } = useContext(UserContext)
@@ -20,7 +21,7 @@ const Header = () => {
     const { t } = useTranslation()
     const [showDelModal, setShowDelModal] = useState(false)
     const [showModal, setShowModal] = useState(false)
-
+    const can = usePermission()
     useEffect(() => {
         if (userDetails) {
             setDp(userDetails?.profileImage?.url ?? "")
@@ -93,7 +94,6 @@ const Header = () => {
     };
 
 
-    // more menu
     const [showMenu, setShowMenu] = useState(false)
     const toggleMenu = () => setShowMenu(!showMenu);
 
@@ -114,7 +114,6 @@ const Header = () => {
     }, []);
 
 
-    // profile completion chart
     const [series, setSeries] = useState([0]);
 
     useEffect(() => {
@@ -293,7 +292,9 @@ const Header = () => {
                                 filter: "drop-shadow(0 0 2px black)"
                             }} ref={menuRef}>
                                 {/* <MoreHorizontal onClick={toggleMenu} color='white' size={30} style={{ cursor: "pointer" }} /> */}
-                                <img alt='niglet' src={change_dp} onClick={toggleMenu} style={{ height: window.innerWidth > 1000 ? "60px" : "40px", width: window.innerWidth > 1000 ? "60px" : "40px", objectFit: "contain", cursor: "pointer" }} />
+                                {can("user-profile.update") && (
+                                    <img alt='niglet' src={change_dp} onClick={toggleMenu} style={{ height: window.innerWidth > 1000 ? "60px" : "40px", width: window.innerWidth > 1000 ? "60px" : "40px", objectFit: "contain", cursor: "pointer" }} />
+                                )}
                                 <div style={{
                                     display: "flex",
                                     flexDirection: "column",
@@ -307,6 +308,7 @@ const Header = () => {
                                     background: "white"
                                 }}>
                                     <label htmlFor="dp" onClick={toggleMenu} style={{ display: "flex", alignItems: "center", gap: "10px", padding: "12px 16px", marginBottom: "0", cursor: "pointer" }}>
+
                                         <Camera size={18} />
                                         <span style={{ whiteSpace: "nowrap" }}>{t("Upload")}</span>
                                     </label>

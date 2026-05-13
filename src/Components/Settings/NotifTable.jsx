@@ -9,7 +9,7 @@ import { encryptData } from '../../Helper/EssentilaMethods/Encryption'
 import { Button } from 'reactstrap'
 import { CheckCircle } from 'react-feather'
 import InstaPayLoader from '../Loader'
-
+import { usePermission } from "../../hooks/GeneralUse/usePermission"
 const NotifTable = () => {
     const { t, i18n } = useTranslation()
     const { userDetails, authHeader, verifyToken } = useContext(UserContext)
@@ -41,7 +41,8 @@ const NotifTable = () => {
     const [rqTelegram, setRqTelegram] = useState(false)
     const [sqTelegram, setSqTelegram] = useState(false)
     const [refTelegram, setRefTelegram] = useState(false)
-
+    const can = usePermission()
+    const isEdit = can("settings.notifications.update")
     const [isLoading, setIsLoading] = useState(true)
 
     useEffect(() => {
@@ -323,7 +324,9 @@ const NotifTable = () => {
                                         border: "none",
                                         outline: "none",
                                         borderRadius: "10px"
-                                    }} onClick={() => setEditMode(true)}>{t("Edit")}</Button>
+                                    }}
+                                        disabled={!isEdit}
+                                        onClick={() => setEditMode(true)}>{t("Edit")}</Button>
                             }
                         </div>
                     </>

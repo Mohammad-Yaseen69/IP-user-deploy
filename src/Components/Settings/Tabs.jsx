@@ -1,78 +1,82 @@
-import React, { useContext, useEffect, useState } from 'react'
-import styles from "./styles/tabs.module.css"
+import { useContext, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { UserContext } from '../../Context/UserContext'
 import { useLocation, useNavigate } from 'react-router'
+import { UserContext } from '../../Context/UserContext'
+import styles from "./styles/tabs.module.css"
 
 // icons
-import basic_active from "./tabs_icons/basic_a.svg"
 import basic from "./tabs_icons/basic.svg"
-import pass_active from "./tabs_icons/password_a.svg"
-import pass from "./tabs_icons/password.svg"
-import sec_active from "./tabs_icons/security_a.svg"
-import sec from "./tabs_icons/security.svg"
-import tfa_active from "./tabs_icons/tfa_a.svg"
-import tfa from "./tabs_icons/tfa.svg"
-import sa_active from "./tabs_icons/social_a.svg"
-import sa from "./tabs_icons/social.svg"
-import iv_active from "./tabs_icons/verification_a.svg"
-import iv from "./tabs_icons/verification.svg"
-import mwc_active from "./tabs_icons/receiving_a.svg"
-import mwc from "./tabs_icons/receiving.svg"
-import dwd_active from "./tabs_icons/download_a.svg"
-import dwd from "./tabs_icons/download.svg"
-import dyd_active from "./tabs_icons/delete_a.svg"
+import basic_active from "./tabs_icons/basic_a.svg"
 import dyd from "./tabs_icons/delete.svg"
-import nominee_active from "./tabs_icons/nominee_a.svg"
-import nominee from "./tabs_icons/nominee.svg"
-import hocfy_active from "./tabs_icons/hocfy_a.svg"
-import hocfy from "./tabs_icons/hocfy.svg"
-import notif_active from "./tabs_icons/notifications_a.svg"
-import notif from "./tabs_icons/notification.svg"
-import login_active from "./tabs_icons/login_a.svg"
-import login from "./tabs_icons/login.svg"
-import thres_a from "./tabs_icons/thres_a.svg"
-import thres from "./tabs_icons/thres.svg"
+import dyd_active from "./tabs_icons/delete_a.svg"
+import dwd from "./tabs_icons/download.svg"
+import dwd_active from "./tabs_icons/download_a.svg"
 import fin_info from "./tabs_icons/fin_info.svg"
 import fin_info_a from "./tabs_icons/fin_info_a.svg"
+import hocfy from "./tabs_icons/hocfy.svg"
+import hocfy_active from "./tabs_icons/hocfy_a.svg"
+import login from "./tabs_icons/login.svg"
+import login_active from "./tabs_icons/login_a.svg"
+import nominee from "./tabs_icons/nominee.svg"
+import nominee_active from "./tabs_icons/nominee_a.svg"
+import notif from "./tabs_icons/notification.svg"
+import notif_active from "./tabs_icons/notifications_a.svg"
+import pass from "./tabs_icons/password.svg"
+import pass_active from "./tabs_icons/password_a.svg"
+import mwc from "./tabs_icons/receiving.svg"
+import mwc_active from "./tabs_icons/receiving_a.svg"
+import sec from "./tabs_icons/security.svg"
+import sec_active from "./tabs_icons/security_a.svg"
+import sa from "./tabs_icons/social.svg"
+import sa_active from "./tabs_icons/social_a.svg"
+import tfa from "./tabs_icons/tfa.svg"
+import tfa_active from "./tabs_icons/tfa_a.svg"
+import thres from "./tabs_icons/thres.svg"
+import thres_a from "./tabs_icons/thres_a.svg"
+import iv from "./tabs_icons/verification.svg"
+import iv_active from "./tabs_icons/verification_a.svg"
 
-import useWindowWidth from '../../utils/useWindowWidth'
 import { ChevronDown } from 'react-feather'
+import { usePermission } from '../../hooks/GeneralUse/usePermission'
+import useWindowWidth from '../../utils/useWindowWidth'
 import NextStepModal from './NextStepModal'
-import { BsFillCreditCardFill } from "react-icons/bs";
 
 
 
 
 const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
+    const can = usePermission()
+
     const { profileIncompleteReason, userDetails, verifyToken, missingTabsData, userWithdrawals, profileCompleted } = useContext(UserContext)
     const [tabsData, setTabsData] = useState([
-        {
+        can("settings.basic-info.view") && {
             name: "Basic Info",
             icon: basic,
             active_icon: basic_active,
         },
-        {
+        can("settings.password.view") && {
             name: "Change Password",
             icon: pass,
             active_icon: pass_active,
+
         },
-        {
+        can("settings.payment-threshold.view") && {
             name: "Payment Threshold",
             icon: thres_a,
             active_icon: thres,
         },
-        {
+        can("settings.financial-info.view") && {
             name: "Financial Info",
             icon: fin_info,
             active_icon: fin_info_a,
         },
+        can("settings.security-questions.view") &&
         {
             name: "Security Questions",
             icon: sec,
             active_icon: sec_active,
         },
-        {
+        can("settings.nominee.view") && {
             name: "Nominee Information",
             icon: nominee,
             active_icon: nominee_active,
@@ -83,29 +87,32 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
             active_icon: tfa_active,
             tabType: 'tfa'
         },
-        {
+        can("settings.how-others-find-you.view") && {
             name: "How Others Can Find You",
             icon: hocfy,
             active_icon: hocfy_active,
         },
+        can("settings.social-accounts.view") &&
         {
             name: "My Social Network Accounts",
             icon: sa,
             active_icon: sa_active,
             tabType: 'social'
         },
+        can("settings.notifications.view") &&
         {
             name: "Notifications",
             icon: notif,
             active_icon: notif_active,
         },
-        {
+        can("settings.api-key.view") && {
             name: account_type === "business" ? "API Key" : "",
             icon: iv,
             active_icon: iv_active,
         },
         account_type === "business"
             ?
+            can("settings.business-verification.view") &&
             {
                 name: "Business Verification",
                 icon: iv,
@@ -120,27 +127,32 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
                 tabType: 'kyc'
             }
         ,
+        can("settings.login-activity.view") &&
         {
             name: "Login Activity",
             icon: login,
             active_icon: login_active,
         },
+        can("settings.receiving-accounts.view") &&
         {
             name: "Receiving Accounts",
             icon: mwc,
             active_icon: mwc_active,
             tabType: 'withdrawls'
         },
+        can("settings.saved-cards.view") &&
         {
             name: "Manage Saved Cards",
             icon: dwd,
             active_icon: dwd_active,
         },
+        can("settings.download-data.view") &&
         {
             name: "Download Your Data",
             icon: dwd,
             active_icon: dwd_active,
         },
+        can("settings.delete-account.view") &&
         {
             name: "Delete Your Account",
             icon: dyd,

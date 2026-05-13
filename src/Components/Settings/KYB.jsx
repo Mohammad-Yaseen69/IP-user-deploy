@@ -23,6 +23,7 @@ import PubliclyTradedCompanyDocs from './PubliclyTradedCompanyDocs'
 import SoleTradedDocs from './SoleTradedDocs'
 import UploadAdditionalKYB from './UploadAdditionalKYB'
 import VerificationPayment from './VerificationPayment'
+import { usePermission } from '../../hooks/GeneralUse/usePermission'
 
 function getFirstLargeFileName(files) {
     if (!files || files.length === 0) return false
@@ -338,7 +339,8 @@ const KYB = () => {
         return errors.find(item => item?.code == code)?.message ?? "We cannot process your request at the moment, please try again later."
     }
 
-
+    const can = usePermission()
+    const isEdit = can("settings.business-verification.update")
     console.log(partners)
     return (
         <Card>
@@ -487,7 +489,7 @@ const KYB = () => {
                                     !registrationNum ||
                                     !dateOfI ||
                                     compnanyFiles?.length === 0 ||
-                                    compnanyFileNames.length < requiredFilesLength
+                                    compnanyFileNames.length < requiredFilesLength || !isEdit
                                 }
                                 onClick={() => setShowAddModal(!showAddModal)}
                             >
