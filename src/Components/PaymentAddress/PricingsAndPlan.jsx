@@ -147,7 +147,7 @@ const PricingsAndPlan = () => {
                     {plans?.length > 0 &&
                         <button
                             onClick={() => setShowAddModal(true)}
-                            style={{ background: '#5926F0', color: '#fff', border: 'none', borderRadius: 6, padding: '6px 18px', fontWeight: 600, cursor: 'pointer', fontSize: 14 }}
+                            style={{ background: '#5926F0', color: '#fff', border: 'none', borderRadius: 6, padding: '6px 16px', fontWeight: 600, cursor: 'pointer', fontSize: 14, width: "100px" }}
                         >
                             {t('Add new')}
                         </button>
@@ -178,7 +178,9 @@ const PricingsAndPlan = () => {
             }
 
             {plans?.length > 0 && window.innerWidth > 700 &&
-                <div style={{ overflowX: 'auto', width: '100%' }}>
+                <div style={{
+                    overflowX: 'auto', width: '100%', minHeight: '400px',
+                }}>
                     <table style={{ width: '100%', borderCollapse: 'collapse', background: '#FFF', minWidth: 680 }}>
                         <thead>
                             <tr style={{ color: '#5B5B5B', fontWeight: 600, fontSize: 14 }}>
