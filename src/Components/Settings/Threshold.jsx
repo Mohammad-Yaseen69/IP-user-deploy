@@ -134,7 +134,7 @@ const Threshold = ({ userDetails, authHeader }) => {
                 }
             }
 
-            const res = await axios.put(`${import.meta.env.VITE_IP_DEV_API}/api/account/update-individual/${userDetails._id}`, { data: encryptData({ qr_quicker_pay_enabled: !toggle }) }, {
+            const res = await axios.put(`${import.meta.env.VITE_IP_DEV_API}/api/account/update-${userDetails.account_type}/${userDetails._id}?thresholdOtpUpdate=true`, { data: encryptData({ qr_quicker_pay_enabled: !toggle }) }, {
                 headers: headers
             })
 
