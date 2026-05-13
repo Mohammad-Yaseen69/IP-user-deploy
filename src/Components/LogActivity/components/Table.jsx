@@ -171,7 +171,7 @@ const ActivityTable = ({ filteredData, Loading }) => {
                                 }}
                                 className={styles.td}
                             >
-                                {item?.agent?.first_name + " " + item?.agent?.last_name || userDetails?.company_name || "—"}
+                                {item?.agent?.first_name || userDetails?.company_name || ""}{item?.agent?.last_name || ""}
                             </div>
 
                             {width > 700 && (
