@@ -20,6 +20,7 @@ import {
 import * as FileSaver from "file-saver";
 import axios from "axios";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
+import { usePermission } from "../../hooks/GeneralUse/usePermission";
 
 const DownloadData = ({ isCollapsed, setIsCollapsed }) => {
     const [nameDob, setNameDob] = useState(true);
@@ -424,7 +425,8 @@ const DownloadData = ({ isCollapsed, setIsCollapsed }) => {
         });
     };
 
-
+    const can = usePermission()
+    const isEdit = can("settings.download-data.download")
 
     return (
         <Card>
@@ -629,7 +631,7 @@ const DownloadData = ({ isCollapsed, setIsCollapsed }) => {
                                 !creditInfo &&
                                 !otherInfo ||
                                 !type ||
-                                downloading
+                                downloading || !isEdit
                             )}
                             onClick={type === "pdf" ? generatePDF : generateDOCX}
                         >{downloading ? t("Downloading") + "..." : t("Download Data")}</Button>
