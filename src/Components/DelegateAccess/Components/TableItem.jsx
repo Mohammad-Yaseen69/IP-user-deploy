@@ -105,7 +105,7 @@ function TableItem({ setMenuOpenFor, width, item, index, menuOpenFor, isRole, se
                         </div>
                     )}
 
-                    <div style={{ flex: isPhone ? 0.40 : 0.30, ...ellipsisStyle }} className={styles.td}>
+                    <div style={{ flex: isPhone ? 0.40 : 0.25, ...ellipsisStyle }} className={styles.td}>
                         {truncate(item?.title, 15) || "—"}
                     </div>
 
@@ -131,7 +131,7 @@ function TableItem({ setMenuOpenFor, width, item, index, menuOpenFor, isRole, se
             ) : (
                 <>
                     {width > 700 && (
-                        <div style={{ flex: 0.05, textAlign: "center" }} className={`${styles.td} ${styles.serial}`}>
+                        <div style={{ flex: 0.05, textAlign: "center", color: "#9AA3B2", fontWeight: 500 }} >
                             {index + 1}
                         </div>
                     )}
@@ -146,7 +146,7 @@ function TableItem({ setMenuOpenFor, width, item, index, menuOpenFor, isRole, se
 
                     {width > 700 && (
                         <div style={{ flex: 0.26, ...ellipsisStyle }} className={styles.td}>
-                            {item?.email || "—"}
+                            {truncate(item?.email, 20) || "—"}
                         </div>
                     )}
 
@@ -167,7 +167,7 @@ function TableItem({ setMenuOpenFor, width, item, index, menuOpenFor, isRole, se
                                         background: item?.status === "pending"
                                             ? "#e0e0e0"
                                             : item?.status === "active"
-                                                ? "#e6f9ed"
+                                                ? "#EDFAF0"
                                                 : item?.status === "inactive"
                                                     ? "#ffeaea"
                                                     : item?.status === "suspended"
@@ -177,7 +177,7 @@ function TableItem({ setMenuOpenFor, width, item, index, menuOpenFor, isRole, se
                                         color: item?.status === "pending"
                                             ? "#888"
                                             : item?.status === "active"
-                                                ? "#1a8a3c"
+                                                ? "#097224"
                                                 : item?.status === "inactive"
                                                     ? "#c0392b"
                                                     : item?.status === "suspended"

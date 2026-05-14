@@ -44,6 +44,10 @@ import tran from "./files/tran.svg";
 import tran_a from "./files/tran_a.svg";
 import wallets from "./files/wallets.svg";
 import wallets_a from "./files/wallets_a.svg";
+import delegate_a from "./files/delegate_a.svg";
+import delegate from "./files/delegate.svg";
+import Feed from "./files/Feed.svg";
+import Feed_a from "./files/Feed_a.svg";
 
 
 export const MENU = [
@@ -192,8 +196,8 @@ export const MENU = [
             },
             {
                 title: "Delegate Access",
-                icon: <img loading="lazy" src={analytics} style={{ marginRight: "12px" }} />,
-                activeIcon: <img loading="lazy" src={analytics_a} style={{ marginRight: "12px" }} />,
+                icon: <img loading="lazy" src={delegate} style={{ marginRight: "12px" }} />,
+                activeIcon: <img loading="lazy" src={delegate_a} style={{ marginRight: "12px" }} />,
                 type: "link",
                 url: `${window.location.origin}/delegate-access`,
                 showOnly: "business",
@@ -201,8 +205,8 @@ export const MENU = [
             },
             {
                 title: "Activity Feed",
-                icon: < img loading="lazy" src={analytics} style={{ marginRight: "12px" }} />,
-                activeIcon: <img loading="lazy" src={analytics_a} style={{ marginRight: "12px" }} />,
+                icon: < img loading="lazy" src={Feed} style={{ marginRight: "12px" }} />,
+                activeIcon: <img loading="lazy" src={Feed_a} style={{ marginRight: "12px" }} />,
                 type: "link",
                 url: `${window.location.origin}/activity`,
                 showOnly: "business",

@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query"
 import { useEffect, useState } from "react"
-import { Search } from "react-feather"
+import { Plus, Search, User, Users } from "react-feather"
 import { useTranslation } from "react-i18next"
 import { apiWrapper } from "../../utils/Functions/apiWrapper"
 import useWindowWidth from "../../utils/useWindowWidth"
@@ -11,7 +11,8 @@ import styles from "./styles/Index.module.css"
 import AgentsModal from "./Components/AgentsModal"
 import Paginations from "../../Common/Component/Paginations"
 import { usePermission } from "../../hooks/GeneralUse/usePermission"
-
+import userFour from "./images/UsersFour.svg"
+import { FaRegUserCircle } from "react-icons/fa"
 const DelegateAccess = () => {
     const width = useWindowWidth()
     const { t } = useTranslation()
@@ -69,138 +70,106 @@ const DelegateAccess = () => {
     return (
         <div className={styles.container}>
             <div className={styles.top}>
-                <h1>
-                    {t("Delegate Access")}
-                </h1>
+                <div className={styles.headerTitle}>
+                    <h1>
+                        {t("Delegate Access")}
+                    </h1>
+                    <p>{t("Handle your Agents and Roles with ease")}</p>
+                </div>
 
-                {width > 1000 && <TopRight />}
-            </div>
-            <div className={styles.receiptsCont}>
-                <div className={styles.head}>
-                    {
-                        isRole ? <h5>
-                            {t("My Roles")}
-                        </h5> : <h5>
-                            {t("My Agents")}
-                        </h5>
-                    }
-                    {
-                        isRole ? <div className={styles.roleContainer}>
-                            <button
-                                onClick={handleRoleAgentToggle}
-                                style={width < 500 ? {
-                                    justifyContent: "center",
-                                    alignItems: "center",
-                                    display: "flex",
-                                    width: "40px",
-                                    height: "40px"
-                                } : {}}
-                            >
-                                {width > 500 && t("Manage Agents")}
-                            </button>
-                            {hasPermission("delegate-access.roles.add") && (
-                                <button
-                                    onClick={handleModalOpen}
-                                    style={width < 500 ? {
-                                        justifyContent: "center",
-                                        alignItems: "center",
-                                        display: "flex",
-                                        width: "40px",
-                                        height: "40px"
-                                    } : {}}
-                                >
-                                    <span style={{ fontSize: width < 500 ? "24px" : '14px', marginLeft: width < 500 && "5px" }}>
-                                        +
-                                    </span>
-                                    {width > 500 && t("Add Role")}
-                                </button>
-                            )}
-                        </div> : <div className={styles.roleContainer}>
-                            <button
-                                onClick={handleRoleAgentToggle}
-                                style={width < 500 ? {
-                                    justifyContent: "center",
-                                    alignItems: "center",
-                                    display: "flex",
-                                    width: "40px",
-                                    height: "40px"
-                                } : {}}
-                            >
-                                {width > 500 && t("Manage Roles")}
-                            </button>
-                            {hasPermission("delegate-access.agents.add") && (
-                                <button
-                                    onClick={handleModalOpen}
-
-                                    style={width < 500 ? {
-                                        justifyContent: "center",
-                                        alignItems: "center",
-                                        display: "flex",
-                                        width: "40px",
-                                        height: "40px"
-                                    } : {}}
-                                >                                <span style={{ fontSize: width < 500 ? "24px" : '14px', marginLeft: width < 500 && "5px" }}>
-                                        +
-                                    </span>
-                                    {width > 500 && t("Add Agent")}
-                                </button>
-                            )}
-                        </div>
-                    }
+                <div className={styles.topright}>
+                    {width > 1000 && <TopRight />}
                 </div>
             </div>
-            <div className={styles.searchCont}>
-                <div className={styles.search}>
-                    <Search />
-                    <input
-                        type="text"
-                        value={search}
-                        onChange={(e) => setSearch(e.target.value)}
-                        placeholder={t(`${isRole ? ("Search for Role") : ("Search for Agent")}`)}
-                    />
-                </div>
-            </div>
-            <DelegateTable
-                filteredInvoices={isRole ? roles : agents}
-                isRole={isRole}
-                roleLoading={roleLoading || agentsLoading}
-                setEditData={setEditData}
-                setShowModal={setShowModal}
-            />            {showModal && (
-                isRole ? (
-                    <RoleModal
-                        agents={roles}
-                        isEdit={!!editData}
-                        editData={editData}
-                        isRole={isRole}
-                        isOpen={showModal}
-                        onClose={() => {
-                            setShowModal(false)
-                            setEditData(null)
-                        }}
-                        t={t}
-                        width={width}
-                    />
-                ) : (
-                    <AgentsModal
-                        roles={roles}
-                        agents={agents}
-                        isEdit={!!editData}
-                        editData={editData}
-                        isRole={isRole}
-                        isOpen={showModal}
-                        onClose={() => {
-                            setShowModal(false)
-                            setEditData(null)
-                        }}
-                        t={t}
-                        width={width}
-                    />
-                )
-            )}
-            <Paginations page={page} totalPages={totalPages} setPage={setPage}
-                limit={limit} setLimit={setLimit} />
+            <div className={styles.main}>
+                <div className={styles.receiptsCont}>
+                    <div className={styles.tabSwitcher}>
 
+                        <button
+                            className={`${styles.tabBtn} ${!isRole ? styles.activeTab : ""}`}
+                            onClick={handleRoleAgentToggle}
+                        >
+                            <img src={userFour} alt="userFour" width={20} height={20} loading="lazy" />
+                            {t("Manage Agents")}
+                        </button>
+                        <button
+                            className={`${styles.tabBtn} ${isRole ? styles.activeTab : ""}`}
+                            onClick={handleRoleAgentToggle}
+                        >
+                            <FaRegUserCircle size={20} />
+                            {t("Manage Roles")}
+                        </button>
+
+                    </div>
+
+                    {isRole ? (
+                        hasPermission("delegate-access.roles.add") && (
+                            <button className={styles.addBtn} onClick={handleModalOpen}>
+                                {t("Add Role")}<span><Plus size={20} /></span>
+                            </button>
+                        )
+                    ) : (
+                        hasPermission("delegate-access.agents.add") && (
+                            <button className={styles.addBtn} onClick={handleModalOpen}>
+                                {t("Add Agent")}  <span><Plus size={20} /></span>
+                            </button>
+                        )
+                    )}
+                </div>
+                <div className={styles.searchCont}>
+                    <div className={styles.searchBox}>
+                        <Search color="#898F8F" />
+                        <input
+                            type="text"
+                            value={search}
+                            onChange={(e) => setSearch(e.target.value)}
+                            placeholder={t(`${isRole ? ("Search for Role") : ("Search for Agent")}`)}
+                        />
+                    </div>
+                    
+                </div>
+                <DelegateTable
+                    filteredInvoices={isRole ? roles : agents}
+                    isRole={isRole}
+                    roleLoading={roleLoading || agentsLoading}
+                    setEditData={setEditData}
+                    setShowModal={setShowModal}
+                />            {showModal && (
+                    isRole ? (
+                        <RoleModal
+                            agents={roles}
+                            isEdit={!!editData}
+                            editData={editData}
+                            isRole={isRole}
+                            isOpen={showModal}
+                            onClose={() => {
+                                setShowModal(false)
+                                setEditData(null)
+                            }}
+                            t={t}
+                            width={width}
+                        />
+                    ) : (
+                        <AgentsModal
+                            roles={roles}
+                            agents={agents}
+                            isEdit={!!editData}
+                            editData={editData}
+                            isRole={isRole}
+                            isOpen={showModal}
+                            onClose={() => {
+                                setShowModal(false)
+                                setEditData(null)
+                            }}
+                            t={t}
+                            width={width}
+                        />
+                    )
+                )}
+                <Paginations page={page} totalPages={totalPages} setPage={setPage}
+                    limit={limit} setLimit={setLimit} />
+
+            </div>
         </div>
     )
 }
