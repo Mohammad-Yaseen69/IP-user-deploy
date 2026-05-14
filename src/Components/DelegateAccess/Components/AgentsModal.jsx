@@ -101,7 +101,7 @@ const AgentsModal = ({ isRole, isOpen, onClose, t, width, roles, isEdit, editDat
     };
 
     const togglePermission = (key, parentKey = null, type = "action") => {
-     
+
         if (isSuperAdmin) return
         let newPerms = [...selectedPermissions];
         let newDenied = [...deniedPermissions];
@@ -341,30 +341,33 @@ const AgentsModal = ({ isRole, isOpen, onClose, t, width, roles, isEdit, editDat
                             />
                         </div>
 
-                        <div className={styles.formGroup}>
-                            <label>{t("Phone Number")}</label>
-                            <PhoneInput
-                                country={isEdit && editData?.country ? editData.country : country}
-                                phone={phone}
-                                setPhone={setPhone}
-                                error={phoneError}
-                                setError={setPhoneError}
-                                disabled={isEdit}
-                            />
-                        </div>
+                        {!isEdit &&
+                            <>
+                                <div className={styles.formGroup}>
+                                    <label>{t("Phone Number")}</label>
+                                    <PhoneInput
+                                        country={isEdit && editData?.country ? editData.country : country}
+                                        phone={phone}
+                                        setPhone={setPhone}
+                                        error={phoneError}
+                                        setError={setPhoneError}
+                                        disabled={isEdit}
+                                    />
+                                </div>
 
-                        <div className={styles.formGroup}>
-                            <label>{t("Email")}</label>
-                            <input
-                                name="email"
-                                type="email"
-                                value={form.email}
-                                onChange={handleChange}
-                                placeholder="Enter Email"
-                                required={!isEdit}
-                                disabled={isEdit}
-                            />
-                        </div>
+                                <div className={styles.formGroup}>
+                                    <label>{t("Email")}</label>
+                                    <input
+                                        name="email"
+                                        type="email"
+                                        value={form.email}
+                                        onChange={handleChange}
+                                        placeholder="Enter Email"
+                                        required={!isEdit}
+                                        disabled={isEdit}
+                                    />
+                                </div></>
+                        }
 
                         <div className={styles.formGroup}>
                             <label>{t("Role")}</label>
