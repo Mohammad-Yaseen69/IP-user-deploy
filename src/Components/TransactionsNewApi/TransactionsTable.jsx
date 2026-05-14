@@ -103,9 +103,15 @@ const TransactionsTable = () => {
     }, [searchQuery]);
 
     const getAllTransactions = () => {
+        const queryParams = new URLSearchParams(window.location.search);
+        if (queryParams.has("search")) return; // Don't fetch or spread if search param exists
+
         if (page === 1) {
             setIsLoading(true)
         }
+
+        if (debouncedSearchQuery) return;
+
         // axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/transaction/account-transactions/${userDetails?._id}/${(page - 1) * 15}/15`, {
         axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/transaction/account-transactions/${userDetails?._id}/${page}/15`, {
             headers: authHeader
@@ -131,18 +137,34 @@ const TransactionsTable = () => {
             })
     }
 
-    const getTransactionsByQuery = () => {
+    const getTransactionsByQuery = (search = null) => {
         setActive("All")
+        if (search) {
+            console.log("calling from search")
+        }
         if (page === 1) {
             setIsLoading(true)
         }
-        axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/transaction/search-account-transactions/${userDetails?._id}/${page}/15/${debouncedSearchQuery}`, {
+        axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/transaction/search-account-transactions/${userDetails?._id}/${page}/15/${search ?? debouncedSearchQuery}`, {
             headers: authHeader
         })
             .then(res => {
                 const decrypted = decryptData(res.data.data)
-                setTransactions(prev => [...prev, ...decrypted.transactionList.filter(transactionFilter)])
-                setFiltered(prev => [...prev, ...decrypted.transactionList.filter(transactionFilter)])
+                const newTransactions = decrypted.transactionList.filter(transactionFilter);
+
+                if (search) {
+                    setTransactions(decrypted.transactionList);
+                    setFiltered(decrypted.transactionList);
+                } else {
+                    if (page === 1) {
+                        setTransactions(newTransactions);
+                        setFiltered(newTransactions);
+                    } else {
+                        setTransactions(prev => [...prev, ...newTransactions]);
+                        setFiltered(prev => [...prev, ...newTransactions]);
+                    }
+                }
+
                 if (decrypted.transactionList.length < 15) {
                     setMaxLimit(true)
                     setStopLoader(true)
@@ -355,10 +377,8 @@ const TransactionsTable = () => {
 
     useEffect(() => {
         if (search) {
-            setIsLoading(true)
-            setPage(1)
-            setActive("All")
             setSearchQuery(search)
+            setDebouncedSearchQuery(search)
         }
     }, [search])
 
@@ -390,7 +410,15 @@ const TransactionsTable = () => {
                 <div className={styles.left}>
                     <div className={styles.search}>
                         <Search size={16} color="#848484" />
-                        <Input placeholder={t("Search Transactions")} value={searchQuery} onChange={e => setSearchQuery(e.target.value)} />
+                        <Input placeholder={t("Search Transactions")} value={searchQuery} onChange={e => {
+                            setSearchQuery(e.target.value);
+                            const urlParams = new URLSearchParams(window.location.search);
+                            if (urlParams.has("search")) {
+                                urlParams.delete("search");
+                                const newUrl = window.location.pathname + (urlParams.toString() ? '?' + urlParams.toString() : '');
+                                window.history.replaceState({}, document.title, newUrl);
+                            }
+                        }} />
                     </div>
                     <img src={calendar} alt="c" onClick={handleDatePickerClick} />
                     {can("transactions.main.export") && (
