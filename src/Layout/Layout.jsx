@@ -111,7 +111,9 @@ const Layout = ({ children, classNames, ...rest }) => {
     beneficiaries,
     getUserBeneficiaries,
     showAnotherLoginModal,
-    setShowAnotherLoginModal
+    setShowAnotherLoginModal,
+    isAgentLogin,
+    agentDetails
   } = useContext(UserContext)
   const [showSuccessModal, setShowSuccessModal] = useState()
 
@@ -188,7 +190,7 @@ const Layout = ({ children, classNames, ...rest }) => {
   useEffect(() => {
     if (userDetails?._id) {
       socketsService.connect();
-      const userId = userDetails?._id;
+      const userId = isAgentLogin && agentDetails?._id ? agentDetails?._id : userDetails?._id;
       socketsService.connectToServer(userId, false, null, null, () => setShowAnotherLoginModal(true));
       socketsService.onPrivateMessage = () => {
         queryClient.invalidateQueries({ queryKey: ['receivedQuotations'] })

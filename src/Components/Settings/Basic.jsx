@@ -241,7 +241,7 @@ const Basic = ({ setCurrentTab }) => {
             }
             const encrypted = encryptData(data)
 
-            axios.put(`${import.meta.env.VITE_IP_DEV_API}/api/account/update-individual/${userDetails?._id}`, {
+            axios.put(`${import.meta.env.VITE_IP_DEV_API}/api/account/update-${userDetails?.account_type}/${userDetails?._id}`, {
                 data: encrypted
             }, {
                 headers: authHeader,
