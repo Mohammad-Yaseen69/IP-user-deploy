@@ -20,7 +20,6 @@ const AgentsModal = ({ isRole, isOpen, onClose, t, width, roles, isEdit, editDat
     const [status, setStatus] = useState({ type: null, message: "" }) // null, 'loading', 'success', 'error'
     const isWildcardParent = (pk) => pk && selectedPermissions.includes(`${pk}.*`);
     const queryClient = useQueryClient()
-
     const [form, setForm] = useState({
         first_name: isEdit && editData ? editData?.first_name || "" : "",
         last_name: isEdit && editData ? editData?.last_name || "" : "",
@@ -102,6 +101,7 @@ const AgentsModal = ({ isRole, isOpen, onClose, t, width, roles, isEdit, editDat
     };
 
     const togglePermission = (key, parentKey = null, type = "action") => {
+
         if (isSuperAdmin) return
         let newPerms = [...selectedPermissions];
         let newDenied = [...deniedPermissions];
@@ -111,6 +111,11 @@ const AgentsModal = ({ isRole, isOpen, onClose, t, width, roles, isEdit, editDat
             if (newPerms.includes(wildcardKey)) {
                 newPerms = newPerms.filter(p => !p.startsWith(`${key}.`));
                 newDenied = newDenied.filter(p => !p.startsWith(`${key}.`));
+                const agentRole = roles?.find(r => r._id === form.role);
+                const roleHasThis = agentRole?.permissions?.includes(wildcardKey);
+                if (roleHasThis) {
+                    newDenied.push(wildcardKey);
+                }
             } else {
                 newPerms = newPerms.filter(p => !p.startsWith(`${key}.`));
                 newDenied = newDenied.filter(p => !p.startsWith(`${key}.`));
@@ -156,7 +161,7 @@ const AgentsModal = ({ isRole, isOpen, onClose, t, width, roles, isEdit, editDat
         } else {
             if (newPerms.includes(key)) {
                 newPerms = newPerms.filter(p => p !== key);
-            } else if (deniedPermissions.includes(key)) {
+            } else if (newDenied.includes(key)) {
                 newDenied = newDenied.filter(p => p !== key);
             } else {
                 const parts = key.split(".");
@@ -241,7 +246,6 @@ const AgentsModal = ({ isRole, isOpen, onClose, t, width, roles, isEdit, editDat
 
     const onSubmit = (e) => {
         e?.preventDefault()
-
         if (!isEdit && !phone) {
             setPhoneError("Phone is required")
             return
@@ -337,30 +341,33 @@ const AgentsModal = ({ isRole, isOpen, onClose, t, width, roles, isEdit, editDat
                             />
                         </div>
 
-                        <div className={styles.formGroup}>
-                            <label>{t("Phone Number")}</label>
-                            <PhoneInput
-                                country={isEdit && editData?.country ? editData.country : country}
-                                phone={phone}
-                                setPhone={setPhone}
-                                error={phoneError}
-                                setError={setPhoneError}
-                                disabled={isEdit}
-                            />
-                        </div>
+                        {!isEdit &&
+                            <>
+                                <div className={styles.formGroup}>
+                                    <label>{t("Phone Number")}</label>
+                                    <PhoneInput
+                                        country={isEdit && editData?.country ? editData.country : country}
+                                        phone={phone}
+                                        setPhone={setPhone}
+                                        error={phoneError}
+                                        setError={setPhoneError}
+                                        disabled={isEdit}
+                                    />
+                                </div>
 
-                        <div className={styles.formGroup}>
-                            <label>{t("Email")}</label>
-                            <input
-                                name="email"
-                                type="email"
-                                value={form.email}
-                                onChange={handleChange}
-                                placeholder="Enter Email"
-                                required={!isEdit}
-                                disabled={isEdit}
-                            />
-                        </div>
+                                <div className={styles.formGroup}>
+                                    <label>{t("Email")}</label>
+                                    <input
+                                        name="email"
+                                        type="email"
+                                        value={form.email}
+                                        onChange={handleChange}
+                                        placeholder="Enter Email"
+                                        required={!isEdit}
+                                        disabled={isEdit}
+                                    />
+                                </div></>
+                        }
 
                         <div className={styles.formGroup}>
                             <label>{t("Role")}</label>

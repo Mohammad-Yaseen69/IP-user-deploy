@@ -114,6 +114,10 @@ const TransactionsTable = () => {
                 const decrypted = decryptData(res.data.data)
                 setTransactions(prev => [...prev, ...decrypted.transactionList.filter(transactionFilter)])
                 setFiltered(prev => [...prev, ...decrypted.transactionList.filter(transactionFilter)])
+                if (decrypted.transactionList.length < 15) {
+                    setMaxLimit(true)
+                    setStopLoader(true)
+                }
                 // console.log("all", decrypted)
                 setIsLoading(false)
             })
@@ -121,7 +125,7 @@ const TransactionsTable = () => {
                 const decrypted = decryptData(err.response.data.data)
                 setIsLoading(false)
                 setStopLoader(true)
-                if (decrypted.status === false && page !== 1) {
+                if (decrypted.status === false) {
                     setMaxLimit(true)
                 }
             })
@@ -139,7 +143,10 @@ const TransactionsTable = () => {
                 const decrypted = decryptData(res.data.data)
                 setTransactions(prev => [...prev, ...decrypted.transactionList.filter(transactionFilter)])
                 setFiltered(prev => [...prev, ...decrypted.transactionList.filter(transactionFilter)])
-
+                if (decrypted.transactionList.length < 15) {
+                    setMaxLimit(true)
+                    setStopLoader(true)
+                }
                 // console.log("query", decrypted)
                 setIsLoading(false)
             })
@@ -148,7 +155,8 @@ const TransactionsTable = () => {
                 setIsLoading(false)
                 setFiltered([])
                 setTransactions([])
-                if (decrypted.status === false && page !== 1) {
+                setStopLoader(true)
+                if (decrypted.status === false) {
                     setMaxLimit(true)
                 }
             })
@@ -176,7 +184,10 @@ const TransactionsTable = () => {
                 const decrypted = decryptData(res.data.data)
                 setTransactions(prev => [...prev, ...decrypted.transactionList.filter(transactionFilter)])
                 setFiltered(prev => [...prev, ...decrypted.transactionList.filter(transactionFilter)])
-
+                if (decrypted.transactionList.length < 15) {
+                    setMaxLimit(true)
+                    setStopLoader(true)
+                }
                 // console.log("date & query", decrypted)
                 setIsLoading(false)
             })
@@ -185,7 +196,8 @@ const TransactionsTable = () => {
                 setIsLoading(false)
                 setFiltered([])
                 setTransactions([])
-                if (decrypted.status === false && page !== 1) {
+                setStopLoader(true)
+                if (decrypted.status === false) {
                     setMaxLimit(true)
                 }
             })
@@ -211,6 +223,7 @@ const TransactionsTable = () => {
         setTransactions([])
         setFiltered([])
         setMaxLimit(false)
+        setStopLoader(false)
         setPage(1)
         if (apiDates !== null) {
             setCurrentTrxType("date_and_query")
@@ -225,6 +238,7 @@ const TransactionsTable = () => {
         setTransactions([])
         setFiltered([])
         setMaxLimit(false)
+        setStopLoader(false)
         setPage(1)
         verifyToken()
     }, [currentTrxType])
@@ -295,6 +309,8 @@ const TransactionsTable = () => {
 
 
     useEffect(() => {
+        if (isLoading || maxLimit) return;
+
         const observer = new IntersectionObserver((enteries) => {
             if (enteries[0].isIntersecting) {
                 setPage(prev => prev + 1)
@@ -308,7 +324,7 @@ const TransactionsTable = () => {
         return () => {
             observer.disconnect()
         }
-    }, [loaderRef.current, mobileLoaderRef.current]);
+    }, [loaderRef.current, mobileLoaderRef.current, isLoading, maxLimit]);
 
     useEffect(() => {
         if (active === "All") {
