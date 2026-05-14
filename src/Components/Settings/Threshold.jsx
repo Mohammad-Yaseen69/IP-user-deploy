@@ -85,7 +85,7 @@ const Threshold = ({ userDetails, authHeader }) => {
             }
 
             if (toggle === false) {
-                await axios.put(`${import.meta.env.VITE_IP_DEV_API}/api/account/update-individual/${userDetails._id}`, { data: encryptData({ qr_quicker_pay_enabled: !toggle }) }, {
+                await axios.put(`${import.meta.env.VITE_IP_DEV_API}/api/account/update-${userDetails?.account_type}/${userDetails._id}`, { data: encryptData({ qr_quicker_pay_enabled: !toggle }) }, {
                     headers: authHeader
                 })
 
