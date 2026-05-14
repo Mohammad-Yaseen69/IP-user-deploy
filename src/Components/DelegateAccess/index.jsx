@@ -105,13 +105,13 @@ const DelegateAccess = () => {
                     {isRole ? (
                         hasPermission("delegate-access.roles.add") && (
                             <button className={styles.addBtn} onClick={handleModalOpen}>
-                                {t("Add Role")}<span><Plus size={20} /></span>
+                                {t("Add Role")}<Plus size={20} />
                             </button>
                         )
                     ) : (
                         hasPermission("delegate-access.agents.add") && (
                             <button className={styles.addBtn} onClick={handleModalOpen}>
-                                {t("Add Agent")}  <span><Plus size={20} /></span>
+                                {t("Add Agent")}  <Plus size={20} />
                             </button>
                         )
                     )}
@@ -126,7 +126,7 @@ const DelegateAccess = () => {
                             placeholder={t(`${isRole ? ("Search for Role") : ("Search for Agent")}`)}
                         />
                     </div>
-                    
+
                 </div>
                 <DelegateTable
                     filteredInvoices={isRole ? roles : agents}

@@ -13,7 +13,7 @@
     background: #fff;
     border-radius: 16px;
     width: 100%;
-    max-width: 680px;
+    max-width: 780px;
     max-height: 90vh;
     display: flex;
     flex-direction: column;
@@ -26,7 +26,6 @@
     align-items: center;
     justify-content: space-between;
     padding: 13px 14px 13px;
-    border-bottom: 1px solid #f0f0f0;
     flex-shrink: 0;
 }
 
@@ -37,7 +36,8 @@
     margin: 0;
     display: flex;
     align-items: center;
-    gap: 2px;
+    gap: 4px;
+    margin-bottom: 15px;
 
     div {
         display: flex;
@@ -81,8 +81,8 @@
 }
 
 .sidebar {
-    width: 180px;
-    background: #f8f8fc;
+    width: 40%;
+    background: #ffff;
     padding: 0px 11px;
     display: flex;
     flex-direction: column;
@@ -99,6 +99,7 @@
     border-radius: 10px;
     cursor: default;
     position: relative;
+
 }
 
 .stepItem:not(:last-child)::after {
@@ -116,9 +117,13 @@
     background: #5626e6;
 }
 
+.stepItem.done .stepItemAfter {
+    background: #10B981;
+}
+
 .stepIcon {
-    width: 30px;
-    height: 30px;
+    width: 33px;
+    height: 33px;
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -137,24 +142,42 @@
 }
 
 .stepIcon.done {
-    background: #5626e6;
+    background: #10B981;
     color: white;
 }
 
 .stepLabel {
-    font-size: 13px;
+    color: #000;
+    font-family: Manrope;
+    font-size: 16px;
+    font-style: normal;
     font-weight: 500;
-    color: #aaa;
-    transition: color 0.3s;
+    line-height: 24px;
+    /* 133.333% */
+    letter-spacing: -0.54px;
+    margin: 0;
+    padding: 0;
+
+    p {
+        color: var(--Secondary, #6F6F6F);
+        font-family: Manrope;
+        font-size: 12px;
+        font-style: normal;
+        font-weight: 600;
+        line-height: 18px;
+        letter-spacing: -0.12px;
+        margin: 0;
+        padding: 0;
+    }
 }
 
 .stepLabel.active {
-    color: #5626e6;
+    /* color: #5626e6; */
     font-weight: 700;
 }
 
 .stepLabel.done {
-    color: #5626e6;
+    /* color: #5626e6; */
 }
 
 .stepContent {
@@ -164,6 +187,7 @@
     display: flex;
     flex-direction: column;
     gap: 16px;
+    background-color: #f8f8fc;
 }
 
 .formGroup {
@@ -172,26 +196,38 @@
     gap: 6px;
 }
 
+.nameInput {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-direction: row;
+}
+
 .formLabel {
-    font-size: 12px;
-    font-weight: 600;
-    color: #666;
-    text-transform: uppercase;
-    letter-spacing: 0.4px;
+    color: var(--text-secondary, #6E7687);
+    font-family: Inter;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 150%;
+    /* 21px */
+    letter-spacing: -0.42px;
 }
 
 .formInput,
 .formSelect {
     width: 100%;
     padding: 10px 14px;
-    border: 1.5px solid #e8e8e8;
     border-radius: 8px;
     font-size: 14px;
     color: #1a1a1a;
-    background: #fff;
     outline: none;
     transition: border-color 0.2s, box-shadow 0.2s;
     appearance: none;
+    border-radius: var(--sm, 6px);
+    border: 1px solid var(--Greyscale-25, #E4E3E5);
+    background: var(--Greyscale-0, #FFF);
+    box-shadow: 0 1px 1.5px 0 rgba(44, 54, 53, 0.03);
 }
 
 .formInput:focus,
@@ -325,48 +361,91 @@
     align-items: center;
     justify-content: space-between;
     padding: 16px 24px;
-    border-top: 1px solid #f0f0f0;
     flex-shrink: 0;
     background: #fff;
 }
 
 .footerLeft {
-    font-size: 13px;
-    color: #aaa;
+    display: flex;
+    height: 60px;
+    width: 38%;
+    padding: 17px 48px 20px 14px;
+    align-items: center;
+    gap: 10px;
+    border-radius: var(--RADIUS-radius-2, 8px);
+    background: var(--bg-elevated, #F8F9FC);
+
+
+    span {
+        display: flex;
+        width: 38px;
+        height: 38px;
+        padding: 9.105px 8.607px 9.107px 8.605px;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        border-radius: 1770px;
+        border: 1px solid var(--COLORS-Primary-100, #C8B7FA);
+    }
+
+    div {
+        margin: 0;
+        padding: 0;
+
+        p {
+            color: var(--Secondary, #6F6F6F);
+            font-family: Manrope;
+            font-size: 10px;
+            font-style: normal;
+            font-weight: 600;
+            line-height: 14px;
+            margin: 0;
+            padding: 0;
+        }
+
+        h2 {
+            color: var(--COLORS-Neutral-1000, #333);
+            font-family: Manrope;
+            font-size: 16px;
+            font-style: normal;
+            font-weight: 600;
+            line-height: 24px;
+            letter-spacing: -0.32px;
+            margin: 0;
+            padding: 0;
+        }
+    }
 }
 
 .footerRight {
     display: flex;
-    gap: 10px;
+    justify-content: space-between;
+    align-items: center;
+    flex: 1 0 0;
+
+    div {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
 }
 
-.btnCancel {
-    padding: 9px 20px;
-    border: 1.5px solid #e0e0e0;
-    border-radius: 8px;
-    background: #fff;
-    font-size: 14px;
-    font-weight: 600;
-    color: #666;
-    cursor: pointer;
-    transition: all 0.2s;
+.btnCancel,
+.btnBack {
+    cursor: progress;
+    border: none;
+    margin-left: 10px;
+    background: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .btnCancel:hover {
     background: #f5f5f5;
 }
 
-.btnBack {
-    padding: 9px 20px;
-    border: 1.5px solid #e0e0e0;
-    border-radius: 8px;
-    background: #fff;
-    font-size: 14px;
-    font-weight: 600;
-    color: #333;
-    cursor: pointer;
-    transition: all 0.2s;
-}
+
 
 .btnBack:hover {
     background: #f5f5f5;
@@ -375,8 +454,8 @@
 .btnNext {
     padding: 9px 24px;
     border: none;
-    border-radius: 8px;
-    background: #5626e6;
+    border-radius: var(--sm, 6px);
+    background: var(--Primary-600---Base, #4A32E3);
     font-size: 14px;
     font-weight: 600;
     color: #fff;
@@ -413,8 +492,8 @@
 }
 
 .permTreeWrapper {
-    border: 1.5px solid #eee;
-    border-radius: 10px;
+    /* border: 1.5px solid #eee; */
+    /* border-radius: 10px; */
     overflow: hidden;
 }
 

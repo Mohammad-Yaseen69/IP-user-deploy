@@ -1,20 +1,20 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useState } from 'react'
-import { CheckCircle, User, Layers, Shield, Eye, XCircle, AlertTriangle } from "react-feather"
+import { CheckCircle, CheckSquare, ChevronRight, ChevronsLeft, Eye, HelpCircle, Layers, Plus, Settings, User, XCircle } from "react-feather"
 import { Spinner } from 'reactstrap'
+import { decryptData } from "../../../Helper/EssentilaMethods/Decryption"
 import useCountryLocation from '../../../hooks/GeneralUse/useCountryLocation'
 import permissionsData from "../../../utils/Data/permissionsData.json"
 import { apiWrapper } from '../../../utils/Functions/apiWrapper'
 import PhoneInput from '../../PhoneInput'
-import PermissionTree from './PermissionTree'
-import { decryptData } from "../../../Helper/EssentilaMethods/Decryption"
+import userFour from "../images/UsersFour.svg"
 import s from "../styles/AgentsModal.module.css"
+import PermissionTree from './PermissionTree'
 
 const STEPS = [
     { id: 1, label: "Profile", icon: <User size={14} /> },
-    { id: 2, label: "Destination", icon: <Layers size={14} /> },
-    { id: 3, label: "Addresses", icon: <Shield size={14} /> },
-    { id: 4, label: "Review", icon: <Eye size={14} /> },
+    { id: 2, label: "Permissions", icon: <Settings size={14} /> },
+    { id: 3, label: "Review", icon: <CheckSquare size={14} /> },
 ]
 
 const AgentsModal = ({ isRole, isOpen, onClose, t, width, roles, isEdit, editData }) => {
@@ -203,14 +203,27 @@ const AgentsModal = ({ isRole, isOpen, onClose, t, width, roles, isEdit, editDat
             if (!form.first_name || !form.last_name) return
             if (!isEdit && !phone) { setPhoneError("Phone is required"); return }
         }
-        if (step < 4) setStep(s => s + 1)
+        if (step < 3) setStep(s => s + 1)
         else onSubmit()
     }
 
     const selectedRoleObj = roles?.find(r => r._id === form.role)
 
     if (!isOpen) return null
+    const isStepOneInvalid =
+        !form.first_name ||
+        !form.last_name ||
+        (!isEdit && (!phone || phoneError)) ||
+        !form.email
 
+    const isStepTwoInvalid =
+        !form.role || selectedPermissions.length === 0
+
+    const isNextDisabled =
+        (step === 1 && isStepOneInvalid) ||
+        (step === 2 && isStepTwoInvalid) ||
+        isCreating ||
+        isUpdating
     return (
         <div className={s.overlay} onClick={onClose}>
             <div className={s.modal} onClick={e => e.stopPropagation()}>
@@ -248,7 +261,7 @@ const AgentsModal = ({ isRole, isOpen, onClose, t, width, roles, isEdit, editDat
 
                             <div className={s.sidebar}>
                                 <div className={s.modalHeader}>
-                                    <h2 className={s.modalTitle}><div><img src="../images/UsersFour.svg" alt="" /></div> {isEdit ? t("Edit Agent") : t("Add Agent")}</h2>
+                                    <h2 className={s.modalTitle}><div><img src={userFour} width={20} height={20} loading="lazy" alt="" /></div> {isEdit ? t("Edit Agent") : t("Add Agent")}</h2>
                                 </div>
                                 {STEPS.map((st, idx) => {
                                     const isDone = step > st.id
@@ -258,10 +271,13 @@ const AgentsModal = ({ isRole, isOpen, onClose, t, width, roles, isEdit, editDat
                                             {idx < STEPS.length - 1 && (
                                                 <div style={{ position: 'absolute', left: 22, top: '100%', width: 2, height: 12, background: isDone ? '#5626e6' : '#e0e0e0', zIndex: 0 }} />
                                             )}
-                                            <div className={`${s.stepIcon} ${isActive ? s.active : ''} ${isDone ? s.done : ''}`}>
+                                            <div
+                                                className={`${s.stepIcon} ${isActive ? s.active : ''} ${isDone ? s.done : ''}`}
+                                            >
                                                 {isDone ? <CheckCircle size={14} /> : st.icon}
                                             </div>
                                             <span className={`${s.stepLabel} ${isActive ? s.active : ''} ${isDone ? s.done : ''}`}>
+                                                <p>STEP{st.id}</p>
                                                 {t(st.label)}
                                             </span>
                                         </div>
@@ -273,13 +289,15 @@ const AgentsModal = ({ isRole, isOpen, onClose, t, width, roles, isEdit, editDat
 
                                 {step === 1 && (
                                     <>
-                                        <div className={s.formGroup}>
-                                            <label className={s.formLabel}>{t("First Name")}</label>
-                                            <input className={s.formInput} name="first_name" value={form.first_name} onChange={handleChange} placeholder={t("Enter first name")} required />
-                                        </div>
-                                        <div className={s.formGroup}>
-                                            <label className={s.formLabel}>{t("Last Name")}</label>
-                                            <input className={s.formInput} name="last_name" value={form.last_name} onChange={handleChange} placeholder={t("Enter last name")} required />
+                                        <div className={s.nameInput}>
+                                            <div className={s.formGroup}>
+                                                <label className={s.formLabel}>{t("First Name")}</label>
+                                                <input className={s.formInput} name="first_name" value={form.first_name} onChange={handleChange} placeholder={t("Enter first name")} required />
+                                            </div>
+                                            <div className={s.formGroup}>
+                                                <label className={s.formLabel}>{t("Last Name")}</label>
+                                                <input className={s.formInput} name="last_name" value={form.last_name} onChange={handleChange} placeholder={t("Enter last name")} required />
+                                            </div>
                                         </div>
                                         <div className={s.formGroup}>
                                             <label className={s.formLabel}>{t("Phone Number")}</label>
@@ -290,6 +308,20 @@ const AgentsModal = ({ isRole, isOpen, onClose, t, width, roles, isEdit, editDat
                                                 error={phoneError}
                                                 setError={setPhoneError}
                                                 disabled={isEdit}
+                                                customStyles={{
+                                                    width: '100%',
+                                                    padding: '13px 14px',
+                                                    borderRadius: '8px',
+                                                    fontSize: '14px',
+                                                    borderRadius: "6px",
+                                                    color: '#1a1a1a',
+                                                    outline: 'none',
+                                                    transition: 'border-color 0.2s, box-shadow 0.2s',
+                                                    appearance: 'none',
+                                                    border: '1px solid var(--Greyscale-25, #E4E3E5)',
+                                                    background: 'var(--Greyscale-0, #FFF)',
+                                                    boxShadow: '0 1px 1.5px 0 rgba(44, 54, 53, 0.03)',
+                                                }}
                                             />
                                         </div>
                                         <div className={s.formGroup}>
@@ -326,38 +358,9 @@ const AgentsModal = ({ isRole, isOpen, onClose, t, width, roles, isEdit, editDat
                                     </>
                                 )}
 
-                                {step === 3 && (
-                                    <>
-                                        <div className={s.warningBanner}>
-                                            <AlertTriangle size={18} className={s.warningIcon} color="#f59e0b" />
-                                            <p className={s.warningText}>
-                                                {t("Please review the agent details before submitting. Once created, the agent will receive an email to set their password and gain access.")}
-                                            </p>
-                                        </div>
-                                        <div className={s.reviewCard}>
-                                            <div className={s.reviewRow}>
-                                                <span className={s.reviewRowKey}>{t("Name")}</span>
-                                                <span className={s.reviewRowVal}>{form.first_name} {form.last_name}</span>
-                                            </div>
-                                            {!isEdit && (
-                                                <div className={s.reviewRow}>
-                                                    <span className={s.reviewRowKey}>{t("Phone")}</span>
-                                                    <span className={s.reviewRowVal}>{phone || "—"}</span>
-                                                </div>
-                                            )}
-                                            <div className={s.reviewRow}>
-                                                <span className={s.reviewRowKey}>{t("Email")}</span>
-                                                <span className={s.reviewRowVal}>{form.email || "—"}</span>
-                                            </div>
-                                            <div className={s.reviewRow}>
-                                                <span className={s.reviewRowKey}>{t("Role")}</span>
-                                                <span className={s.reviewRowVal}>{selectedRoleObj?.title || t("Custom")}</span>
-                                            </div>
-                                        </div>
-                                    </>
-                                )}
 
-                                {step === 4 && (
+
+                                {step === 3 && (
                                     <>
                                         <div className={s.reviewCard} style={{ marginBottom: 12 }}>
                                             <div className={s.reviewRow}>
@@ -382,6 +385,8 @@ const AgentsModal = ({ isRole, isOpen, onClose, t, width, roles, isEdit, editDat
                                                 isIndeterminate={isIndeterminate}
                                                 togglePermission={togglePermission}
                                                 isSuperAdmin={isSuperAdmin}
+                                                isDisabled={true}
+
                                             />
                                         </div>
                                     </>
@@ -391,24 +396,32 @@ const AgentsModal = ({ isRole, isOpen, onClose, t, width, roles, isEdit, editDat
                         </div>
 
                         <div className={s.modalFooter}>
-                            <span className={s.footerLeft}>
-                                {t("Step")} {step} {t("of")} {STEPS.length}
-                            </span>
+                            <div className={s.footerLeft}>
+                                <span><HelpCircle /></span>
+                                <div>
+                                    <p>{t("Having Troubles?")}</p>
+                                    <h2>{("Contact Us")}</h2>
+                                </div>
+                            </div>
                             <div className={s.footerRight}>
                                 <button className={s.btnCancel} onClick={onClose} type="button">{t("Cancel")}</button>
-                                {step > 1 && (
-                                    <button className={s.btnBack} onClick={() => setStep(p => p - 1)} type="button">{t("Back")}</button>
-                                )}
-                                <button
-                                    className={s.btnNext}
-                                    onClick={handleNext}
-                                    disabled={isCreating || isUpdating}
-                                    type="button"
-                                >
-                                    {step === 4
-                                        ? (isCreating || isUpdating ? <><Spinner size="sm" /> {t("Saving...")}</> : (isEdit ? t("Update") : t("Save")))
-                                        : t("Next")}
-                                </button>
+                                <div>
+                                    {step > 1 && (
+                                        <button className={s.btnBack} onClick={() => setStep(p => p - 1)} type="button"><ChevronsLeft /> {t("Back")}</button>
+                                    )}
+                                    <button
+                                        className={s.btnNext}
+                                        onClick={handleNext}
+                                        disabled={isNextDisabled}
+                                        type="button"
+                                    >
+                                        {step === 3
+                                            ? (isCreating || isUpdating ?
+                                                <><Spinner size="sm" /> {t("Saving...")}</>
+                                                : (isEdit ? t("Update") : t("Create & Send Invite")))
+                                            : t("Next")} {step < 2 ? <ChevronRight /> : <Plus size={20} />}
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </>
