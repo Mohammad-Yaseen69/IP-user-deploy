@@ -47,34 +47,41 @@ const LogActivity = () => {
     const totalPages = ActivityData?.data?.totalPages || 1
     return (
         <div className={styles.container}>
+
             <div className={styles.top}>
-                <h1>
-                    {t("Activity Feed")}
-                </h1>
+                <div className={styles.headerTitle}>
+                    <h1>
+                        {t("Activity Feed")}
+                    </h1>
+                    <p>{t("Stay on top of user actions and permission settings.")}</p>
+                </div>
 
                 {width > 1000 && <TopRight />}
             </div>
-            <div className={styles.searchCont}>
-                <div className={styles.search}>
-                    <Search />
-                    <input
-                        type="text"
-                        value={search}
-                        onChange={(e) => setSearch(e.target.value)}
-                        placeholder={("Search for Activity Feeds")}
-                    />
-                </div>
-                <EntityDropdown fmt={fmt} value={selectedEntity} onChange={setSelectedEntity} adminActivitiesData={adminActivitiesData} />
+            <div className={styles.main}>
 
-                <ActionDropdown
-                    selectedEntity={selectedEntity}
-                    value={selectedActions}
-                    onChange={setSelectedActions}
-                    fmt={fmt}
-                    adminActivitiesData={adminActivitiesData} />
+                <div className={styles.searchCont}>
+                    <div className={styles.searchBox}>
+                        <Search />
+                        <input
+                            type="text"
+                            value={search}
+                            onChange={(e) => setSearch(e.target.value)}
+                            placeholder={("Search for Activity Feeds")}
+                        />
+                    </div>
+                    <EntityDropdown fmt={fmt} value={selectedEntity} onChange={setSelectedEntity} adminActivitiesData={adminActivitiesData} />
+
+                    <ActionDropdown
+                        selectedEntity={selectedEntity}
+                        value={selectedActions}
+                        onChange={setSelectedActions}
+                        fmt={fmt}
+                        adminActivitiesData={adminActivitiesData} />
+                </div>
+                <ActivityTable filteredData={data} Loading={Loading} />
+                <Paginations page={page} totalPages={totalPages} setPage={setPage} limit={limit} setLimit={setLimit} />
             </div>
-            <ActivityTable filteredData={data} Loading={Loading} />
-            <Paginations page={page} totalPages={totalPages} setPage={setPage} limit={limit} setLimit={setLimit} />
         </div>
     )
 }
