@@ -12,7 +12,7 @@ const RoleModal = ({ isRole, isOpen, onClose, t, width, isEdit, editData }) => {
     const [permSearch, setPermSearch] = useState("")
     const [selectedPermissions, setSelectedPermissions] = useState(isEdit && editData ? editData.permissions || [] : [])
     const [deniedPermissions, setDeniedPermissions] = useState(isEdit && editData ? editData.deniedPermissions || [] : [])
-    const [status, setStatus] = useState({ type: null, message: "" }) // null, 'loading', 'success', 'error'
+    const [status, setStatus] = useState({ type: null, message: "" })
 
     const isWildcardParent = (pk) => pk && selectedPermissions.includes(`${pk}.*`);
     const queryClient = useQueryClient()
@@ -84,6 +84,9 @@ const RoleModal = ({ isRole, isOpen, onClose, t, width, isEdit, editData }) => {
             if (newPerms.includes(wildcardKey)) {
                 newPerms = newPerms.filter(p => !p.startsWith(`${key}.`));
                 newDenied = newDenied.filter(p => !p.startsWith(`${key}.`));
+                if (isEdit) {
+                    newDenied.push(wildcardKey);
+                }
             } else {
                 newPerms = newPerms.filter(p => !p.startsWith(`${key}.`));
                 newDenied = newDenied.filter(p => !p.startsWith(`${key}.`));
@@ -129,7 +132,7 @@ const RoleModal = ({ isRole, isOpen, onClose, t, width, isEdit, editData }) => {
         } else {
             if (newPerms.includes(key)) {
                 newPerms = newPerms.filter(p => p !== key);
-            } else if (deniedPermissions.includes(key)) {
+            } else if (newDenied.includes(key)) {
                 newDenied = newDenied.filter(p => p !== key);
             } else {
                 const parts = key.split(".");
