@@ -16,9 +16,12 @@ export const useAgentAuth = () => {
 
     const verifyLoginOtp = useMutation({
         mutationFn: async ({ credentials, method }) => apiWrapper({
-            endpoint: `/api/business-agents/agents/verify-login-${method === "auth" ? "auth" : "otp"}`,
+            endpoint: `/api/business-agents/agents/verify-login-otp`,
             method: 'POST',
-            payload: credentials,
+            payload: {
+                ...credentials,
+                isAuthenticator: method === "auth" ? true : false
+            },
             isEncrypted: true
         })
     });

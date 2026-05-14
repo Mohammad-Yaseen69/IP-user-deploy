@@ -9,7 +9,7 @@ import styles from "./styles/Index.module.css"
 import ActivityTable from "./components/Table"
 import { EntityDropdown } from "./components/EntityDropdown"
 import { ActionDropdown } from "./components/ActionDropdown"
-import adminActivitiesData from "../../Data/adminActivitiesData.json"
+import adminActivitiesData from "../../Data/userActivitiesData.json"
 import Paginations from "../../Common/Component/Paginations"
 const LogActivity = () => {
     const width = useWindowWidth()

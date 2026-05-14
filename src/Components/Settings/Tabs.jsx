@@ -158,7 +158,7 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
             icon: dyd,
             active_icon: dyd_active,
         },
-    ])
+    ].filter(Boolean))
     const { t } = useTranslation()
     const [missingTabs, setMissingTabs] = useState([])
     const [showDropdown, setShowDropdown] = useState(false);
@@ -228,7 +228,7 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
 
     return (
         <div style={{ overflowX: width < 1000 && "visible" }} className={styles.container}>
-            {(missingTabsData.length > 0 && width > 1000 && profileCompleted) &&
+            {(missingTabsData?.length > 0 && width > 1000 && profileCompleted) &&
                 <div className={styles.missingTabs}>
                     <span  >
                         {t("Please complete the following important steps")}
@@ -236,16 +236,16 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
                     {missingTabs?.map(item => (
                         <div
                             style={{ padding: '12px 5px', width: '100%' }}
-                            key={item.name}
-                            className={`${styles.tab} ${currentTab === item.name ? styles.active : ""} ${((item.name !== "Basic Info" && profileIncompleteReason === "basic") || (userDetails?.country?.kyc_required && item.name !== "Verification" && !ft && !isKycApproved)) ? styles.disabled : ""} ${(userDetails?.country?.kyc_required && item.name !== "Verification") ? styles.kyc : ""}`}
+                            key={item?.name}
+                            className={`${styles.tab} ${currentTab === item?.name ? styles.active : ""} ${((item?.name !== "Basic Info" && profileIncompleteReason === "basic") || (userDetails?.country?.kyc_required && item?.name !== "Verification" && !ft && !isKycApproved)) ? styles.disabled : ""} ${(userDetails?.country?.kyc_required && item?.name !== "Verification") ? styles.kyc : ""}`}
                             onClick={() => {
                                 window.history.replaceState(null, null, "")
-                                setCurrentTab(item.name)
+                                setCurrentTab(item?.name)
                                 verifyToken()
 
-                                const activeUrlTab = navigatedTabs.find(tab => window.location.href.includes(tab.param));
+                                const activeUrlTab = navigatedTabs?.find(tab => window.location.href.includes(tab.param));
 
-                                if (activeUrlTab && item.name === activeUrlTab.name) {
+                                if (activeUrlTab && item?.name === activeUrlTab?.name) {
                                     navigate(`/settings`);
                                 }
 
@@ -253,8 +253,8 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
                             }}
 
                         >
-                            <img alt='asdfaf' src={item.name !== currentTab ? item.active_icon : item.icon} />
-                            {t(item.name)}
+                            <img alt='asdfaf' src={item?.name !== currentTab ? item?.active_icon : item?.icon} />
+                            {t(item?.name)}
                         </div>
                     ))}
                 </div>
@@ -289,7 +289,7 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
                         tabIndex={0}
                         style={{ justifyContent: 'space-between' }}
                         onBlur={e => {
-                            if (!e.currentTarget.contains(e.relatedTarget)) setShowDropdown(false);
+                            if (!e.currentTarget.contains(e?.relatedTarget)) setShowDropdown(false);
                         }}                    >
                         {(() => {
                             const selected = tabsData.find(tab => tab.name === currentTab);
@@ -306,38 +306,38 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
                     </div>
                     {showDropdown && (
                         <div className={styles.customDropdownList} tabIndex={-1}>
-                            {tabsData.filter(item => item.name.length > 0).map(item => {
-                                const isDisabled = (item.name !== "Basic Info" && profileIncompleteReason === "basic") ||
-                                    (userDetails?.country?.kyc_required && item.name !== "Verification" && !ft && !isKycApproved);
+                            {tabsData.filter(item => item?.name.length > 0).map(item => {
+                                const isDisabled = (item?.name !== "Basic Info" && profileIncompleteReason === "basic") ||
+                                    (userDetails?.country?.kyc_required && item?.name !== "Verification" && !ft && !isKycApproved);
                                 return (
                                     <div
-                                        key={item.name}
-                                        style={{ background: (currentTab !== item.name && missingTabs.some(i => i.name === item.name)) && "rgba(255, 136, 0, 0.08)", justifyContent: 'space-between' }}
+                                        key={item?.name}
+                                        style={{ background: (currentTab !== item?.name && missingTabs.some(i => i.name === item?.name)) && "rgba(255, 136, 0, 0.08)", justifyContent: 'space-between' }}
                                         className={
                                             styles.customDropdownOption +
                                             (isDisabled ? ' ' + styles.disabled : '') +
-                                            (currentTab === item.name ? ' ' + styles.active : '')
+                                            (currentTab === item?.name ? ' ' + styles.active : '')
                                         }
                                         tabIndex={isDisabled ? -1 : 0}
                                         onMouseDown={e => {
                                             e.preventDefault();
                                             if (isDisabled) return;
-                                            setCurrentTab(item.name);
+                                            setCurrentTab(item?.name);
                                             setShowDropdown(false);
                                             verifyToken();
                                             const activeUrlTab = navigatedTabs.find(tab => window.location.href.includes(tab.param));
 
-                                            if (activeUrlTab && item.name === activeUrlTab.name) {
+                                            if (activeUrlTab && item?.name === activeUrlTab.name) {
                                                 navigate(`/settings`);
                                             }
                                         }}
                                     >
                                         <div>
-                                            <img alt="tab-icon" style={{ width: "40px", height: '40px' }} src={item.active_icon} className={styles.tabIcon} />
-                                            <span style={{ fontWeight: 600, fontSize: '15px' }}>{t(item.name)}</span>
+                                            <img alt="tab-icon" style={{ width: "40px", height: '40px' }} src={item?.active_icon} className={styles.tabIcon} />
+                                            <span style={{ fontWeight: 600, fontSize: '15px' }}>{t(item?.name)}</span>
                                         </div>
 
-                                        {(currentTab !== item.name && missingTabs.some(i => i.name === item.name))
+                                        {(currentTab !== item?.name && missingTabs.some(i => i.name === item?.name))
                                             &&
                                             <div style={{ width: '14px', height: '14px', background: "#EB8C1D", borderRadius: '50%', flexShrink: "0", display: "flex", justifyContent: "center", alignItems: 'center', color: 'white', fontWeight: 600 }}>
                                                 i
@@ -351,14 +351,14 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
                 </div>
             )}
             {
-                tabsData.filter(item => (item.name.length > 0 && (!missingTabs.some(i => i.name === item.name) && width > 1000))).map(item => (
+                tabsData.filter(item => (item?.name?.length > 0 && (!missingTabs.some(i => i.name === item?.name) && width > 1000))).map(item => (
                     <div
-                        key={item.name}
-                        className={`${styles.tab} ${currentTab === item.name ? styles.active : ""} ${((item.name !== "Basic Info" && profileIncompleteReason === "basic") || (userDetails?.country?.kyc_required && item.name !== "Verification" && !ft && !isKycApproved)) ? styles.disabled : ""} ${(userDetails?.country?.kyc_required && item.name !== "Verification") ? styles.kyc : ""}`}
+                        key={item?.name}
+                        className={`${styles.tab} ${currentTab === item?.name ? styles.active : ""} ${((item?.name !== "Basic Info" && profileIncompleteReason === "basic") || (userDetails?.country?.kyc_required && item?.name !== "Verification" && !ft && !isKycApproved)) ? styles.disabled : ""} ${(userDetails?.country?.kyc_required && item?.name !== "Verification") ? styles.kyc : ""}`}
                         onClick={() => {
-                            if ((item.name !== "Basic Info" && profileIncompleteReason === "basic") || (userDetails?.country?.kyc_required && item.name !== "Verification" && !ft && !isKycApproved)) return;
+                            if ((item?.name !== "Basic Info" && profileIncompleteReason === "basic") || (userDetails?.country?.kyc_required && item?.name !== "Verification" && !ft && !isKycApproved)) return;
                             window.history.replaceState(null, null, "")
-                            setCurrentTab(item.name)
+                            setCurrentTab(item?.name)
                             verifyToken()
 
                             const activeUrlTab = navigatedTabs.find(tab => window.location.href.includes(tab.param));
@@ -368,10 +368,10 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
                             }
                         }}
                     >
-                        <img alt='asdfaf' src={item.name !== currentTab ? item.active_icon : item.icon} />
-                        {t(item.name)}
+                        <img alt='asdfaf' src={item?.name !== currentTab ? item?.active_icon : item?.icon} />
+                        {t(item?.name)}
                         {
-                            item.name.toLowerCase().includes("basic")
+                            item?.name.toLowerCase().includes("basic")
                                 &&
                                 profileIncompleteReason === "basic"
                                 ?
@@ -380,7 +380,7 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
                                 ""
                         }
                         {
-                            item.name.toLowerCase().includes("security")
+                            item?.name.toLowerCase().includes("security")
                                 &&
                                 profileIncompleteReason === "security"
                                 ?
@@ -389,7 +389,7 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
                                 ""
                         }
                         {/* {
-                            item.name.toLowerCase().includes("preferences")
+                            item?.name.toLowerCase().includes("preferences")
                                 &&
                                 !userDetails?.tfa
                                 ?
@@ -398,7 +398,7 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
                                 ""
                         } */}
                         {/* {
-                            item.name.toLowerCase().includes("identity")
+                            item?.name.toLowerCase().includes("identity")
                                 &&
                                 userDetails?.user?.kyc_status !== "approved"
                                 ?

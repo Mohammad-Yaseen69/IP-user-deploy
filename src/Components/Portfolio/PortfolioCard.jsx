@@ -22,6 +22,7 @@ import docPl from "./files/doc.jpeg"
 import styles2 from "../Profile/styles/PortfolioItem.module.css"
 import "./styles/player.reset.css"
 import useWindowWidth from "../../utils/useWindowWidth"
+import { usePermission } from "../../hooks/GeneralUse/usePermission"
 
 const PortfolioCard = ({ item, dragRef, dragOverRef, index, handleSort, pAddress, publicP, setPlayingMediaId, playingMediaId, playerRefs }) => {
     const { t } = useTranslation()
@@ -33,6 +34,13 @@ const PortfolioCard = ({ item, dragRef, dragOverRef, index, handleSort, pAddress
     const [tooltip, setTooltip] = useState(false);
     const [isDraggable, setIsDraggable] = useState(false)
     const width = useWindowWidth()
+    const can = usePermission()
+
+    const canEditPortfolio = can("portfolio.edit")
+
+    const canDeletePortfolio = can("portfolio.delete")
+
+    const canSharePortfolio = can("portfolio.share")
     const base_url = window.location.origin || 'https://my.insta-pay.ch';
     const handleClickOutside = (event) => {
         if (menuRef.current && !menuRef.current.contains(event.target)) {
@@ -233,7 +241,7 @@ const PortfolioCard = ({ item, dragRef, dragOverRef, index, handleSort, pAddress
                                         className={`${styles.card_menu} ${showMenu ? styles.card_menu_active : ""}`}
                                     >
 
-                                        <div className={styles.card_menu_item} onClick={(e) => {
+                                        {canEditPortfolio && <div className={styles.card_menu_item} onClick={(e) => {
                                             e.stopPropagation()
                                             setShowEdit(true)
                                             toggleShowMenu()
@@ -245,21 +253,21 @@ const PortfolioCard = ({ item, dragRef, dragOverRef, index, handleSort, pAddress
                                                 objectFit: "contain"
                                             }} />
                                             <span>{t("Edit")}</span>
-                                        </div>
-
-                                        <div className={styles.card_menu_item} onClick={(e) => {
-                                            e.stopPropagation()
-                                            setShowDelete(true)
-                                            toggleShowMenu()
-                                        }}>
-                                            {/* <Trash2 /> */}
-                                            <img src={delete_icon} alt="delete" style={{
-                                                width: "20px",
-                                                height: "20px",
-                                                objectFit: "contain"
-                                            }} />
-                                            <span>{t("Delete")}</span>
-                                        </div>
+                                        </div>}
+                                        {canDeletePortfolio &&
+                                            <div className={styles.card_menu_item} onClick={(e) => {
+                                                e.stopPropagation()
+                                                setShowDelete(true)
+                                                toggleShowMenu()
+                                            }}>
+                                                {/* <Trash2 /> */}
+                                                <img src={delete_icon} alt="delete" style={{
+                                                    width: "20px",
+                                                    height: "20px",
+                                                    objectFit: "contain"
+                                                }} />
+                                                <span>{t("Delete")}</span>
+                                            </div>}
                                     </div>
                                 </>
                             }
@@ -404,8 +412,8 @@ const PortfolioCard = ({ item, dragRef, dragOverRef, index, handleSort, pAddress
                             <div className={styles.icbm_right}>
                                 {/* <img src={heart} alt="heart" />
                         <img src={comment} alt="comment" /> */}
-                                <img src={share} alt="share" onClick={() => setShowShareModal(true)} style={{ cursor: "pointer" }} />
-                            </div>
+                                {canSharePortfolio && <img src={share} alt="share" onClick={() => setShowShareModal(true)} style={{ cursor: "pointer" }} />
+                                } </div>
                         </div>
                     </div>
                 </>

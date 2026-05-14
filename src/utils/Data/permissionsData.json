@@ -568,10 +568,59 @@
     },
     {
         "module": "payment-address",
-        "feature": null,
-        "action": "share",
-        "key": "payment-address.share",
-        "description": "Share Payment Address Link"
+        "feature": "banner",
+        "action": "upload",
+        "key": "payment-address.banner.upload",
+        "description": "Upload Payment Address Banner"
+    },
+    {
+        "module": "payment-address",
+        "feature": "profile-image",
+        "action": "update",
+        "key": "payment-address.profile-image.update",
+        "description": "Update Payment Address Profile Image"
+    },
+    {
+        "module": "payment-address",
+        "feature": "virtual-payment-address",
+        "action": "enable",
+        "key": "payment-address.virtual-payment-address.enable",
+        "description": "Enable Virtual Payment Address"
+    },
+    {
+        "module": "payment-address",
+        "feature": "video",
+        "action": "add",
+        "key": "payment-address.video.add",
+        "description": "Add Payment Address Video"
+    },
+    {
+        "module": "payment-address",
+        "feature": "plan",
+        "action": "add",
+        "key": "payment-address.plan.add",
+        "description": "Add New Plan"
+    },
+    {
+        "module": "payment-address",
+        "feature": "plan",
+        "action": "update",
+        "key": "payment-address.plan.update",
+        "description": "Update Plan"
+    },
+    {
+        "module": "payment-address",
+        "feature": "plan",
+        "action": "delete",
+        "key": "payment-address.plan.delete",
+        "description": "Delete Plan"
+    },
+    {
+        "module": "payment-address",
+        "feature": "plan",
+        "action": "subscribe",
+        "key": "payment-address.plan.subscribe",
+        "description": "Subscribe To Plan"
     },
     {
         "module": "quotations",
@@ -644,7 +693,7 @@
         "description": "View Geo-Fencing Settings"
     },
     {
-        "module": "geo-fencing",  
+        "module": "geo-fencing",
         "feature": null,
         "action": "update",
         "key": "geo-fencing.update",

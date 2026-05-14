@@ -1,0 +1,151 @@
+[
+    {
+        "entity": "ACCOUNT",
+        "actions": [
+            "BUSINESS_ACCOUNT_UPDATED",
+            "CHANGED_PASSWORD",
+            "SET-OTP-THRESHOLD",
+            "BIOMETRIC_LOGIN_CHALLENGE_GENERATED",
+            "SECURITY_QUESTIONS_UPDATED",
+            "QR_QUICK_PAY_UPDATED",
+            "SET_ACCOUNT_SEARCH",
+            "SET_ACCOUNT_SEARCH_UPDATED",
+            "SET_CREATE_ACCOUNT_PIN",
+            "SET_STATUS_PIN",
+            "UPDATE_ACCOUNT_PIN",
+            "ADD_KYB_PARTNER",
+            "DELETE_USER_PIN",
+            "DELETE_USER_ACCOUNT"
+        ]
+    },
+    {
+        "entity": "NOMINEE",
+        "actions": [
+            "NOMINEE_ADDED",
+            "NOMINEE_UPDATED",
+            "NOMINEE_DELETED"
+        ]
+    },
+    {
+        "entity": "NOTIFICATION",
+        "actions": [
+            "UPDATE_NOTIFICATION"
+        ]
+    },
+    {
+        "entity": "KYB_PARTNERS",
+        "actions": [
+            "ADD_KYB_PARTNER",
+            "UPDATE_KYB_PARTNER",
+            "DELETE_KYB_PARTNER",
+            "VERIFICATION_KYB_PARTNER",
+            "VERIFICATION_DITIT_KYB_PARTNER",
+            "DELETE_KYB_PARTNER_FILE"
+        ]
+    },
+    {
+        "entity": "API_KEYS",
+        "actions": [
+            "API_KEY_CREATING",
+            "API_KEY_UPDATED",
+            "API_KEY_DELETED"
+        ]
+    },
+    {
+        "entity": "WITHDRAWL",
+        "actions": [
+            "CREATE_WITHDRAWL",
+            "UPDATE_WITHDRAWL",
+            "DELETE_WITHDRAWL",
+            "DELETE_CHANNEL_WITHDRWAL",
+            "SET_AS_DEFAULT"
+        ]
+    },
+    {
+        "entity": "INVOICES",
+        "actions": [
+            "CREATE_INVOICES",
+            "UPDATED_INVOICES",
+            "DELETED_INVOICES"
+        ]
+    },
+    {
+        "entity": "TRANSACTION",
+        "actions": [
+            "TRANSACTION_CREATED"
+        ]
+    },
+    {
+        "entity": "PAYMENTSREQUEST",
+        "actions": [
+            "CREATED_PAYMENTS_REQUEST",
+            "PAYMENT_REQUEST_ACCEPTED",
+            "PAYMENT_REQUEST_DECLINED"
+        ]
+    },
+    {
+        "entity": "QUOTATION",
+        "actions": [
+            "CREATE_QUOTATION",
+            "BARGAIN_QUOTATION",
+            "ACCEPTED_BARGAIN_QUOTATION",
+            "DECLINED_QUOTATION",
+            "QUOTATION_ACCEPTED",
+            "ACCEPT_QUOTATION"
+        ]
+    },
+    {
+        "entity": "BENEFICIARY",
+        "actions": [
+            "CREATE_BENEFICIARY",
+            "UPDATED_BENEFICIARY",
+            "DELETE_BENEFICIARY"
+        ]
+    },
+    {
+        "entity": "QRCODE",
+        "actions": [
+            "UPDATE_QRCODE",
+            "QR_CODE_UPLOADED"
+        ]
+    },
+    {
+        "entity": "CURRENCY",
+        "actions": [
+            "CURRENCY_ADD"
+        ]
+    },
+    {
+        "entity": "PORTFOLIO",
+        "actions": [
+            "UPLOAD_PORTFOLIO",
+            "UPDATE_PORTFOLIO",
+            "DELETE_PORTFOLIO"
+        ]
+    },
+    {
+        "entity": "GEOFENCING",
+        "actions": [
+            "UPDATE_GEOFENCING"
+        ]
+    },
+    {
+        "entity": "REFERRALS",
+        "actions": [
+            "COMMISSION_MOVED",
+            "CREATE_WITHDRAWAL_REQUEST"
+        ]
+    },
+    {
+        "entity": "DELEGATE_ACCESS",
+        "actions": [
+            "CREATE_AGENTS",
+            "UPDATE_AGENTS",
+            "DELETE_AGENTS",
+            "AGENTS_STATUS_UPDATE",
+            "CREATE_ROLE",
+            "UPDATE_ROLE",
+            "DELETE_ROLE"
+        ]
+    }
+]
