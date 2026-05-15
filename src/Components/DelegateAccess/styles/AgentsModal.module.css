@@ -181,11 +181,13 @@
 }
 
 .stepContainer {
+    width: 100%;
     padding: 10px;
     background: #fff;
 }
 
 .stepContent {
+    width: 100%;
     flex: 1;
     padding: 24px;
     overflow-y: auto;
