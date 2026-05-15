@@ -8,6 +8,7 @@ import { Link } from 'react-router-dom'
 import BeneficiaryCard from './BeneficiaryCard'
 import { UserContext } from '../../Context/UserContext'
 import add_ben from "./add_ben.svg"
+import { usePermission } from "../../hooks/GeneralUse/usePermission";
 
 const Beneficiaries = () => {
     const { t } = useTranslation()
@@ -19,6 +20,7 @@ const Beneficiaries = () => {
             getUserBeneficiaries()
         }
     }, [userDetails])
+    const can = usePermission()
 
     useEffect(() => setFiltered(beneficiaries), [beneficiaries]);
 
@@ -57,11 +59,11 @@ const Beneficiaries = () => {
                         <Input type='search' placeholder={t('Search for Beneficiaries')} style={{ padding: ".5rem 1rem" }} onChange={filterBenef}
                         />
                     </div>
-                    <Button color='transparent' className={styles.btn} style={{ padding: ".5rem 1rem" }} onClick={verifyToken}>
+                    {can("beneficiaries.add") && <Button color='transparent' className={styles.btn} style={{ padding: ".5rem 1rem" }} onClick={verifyToken}>
                         <Link to={"/beneficiaries/add"}>
                             {t("Add Beneficiary")}
                         </Link>
-                    </Button>
+                    </Button>}
                     {/* <Button color='transparent' className={styles.btn} style={{ padding: ".5rem 1rem" }} onClick={() => setManagable(true)}>{t("Manage Beneficiaries")}</Button> */}
                 </div>
 
@@ -77,14 +79,14 @@ const Beneficiaries = () => {
                     overflowX: "auto",
                     height: "fit-content"
                 }}>
-                    {
+                    {can("beneficiaries.view-all") &&
                         filtered.length > 0
-                            ?
-                            filtered.map(item => (
-                                <BeneficiaryCard key={item._id} user={item} />
-                            ))
-                            :
-                            t("No Beneficiaries")
+                        ?
+                        filtered.map(item => (
+                            <BeneficiaryCard key={item._id} user={item} />
+                        ))
+                        :
+                        t("No Beneficiaries")
                     }
                 </div>
             </div>

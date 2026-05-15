@@ -12,6 +12,7 @@ import styles from "../TransactionsNewApi/styles/index.module.scss"
 import more_info from "./more_info.module.scss"
 import PendingItemDetails from "./PendingItemDetails.jsx"
 import ReviewModal from "./ReviewModal"
+import { usePermission } from "../../hooks/GeneralUse/usePermission.jsx"
 
 
 const PendingItem = ({ color, item, activeItem, setActiveItem, index, type = "received", authHeader }) => {
@@ -95,7 +96,10 @@ const PendingItem = ({ color, item, activeItem, setActiveItem, index, type = "re
     const link_type = queryParams.get("type")
 
     const itemRef = useRef(null)
+    const can = usePermission()
+    const canAcceptPaymentRequest = can("payment-request.accept")
 
+    const canDeclinePaymentRequest = can("payment-request.decline")
     useLayoutEffect(() => {
         if (id && id === item?._id) {
             itemRef.current.scrollIntoView({ behavior: "smooth" })
@@ -169,7 +173,7 @@ const PendingItem = ({ color, item, activeItem, setActiveItem, index, type = "re
                     type === "received" && status.toLowerCase() === "pending"
                         ?
                         <div style={{ display: "flex", gap: "1rem", alignItems: "center", justifyContent: "center" }}>
-                            <div style={{
+                            {canAcceptPaymentRequest && <div style={{
                                 flex: "none",
                                 borderRadius: "9.938px",
                                 background: "linear-gradient(341deg, #E64067 -4.84%, #5926F0 90.69%, #4828A0 166.81%), #D9D9D9",
@@ -184,8 +188,8 @@ const PendingItem = ({ color, item, activeItem, setActiveItem, index, type = "re
                                 aspectRatio: 1
                             }} onClick={() => setActiveItem(index + 1)}>
                                 <Check color="white" />
-                            </div>
-                            <div style={{
+                            </div>}
+                            {canDeclinePaymentRequest && <div style={{
                                 borderRadius: "9.938px",
                                 flex: "none",
                                 background: "linear-gradient(to top left,#e1e1e1,#e2e2e2,#b5b5b5)",
@@ -201,7 +205,7 @@ const PendingItem = ({ color, item, activeItem, setActiveItem, index, type = "re
                                 rejectRequest()
                             }}>
                                 <X color="#fff" />
-                            </div>
+                            </div>}
                         </div>
                         :
                         <div>{t("No Actions")}</div>

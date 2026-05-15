@@ -1,23 +1,24 @@
-import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import DateMomentUtils from '@date-io/moment';
+import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
+import axios from 'axios';
+import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useLocation } from 'react-router';
+import { toast } from 'react-toastify';
+import { Button, Card, CardBody, CardFooter, CardHeader, FormGroup, Input, Label, Modal, ModalBody, ModalHeader } from 'reactstrap';
 import { UserContext } from '../../Context/UserContext';
 import { decryptData } from '../../Helper/EssentilaMethods/Decryption';
 import { encryptData } from '../../Helper/EssentilaMethods/Encryption';
-import axios from 'axios';
-import { useTranslation } from 'react-i18next';
-import { Button, Card, CardBody, CardFooter, CardHeader, FormGroup, Input, Label, Modal, ModalBody, ModalHeader } from 'reactstrap';
-import CitiesDropDown from '../CitiesDropDown';
-import { toast } from 'react-toastify';
 import SuccessModal from '../AddBeneficiary/SuccessModal';
-import OTPConfirmation from '../UserSettingsNew/OTPConfirmation';
-import { useLocation, useNavigate } from 'react-router';
-import QrGenerate from './QrGenerate';
-import NextStepModal from './NextStepModal';
-import DateMomentUtils from '@date-io/moment';
-import { MuiPickersUtilsProvider, DatePicker } from '@material-ui/pickers';
+import CitiesDropDown from '../CitiesDropDown';
+import citiesData from "../CitiesDropDown/CitiesData.json";
+import countriesData from "../PaymentsNewer/CountriesData.json";
 import PhoneInput from '../PhoneInput';
-import countriesData from "../PaymentsNewer/CountriesData.json"
-import citiesData from "../CitiesDropDown/CitiesData.json"
-import CountryBasedPhone from "../PhoneInput/PhoneNumberBasedOnCountry.json"
+import CountryBasedPhone from "../PhoneInput/PhoneNumberBasedOnCountry.json";
+import OTPConfirmation from '../UserSettingsNew/OTPConfirmation';
+import NextStepModal from './NextStepModal';
+import QrGenerate from './QrGenerate';
+import { usePermission } from '../../hooks/GeneralUse/usePermission';
 
 
 // dates
@@ -52,7 +53,7 @@ const Basic = ({ setCurrentTab }) => {
     const [otpType, setOtpType] = useState("")
     const [showNextStepModal, setShowNextStepModal] = useState(false)
     const [loading, setLoading] = useState()
-
+    const can = usePermission()
     useEffect(() => {
         setCodeType("sms")
     }, [userDetails])
@@ -240,7 +241,7 @@ const Basic = ({ setCurrentTab }) => {
             }
             const encrypted = encryptData(data)
 
-            axios.put(`${import.meta.env.VITE_IP_DEV_API}/api/account/update-individual/${userDetails?._id}`, {
+            axios.put(`${import.meta.env.VITE_IP_DEV_API}/api/account/update-${userDetails?.account_type}/${userDetails?._id}`, {
                 data: encrypted
             }, {
                 headers: authHeader,
@@ -915,12 +916,12 @@ const Basic = ({ setCurrentTab }) => {
                                 </Button>
                             </>
                             :
-                            <Button style={{
+                            (can("settings.basic-info.update") && (<Button style={{
                                 background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
                                 border: "none",
                                 outline: "none",
                                 borderRadius: "10px"
-                            }} onClick={() => setIsEditMode(true)}>{t("Edit Profile")}</Button>
+                            }} onClick={() => setIsEditMode(true)}>{t("Edit Profile")}</Button>))
                     }
                 </CardFooter>
             </Card>

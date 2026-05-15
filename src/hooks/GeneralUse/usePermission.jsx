@@ -12,7 +12,6 @@ export const usePermission = () => {
             return true;
         }
 
-        console.log(permission, "permission")
         // const agentDetailsData = userDetails?.agentDetails
 
         if (!agentDetails) return true

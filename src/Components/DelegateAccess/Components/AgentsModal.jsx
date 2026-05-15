@@ -28,7 +28,6 @@ const AgentsModal = ({ isRole, isOpen, onClose, t, width, roles, isEdit, editDat
     const [status, setStatus] = useState({ type: null, message: "" })
     const isWildcardParent = (pk) => pk && selectedPermissions.includes(`${pk}.*`)
     const queryClient = useQueryClient()
-
     const [form, setForm] = useState({
         first_name: isEdit && editData ? editData?.first_name || "" : "",
         last_name: isEdit && editData ? editData?.last_name || "" : "",
@@ -100,6 +99,7 @@ const AgentsModal = ({ isRole, isOpen, onClose, t, width, roles, isEdit, editDat
     }
 
     const togglePermission = (key, parentKey = null, type = "action") => {
+
         if (isSuperAdmin) return
         let newPerms = [...selectedPermissions]
         let newDenied = [...deniedPermissions]
@@ -149,6 +149,9 @@ const AgentsModal = ({ isRole, isOpen, onClose, t, width, roles, isEdit, editDat
                 newPerms = newPerms.filter(p => p !== key)
             } else if (deniedPermissions.includes(key)) {
                 newDenied = newDenied.filter(p => p !== key)
+                newPerms = newPerms.filter(p => p !== key);
+            } else if (newDenied.includes(key)) {
+                newDenied = newDenied.filter(p => p !== key);
             } else {
                 const parts = key.split(".")
                 const mod = parts[0]
@@ -192,7 +195,6 @@ const AgentsModal = ({ isRole, isOpen, onClose, t, width, roles, isEdit, editDat
 
     const onSubmit = (e) => {
         e?.preventDefault()
-
         if (!isEdit && !phone) {
             setPhoneError("Phone is required")
             return

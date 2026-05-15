@@ -24,6 +24,7 @@ import PortfolioCard from '../Portfolio/PortfolioCard'
 import useWindowWidth from '../../utils/useWindowWidth'
 import QrGenerate from '../Settings/QrGenerate'
 import PricingsAndPlan from './PricingsAndPlan'
+import { usePermission } from '../../hooks/GeneralUse/usePermission'
 
 const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
     const { t } = useTranslation()
@@ -45,6 +46,14 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
     const [qrFile, setQrFile] = useState(null)
     const width = useWindowWidth()
     const [loading, setLoading] = useState(false)
+    const can = usePermission()
+    const canUploadPaymentBanner = can("payment-address.banner.upload")
+
+    const canUpdatePaymentProfileImage = can("payment-address.profile-image.update")
+
+    const canEnableVirtualPaymentAddress = can("payment-address.virtual-payment-address.enable")
+
+    const canAddPaymentVideo = can("payment-address.video.add")
 
     const base_url = window.location.origin || 'https://my.insta-pay.ch';
     const getPaymentAddress = () => {
@@ -124,10 +133,6 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
         }
     }
 
-
-
-
-    // vpa details
     const [showCurrencyDropdown, setShowCurrencyDropdown] = useState(false)
     const [isActive, setIsActive] = useState(false)
     const [currentWallet, setCurrentWallet] = useState(null)
@@ -140,8 +145,6 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
             setCurrentWallet(userWallets?.filter(item => item?.status?.toLowerCase() === "active" && item?.wallet_type === "insta" && item?.currency?.code !== currency && !item?.blocked && !item?.admin_blocked && !item?.blocked)?.[0])
         }
     }, [currency])
-
-
 
     const handleChangeStatus = async () => {
         if (loading === true) {
@@ -171,7 +174,6 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
         }
     }
 
-    // pa link
     const pa_link = `${base_url}/pay/${userDetails?.username}`;
     const [urlCopied, setUrlCopied] = useState(false)
     const copyHandler = () => {
@@ -185,8 +187,6 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
     const [isWrapped, setIsWrapped] = useState(false);
     const leftRef = useRef()
     const topRef = useRef()
-
-
 
     const [showAboutModal, setShowAboutModal] = useState(false)
 
@@ -239,7 +239,17 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
                         </>
                         :
                         <>
-                            {paymentAddressDetails?.title ? (isSaving ? t("Updating") : editMode ? t('Update') : t("Edit")) : (isSaving ? t("Adding") : t('Add'))}
+                            {
+                                paymentAddressDetails?.title
+                                    ? (
+                                        can("payment-address.update")
+                                            ? (isSaving ? t("Updating") : t("Update"))
+                                            : t("View")
+                                    )
+                                    : (
+                                        isSaving ? t("Adding") : t("Add")
+                                    )
+                            }
                         </>
                 }
             </button>
@@ -259,14 +269,14 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
                         <>
                             <QrGenerate downloadFileSetter={setQrFile} qrUrl={`${base_url}/pay/${userDetails?.username}`} />
                             <InstructionsModal isOpen={isOpen} toggle={() => setIsOpen(!isOpen)} />
-                            <Cover dets={paymentAddressDetails} cover={cover} setCover={setCover} />
+                            <Cover dets={paymentAddressDetails} cover={cover} setCover={setCover} canUploadPaymentBanner={canUploadPaymentBanner} />
                             <Card style={{ marginBottom: "0", borderRadius: '0px' }} className={styles.sub_container}>
                                 <CardBody className={styles.sc_body}>
 
 
                                     <div className={styles.top}>
                                         <div ref={leftRef} className={styles.left}>
-                                            <Profile dets={paymentAddressDetails} dp={dp} setDp={setDp} />
+                                            <Profile dets={paymentAddressDetails} canUpdatePaymentProfileImage={canUpdatePaymentProfileImage} dp={dp} setDp={setDp} />
                                             <div className={styles.basic_dets}>
                                                 <div className={styles.badge}>{userDetails?.account_type === "individual" ? t("Personal") : t("Business")} {t("Account")}</div>
                                                 <h4>{userDetails?.user?.first_name || userDetails?.company_name} {userDetails?.user?.last_name}</h4>
@@ -317,8 +327,8 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
                                                     </p>
                                                 </div>
 
-                                                <Toggle checked={isActive} onChange={handleChangeStatus} />
-                                            </div>
+                                                {canEnableVirtualPaymentAddress && <Toggle checked={isActive} onChange={handleChangeStatus} />
+                                                }</div>
 
                                             <div onClick={() => setShowCurrencyDropdown(!showCurrencyDropdown)} className={styles.curr}>
                                                 <p>{t("Set the currency")}</p>
@@ -374,9 +384,9 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
                                                 <p>
                                                     {t("Payment Address QR Code")}
                                                 </p>
-                                                <span onClick={downloadQRCode} style={{ cursor: "pointer" }}>
+                                                {can("payment-address.download") && <span onClick={downloadQRCode} style={{ cursor: "pointer" }}>
                                                     {t("Download")}
-                                                </span>
+                                                </span>}
                                             </div>
                                         </div>
                                     </div>
@@ -467,8 +477,8 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
                                                 </div>
                                             </div>
                                             <div className={styles.bottomV}>
-                                                <button className={styles.buttonStyles} onClick={() => setShowModal(true)}>{t("Add Video")}</button>
-                                            </div>
+                                                {canAddPaymentVideo && <button className={styles.buttonStyles} onClick={() => setShowModal(true)}>{t("Add Video")}</button>
+                                                } </div>
                                         </div>
                                     </div>
 

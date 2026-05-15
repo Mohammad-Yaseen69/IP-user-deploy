@@ -4,9 +4,13 @@ import useWindowWidth from "../../../utils/useWindowWidth";
 import InstaPayLoader from "../../Loader";
 import { MoreHorizontal, MoreVertical, X } from "react-feather";
 import { useState } from "react";
+import { useContext, useMemo } from "react";
+import { UserContext } from "../../../Context/UserContext";
+import { Link } from "react-router-dom";
 
 const ActivityTable = ({ filteredData, Loading }) => {
     const { t } = useTranslation();
+    const { userDetails } = useContext(UserContext)
     const width = useWindowWidth();
     const [selectedActivity, setSelectedActivity] = useState(null)
     const [showModal, setShowModal] = useState(false)
@@ -14,7 +18,28 @@ const ActivityTable = ({ filteredData, Loading }) => {
         if (!text) return "—";
         return text.length > max ? `${text.slice(0, max)}...` : text;
     };
-    console.log(filteredData)
+
+    const dynamicDesc = (desc) => {
+        const isTransaction = desc?.toLowerCase()?.includes("transaction created with reference id:")
+        if (isTransaction) {
+            const reference = desc?.split("reference ID: ")?.[1]
+            if (reference) {
+                return (
+                    <span>
+                        {t("Transaction created with reference id:")} {" "}
+                        <Link to={`/transactions?search=${reference}`}>
+                            {reference}
+                        </Link>
+                    </span>
+                )
+            } else {
+                return desc || "—"
+            }
+        } else {
+            return desc || "—"
+        }
+    }
+
     return (
         <div className={styles.tableWrapper}>
             <div className={styles.table}>
@@ -51,7 +76,7 @@ const ActivityTable = ({ filteredData, Loading }) => {
                         }}
                         className={styles.th}
                     >
-                        {t("Admin Name")}
+                        {t("Name")}
                     </div>
 
                     {width > 700 && (
@@ -157,7 +182,7 @@ const ActivityTable = ({ filteredData, Loading }) => {
                                 }}
                                 className={styles.td}
                             >
-                                {item?.admin_name || "—"}
+                                {item?.agent?.first_name || userDetails?.company_name || ""}{item?.agent?.last_name || ""}
                             </div>
 
                             {width > 700 && (
@@ -192,7 +217,7 @@ const ActivityTable = ({ filteredData, Loading }) => {
                                     }}
                                     className={styles.td}
                                 >
-                                    {truncate(item?.description, 20) || "—"}
+                                    {dynamicDesc(item?.description)}
                                 </div>
                             )}
 
