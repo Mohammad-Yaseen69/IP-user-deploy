@@ -15,6 +15,7 @@ const PricingsAddModal = ({ isOpen, toggle, editMode = false, plan = null, onEdi
     const [tAndC, setTAndC] = useState("")
     const [receivingWallet, setReceivingWallet] = useState("")
     const [status, setStatus] = useState(true)
+    const [showOnPaymentAddress, setShowOnPaymentAddress] = useState(false)
     const { userWallets } = useContext(UserContext)
 
     useEffect(() => {
@@ -25,11 +26,12 @@ const PricingsAddModal = ({ isOpen, toggle, editMode = false, plan = null, onEdi
             setBillingCycle(plan.billingCycle || "One-Time")
             setReceivingWallet(plan.currency || "")
             setStatus(plan.status)
+            setShowOnPaymentAddress(plan.showOnPaymentAddress ?? false)
             setReceivingWallet(plan.receivingWallet?._id)
             setTAndC(plan?.termsAndConditions?.text || "")
         }
         if (!isOpen) {
-            setTitle(''); setDescription(''); setReceivingWallet(''); setPrice('0.00'); setBillingCycle('One-Time'); setTAndC(""); setStatus(true);
+            setTitle(''); setDescription(''); setReceivingWallet(''); setPrice('0.00'); setBillingCycle('One-Time'); setTAndC(""); setStatus(true); setShowOnPaymentAddress(false);
         }
     }, [editMode, plan, isOpen])
 
@@ -43,6 +45,7 @@ const PricingsAddModal = ({ isOpen, toggle, editMode = false, plan = null, onEdi
             billingCycle,
             currency: receivingWallet,
             status,
+            showOnPaymentAddress,
             tAndC,
             _id: plan?._id
         }
@@ -60,6 +63,7 @@ const PricingsAddModal = ({ isOpen, toggle, editMode = false, plan = null, onEdi
         setBillingCycle('One-Time')
         setTAndC("")
         setStatus(true)
+        setShowOnPaymentAddress(false)
         toggle()
     }
 
@@ -167,6 +171,9 @@ const PricingsAddModal = ({ isOpen, toggle, editMode = false, plan = null, onEdi
                             <Toggle onChange={() => setStatus(prev => !prev)} checked={status} />
                         </Field>
                     )}
+                    <Field label={t("Add on Payment Address")} toggle>
+                        <Toggle onChange={() => setShowOnPaymentAddress(prev => !prev)} checked={showOnPaymentAddress} />
+                    </Field>
                     <ButtonForRequests isLoading={submitting || !formValid} onClick={handleSave}>
                         {editMode ? t("Save Changes") : t("Save & Publish to My Payment Address")}
                     </ButtonForRequests>

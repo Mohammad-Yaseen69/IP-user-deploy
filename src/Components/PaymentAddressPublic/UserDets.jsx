@@ -23,7 +23,7 @@ const UserDets = ({ croppedCover, cover, dp, croppedDp, userDetails, user_name, 
     const isFromQr = queryParams.get('fromQr')
     const { data: plansData, isLoading } = useQuery({
         queryKey: ['PublicUserPlans', user_name],
-        queryFn: () => getUserPlans(user_name),
+        queryFn: () => getUserPlans(user_name, true),
         enabled: !!user_name
     })
     const { data: storeData, } = useQuery({
