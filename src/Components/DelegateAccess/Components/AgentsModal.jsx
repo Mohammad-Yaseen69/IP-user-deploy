@@ -1,7 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useState } from 'react'
 import { CheckCircle, CheckSquare, ChevronRight, ChevronsLeft, Eye, HelpCircle, Layers, Plus, Settings, User, XCircle } from "react-feather"
-import { Spinner } from 'reactstrap'
 import { decryptData } from "../../../Helper/EssentilaMethods/Decryption"
 import useCountryLocation from '../../../hooks/GeneralUse/useCountryLocation'
 import permissionsData from "../../../utils/Data/permissionsData.json"
@@ -10,6 +9,7 @@ import PhoneInput from '../../PhoneInput'
 import userFour from "../images/UsersFour.svg"
 import s from "../styles/AgentsModal.module.css"
 import PermissionTree from './PermissionTree'
+import { Button, Modal, ModalBody, ModalHeader, Spinner } from 'reactstrap'
 
 const STEPS = [
     { id: 1, label: "Profile", icon: <User size={14} /> },
@@ -190,12 +190,35 @@ const AgentsModal = ({ isRole, isOpen, onClose, t, width, roles, isEdit, editDat
         }
     })
 
-    const onSubmit = () => {
-        if (!isEdit && !phone) { setPhoneError("Phone is required"); return }
-        const payload = isEdit
-            ? { first_name: form.first_name, last_name: form.last_name, role: form.role, permissions: selectedPermissions, deniedPermissions }
-            : { phone, email: form.email, first_name: form.first_name, last_name: form.last_name, role: form.role, permissions: selectedPermissions, deniedPermissions }
-        isEdit ? updateAgent(payload) : createAgent(payload)
+    const onSubmit = (e) => {
+        e?.preventDefault()
+
+        if (!isEdit && !phone) {
+            setPhoneError("Phone is required")
+            return
+        }
+
+        const payload = isEdit ? {
+            first_name: form.first_name,
+            last_name: form.last_name,
+            role: form.role,
+            permissions: selectedPermissions,
+            deniedPermissions,
+        } : {
+            phone,
+            email: form.email,
+            first_name: form.first_name,
+            last_name: form.last_name,
+            role: form.role,
+            permissions: selectedPermissions,
+            deniedPermissions,
+        }
+
+        if (isEdit) {
+            updateAgent(payload)
+        } else {
+            createAgent(payload)
+        }
     }
 
     const handleNext = () => {
@@ -224,211 +247,316 @@ const AgentsModal = ({ isRole, isOpen, onClose, t, width, roles, isEdit, editDat
         (step === 2 && isStepTwoInvalid) ||
         isCreating ||
         isUpdating
+    const renderStatusContent = () => {
+        if (status.type === 'loading') {
+            return (
+                <div className="text-center p-5">
+                    <Spinner color="primary" style={{ width: '3rem', height: '3rem' }} />
+                    <h5 className="mt-3">{status.message}</h5>
+                </div>
+            );
+        }
+        if (status.type === 'success') {
+            return (
+                <div className="text-center p-5">
+                    <CheckCircle size={60} color="#27ae60" />
+                    <h5 className="mt-3 text-success">{t("Success!")}</h5>
+                    <p className="text-muted">{status.message}</p>
+                    <Button color="success" className="mt-3 px-5" onClick={onClose}>
+                        {t("Done")}
+                    </Button>
+                </div>
+            );
+        }
+        if (status.type === 'error') {
+            return (
+                <div className="text-center p-5">
+                    <XCircle size={60} color="#e74c3c" />
+                    <h5 className="mt-3 text-danger">{t("Error!")}</h5>
+                    <p className="text-muted">{status.message}</p>
+                    <Button color="danger" className="mt-3 px-5" onClick={() => setStatus({ type: null, message: "" })}>
+                        {t("Try Again")}
+                    </Button>
+                </div>
+            );
+        }
+        return null;
+    };
+
     return (
-        <div className={s.overlay} onClick={onClose}>
-            <div className={s.modal} onClick={e => e.stopPropagation()}>
+        isEdit ?
+            <Modal isOpen={isOpen} toggle={onClose} style={{ maxWidth: width > 800 ? "700px" : "95%" }
+            } centered >
+                <ModalHeader toggle={onClose} className="border-0 pb-0">
+                    {!status.type && t("Edit Agent")}
+                </ModalHeader>
 
-
-
-                {status.type === 'loading' && (
-                    <div className={s.statusScreen}>
-                        <Spinner style={{ width: '3rem', height: '3rem', color: '#5626e6' }} />
-                        <p className={s.statusMsg}>{status.message}</p>
-                    </div>
-                )}
-
-                {status.type === 'success' && (
-                    <div className={s.statusScreen}>
-                        <CheckCircle size={64} color="#22c55e" />
-                        <h3 className={s.statusTitle}>{t("Success!")}</h3>
-                        <p className={s.statusMsg}>{status.message}</p>
-                        <button className={s.btnDone} onClick={onClose}>{t("Done")}</button>
-                    </div>
-                )}
-
-                {status.type === 'error' && (
-                    <div className={s.statusScreen}>
-                        <XCircle size={64} color="#ef4444" />
-                        <h3 className={s.statusTitle}>{t("Error!")}</h3>
-                        <p className={s.statusMsg}>{status.message}</p>
-                        <button className={s.btnNext} onClick={() => setStatus({ type: null, message: "" })}>{t("Try Again")}</button>
-                    </div>
-                )}
-
-                {!status.type && (
-                    <>
-                        <div className={s.modalBody}>
-
-                            <div className={s.sidebar}>
-                                <div className={s.modalHeader}>
-                                    <h2 className={s.modalTitle}><div><img src={userFour} width={20} height={20} loading="lazy" alt="" /></div> {isEdit ? t("Edit Agent") : t("Add Agent")}</h2>
-                                </div>
-                                {STEPS.map((st, idx) => {
-                                    const isDone = step > st.id
-                                    const isActive = step === st.id
-                                    return (
-                                        <div key={st.id} className={s.stepItem} style={{ position: 'relative' }}>
-                                            {idx < STEPS.length - 1 && (
-                                                <div style={{ position: 'absolute', left: 22, top: '100%', width: 2, height: 12, background: isDone ? '#5626e6' : '#e0e0e0', zIndex: 0 }} />
-                                            )}
-                                            <div
-                                                className={`${s.stepIcon} ${isActive ? s.active : ''} ${isDone ? s.done : ''}`}
-                                            >
-                                                {isDone ? <CheckCircle size={14} /> : st.icon}
-                                            </div>
-                                            <span className={`${s.stepLabel} ${isActive ? s.active : ''} ${isDone ? s.done : ''}`}>
-                                                <p>STEP{st.id}</p>
-                                                {t(st.label)}
-                                            </span>
-                                        </div>
-                                    )
-                                })}
+                <ModalBody>
+                    {status.type ? renderStatusContent() : (
+                        <form onSubmit={onSubmit}>
+                            <div className={s.formGroup}>
+                                <label>{t("First Name")}</label>
+                                <input
+                                    name="first_name"
+                                    value={form.first_name}
+                                    onChange={handleChange}
+                                    placeholder={t("First Name")}
+                                    required
+                                />
                             </div>
 
-                            <div className={s.stepContent}>
-
-                                {step === 1 && (
-                                    <>
-                                        <div className={s.nameInput}>
-                                            <div className={s.formGroup}>
-                                                <label className={s.formLabel}>{t("First Name")}</label>
-                                                <input className={s.formInput} name="first_name" value={form.first_name} onChange={handleChange} placeholder={t("Enter first name")} required />
-                                            </div>
-                                            <div className={s.formGroup}>
-                                                <label className={s.formLabel}>{t("Last Name")}</label>
-                                                <input className={s.formInput} name="last_name" value={form.last_name} onChange={handleChange} placeholder={t("Enter last name")} required />
-                                            </div>
-                                        </div>
-                                        <div className={s.formGroup}>
-                                            <label className={s.formLabel}>{t("Phone Number")}</label>
-                                            <PhoneInput
-                                                country={isEdit && editData?.country ? editData.country : country}
-                                                phone={phone}
-                                                setPhone={setPhone}
-                                                error={phoneError}
-                                                setError={setPhoneError}
-                                                disabled={isEdit}
-                                                customStyles={{
-                                                    width: '100%',
-                                                    padding: '13px 14px',
-                                                    borderRadius: '8px',
-                                                    fontSize: '14px',
-                                                    borderRadius: "6px",
-                                                    color: '#1a1a1a',
-                                                    outline: 'none',
-                                                    transition: 'border-color 0.2s, box-shadow 0.2s',
-                                                    appearance: 'none',
-                                                    border: '1px solid var(--Greyscale-25, #E4E3E5)',
-                                                    background: 'var(--Greyscale-0, #FFF)',
-                                                    boxShadow: '0 1px 1.5px 0 rgba(44, 54, 53, 0.03)',
-                                                }}
-                                            />
-                                        </div>
-                                        <div className={s.formGroup}>
-                                            <label className={s.formLabel}>{t("Email")}</label>
-                                            <input className={s.formInput} name="email" type="email" value={form.email} onChange={handleChange} placeholder={t("Enter email address")} required={!isEdit} disabled={isEdit} />
-                                        </div>
-                                    </>
-                                )}
-
-                                {step === 2 && (
-                                    <>
-                                        <div className={s.formGroup}>
-                                            <label className={s.formLabel}>{t("Role")}</label>
-                                            <select className={s.formSelect} name="role" value={form.role} onChange={handleChange}>
-                                                <option value="">{t("Select Role")}</option>
-                                                {roles?.map((item) => (
-                                                    <option key={item?._id} value={item?._id}>{item?.title}</option>
-                                                ))}
-                                            </select>
-                                        </div>
-                                        <div className={s.formGroup}>
-                                            <div className={s.permTreeWrapper}>
-                                                <PermissionTree
-                                                    processedPermissions={processedPermissions}
-                                                    permSearch={permSearch}
-                                                    setPermSearch={setPermSearch}
-                                                    isSelected={isSelected}
-                                                    isIndeterminate={isIndeterminate}
-                                                    togglePermission={togglePermission}
-                                                    isSuperAdmin={isSuperAdmin}
-                                                />
-                                            </div>
-                                        </div>
-                                    </>
-                                )}
-
-
-
-                                {step === 3 && (
-                                    <>
-                                        <div className={s.reviewCard} style={{ marginBottom: 12 }}>
-                                            <div className={s.reviewRow}>
-                                                <span className={s.reviewRowKey}>{t("Agent")}</span>
-                                                <span className={s.reviewRowVal}>{form.first_name} {form.last_name}</span>
-                                            </div>
-                                            <div className={s.reviewRow}>
-                                                <span className={s.reviewRowKey}>{t("Role")}</span>
-                                                <span className={s.reviewRowVal}>{selectedRoleObj?.title || t("Custom")}</span>
-                                            </div>
-                                            <div className={s.reviewRow}>
-                                                <span className={s.reviewRowKey}>{t("Permissions")}</span>
-                                                <span className={s.reviewRowVal}>{selectedPermissions.length} {t("granted")}</span>
-                                            </div>
-                                        </div>
-                                        <div className={s.permTreeWrapper}>
-                                            <PermissionTree
-                                                processedPermissions={processedPermissions}
-                                                permSearch={permSearch}
-                                                setPermSearch={setPermSearch}
-                                                isSelected={isSelected}
-                                                isIndeterminate={isIndeterminate}
-                                                togglePermission={togglePermission}
-                                                isSuperAdmin={isSuperAdmin}
-                                                isDisabled={true}
-
-                                            />
-                                        </div>
-                                    </>
-                                )}
-
+                            <div className={s.formGroup}>
+                                <label>{t("Last Name")}</label>
+                                <input
+                                    name="last_name"
+                                    value={form.last_name}
+                                    onChange={handleChange}
+                                    placeholder={t("Last Name")}
+                                    required
+                                />
                             </div>
+
+                            <div className={s.formGroup}>
+                                <label>{t("Role")}</label>
+                                <select name="role" value={form.role} onChange={handleChange}>
+                                    <option value="">{t("Select Role")}</option>
+                                    {roles?.map((item) => (
+                                        <option key={item?._id} value={item?._id}>
+                                            {item?.title}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+
+                            <div className={s.formGroup}>
+                                <PermissionTree
+                                    processedPermissions={processedPermissions}
+                                    permSearch={permSearch}
+                                    setPermSearch={setPermSearch}
+                                    isSelected={isSelected}
+                                    isIndeterminate={isIndeterminate}
+                                    togglePermission={togglePermission}
+                                    isSuperAdmin={isSuperAdmin}
+                                />
+                            </div>
+
+                            <div className="d-flex justify-content-end gap-2 mt-4">
+                                <Button color="light" onClick={onClose} type="button">
+                                    {t("Cancel")}
+                                </Button>
+                                <Button color="primary" type="submit" disabled={isCreating || isUpdating} className="px-4">
+                                    {isEdit ? t("Update Agent") : t("Add Agent")}
+                                </Button>
+                            </div>
+                        </form>
+                    )}
+                </ModalBody>
+            </Modal > : <div className={s.overlay} onClick={onClose}>
+                <div className={s.modal} onClick={e => e.stopPropagation()}>
+
+
+
+                    {status.type === 'loading' && (
+                        <div className={s.statusScreen}>
+                            <Spinner style={{ width: '3rem', height: '3rem', color: '#5626e6' }} />
+                            <p className={s.statusMsg}>{status.message}</p>
                         </div>
+                    )}
 
-                        <div className={s.modalFooter}>
-                            <div className={s.footerLeft}>
-                                <span><HelpCircle /></span>
-                                <div>
-                                    <p>{t("Having Troubles?")}</p>
-                                    <h2>{("Contact Us")}</h2>
-                                </div>
-                            </div>
-                            <div className={s.footerRight}>
-                                <button className={s.btnCancel} onClick={onClose} type="button">{t("Cancel")}</button>
-                                <div>
-                                    {step > 1 && (
-                                        <button className={s.btnBack} onClick={() => setStep(p => p - 1)} type="button"><ChevronsLeft /> {t("Back")}</button>
-                                    )}
-                                    <button
-                                        className={s.btnNext}
-                                        onClick={handleNext}
-                                        disabled={isNextDisabled}
-                                        type="button"
-                                    >
-                                        {step === 3
-                                            ? (isCreating || isUpdating ?
-                                                <><Spinner size="sm" /> {t("Saving...")}</>
-                                                : (isEdit ? t("Update") : t("Create & Send Invite")))
-                                            : t("Next")} {step < 2 ? <ChevronRight /> : <Plus size={20} />}
-                                    </button>
-                                </div>
-                            </div>
+                    {status.type === 'success' && (
+                        <div className={s.statusScreen}>
+                            <CheckCircle size={64} color="#22c55e" />
+                            <h3 className={s.statusTitle}>{t("Success!")}</h3>
+                            <p className={s.statusMsg}>{status.message}</p>
+                            <button className={s.btnDone} onClick={onClose}>{t("Done")}</button>
                         </div>
-                    </>
-                )}
+                    )}
 
+                    {status.type === 'error' && (
+                        <div className={s.statusScreen}>
+                            <XCircle size={64} color="#ef4444" />
+                            <h3 className={s.statusTitle}>{t("Error!")}</h3>
+                            <p className={s.statusMsg}>{status.message}</p>
+                            <button className={s.btnNext} onClick={() => setStatus({ type: null, message: "" })}>{t("Try Again")}</button>
+                        </div>
+                    )}
+
+                    {!status.type && (
+                        <>
+                            <div className={s.modalBody}>
+
+                                <div className={s.sidebar}>
+                                    <div className={s.modalHeader}>
+                                        <h2 className={s.modalTitle}><div><img src={userFour} width={20} height={20} loading="lazy" alt="" /></div> {isEdit ? t("Edit Agent") : t("Add Agent")}</h2>
+                                    </div>
+                                    {STEPS.map((st, idx) => {
+                                        const isDone = step > st.id
+                                        const isActive = step === st.id
+                                        return (
+                                            <div key={st.id} className={s.stepItem} style={{ position: 'relative' }}>
+                                                {idx < STEPS.length - 1 && (
+                                                    <div style={{ position: 'absolute', left: 22, top: '100%', width: 2, height: 12, background: isDone ? '#5626e6' : '#e0e0e0', zIndex: 0 }} />
+                                                )}
+                                                <div
+                                                    className={`${s.stepIcon} ${isActive ? s.active : ''} ${isDone ? s.done : ''}`}
+                                                >
+                                                    {isDone ? <CheckCircle size={14} /> : st.icon}
+                                                </div>
+                                                <span className={`${s.stepLabel} ${isActive ? s.active : ''} ${isDone ? s.done : ''}`}>
+                                                    <p>STEP{st.id}</p>
+                                                    {t(st.label)}
+                                                </span>
+                                            </div>
+                                        )
+                                    })}
+                                </div>
+
+                                <div className={s.stepContainer}>
+                                    <div className={s.stepContent}>
+
+                                        {step === 1 && (
+                                            <>
+                                                <div className={s.nameInput}>
+                                                    <div className={s.formGroup}>
+                                                        <label className={s.formLabel}>{t("First Name")}</label>
+                                                        <input className={s.formInput} name="first_name" value={form.first_name} onChange={handleChange} placeholder={t("Enter first name")} required />
+                                                    </div>
+                                                    <div className={s.formGroup}>
+                                                        <label className={s.formLabel}>{t("Last Name")}</label>
+                                                        <input className={s.formInput} name="last_name" value={form.last_name} onChange={handleChange} placeholder={t("Enter last name")} required />
+                                                    </div>
+                                                </div>
+                                                <div className={s.formGroup}>
+                                                    <label className={s.formLabel}>{t("Phone Number")}</label>
+                                                    <PhoneInput
+                                                        country={isEdit && editData?.country ? editData.country : country}
+                                                        phone={phone}
+                                                        setPhone={setPhone}
+                                                        error={phoneError}
+                                                        setError={setPhoneError}
+                                                        disabled={isEdit}
+                                                        customStyles={{
+                                                            width: '100%',
+                                                            padding: '13px 14px',
+                                                            borderRadius: '8px',
+                                                            fontSize: '14px',
+                                                            borderRadius: "6px",
+                                                            color: '#1a1a1a',
+                                                            outline: 'none',
+                                                            transition: 'border-color 0.2s, box-shadow 0.2s',
+                                                            appearance: 'none',
+                                                            border: '1px solid var(--Greyscale-25, #E4E3E5)',
+                                                            background: 'var(--Greyscale-0, #FFF)',
+                                                            boxShadow: '0 1px 1.5px 0 rgba(44, 54, 53, 0.03)',
+                                                        }}
+                                                    />
+                                                </div>
+                                                <div className={s.formGroup}>
+                                                    <label className={s.formLabel}>{t("Email")}</label>
+                                                    <input className={s.formInput} name="email" type="email" value={form.email} onChange={handleChange} placeholder={t("Enter email address")} required={!isEdit} disabled={isEdit} />
+                                                </div>
+                                            </>
+                                        )}
+
+                                        {step === 2 && (
+                                            <>
+                                                <div className={s.formGroup}>
+                                                    <label className={s.formLabel}>{t("Role")}</label>
+                                                    <select className={s.formSelect} name="role" value={form.role} onChange={handleChange}>
+                                                        <option value="">{t("Select Role")}</option>
+                                                        {roles?.map((item) => (
+                                                            <option key={item?._id} value={item?._id}>{item?.title}</option>
+                                                        ))}
+                                                    </select>
+                                                </div>
+                                                <div className={s.formGroup}>
+                                                    <div className={s.permTreeWrapper}>
+                                                        <PermissionTree
+                                                            processedPermissions={processedPermissions}
+                                                            permSearch={permSearch}
+                                                            setPermSearch={setPermSearch}
+                                                            isSelected={isSelected}
+                                                            isIndeterminate={isIndeterminate}
+                                                            togglePermission={togglePermission}
+                                                            isSuperAdmin={isSuperAdmin}
+                                                        />
+                                                    </div>
+                                                </div>
+                                            </>
+                                        )}
+
+
+
+                                        {step === 3 && (
+                                            <>
+                                                <div className={s.reviewCard} style={{ marginBottom: 12 }}>
+                                                    <div className={s.reviewRow}>
+                                                        <span className={s.reviewRowKey}>{t("Agent")}</span>
+                                                        <span className={s.reviewRowVal}>{form.first_name} {form.last_name}</span>
+                                                    </div>
+                                                    <div className={s.reviewRow}>
+                                                        <span className={s.reviewRowKey}>{t("Role")}</span>
+                                                        <span className={s.reviewRowVal}>{selectedRoleObj?.title || t("Custom")}</span>
+                                                    </div>
+                                                    <div className={s.reviewRow}>
+                                                        <span className={s.reviewRowKey}>{t("Permissions")}</span>
+                                                        <span className={s.reviewRowVal}>{selectedPermissions.length} {t("granted")}</span>
+                                                    </div>
+                                                </div>
+                                                <div className={s.permTreeWrapper}>
+                                                    <PermissionTree
+                                                        processedPermissions={processedPermissions}
+                                                        permSearch={permSearch}
+                                                        setPermSearch={setPermSearch}
+                                                        isSelected={isSelected}
+                                                        isIndeterminate={isIndeterminate}
+                                                        togglePermission={togglePermission}
+                                                        isSuperAdmin={isSuperAdmin}
+                                                        isDisabled={true}
+
+                                                    />
+                                                </div>
+                                            </>
+                                        )}
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className={s.modalFooter}>
+                                <div className={s.footerLeft}>
+                                    <span><HelpCircle /></span>
+                                    <div>
+                                        <p>{t("Having Troubles?")}</p>
+                                        <h2>{("Contact Us")}</h2>
+                                    </div>
+                                </div>
+                                <div className={s.footerRight}>
+                                    <button className={s.btnCancel} onClick={onClose} type="button">{t("Cancel")}</button>
+                                    <div>
+                                        {step > 1 && (
+                                            <button className={s.btnBack} onClick={() => setStep(p => p - 1)} type="button"><ChevronsLeft /> {t("Back")}</button>
+                                        )}
+                                        <button
+                                            className={s.btnNext}
+                                            onClick={handleNext}
+                                            disabled={isNextDisabled}
+                                            type="button"
+                                        >
+                                            {step === 3
+                                                ? (isCreating || isUpdating ?
+                                                    <><Spinner size="sm" /> {t("Saving...")}</>
+                                                    : (isEdit ? t("Update") : t("Create & Send Invite")))
+                                                : t("Next")} {step < 2 ? <ChevronRight /> : <Plus size={20} />}
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </>
+                    )}
+
+                </div>
             </div>
-        </div>
     )
 }
 
