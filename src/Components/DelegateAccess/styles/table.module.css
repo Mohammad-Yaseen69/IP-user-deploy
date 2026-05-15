@@ -17,20 +17,33 @@
         }
 
         .thead {
-            font-weight: 700;
+            font-weight: 500;
             color: #333;
+            padding: 10px 24px;
+            background: var(--bg-surface, #EFF1F6);
+            border-radius: 8px;
+            margin-bottom: 10px;
         }
 
         .th {
-            font-size: 13px;
-            flex: 1;
+            color: var(--gray-gray-600, #6E7687);
+            font-family: Inter;
+            font-size: 14px;
+            font-style: normal;
+            font-weight: 500;
+            line-height: normal;
+            letter-spacing: -0.42px;
         }
 
         .td {
+            color: var(--Light-Mode-Text, #151514);
+            font-family: Inter;
             font-size: 14px;
-            font-weight: 600;
-            color: #777;
-            flex: 1;
+            font-style: normal;
+            font-weight: 500;
+            line-height: 150%;
+            /* 21px */
+            letter-spacing: -0.42px;
         }
 
         .serial {

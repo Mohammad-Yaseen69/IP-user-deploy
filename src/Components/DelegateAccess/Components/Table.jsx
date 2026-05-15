@@ -16,7 +16,7 @@ const DelegateTable = ({ filteredInvoices, setEditData, setShowModal, isRole, ro
         {isRole ? (
           <div className={`${styles.tr} ${styles.thead}`}>
             {width > 700 && (
-              <div style={{ flex: 0.05 }} className={`${styles.th} ${styles.serial}`}>
+              <div style={{ flex: 0.09 }} className={`${styles.th} ${styles.serial}`}>
                 {t("S.No")}
               </div>
             )}
@@ -32,7 +32,6 @@ const DelegateTable = ({ filteredInvoices, setEditData, setShowModal, isRole, ro
               {t("Permissions")}
             </div>
             <div style={{ flex: width <= 700 ? 0.15 : 0.1 }} className={`${styles.th} ${styles.actions}`}>
-              {t("Actions")}
             </div>
           </div>) : (
           <div className={`${styles.tr} ${styles.thead}`}>
@@ -61,7 +60,6 @@ const DelegateTable = ({ filteredInvoices, setEditData, setShowModal, isRole, ro
               </div>
             )}
             <div style={{ flex: width <= 700 ? 0.15 : 0.1 }} className={`${styles.th} ${styles.actions}`}>
-              {t("Actions")}
             </div>
           </div>
         )}

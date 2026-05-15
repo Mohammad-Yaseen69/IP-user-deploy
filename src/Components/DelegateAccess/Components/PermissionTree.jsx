@@ -14,7 +14,8 @@ const PermissionTree = ({
     togglePermission,
     permSearch,
     setPermSearch,
-    isSuperAdmin
+    isSuperAdmin,
+    isDisabled
 }) => {
     const [expandedModules, setExpandedModules] = useState({});
     const { t } = useTranslation()
@@ -25,7 +26,7 @@ const PermissionTree = ({
             f.actions.some(a => a.description.toLowerCase().includes(permSearch.toLowerCase()) || a.key.toLowerCase().includes(permSearch.toLowerCase()))
         )
     );
-
+    console.log("DISABLED =>", isDisabled)
     return (
         <div className={addStyles.inp_con}>
             <label>{t("Permissions Hierarchy")}</label>
@@ -94,7 +95,7 @@ const PermissionTree = ({
                                                         <Toggle
                                                             className={addStyles.checkInput}
                                                             type="checkbox"
-                                                            disabled={isSuperAdmin}
+                                                            disabled={isSuperAdmin || isDisabled}
                                                             checked={isSelected(a.key, "action") || isSuperAdmin}
                                                             onChange={() => togglePermission(a.key, fKey, "action")}
                                                         />
