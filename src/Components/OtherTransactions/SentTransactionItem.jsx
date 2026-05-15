@@ -8,6 +8,7 @@ import { UserContext } from "../../Context/UserContext.jsx"
 import SubscriptionDetails from "./SubscriptionDetails.jsx"
 import { useTranslation } from "react-i18next"
 import { useQueryClient } from "@tanstack/react-query"
+import { usePermission } from "../../hooks/GeneralUse/usePermission.jsx"
 
 
 const SentTransactionItem = ({ color, item, activeItem, setActiveItem, index, currentUser }) => {
@@ -15,6 +16,8 @@ const SentTransactionItem = ({ color, item, activeItem, setActiveItem, index, cu
     const [currentImage, setCurrentImage] = useState("")
     const queryClient = useQueryClient()
     const item_date = item?.date
+    const can = usePermission()
+
     const { authHeader, verifyToken } = useContext(UserContext)
     const recipient = useMemo(() => {
         return item?.[item?.type === "payment" ? "payment" : "request_payment"]?.receiver?.account_type === "individual" ? `${item?.[item?.type === "payment" ? "payment" : "request_payment"]?.receiver?.first_name} ${item?.[item?.type === "payment" ? "payment" : "request_payment"]?.receiver?.last_name}` : item?.[item?.type === "payment" ? "payment" : "request_payment"]?.receiver?.company_name
@@ -46,26 +49,28 @@ const SentTransactionItem = ({ color, item, activeItem, setActiveItem, index, cu
                     }}>{t(item?.status[0].toUpperCase() + item?.status.slice(1)?.toLowerCase())}</div>
                 </div>
                 <div>
-                    <div style={{
-                        borderRadius: "9.938px",
-                        flex: "none",
-                        background: "linear-gradient(to top left,#e1e1e1,#e2e2e2,#b5b5b5)",
-                        boxShadow: "0px 3.3125px 5.79688px 0px rgba(172, 53, 159, 0.31)",
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        height: "34px",
-                        width: "34px",
-                        aspectRatio: 1,
-                        margin: "0 auto",
-                        opacity: item?.status === "processing" || item?.status === "pending" ? 1 : .3,
-                        // pointerEvents: item?.status === "processing" || item?.status === "pending" ? "all" : "none",
-                        cursor: item?.status === "processing" || item?.status === "pending" ? "pointer" : "not-allowed",
-                    }}
-                        onClick={() => item?.status === "processing" || item?.status === "pending" ? cancelSubscriptionOrSchedulePayment(item, authHeader, verifyToken,queryClient) : console.log("")}
-                    >
-                        <X color="#fff" />
-                    </div>
+                    {can("schedules.cancel") &&
+                        <div style={{
+                            borderRadius: "9.938px",
+                            flex: "none",
+                            background: "linear-gradient(to top left,#e1e1e1,#e2e2e2,#b5b5b5)",
+                            boxShadow: "0px 3.3125px 5.79688px 0px rgba(172, 53, 159, 0.31)",
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            height: "34px",
+                            width: "34px",
+                            aspectRatio: 1,
+                            margin: "0 auto",
+                            opacity: item?.status === "processing" || item?.status === "pending" ? 1 : .3,
+                            // pointerEvents: item?.status === "processing" || item?.status === "pending" ? "all" : "none",
+                            cursor: item?.status === "processing" || item?.status === "pending" ? "pointer" : "not-allowed",
+                        }}
+                            onClick={() => item?.status === "processing" || item?.status === "pending" ? cancelSubscriptionOrSchedulePayment(item, authHeader, verifyToken, queryClient) : console.log("")}
+                        >
+                            <X color="#fff" />
+                        </div>
+                    }
                 </div>
                 <div style={{ maxWidth: "15px" }}>{
                     activeItem === index + 1

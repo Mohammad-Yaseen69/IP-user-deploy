@@ -233,7 +233,7 @@ const PendingNew = () => {
             const data = { telegram_last_shown_payment_request: filteredReceived.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))[0]?._id, instagram_last_shown_payment_request: filteredReceived.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))[0]?._id }
             console.log(data)
             const res =
-                await axios.put(`${import.meta.env.VITE_IP_DEV_API}/api/account/update-individual/${userDetails?._id}`, {
+                await axios.put(`${import.meta.env.VITE_IP_DEV_API}/api/account/update-${userDetails?.account_type}/${userDetails?._id}`, {
                     data: encryptData(data)
                 }, { headers: authHeader }
                 )

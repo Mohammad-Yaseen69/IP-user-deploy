@@ -11,6 +11,7 @@ import { toast } from 'react-toastify'
 import OTPConfirmation from '../UserSettingsNew/OTPConfirmation'
 import SuccessModal from '../AddBeneficiary/SuccessModal'
 import { useNavigate } from 'react-router'
+import { usePermission } from '../../hooks/GeneralUse/usePermission'
 
 const capitalize = (value = "") => {
     return `${value[0].toUpperCase()}${value.slice(1)}`
@@ -34,6 +35,7 @@ const passwordPatterns = [
 const Password = () => {
     const { userDetails, authHeader, setProfileLockTime, isAgentLogin, agentDetails } = useContext(UserContext)
     const navigate = useNavigate()
+    const can = usePermission()
     const { t } = useTranslation()
     const [state, setState] = useState({
         current: "",
@@ -61,7 +63,6 @@ const Password = () => {
         }))
     }
 
-    // otp states
     const [showSuccess, setShowSuccess] = useState(false)
     const [showOtp, setShowOtp] = useState(false)
     const [token, setToken] = useState("")
@@ -154,7 +155,7 @@ const Password = () => {
             state.confirm !== state.current
         );
     }, [isPasswordValid, state]);
-
+    const canUpdatePassword = can("settings.password.update")
     return (
         <div className='card' >
             <CardHeader>
@@ -234,7 +235,7 @@ const Password = () => {
                         borderRadius: "10px"
                     }}
                     onClick={sendOtp}
-                    disabled={!isFormValid || saving}
+                    disabled={!isFormValid || saving || !canUpdatePassword}
                 >{t("Change Password")}</Button>
             </div>
             <Modal isOpen={showOtp}>

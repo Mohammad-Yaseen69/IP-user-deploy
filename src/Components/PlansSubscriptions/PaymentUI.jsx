@@ -68,8 +68,9 @@ const PaymentUI = ({ data, user_name, state, dataHandler, url }) => {
                     wallet={data?.plan?.receivingWallet}
                     username={user_name}
                     subscriptionId={data.subscriptionId}
+                    planId={data?.plan?.planId}
                     countryIsoCode={data.countryIsoCode}
-                    type='subscription'
+                    type='plan'
                 />
             }
 

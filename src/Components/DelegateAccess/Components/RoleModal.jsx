@@ -92,6 +92,9 @@ const RoleModal = ({ isRole, isOpen, onClose, t, width, isEdit, editData }) => {
             if (newPerms.includes(wildcardKey)) {
                 newPerms = newPerms.filter(p => !p.startsWith(`${key}.`));
                 newDenied = newDenied.filter(p => !p.startsWith(`${key}.`));
+                if (isEdit) {
+                    newDenied.push(wildcardKey);
+                }
             } else {
                 newPerms = newPerms.filter(p => !p.startsWith(`${key}.`));
                 newDenied = newDenied.filter(p => !p.startsWith(`${key}.`));
@@ -137,7 +140,7 @@ const RoleModal = ({ isRole, isOpen, onClose, t, width, isEdit, editData }) => {
         } else {
             if (newPerms.includes(key)) {
                 newPerms = newPerms.filter(p => p !== key);
-            } else if (deniedPermissions.includes(key)) {
+            } else if (newDenied.includes(key)) {
                 newDenied = newDenied.filter(p => p !== key);
             } else {
                 const parts = key.split(".");

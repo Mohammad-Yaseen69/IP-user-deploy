@@ -10,6 +10,7 @@ import { addPlan, deletePlan as deletePlanApi, getUserPlans, updatePlan } from "
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption"
 import { toast } from "react-toastify"
 import { apiWrapper } from "../../utils/Functions/apiWrapper";
+import { usePermission } from "../../hooks/GeneralUse/usePermission"
 
 
 
@@ -138,13 +139,20 @@ const PricingsAndPlan = () => {
         }
         await addMutate(addPayload)
     }
+    const can = usePermission()
+    const canAddPaymentPlan = can("payment-address.plan.add")
 
+    const canUpdatePaymentPlan = can("payment-address.plan.update")
+
+    const canDeletePaymentPlan = can("payment-address.plan.delete")
+
+    const canSubscribePaymentPlan = can("payment-address.plan.subscribe")
     return (
         <div className={styles.container}>
             <div className={styles.top}>
                 <div >
                     <h1>{t("Plans & Pricing")}</h1>
-                    {plans?.length > 0 &&
+                    {canAddPaymentPlan && plans?.length > 0 &&
                         <button
                             onClick={() => setShowAddModal(true)}
                             style={{ background: '#5926F0', color: '#fff', border: 'none', borderRadius: 6, padding: '6px 16px', fontWeight: 600, cursor: 'pointer', fontSize: 14, width: "100px" }}
@@ -211,10 +219,38 @@ const PricingsAndPlan = () => {
                                         </span>
                                         {openMenuPlanId === (plan.id || plan._id) && (
                                             <div ref={el => menuRefs.current[plan.id || plan._id] = el} style={{ position: 'absolute', top: 38, right: 16, background: '#fff', boxShadow: '0 4px 12px 0 rgba(0,0,0,0.13)', borderRadius: 10, zIndex: 10, minWidth: 110, padding: '3px 0', transition: 'opacity .2s' }}>
-                                                <div style={{ padding: '8px 18px', cursor: 'pointer', color: '#5926F0', fontWeight: 600, fontSize: 14 }} onClick={() => handleEdit(plan)}>{t('Edit')}</div>
-                                                <div style={{ padding: '8px 18px', cursor: 'pointer', color: '#5926F0', fontWeight: 600, fontSize: 14 }} onClick={() => handleViewSubscription(plan?._id)}>{isGettingSubscribers ? t('Loading...') : t('Subscribers')}</div>
-                                                <div style={{ padding: '8px 18px', cursor: 'pointer', color: '#e11d48', fontWeight: 600, fontSize: 14 }} onClick={() => handleDelete(plan._id)}>{isDeleting ? t('Deleting...') : t('Delete')}</div>
-                                            </div>
+                                                {
+                                                    canUpdatePaymentPlan &&
+                                                    <div
+                                                        style={{
+                                                            padding: '8px 18px',
+                                                            cursor: 'pointer',
+                                                            color: '#5926F0',
+                                                            fontWeight: 600,
+                                                            fontSize: 14
+                                                        }}
+                                                        onClick={() => handleEdit(plan)}
+                                                    >
+                                                        {t('Edit')}
+                                                    </div>
+                                                }
+                                                {
+                                                    canSubscribePaymentPlan &&
+                                                    <div
+                                                        style={{
+                                                            padding: '8px 18px',
+                                                            cursor: 'pointer',
+                                                            color: '#5926F0',
+                                                            fontWeight: 600,
+                                                            fontSize: 14
+                                                        }}
+                                                        onClick={() => handleViewSubscription(plan?._id)}
+                                                    >
+                                                        {isGettingSubscribers ? t('Loading...') : t('Subscribers')}
+                                                    </div>
+                                                }
+                                                {canDeletePaymentPlan && <div style={{ padding: '8px 18px', cursor: 'pointer', color: '#e11d48', fontWeight: 600, fontSize: 14 }} onClick={() => handleDelete(plan._id)}>{isDeleting ? t('Deleting...') : t('Delete')}</div>
+                                                } </div>
                                         )}
                                     </td>
                                 </tr>
