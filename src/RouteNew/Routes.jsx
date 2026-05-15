@@ -65,6 +65,7 @@ const ReceiptInvoice = lazy(() => import("../Components/ReceiptInvoices"))
 const InvoicePayment = lazy(() => import("../Components/ReceiptInvoices/InvoicePayment"))
 const InvoicePaymentQr = lazy(() => import("../Components/ReceiptInvoices/InvoicePaymentQr"))
 const PlansSubscription = lazy(() => import("../Components/PlansSubscriptions"))
+const PlanPaymentLink = lazy(() => import("../Components/PlanPaymentLink"))
 const StoreCreate = lazy(() => import("../Components/StoreCreate"))
 const GuestLogin = lazy(() => import("../Components/guestDashboard/auth"))
 const DelegateAccess = lazy(() => import("../Components/DelegateAccess"))
@@ -185,6 +186,7 @@ export const publicRoutes = [
     { path: "/invoice/:username/:invoiceId", component: <PermissionRoute permission="invoices.payment.pay"><InvoicePayment /></PermissionRoute> },
     { path: "/invoice/qr/:username/:invoiceId", component: <PermissionRoute permission="invoices.payment.pay"><InvoicePaymentQr /></PermissionRoute> },
     { path: "/pay/subscription/:subscriptionId", component: <PlansSubscription /> },
+    { path: "/pay/plan/:username/:planId", component: <PlanPaymentLink /> },
     { path: "/create-agent-password/:token", component: <CreateAgentPassword /> },
     { path: "*", component: <NotFound type='Page' /> }
 ]

@@ -23,8 +23,8 @@ import AddPortfolioItem from '../Portfolio/AddPortfolioItem'
 import PortfolioCard from '../Portfolio/PortfolioCard'
 import useWindowWidth from '../../utils/useWindowWidth'
 import QrGenerate from '../Settings/QrGenerate'
-import PricingsAndPlan from './PricingsAndPlan'
 import { usePermission } from '../../hooks/GeneralUse/usePermission'
+import PricingsAndPlan from './PricingsAndPlan'
 
 const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
     const { t } = useTranslation()
@@ -480,13 +480,9 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
                                                 {canAddPaymentVideo && <button className={styles.buttonStyles} onClick={() => setShowModal(true)}>{t("Add Video")}</button>
                                                 } </div>
                                         </div>
+
                                     </div>
-
-
-                                    <PricingsAndPlan />
-
-
-
+                                    <PricingsAndPlan isInvoicePage={false} />
 
                                 </CardBody>
                             </Card>
