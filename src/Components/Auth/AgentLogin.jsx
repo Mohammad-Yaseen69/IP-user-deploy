@@ -1,36 +1,34 @@
-import { useContext, useEffect, useLayoutEffect, useRef, useState } from "react"
-import styles from "./styles/index.module.css"
-import { useTranslation } from "react-i18next";
-import { UserContext } from "../../Context/UserContext";
-import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
-import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
-import PhoneInput from "../PhoneInput";
-import { AlertTriangle, ChevronRight, Eye, EyeOff, Mail } from "react-feather";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import gs from "./files/gs.svg"
-import as from "./files/as.svg"
-import authenticator from "./files/authenticator.webp"
-import axios from "axios";
-import LanguagePicker from "../LanguagePicker";
-import FaceAnimation from "./FaceAnimation"
-import BiometricSvg from "../../assets/icons/fingerprint.png"
-import authenticatorBlack from '../../assets/images/authenticatorBlack.jpg'
-import instaBlack from '../../assets/images/instaBlack.png'
-import biometricBlack from '../../assets/images/biometricBlack.jpg'
-import whatsappBlack from '../../assets/images/whatsappBlack.png'
-import emailBlack from '../../assets/images/emailBlack.png'
-import { startAuthentication } from "@simplewebauthn/browser"
+import { startAuthentication } from "@simplewebauthn/browser";
+import { useContext, useEffect, useLayoutEffect, useRef, useState } from "react";
 import * as rdd from "react-device-detect";
-import { authIcon, instaIcon, smsIcon, whatsappIcon, email as emailIcon } from "./files"
+import { AlertTriangle, ChevronRight, Eye, EyeOff } from "react-feather";
+import { useTranslation } from "react-i18next";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { UserContext } from "../../Context/UserContext";
+import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
+import BiometricSvg from "../../assets/icons/fingerprint.png";
+import authenticatorBlack from '../../assets/images/authenticatorBlack.jpg';
+import biometricBlack from '../../assets/images/biometricBlack.jpg';
+import emailBlack from '../../assets/images/emailBlack.png';
+import instaBlack from '../../assets/images/instaBlack.png';
+import whatsappBlack from '../../assets/images/whatsappBlack.png';
+import LanguagePicker from "../LanguagePicker";
+import PhoneInput from "../PhoneInput";
+import FaceAnimation from "./FaceAnimation";
+import { authIcon, email as emailIcon, instaIcon, smsIcon, whatsappIcon } from "./files";
+import as from "./files/as.svg";
+import authenticator from "./files/authenticator.webp";
+import gs from "./files/gs.svg";
+import styles from "./styles/index.module.css";
 
-import useWindowWidth from "../../utils/useWindowWidth";
-import i18next from "i18next";
-import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from 'reactstrap';
-import localforage from "localforage"
-import InstaPayLoader from "../Loader";
 import { logger } from "@sentry/react";
-import VpnModal from "./VpnModal";
+import i18next from "i18next";
+import localforage from "localforage";
+import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
+import useWindowWidth from "../../utils/useWindowWidth";
+import InstaPayLoader from "../Loader";
 import LocationDeniedModal from "./LocationDeniedModal";
+import VpnModal from "./VpnModal";
 import { useAgentAuth } from "./hooks/useAgentAuth";
 const AgentLogin = ({ country, setIsLoginForm, setIsAgentForm }) => {
     const { sendLoginOtp, verifyLoginOtp, getAuthDetails, biometricChallenge, biometricVerify, createLoginHistory } = useAgentAuth();
