@@ -34,24 +34,53 @@
     align-items: center;
     justify-content: center;
     padding: 24px;
+    overflow: hidden;
 }
 
 .leftImg {
     width: 100%;
     height: 100%;
-    object-fit: fill;
-    border-radius: 10px;
+    object-fit: cover;
+    border-radius: 12px;
+    display: block;
 }
 
-.wrapperRight,
-.right {
-    width: 58%;
-    background: #F7F7FB;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 48px 150px;
+.leftPanel::after {
+    content: "";
+    position: absolute;
+    inset: 24px;
+    border-radius: 12px;
+    background: linear-gradient(180deg,
+            rgba(0, 0, 0, 0.15) 0%,
+            rgba(0, 0, 0, 0.45) 100%);
 }
+
+.childLogo {
+    position: absolute;
+    top: 50px;
+    left: 50px;
+    width: 42px !important;
+    height: auto !important;
+    object-fit: contain;
+    z-index: 2;
+}
+
+.leftPanel h2 {
+    position: absolute;
+    top: 190px;
+    left: 50px;
+    max-width: 320px;
+    color: #FFF;
+    font-size: 39px;
+    font-weight: 600;
+    line-height: 1.1;
+    margin: 0;
+
+    z-index: 2;
+}
+
+
+
 
 .iconArea {
     width: 44px;
@@ -113,6 +142,25 @@
 
 .password_input input::placeholder {
     color: #A0A0A0;
+}
+
+.footer {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    font-size: 14px;
+
+    span {
+        color: var(--COLORS-Neutral-700, #777);
+        font-family: Manrope;
+        font-size: 12px;
+        font-style: normal;
+        font-weight: 600;
+        line-height: 18px;
+        letter-spacing: -0.12px;
+    }
 }
 
 .password_guidance {

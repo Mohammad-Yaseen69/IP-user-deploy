@@ -7,7 +7,7 @@ import InstaPayLoader from "../../Loader"
 const AuthStepTwo = ({
     t,
     InstapayLogo,
-    getOtpLabel,        
+    getOtpLabel,
     otpValues,
     handleInputChange,
     handleInputKeyDown,
@@ -96,7 +96,6 @@ const AuthStepTwo = ({
                         )}
                     </div>
                 ) : (
-                    /* ── OTP INPUTS ── */
                     <div className={styles.otpContainer}>
                         <div
                             className={
@@ -128,7 +127,6 @@ const AuthStepTwo = ({
                     </div>
                 )}
 
-                {/* ── Error ── */}
                 {isLoginError && (
                     <div className={styles.input_error}>
                         <AlertTriangle size={17} color="#F32D2D" />
@@ -136,7 +134,6 @@ const AuthStepTwo = ({
                     </div>
                 )}
 
-                {/* ── Resend / Timer ── */}
                 {currentOtpMethod !== "auth" && currentOtpMethod !== "biometric" && (
                     <p className={styles.resendText}>
                         {resendTimer > 0 ? (

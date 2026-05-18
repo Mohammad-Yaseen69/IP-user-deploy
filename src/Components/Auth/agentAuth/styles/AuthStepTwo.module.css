@@ -66,6 +66,7 @@
     border: 1px solid #ddd;
     border-radius: 8px;
     outline: none;
+    margin: 4px;
 }
 
 .otpInput:focus {
