@@ -972,9 +972,7 @@ const AgentLogin = ({ country, setIsLoginForm, setIsAgentForm }) => {
 
     return (
         <>
-
             <VpnModal showNoticeModal={showNoticeModal} />
-
             <LocationDeniedModal
                 isOpen={showLocationModal}
                 toggle={() => setShowLocationModal(false)}
@@ -986,7 +984,6 @@ const AgentLogin = ({ country, setIsLoginForm, setIsAgentForm }) => {
                     }
                 }}
             />
-
             <Modal isOpen={showRestoreModal} toggle={() => setShowRestoreModal(false)} centered>
                 <ModalHeader toggle={() => setShowRestoreModal(false)}>
                     {t("Account Restoration")}
@@ -1025,7 +1022,6 @@ const AgentLogin = ({ country, setIsLoginForm, setIsAgentForm }) => {
                     </Button>
                 </ModalFooter>
             </Modal>
-
             <form
                 autoComplete="off"
                 onSubmit={(e) => {
@@ -1187,7 +1183,7 @@ const AgentLogin = ({ country, setIsLoginForm, setIsAgentForm }) => {
                             </button>
                         }
                         <span></span>
- 
+
                         <div className={styles.btns}>
                             {
                                 (emailVerified && width > 1000)

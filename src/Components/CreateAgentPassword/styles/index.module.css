@@ -43,15 +43,7 @@
     border-radius: 10px;
 }
 
-.wrapperRight,
-.right {
-    width: 58%;
-    background: #F7F7FB;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 48px 150px;
-}
+
 
 .iconArea {
     width: 44px;
@@ -113,6 +105,25 @@
 
 .password_input input::placeholder {
     color: #A0A0A0;
+}
+
+.footer {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    font-size: 14px;
+
+    span {
+        color: var(--COLORS-Neutral-700, #777);
+        font-family: Manrope;
+        font-size: 12px;
+        font-style: normal;
+        font-weight: 600;
+        line-height: 18px;
+        letter-spacing: -0.12px;
+    }
 }
 
 .password_guidance {

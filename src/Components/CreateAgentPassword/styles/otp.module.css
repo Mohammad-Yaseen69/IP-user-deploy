@@ -50,10 +50,19 @@
     background: #F7F7FB;
     display: flex;
     flex-direction: column;
-    justify-content: start;
-    padding: 48px 150px;
+    justify-content: space-between;
+    align-items: center;
+    padding: 65px 18px 26px 20px;
 }
 
+.wrapperRight_two {
+    width: 58%;
+    background: #F7F7FB;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    
+}
 
 .iconArea {
     width: 44px;
@@ -66,8 +75,8 @@
     margin-bottom: 18px;
 }
 
-.wrapperRight h4,
-.right h4 {
+.wrapperRight h5,
+.right h5 {
     color: var(--text-primary, #1B1F2A);
     text-align: center;
     font-family: Inter;
@@ -155,7 +164,7 @@
 
 .inputs {
     display: flex;
-    gap: 14px;
+    gap: 5px;
     margin-bottom: 30px;
     align-items: center;
     justify-content: center;
@@ -197,6 +206,7 @@
 
 
 .resendBtn {
+    margin-left: 10px;
     color: var(--primary, #5926F0);
     text-align: center;
     cursor: pointer;

@@ -418,6 +418,8 @@
     line-height: 130%;
 }
 
+
+
 .agree_item {
     display: flex;
     align-items: center;
@@ -841,12 +843,13 @@
 }
 
 
+
 @media screen and (max-width: 600px) {
     .wrapper {
         width: 95%;
     }
 
-    .form_btn{
+    .form_btn {
         margin: 20px auto !important;
     }
 }

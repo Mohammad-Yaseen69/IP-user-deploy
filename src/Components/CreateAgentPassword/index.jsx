@@ -5,6 +5,7 @@ import { apiWrapper } from '../../utils/Functions/apiWrapper'
 import { decryptData } from '../../Helper/EssentilaMethods/Decryption'
 import ErrorModal from '../PaymentsNewer/InternationalFlow/ErrorModal'
 import styles from "./styles/index.module.css"
+import styles2 from "./styles/createPassword.module.css"
 import otpStyles from "./styles/otp.module.css"
 import { Check, ChevronRight, Eye, EyeOff, Lock } from 'react-feather'
 import Cross from './Cross'
@@ -13,6 +14,8 @@ import Logo from "../../assets/images/logo/logo2.webp"
 import Gif from "../../assets/gif.gif"
 import { Modal, ModalBody } from 'reactstrap'
 import imgLeft from "./files/image.png"
+import LanguagePicker from '../LanguagePicker'
+import { FlagSvg } from '../Auth/agentAuth/files/svg'
 
 const CreateAgentPassword = () => {
     const { token } = useParams()
@@ -138,7 +141,6 @@ const CreateAgentPassword = () => {
         inputRefs.current[lastFilledIndex]?.focus()
     }
 
-    // Password Validation Logic
     const isLengthValid = passwords.password.length >= 9 && passwords.password.length <= 64
     const hasUpper = /[A-Z]/.test(passwords.password)
     const hasLower = /[a-z]/.test(passwords.password)
@@ -149,91 +151,104 @@ const CreateAgentPassword = () => {
     const passwordsMatch = passwords.password === passwords.confirmPassword && passwords.confirmPassword !== ""
 
     const renderStep1 = () => (
-        <div className={styles.wrapper}>
+        <div className={styles2.wrapper}>
 
-            <div className={styles.leftPanel}>
-                <img src={imgLeft} alt="" className={styles.leftImg} />
+            <div className={styles2.leftPanel}>
+                <img src={imgLeft} alt="" className={styles2.leftImg} />
             </div>
 
-            <div className={styles.wrapperRight}>
-                <div className={styles.top}>
-                    <div className={styles.iconArea}>
-                        <Lock size={22} color="#5926F0" />
+            <div className={styles2.wrapperRight}>
+                <div className={styles2.wrapperRight_two}>
+                    <div className={styles2.top}>
+                        <div className={styles2.iconArea}>
+                            <Lock size={22} color="#5926F0" />
+                        </div>
+
+                        <h4>{t("Create a new password")}</h4>
+                        <p className={styles2.subtitle}>{t("Enter a strong password.")}</p>
                     </div>
 
-                    <h4>{t("Create a new password")}</h4>
-                    <p className={styles.subtitle}>{t("Enter a strong password.")}</p>
-                </div>
+                    <div className={styles2.password_input}>
+                        <Lock size={16} color="#bbb" />
+                        <input
+                            type={showPassword ? "text" : "password"}
+                            value={passwords.password}
+                            onChange={(e) => setPasswords({ ...passwords, password: e.target.value })}
+                            placeholder={t("Password")}
+                        />
+                        {showPassword
+                            ? <EyeOff size={18} onClick={() => setShowPassword(false)} style={{ cursor: "pointer", color: "#aaa", flexShrink: 0 }} />
+                            : <Eye size={18} onClick={() => setShowPassword(true)} style={{ cursor: "pointer", color: "#aaa", flexShrink: 0 }} />
+                        }
+                    </div>
 
-                <div className={styles.password_input}>
-                    <Lock size={16} color="#bbb" />
-                    <input
-                        type={showPassword ? "text" : "password"}
-                        value={passwords.password}
-                        onChange={(e) => setPasswords({ ...passwords, password: e.target.value })}
-                        placeholder={t("Password")}
-                    />
-                    {showPassword
-                        ? <EyeOff size={18} onClick={() => setShowPassword(false)} style={{ cursor: "pointer", color: "#aaa", flexShrink: 0 }} />
-                        : <Eye size={18} onClick={() => setShowPassword(true)} style={{ cursor: "pointer", color: "#aaa", flexShrink: 0 }} />
-                    }
-                </div>
-
-                <div className={styles.password_guidance}>
-                    <h5>{t("Password must:")}</h5>
-                    <ul className={styles.pg_list}>
-                        <li>
-                            {isLengthValid ? <Check size={14} color="#22c55e" /> : <Cross />}
-                            <p>{t("Be between 9 and 64 characters")}</p>
-                        </li>
-                        <li>
-                            {requirementCount ? <Check size={14} color="#22c55e" /> : <Cross />}
-                            <p>{t("Include at least two of the following:")}</p>
-                        </li>
-                        <ul className={styles.pg_sub_list}>
-                            <li>{hasUpper ? <Check size={13} color="#22c55e" /> : <Cross />}<p>{t("Uppercase character")}</p></li>
-                            <li>{hasLower ? <Check size={13} color="#22c55e" /> : <Cross />}<p>{t("Lowercase Character")}</p></li>
-                            <li>{hasNumber ? <Check size={13} color="#22c55e" /> : <Cross />}<p>{t("Number")}</p></li>
-                            <li>{hasSpecial ? <Check size={13} color="#22c55e" /> : <Cross />}<p>{t("Special Character")}</p></li>
+                    <div className={styles2.password_guidance}>
+                        <h5>{t("Password must:")}</h5>
+                        <ul className={styles2.pg_list}>
+                            <li>
+                                {isLengthValid ? <Check size={14} color="#22c55e" /> : <Cross />}
+                                <p>{t("Be between 9 and 64 characters")}</p>
+                            </li>
+                            <li>
+                                {requirementCount ? <Check size={14} color="#22c55e" /> : <Cross />}
+                                <p>{t("Include at least two of the following:")}</p>
+                            </li>
+                            <ul className={styles2.pg_sub_list}>
+                                <li>{hasUpper ? <Check size={13} color="#22c55e" /> : <Cross />}<p>{t("Uppercase character")}</p></li>
+                                <li>{hasLower ? <Check size={13} color="#22c55e" /> : <Cross />}<p>{t("Lowercase Character")}</p></li>
+                                <li>{hasNumber ? <Check size={13} color="#22c55e" /> : <Cross />}<p>{t("Number")}</p></li>
+                                <li>{hasSpecial ? <Check size={13} color="#22c55e" /> : <Cross />}<p>{t("Special Character")}</p></li>
+                            </ul>
                         </ul>
-                    </ul>
-                </div>
+                    </div>
 
-                <div className={styles.password_input}>
-                    <Lock size={16} color="#bbb" />
-                    <input
-                        type={showConfirmPassword ? "text" : "password"}
-                        value={passwords.confirmPassword}
-                        onChange={(e) => setPasswords({ ...passwords, confirmPassword: e.target.value })}
-                        placeholder={t("Confirm Password")}
-                    />
-                    {showConfirmPassword
-                        ? <EyeOff size={18} onClick={() => setShowConfirmPassword(false)} style={{ cursor: "pointer", color: "#aaa", flexShrink: 0 }} />
-                        : <Eye size={18} onClick={() => setShowConfirmPassword(true)} style={{ cursor: "pointer", color: "#aaa", flexShrink: 0 }} />
-                    }
-                </div>
+                    <div className={styles2.password_input}>
+                        <Lock size={16} color="#bbb" />
+                        <input
+                            type={showConfirmPassword ? "text" : "password"}
+                            value={passwords.confirmPassword}
+                            onChange={(e) => setPasswords({ ...passwords, confirmPassword: e.target.value })}
+                            placeholder={t("Confirm Password")}
+                        />
+                        {showConfirmPassword
+                            ? <EyeOff size={18} onClick={() => setShowConfirmPassword(false)} style={{ cursor: "pointer", color: "#aaa", flexShrink: 0 }} />
+                            : <Eye size={18} onClick={() => setShowConfirmPassword(true)} style={{ cursor: "pointer", color: "#aaa", flexShrink: 0 }} />
+                        }
+                    </div>
 
-                {!passwordsMatch && passwords.confirmPassword.length > 0 && (
-                    <p style={{ color: "#ef4444", fontSize: "12px", marginTop: "-6px", marginBottom: "8px", alignSelf: "flex-start" }}>
-                        {t("The password doesn't match.")}
+                    {!passwordsMatch && passwords.confirmPassword.length > 0 && (
+                        <p style={{ color: "#ef4444", fontSize: "12px", marginTop: "-6px", marginBottom: "8px", alignSelf: "flex-start" }}>
+                            {t("The password doesn't match.")}
+                        </p>
+                    )}
+
+                    <button
+                        onClick={() => sendPassword()}
+                        className={styles2.form_btn}
+                        disabled={sendingPassword || !isPasswordValid || !passwordsMatch}
+                    >
+                        <span>{sendingPassword ? t("Continuing") : t("Send verification code")}</span>
+                        <ChevronRight size={22} color="white" />
+                    </button>
+
+                    <p className={styles2.termsText}>
+                        {t("By continuing, you agree to our")}{" "}
+                        <a href="https://www.insta-pay.ch/terms-and-conditions"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >{t("Terms & Conditions")}</a>{" "}
+                        {t("and")}{" "}
+                        <a href="https://www.insta-pay.ch/privacy-policy"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >{t("Privacy Statement")}</a>.
                     </p>
-                )}
-
-                <button
-                    onClick={() => sendPassword()}
-                    className={styles.form_btn}
-                    disabled={sendingPassword || !isPasswordValid || !passwordsMatch}
-                >
-                    <span>{sendingPassword ? t("Continuing") : t("Send verification code")}</span>
-                    <ChevronRight size={22} color="white" />
-                </button>
-
-                <p className={styles.termsText}>
-                    {t("By continuing, you agree to our")}{" "}
-                    <a href="#">{t("Terms & Conditions")}</a>{" "}
-                    {t("and")}{" "}
-                    <a href="#">{t("Privacy Statement")}</a>.
-                </p>
+                </div>
+                <div className={styles2.footer}>
+                    <LanguagePicker />
+                    <span>© 2024 Instapay. {t("All rights reserved.")}</span>
+                    <span><FlagSvg /> {t("A Swiss Company")}</span>
+                </div>
             </div>
         </div>
     )
@@ -246,77 +261,83 @@ const CreateAgentPassword = () => {
             </div>
 
             <div className={otpStyles.wrapperRight}>
-                <div className={otpStyles.logo}>
-                    <img src={Logo} loading="lazy" width={100} height={100} alt="logo" />
-                </div>
-                <div className={otpStyles.top}>
-                    <div className={otpStyles.iconArea}>
-                        <Lock size={22} color="#5926F0" />
+                <div className={otpStyles.wrapperRight_two}>
+                    <div className={otpStyles.logo}>
+                        <img src={Logo} loading="lazy" width={100} height={100} alt="logo" />
+                    </div>
+                    <div className={otpStyles.top}>
+                        <div className={otpStyles.iconArea}>
+                            <Lock size={22} color="#5926F0" />
+                        </div>
+
+                        <h5>{t("SMS Verification Code")}</h5>
+
+                        <p className={otpStyles.subtitle}>
+                            {t("Enter the 6 digit verification code sent to your device")}
+                        </p>
                     </div>
 
-                    <h5>{t("SMS Verification Code")}</h5>
-
-                    <p className={otpStyles.subtitle}>
-                        {t("Enter the 6 digit verification code sent to your device")}
-                    </p>
-                </div>
-
-                <div className={otpStyles.otpWrapper}>
+                    <div className={otpStyles.otpWrapper}>
 
 
-                    <div className={otpStyles.inputs}>
-                        {otpValues.map((val, i) => (
-                            <input
-                                key={i}
-                                ref={el => inputRefs.current[i] = el}
-                                value={val}
-                                onChange={(e) => handleOtpChange(i, e.target.value)}
-                                onKeyDown={(e) => handleOtpKeyDown(i, e)}
-                                onPaste={handleOtpPaste}
-                                maxLength={1}
-                            />
-                        ))}
+                        <div className={otpStyles.inputs}>
+                            {otpValues.map((val, i) => (
+                                <input
+                                    key={i}
+                                    ref={el => inputRefs.current[i] = el}
+                                    value={val}
+                                    onChange={(e) => handleOtpChange(i, e.target.value)}
+                                    onKeyDown={(e) => handleOtpKeyDown(i, e)}
+                                    onPaste={handleOtpPaste}
+                                    maxLength={1}
+                                />
+                            ))}
+                        </div>
                     </div>
-                </div>
 
-                <div className={otpStyles.resend_and_switch}>
-                    <span>
-                        {resendTimer > 0 ? (
-                            `${t("Resend available in")} ${resendTimer} ${t("seconds")}`
-                        ) : (
-                            <>
-                                {t("Didn't receive the code?")}
-
-                                <span
-                                    className={otpStyles.resendBtn}
-                                    onClick={() => resendOtp()}
-                                >
-                                    {resendingOtp
-                                        ? t("Resending...")
-                                        : t("Resend Now")}
-                                </span>
-                            </>
-                        )}
-                    </span>
-                </div>
-
-                <div className={otpStyles.buttons}>
-
-                    <button
-                        className={otpStyles.form_btn}
-                        disabled={verifyingOtp || isAnyFieldEmpty}
-                        onClick={() => verifyOtp()}
-                    >
+                    <div className={otpStyles.resend_and_switch}>
                         <span>
-                            {verifyingOtp
-                                ? t("Verifying")
-                                : t("Verify and continue")}
+                            {resendTimer > 0 ? (
+                                `${t("Resend available in")} ${resendTimer} ${t("seconds")}`
+                            ) : (
+                                <>
+                                    {t("Didn't receive the code?")}
+
+                                    <span
+                                        className={otpStyles.resendBtn}
+                                        onClick={() => resendOtp()}
+                                    >
+                                        {resendingOtp
+                                            ? t("Resending...")
+                                            : t("Resend Now")}
+                                    </span>
+                                </>
+                            )}
                         </span>
+                    </div>
 
-                        <ChevronRight size={20} color="white" />
-                    </button>
+                    <div className={otpStyles.buttons}>
+
+                        <button
+                            className={otpStyles.form_btn}
+                            disabled={verifyingOtp || isAnyFieldEmpty}
+                            onClick={() => verifyOtp()}
+                        >
+                            <span>
+                                {verifyingOtp
+                                    ? t("Verifying")
+                                    : t("Verify and continue")}
+                            </span>
+
+                            <ChevronRight size={20} color="white" />
+                        </button>
+                    </div>
                 </div>
-
+                <div className={styles.footer}>
+                    <LanguagePicker />
+                    <span>© 2024 Instapay. {t("All rights reserved.")}</span>
+                    <span><FlagSvg /> {t("A Swiss Company")}</span>
+                </div>
             </div>
         </div>
     )
