@@ -13,7 +13,7 @@ import { FaAdjust } from "react-icons/fa";
 import { IoCrop } from "react-icons/io5";
 import { useTranslation } from "react-i18next";
 
-const Profile = ({ dp, setDp, dets }) => {
+const Profile = ({ dp, setDp, dets, canUpdatePaymentProfileImage }) => {
     const { authHeader, userDetails, verifyToken, croppedImages } = useContext(UserContext)
     const [isEditing, setIsEditing] = useState(false);
     const [isSaving, setIsSaving] = useState(false)
@@ -150,8 +150,8 @@ const Profile = ({ dp, setDp, dets }) => {
                     </div>
                     :
                     <div style={{ display: "flex", justifyContent: "center", alignItems: 'center', width: "100%", gap: "9px", marginTop: '7px' }}>
-                        <label htmlFor="dp" style={{ fontSize: "12px", color: "#5926F0", fontWeight: 600, marginBottom: "0px", cursor: "pointer" }}>{t("Change")}</label>
-                        {dp &&
+                        {canUpdatePaymentProfileImage && <label htmlFor="dp" style={{ fontSize: "12px", color: "#5926F0", fontWeight: 600, marginBottom: "0px", cursor: "pointer" }}>{t("Change")}</label>
+                        } {dp &&
                             <>
                                 <span style={{ fontSize: "14px", color: "#5926F0", fontWeight: 600 }}>|</span>
                                 <span onClick={deletePfp} style={{ fontSize: "12px", color: "#5926F0", fontWeight: 600, cursor: "pointer" }}>{t("Delete")}</span>

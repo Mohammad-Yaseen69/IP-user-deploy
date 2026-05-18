@@ -15,6 +15,7 @@ const PricingsAddModal = ({ isOpen, toggle, editMode = false, plan = null, onEdi
     const [tAndC, setTAndC] = useState("")
     const [receivingWallet, setReceivingWallet] = useState("")
     const [status, setStatus] = useState(true)
+    const [showOnPaymentAddress, setShowOnPaymentAddress] = useState(false)
     const { userWallets } = useContext(UserContext)
 
     useEffect(() => {
@@ -25,11 +26,12 @@ const PricingsAddModal = ({ isOpen, toggle, editMode = false, plan = null, onEdi
             setBillingCycle(plan.billingCycle || "One-Time")
             setReceivingWallet(plan.currency || "")
             setStatus(plan.status)
+            setShowOnPaymentAddress(plan.showOnPaymentAddress ?? false)
             setReceivingWallet(plan.receivingWallet?._id)
             setTAndC(plan?.termsAndConditions?.text || "")
         }
         if (!isOpen) {
-            setTitle(''); setDescription(''); setReceivingWallet(''); setPrice('0.00'); setBillingCycle('One-Time'); setTAndC(""); setStatus(true);
+            setTitle(''); setDescription(''); setReceivingWallet(''); setPrice('0.00'); setBillingCycle('One-Time'); setTAndC(""); setStatus(true); setShowOnPaymentAddress(false);
         }
     }, [editMode, plan, isOpen])
 
@@ -43,6 +45,7 @@ const PricingsAddModal = ({ isOpen, toggle, editMode = false, plan = null, onEdi
             billingCycle,
             currency: receivingWallet,
             status,
+            showOnPaymentAddress,
             tAndC,
             _id: plan?._id
         }
@@ -60,6 +63,7 @@ const PricingsAddModal = ({ isOpen, toggle, editMode = false, plan = null, onEdi
         setBillingCycle('One-Time')
         setTAndC("")
         setStatus(true)
+        setShowOnPaymentAddress(false)
         toggle()
     }
 
@@ -87,17 +91,24 @@ const PricingsAddModal = ({ isOpen, toggle, editMode = false, plan = null, onEdi
                     <Field label={t("Plan or Service Title")} required={!title}>
                         <TextInput
                             value={title}
+                            maxLength={100}
                             onChange={(e) => setTitle(e.target.value)}
                             placeholder={t("Short name of your plan (e.g. Starter)")}
                             styles={{ boxShadow: "0 2px 4px 0 rgba(27, 28, 29, 0.04)" }}
                         />
+                        {title.length} /100  {t("characters")}
+
                     </Field>
                     <Field label={t("Short Description")} required={!description}>
                         <TextInput
                             value={description}
+                            maxLength={350}
                             onChange={e => setDescription(e.target.value)}
                             placeholder={t("Short line for your customer")}
                         />
+                        <span style={{ fontSize: "12px", color: "#6b7280" }}>
+                            {description.length} /350 {t("characters")}
+                        </span>
                     </Field>
                     <Field label={t("Price")} required={!price || Number(price) === 0}>
                         <div style={{ display: 'flex', gap: 8 }}>
@@ -147,16 +158,22 @@ const PricingsAddModal = ({ isOpen, toggle, editMode = false, plan = null, onEdi
                             as="textarea"
                             rows={6}
                             value={tAndC}
+                            maxLength={1500}
                             onChange={e => setTAndC(e.target.value)}
                             placeholder={t("Type in your Terms and Conditions")}
                             style={{ marginTop: 10, resize: "none", minHeight: "250px" }}
                         />
+                        {tAndC.length} /1500  {t("characters")}
+
                     </Field>
                     {editMode && (
                         <Field label={t("Status")} toggle>
                             <Toggle onChange={() => setStatus(prev => !prev)} checked={status} />
                         </Field>
                     )}
+                    <Field label={t("Add on Payment Address")} toggle>
+                        <Toggle onChange={() => setShowOnPaymentAddress(prev => !prev)} checked={showOnPaymentAddress} />
+                    </Field>
                     <ButtonForRequests isLoading={submitting || !formValid} onClick={handleSave}>
                         {editMode ? t("Save Changes") : t("Save & Publish to My Payment Address")}
                     </ButtonForRequests>

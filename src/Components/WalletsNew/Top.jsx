@@ -24,12 +24,14 @@ import { Modal, ModalBody, ModalHeader, Tooltip } from "reactstrap"
 import CurConversion from "../HomeNewUpdated/CurConversion"
 import AddWithdrawalsModal from "../AddWithdrawa;sModal"
 import QrGenerate from "../Settings/QrGenerate"
+import { usePermission } from "../../hooks/GeneralUse/usePermission"
 
 const Top = ({ currentWallet, setCurrentWallet, data }) => {
     const navigate = useNavigate()
     const { t } = useTranslation()
     const swiperRef = useRef(null)
     const { userWallets, authHeader, getUserWallets, userDetails, getWithdrawals, userWithdrawals } = useContext(UserContext)
+    const can = usePermission()
     const [activeDot, setActiveDot] = useState(0)
     const [currentDefault, setCurrentDefault] = useState(false)
     const [currentActive, setCurrentActive] = useState(false)
@@ -178,7 +180,7 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
                 <div className={styles.top} >
                     <h2 >{currentWallet?.currency?.code}  {t("Wallet")}</h2>
 
-                    {(currentWallet?.wallet_type !== "crypto" && !(currentWallet?.blocked || currentWallet?.admin_blocked || currentWallet?.status !== "active")) ?
+                    {can("wallet.status.update") && (currentWallet?.wallet_type !== "crypto" && !(currentWallet?.blocked || currentWallet?.admin_blocked || currentWallet?.status !== "active")) ?
 
                         <div className={styles.default}>
                             <span style={{ textAlign: "right" }}>
@@ -197,6 +199,7 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
                         </div> : null}
                 </div>
                 <div className={styles.cards}>
+                {can("wallet.list.view") && (
                     <Swiper
                         effect={"cards"}
                         grabCursor={true}
@@ -232,6 +235,7 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
                                 : ""
                         }
                     </Swiper>
+                )}
                     <div style={{
                         display: "flex",
                         justifyContent: "center",
@@ -258,12 +262,14 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
                     </div>
                 </div>
             </div>
-            <div className={styles.add_cur}>
-                <div onClick={() => setShowAddCurrencyModal(!showAddCurrencyModal)}>
-                    <img src={plus} alt="" />
-                    <span>{t("Add Currency")}</span>
+            {can("wallet.currencies.add") && (
+                <div className={styles.add_cur}>
+                    <div onClick={() => setShowAddCurrencyModal(!showAddCurrencyModal)}>
+                        <img src={plus} alt="" />
+                        <span>{t("Add Currency")}</span>
+                    </div>
                 </div>
-            </div>
+            )}
             <div className={styles.right} style={{ minWidth: window.innerWidth > 600 ? "500px" : "auto" }}>
                 <div className={styles.top}>
                     <h2>
@@ -272,26 +278,26 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
                     <div className={styles.badge}>{currentWallet?.currency?.code}  {t("Wallet")}</div>
                 </div>
                 <div className={styles.actions}>
-                    <button
-                        disabled={blockedWallet}
-                        style={{
-                            opacity: blockedWallet ? .7 : 1,
-                            cursor: blockedWallet ? "not-allowed" : "pointer",
-                            backgroundColor: blockedWallet ? "grey" : "white",
-                            color: blockedWallet ? "white" : "inherit",
-                        }}
-                        className={styles.action}
-                        onClick={() => {
-                            navigate(`/add-funds?type=${currentWallet?.wallet_type === "crypto" ? "crypto" : "wallet"}&wallet_address=${currentWallet?.wallet_id}`)
-                        }}
-                        id="add_funds"
-                    >
-                        <img src={add_funds} alt="" />
-                        {t("Add Funds")}
-                    </button>
-                    {
-                        blockedWallet
-                        &&
+                    {can("wallet.payment.topup") && (
+                        <button
+                            disabled={blockedWallet}
+                            style={{
+                                opacity: blockedWallet ? .7 : 1,
+                                cursor: blockedWallet ? "not-allowed" : "pointer",
+                                backgroundColor: blockedWallet ? "grey" : "white",
+                                color: blockedWallet ? "white" : "inherit",
+                            }}
+                            className={styles.action}
+                            onClick={() => {
+                                navigate(`/add-funds?type=${currentWallet?.wallet_type === "crypto" ? "crypto" : "wallet"}&wallet_address=${currentWallet?.wallet_id}`)
+                            }}
+                            id="add_funds"
+                        >
+                            <img src={add_funds} alt="" />
+                            {t("Add Funds")}
+                        </button>
+                    )}
+                    {can("wallet.payment.topup") && blockedWallet && (
                         <Tooltip
                             placement={"top"}
                             isOpen={tooltips.add}
@@ -301,25 +307,25 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
                         >
                             {t("This currency wallet is currently blocked/disabled and funds cannot be added.")}
                         </Tooltip>
-                    }
-                    <button
-                        disabled={blockedWallet}
-                        style={{
-                            opacity: blockedWallet ? .7 : 1,
-                            cursor: blockedWallet ? "not-allowed" : "pointer",
-                            backgroundColor: blockedWallet ? "grey" : "white",
-                            color: blockedWallet ? "white" : "inherit",
-                        }}
-                        className={styles.action}
-                        onClick={() => setShowConversionModal(!showConversionModal)}
-                        id="convert_funds"
-                    >
-                        <img style={{ height: "20px" }} src={convert} alt="" />
-                        {service_name_formatter(t("convert funds "))}
-                    </button>
-                    {
-                        blockedWallet
-                        &&
+                    )}
+                    {can("wallet.payment.conversion") && (
+                        <button
+                            disabled={blockedWallet}
+                            style={{
+                                opacity: blockedWallet ? .7 : 1,
+                                cursor: blockedWallet ? "not-allowed" : "pointer",
+                                backgroundColor: blockedWallet ? "grey" : "white",
+                                color: blockedWallet ? "white" : "inherit",
+                            }}
+                            className={styles.action}
+                            onClick={() => setShowConversionModal(!showConversionModal)}
+                            id="convert_funds"
+                        >
+                            <img style={{ height: "20px" }} src={convert} alt="" />
+                            {service_name_formatter(t("convert funds "))}
+                        </button>
+                    )}
+                    {can("wallet.payment.conversion") && blockedWallet && (
                         <Tooltip
                             placement={"top"}
                             isOpen={tooltips.convert}
@@ -329,25 +335,25 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
                         >
                             {t("This currency wallet is currently blocked/disabled and funds cannot be converted.")}
                         </Tooltip>
-                    }
-                    <button
-                        disabled={blockedWallet}
-                        style={{
-                            opacity: blockedWallet ? .7 : 1,
-                            cursor: blockedWallet ? "not-allowed" : "pointer",
-                            backgroundColor: blockedWallet ? "grey" : "white",
-                            color: blockedWallet ? "white" : "inherit",
-                        }}
-                        className={styles.action}
-                        onClick={() => setShowWithdrawalModal(!showWithdrawalModal)}
-                        id="withdraw_balance"
-                    >
-                        <img style={{ height: "20px" }} src={withdraw} alt="" />
-                        {service_name_formatter(t("withdraw balance"))}
-                    </button>
-                    {
-                        blockedWallet
-                        &&
+                    )}
+                    {can("wallet.payment.withdraw") && (
+                        <button
+                            disabled={blockedWallet}
+                            style={{
+                                opacity: blockedWallet ? .7 : 1,
+                                cursor: blockedWallet ? "not-allowed" : "pointer",
+                                backgroundColor: blockedWallet ? "grey" : "white",
+                                color: blockedWallet ? "white" : "inherit",
+                            }}
+                            className={styles.action}
+                            onClick={() => setShowWithdrawalModal(!showWithdrawalModal)}
+                            id="withdraw_balance"
+                        >
+                            <img style={{ height: "20px" }} src={withdraw} alt="" />
+                            {service_name_formatter(t("withdraw balance"))}
+                        </button>
+                    )}
+                    {can("wallet.payment.withdraw") && blockedWallet && (
                         <Tooltip
                             placement={"top"}
                             isOpen={tooltips.withdraw}
@@ -357,26 +363,26 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
                         >
                             {t("This currency wallet is currently blocked/disabled and you cannot withdraw balance.")}
                         </Tooltip>
-                    }
-                    <button
-                        disabled={blockedWallet}
-                        style={{
-                            opacity: blockedWallet ? .7 : 1,
-                            cursor: blockedWallet ? "not-allowed" : "pointer",
-                            backgroundColor: blockedWallet ? "grey" : "white",
-                            color: blockedWallet ? "white" : "inherit",
-                            whiteSpace: "nowrap"
-                        }}
-                        className={styles.action}
-                        onClick={() => setShowDownloadStatementModal(!showDownloadStatementModal)}
-                        id={"download_statement"}
-                    >
-                        <img style={{ height: "20px" }} src={download} alt="" />
-                        {t("Download Statement")}
-                    </button>
-                    {
-                        blockedWallet
-                        &&
+                    )}
+                    {can("transactions.wallet.export") && (
+                        <button
+                            disabled={blockedWallet}
+                            style={{
+                                opacity: blockedWallet ? .7 : 1,
+                                cursor: blockedWallet ? "not-allowed" : "pointer",
+                                backgroundColor: blockedWallet ? "grey" : "white",
+                                color: blockedWallet ? "white" : "inherit",
+                                whiteSpace: "nowrap"
+                            }}
+                            className={styles.action}
+                            onClick={() => setShowDownloadStatementModal(!showDownloadStatementModal)}
+                            id={"download_statement"}
+                        >
+                            <img style={{ height: "20px" }} src={download} alt="" />
+                            {t("Download Statement")}
+                        </button>
+                    )}
+                    {can("transactions.wallet.export") && blockedWallet && (
                         <Tooltip
                             placement={"top"}
                             isOpen={tooltips.downlaod}
@@ -384,29 +390,29 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
                             toggle={() => updateTooltip("downlaod")}
                             color="primary"
                         >
-                            {t(" This currency wallet is currently blocked/disabled and you cannot download the statement.")}
+                            {t("This currency wallet is currently blocked/disabled and you cannot download the statement.")}
                         </Tooltip>
-                    }
-                    <button
-                        className={`${styles.action} ${styles.a_danger}`}
-                        onClick={() => {
-                            currentDefault ? console.log("") : handleBlockWallet()
-                        }}
-                        disabled={currentDefault}
-                        style={{
-                            opacity: currentDefault ? .7 : 1,
-                            cursor: currentDefault ? "not-allowed" : "pointer",
-                            backgroundColor: currentDefault ? "grey" : "rgba(230, 64, 103, 0.16)",
-                            color: currentDefault ? "white" : "#E64067",
-                        }}
-                        id={"block_the_wallet"}
-                    >
-                        <img style={{ height: "20px" }} src={block} alt="" />
-                        {adminBlocked ? t("Blocked By Admin") : !blocked ? t("Block the Wallet") : t("Unblock The Wallet")}
-                    </button>
-                    {
-                        currentDefault
-                        &&
+                    )}
+                    {can("wallet.status.update") && (
+                        <button
+                            className={`${styles.action} ${styles.a_danger}`}
+                            onClick={() => {
+                                currentDefault ? console.log("") : handleBlockWallet()
+                            }}
+                            disabled={currentDefault}
+                            style={{
+                                opacity: currentDefault ? .7 : 1,
+                                cursor: currentDefault ? "not-allowed" : "pointer",
+                                backgroundColor: currentDefault ? "grey" : "rgba(230, 64, 103, 0.16)",
+                                color: currentDefault ? "white" : "#E64067",
+                            }}
+                            id={"block_the_wallet"}
+                        >
+                            <img style={{ height: "20px" }} src={block} alt="" />
+                            {adminBlocked ? t("Blocked By Admin") : !blocked ? t("Block the Wallet") : t("Unblock The Wallet")}
+                        </button>
+                    )}
+                    {can("wallet.status.update") && currentDefault && (
                         <Tooltip
                             placement={"top"}
                             isOpen={tooltips.block}
@@ -416,28 +422,28 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
                         >
                             {t("This currency wallet is currently set as your default and cannot be blocked. To proceed, please set a different currency wallet as your default first.")}
                         </Tooltip>
-                    }
-                    <button
-                        className={`${styles.action} ${styles.status}`}
-                        onClick={currentDefault ? console.log("Lol") : handleChangeStatus}
-                        disabled={currentDefault}
-                        style={{
-                            opacity: currentDefault ? .7 : 1,
-                            cursor: currentDefault ? "not-allowed" : "pointer",
-                            backgroundColor: currentDefault ? "grey" : "white",
-                            color: currentDefault ? "white" : "inherit",
-                            whiteSpace: "nowrap"
-                        }}
-                        id={"status_of_wallet"}
-                    >
-                        {t("Wallet Status")}
-                        <div className={`${styles.switch} ${currentDefault ? styles.disabled : ""}`}>
-                            <div className={`${styles.thumb} ${currentActive ? styles.active : ""}`}></div>
-                        </div>
-                    </button>
-                    {
-                        currentDefault
-                        &&
+                    )}
+                    {can("wallet.status.update") && (
+                        <button
+                            className={`${styles.action} ${styles.status}`}
+                            onClick={currentDefault ? console.log("Lol") : handleChangeStatus}
+                            disabled={currentDefault}
+                            style={{
+                                opacity: currentDefault ? .7 : 1,
+                                cursor: currentDefault ? "not-allowed" : "pointer",
+                                backgroundColor: currentDefault ? "grey" : "white",
+                                color: currentDefault ? "white" : "inherit",
+                                whiteSpace: "nowrap"
+                            }}
+                            id={"status_of_wallet"}
+                        >
+                            {t("Wallet Status")}
+                            <div className={`${styles.switch} ${currentDefault ? styles.disabled : ""}`}>
+                                <div className={`${styles.thumb} ${currentActive ? styles.active : ""}`}></div>
+                            </div>
+                        </button>
+                    )}
+                    {can("wallet.status.update") && currentDefault && (
                         <Tooltip
                             placement={"top"}
                             isOpen={tooltips.status}
@@ -447,7 +453,7 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
                         >
                             {t("This currency wallet is currently set as your default and cannot be disabled. To proceed, please set a different currency wallet as your default first.")}
                         </Tooltip>
-                    }
+                    )}
                 </div>
             </div>
             <DefaultWalletModal

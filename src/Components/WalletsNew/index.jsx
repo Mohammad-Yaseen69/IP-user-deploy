@@ -12,6 +12,7 @@ import axios from "axios"
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption"
 import { UserContext } from "../../Context/UserContext"
 import QrGenerate from "../Settings/QrGenerate"
+import { usePermission } from "../../hooks/GeneralUse/usePermission"
 // import { useLocation } from "react-router"
 
 
@@ -125,6 +126,8 @@ const WalletsNew = () => {
     const cancelTokenRef = useRef()
     const [currentType, setCurrentType] = useState("")
     const [filtered, setFiltered] = useState([])
+    const can = usePermission()
+
     const [categories, setCategories] = useState([
         {
             _id: "uncategorized",
@@ -147,18 +150,14 @@ const WalletsNew = () => {
             };
         });
 
-        // Check for uncategorized transactions
         const uncategorizedTransactions = filtered.filter(trx => trx?.status?.toLowerCase() == "completed" && (!trx.categories || trx.categories?.length === 0) && trx?.transaction_type === currentType);
         const totalUncategorizedAmount = uncategorizedTransactions.reduce((acc, trx) => acc + trx.amount, 0);
 
-        // Check if the "uncategorized" category already exists
         const uncategorizedIndex = updatedCategories.findIndex(category => category._id === "uncategorized");
 
         if (uncategorizedIndex !== -1) {
-            // Update the existing "uncategorized" category
             updatedCategories[uncategorizedIndex].value = totalUncategorizedAmount;
         } else {
-            // Create a new category for uncategorized transactions
             const uncategorizedCategory = {
                 _id: "uncategorized",
                 name: "Uncategorized",
@@ -166,7 +165,6 @@ const WalletsNew = () => {
                 color: "#5926f0"
             };
 
-            // Add the uncategorized category to the updatedCategories array
             updatedCategories.push(uncategorizedCategory);
         }
 
@@ -209,6 +207,8 @@ const WalletsNew = () => {
         return userWallets?.filter(item => !item?.qrCode?.url) ?? []
     }, [userWallets])
 
+    if (!can("wallet.view")) return null;
+
     return (
         <>
             {
@@ -236,18 +236,27 @@ const WalletsNew = () => {
                                 setCurrentWallet={setCurrentWallet}
                                 data={data}
                             />
-                            <AccountLimits
-                                data={data}
-                                error={error}
-                                loading={loading}
-                                currentWallet={currentWallet}
-                            />
-                            <CenterContainer categories={categories} setCategories={setCategories} currentType={currentType} setCurrentType={setCurrentType} currentWallet={currentWallet} />
-                            <TransactionsTable
-                                currentWallet={currentWallet}
-                                filtered={filtered}
-                                setFiltered={setFiltered}
-                            />
+                            {
+                                can("wallet.limits.view") && (
+                                    <AccountLimits
+                                        data={data}
+                                        error={error}
+                                        loading={loading}
+                                        currentWallet={currentWallet}
+                                    />
+                                )
+                            }
+                            {can("wallet.analytics.view") && (
+                                <CenterContainer categories={categories} setCategories={setCategories} currentType={currentType} setCurrentType={setCurrentType} currentWallet={currentWallet} />
+                            )}
+
+                            {can("transactions.wallet.list") && (
+                                <TransactionsTable
+                                    currentWallet={currentWallet}
+                                    filtered={filtered}
+                                    setFiltered={setFiltered}
+                                />
+                            )}
                         </div>
                     </div>
                     :
@@ -266,18 +275,27 @@ const WalletsNew = () => {
                                 setCurrentWallet={setCurrentWallet}
                                 data={data}
                             />
-                            <AccountLimits
-                                data={data}
-                                error={error}
-                                loading={loading}
-                                currentWallet={currentWallet}
-                            />
-                            <CenterContainer categories={categories} setCategories={setCategories} currentType={currentType} setCurrentType={setCurrentType} currentWallet={currentWallet} />
-                            <TransactionsTable
-                                currentWallet={currentWallet}
-                                filtered={filtered}
-                                setFiltered={setFiltered}
-                            />
+                            {
+                                can("wallet.limits.view") && (
+
+                                    <AccountLimits
+                                        data={data}
+                                        error={error}
+                                        loading={loading}
+                                        currentWallet={currentWallet}
+                                    />)
+                            }
+
+                            {can("wallet.analytics.view") && (
+                                <CenterContainer categories={categories} setCategories={setCategories} currentType={currentType} setCurrentType={setCurrentType} currentWallet={currentWallet} />
+                            )}
+                            {can("transactions.wallet.list") && (
+                                <TransactionsTable
+                                    currentWallet={currentWallet}
+                                    filtered={filtered}
+                                    setFiltered={setFiltered}
+                                />
+                            )}
                         </div>
                     </div>
             }

@@ -80,6 +80,8 @@ const UserState = ({ children }) => {
     const [available, setAvailable] = useState(0)
     const [blocked, setBlocked] = useState(0)
     const [showAnotherLoginModal, setShowAnotherLoginModal] = useState(false)
+    const [isAgentLogin, setIsAgentLogin] = useState(false)
+    const [agentDetails, setAgentDetails] = useState(null)
     const base_url = window.location.origin || 'https://my.insta-pay.ch';
 
 
@@ -160,6 +162,8 @@ const UserState = ({ children }) => {
         setProfileCompleted(null)
         setProfileCompletedPercentage(0)
         setProfileIncompleteReason("")
+        setIsAgentLogin(false)
+        setAgentDetails(null)
     }
 
     const getImage = async (dp, c, type, name) => {
@@ -209,9 +213,18 @@ const UserState = ({ children }) => {
 
     const verifyToken = (isFetchRequired = false) => {
         if ((!window.location.pathname.includes("auth") && !userDetails && Object.keys(userDetails || {}).length === 0) || isFetchRequired) {
-            axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/account/auth/${token}`)
+            const isAgentLoginCheck = localStorage.getItem("isAgentLogin")
+            const url = isAgentLoginCheck ? `/api/business-agents/agents/auth/${token}` : `/api/account/auth/${token}`
+
+            axios.get(`${import.meta.env.VITE_IP_DEV_API}${url}`)
                 .then(res => {
                     const decrypted = decryptData(res.data.data)
+
+                    if (isAgentLoginCheck) {
+                        setIsAgentLogin(true)
+                        setAgentDetails(decrypted?.agentDetails)
+                    }
+
                     setUserDetails(decrypted)
                     if (!decrypted?.country?.status) {
                         sessionStorage.setItem("country_status_error", "Service not available in your country!")
@@ -239,7 +252,7 @@ const UserState = ({ children }) => {
                     if (!decrypted?.tfa) {
                         setMissingTabsData(prev => prev.includes("tfa") ? prev : [...prev, "tfa"]);
                     }
-                    const isKycMissing = decrypted?.account_type === 'business' 
+                    const isKycMissing = decrypted?.account_type === 'business'
                         ? (decrypted?.company?.kyb_status === "declined" || !decrypted.company?.kyb_status)
                         : (decrypted?.user?.kyc_status === "declined" || !decrypted.user?.kyc_status);
 
@@ -260,8 +273,15 @@ const UserState = ({ children }) => {
                         localStorage.setItem("ip_country", coun)
                         clearData()
                         if (!publicRoutes.some(item => window.location.pathname.toLowerCase().includes(item.path.toLowerCase().split(":")[0])) && !window.location.pathname.toLowerCase().includes("profile/")) {
-                            sessionStorage.setItem("path", window.location.href?.split("pay.ch")?.[1])
-                            navigate("/login", { replace: true })
+                            // sessionStorage.setItem("path", window.location.href?.split("pay.ch")?.[1])
+                            // navigate("/login", { replace: true })
+                            if (!publicRoutes.some(item => window.location.pathname.toLowerCase().includes(item.path.toLowerCase().split(":")[0])) && !window.location.pathname.toLowerCase().includes("profile/")) {
+                                const currentPath = window.location.pathname + window.location.search;
+                                if (currentPath && currentPath !== "undefined" && !currentPath.includes("/login")) {
+                                    sessionStorage.setItem("path", currentPath)
+                                }
+                                navigate("/login", { replace: true })
+                            }
                         }
                     }
                 })
@@ -270,10 +290,16 @@ const UserState = ({ children }) => {
 
     // check auth
     const checkAuth = () => {
-        axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/account/auth/${token}`)
+        const isAgentLoginCheck = localStorage.getItem("isAgentLogin")
+        const url = isAgentLoginCheck ? `/api/business-agents/agents/auth/${token}` : `/api/account/auth/${token}`
+        axios.get(`${import.meta.env.VITE_IP_DEV_API}${url}`)
             .then(res => {
                 const decrypted = decryptData(res.data.data)
                 setUserDetails(decrypted)
+                if (isAgentLoginCheck) {
+                    setIsAgentLogin(true)
+                    setAgentDetails(decrypted?.agentDetails)
+                }
                 if (!decrypted?.country?.status) {
                     sessionStorage.setItem("country_status_error", "Service not available in your country!")
                     const coun = localStorage.getItem("ip_country")
@@ -300,7 +326,7 @@ const UserState = ({ children }) => {
                 if (!decrypted?.tfa) {
                     setMissingTabsData(prev => prev.includes("tfa") ? prev : [...prev, "tfa"]);
                 }
-                const isKycMissing = decrypted?.account_type === 'business' 
+                const isKycMissing = decrypted?.account_type === 'business'
                     ? (decrypted?.company?.kyb_status === "declined" || !decrypted.company?.kyb_status)
                     : (decrypted?.user?.kyc_status === "declined" || !decrypted.user?.kyc_status);
 
@@ -654,7 +680,7 @@ const UserState = ({ children }) => {
 
 
     return (
-        <UserContext.Provider value={{ userDetails, setUserDetails, userWallets, setUserWallets, token, authHeader, beneficiaries, setBeneficiaries, userTransactions, setUserTransactions, searchQuery, setSearchQuery, apiDates, setApiDates, userSecurityQues, referralLink, userSessions, allowedFeatures, verifyToken, userWithdrawals, setUserWithdrawals, allowedWithdrawals, registeredBeneficiaries, profileCompleted, allowedCountries, userPortfolio, profileIncompleteReason, setUserPortfolio, setUserVideos, getUserVideos, userVideos, checkRegisteredBenficiaries, getAllActiveCountries, getUserWallets, getUserBeneficiaries, getUserDocuments, checkAuth, getSecurityQuestions, getInvitationLink, getSessions, profileCompletedPercentage, getWithdrawals, getReferralCommission, totalReferralAmount, validateSendingLimits, validateReceivingLimits, validateTransactionsCount, profileLockTIme, setProfileLockTime, showInactivityModal, setShowInactivityModal, is30Days, setIs30Days, threeDaysReminder, set3DaysReminder, is30DaysInfo, setIs30DaysInfo, threeDaysReminderInfo, set3DaysReminderInfo, clearData, croppedImages, updateCoordinates, setCroppedImages, missingTabsData, setMissingTabsData, setAvailable, available, setBlocked, blocked, benLoading, balanceLoading, showModalState, setShowModalState, processReceivingNonIpFunds: processReceivingNonIpFunds.mutateAsync, showAnotherLoginModal, setShowAnotherLoginModal }}>
+        <UserContext.Provider value={{ userDetails, setUserDetails, userWallets, setUserWallets, token, authHeader, beneficiaries, setBeneficiaries, userTransactions, setUserTransactions, searchQuery, setSearchQuery, apiDates, setApiDates, userSecurityQues, referralLink, userSessions, allowedFeatures, verifyToken, userWithdrawals, setUserWithdrawals, allowedWithdrawals, registeredBeneficiaries, profileCompleted, allowedCountries, userPortfolio, profileIncompleteReason, setUserPortfolio, setUserVideos, getUserVideos, userVideos, checkRegisteredBenficiaries, getAllActiveCountries, getUserWallets, getUserBeneficiaries, getUserDocuments, checkAuth, getSecurityQuestions, getInvitationLink, getSessions, profileCompletedPercentage, getWithdrawals, getReferralCommission, totalReferralAmount, validateSendingLimits, validateReceivingLimits, validateTransactionsCount, profileLockTIme, setProfileLockTime, showInactivityModal, setShowInactivityModal, is30Days, setIs30Days, threeDaysReminder, set3DaysReminder, is30DaysInfo, setIs30DaysInfo, threeDaysReminderInfo, set3DaysReminderInfo, clearData, croppedImages, updateCoordinates, setCroppedImages, missingTabsData, setMissingTabsData, setAvailable, available, setBlocked, blocked, benLoading, balanceLoading, showModalState, setShowModalState, processReceivingNonIpFunds: processReceivingNonIpFunds.mutateAsync, showAnotherLoginModal, setShowAnotherLoginModal, isAgentLogin, setIsAgentLogin, agentDetails, setAgentDetails }}>
             {((showModalState || Boolean(isSessionExpired)) && !location.pathname.startsWith("/pay/")) &&
                 <SessionExpireModal
                     isOpen={(showModalState || Boolean(isSessionExpired))}

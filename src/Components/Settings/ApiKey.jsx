@@ -8,6 +8,7 @@ import InstaPayLoader from '../Loader'
 import styles from './styles/apiKey.module.css'
 import { Toggle } from "../MyMasterCard/CardPurchased"
 import apiKeyImg from "./apiKeyCreate.png"
+import { usePermission } from '../../hooks/GeneralUse/usePermission'
 
 const FEATURE_LIST = [
     { id: 'international', label: 'International Transfers' },
@@ -44,7 +45,8 @@ const ApiKey = () => {
     const updateFeatures = useUpdateFeatures({ headers: authHeader, accountId })
     const apiKey = data?.userKey?.api_key ?? ""
     const featureStatus = data?.userKey?.status ?? ""
-
+    const can = usePermission()
+    const isEdit = can("settings.api-key.update")
     const isBusy = useMemo(() => {
         return isLoading || isFetching || createMutation.isPending || regenerateMutation.isPending || updateWebhookMutation.isPending || deleteKeyMutation.isPending || updateStatusMutation.isPending
     }, [isLoading, isFetching, createMutation.isPending, regenerateMutation.isPending, updateWebhookMutation.isPending, deleteKeyMutation.isPending, updateStatusMutation.isPending])
@@ -265,7 +267,8 @@ const ApiKey = () => {
                                 >
                                     {updateFeatures.isPending ? t("Saving...") : t("Save")}
                                 </button>
-                                <button className={`${styles.btn} ${styles.btnPrimary}`} style={{ padding: "13px 26px" }} onClick={handleRegenerate} disabled={isBusy || featureStatus !== "enabled"}>
+                                <button className={`${styles.btn} ${styles.btnPrimary}`}
+                                    style={{ padding: "13px 26px" }} onClick={handleRegenerate} disabled={isBusy || featureStatus !== "enabled" || !isEdit}>
                                     {regenerateMutation.isPending ? t("Regenerating...") : (apiKey ? (t("Regenerate API Key")) : t("Generate API Key"))}
                                 </button>
                             </div>

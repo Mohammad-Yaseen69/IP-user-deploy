@@ -6,13 +6,15 @@ import NomineeDetails from './NomineeDetails';
 import axios from 'axios';
 import { UserContext } from '../../Context/UserContext';
 import { decryptData } from '../../Helper/EssentilaMethods/Decryption';
+import { usePermission } from '../../hooks/GeneralUse/usePermission';
 
 const Nominee = () => {
     const { t } = useTranslation()
 
     const [nominee, setNominee] = useState({})
     const [addNominee, setAddNominee] = useState(false)
-
+    const can = usePermission()
+    const isEdit = can("settings.nominee.update")
     // context
     const { authHeader, userDetails } = useContext(UserContext)
 
@@ -55,7 +57,7 @@ const Nominee = () => {
                                     :
                                     <div style={{ display: "flex", alignItems: "center", flexDirection: "column", gap: "10px" }}>
                                         <p style={{ textAlign: "center" }}>{t("You may elect a Nominee of your choice, provided they are not a minor, through the InstaPay platform itself. You acknowledge that no wet signature is required to \nappoint the nominee, and the online registration will be considered final and binding. In the event of the death of an InstaPay Wallet holder, the balance in the Wallet \nwill be transferred to the registered Nominee. KEMIT KINGDOM will be discharged from all its liabilities upon the handover of the amount to the Nominee. The Nominee \nwill provide any documents required by InstaPay, including those for identification and proof of death.")}</p>
-                                        <Button style={{
+                                        <Button disabled={!isEdit} style={{
                                             background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
                                             border: "none",
                                             outline: "none",

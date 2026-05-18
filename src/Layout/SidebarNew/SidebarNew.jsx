@@ -1,18 +1,17 @@
 import { Fragment, useContext, useEffect, useRef, useState } from "react";
-import CustomizerContext from "../../Helper/Customizer";
-import { MENU } from "./SbNMenu";
-import SidebarIcon from "./SbNIcon";
-import SimpleBar from "simplebar-react";
-import { ArrowLeft, ArrowRight, ChevronRight, Search } from "react-feather";
-import ConfigDB from "../../Config/ThemeConfig";
-import SidebarSubMenu from "./SbNSubMenu";
-import BackBtn from "./SbNBackBtn";
-import { Form, Input } from "reactstrap";
-import "./sm.css"
-import { UserContext } from "../../Context/UserContext";
-import { Link } from "react-router-dom";
+import { ArrowLeft, ArrowRight, ChevronRight } from "react-feather";
 import { useTranslation } from "react-i18next";
-import { useLocation } from "react-router-dom"
+import { Link, useLocation } from "react-router-dom";
+import SimpleBar from "simplebar-react";
+import ConfigDB from "../../Config/ThemeConfig";
+import { UserContext } from "../../Context/UserContext";
+import CustomizerContext from "../../Helper/Customizer";
+import BackBtn from "./SbNBackBtn";
+import SidebarIcon from "./SbNIcon";
+import { MENU } from "./SbNMenu";
+import SidebarSubMenu from "./SbNSubMenu";
+import "./sm.css";
+import { usePermission } from "../../hooks/GeneralUse/usePermission";
 
 const SidebarNew = ({ setShowModal, showModal }) => {
     const { t } = useTranslation()
@@ -69,7 +68,6 @@ const SidebarNew = ({ setShowModal, showModal }) => {
         }
     };
 
-    // sidebar toggle
     useEffect(() => {
         const handleClick = (event) => {
             const logo = document.querySelector("[data-testid='logo']");
@@ -98,7 +96,12 @@ const SidebarNew = ({ setShowModal, showModal }) => {
     }, [location.pathname])
 
     const [inheritSize, setInheritSize] = useState(false)
-
+    const filteredMenu = MENU?.filter(item => {
+        if (item.showOnly === "business") {
+            return userDetails?.account_type === "business"
+        }
+        return true
+    })
     return (
         <div className={`sidebar-wrapper ${togglSidebar ? "close_icon" : ""} `} id="sidebar-wrapper" ref={sidebarRef} style={{ background: "white", margin: "1rem", borderRadius: "16px", height: "calc(100vh - 2rem)", boxShadow: "15.1463px 4.32752px 242.341px rgba(0, 0, 0, 0.07)", display: (location.pathname === "/create-pin" || location.pathname === "/update-pin") && "none" }} onMouseEnter={() => setInheritSize(true)} onMouseLeave={() => setInheritSize(false)}>
             <div>
@@ -122,9 +125,13 @@ const SidebarNew = ({ setShowModal, showModal }) => {
                                         <>
                                             {
                                                 MENU.map((item, i) => (
+
                                                     <Fragment key={i}>
                                                         <li style={{ width: togglSidebar ? "100%" : "auto" }} className={item.className}>
-                                                            <SidebarSubMenu menu={item.menu} isOpen={isOpen} setIsOpen={setIsOpen} level={0} setShowModal={setShowModal} profileCompletedPercentage={profileCompletedPercentage} showModal={showModal} inheritSize={inheritSize} />
+                                                            <SidebarSubMenu
+                                                                userDetails={userDetails}
+
+                                                                menu={item.menu} isOpen={isOpen} setIsOpen={setIsOpen} level={0} setShowModal={setShowModal} profileCompletedPercentage={profileCompletedPercentage} showModal={showModal} inheritSize={inheritSize} />
                                                         </li>
                                                     </Fragment>
                                                 ))

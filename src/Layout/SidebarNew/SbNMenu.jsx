@@ -8,10 +8,8 @@ import acc from "./files/acc.svg";
 import acc_a from "./files/acc_a.svg";
 import analytics from "./files/analytics.svg";
 import analytics_a from "./files/analytics_a.svg";
-import storeProduct from "./files/archive.svg";
 import ben from "./files/ben.svg";
 import ben_a from "./files/ben_a.svg";
-import dashboardStore from "./files/columns-01.svg";
 import dash from "./files/dash.svg";
 import dash_a from "./files/dash_a.svg";
 import location from "./files/location.svg";
@@ -22,7 +20,6 @@ import mastercard from "./files/master_card.svg";
 import mastercard_a from "./files/master_card_a.svg";
 import pa from "./files/pa.svg";
 import pa_a from "./files/pa_a.svg";
-import orderMy from "./files/package.svg";
 import paym from "./files/paym.svg";
 import paym_a from "./files/paym_a.svg";
 import pen from "./files/pen.svg";
@@ -39,10 +36,8 @@ import ref from "./files/ref.svg";
 import ref_a from "./files/ref_a.svg";
 import schedules from "./files/schedules.svg";
 import schedules_a from "./files/schedules_a.svg";
-import storeSetting from "./files/settings-02.svg";
 import settings from "./files/settings.svg";
 import settings_a from "./files/settings_a.svg";
-import shopingcard from "./files/shopping-cart-03.svg";
 import support from "./files/support.svg";
 import support_a from "./files/support_a.svg";
 import tran from "./files/tran.svg";
@@ -65,6 +60,7 @@ export const MENU = [
                 activeIcon: <img loading="lazy" src={dash_a} style={{ marginRight: "12px" }} />,
                 type: "link",
                 url: `${window.location.origin}/dashboard/default`,
+                permission: "dashboard.view"
             },
             {
                 title: "My Wallets",
@@ -72,6 +68,7 @@ export const MENU = [
                 activeIcon: <img loading="lazy" src={wallets_a} style={{ marginRight: "12px" }} />,
                 type: "link",
                 url: `${window.location.origin}/wallets`,
+                permission: "wallet.view"
             },
             {
                 title: "My Mastercard",
@@ -79,6 +76,7 @@ export const MENU = [
                 activeIcon: <img loading="lazy" src={mastercard_a} style={{ marginRight: "12px" }} />,
                 type: "link",
                 url: `${window.location.origin}/my-mastercard`,
+                permission: "mastercard.view"
             },
             {
                 title: "Transactions",
@@ -86,6 +84,7 @@ export const MENU = [
                 activeIcon: <img loading="lazy" src={tran_a} style={{ marginRight: "12px" }} />,
                 type: "link",
                 url: `${window.location.origin}/transactions`,
+                permission: "transactions.main.view"
             },
             {
                 title: "Schedules",
@@ -93,6 +92,7 @@ export const MENU = [
                 activeIcon: <img loading="lazy" src={schedules_a} style={{ marginRight: "12px" }} />,
                 type: "link",
                 url: `${window.location.origin}/other-transactions`,
+                permission: "schedules.view",
             },
             {
                 title: "My Invoices",
@@ -100,12 +100,14 @@ export const MENU = [
                 activeIcon: <img loading="lazy" src={rec_a} style={{ marginRight: "12px" }} />,
                 type: "link",
                 url: `${window.location.origin}/invoices`,
+                permission: "invoices.view"
             },
             {
                 title: "My eShop",
                 icon: <img loading="lazy" src={paym} style={{ marginRight: "12px" }} />,
                 activeIcon: <img loading="lazy" src={paym_a} style={{ marginRight: "12px" }} />,
                 type: "external_eshop",
+                permission: "eshop.view"
             },
             {
                 title: "Payments",
@@ -113,6 +115,7 @@ export const MENU = [
                 activeIcon: <img loading="lazy" src={paym_a} style={{ marginRight: "12px" }} />,
                 type: "link",
                 url: `${window.location.origin}/payments`,
+                permission: "payments.view"
             },
             {
                 title: "Beneficiaries",
@@ -120,6 +123,7 @@ export const MENU = [
                 activeIcon: <img loading="lazy" src={ben_a} style={{ marginRight: "12px" }} />,
                 type: "link",
                 url: `${window.location.origin}/beneficiaries`,
+                permission: "beneficiaries.view"
             },
             {
                 title: "Referrals",
@@ -127,6 +131,7 @@ export const MENU = [
                 activeIcon: <img loading="lazy" src={ref_a} style={{ marginRight: "12px" }} />,
                 type: "link",
                 url: `${window.location.origin}/referrals`,
+                permission: "referrals.view"
             },
             {
                 title: "Quotations",
@@ -134,6 +139,7 @@ export const MENU = [
                 activeIcon: <img loading="lazy" src={quotations_a} style={{ marginRight: "12px" }} />,
                 type: "link",
                 url: `${window.location.origin}/quotations`,
+                permission: "quotations.view"
             },
             {
                 title: "Payment Requests",
@@ -141,6 +147,7 @@ export const MENU = [
                 activeIcon: <img loading="lazy" src={pen_a} style={{ marginRight: "12px" }} />,
                 type: "link",
                 url: `${window.location.origin}/payment-requests`,
+                permission: "payment-request.view"
             },
             // {
             //     title: "Mastercard",
@@ -155,6 +162,7 @@ export const MENU = [
                 activeIcon: <img loading="lazy" src={qr_s_a} style={{ marginRight: "12px" }} />,
                 type: "link",
                 url: `${window.location.origin}/chips-in`,
+                permission: "qr-sticker.view"
             },
             {
                 title: "My Portfolio",
@@ -162,6 +170,7 @@ export const MENU = [
                 activeIcon: <img loading="lazy" src={portfolio_a} style={{ marginRight: "12px" }} />,
                 type: "link",
                 url: `${window.location.origin}/portfolio`,
+                permission: "portfolio.view"
             },
             {
                 title: "My Payment Address",
@@ -169,6 +178,7 @@ export const MENU = [
                 activeIcon: <img loading="lazy" src={pa_a} style={{ marginRight: "12px" }} />,
                 type: "link",
                 url: `${window.location.origin}/payment-address`,
+                permission: "payment-address.view"
             },
             {
                 title: "Analytics",
@@ -178,6 +188,25 @@ export const MENU = [
                 activeIcon: <img loading="lazy" src={analytics_a} style={{ marginRight: "12px" }} />,
                 type: "link",
                 url: `${window.location.origin}/analytics`,
+                permission: "analytics.view"
+            },
+            {
+                title: "Delegate Access",
+                icon: <img loading="lazy" src={analytics} style={{ marginRight: "12px" }} />,
+                activeIcon: <img loading="lazy" src={analytics_a} style={{ marginRight: "12px" }} />,
+                type: "link",
+                url: `${window.location.origin}/delegate-access`,
+                showOnly: "business",
+                permission: "delegate-access.view"
+            },
+            {
+                title: "Activity Feed",
+                icon: < img loading="lazy" src={analytics} style={{ marginRight: "12px" }} />,
+                activeIcon: <img loading="lazy" src={analytics_a} style={{ marginRight: "12px" }} />,
+                type: "link",
+                url: `${window.location.origin}/activity`,
+                showOnly: "business",
+                permission: "activity-logs.view"
             },
             // {
             //     title: "Store",
@@ -225,6 +254,7 @@ export const MENU = [
                 activeIcon: <img loading="lazy" src={acc_a} style={{ marginRight: "12px" }} />,
                 type: "link",
                 url: `${window.location.origin}/my-profile`,
+                permission: "user-profile.view"
             },
             {
                 title: "Geo Fencing",
@@ -232,6 +262,7 @@ export const MENU = [
                 activeIcon: <img loading="lazy" src={location_a} style={{ marginRight: "12px" }} />,
                 type: "link",
                 url: `${window.location.origin}/geo-fencing`,
+                permission: "geo-fencing.view"
             },
             {
                 title: "Settings",
@@ -239,6 +270,7 @@ export const MENU = [
                 activeIcon: <img loading="lazy" src={settings_a} style={{ marginRight: "12px" }} />,
                 type: "link",
                 url: `${window.location.origin}/settings`,
+                permission: "settings.view"
             },
             // {
             //     title: "Dark Mode",
@@ -272,24 +304,28 @@ export const SEARCHMENU = [
                 icon: <Home />,
                 type: "link",
                 url: `${window.location.origin}/dashboard/default`,
+                permission: "dashboard.view"
             },
             {
                 title: "Transactions",
                 icon: <CreditCard />,
                 type: "link",
                 url: `${window.location.origin}/transactions`,
+                permission: "transactions.main.view"
             },
             {
                 title: "Payments",
                 icon: <DollarSign />,
                 type: "link",
                 url: `${window.location.origin}/ecommerce/payment-details`,
+                permission: "payments.view"
             },
             {
                 title: "Referrals",
                 icon: <User />,
                 type: "link",
                 url: `${window.location.origin}/users/userCards`,
+                permission: "referrals.view"
             },
         ],
     },

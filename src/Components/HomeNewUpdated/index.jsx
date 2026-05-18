@@ -33,6 +33,7 @@ import eth from "../PaymentsNewer/files/eth.webp";
 import usdt from "../PaymentsNewer/files/usdt.webp";
 import crown from "./files/crown.svg";
 import chat from "./files/chat.svg";
+import { usePermission } from "../../hooks/GeneralUse/usePermission";
 
 
 const HomeNewUpdated = () => {
@@ -81,6 +82,7 @@ const HomeNewUpdated = () => {
             inc_color: "white"
         },
     ])
+    const can = usePermission()
 
     useEffect(() => {
         const getCryptoRates = async () => {
@@ -112,7 +114,7 @@ const HomeNewUpdated = () => {
         getCryptoRates()
     }, [])
 
-    const { userDetails, profileCompletedPercentage, userWallets, croppedImages } = useContext(UserContext)
+    const { userDetails, profileCompletedPercentage, userWallets, croppedImages, isAgentLogin, agentDetails } = useContext(UserContext)
     const [showCompletionModal, setShowCompletionModal] = useState(false)
     const [selectedWallet, setSelectedWallet] = useState(null)
 
@@ -170,7 +172,7 @@ const HomeNewUpdated = () => {
                                                                     ?
                                                                     userDetails?.user?.first_name?.[0]?.toUpperCase()
                                                                     :
-                                                                    userDetails?.company?.company_name?.[0]?.toUpperCase()
+                                                                    isAgentLogin ? agentDetails?.first_name?.[0]?.toUpperCase() : userDetails?.company?.company_name?.[0]?.toUpperCase()
                                                             }</div>
                                                 }
                                             </div>
@@ -181,10 +183,10 @@ const HomeNewUpdated = () => {
                                                             ?
                                                             `${userDetails?.user?.first_name} ${userDetails?.user?.last_name}`?.split(" ")?.slice(0, 2)?.join(" ")
                                                             :
-                                                            userDetails?.company?.company_name?.split(" ")?.slice(0, 2)?.join(" ")
+                                                            isAgentLogin ? `${agentDetails?.first_name} ${agentDetails?.last_name}` : userDetails?.company?.company_name
                                                     }
                                                 </h5>
-                                                <p style={{ marginBottom: 0, fontSize: ".7rem", color: "#939393" }}>{userDetails?.email}</p>
+                                                <p style={{ marginBottom: 0, fontSize: ".7rem", color: "#939393" }}>{isAgentLogin ? agentDetails?.email : userDetails?.email}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -194,11 +196,14 @@ const HomeNewUpdated = () => {
                                 </div>
                                 <div className={styles.balance_currencies}>
                                     <div style={{ display: "flex" }} className={styles.min_gap}>
-                                        <BalanceComponent />
+                                        {can("dashboard.balance.view") && (
+                                            <BalanceComponent />
+                                        )}
+
                                         <ReferalRewards />
                                     </div>
                                     {
-                                        userWallets.some(item => item?.balance?.reserved)
+                                        can("dashboard.balance.view") && userWallets.some(item => item?.balance?.reserved)
                                         &&
                                         <OtherBalance />
                                     }
@@ -229,19 +234,27 @@ const HomeNewUpdated = () => {
                             </div>
                         </div>
                         <div className={styles.middle}>
-                            <RecentTrans currentWallet={selectedWallet} />
-                            <Stats
-                                currentWallet={selectedWallet}
-                            />
+                            {can("dashboard.recent-transactions.view") && (
+                                <RecentTrans currentWallet={selectedWallet} />
+                            )}
+
+                            {can("dashboard.insights.view") && (
+                                <Stats
+                                    currentWallet={selectedWallet}
+                                />
+                            )}
+
                             <QuickLinksNew />
                         </div>
                     </div>
                     <div className={styles.right}>
-                        <RightContainer
-                            setCurrentWallet={setSelectedWallet}
-                            showBusinessModal={showBusinessModal}
-                            setShowBusinessModal={setShowBusinessModal}
-                        />
+                        {can("wallet.list.view") && (
+                            <RightContainer
+                                setCurrentWallet={setSelectedWallet}
+                                showBusinessModal={showBusinessModal}
+                                setShowBusinessModal={setShowBusinessModal}
+                            />
+                        )}
                         <a href="https://api.whatsapp.com/send/?phone=41783192428" target="_blank" style={{ width: "100%", flex: 1, display: "flex" }} rel="noreferrer">
                             <div style={{
                                 minHeight: "75px",
@@ -304,9 +317,11 @@ const HomeNewUpdated = () => {
                     <TopBar />
                     <EarnMoneyBanner />
                     <RecentBeneficiaries />
-                    <WalletsMobile
-                        setCurrentWallet={setSelectedWallet}
-                    />
+                    {can("wallet.list.view") && (
+                        <WalletsMobile
+                            setCurrentWallet={setSelectedWallet}
+                        />
+                    )}
                     {/* crypto */}
                     <div className={styles.crypto}>
                         <h5>{t("crypto wallet balance").split(" ")?.map(item => service_name_formatter(item))?.join(" ")}</h5>
@@ -337,12 +352,16 @@ const HomeNewUpdated = () => {
                         }
                     </div>
                     <QuickLinksMobile />
-                    <Stats
-                        currentWallet={selectedWallet}
-                    />
-                    <TransDetails
-                        selectedWallet={selectedWallet}
-                    />
+                    {can("dashboard.insights.view") && (
+                        <Stats
+                            currentWallet={selectedWallet}
+                        />
+                    )}
+                    {can("dashboard.insights.view") && (
+                        <TransDetails
+                            selectedWallet={selectedWallet}
+                        />
+                    )}
                     <CurConversion />
                 </div>
             }

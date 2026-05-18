@@ -89,6 +89,7 @@ const PaymentAddressPublic = () => {
             <div style={{ width: "100vw", height: "100vh", background: "#fff" }}>
                 {currenctModal === "success" && (
                     <Receipt
+                       isGuest={true}
                         data={{
                             beneficiary: {
                                 first_name: userDetails?.first_name || userDetails?.company_name,

@@ -11,6 +11,7 @@ import styles from "./styles/NotifTable.module.css"
 import { toast } from 'react-toastify';
 import Switch from './Switch';
 import { Toggle } from '../MyMasterCard/CardPurchased';
+import { usePermission } from '../../hooks/GeneralUse/usePermission';
 
 const HowOthersFindYou = () => {
     const { t } = useTranslation()
@@ -19,7 +20,8 @@ const HowOthersFindYou = () => {
     const [phoneActive, setPhoneActive] = useState(false)
     const [nameActive, setNameActive] = useState(true)
     const [usernameActive, setUsernameActive] = useState(true)
-
+    const can = usePermission()
+    const isEdit = can("settings.how-others-find-you.update")
     // const switchStyle = {
     //     display: 'inline-block',
     //     width: '80px',
@@ -206,12 +208,14 @@ const HowOthersFindYou = () => {
                                 }
                             </>
                             :
-                            <Button style={{
-                                background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
-                                border: "none",
-                                outline: "none",
-                                borderRadius: "10px"
-                            }} onClick={() => setEditMode(true)}>{t("Edit")}</Button>
+                            <Button
+                                disabled={!isEdit}
+                                style={{
+                                    background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+                                    border: "none",
+                                    outline: "none",
+                                    borderRadius: "10px"
+                                }} onClick={() => setEditMode(true)}>{t("Edit")}</Button>
                     }
                 </div>
             </CardBody>

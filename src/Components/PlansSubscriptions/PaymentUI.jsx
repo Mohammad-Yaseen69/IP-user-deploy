@@ -17,13 +17,18 @@ import PaymentActionsButtons from '../ReceiptInvoices/InvoicePayment/PaymentActi
 import PayWithCrypto from '../PaymentAddressPublic/PayWithCrypto'
 import { useState } from 'react'
 import InvoiceDetails from '../ReceiptInvoices/InvoicePayment/InvoiceDetails'
+import { Modal, ModalBody, ModalHeader } from 'reactstrap'
 
 const PaymentUI = ({ data, user_name, state, dataHandler, url }) => {
     const { t } = useTranslation()
     const navigate = useNavigate()
     const width = useWindowWidth()
     const [verificationBadge, setShowVerificationBadge] = useState(false)
+    const [showTermsModal, setShowTermsModal] = useState(false)
 
+    const termsText = data?.plan?.termsAndConditions?.text || data?.termsAndConditions?.text || "";
+    const isTruncated = termsText.length > 500;
+    const displayTerms = isTruncated ? termsText.substring(0, 500) + "..." : termsText;
     const actionButtons = [
         {
             label: "Pay With InstaPay",
@@ -69,8 +74,9 @@ const PaymentUI = ({ data, user_name, state, dataHandler, url }) => {
                     wallet={data?.plan?.receivingWallet}
                     username={user_name}
                     subscriptionId={data.subscriptionId}
+                    planId={data?.plan?.planId}
                     countryIsoCode={data.countryIsoCode}
-                    type='subscription'
+                    type='plan'
                 />
             }
 
@@ -99,7 +105,7 @@ const PaymentUI = ({ data, user_name, state, dataHandler, url }) => {
                         ...data?.plan.account,
                         kyc_status: data?.plan.account?.user?.kyc_status
                     }}
-                    user_name={data?.plan?.accoutn?.username}
+                    user_name={data?.plan?.account?.username}
                     invoice={true}
 
                 />
@@ -121,6 +127,23 @@ const PaymentUI = ({ data, user_name, state, dataHandler, url }) => {
             <div className={styles.right}>
 
                 <InvoiceDetails data={data} isSubscription={true} />
+
+                {termsText && (
+                    <div style={{ textAlign: "left", width: "100%" }}>
+                        <span style={{ fontWeight: 600, fontSize: "16px", color: "#333", textAlign: "center", width: "100%", display: "block" }}>{t("Terms & Conditions")}:</span>
+                        <div style={{ fontSize: "14px", color: "#555", marginTop: "10px", whiteSpace: "pre-wrap", background: "#f9fafb", padding: "12px", borderRadius: "8px" }}>
+                            {displayTerms}
+                        </div>
+                        {isTruncated && (
+                            <span
+                                onClick={() => setShowTermsModal(true)}
+                                style={{ color: "#5926F0", cursor: "pointer", fontSize: "14px", fontWeight: 600, marginTop: "8px", display: "inline-block" }}
+                            >
+                                {t("Show More")}
+                            </span>
+                        )}
+                    </div>
+                )}
 
                 <div className={styles.amount}>
                     <span> {t("Amount")} </span>
@@ -152,6 +175,15 @@ const PaymentUI = ({ data, user_name, state, dataHandler, url }) => {
                     <img src={ip} alt="" style={{ margin: "20px auto", width: "200px" }} />
                 </div>
             }
+
+            <Modal isOpen={showTermsModal} toggle={() => setShowTermsModal(false)} size="lg">
+                <ModalHeader toggle={() => setShowTermsModal(false)}>{t("Terms & Conditions")}</ModalHeader>
+                <ModalBody style={{ padding: "20px" }}>
+                    <div style={{ whiteSpace: "pre-wrap", fontSize: "15px", color: "#333", lineHeight: "1.6" }}>
+                        {termsText}
+                    </div>
+                </ModalBody>
+            </Modal>
         </>
     )
 }

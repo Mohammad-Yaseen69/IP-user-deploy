@@ -1,5 +1,5 @@
 .container {
-    height: 311px;
+    height: auto;
     margin-bottom: 8px;
     display: flex;
     padding: var(--SPACING-spacing-2, 18px);
@@ -83,6 +83,7 @@
     font-style: normal;
     font-weight: 600;
     margin-bottom: 0px;
+
 }
 
 .addContainer .text p {
@@ -131,6 +132,9 @@
     font-style: normal;
     font-weight: 700;
     margin-bottom: 0px;
+    white-space: normal;
+    word-break: break-word;
+    overflow-wrap: break-word;
 }
 
 .mobileItem .left p {
@@ -139,6 +143,9 @@
     font-style: normal;
     font-weight: 600;
     margin-bottom: 0px;
+    white-space: normal;
+    word-break: break-word;
+    overflow-wrap: break-word;
 }
 
 .mobileItem .right {
@@ -173,4 +180,18 @@
     font-style: normal;
     font-weight: 600;
     line-height: 14px;
+}
+
+@media (max-width: 700px) {
+    .addContainer {
+        padding: 28px 11px;
+    }
+
+    .text {
+        text-align: center;
+    }
+
+    .text p {
+        width: 100%;
+    }
 }

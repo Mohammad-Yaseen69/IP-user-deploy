@@ -21,10 +21,9 @@ const UserDets = ({ croppedCover, cover, dp, croppedDp, userDetails, user_name, 
     const [actionButtons, setActionsButtons] = useState([]);
     const queryParams = new URLSearchParams(location.search)
     const isFromQr = queryParams.get('fromQr')
-
     const { data: plansData, isLoading } = useQuery({
         queryKey: ['PublicUserPlans', user_name],
-        queryFn: () => getUserPlans(user_name),
+        queryFn: () => getUserPlans(user_name, true),
         enabled: !!user_name
     })
     const { data: storeData, } = useQuery({
@@ -99,7 +98,7 @@ const UserDets = ({ croppedCover, cover, dp, croppedDp, userDetails, user_name, 
 
 
 
- 
+
     console.log(actionButtons, "planData")
 
     return (

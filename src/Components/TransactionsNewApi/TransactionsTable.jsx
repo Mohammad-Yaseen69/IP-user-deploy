@@ -24,8 +24,7 @@ import requested_white from "./files/requested_white.png";
 import sent_grey from "./files/sent_grey.png";
 import sent_white from "./files/sent_white.png";
 import styles from "./styles/index.module.scss";
-
-
+import { usePermission } from "../../hooks/GeneralUse/usePermission";
 
 const transactionFilter = (t) => {
     if (t.transaction_type?.toLowerCase() === "credit" && t.status?.toLowerCase() === "failed" && t.payment_type?.toLowerCase() === "mobile_wallet") {
@@ -82,6 +81,7 @@ const TransactionsTable = () => {
     const [stopLoader, setStopLoader] = useState(false)
     const [exportLoading, setExportLoading] = useState(false)
     const [showStatementModal, setShowStatementModal] = useState(false)
+    const can = usePermission();
 
     useEffect(() => {
         getUserBeneficiaries()
@@ -103,9 +103,15 @@ const TransactionsTable = () => {
     }, [searchQuery]);
 
     const getAllTransactions = () => {
+        const queryParams = new URLSearchParams(window.location.search);
+        if (queryParams.has("search")) return; // Don't fetch or spread if search param exists
+
         if (page === 1) {
             setIsLoading(true)
         }
+
+        if (debouncedSearchQuery) return;
+
         // axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/transaction/account-transactions/${userDetails?._id}/${(page - 1) * 15}/15`, {
         axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/transaction/account-transactions/${userDetails?._id}/${page}/15`, {
             headers: authHeader
@@ -114,6 +120,10 @@ const TransactionsTable = () => {
                 const decrypted = decryptData(res.data.data)
                 setTransactions(prev => [...prev, ...decrypted.transactionList.filter(transactionFilter)])
                 setFiltered(prev => [...prev, ...decrypted.transactionList.filter(transactionFilter)])
+                if (decrypted.transactionList.length < 15) {
+                    setMaxLimit(true)
+                    setStopLoader(true)
+                }
                 // console.log("all", decrypted)
                 setIsLoading(false)
             })
@@ -121,25 +131,44 @@ const TransactionsTable = () => {
                 const decrypted = decryptData(err.response.data.data)
                 setIsLoading(false)
                 setStopLoader(true)
-                if (decrypted.status === false && page !== 1) {
+                if (decrypted.status === false) {
                     setMaxLimit(true)
                 }
             })
     }
 
-    const getTransactionsByQuery = () => {
+    const getTransactionsByQuery = (search = null) => {
         setActive("All")
+        if (search) {
+            console.log("calling from search")
+        }
         if (page === 1) {
             setIsLoading(true)
         }
-        axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/transaction/search-account-transactions/${userDetails?._id}/${page}/15/${debouncedSearchQuery}`, {
+        axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/transaction/search-account-transactions/${userDetails?._id}/${page}/15/${search ?? debouncedSearchQuery}`, {
             headers: authHeader
         })
             .then(res => {
                 const decrypted = decryptData(res.data.data)
-                setTransactions(prev => [...prev, ...decrypted.transactionList.filter(transactionFilter)])
-                setFiltered(prev => [...prev, ...decrypted.transactionList.filter(transactionFilter)])
+                const newTransactions = decrypted.transactionList.filter(transactionFilter);
 
+                if (search) {
+                    setTransactions(decrypted.transactionList);
+                    setFiltered(decrypted.transactionList);
+                } else {
+                    if (page === 1) {
+                        setTransactions(newTransactions);
+                        setFiltered(newTransactions);
+                    } else {
+                        setTransactions(prev => [...prev, ...newTransactions]);
+                        setFiltered(prev => [...prev, ...newTransactions]);
+                    }
+                }
+
+                if (decrypted.transactionList.length < 15) {
+                    setMaxLimit(true)
+                    setStopLoader(true)
+                }
                 // console.log("query", decrypted)
                 setIsLoading(false)
             })
@@ -148,7 +177,8 @@ const TransactionsTable = () => {
                 setIsLoading(false)
                 setFiltered([])
                 setTransactions([])
-                if (decrypted.status === false && page !== 1) {
+                setStopLoader(true)
+                if (decrypted.status === false) {
                     setMaxLimit(true)
                 }
             })
@@ -176,7 +206,10 @@ const TransactionsTable = () => {
                 const decrypted = decryptData(res.data.data)
                 setTransactions(prev => [...prev, ...decrypted.transactionList.filter(transactionFilter)])
                 setFiltered(prev => [...prev, ...decrypted.transactionList.filter(transactionFilter)])
-
+                if (decrypted.transactionList.length < 15) {
+                    setMaxLimit(true)
+                    setStopLoader(true)
+                }
                 // console.log("date & query", decrypted)
                 setIsLoading(false)
             })
@@ -185,7 +218,8 @@ const TransactionsTable = () => {
                 setIsLoading(false)
                 setFiltered([])
                 setTransactions([])
-                if (decrypted.status === false && page !== 1) {
+                setStopLoader(true)
+                if (decrypted.status === false) {
                     setMaxLimit(true)
                 }
             })
@@ -211,6 +245,7 @@ const TransactionsTable = () => {
         setTransactions([])
         setFiltered([])
         setMaxLimit(false)
+        setStopLoader(false)
         setPage(1)
         if (apiDates !== null) {
             setCurrentTrxType("date_and_query")
@@ -225,6 +260,7 @@ const TransactionsTable = () => {
         setTransactions([])
         setFiltered([])
         setMaxLimit(false)
+        setStopLoader(false)
         setPage(1)
         verifyToken()
     }, [currentTrxType])
@@ -295,6 +331,8 @@ const TransactionsTable = () => {
 
 
     useEffect(() => {
+        if (isLoading || maxLimit) return;
+
         const observer = new IntersectionObserver((enteries) => {
             if (enteries[0].isIntersecting) {
                 setPage(prev => prev + 1)
@@ -308,7 +346,7 @@ const TransactionsTable = () => {
         return () => {
             observer.disconnect()
         }
-    }, [loaderRef.current, mobileLoaderRef.current]);
+    }, [loaderRef.current, mobileLoaderRef.current, isLoading, maxLimit]);
 
     useEffect(() => {
         if (active === "All") {
@@ -334,11 +372,15 @@ const TransactionsTable = () => {
 
     const location = useLocation()
     const queryParams = new URLSearchParams(location.search)
+    const search = queryParams.get("search")
     const currentIndex = queryParams.get("current-index")
 
     useEffect(() => {
-        setActiveItem(currentIndex)
-    }, [])
+        if (search) {
+            setSearchQuery(search)
+            setDebouncedSearchQuery(search)
+        }
+    }, [search])
 
 
 
@@ -368,18 +410,28 @@ const TransactionsTable = () => {
                 <div className={styles.left}>
                     <div className={styles.search}>
                         <Search size={16} color="#848484" />
-                        <Input placeholder={t("Search Transactions")} value={searchQuery} onChange={e => setSearchQuery(e.target.value)} />
+                        <Input placeholder={t("Search Transactions")} value={searchQuery} onChange={e => {
+                            setSearchQuery(e.target.value);
+                            const urlParams = new URLSearchParams(window.location.search);
+                            if (urlParams.has("search")) {
+                                urlParams.delete("search");
+                                const newUrl = window.location.pathname + (urlParams.toString() ? '?' + urlParams.toString() : '');
+                                window.history.replaceState({}, document.title, newUrl);
+                            }
+                        }} />
                     </div>
                     <img src={calendar} alt="c" onClick={handleDatePickerClick} />
-                    <span
-                        onClick={() => setShowStatementModal(!showStatementModal)}
+                    {can("transactions.main.export") && (
+                        <span
+                            onClick={() => setShowStatementModal(!showStatementModal)}
 
-                        // onClick={() => exportToExcel(transactions, userDetails, setExportLoading)}
-                        style={{ background: "linear-gradient(346deg, rgb(230, 64, 103) 0%, rgb(89, 38, 240) 55.65%, rgb(72, 40, 160) 100%), rgb(217, 217, 217)", borderRadius: "8px", padding: "4px", marginBottom: "3px", pointerEvents: exportLoading && "none", opacity: exportLoading && .6, display: "flex" }}>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none">
-                            <path d="M21 6H17.8C16.1198 6 15.2798 6 14.638 6.32698C14.0735 6.6146 13.6146 7.07354 13.327 7.63803C13 8.27976 13 9.11984 13 10.8V12M21 6L18 3M21 6L18 9M10 3H7.8C6.11984 3 5.27976 3 4.63803 3.32698C4.07354 3.6146 3.6146 4.07354 3.32698 4.63803C3 5.27976 3 6.11984 3 7.8V16.2C3 17.8802 3 18.7202 3.32698 19.362C3.6146 19.9265 4.07354 20.3854 4.63803 20.673C5.27976 21 6.11984 21 7.8 21H16.2C17.8802 21 18.7202 21 19.362 20.673C19.9265 20.3854 20.3854 19.9265 20.673 19.362C21 18.7202 21 17.8802 21 16.2V14" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                        </svg>
-                    </span>
+                            // onClick={() => exportToExcel(transactions, userDetails, setExportLoading)}
+                            style={{ background: "linear-gradient(346deg, rgb(230, 64, 103) 0%, rgb(89, 38, 240) 55.65%, rgb(72, 40, 160) 100%), rgb(217, 217, 217)", borderRadius: "8px", padding: "4px", marginBottom: "3px", pointerEvents: exportLoading && "none", opacity: exportLoading && .6, display: "flex" }}>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none">
+                                <path d="M21 6H17.8C16.1198 6 15.2798 6 14.638 6.32698C14.0735 6.6146 13.6146 7.07354 13.327 7.63803C13 8.27976 13 9.11984 13 10.8V12M21 6L18 3M21 6L18 9M10 3H7.8C6.11984 3 5.27976 3 4.63803 3.32698C4.07354 3.6146 3.6146 4.07354 3.32698 4.63803C3 5.27976 3 6.11984 3 7.8V16.2C3 17.8802 3 18.7202 3.32698 19.362C3.6146 19.9265 4.07354 20.3854 4.63803 20.673C5.27976 21 6.11984 21 7.8 21H16.2C17.8802 21 18.7202 21 19.362 20.673C19.9265 20.3854 20.3854 19.9265 20.673 19.362C21 18.7202 21 17.8802 21 16.2V14" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                            </svg>
+                        </span>
+                    )}
                     {showDatePicker && (
                         <div ref={datePickerRef} style={{ position: "absolute", top: "100%", right: 0, boxShadow: "0px 0px 3px rgba(0,0,0,0.1)", borderRadius: "10xp", overflow: "hidden", zIndex: 10000000 }}>
                             <DateRangePicker maxDate={new Date()}

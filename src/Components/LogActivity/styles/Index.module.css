@@ -1,0 +1,40 @@
+.container {
+    padding: 32px;
+
+    .top {
+        position: relative;
+        margin-bottom: 2.5rem;
+
+        h1 {
+            color: #5626e6;
+            font-size: 40px;
+            font-style: normal;
+            font-weight: 700;
+        }
+    }
+
+    .searchCont {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+
+
+        .search {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+            border-radius: var(--SPACING-spacing-0, 8px);
+            background: #FFF;
+            box-shadow: 0 4.328px 35.702px 0 rgba(0, 0, 0, 0.06);
+            padding: 8px 14px;
+
+            input {
+                border: none;
+                outline: none;
+                padding: 0px;
+                font-weight: 600;
+            }
+        }
+    }
+}
