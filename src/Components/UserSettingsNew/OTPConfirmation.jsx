@@ -231,7 +231,7 @@ const OTPConfirmation = ({ setter, callback, setterValue, hideOtp, type = "", pr
                                                 ? (userDetails?.phone?.slice(0, 3) === "971"
                                                     ? "whatsapp number."
                                                     : "phone number.")
-                                                : ""
+                                                : "SMS"
                                             }`
                                             :
                                             t("Enter a code shown in the app to make sure everything works fine.")
