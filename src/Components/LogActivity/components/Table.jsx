@@ -36,7 +36,7 @@ const ActivityTable = ({ filteredData, Loading }) => {
                 return desc || "—"
             }
         } else {
-            return desc || "—"
+            return truncate(desc, 20) || "—"
         }
     }
 
