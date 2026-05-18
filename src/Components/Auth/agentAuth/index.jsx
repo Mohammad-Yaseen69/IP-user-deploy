@@ -1,7 +1,7 @@
 import { useContext, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import InstapayLogo from "../../../assets/images/logo/logo.webp"
+import InstapayLogo from "../../../assets/images/logo/logo_white.png"
 import InstapayLogo2 from "../../../assets/images/logo/logo2.webp"
 import useCountryLocation from '../../../hooks/GeneralUse/useCountryLocation'
 import LanguagePicker from '../../LanguagePicker'
@@ -945,7 +945,6 @@ const Index = () => {
     setAccountRestoreDetails(null)
   }
 
-
   const getOtpLabel = () => {
     const credential = getResolvedCredential();
     const maskedEmail = `${credential.slice(0, credential.length - 4).split("").map(() => "*").join("")}${credential.slice(credential.length - 4)}`;
@@ -1006,6 +1005,8 @@ const Index = () => {
 
       <div className={styles.child1}>
         <img src={rightImage} width={"100%"} height={"100%"} loading='lazy' alt="" />
+        <img src={InstapayLogo} className={styles.childLogo} width={"100%"} height={"100%"} loading='lazy' alt="" />
+        <h2>{t("Unlock Seamless Payments with InstaPay")}</h2>
       </div>
 
       <div className={styles.child2}>

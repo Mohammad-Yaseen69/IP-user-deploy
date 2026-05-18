@@ -11,6 +11,7 @@ import { Check, ChevronRight, Eye, EyeOff, Lock } from 'react-feather'
 import Cross from './Cross'
 import { useTranslation } from 'react-i18next'
 import Logo from "../../assets/images/logo/logo2.webp"
+import InstapayLogo from "../../assets/images/logo/logo_white.png"
 import Gif from "../../assets/gif.gif"
 import { Modal, ModalBody } from 'reactstrap'
 import imgLeft from "./files/image.png"
@@ -153,8 +154,22 @@ const CreateAgentPassword = () => {
     const renderStep1 = () => (
         <div className={styles2.wrapper}>
 
-            <div className={styles2.leftPanel}>
-                <img src={imgLeft} alt="" className={styles2.leftImg} />
+            <div className={otpStyles.leftPanel}>
+                <img
+                    src={imgLeft}
+                    loading="lazy"
+                    alt=""
+                    className={otpStyles.leftImg}
+                />
+
+                <img
+                    src={InstapayLogo}
+                    className={otpStyles.childLogo}
+                    loading="lazy"
+                    alt=""
+                />
+
+                <h2>{t("Unlock Seamless Payments with InstaPay")}</h2>
             </div>
 
             <div className={styles2.wrapperRight}>
@@ -257,7 +272,21 @@ const CreateAgentPassword = () => {
         <div className={otpStyles.wrapper}>
 
             <div className={otpStyles.leftPanel}>
-                <img src={imgLeft} alt="" className={otpStyles.leftImg} />
+                <img
+                    src={imgLeft}
+                    loading="lazy"
+                    alt=""
+                    className={otpStyles.leftImg}
+                />
+
+                <img
+                    src={InstapayLogo}
+                    className={otpStyles.childLogo}
+                    loading="lazy"
+                    alt=""
+                />
+
+                <h2>{t("Unlock Seamless Payments with InstaPay")}</h2>
             </div>
 
             <div className={otpStyles.wrapperRight}>
