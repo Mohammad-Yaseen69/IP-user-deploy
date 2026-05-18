@@ -11,6 +11,7 @@ import { toast } from "react-toastify"
 import change_dp from "./change_img.svg"
 import AdjustModal from "./AdjustModal"
 import { t } from "i18next"
+import { usePermission } from "../../hooks/GeneralUse/usePermission"
 
 const Cover = () => {
     const [coverPhoto, setCoverPhoto] = useState(cover)
@@ -21,7 +22,7 @@ const Cover = () => {
     const mainContainerRef = useRef(null)
     const [file, setFile] = useState(null)
     const [showAdjustModal, setShowAdjustModal] = useState(false)
-
+    const can = usePermission()
     useEffect(() => {
         if (userDetails) {
             setCoverPhoto(userDetails?.coverImage?.url || cover)
@@ -85,7 +86,6 @@ const Cover = () => {
     };
 
 
-    // more menu
     const [showMenu, setShowMenu] = useState(false)
     const toggleMenu = () => setShowMenu(!showMenu);
 
@@ -124,7 +124,9 @@ const Cover = () => {
                         </div>
                         :
                         <div style={{ position: "absolute", top: "25px", right: "25px", filter: "drop-shadow(0 0 2px black)", zIndex: "101" }} ref={menuRef}>
-                            <img alt="" src={change_dp} onClick={toggleMenu} style={{ height: window.innerWidth > 1000 ? "70px" : "40px", width: window.innerWidth > 1000 ? "70px" : "40px", objectFit: "contain", cursor: "pointer" }} />
+                            {can("user-profile.update") && (
+                                <img alt="" src={change_dp} onClick={toggleMenu} style={{ height: window.innerWidth > 1000 ? "70px" : "40px", width: window.innerWidth > 1000 ? "70px" : "40px", objectFit: "contain", cursor: "pointer" }} />
+                            )}
                             <div style={{
                                 display: "flex",
                                 flexDirection: "column",

@@ -14,6 +14,7 @@ import NoInvoiceScreen from './UI/NoInvoiceScreen'
 import { useDebounce } from '../../hooks/useDebounce/useDebounce'
 import Paginations from '../../Common/Component/Paginations'
 import { usePermission } from '../../hooks/GeneralUse/usePermission'
+import PricingsAndPlan from '../PaymentAddress/PricingsAndPlan'
 
 const ReceiptInvoice = () => {
     const { t } = useTranslation()
@@ -23,6 +24,7 @@ const ReceiptInvoice = () => {
     const [search, setSearch] = useState("")
     const [page, setPage] = useState(1)
     const [limit, setLimit] = useState(10)
+    const [activeTab, setActiveTab] = useState("invoice")
     const width = useWindowWidth()
     const debouncedSearch = useDebounce(search, 500)
 
@@ -48,16 +50,42 @@ const ReceiptInvoice = () => {
         <div className={styles.container}>
             <div className={styles.top}>
                 <h1>
-                    {t("My Invoices")}
+                    {t("My Invoices & Plans")}
                 </h1>
 
                 {width > 1000 && <TopRight />}
             </div>
 
+            <div style={{ display: 'flex', gap: '10px', marginBottom: '20px' }}>
+                <div
+                    onClick={() => setActiveTab("invoice")}
+                    style={{
+                        cursor: 'pointer',
+                        padding: '10px 20px',
+                        background: activeTab === 'invoice' ? '#5926F0' : 'rgb(221 218 218)',
+                        fontWeight: 600,
+                        color: activeTab === 'invoice' ? 'white' : 'black',
+                        borderRadius: "6px"
+                    }}
+                >
+                    {t("Invoices")}
+                </div>
+                <div
+                    onClick={() => setActiveTab("plans")}
+                    style={{
+                        cursor: 'pointer',
+                        padding: '10px 20px',
+                        background: activeTab === 'plans' ? '#5926F0' : 'rgb(221 218 218)',
+                        fontWeight: 600,
+                        color: activeTab === 'plans' ? 'white' : 'black',
+                        borderRadius: "6px"
+                    }}
+                >
+                    {t("Plans")}
+                </div>
+            </div>
 
-
-
-            <div className={styles.receiptsCont}>
+            {activeTab === 'invoice' ? (<div className={styles.receiptsCont}>
                 <div className={styles.head}>
                     <h5>
                         {t("My recent Invoices:")}
@@ -100,6 +128,11 @@ const ReceiptInvoice = () => {
                         <Paginations page={page} totalPages={totalPages} setPage={setPage} limit={limit} setLimit={setLimit} /></>)}
 
             </div>
+            ) : (
+                <div>
+                    <PricingsAndPlan isInvoicePage={true} />
+                </div>
+            )}
 
 
             {/* Permission: invoices.create */}

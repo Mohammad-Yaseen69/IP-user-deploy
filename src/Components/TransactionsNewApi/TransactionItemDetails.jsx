@@ -200,6 +200,14 @@ const TransactionItemDetails = ({ item, badgeColor, desc, internationalReceiver,
                     </div>
                 }
                 {
+                    item?.agent?.first_name
+                    &&
+                    <div style={{background: "#6f2ad9"}} className={styles.er_item}>
+                        <span style={{color:"white"}} >{t("Performed By:")} {item?.agent?.first_name} {item?.agent?.last_name}</span>
+                    </div>
+                }
+
+                {
                     (desc || item.status?.toLowerCase() === "reversed")
                         ?
                         <div className={styles.er_item}>

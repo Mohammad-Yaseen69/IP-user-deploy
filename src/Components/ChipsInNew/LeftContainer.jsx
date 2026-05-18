@@ -17,6 +17,7 @@ import copy from "./copy.png"
 import InstructionsModal from "./InstructionModal"
 import { Toggle } from "../MyMasterCard/CardPurchased"
 import { ChevronDown } from "react-feather"
+import { usePermission } from "../../hooks/GeneralUse/usePermission"
 
 const LeftContainer = ({ currentWallet, currency, setCurrency, setWalletRefresh, authHeader, defaultWal, showTooltip, setShowTooltip, setCurrentWallet }) => {
     const { t } = useTranslation()
@@ -28,9 +29,9 @@ const LeftContainer = ({ currentWallet, currency, setCurrency, setWalletRefresh,
     const [description, setDescription] = useState("");
     const { userWallets } = useContext(UserContext)
     const [saving, setSaving] = useState(false)
-
+    const can = usePermission()
     const base_url = window.location.origin || 'https://my.insta-pay.ch';
-    
+
     useEffect(() => {
         setGeneralQRactive(currentWallet?.qrCode?.status === "true" ? true : false)
         setTitle(currentWallet?.qrCode?.title ?? "")
@@ -103,20 +104,22 @@ const LeftContainer = ({ currentWallet, currency, setCurrency, setWalletRefresh,
                                 }
                             </Input>
 
-                            <ChevronDown size={20} style={{marginLeft: "-10px"}} />
+                            <ChevronDown size={20} style={{ marginLeft: "-10px" }} />
 
                         </div>
                         <h5 style={{ marginBottom: 0 }}>{currency} {t("Wallet QR")}</h5>
                         <p style={{ marginTop: ".5rem", marginBottom: 0 }}>{currentWallet?.qrCode?.description ?? ""}</p>
                         <div className={styles.tl_bot}>
-                            <Button color="primary" onClick={() => setShowDownloadModal(true)}>
+                            {can("qr-sticker.download") && <Button color="primary" onClick={() => setShowDownloadModal(true)}>
                                 <img src={download} alt="" />
                                 <span>{t("Download QR")}</span>
-                            </Button>
-                            <div className={styles.qr_status}>
-                                <span>{t("QR Code Status")}</span>
-                                <Toggle bottom={'0'} disabled={saving} checked={generalQRactive} onChange={() => updateQr(setGeneralQRactive)} />
-                            </div>
+                            </Button>}
+                            {can("qr-sticker.update") &&
+                                <div className={styles.qr_status}>
+                                    <span>{t("QR Code Status")}</span>
+                                    <Toggle bottom={'0'} disabled={saving} checked={generalQRactive} onChange={() => updateQr(setGeneralQRactive)} />
+                                </div>
+                            }
                         </div>
                     </div>
                     <div className={styles.right}>
@@ -131,30 +134,35 @@ const LeftContainer = ({ currentWallet, currency, setCurrency, setWalletRefresh,
                     <div className={styles.inp_con}>
                         <div className={styles.ic_top}>
                             <Label>{t("QR Code Title")}</Label>
-                            <button disabled={saving || (titleEdit && !title)} onClick={() => {
-                                if (titleEdit) {
-                                    updateQr(undefined, setTitleEdit)
-                                } else {
-                                    setTitleEdit(true)
-                                }
-                            }}>
-                                <span>{!titleEdit ? t("Edit") : t("Save")}</span>
-                            </button>
+                            {can("qr-sticker.update") &&
+                                <button disabled={saving || (titleEdit && !title)} onClick={() => {
+                                    if (titleEdit) {
+                                        updateQr(undefined, setTitleEdit)
+                                    } else {
+                                        setTitleEdit(true)
+                                    }
+                                }}>
+                                    <span>{!titleEdit ? t("Edit") : t("Save")}</span>
+                                </button>
+                            }
                         </div>
                         <Input value={title} onChange={(e) => setTitle(e.target.value)} type="text" placeholder={"QR Code Title"} disabled={!titleEdit} />
                     </div>
                     <div className={styles.inp_con}>
                         <div className={styles.ic_top}>
                             <Label>{t("Description")}</Label>
-                            <button disabled={saving || (descEdit && !description)} onClick={() => {
-                                if (descEdit) {
-                                    updateQr(undefined, setDescEdit)
-                                } else {
-                                    setDescEdit(true)
-                                }
-                            }}>
-                                <span>{!descEdit ? t("Edit") : t("Save")}</span>
-                            </button>
+                            {can("qr-sticker.update") &&
+
+                                <button disabled={saving || (descEdit && !description)} onClick={() => {
+                                    if (descEdit) {
+                                        updateQr(undefined, setDescEdit)
+                                    } else {
+                                        setDescEdit(true)
+                                    }
+                                }}>
+                                    <span>{!descEdit ? t("Edit") : t("Save")}</span>
+                                </button>
+                            }
                         </div>
                         <Input value={description} onChange={(e) => setDescription(e.target.value)} type="textarea" placeholder={"Description"} disabled={!descEdit} />
                     </div>

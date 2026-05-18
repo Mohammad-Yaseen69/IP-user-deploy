@@ -10,6 +10,7 @@ import axios from "axios"
 import { UserContext } from "../../../Context/UserContext"
 import allCountries from "../../PaymentsNewer/CountriesData.json"
 import AddWithdrawalsModal from "../../AddWithdrawa;sModal"
+import { usePermission } from "../../../hooks/GeneralUse/usePermission"
 
 const WithdrawalsNew = () => {
     const { t } = useTranslation()
@@ -21,7 +22,8 @@ const WithdrawalsNew = () => {
             getWithdrawals()
         }
     }, [userDetails])
-
+    const can = usePermission()
+    const isEdit = can("settings.receiving-accounts.add")
     useEffect(() => {
         const getCountries = async () => {
             try {
@@ -100,7 +102,7 @@ const WithdrawalsNew = () => {
                         <BsInfoCircleFill color="#EB8C1D" size={window.innerWidth > 1000 ? 30 : 16} style={{ flexShrink: 0 }} />
                         <p>{t("Set up your receiving accounts in up to three countries and instantly cash out funds from approved payment requests to your activated payout channels.")}</p>
                     </div>
-                    <Button onClick={() => setNewWithdrawal(true)}>
+                    <Button disabled={!isEdit} onClick={() => setNewWithdrawal(true)}>
                         <img src={add_wd} alt="" />
                         <span>{t("Add New")}</span>
                     </Button>

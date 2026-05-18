@@ -114,7 +114,7 @@ const HomeNewUpdated = () => {
         getCryptoRates()
     }, [])
 
-    const { userDetails, profileCompletedPercentage, userWallets, croppedImages } = useContext(UserContext)
+    const { userDetails, profileCompletedPercentage, userWallets, croppedImages, isAgentLogin, agentDetails } = useContext(UserContext)
     const [showCompletionModal, setShowCompletionModal] = useState(false)
     const [selectedWallet, setSelectedWallet] = useState(null)
 
@@ -172,7 +172,7 @@ const HomeNewUpdated = () => {
                                                                     ?
                                                                     userDetails?.user?.first_name?.[0]?.toUpperCase()
                                                                     :
-                                                                    userDetails?.company?.company_name?.[0]?.toUpperCase()
+                                                                    isAgentLogin ? agentDetails?.first_name?.[0]?.toUpperCase() : userDetails?.company?.company_name?.[0]?.toUpperCase()
                                                             }</div>
                                                 }
                                             </div>
@@ -183,10 +183,10 @@ const HomeNewUpdated = () => {
                                                             ?
                                                             `${userDetails?.user?.first_name} ${userDetails?.user?.last_name}`?.split(" ")?.slice(0, 2)?.join(" ")
                                                             :
-                                                            userDetails?.company?.company_name?.split(" ")?.slice(0, 2)?.join(" ")
+                                                            isAgentLogin ? `${agentDetails?.first_name} ${agentDetails?.last_name}` : userDetails?.company?.company_name
                                                     }
                                                 </h5>
-                                                <p style={{ marginBottom: 0, fontSize: ".7rem", color: "#939393" }}>{userDetails?.email}</p>
+                                                <p style={{ marginBottom: 0, fontSize: ".7rem", color: "#939393" }}>{isAgentLogin ? agentDetails?.email : userDetails?.email}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -202,7 +202,7 @@ const HomeNewUpdated = () => {
 
                                         <ReferalRewards />
                                     </div>
-                                     {
+                                    {
                                         can("dashboard.balance.view") && userWallets.some(item => item?.balance?.reserved)
                                         &&
                                         <OtherBalance />

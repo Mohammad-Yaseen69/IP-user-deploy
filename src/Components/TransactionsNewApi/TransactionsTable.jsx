@@ -103,9 +103,15 @@ const TransactionsTable = () => {
     }, [searchQuery]);
 
     const getAllTransactions = () => {
+        const queryParams = new URLSearchParams(window.location.search);
+        if (queryParams.has("search")) return; // Don't fetch or spread if search param exists
+
         if (page === 1) {
             setIsLoading(true)
         }
+
+        if (debouncedSearchQuery) return;
+
         // axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/transaction/account-transactions/${userDetails?._id}/${(page - 1) * 15}/15`, {
         axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/transaction/account-transactions/${userDetails?._id}/${page}/15`, {
             headers: authHeader
@@ -114,6 +120,10 @@ const TransactionsTable = () => {
                 const decrypted = decryptData(res.data.data)
                 setTransactions(prev => [...prev, ...decrypted.transactionList.filter(transactionFilter)])
                 setFiltered(prev => [...prev, ...decrypted.transactionList.filter(transactionFilter)])
+                if (decrypted.transactionList.length < 15) {
+                    setMaxLimit(true)
+                    setStopLoader(true)
+                }
                 // console.log("all", decrypted)
                 setIsLoading(false)
             })
@@ -121,25 +131,44 @@ const TransactionsTable = () => {
                 const decrypted = decryptData(err.response.data.data)
                 setIsLoading(false)
                 setStopLoader(true)
-                if (decrypted.status === false && page !== 1) {
+                if (decrypted.status === false) {
                     setMaxLimit(true)
                 }
             })
     }
 
-    const getTransactionsByQuery = () => {
+    const getTransactionsByQuery = (search = null) => {
         setActive("All")
+        if (search) {
+            console.log("calling from search")
+        }
         if (page === 1) {
             setIsLoading(true)
         }
-        axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/transaction/search-account-transactions/${userDetails?._id}/${page}/15/${debouncedSearchQuery}`, {
+        axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/transaction/search-account-transactions/${userDetails?._id}/${page}/15/${search ?? debouncedSearchQuery}`, {
             headers: authHeader
         })
             .then(res => {
                 const decrypted = decryptData(res.data.data)
-                setTransactions(prev => [...prev, ...decrypted.transactionList.filter(transactionFilter)])
-                setFiltered(prev => [...prev, ...decrypted.transactionList.filter(transactionFilter)])
+                const newTransactions = decrypted.transactionList.filter(transactionFilter);
 
+                if (search) {
+                    setTransactions(decrypted.transactionList);
+                    setFiltered(decrypted.transactionList);
+                } else {
+                    if (page === 1) {
+                        setTransactions(newTransactions);
+                        setFiltered(newTransactions);
+                    } else {
+                        setTransactions(prev => [...prev, ...newTransactions]);
+                        setFiltered(prev => [...prev, ...newTransactions]);
+                    }
+                }
+
+                if (decrypted.transactionList.length < 15) {
+                    setMaxLimit(true)
+                    setStopLoader(true)
+                }
                 // console.log("query", decrypted)
                 setIsLoading(false)
             })
@@ -148,7 +177,8 @@ const TransactionsTable = () => {
                 setIsLoading(false)
                 setFiltered([])
                 setTransactions([])
-                if (decrypted.status === false && page !== 1) {
+                setStopLoader(true)
+                if (decrypted.status === false) {
                     setMaxLimit(true)
                 }
             })
@@ -176,7 +206,10 @@ const TransactionsTable = () => {
                 const decrypted = decryptData(res.data.data)
                 setTransactions(prev => [...prev, ...decrypted.transactionList.filter(transactionFilter)])
                 setFiltered(prev => [...prev, ...decrypted.transactionList.filter(transactionFilter)])
-
+                if (decrypted.transactionList.length < 15) {
+                    setMaxLimit(true)
+                    setStopLoader(true)
+                }
                 // console.log("date & query", decrypted)
                 setIsLoading(false)
             })
@@ -185,7 +218,8 @@ const TransactionsTable = () => {
                 setIsLoading(false)
                 setFiltered([])
                 setTransactions([])
-                if (decrypted.status === false && page !== 1) {
+                setStopLoader(true)
+                if (decrypted.status === false) {
                     setMaxLimit(true)
                 }
             })
@@ -211,6 +245,7 @@ const TransactionsTable = () => {
         setTransactions([])
         setFiltered([])
         setMaxLimit(false)
+        setStopLoader(false)
         setPage(1)
         if (apiDates !== null) {
             setCurrentTrxType("date_and_query")
@@ -225,6 +260,7 @@ const TransactionsTable = () => {
         setTransactions([])
         setFiltered([])
         setMaxLimit(false)
+        setStopLoader(false)
         setPage(1)
         verifyToken()
     }, [currentTrxType])
@@ -295,6 +331,8 @@ const TransactionsTable = () => {
 
 
     useEffect(() => {
+        if (isLoading || maxLimit) return;
+
         const observer = new IntersectionObserver((enteries) => {
             if (enteries[0].isIntersecting) {
                 setPage(prev => prev + 1)
@@ -308,7 +346,7 @@ const TransactionsTable = () => {
         return () => {
             observer.disconnect()
         }
-    }, [loaderRef.current, mobileLoaderRef.current]);
+    }, [loaderRef.current, mobileLoaderRef.current, isLoading, maxLimit]);
 
     useEffect(() => {
         if (active === "All") {
@@ -334,11 +372,15 @@ const TransactionsTable = () => {
 
     const location = useLocation()
     const queryParams = new URLSearchParams(location.search)
+    const search = queryParams.get("search")
     const currentIndex = queryParams.get("current-index")
 
     useEffect(() => {
-        setActiveItem(currentIndex)
-    }, [])
+        if (search) {
+            setSearchQuery(search)
+            setDebouncedSearchQuery(search)
+        }
+    }, [search])
 
 
 
@@ -368,7 +410,15 @@ const TransactionsTable = () => {
                 <div className={styles.left}>
                     <div className={styles.search}>
                         <Search size={16} color="#848484" />
-                        <Input placeholder={t("Search Transactions")} value={searchQuery} onChange={e => setSearchQuery(e.target.value)} />
+                        <Input placeholder={t("Search Transactions")} value={searchQuery} onChange={e => {
+                            setSearchQuery(e.target.value);
+                            const urlParams = new URLSearchParams(window.location.search);
+                            if (urlParams.has("search")) {
+                                urlParams.delete("search");
+                                const newUrl = window.location.pathname + (urlParams.toString() ? '?' + urlParams.toString() : '');
+                                window.history.replaceState({}, document.title, newUrl);
+                            }
+                        }} />
                     </div>
                     <img src={calendar} alt="c" onClick={handleDatePickerClick} />
                     {can("transactions.main.export") && (

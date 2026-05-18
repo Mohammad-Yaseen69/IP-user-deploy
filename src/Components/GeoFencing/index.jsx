@@ -11,6 +11,8 @@ import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
+import { usePermission } from "../../hooks/GeneralUse/usePermission";
+
 
 
 const Toggle = ({ checked, onChange, isCheckbox = false, style }) => (
@@ -33,6 +35,9 @@ const GeoFencing = () => {
     const [changes, setChanges] = useState([])
     const { userDetails, authHeader } = useContext(UserContext)
     const [isSaving, setIsSaving] = useState(false)
+    const checkPermission = usePermission();
+    const canUpdate = checkPermission("geo-fencing.update");
+
 
     useEffect(() => {
         const groupedData = citiesData?.reduce((acc, country) => {
@@ -129,8 +134,12 @@ const GeoFencing = () => {
     }
 
     const handleCheckChange = (e, checkType, isoCode, region, isRegionToggle = false) => {
-
+        if (!canUpdate) {
+            toast.error(t("You don't have permission to update geo-fencing settings"));
+            return;
+        }
         const isChecked = e.target.checked;
+
 
         const updatedCountries = { ...filteredCountries };
 
@@ -193,7 +202,12 @@ const GeoFencing = () => {
     }, [changes])
 
     const submitChanges = async () => {
+        if (!canUpdate) {
+            toast.error(t("You don't have permission to update geo-fencing settings"));
+            return;
+        }
         setIsSaving(true)
+
         try {
             // Get current state of all countries
             const allDisabledToggles = Object.entries(filteredCountries).reduce((acc, [region, countries]) => {
@@ -442,8 +456,9 @@ const GeoFencing = () => {
             <div style={{ display: "flex", justifyContent: "right", marginTop: "1rem" }}>
                 <button
                     onClick={submitChanges}
-                    disabled={changes.length < 1 || isSaving}
+                    disabled={changes.length < 1 || isSaving || !canUpdate}
                     className={styles.saveBtn}
+
                     style={{ cursor: "pointer" }}
                 >
                     {!isSaving ? t("Save Changes") : t("Saving")}

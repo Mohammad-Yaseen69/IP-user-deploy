@@ -10,6 +10,7 @@ import OTPConfirmation from '../UserSettingsNew/OTPConfirmation';
 import SuccessModal from '../AddBeneficiary/SuccessModal';
 import { useLocation, useNavigate } from 'react-router';
 import { toast } from 'react-toastify';
+import { usePermission } from '../../hooks/GeneralUse/usePermission';
 
 const SecurityQuestions = () => {
     const { userSecurityQues, authHeader, userDetails, verifyToken, getSecurityQuestions, setProfileLockTime, profileCompletedPercentage, setUserDetails } = useContext(UserContext)
@@ -37,7 +38,8 @@ const SecurityQuestions = () => {
     const [saving, setSaving] = useState("")
     const [token, setToken] = useState("")
     const [codeType, setCodeType] = useState("sms")
-
+    const can = usePermission()
+    const isEdit = can("settings.security-questions.update")
     useEffect(() => {
         setCodeType(userDetails?.tfa ? "authenticator" : "sms")
     }, [userDetails])
@@ -307,7 +309,7 @@ const SecurityQuestions = () => {
                             type='button'
                         >{t("Save")}</Button>
                         :
-                        <Button onClick={() => setIsEditable(true)} type='button' style={{
+                        <Button onClick={() => setIsEditable(true)} type='button' disabled={!isEdit} style={{
                             background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
                             border: "none",
                             outline: "none",

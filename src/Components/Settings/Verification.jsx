@@ -190,7 +190,7 @@ const Verification = () => {
                 paypal_transaction: "processing"
             }
 
-            const res = await axios.put(`${import.meta.env.VITE_IP_DEV_API}/api/account/update-individual/${userDetails?._id}`, { data: encryptData(data) }, {
+            const res = await axios.put(`${import.meta.env.VITE_IP_DEV_API}/api/account/update-${userDetails?.account_type}/${userDetails?._id}`, { data: encryptData(data) }, {
                 headers: authHeader
             })
 

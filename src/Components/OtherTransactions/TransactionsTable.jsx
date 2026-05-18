@@ -19,6 +19,7 @@ import SentItem from "./Mobile/SentItem";
 import PlanSubscriptionTable from "./PlanSubscriptionTable";
 import ReceivedItem from "./Mobile/ReceivedItem";
 import { useQuery } from "@tanstack/react-query";
+import { usePermission } from "../../hooks/GeneralUse/usePermission";
 const fetchTransactions = async (url, authHeader) => {
     const res = await axios.get(url, { headers: authHeader });
     const decrypted = decryptData(res.data.data);
@@ -60,7 +61,7 @@ const TransactionsTable = () => {
     const { userDetails, authHeader } = useContext(UserContext);
     const [debouncedSearchQuery, setDebouncedSearchQuery] = useState("");
     const [debounceTimer, setDebounceTimer] = useState(null);
-
+    const can = usePermission()
     useEffect(() => {
         if (searchQuery !== debouncedSearchQuery) {
             if (debounceTimer) {

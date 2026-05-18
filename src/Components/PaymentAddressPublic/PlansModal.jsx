@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { Modal, ModalBody } from 'reactstrap'
+import { Modal, ModalBody, ModalHeader } from 'reactstrap'
 import styles from "./styles/plans.module.scss"
 import { useTranslation } from 'react-i18next'
 import { formatCurrency } from '../../Helper/AmountFormat'
@@ -23,6 +23,7 @@ const PlansModal = ({ isOpen, toggle, plansData, dataHandler, isLoading, user, u
     const [showGuestModal, setShowGuestModal] = useState(false)
     const [selectedAction, setSelectedAction] = useState(null)
     const [selectedPlan, setSelectedPlan] = useState()
+    const [showTermsModal, setShowTermsModal] = useState(false)
 
     useEffect(() => {
         if (plansData) {
@@ -141,11 +142,17 @@ const PlansModal = ({ isOpen, toggle, plansData, dataHandler, isLoading, user, u
                                                     <div className={styles.desc}>{plan?.description}</div>
 
                                                     <div className={styles.termsLabel}>{t('Terms & Conditions')}:</div>
-                                                    <textarea
-                                                        className={styles.terms}
-                                                        readOnly
-                                                        value={plan?.termsAndConditions?.text || ''}
-                                                    />
+                                                    <div style={{ fontSize: "14px", color: "#555", marginTop: "10px", whiteSpace: "pre-wrap", background: "#f9fafb", padding: "12px", borderRadius: "8px" }}>
+                                                        {truncate(plan?.termsAndConditions?.text, 500)}
+                                                    </div>
+                                                    {plan?.termsAndConditions?.text?.length > 500 && (
+                                                        <span 
+                                                            onClick={(e) => { e.stopPropagation(); setShowTermsModal(true); }}
+                                                            style={{ color: "#5926F0", cursor: "pointer", fontSize: "14px", fontWeight: 600, marginTop: "8px", display: "inline-block" }}
+                                                        >
+                                                            {t("Show More")}
+                                                        </span>
+                                                    )}
 
                                                     <div style={{ marginTop: "15px" }}>
                                                         <span style={{ fontWeight: 600, fontSize: "16px" }}>{t("Select a payment option to continue:")} </span>
@@ -194,11 +201,17 @@ const PlansModal = ({ isOpen, toggle, plansData, dataHandler, isLoading, user, u
                                             <div className={styles.desc}>{selectedPlan.description}</div>
 
                                             <div className={styles.termsLabel}>{t('Terms & Conditions')}:</div>
-                                            <textarea
-                                                className={styles.terms}
-                                                readOnly
-                                                value={selectedPlan?.termsAndConditions?.text || ''}
-                                            />
+                                            <div style={{ fontSize: "14px", color: "#555", marginTop: "10px", whiteSpace: "pre-wrap", background: "#f9fafb", padding: "12px", borderRadius: "8px" }}>
+                                                {truncate(selectedPlan?.termsAndConditions?.text, 500)}
+                                            </div>
+                                            {selectedPlan?.termsAndConditions?.text?.length > 500 && (
+                                                <span 
+                                                    onClick={() => setShowTermsModal(true)}
+                                                    style={{ color: "#5926F0", cursor: "pointer", fontSize: "14px", fontWeight: 600, marginTop: "8px", display: "inline-block" }}
+                                                >
+                                                    {t("Show More")}
+                                                </span>
+                                            )}
 
                                             <div style={{ marginTop: "15px" }}>
                                                 <span style={{ fontWeight: 600, fontSize: "16px" }}>{t("Select a payment option to continue:")} </span>
@@ -237,6 +250,15 @@ const PlansModal = ({ isOpen, toggle, plansData, dataHandler, isLoading, user, u
                                     </svg>
                                 </button>}
                         </div>
+                    </div>
+                </ModalBody>
+            </Modal>
+
+            <Modal isOpen={showTermsModal} toggle={() => setShowTermsModal(false)} size="lg" style={{ zIndex: 1060 }}>
+                <ModalHeader toggle={() => setShowTermsModal(false)}>{t("Terms & Conditions")}</ModalHeader>
+                <ModalBody style={{ padding: "20px" }}>
+                    <div style={{ whiteSpace: "pre-wrap", fontSize: "15px", color: "#333", lineHeight: "1.6" }}>
+                        {selectedPlan?.termsAndConditions?.text}
                     </div>
                 </ModalBody>
             </Modal>

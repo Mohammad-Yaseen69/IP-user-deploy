@@ -12,6 +12,7 @@ import { Info } from "react-feather"
 import useWindowWidth from "../../utils/useWindowWidth"
 import { startAuthentication } from "@simplewebauthn/browser"
 import { useTranslation } from "react-i18next"
+import { usePermission } from "../../hooks/GeneralUse/usePermission"
 
 const Threshold = ({ userDetails, authHeader }) => {
     const [active, setActive] = useState(false)
@@ -27,7 +28,7 @@ const Threshold = ({ userDetails, authHeader }) => {
     const [loading, setLoading] = useState(false)
     const width = useWindowWidth()
     const { t } = useTranslation()
-
+    const can = usePermission()
     useEffect(() => {
         setActive(userDetails?.otp_thresholds?.qr_pay?.enabled)
         setCAmount(userDetails?.otp_thresholds?.qr_pay?.amount?.toFixed(2))
@@ -84,7 +85,7 @@ const Threshold = ({ userDetails, authHeader }) => {
             }
 
             if (toggle === false) {
-                await axios.put(`${import.meta.env.VITE_IP_DEV_API}/api/account/update-individual/${userDetails._id}`, { data: encryptData({ qr_quicker_pay_enabled: !toggle }) }, {
+                await axios.put(`${import.meta.env.VITE_IP_DEV_API}/api/account/update-${userDetails?.account_type}/${userDetails._id}`, { data: encryptData({ qr_quicker_pay_enabled: !toggle }) }, {
                     headers: authHeader
                 })
 
@@ -146,6 +147,7 @@ const Threshold = ({ userDetails, authHeader }) => {
             console.log(dec)
         }
     }
+    const canEdit = can("settings.payment-threshold.update")
     return (
         <div className={styles.cont}>
             <div className={styles.top}>
@@ -225,7 +227,7 @@ const Threshold = ({ userDetails, authHeader }) => {
                             {!editMode &&
                                 <div className={styles.btns}>
                                     <button disabled={loading} className={styles.deactivate} onClick={() => updateThreshold(false)}>{loading ? t("Deactivating...") : t("Deactivate")}</button>
-                                    <button className={styles.edit} onClick={() => setEditMode(true)}>{t("Edit the amount")}</button>
+                                    <button className={styles.edit} disabled={!canEdit} onClick={() => setEditMode(true)}>{t("Edit the amount")}</button>
                                 </div>}
                         </div>
 

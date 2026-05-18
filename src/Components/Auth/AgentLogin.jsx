@@ -1188,10 +1188,8 @@ const AgentLogin = ({ country, setIsLoginForm, setIsAgentForm }) => {
                                 {t("Back")}
                             </button>
                         }
-                        <div className={styles.bottom_text}>
-                            <span>{t("Are you a User?")} </span>
-                            <Link to={"/login"} onClick={() => { setIsAgentForm(false); setIsLoginForm(true) }}>{t("Sign in as User")}</Link>
-                        </div>
+                        <span></span>
+ 
                         <div className={styles.btns}>
                             {
                                 (emailVerified && width > 1000)
