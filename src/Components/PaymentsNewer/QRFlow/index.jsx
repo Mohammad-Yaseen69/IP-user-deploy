@@ -504,14 +504,15 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
         }
     }
 
-    const getExchangeRate = async (amount, setLimitType, payment_method = "instant", from, setLoading) => {
+    const getExchangeRate = async (amount, setLimitType, payment_method = "instant", from,
+        setLoading, signal) => {
         dataHandler("loading", true)
         dataHandler("exchange_rate_error", "")
         dataHandler("exchange_rate", {})
         try {
             const url = `${import.meta.env.VITE_IP_DEV_API}/api/wallet/get-new-exchange-rate?from=${from}&to=${data.beneficiary_wallet?.currency?.code}&amount=${amount}&type=qr_pay&level_id=${userDetails?.level?._id}&account_id=${userDetails?._id}&payment_type=${data.payment_type?.value ?? "wallet"}&receiver_wallet_id=${data.beneficiary_wallet?._id}&sender_wallet_id=${data.wallet?._id ?? data.currency?._id}&payment_method=${payment_method}`
             // console.log(url)
-            const res = await axios.get(url, { headers: authHeader })
+            const res = await axios.get(url, { headers: authHeader, signal })
 
             const decrypted = decryptData(res.data.data)
             console.log(decrypted)
@@ -580,7 +581,12 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
             return exchange_rate_details
         }
         catch (err) {
+            if (err?.name === "CanceledError" || err?.code === "ERR_CANCELED") {
+                console.log("Request aborted")
+                return
+            }
             const dec = decryptData(err?.response?.data?.data)
+
             console.log(dec, err)
             if (typeof dec?.message == "object") {
                 if (dec?.message?.[0]?.code === "1003007") {
