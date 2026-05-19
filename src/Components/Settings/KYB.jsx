@@ -349,7 +349,7 @@ const KYB = () => {
                 <div className="card-options" style={{ display: 'flex', gap: "10px", alignItems: "center" }}>
                     <Badge color={(userDetails?.company?.kyb_status === "verified" || userDetails?.company?.kyb_status === "approved") ? "success" : userDetails?.company?.kyb_status === "declined" ? "danger" : "warning"}>{userDetails?.company?.kyb_status?.toUpperCase()}</Badge>
                     {
-                        userDetails?.company?.kyb_additional_file?.some(item => item?.status === "requested")
+                        userDetails?.company?.kyb_additional_file?.some(item => item?.status === "requested" || item?.status === "declined")
                         &&
                         <Button style={{
                             background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
@@ -359,7 +359,6 @@ const KYB = () => {
                             fontSize: ".7rem",
                             borderRadius: "5px"
                         }}
-                            disabled={isReadOnly}
                             onClick={(e) => {
                                 e.stopPropagation()
                                 setShowAdditionalModal(!showAdditionalModal)
