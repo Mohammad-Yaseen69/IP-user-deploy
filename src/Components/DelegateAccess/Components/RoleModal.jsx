@@ -403,7 +403,7 @@ const RoleModal = ({ isRole, isOpen, onClose, t, width, isEdit, editData }) => {
                                                 {isDone ? <CheckCircle size={14} /> : st.icon}
                                             </div>
                                             <span className={`${styles.stepLabel} ${isActive ? styles.active : ''} ${isDone ? styles.done : ''}`}>
-                                                <p>STEP{st.id}</p>
+                                                <p>{t("STEP")}{st.id}</p>
                                                 {t(st.label)}
                                             </span>
                                         </div>
@@ -498,7 +498,7 @@ const RoleModal = ({ isRole, isOpen, onClose, t, width, isEdit, editData }) => {
                                 <span><HelpCircle /></span>
                                 <div>
                                     <p>{t("Having Troubles?")}</p>
-                                    <h2>{("Contact Us")}</h2>
+                                    <h2>{t("Contact Us")}</h2>
                                 </div>
                             </div>
                             <div className={styles.footerRight}>

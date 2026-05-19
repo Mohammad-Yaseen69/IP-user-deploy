@@ -40,7 +40,7 @@ const Stepthree = ({ data, dataHandler }) => {
                 data.account_type === "business" &&
                 <div className={styles.inp}>
                     <label>{t("Business Email")}:</label>
-                    <input placeholder="Enter your business email" value={data.email} onChange={e => dataHandler("email", e.target.value)} style={{ background: "transparent", border: "none", outline: "none" }} type="email" />
+                    <input placeholder={t("Enter your business email")} value={data.email} onChange={e => dataHandler("email", e.target.value)} style={{ background: "transparent", border: "none", outline: "none" }} type="email" />
                 </div>
             }
         </div>

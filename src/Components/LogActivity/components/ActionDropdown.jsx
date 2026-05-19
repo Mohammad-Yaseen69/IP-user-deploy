@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState } from "react"
 import { ChevronDown, X } from "react-feather"
+import { useTranslation } from "react-i18next"
 
 export const ActionDropdown = ({ selectedEntity, value, onChange, adminActivitiesData, fmt }) => {
     const [open, setOpen] = useState(false)
     const ref = useRef()
-
+    const { t } = useTranslation()
     const availableActions = selectedEntity
         ? adminActivitiesData.find(e => e.entity === selectedEntity)?.actions ?? []
         : adminActivitiesData.flatMap(e => e.actions).filter((a, i, arr) => arr.indexOf(a) === i)
@@ -54,7 +55,7 @@ export const ActionDropdown = ({ selectedEntity, value, onChange, adminActivitie
                     borderColor: open ? "#4f46e5" : value.length ? "#c7d2fe" : "#e2e8f0",
                 }}
             >
-                <span style={{ maxWidth: 140, overflow: "hidden", textOverflow: "ellipsis" }}>{label}</span>
+                <span style={{ maxWidth: 140, overflow: "hidden", textOverflow: "ellipsis" }}>{t(label)}</span>
                 <div style={{ display: "flex", alignItems: "center", gap: 2 }}>
                     {value.length > 0 && (
                         <span
@@ -78,7 +79,7 @@ export const ActionDropdown = ({ selectedEntity, value, onChange, adminActivitie
                     }}>
                         {availableActions.length === 0 ? (
                             <div style={{ padding: "10px 14px", fontSize: 13, color: "#94a3b8" }}>
-                                No actions available
+                                {t("No actions available")}
                             </div>
                         ) : availableActions.map(action => {
                             const checked = value.includes(action)
@@ -101,7 +102,6 @@ export const ActionDropdown = ({ selectedEntity, value, onChange, adminActivitie
                                     onMouseEnter={e => { if (!checked) e.currentTarget.style.background = "#f8fafc" }}
                                     onMouseLeave={e => { if (!checked) e.currentTarget.style.background = "transparent" }}
                                 >
-                                    {/* Custom checkbox */}
                                     <div style={{
                                         width: 16, height: 16, borderRadius: 4, flexShrink: 0,
                                         border: `2px solid ${checked ? "#4f46e5" : "#d1d5db"}`,
