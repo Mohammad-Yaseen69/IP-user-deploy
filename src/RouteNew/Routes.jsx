@@ -70,6 +70,7 @@ const StoreCreate = lazy(() => import("../Components/StoreCreate"))
 const GuestLogin = lazy(() => import("../Components/guestDashboard/auth"))
 const DelegateAccess = lazy(() => import("../Components/DelegateAccess"))
 const CreateAgentPassword = lazy(() => import("../Components/CreateAgentPassword"))
+const AgentLogin = lazy(() => import("../Components/Auth/agentAuth/index"))
 const LogActivity = lazy(() => import("../Components/LogActivity"))
 
 
@@ -188,11 +189,13 @@ export const publicRoutes = [
     { path: "/pay/subscription/:subscriptionId", component: <PlansSubscription /> },
     { path: "/pay/plan/:username/:planId", component: <PlanPaymentLink /> },
     { path: "/create-agent-password/:token", component: <CreateAgentPassword /> },
+
     { path: "*", component: <NotFound type='Page' /> }
 ]
 export const authRoutes = [
     { path: `/login`, component: <Auth /> },
-    { path: `/agent-login`, component: <Auth /> },
+    // { path: `/agent-login`, component: <Auth /> },
+    { path: `/agent-login`, component: <AgentLogin /> },
     { path: `/forgot-password`, component: <AuthNew /> },
     { path: `/forgot-password/agent`, component: <AuthNew /> },
     { path: `/signup`, component: <Auth /> },

@@ -2,6 +2,8 @@ import { useTranslation } from "react-i18next";
 import styles from "../styles/table.module.css";
 import useWindowWidth from "../../../utils/useWindowWidth";
 import InstaPayLoader from "../../Loader";
+import { MoreHorizontal, MoreVertical, X } from "react-feather";
+import { useState } from "react";
 import { useContext, useMemo } from "react";
 import { UserContext } from "../../../Context/UserContext";
 import { Link } from "react-router-dom";
@@ -10,7 +12,8 @@ const ActivityTable = ({ filteredData, Loading }) => {
     const { t } = useTranslation();
     const { userDetails } = useContext(UserContext)
     const width = useWindowWidth();
-
+    const [selectedActivity, setSelectedActivity] = useState(null)
+    const [showModal, setShowModal] = useState(false)
     const truncate = (text, max) => {
         if (!text) return "—";
         return text.length > max ? `${text.slice(0, max)}...` : text;
@@ -33,7 +36,7 @@ const ActivityTable = ({ filteredData, Loading }) => {
                 return desc || "—"
             }
         } else {
-            return desc || "—"
+            return truncate(desc, 20) || "—"
         }
     }
 
@@ -118,6 +121,14 @@ const ActivityTable = ({ filteredData, Loading }) => {
                         className={styles.th}
                     >
                         {t("IP Address")}
+                    </div>
+                    <div
+                        style={{
+                            flex: width <= 700 ? 0.18 : 0.12,
+                            textAlign: "center"
+                        }}
+                        className={styles.th}
+                    >
                     </div>
 
                 </div>
@@ -219,6 +230,20 @@ const ActivityTable = ({ filteredData, Loading }) => {
                             >
                                 {item?.ipAddress || "—"}
                             </div>
+                            <div
+                                style={{
+                                    flex: width <= 700 ? 0.18 : 0.12,
+                                    textAlign: "center"
+                                }}
+                                onClick={() => {
+                                    setSelectedActivity(item)
+                                    setShowModal(true)
+                                }}
+                                className={styles.td}
+                            >
+                                <MoreVertical size={18} />
+
+                            </div>
 
                         </div>
                     ))
@@ -235,7 +260,71 @@ const ActivityTable = ({ filteredData, Loading }) => {
                         {t("No Activity found")}
                     </div>
                 )}
+                {showModal && selectedActivity && (
+                    <div
+                        className={styles.modalOverlay}
+                        onClick={() => setShowModal(false)}
+                    >
+                        <div
+                            className={styles.modal}
+                            onClick={(e) => e.stopPropagation()}
+                        >
+                            <div className={styles.modalHeader}>
+                                <h3>{t("Activity Details")}</h3>
 
+                                <button
+                                    className={styles.closeBtn}
+                                    onClick={() => setShowModal(false)}
+                                >
+                                    <X size={18} />
+                                </button>
+                            </div>
+
+                            <div className={styles.modalBody}>
+
+                                <div className={styles.detailRow}>
+                                    <span>ID</span>
+                                    <p>{selectedActivity?._id}</p>
+                                </div>
+
+                                <div className={styles.detailRow}>
+                                    <span>Action</span>
+                                    <p>{selectedActivity?.action}</p>
+                                </div>
+
+                                <div className={styles.detailRow}>
+                                    <span>Description</span>
+                                    <p>{selectedActivity?.description}</p>
+                                </div>
+
+                                <div className={styles.detailRow}>
+                                    <span>Entity Type</span>
+                                    <p>{selectedActivity?.entityType}</p>
+                                </div>
+
+                                <div className={styles.detailRow}>
+                                    <span>Entity ID</span>
+                                    <p>{selectedActivity?.entityId}</p>
+                                </div>
+
+                                <div className={styles.detailRow}>
+                                    <span>IP Address</span>
+                                    <p>{selectedActivity?.ipAddress}</p>
+                                </div>
+
+                                <div className={styles.detailRow}>
+                                    <span>Created At</span>
+                                    <p>
+                                        {selectedActivity?.createdAt
+                                            ? new Date(selectedActivity.createdAt).toLocaleString()
+                                            : "—"}
+                                    </p>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
     );
