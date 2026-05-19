@@ -1,16 +1,17 @@
 import { useEffect, useRef, useState } from "react"
 import { ChevronDown, X } from "react-feather"
+import { useTranslation } from "react-i18next"
 
 export const EntityDropdown = ({ value, onChange, fmt, adminActivitiesData, }) => {
     const [open, setOpen] = useState(false)
     const ref = useRef()
-
+    const { t } = useTranslation()
     useEffect(() => {
         const handler = (e) => { if (ref.current && !ref.current.contains(e.target)) setOpen(false) }
         document.addEventListener("mousedown", handler)
         return () => document.removeEventListener("mousedown", handler)
     }, [])
-
+console.log(adminActivitiesData,"filter ka dtat")
     return (
         <div ref={ref} style={{ position: "relative", minWidth: 170 }}>
             <button
@@ -36,7 +37,7 @@ export const EntityDropdown = ({ value, onChange, fmt, adminActivitiesData, }) =
                     borderColor: open ? "#4f46e5" : value.length ? "#c7d2fe" : "#e2e8f0",
                 }}
             >
-                <span>{value ? fmt(value) : "Filter by Entity"}</span>
+                <span>{value ? fmt(value) : t("Filter by Entity")}</span>
                 <div style={{ display: "flex", alignItems: "center", gap: 2 }}>
                     {value && (
                         <span

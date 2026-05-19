@@ -55,7 +55,7 @@ export const ActionDropdown = ({ selectedEntity, value, onChange, adminActivitie
                     borderColor: open ? "#4f46e5" : value.length ? "#c7d2fe" : "#e2e8f0",
                 }}
             >
-                <span style={{ maxWidth: 140, overflow: "hidden", textOverflow: "ellipsis" }}>{label}</span>
+                <span style={{ maxWidth: 140, overflow: "hidden", textOverflow: "ellipsis" }}>{t(label)}</span>
                 <div style={{ display: "flex", alignItems: "center", gap: 2 }}>
                     {value.length > 0 && (
                         <span

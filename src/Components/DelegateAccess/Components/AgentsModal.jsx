@@ -405,7 +405,7 @@ const AgentsModal = ({ isRole, isOpen, onClose, t, width, roles, isEdit, editDat
                                                     {isDone ? <CheckCircle size={14} /> : st.icon}
                                                 </div>
                                                 <span className={`${s.stepLabel} ${isActive ? s.active : ''} ${isDone ? s.done : ''}`}>
-                                                    <p>STEP{st.id}</p>
+                                                    <p>{t("STEP")}{st.id}</p>
                                                     {t(st.label)}
                                                 </span>
                                             </div>
@@ -530,7 +530,7 @@ const AgentsModal = ({ isRole, isOpen, onClose, t, width, roles, isEdit, editDat
                                     <span><HelpCircle /></span>
                                     <div>
                                         <p>{t("Having Troubles?")}</p>
-                                        <h2>{("Contact Us")}</h2>
+                                        <h2>{t("Contact Us")}</h2>
                                     </div>
                                 </div>
                                 <div className={s.footerRight}>
