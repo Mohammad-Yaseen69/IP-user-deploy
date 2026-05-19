@@ -17,20 +17,33 @@
         }
 
         .thead {
-            font-weight: 700;
+            font-weight: 500;
             color: #333;
+            padding: 10px 24px;
+            background: var(--bg-surface, #EFF1F6);
+            border-radius: 8px;
+            margin-bottom: 10px;
         }
 
         .th {
-            font-size: 13px;
-            flex: 1;
+            color: var(--gray-gray-600, #6E7687);
+            font-family: Inter;
+            font-size: 14px;
+            font-style: normal;
+            font-weight: 500;
+            line-height: normal;
+            letter-spacing: -0.42px;
         }
 
         .td {
+            color: var(--Light-Mode-Text, #151514);
+            font-family: Inter;
             font-size: 14px;
-            font-weight: 600;
-            color: #777;
-            flex: 1;
+            font-style: normal;
+            font-weight: 500;
+            line-height: 150%;
+            /* 21px */
+            letter-spacing: -0.42px;
         }
 
         .serial {
@@ -82,4 +95,90 @@
             gap: 12px;
             background: #fff;
 
+        }
+
+        .modalOverlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.45);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            padding: 20px;
+        }
+
+        .modal {
+            width: 100%;
+            max-width: 520px;
+            background: white;
+            border-radius: 18px;
+            overflow: hidden;
+            animation: modalFade 0.2s ease;
+        }
+
+        .modalHeader {
+            padding: 18px 22px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .modalHeader h3 {
+            margin: 0;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .closeBtn {
+            border: none;
+            background: #f5f5f5;
+            width: 34px;
+            height: 34px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modalBody {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .detailRow {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #f1f1f1;
+        }
+
+        .detailRow span {
+            font-size: 13px;
+            color: #777;
+            font-weight: 500;
+        }
+
+        .detailRow p {
+            margin: 0;
+            font-size: 14px;
+            color: #111;
+            word-break: break-word;
+        }
+
+        @keyframes modalFade {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }

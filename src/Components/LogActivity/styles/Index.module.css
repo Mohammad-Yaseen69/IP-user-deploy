@@ -3,7 +3,6 @@
 
     .top {
         position: relative;
-        margin-bottom: 2.5rem;
 
         h1 {
             color: #5626e6;
@@ -13,28 +12,53 @@
         }
     }
 
-    .searchCont {
-        display: flex;
-        align-items: center;
-        gap: 10px;
+    .main {
+        height: auto;
+        padding: var(--md, 16px);
+        align-items: flex-start;
+        gap: var(--lg, 24px);
+        align-self: stretch;
+        border-radius: var(--md, 10px);
+        background: #FFF;
 
-
-        .search {
+        .searchCont {
             display: flex;
             align-items: center;
+            justify-content: center;
             gap: 10px;
-            width: 100%;
-            border-radius: var(--SPACING-spacing-0, 8px);
-            background: #FFF;
-            box-shadow: 0 4.328px 35.702px 0 rgba(0, 0, 0, 0.06);
-            padding: 8px 14px;
 
-            input {
-                border: none;
-                outline: none;
-                padding: 0px;
-                font-weight: 600;
+
+            .searchBox {
+                margin-top: 10px;
+                flex: 1;
+                display: flex;
+                align-items: center;
+                border-radius: 8px;
+                border: 1px solid var(--Greyscale-50, #E7E9E9);
+                background: var(--Greyscale-0, #FFF);
+                box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.03);
+                padding: 7px 24px;
+
+                Search {
+                    border-radius: 9.416px;
+                    border: 1.25px solid var(--Greyscale-400, #898F8F);
+
+                }
+
+
             }
         }
+    }
+
+    .searchBox input {
+        border: none;
+        outline: none;
+        width: 100%;
+        font-size: 14px;
+        color: #333;
+    }
+
+    .searchBox input::placeholder {
+        color: #aaa;
     }
 }

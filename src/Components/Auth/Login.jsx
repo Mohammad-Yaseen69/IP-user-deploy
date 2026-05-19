@@ -31,7 +31,7 @@ import InstaPayLoader from "../Loader";
 import { logger } from "@sentry/react";
 import VpnModal from "./VpnModal";
 import LocationDeniedModal from "./LocationDeniedModal";
-const Login = ({ country, setIsLoginForm, setIsAgentForm }) => {
+const Login = ({ country, setIsLoginForm, }) => {
     const navigate = useNavigate()
     const { t } = useTranslation()
     const location = useLocation();
@@ -1217,7 +1217,7 @@ const Login = ({ country, setIsLoginForm, setIsAgentForm }) => {
                             </div>
                             <div className={styles.bottom_text}>
                                 <span>{t("Are you an Agent?")} </span>
-                                <Link to={"/agent-login"} onClick={() => {setIsAgentForm(true); setIsLoginForm(false)}}>{t("Sign in as Agent")}</Link>
+                                <Link to={"/agent-login"} >{t("Sign in as Agent")}</Link>
                             </div>
                         </div>
                         <div className={styles.btns}>
@@ -1537,7 +1537,7 @@ const Login = ({ country, setIsLoginForm, setIsAgentForm }) => {
                                     </div>
                                     <div className={styles.bottom_text}>
                                         <span>{t("Are you an Agent?")} </span>
-                                        <Link to={"/agent-login"} onClick={() => {setIsAgentForm(true); setIsLoginForm(false)}}>{t("Sign in as Agent")}</Link>
+                                        <Link to={"/agent-login"} >{t("Sign in as Agent")}</Link>
                                     </div>
                                 </div>
                                 <div className={styles.btns}>
