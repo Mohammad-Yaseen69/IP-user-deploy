@@ -71,9 +71,9 @@ const ViewDetailModal = ({ isOpen, toggle, item, isRole }) => {
                 <div className={styles.detailCard}>
                   <span className={styles.detailLabel}>{t("Verifications")}</span>
                   <div className="d-flex flex-wrap gap-2 mt-1">
-                    {item.email_verification && <Badge color="info">Email</Badge>}
-                    {item.sms_verification && <Badge color="info">SMS</Badge>}
-                    {item.whatsapp_verification && <Badge color="info">WhatsApp</Badge>}
+                    {item.email_verification && <Badge color="info">{t("Email")}</Badge>}
+                    {item.sms_verification && <Badge color="info">{t("SMS")}</Badge>}
+                    {item.whatsapp_verification && <Badge color="info">{t("WhatsApp")}</Badge>}
                   </div>
                 </div>
               </Col>
@@ -91,7 +91,7 @@ const ViewDetailModal = ({ isOpen, toggle, item, isRole }) => {
                     </Badge>
                   ))
                 ) : (
-                  <span className="text-muted small">No permissions assigned</span>
+                  <span className="text-muted small">{t("No permissions assigned")}</span>
                 )}
               </div>
             </div>

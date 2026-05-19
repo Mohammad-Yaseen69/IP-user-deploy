@@ -42,9 +42,21 @@ const LogActivity = () => {
 
         return () => clearTimeout(delay)
     }, [search])
-    console.log(ActivityData)
     const data = ActivityData?.data?.logs || []
     const totalPages = ActivityData?.data?.totalPages || 1
+    const filteredData = data.filter((item) => {
+        const entityMatch = selectedEntity
+            ? item.entityType === selectedEntity
+            : true
+
+        const actionMatch = selectedActions.length > 0
+            ? selectedActions.includes(item.action)
+            : true
+
+        return entityMatch && actionMatch
+    })
+    console.log(data, "data")
+    console.log(filteredData, "dfilteredDataata")
     return (
         <div className={styles.container}>
 
@@ -67,7 +79,7 @@ const LogActivity = () => {
                             type="text"
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
-                            placeholder={("Search for Activity Feeds")}
+                            placeholder={t("Search for Activity Feeds")}
                         />
                     </div>
                     <EntityDropdown fmt={fmt} value={selectedEntity} onChange={setSelectedEntity} adminActivitiesData={adminActivitiesData} />
@@ -79,7 +91,7 @@ const LogActivity = () => {
                         fmt={fmt}
                         adminActivitiesData={adminActivitiesData} />
                 </div>
-                <ActivityTable filteredData={data} Loading={Loading} />
+                <ActivityTable filteredData={filteredData} Loading={Loading} />
                 <Paginations page={page} totalPages={totalPages} setPage={setPage} limit={limit} setLimit={setLimit} />
             </div>
         </div>

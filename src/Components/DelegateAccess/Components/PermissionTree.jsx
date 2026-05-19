@@ -35,7 +35,7 @@ const PermissionTree = ({
                     <SearchIcon size={16} style={{ position: "absolute", left: "10px", top: "50%", transform: "translateY(-50%)", color: "#888" }} />
                     <input
                         type="text"
-                        placeholder="Search permissions..."
+                        placeholder={t("Search permissions...")}
                         value={permSearch}
                         onChange={e => setPermSearch(e.target.value)}
                         style={{ width: "100%", padding: "0.6rem 0.6rem 0.6rem 2.2rem", borderRadius: "8px", border: "1px solid #ddd", fontSize: "0.9rem" }}

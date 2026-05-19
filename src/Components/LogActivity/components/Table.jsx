@@ -283,37 +283,37 @@ const ActivityTable = ({ filteredData, Loading }) => {
                             <div className={styles.modalBody}>
 
                                 <div className={styles.detailRow}>
-                                    <span>ID</span>
+                                    <span>{t("ID")}</span>
                                     <p>{selectedActivity?._id}</p>
                                 </div>
 
                                 <div className={styles.detailRow}>
-                                    <span>Action</span>
+                                    <span>{t("Action")}</span>
                                     <p>{selectedActivity?.action}</p>
                                 </div>
 
                                 <div className={styles.detailRow}>
-                                    <span>Description</span>
+                                    <span>{t("Description")}</span>
                                     <p>{selectedActivity?.description}</p>
                                 </div>
 
                                 <div className={styles.detailRow}>
-                                    <span>Entity Type</span>
+                                    <span>{t("Entity Type")}</span>
                                     <p>{selectedActivity?.entityType}</p>
                                 </div>
 
                                 <div className={styles.detailRow}>
-                                    <span>Entity ID</span>
+                                    <span>{t("Entity ID")}</span>
                                     <p>{selectedActivity?.entityId}</p>
                                 </div>
 
                                 <div className={styles.detailRow}>
-                                    <span>IP Address</span>
+                                    <span>{t("IP Address")}</span>
                                     <p>{selectedActivity?.ipAddress}</p>
                                 </div>
 
                                 <div className={styles.detailRow}>
-                                    <span>Created At</span>
+                                    <span>{t("Created At")}</span>
                                     <p>
                                         {selectedActivity?.createdAt
                                             ? new Date(selectedActivity.createdAt).toLocaleString()
