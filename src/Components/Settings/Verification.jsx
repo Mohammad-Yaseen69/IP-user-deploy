@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useLayoutEffect, useState } from 'react'
-import { Button, Card, CardBody, CardHeader, Col, Input, Label, Modal, ModalBody, ModalHeader } from 'reactstrap'
+import { Button, Card, CardBody, CardHeader, Col, Input, Label, Modal, ModalBody, ModalHeader, Table, Badge } from 'reactstrap'
 import { H4 } from '../../AbstractElements'
 import { UserContext } from '../../Context/UserContext';
 import { encryptData } from '../../Helper/EssentilaMethods/Encryption';
@@ -7,7 +7,6 @@ import { decryptData } from '../../Helper/EssentilaMethods/Decryption';
 import axios from 'axios';
 import { useTranslation } from 'react-i18next';
 import VerificationAlert from './VerificationAlert';
-import UploadAdditional from './UploadAdditional';
 import VerificationPayment from './VerificationPayment';
 import { useLocation, useNavigate } from 'react-router';
 import { CheckCircle, XCircle } from 'react-feather';
@@ -18,6 +17,7 @@ import { AiOutlineClockCircle } from 'react-icons/ai';
 import { logger } from '@sentry/react';
 import { useMutation } from '@tanstack/react-query';
 import { apiWrapper } from '../../utils/Functions/apiWrapper';
+import AdditionalFilesSection from './AdditionalFilesSection';
 
 const industries = [
     "Arts & Entertainment",
@@ -55,7 +55,6 @@ const Verification = () => {
 
     const { userDetails, authHeader, verifyToken } = useContext(UserContext)
     const [message, setMessage] = useState("")
-    const [showAdditionalModal, setShowAdditionalModal] = useState(false)
     const [occupation, setOccupation] = useState("")
     const [sourceOfFund, setSourceOfFund] = useState("")
     const [occupationOther, setOccupationOther] = useState("")
@@ -170,9 +169,21 @@ const Verification = () => {
     const payment_through = queryParams.get("payment_through")
     const refreshData = queryParams.get("refreshData")
     const ft = queryParams.get("ft")
+    const scroll = queryParams.get("scroll")
     const [statusModal, setStatusModal] = useState(false)
     const [processing, setProcessing] = useState("")
     const [showRefreshScreen, setShowRefreshScreen] = useState(refreshData === "true")
+
+    useEffect(() => {
+        if (scroll === "additional-files") {
+            setTimeout(() => {
+                const element = document.getElementById("additional-files-section");
+                if (element) {
+                    element.scrollIntoView({ behavior: "smooth", block: "start" });
+                }
+            }, 800);
+        }
+    }, [scroll, userDetails]);
 
     useEffect(() => {
         if (refreshData) {
@@ -500,27 +511,15 @@ const Verification = () => {
                         <h4 style={{ fontSize: "18px" }}>{t("Additional Documents:")}</h4>
                         <p>{t("Kemit Kingdom reserves the right to request any additional documents (Enhanced Due Diligence - EDD) or further information necessary for conducting thorough \nverifications, in accordance with its legal obligations.")}</p>
                     </Col>
-                    {
-                        userDetails?.user?.kyc_additional_file?.length > 0 && userDetails?.user?.kyc_additional_file?.some(item => item?.status === "requested")
-                            ?
-                            <>
-                                <Col className='mb-4' style={{ display: "flex", justifyContent: "flex-end" }}>
-                                    <Button style={{
-                                        background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
-                                        border: "none",
-                                        outline: "none",
-                                        borderRadius: "10px"
-                                    }}
-                                        onClick={() => setShowAdditionalModal(!showAdditionalModal)}
-                                        disabled={userDetails?.user?.kyc_additional_file?.every(item => item?.status !== "requested")}
-                                    >
-                                        {userDetails?.user?.kyc_additional_file?.every(item => item?.status !== "requested") ? "Uploaded" : t("Upload Requested Documents")}
-                                    </Button>
-                                </Col>
-                                <UploadAdditional files={userDetails?.user?.kyc_additional_file} isOpen={showAdditionalModal} toggle={() => setShowAdditionalModal(!showAdditionalModal)} user_id={userDetails?._id} />
-                            </>
-                            : ""
-                    }
+                    {userDetails?.user?.kyc_additional_file?.length > 0 && (
+                        <AdditionalFilesSection 
+                            files={userDetails.user.kyc_additional_file}
+                            userId={userDetails?._id}
+                            uploadEndpoint={`${import.meta.env.VITE_IP_DEV_API}/api/user/upload-additional-file/${userDetails?._id}`}
+                            authHeader={authHeader}
+                            verifyToken={verifyToken}
+                        />
+                    )}
                     <Col className='mb-4' style={{ display: "flex", justifyContent: "flex-end" }}>
                         {
                             userDetails?.user?.kyc_status !== "approved" && userDetails?.user?.kyc_status !== "needs-review" && userDetails?.paypal_transaction !== "processing"
