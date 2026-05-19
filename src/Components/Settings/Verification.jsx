@@ -501,7 +501,7 @@ const Verification = () => {
                         <p>{t("Kemit Kingdom reserves the right to request any additional documents (Enhanced Due Diligence - EDD) or further information necessary for conducting thorough \nverifications, in accordance with its legal obligations.")}</p>
                     </Col>
                     {
-                        userDetails?.user?.kyc_additional_file?.length > 0 && userDetails?.user?.kyc_additional_file?.some(item => item?.status === "requested")
+                        userDetails?.user?.kyc_additional_file?.length > 0 && userDetails?.user?.kyc_additional_file?.some(item => item?.status === "requested" || item?.status === "declined")
                             ?
                             <>
                                 <Col className='mb-4' style={{ display: "flex", justifyContent: "flex-end" }}>
@@ -512,9 +512,9 @@ const Verification = () => {
                                         borderRadius: "10px"
                                     }}
                                         onClick={() => setShowAdditionalModal(!showAdditionalModal)}
-                                        disabled={userDetails?.user?.kyc_additional_file?.every(item => item?.status !== "requested")}
+                                        disabled={userDetails?.user?.kyc_additional_file?.every(item => item?.status !== "requested" && item?.status !== "decline")}
                                     >
-                                        {userDetails?.user?.kyc_additional_file?.every(item => item?.status !== "requested") ? "Uploaded" : t("Upload Requested Documents")}
+                                        {userDetails?.user?.kyc_additional_file?.every(item => item?.status !== "requested" && item?.status !== "declined") ? "Uploaded" : t("Upload Requested Documents")}
                                     </Button>
                                 </Col>
                                 <UploadAdditional files={userDetails?.user?.kyc_additional_file} isOpen={showAdditionalModal} toggle={() => setShowAdditionalModal(!showAdditionalModal)} user_id={userDetails?._id} />
