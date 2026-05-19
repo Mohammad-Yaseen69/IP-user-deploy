@@ -21,7 +21,7 @@ const AdditionalDocumentModal = ({ isOpen, toggle, accounType }) => {
 
     const handleRedirect = () => {
         toggle()
-        navigate('/settings?tab=verification')
+        navigate('/settings?tab=verification&scroll=additional-files')
     }
 
     return (
