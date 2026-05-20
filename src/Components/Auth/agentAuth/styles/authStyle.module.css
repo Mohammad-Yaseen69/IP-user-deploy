@@ -279,3 +279,61 @@
         }
     }
 }
+
+@media (max-width: 700px) {
+    .container {
+        align-items: center;
+        justify-content: center;
+        padding: 0px;
+
+        .child2 {
+            width: 100%;
+        }
+
+        .authForm {
+            gap: 0px;
+
+
+            div {
+                h1 {
+                    width: 100%;
+                }
+
+                p {
+                    width: 100%;
+                    padding: 0px !important;
+                }
+
+            }
+
+            form {
+
+                width: 100% !important;
+
+                div {
+                    width: 100%;
+
+                }
+            }
+        }
+
+        .footerBtn {
+            width: 100%;
+            align-items: center;
+            justify-content: center;
+            flex-direction: row !important;
+        }
+
+        .footer {
+            margin-bottom: 10px;
+        }
+
+        .footer span:nth-child(2) {
+            display: none;
+        }
+
+        .child1 {
+            display: none;
+        }
+    }
+}

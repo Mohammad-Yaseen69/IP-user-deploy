@@ -506,6 +506,13 @@
 }
 
 @media (max-width: 600px) {
+    .modalFooter {
+        flex-wrap: wrap;
+        .footerLeft{
+            width: 100%;
+        }
+    }
+
     .sidebar {
         display: none;
     }

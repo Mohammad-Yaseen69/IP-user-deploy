@@ -82,14 +82,16 @@ const LogActivity = () => {
                             placeholder={t("Search for Activity Feeds")}
                         />
                     </div>
-                    <EntityDropdown fmt={fmt} value={selectedEntity} onChange={setSelectedEntity} adminActivitiesData={adminActivitiesData} />
-
-                    <ActionDropdown
-                        selectedEntity={selectedEntity}
-                        value={selectedActions}
-                        onChange={setSelectedActions}
-                        fmt={fmt}
-                        adminActivitiesData={adminActivitiesData} />
+                    <div className={styles.mobileCOntainer}>
+                        <EntityDropdown fmt={fmt} value={selectedEntity} onChange={setSelectedEntity} adminActivitiesData={adminActivitiesData} />
+                        <br />
+                        <ActionDropdown
+                            selectedEntity={selectedEntity}
+                            value={selectedActions}
+                            onChange={setSelectedActions}
+                            fmt={fmt}
+                            adminActivitiesData={adminActivitiesData} />
+                    </div>
                 </div>
                 <ActivityTable filteredData={filteredData} Loading={Loading} />
                 <Paginations page={page} totalPages={totalPages} setPage={setPage} limit={limit} setLimit={setLimit} />

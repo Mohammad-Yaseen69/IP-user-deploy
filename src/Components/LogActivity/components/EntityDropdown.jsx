@@ -11,7 +11,7 @@ export const EntityDropdown = ({ value, onChange, fmt, adminActivitiesData, }) =
         document.addEventListener("mousedown", handler)
         return () => document.removeEventListener("mousedown", handler)
     }, [])
-console.log(adminActivitiesData,"filter ka dtat")
+    console.log(adminActivitiesData, "filter ka dtat")
     return (
         <div ref={ref} style={{ position: "relative", minWidth: 170 }}>
             <button
@@ -23,7 +23,7 @@ console.log(adminActivitiesData,"filter ka dtat")
                     justifyContent: "space-between",
                     gap: 6,
                     borderRadius: "6px",
-                    padding: "8px 14px",
+                    padding: "10px 14px",
                     border: "var(--SPACING-spacing-0, 8px)",
                     background: value.length ? "#f0f4ff" : "#F3F3F4",
                     cursor: "pointer",
@@ -35,6 +35,7 @@ console.log(adminActivitiesData,"filter ka dtat")
                     outline: "none",
                     boxShadow: open ? "0 4.328px 35.702px 0 rgba(0, 0, 0, 0.06)" : "none",
                     borderColor: open ? "#4f46e5" : value.length ? "#c7d2fe" : "#e2e8f0",
+                    margin: 0,
                 }}
             >
                 <span>{value ? fmt(value) : t("Filter by Entity")}</span>

@@ -88,7 +88,7 @@ export const ActionDropdown = ({ selectedEntity, value, onChange, adminActivitie
                                     key={action}
                                     onClick={() => toggle(action)}
                                     style={{
-                                        padding: "8px 14px",
+                                        padding: "10px 14px",
                                         fontSize: 13,
                                         cursor: "pointer",
                                         display: "flex",
@@ -98,6 +98,8 @@ export const ActionDropdown = ({ selectedEntity, value, onChange, adminActivitie
                                         background: checked ? "#f0f4ff" : "transparent",
                                         fontWeight: checked ? 600 : 400,
                                         transition: "background 0.12s",
+                                        marginTop: 10,
+
                                     }}
                                     onMouseEnter={e => { if (!checked) e.currentTarget.style.background = "#f8fafc" }}
                                     onMouseLeave={e => { if (!checked) e.currentTarget.style.background = "transparent" }}
