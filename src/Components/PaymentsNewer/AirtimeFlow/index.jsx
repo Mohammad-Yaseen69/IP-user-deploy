@@ -34,6 +34,7 @@ import StepFourE from "../Esim/StepFour"
 import ReceiptE from "../Esim/Receipt"
 import countries from "../../CitiesDropDown/CitiesData.json"
 import PrevModal from "./PrevModal";
+import { useIdempotency } from "../../../hooks/Payments/useIdempotency";
 
 const initialState = {
     loading: false,
@@ -107,6 +108,7 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
     const { authHeader, userWallets, userDetails, setProfileLockTime } = useContext(UserContext)
     const { t } = useTranslation()
     const [data, dispatch] = useReducer(reducer, initialState)
+    const { getKey, reset } = useIdempotency()
 
     const updateDataHandler = (field, value) => {
         dispatch({ type: "UPDATE_FIELD", field, value });
@@ -321,7 +323,7 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
                     url = `${import.meta.env.VITE_IP_DEV_API}/api/paypal/initiate-esim`
                 }
             }
-            const res = await axios.post(url, { data: enc }, { headers: authHeader })
+            const res = await axios.post(url, { data: enc }, { headers: { ...authHeader, "idempotency-key": getKey() } })
 
             const dec = decryptData(res.data.data)
             console.log(dec)
@@ -461,7 +463,7 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
 
             const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/initiate${data.selectedSavedCard?._id ? "-pan" : ""}-airtime-transaction`,
                 { data: enc },
-                { headers: authHeader }
+                { headers: { ...authHeader, "idempotency-key": getKey() } }
             )
             const dec = decryptData(res.data.data)
             console.log(dec)
@@ -523,10 +525,12 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
             isLoading={data.loading}
             isOpen={data.show_otp}
             toggle={() => {
+                reset()
                 updateDataHandler("show_otp", false)
             }}
             resendHandler={createTransaction}
             error={data.otpError}
+            resetIdempotency={reset}
         />
     )
 
@@ -725,6 +729,7 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
                                                         />
                                                         <div className={styles.buttons}>
                                                             <button disabled={data.loading} onClick={() => {
+                                                                reset()
                                                                 if (data.payment_type?.value === "card" && data.showCard) {
                                                                     updateDataHandler("showCard", false)
                                                                 }
