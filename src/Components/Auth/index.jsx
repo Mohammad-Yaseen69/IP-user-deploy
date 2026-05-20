@@ -1,4 +1,3 @@
-
 import styles from "./styles/index.module.css"
 import man from "./files/man.webp"
 import woman from "./files/woman.webp"
@@ -13,12 +12,14 @@ import coun from "../PaymentsNewer/CountriesData.json"
 import Signup from "./Signup"
 import useCountryLocation from "../../hooks/GeneralUse/useCountryLocation"
 import { useLocation } from "react-router"
+import AgentLogin from "./AgentLogin"
 
 const swissFlag = coun.find(item => item.alpha3 === "CHE")?.file_url
 
 const Auth = () => {
     const { t } = useTranslation()
     const [isLoginForm, setIsLoginForm] = useState(window?.location?.href?.includes("login") ? true : false);
+    // const [isAgentForm, setIsAgentForm] = useState(window?.location?.href?.includes("agent-login") ? true : false);
     const { country } = useCountryLocation()
     const noticeMessage = `It appears that your connection is being made through a VPN, proxy, or TOR network. For security and compliance reasons, please disable any such services and refresh the page to continue using InstaPay.`;
     const location = useLocation()
@@ -97,6 +98,13 @@ const Auth = () => {
                                 }
                             </div>
                             {
+                                // isAgentForm ?
+                                //     <AgentLogin
+                                //         country={country}
+                                //         setIsAgentForm={setIsAgentForm}
+                                //         setIsLoginForm={setIsLoginForm}
+                                //     />
+                                //     :
                                 isLoginForm
                                     ?
                                     <Login

@@ -51,7 +51,7 @@ const Header = () => {
                             <img src={verified} alt="" style={{ height: "20px", width: "20px", objectFit: "contain" }} />
                         }
                     </div>
-                    <h4 style={{ marginBottom: "-.5rem" }}>{userDetails?.user?.first_name} {userDetails?.user?.last_name}</h4>
+                    <h4 style={{ marginBottom: "-.5rem" }}>{userDetails?.user?.first_name || userDetails?.company_name} {userDetails?.user?.last_name}</h4>
                     <div style={{ fontSize: ".8rem" }}>@{userDetails?.username}</div>
                     <div className={styles.country}>
                         <img src={userCountry?.file_url} alt={userCountry?.alpha3} style={{ boxShadow: "0 0 5px #afafaf" }} />

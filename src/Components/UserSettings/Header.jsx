@@ -43,7 +43,6 @@ const Header = () => {
         }
     }, [userDetails])
 
-    // dp states and methods
     const [isAdjusting, setIsAdjusting] = useState(false)
     const [isEditing, setIsEditing] = useState(false);
     const [editor, setEditor] = useState(null);
@@ -104,7 +103,6 @@ const Header = () => {
     };
 
 
-    // more menu
     const [showMenu, setShowMenu] = useState(false)
     const toggleMenu = () => setShowMenu(!showMenu);
 

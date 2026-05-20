@@ -119,7 +119,7 @@ const NonInstapayPayment = ({ sendPaymentType, setSendPaymentType, setStep }) =>
         dispatch({ type: "UPDATE_FIELD", field, value });
     };
 
-    const loading = useMemo(() => { }, [])
+
 
     const { mutateAsync: getFeeDetails } = useMutation({
         mutationFn: ({ receiverCountryCode, sendingWalletId, amount, type, paymentType, identifier }) => apiWrapper({
@@ -342,11 +342,11 @@ const NonInstapayPayment = ({ sendPaymentType, setSendPaymentType, setStep }) =>
                 return true
             } else {
                 dataHandler("phone_error", "Incorrect phone number, please enter a valid number.")
-                return true
+                return false
             }
         } catch {
             dataHandler("phone_error", "Incorrect phone number, please enter a valid number.")
-            return true
+            return false
         } finally {
             dataHandler("loading", false)
         }
@@ -395,6 +395,7 @@ const NonInstapayPayment = ({ sendPaymentType, setSendPaymentType, setStep }) =>
     })
 
     const sendOtp = async (codeType = "") => {
+        dataHandler("loading", true)
         const payload = {
             token: data?.exchange_rate?.token,
             identifier: Number(data?.identifier),
@@ -674,7 +675,7 @@ const NonInstapayPayment = ({ sendPaymentType, setSendPaymentType, setStep }) =>
                     &&
                     <StepFour
                         error={data.ex_extra_error}
-                        loading={loading}
+                        loading={data.loading}
                         data={data}
                         dataHandler={dataHandler}
                     />
@@ -740,7 +741,7 @@ const NonInstapayPayment = ({ sendPaymentType, setSendPaymentType, setStep }) =>
                                     callback={data.payment_type?.value === "card" ? initiateCardPayment : data.payment_type?.value === "paypal" ? initiatePaypalPayment : data?.payment_type?.value === "mobile_wallet" ? () => { } : confirmWalletPayment}
                                     data={data}
                                     dataHandler={dataHandler}
-                                    isLoading={loading}
+                                    isLoading={data.loading}
                                     isOpen={data.showOtpModal}
                                     toggle={() => {
                                         dataHandler("showOtpModal", false)
@@ -782,13 +783,18 @@ const NonInstapayPayment = ({ sendPaymentType, setSendPaymentType, setStep }) =>
                         onClick={handleClick}
                     >
                         {
-                            data.step === 5
-                                ?
-                                t("Confirm")
-                                :
-                                t("Next")
+                            data.loading ? t("Loading...") :
+                                <>
+                                    {
+                                        data.step === 5
+                                            ?
+                                            t("Confirm")
+                                            :
+                                            t("Next")
+                                    }
+                                    {!isMobile && <ChevronRight size={18} />}
+                                </>
                         }
-                        {!isMobile && <ChevronRight size={18} />}
                     </button>
                 </div>
             </div>

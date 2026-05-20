@@ -6,10 +6,12 @@ import Notifications from "../../Components/Notifications";
 import msg from "../../Components/topRight/msg.svg"
 import { MobileSbContext } from "../Layout";
 import LanguagePicker from "../../Components/LanguagePicker";
+import { usePermission } from "../../hooks/GeneralUse/usePermission";
 
 const TopBar = () => {
     const { userDetails } = useContext(UserContext)
     const { toggleSidebar } = useContext(MobileSbContext)
+    const can = usePermission()
     return (
         <header className={styles.header}>
             <div className={styles.top}>
@@ -58,7 +60,7 @@ const TopBar = () => {
                     }}>
                         <img src={msg} alt="" />
                     </Col> */}
-                    <Notifications />
+                    {can("notifications.view") && <Notifications />}
                 </div>
             </div>
         </header>

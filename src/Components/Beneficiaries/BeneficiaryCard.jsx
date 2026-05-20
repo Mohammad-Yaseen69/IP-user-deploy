@@ -12,6 +12,7 @@ import { useContext, useEffect, useState } from "react"
 import { UserContext } from "../../Context/UserContext"
 import { Button } from "reactstrap"
 import DeleteBeneficiary from "./DeleteBeneficiary"
+import { usePermission } from "../../hooks/GeneralUse/usePermission"
 
 const BeneficiaryCard = ({ user }) => {
     const { t } = useTranslation()
@@ -33,6 +34,7 @@ const BeneficiaryCard = ({ user }) => {
     }
     const primaryFlagSrc = normalizeFlagUrl(country?.file_url)
     const [flagSrc, setFlagSrc] = useState(primaryFlagSrc || ins)
+    const can = usePermission()
 
     useEffect(() => {
         setFlagSrc(primaryFlagSrc || ins)
@@ -79,6 +81,19 @@ const BeneficiaryCard = ({ user }) => {
                             {/* </Link> */}
                             <img src={flagSrc} alt={country?.alpha3 || user?.country_name || "flag"} style={{ borderRadius: "4px", boxShadow: "0 0 10px rgba(0,0,0,.3)", }} className={styles.flag} draggable="false" onError={() => setFlagSrc(ins)} loading="lazy" />
                             <div className={styles.type_badge}>{t(user?.beneficiary_type[0]?.toUpperCase() + user?.beneficiary_type?.slice(1)?.toLowerCase())}</div>
+                            {user?.agent?.first_name && (
+                                <p
+                                    style={{
+                                        fontSize: "13px",
+                                        color: "black",
+                                        fontWeight: 600,
+                                        marginBottom: "0px"
+                                    }}
+                                >
+
+                                    ( {t("Created By:")} <span style={{ color: "#6829de" }} > {`${user?.agent?.first_name}  ${user?.agent?.last_name}`} </span> )
+                                </p>
+                            )}
                         </div>
                         <button className={styles.toggle} onClick={e => {
                             e.stopPropagation()
@@ -262,18 +277,19 @@ const BeneficiaryCard = ({ user }) => {
                             &&
                             <div style={{ top: window.innerWidth < 1000 && "inherit", bottom: window.innerWidth < 1000 && "100%", zIndex: 12 }} className={styles.showMore}>
                                 <Link to={`/beneficiaries/edit${user.beneficiary_type === "business" ? "/business" : ""}?user_id=${user._id}&edit=true`}>
-                                    <Button color='transparent' className={styles.btn} style={{ padding: ".5rem 1rem" }}>
+                                    {can("beneficiaries.edit") && <Button color='transparent' className={styles.btn} style={{ padding: ".5rem 1rem" }}>
                                         {t("Edit") + " " + t("Beneficiary")}
-                                    </Button>
+                                    </Button>}
                                 </Link>
                                 <Link to={`/beneficiaries/edit${user.beneficiary_type === "business" ? "/business" : ""}?user_id=${user._id}&view=true`}>
                                     <Button color='transparent' className={styles.btn} style={{ padding: ".5rem 1rem" }}>
                                         {t("View") + " " + t("Beneficiary")}
                                     </Button>
                                 </Link>
-                                <Button color='transparent' className={styles.btn} style={{ padding: ".5rem 1rem" }} onClick={toggleShowDelete}>
+                                {can("beneficiaries.delete") && <Button color='transparent' className={styles.btn} style={{ padding: ".5rem 1rem" }} onClick={toggleShowDelete}>
                                     {t("Delete") + " " + t("Beneficiary")}
-                                </Button>
+                                </Button>}
+
                             </div>
                         }
                     </div>

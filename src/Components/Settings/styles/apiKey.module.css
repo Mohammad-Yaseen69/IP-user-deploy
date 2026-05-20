@@ -197,7 +197,7 @@
 
   .centerCol .left {
     margin-bottom: -30px;
-    z-index: 1111;
+    z-index: 9;
   }
 }
 
@@ -208,6 +208,7 @@
 
 
   .endActions {
+    width: 100%;
     display: grid;
     grid-template-columns: 1fr 1fr;
   }

@@ -148,7 +148,33 @@ const GoogleAuthenticatorModal = ({
             setEnablingAuth(false)
         }
     }
+    const handlePaste = (e) => {
+        e.preventDefault();
 
+        const pastedData = e.clipboardData
+            .getData("text")
+            .replace(/\D/g, "")
+            .slice(0, numberOfFields);
+
+        if (!pastedData) return;
+
+        const newOTPValues = [...otpValues];
+
+        pastedData.split("").forEach((char, index) => {
+            newOTPValues[index] = char;
+        });
+
+        setOTPValues(newOTPValues);
+
+        const isEmpty = newOTPValues.some(val => val === "");
+        setIsAnyFieldEmpty(isEmpty);
+
+        const lastIndex = pastedData.length - 1;
+
+        if (inputRefs.current[lastIndex]) {
+            inputRefs.current[lastIndex].focus();
+        }
+    };
     return (
         <div className="auth-modal">
             <Modal isOpen={isOpen} style={{ maxWidth: step !== 2 ? "800px" : "900px", width: "calc(100% - 2rem)", transition: "250ms", margin: "1rem auto", justifyContent: "center" }} contentClassName={styles.content}>
@@ -259,12 +285,16 @@ const GoogleAuthenticatorModal = ({
                                                 {otpValues.map((value, index) => (
                                                     <input
                                                         key={index}
-                                                        type="number"
+                                                        type="text"
+                                                        inputMode="numeric"
+                                                        pattern="[0-9]*"
                                                         maxLength={1}
                                                         value={value}
                                                         onChange={(e) => {
                                                             handleInputChange(index, e.target.value)
                                                         }}
+                                                        onPaste={handlePaste}
+
                                                         onKeyDown={(e) => handleInputKeyDown(index, e)}
                                                         ref={(input) => (inputRefs.current[index] = input)}
                                                     />

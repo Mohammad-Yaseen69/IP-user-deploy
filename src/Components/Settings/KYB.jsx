@@ -21,8 +21,9 @@ import NgosDocs from './NgosDocs'
 import PrivateCompanyDocs from './PrivateCompanyDocs'
 import PubliclyTradedCompanyDocs from './PubliclyTradedCompanyDocs'
 import SoleTradedDocs from './SoleTradedDocs'
-import UploadAdditionalKYB from './UploadAdditionalKYB'
 import VerificationPayment from './VerificationPayment'
+import { usePermission } from '../../hooks/GeneralUse/usePermission'
+import AdditionalFilesSection from './AdditionalFilesSection'
 
 function getFirstLargeFileName(files) {
     if (!files || files.length === 0) return false
@@ -72,11 +73,26 @@ const KYB = () => {
     const [compnanyFiles, setCompanyFiles] = useState([])
     const [compnanyFileNames, setCompanyFileNames] = useState([])
     const [isUploading, setIsUploading] = useState(false)
+
+
+
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
     const status = queryParams.get("status");
     const code = queryParams.get("code");
+    const scroll = queryParams.get("scroll");
     const isModalOpen = !!status;
+
+    useEffect(() => {
+        if (scroll === "additional-files") {
+            setTimeout(() => {
+                const element = document.getElementById("additional-files-section");
+                if (element) {
+                    element.scrollIntoView({ behavior: "smooth", block: "start" });
+                }
+            }, 800);
+        }
+    }, [scroll, userDetails]);
     const { mutateAsync, isPending } = useMutation({
         mutationFn: (payload) => getFeeAmount({ payload, authHeader }),
     })
@@ -338,7 +354,8 @@ const KYB = () => {
         return errors.find(item => item?.code == code)?.message ?? "We cannot process your request at the moment, please try again later."
     }
 
-
+    const can = usePermission()
+    const isEdit = can("settings.business-verification.update")
     console.log(partners)
     return (
         <Card>
@@ -346,30 +363,8 @@ const KYB = () => {
                 <h4>{t("KYB Verification")}</h4>
                 <div className="card-options" style={{ display: 'flex', gap: "10px", alignItems: "center" }}>
                     <Badge color={(userDetails?.company?.kyb_status === "verified" || userDetails?.company?.kyb_status === "approved") ? "success" : userDetails?.company?.kyb_status === "declined" ? "danger" : "warning"}>{userDetails?.company?.kyb_status?.toUpperCase()}</Badge>
-                    {
-                        userDetails?.company?.kyb_additional_file?.some(item => item?.status === "requested")
-                        &&
-                        <Button style={{
-                            background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
-                            border: "none",
-                            outline: "none",
-                            padding: "5px 10px",
-                            fontSize: ".7rem",
-                            borderRadius: "5px"
-                        }}
-                            disabled={isReadOnly}
-                            onClick={(e) => {
-                                e.stopPropagation()
-                                setShowAdditionalModal(!showAdditionalModal)
-                            }}>{t("Additional Files")}</Button>
-                    }
                 </div>
             </CardHeader>
-            {
-                userDetails?.company?.kyb_additional_file
-                &&
-                <UploadAdditionalKYB files={userDetails?.company?.kyb_additional_file} isOpen={showAdditionalModal} toggle={() => setShowAdditionalModal(!showAdditionalModal)} user_id={userDetails?._id} />
-            }
             <CardBody style={{ display: "flex", flexDirection: "column" }}>
                 {
                     (userDetails?.company?.kyb_status !== "verified")
@@ -434,6 +429,7 @@ const KYB = () => {
                                 className="form-control custom-datepicker"
                                 clearable
                                 autoOk
+                                maxDate={new Date()}
                                 disabled={isReadOnly}
                                 style={{
                                     background: "#fff",
@@ -486,7 +482,7 @@ const KYB = () => {
                                     !registrationNum ||
                                     !dateOfI ||
                                     compnanyFiles?.length === 0 ||
-                                    compnanyFileNames.length < requiredFilesLength
+                                    compnanyFileNames.length < requiredFilesLength || !isEdit
                                 }
                                 onClick={() => setShowAddModal(!showAddModal)}
                             >
@@ -584,6 +580,16 @@ const KYB = () => {
                         isGettingFee={isPending}
                     />
                 }
+
+                {userDetails?.company?.kyb_additional_file?.length > 0 && (
+                    <AdditionalFilesSection 
+                        files={userDetails.company.kyb_additional_file}
+                        userId={userDetails?._id}
+                        uploadEndpoint={`${import.meta.env.VITE_IP_DEV_API}/api/company/upload-additional-file-kyb/${userDetails?._id}`}
+                        authHeader={authHeader}
+                        verifyToken={verifyToken}
+                    />
+                )}
             </CardBody>
             {isModalOpen && (
                 <Modal isOpen={true}>

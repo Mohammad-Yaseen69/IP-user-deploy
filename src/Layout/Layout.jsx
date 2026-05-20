@@ -26,6 +26,7 @@ import SocketsService from "../Services/Socket";
 import AnotherLoginModal from "../Components/AnotherLoginModal";
 import { useTranslation } from "react-i18next";
 import { useQueryClient } from "@tanstack/react-query";
+import AdditionalDocumentModal from "./AdditionalDocumentModal";
 
 
 
@@ -43,8 +44,7 @@ const MobileSbContextProvider = ({ children }) => {
 }
 
 const Layout = ({ children, classNames, ...rest }) => {
-  const { setTogglSidebar, sidebar_types } =
-    useContext(CheckContext);
+  const { setTogglSidebar, sidebar_types } = useContext(CheckContext);
   const { t } = useTranslation()
   const location = useLocation();
   const query = new URLSearchParams(location.search)
@@ -111,9 +111,29 @@ const Layout = ({ children, classNames, ...rest }) => {
     beneficiaries,
     getUserBeneficiaries,
     showAnotherLoginModal,
-    setShowAnotherLoginModal
+    setShowAnotherLoginModal,
+    isAgentLogin,
+    agentDetails,
   } = useContext(UserContext)
   const [showSuccessModal, setShowSuccessModal] = useState()
+  const [showAdditionalFilesModal, setShowAdditionalModal] = useState(false)
+
+  useEffect(() => {
+    console.log("checking files status")
+    if (userDetails?.account_type === "individual") {
+      if (userDetails?.user?.kyc_additional_file?.length > 0 && userDetails?.user?.kyc_additional_file?.find((item) => item?.status === "declined" || item?.status === "requested")) {
+        setShowAdditionalModal(true)
+      }
+    } else {
+      console.log("coming here", userDetails?.company?.kyb_additional_file)
+      if (userDetails?.company?.kyb_additional_file?.length > 0 && userDetails?.company?.kyb_additional_file?.find((item) => item?.status === "declined" || item?.status === "requested")) {
+        console.log("coming here again")
+
+        setShowAdditionalModal(true)
+      }
+    }
+    console.log("checking done")
+  }, [userDetails])
 
 
   const beneficiaryWithoutAddresses = useMemo(() => {
@@ -188,7 +208,7 @@ const Layout = ({ children, classNames, ...rest }) => {
   useEffect(() => {
     if (userDetails?._id) {
       socketsService.connect();
-      const userId = userDetails?._id;
+      const userId = isAgentLogin && agentDetails?._id ? agentDetails?._id : userDetails?._id;
       socketsService.connectToServer(userId, false, null, null, () => setShowAnotherLoginModal(true));
       socketsService.onPrivateMessage = () => {
         queryClient.invalidateQueries({ queryKey: ['receivedQuotations'] })
@@ -276,6 +296,13 @@ const Layout = ({ children, classNames, ...rest }) => {
             isOpen={is30DaysInfo && userDetails?.account_type === "individual" && profileCompleted === true}
             toggleOnSuccess={() => setIs30DaysInfo(!is30DaysInfo)}
             setShowSuccessModal={setShowSuccessModal}
+          />
+        }
+
+        {(showAdditionalFilesModal && !location.pathname.toLowerCase().includes("settings")) &&
+          <AdditionalDocumentModal
+            isOpen={showAdditionalFilesModal}
+            toggle={() => setShowAdditionalModal(false)}
           />
         }
 

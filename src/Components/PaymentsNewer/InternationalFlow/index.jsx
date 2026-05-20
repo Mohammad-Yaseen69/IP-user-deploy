@@ -670,7 +670,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
             const transaction_data = {
                 additional_information: internationalData.comment,
                 purpose_of_remittance: internationalData.reason,
-                user_id: userDetails?.user?._id,
+                user_id: userDetails?.account_type === "business" ? userDetails?.company?._id : userDetails?.user?._id,
                 beneficiary_id: internationalData.beneficiary?._id,
                 service: { id: internationalData.payoutChannel?.id },
                 transaction_type: internationalData.flow,

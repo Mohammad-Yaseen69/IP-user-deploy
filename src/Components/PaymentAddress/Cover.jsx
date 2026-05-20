@@ -15,7 +15,7 @@ import del from "./files/icons/delete.svg"
 import { t } from "i18next";
 
 
-const Cover = ({ cover, setCover, dets }) => {
+const Cover = ({ cover, setCover, dets, canUploadPaymentBanner }) => {
     const { authHeader, userDetails, verifyToken, croppedImages, setCroppedImages } = useContext(UserContext)
 
     const [isEditing, setIsEditing] = useState(false);
@@ -117,7 +117,7 @@ const Cover = ({ cover, setCover, dets }) => {
                             onClick={handleSave}
                             disabled={isSaving}
                         >
-                            {isSaving ? t("Saving"): t("Save")}
+                            {isSaving ? t("Saving") : t("Save")}
                         </Button> :
                             <Button color='primary'
                                 style={{
@@ -135,12 +135,12 @@ const Cover = ({ cover, setCover, dets }) => {
                     </div>
                     :
                     <div style={{ position: "absolute", top: "20px", right: "90px", height: "40px", width: "40px", display: "flex", justifyContent: "center", alignItems: "center" }}>
-                        <label htmlFor='cover' style={{ marginBottom: "0", cursor: "pointer" }}>
+                        {canUploadPaymentBanner && <label htmlFor='cover' style={{ marginBottom: "0", cursor: "pointer" }}>
                             <svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M0 8C0 3.58172 3.58172 0 8 0H36C40.4183 0 44 3.58172 44 8V36C44 40.4183 40.4183 44 36 44H8C3.58172 44 0 40.4183 0 36V8Z" fill="black" fill-opacity="0.31" />
                                 <path d="M26 22L22 18M22 18L18 22M22 18V27.2C22 28.5907 22 29.2861 22.5505 30.0646C22.9163 30.5819 23.9694 31.2203 24.5972 31.3054C25.5421 31.4334 25.9009 31.2462 26.6186 30.8719C29.8167 29.2036 32 25.8568 32 22C32 16.4772 27.5228 12 22 12C16.4772 12 12 16.4772 12 22C12 25.7014 14.011 28.9331 17 30.6622" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                             </svg>
-                        </label>
+                        </label>}
                         {cover &&
                             <div style={{ backdropFilter: "blur(10px)", cursor: "pointer", display: "flex", alignItems: "center", gap: "12px" }}>
                                 <svg onClick={deleteCover} style={{ marginLeft: "12px" }} width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">

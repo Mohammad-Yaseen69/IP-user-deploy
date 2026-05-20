@@ -1,0 +1,226 @@
+.container {
+    padding: 24px;
+    background-color: #fcfcfc;
+    min-height: 100vh;
+    font-family: 'Inter', sans-serif;
+}
+
+.top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    position: relative;
+    margin: 0px;
+    padding: 0px;
+}
+
+.headerTitle {
+
+    margin: 0px;
+    padding: 0px;
+}
+
+.headerTitle h1 {
+    color: #5626e6;
+    font-size: 40px;
+    font-style: normal;
+    font-weight: 700;
+    margin: 0px;
+    padding: 0px;
+}
+
+.headerTitle p {
+    color: #868686;
+    font-size: 14px;
+    font-weight: 400;
+    margin: 0px;
+    padding: 0px;
+}
+
+.topright {
+    margin-top: 100px;
+}
+
+.main {
+    height: auto;
+    padding: var(--md, 16px);
+    align-items: flex-start;
+    gap: var(--lg, 24px);
+    align-self: stretch;
+    border-radius: var(--md, 10px);
+    background: #FFF;
+}
+
+.receiptsCont {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+}
+
+
+.actionBar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.tabSwitcher {
+    display: flex;
+    background: #f0f0f5;
+    /* padding: 4px; */
+    border-radius: 8px;
+    gap: 4px;
+}
+
+.tabBtn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: var(--sm, 8px) var(--lg, 24px);
+    border: none;
+    border-radius: 6px;
+    background: transparent;
+    color: #6E7687;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.addBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: var(--sm, 8px) var(--lg, 24px);
+    border: none;
+    border-radius: 6px;
+    background: #5626e6;
+    color: white;
+    box-shadow: 0 2px 4px rgba(86, 38, 230, 0.2);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.addBtn:hover {
+    background: #451dbb;
+}
+
+
+
+.tabBtn img {
+    filter: grayscale(1) opacity(0.6);
+}
+
+.activeTab {
+    background: #5626e6;
+    color: white;
+    box-shadow: 0 2px 4px rgba(86, 38, 230, 0.2);
+}
+
+.activeTab img {
+    filter: brightness(0) invert(1);
+}
+
+.filterBar {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 24px;
+    align-items: center;
+}
+
+.searchBox {
+    margin-top: 10px;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    border-radius: 8px;
+    border: 1px solid var(--Greyscale-50, #E7E9E9);
+    background: var(--Greyscale-0, #FFF);
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.03);
+    padding: 10px 24px;
+
+    Search {
+        border-radius: 9.416px;
+        border: 1.25px solid var(--Greyscale-400, #898F8F);
+    }
+}
+
+.searchBox input {
+    border: none;
+    outline: none;
+    width: 100%;
+    font-size: 14px;
+    color: #333;
+}
+
+.searchBox input::placeholder {
+    color: #aaa;
+}
+
+.filterButtons {
+    display: flex;
+    gap: 12px;
+}
+
+.filterBtn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #f0f0f5;
+    border: 1px solid #e0e0e0;
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.filterBtn:hover {
+    background: #e6e6f0;
+}
+
+@media (max-width: 768px) {
+    .receiptsCont {
+        flex-wrap: wrap;
+        gap: 10px;
+
+        .addBtn {
+            width: 100%;
+        }
+    }
+
+    .main {
+        padding: 0px;
+
+        .tabBtn {
+            padding: var(--sm, 12px) var(--lg, 17px);
+
+        }
+    }
+
+    .actionBar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+    }
+
+    .filterBar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .filterButtons {
+        justify-content: space-between;
+    }
+
+    .filterBtn {
+        flex: 1;
+        justify-content: center;
+    }
+}

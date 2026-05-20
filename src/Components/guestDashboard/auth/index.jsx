@@ -5,10 +5,10 @@ import InstapayLogo from "../../../assets/images/logo/logo.webp"
 import InstapayLogo2 from "../../../assets/images/logo/logo2.webp"
 import useCountryLocation from '../../../hooks/GeneralUse/useCountryLocation'
 import LanguagePicker from '../../LanguagePicker'
-import rightImage from "../files/pawel-czerwinski-0iBUDPbOKjI-unsplash 1.png"
+import rightImage from "../files/image.png"
 import { FlagSvg } from '../files/svg'
 import styles from "../styles/authStyle.module.css"
-import AuthStepOne from './AuthStepOne'
+import AuthStepOne from '../../Auth/agentAuth/AuthStepOne'
 import AuthStepTwo from './AuthStepTwo'
 const Index = () => {
   const { t } = useTranslation()

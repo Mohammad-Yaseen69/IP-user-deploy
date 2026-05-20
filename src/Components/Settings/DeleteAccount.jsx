@@ -7,6 +7,7 @@ import { H4 } from "../../AbstractElements";
 import axios from "axios";
 import { UserContext } from "../../Context/UserContext";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
+import { usePermission } from "../../hooks/GeneralUse/usePermission";
 
 const DeleteAccount = () => {
     const [check, setCheck] = useState(false);
@@ -34,6 +35,8 @@ const DeleteAccount = () => {
                 // console.log(decrypted)
             })
     }
+    const can = usePermission()
+    const isEdit = can("settings.delete-account.delete")
 
     return (
         <Card style={{ flexDirection: "column" }}>
@@ -108,7 +111,7 @@ const DeleteAccount = () => {
                     </div>
                     <div className="d-flex justify-content-center flex-column align-items-center gap-2 mt-4">
                         <span>{t("Are you sure you want to close your account?")}</span>
-                        <Button color="danger" disabled={!check} onClick={deleteAccountHandler}>{t("Yes, Continue")}</Button>
+                        <Button color="danger" disabled={!check || !isEdit} onClick={deleteAccountHandler}>{t("Yes, Continue")}</Button>
                     </div>
                 </div>
             </CardBody>

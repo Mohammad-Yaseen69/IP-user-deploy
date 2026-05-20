@@ -20,12 +20,13 @@ import CommissionWithdraw from "./CommissionWithdraw";
 import RefItem from "./RefItem";
 import TransactionItem from "../TransactionsNewApi/TransactionItem";
 import TransactionItemMobile from "../TransactionsNewApi/Mobile/TransactionItemMobile";
+import { usePermission } from "../../hooks/GeneralUse/usePermission";
 
 const ReferralsNew = () => {
     const { referralLink, userDetails, authHeader, getInvitationLink, getReferralCommission, totalReferralAmount, userWallets, validateReceivingLimits, verifyToken } = useContext(UserContext)
 
     const isLimitReached = useMemo(() => validateReceivingLimits(), [])
-
+    const can = usePermission()
     useEffect(() => {
         if (userDetails) {
             getInvitationLink()
@@ -47,7 +48,6 @@ const ReferralsNew = () => {
 
         setCopied(true);
 
-        // Reset the copied state after a brief delay
         setTimeout(() => {
             setCopied(false);
         }, 4000);
@@ -55,7 +55,9 @@ const ReferralsNew = () => {
 
     const { t } = useTranslation()
 
-
+    const canWithdrawCommission = can("referrals.commission.withdraw")
+    const canConvertCommission = can("referrals.commission.convert")
+    const canShareReferral = can("referrals.link.share")
     const getReferrals = () => {
         if (userDetails?.account_type === "individual") {
             axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/invitation/get-referral/${userDetails?._id}`, {
@@ -242,7 +244,7 @@ const ReferralsNew = () => {
                                                             }}>
                                                                 {
                                                                     !isLimitReached
-                                                                    &&
+                                                                    && canConvertCommission &&
                                                                     <div
                                                                         style={{
                                                                             padding: "13px 16px",
@@ -261,7 +263,7 @@ const ReferralsNew = () => {
                                                                     >{t("Move To Main Balance")}</div>
                                                                 }
                                                                 {
-                                                                    (
+                                                                    canWithdrawCommission && (
                                                                         isLimitReached
                                                                         ||
                                                                         totalReferralAmount > (userDetails?.level?.daily_receiving_limit - userDetails?.used_limits?.daily_receiving_limit)
@@ -313,7 +315,7 @@ const ReferralsNew = () => {
                             </div>
                             <div className={`${styles.ref_dets_sub} ${styles.right}`}>
                                 <span>{t("Share Your Unique Referral Link")}: </span>
-                                <div style={{gap: window.innerWidth < 500 && "0.5rem"}} className={styles.bot}>
+                                <div style={{ gap: window.innerWidth < 500 && "0.5rem" }} className={styles.bot}>
                                     <div>
                                         <span>
                                             {referralLink}
@@ -326,8 +328,10 @@ const ReferralsNew = () => {
                                                 <img src={copy_ic} alt="c" loading="lazy" style={{ cursor: "pointer" }} onClick={handleCopy} />
                                         }
                                     </div>
-                                    <img src={ref_share} alt="r" loading="lazy" style={{ cursor: "pointer" }} onClick={() => setShowShareModal(!showShareModal)} />
-                                </div>
+                                    {
+                                        canShareReferral &&
+                                        <img src={ref_share} alt="r" loading="lazy" style={{ cursor: "pointer" }} onClick={() => setShowShareModal(!showShareModal)} />
+                                    }   </div>
                                 <SocialModal isOpen={showShareModal} toggle={() => setShowShareModal(!showShareModal)} link={referralLink} />
                             </div>
                         </div>

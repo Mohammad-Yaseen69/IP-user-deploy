@@ -44,8 +44,9 @@ import { useQuery } from '@tanstack/react-query';
 import { apiWrapper } from '../../utils/Functions/apiWrapper';
 import { localCurrency } from '../../utils/Functions';
 import { formatCurrency } from '../../Helper/AmountFormat';
+import { usePermission } from '../../hooks/GeneralUse/usePermission';
 
-export const Toggle = ({ checked, onChange, isCheckbox = false, disabled = false, bottom }) => (
+export const Toggle = ({ checked, onChange, isCheckbox = false, disabled = false, bottom, ref }) => (
     <label disabled={disabled} className={isCheckbox ? styles.checkbox : styles.toggle}>
 
         <input
@@ -53,6 +54,7 @@ export const Toggle = ({ checked, onChange, isCheckbox = false, disabled = false
             checked={checked}
             onChange={onChange}
             disabled={disabled}
+            ref={ref || null}
         />
 
         <span className={isCheckbox ? styles.checkmark : styles.slider}>
@@ -113,6 +115,7 @@ const DisabledOverlay = ({ message, t }) => (
 );
 
 const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCardDetails, setCurrentCardDetails, transactions }) => {
+    const can = usePermission();
     const [checks, setChecks] = useState({
         cardStatus: true,
         onlinePurchases: false,
@@ -211,6 +214,13 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
 
 
     const freezeToggle = async () => {
+        // Permission: mastercard.card.activate / mastercard.card.freeze
+        if (cardStatus === "deactive") {
+            if (!can("mastercard.card.activate")) return;
+        } else {
+            if (!can("mastercard.card.freeze")) return;
+        }
+
         setFreezeLoading(true);
         try {
             const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/mastercard/${cardStatus === "deactive" ? "activate" : "freeze"}`,
@@ -230,6 +240,7 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
             }
         } catch (error) {
             const dec = decryptData(error?.response?.data?.data)
+            toast.error(dec?.message || "We are unable to process your request at the moment, please try again later")
             console.log(dec)
         }
         setFreezeLoading(false);
@@ -641,12 +652,15 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
                                 <span>{cards.length}</span>
                             </div>
 
-                            <button style={{ opacity: cards.length === 3 && 0.5 }} disabled={cards.length === 3} onClick={() => setCardPurchased(false)}>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 17 17" fill="none">
-                                    <path d="M8.67521 4.24182V13.5752M4.00854 8.90849H13.3419" stroke="white" strokeWidth="1.56777" strokeLinecap="round" strokeLinejoin="round" />
-                                </svg>
-                                {t("Add Card")}
-                            </button>
+                            {/* Permission: mastercard.card.create */}
+                            {can("mastercard.card.create") && (
+                                <button style={{ opacity: cards.length === 3 && 0.5 }} disabled={cards.length === 3} onClick={() => setCardPurchased(false)}>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 17 17" fill="none">
+                                        <path d="M8.67521 4.24182V13.5752M4.00854 8.90849H13.3419" stroke="white" strokeWidth="1.56777" strokeLinecap="round" strokeLinejoin="round" />
+                                    </svg>
+                                    {t("Add Card")}
+                                </button>
+                            )}
                         </div>
 
                         <h2>{t('My Primary MasterCard')}</h2>
@@ -691,6 +705,8 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
 
                                             className={`${styles.card} ${card.type === "standard" ? styles.standard : styles.premium} ${flippedCards[card._id] ? styles.flipped : ''}`}
                                             onClick={() => {
+                                                // Permission: mastercard.details.view
+                                                if (!can("mastercard.details.view")) return;
                                                 if ((cards[current]?.premium_features?.apple_pay === true || cards[current]?.premium_features?.google_pay === true) && !userDetails.email) {
                                                     setShowEmailModal(true)
                                                 } else {
@@ -735,40 +751,47 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
                                                     </span>
                                                 </div>
 
-                                                <div className={styles.cardDets}>
-                                                    <div className={styles.num}>
-                                                        <h3
-                                                            onClick={(e) => {
-                                                                e.stopPropagation();
-                                                                handleCopy(currentCardDetails?.card_number);
-                                                            }}
-                                                            className={styles.vals}
-                                                            style={{ cursor: 'pointer' }}
-                                                        >
-                                                            {formatCardNumber(currentCardDetails?.card_number)}
-                                                        </h3>
-                                                        <img
-                                                            src={Copy}
-                                                            alt="copy"
-                                                            style={{ cursor: 'pointer' }}
-                                                            onClick={(e) => {
-                                                                e.stopPropagation();
-                                                                handleCopy(currentCardDetails?.card_number);
-                                                            }}
-                                                        />
-                                                    </div>
+                                                {/* Permission: mastercard.details.view */}
+                                                {can("mastercard.details.view") && (
+                                                    <div className={styles.cardDets}>
+                                                        <div className={styles.num}>
+                                                            <h3
+                                                                onClick={(e) => {
+                                                                    e.stopPropagation();
+                                                                    // Permission: mastercard.details.copy
+                                                                    if (!can("mastercard.details.copy")) return;
+                                                                    handleCopy(currentCardDetails?.card_number);
+                                                                }}
+                                                                className={styles.vals}
+                                                                style={{ cursor: 'pointer' }}
+                                                            >
+                                                                {formatCardNumber(currentCardDetails?.card_number)}
+                                                            </h3>
+                                                            <img
+                                                                src={Copy}
+                                                                alt="copy"
+                                                                style={{ cursor: 'pointer' }}
+                                                                onClick={(e) => {
+                                                                    e.stopPropagation();
+                                                                    // Permission: mastercard.details.copy
+                                                                    if (!can("mastercard.details.copy")) return;
+                                                                    handleCopy(currentCardDetails?.card_number);
+                                                                }}
+                                                            />
+                                                        </div>
 
-                                                    <div className={styles.row}>
-                                                        <div className={styles.dets}>
-                                                            <span className={styles.lab}>{t('VALID THRU')}</span>
-                                                            <h3 className={styles.vals}>{currentCardDetails?.exp_date}</h3>
-                                                        </div>
-                                                        <div className={styles.dets}>
-                                                            <span className={styles.lab}>{t('CVV')}</span>
-                                                            <h3 className={styles.vals}>{currentCardDetails?.cvv}</h3>
+                                                        <div className={styles.row}>
+                                                            <div className={styles.dets}>
+                                                                <span className={styles.lab}>{t('VALID THRU')}</span>
+                                                                <h3 className={styles.vals}>{currentCardDetails?.exp_date}</h3>
+                                                            </div>
+                                                            <div className={styles.dets}>
+                                                                <span className={styles.lab}>{t('CVV')}</span>
+                                                                <h3 className={styles.vals}>{currentCardDetails?.cvv}</h3>
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                </div>
+                                                )}
                                             </div>
                                         </div>
                                     </SwiperSlide>
@@ -776,16 +799,19 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
                             </Swiper>
                         </div>
 
-                        <span style={{ cursor: 'pointer' }}
-                            onClick={() => {
-                                if ((cards[current]?.premium_features?.apple_pay === true || cards[current]?.premium_features?.google_pay === true) && !userDetails.email) {
-                                    setShowEmailModal(true)
-                                } else {
-                                    handleCardFlip(cards[current]._id)
-                                }
-                            }}
-                            className={styles.tap}
-                        >{t('Tap to see details')}</span>
+                        {/* Permission: mastercard.details.view */}
+                        {can("mastercard.details.view") && (
+                            <span style={{ cursor: 'pointer' }}
+                                onClick={() => {
+                                    if ((cards[current]?.premium_features?.apple_pay === true || cards[current]?.premium_features?.google_pay === true) && !userDetails.email) {
+                                        setShowEmailModal(true)
+                                    } else {
+                                        handleCardFlip(cards[current]._id)
+                                    }
+                                }}
+                                className={styles.tap}
+                            >{t('Tap to see details')}</span>
+                        )}
 
                         <div className={styles.balance}>
                             <svg xmlns="http://www.w3.org/2000/svg" width="222" height="160" viewBox="0 0 222 160" fill="none">
@@ -806,7 +832,8 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
                             </div>
 
                             <div className={styles.bottom}>
-                                {!cardLoading &&
+                                {/* Permission: mastercard.details.balance */}
+                                {can("mastercard.details.balance") && !cardLoading &&
                                     <>
                                         <h2>
                                             ${currentCardDetails?.balance >= 0.01 ? Number(currentCardDetails?.balance)?.toFixed(2) : Number(currentCardDetails?.balance).toFixed(getDecimalPointIndex(+currentCardDetails?.balance))}
@@ -820,7 +847,8 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
                                         </div>
                                     </>
                                 }
-                                {cardLoading &&
+                                {/* Permission: mastercard.details.balance */}
+                                {can("mastercard.details.balance") && cardLoading &&
                                     <div style={{ width: '150px' }}>
                                         <InstaPayLoader />
                                     </div>
@@ -866,6 +894,8 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
                                     <div
                                         onClick={() => {
                                             if (cardStatus === "deactive") return;
+                                            // Permission: mastercard.funds.add
+                                            if (!can("mastercard.funds.add")) return;
                                             openModal("addFunds")
                                             if (width < 1000) {
                                                 navigate("/my-mastercard?addFundsMobile=true")
@@ -882,11 +912,13 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
                                     >
                                         <img src={plus} alt="" />
                                         <span>{t('Add Funds')}</span>
-                                        {cardStatus === "deactive" && <div className="disabled-overlay" style={{ display: 'none', position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}><DisabledOverlay t={t} message="Your card is freeze" /></div>}
+                                        {cardStatus === "deactive" && <div className="disabled-overlay" style={{ display: 'none', position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}><DisabledOverlay t={t} message="Your card is frozen" /></div>}
                                     </div>
                                     <div
                                         onClick={() => {
                                             if (cardStatus === "deactive") return;
+                                            // Permission: mastercard.transfer.card-to-card
+                                            if (!can("mastercard.transfer.card-to-card")) return;
                                             openModal("ctc")
                                             if (width < 1000) {
                                                 navigate("/my-mastercard?ctcMobile=true")
@@ -899,13 +931,15 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
                                     >
                                         <img src={CreditCardR} alt="" />
                                         <span>{t('Card to Card Transfer')}</span>
-                                        {cardStatus === "deactive" && <div className="disabled-overlay" style={{ display: 'none', position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}><DisabledOverlay t={t} message="Your card is freeze" /></div>}
+                                        {cardStatus === "deactive" && <div className="disabled-overlay" style={{ display: 'none', position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}><DisabledOverlay t={t} message="Your card is frozen" /></div>}
                                     </div>
                                 </div>
                                 <div style={{ display: "flex", flexDirection: "column", gap: '12px', justifyContent: "center", flex: 1 }}>
                                     <div
                                         onClick={() => {
                                             if (cardStatus === "deactive") return;
+                                            // Permission: mastercard.transfer.card-to-wallet
+                                            if (!can("mastercard.transfer.card-to-wallet")) return;
                                             openModal("ctw")
                                             if (width < 1000) {
                                                 navigate("/my-mastercard?ctwMobile=true")
@@ -918,24 +952,30 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
                                     >
                                         <img src={Wallet2} alt="" />
                                         <span>{t('Card to Wallet Transfer')}</span>
-                                        {cardStatus === "deactive" && <div className="disabled-overlay" style={{ display: 'none', position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}><DisabledOverlay t={t} message="Your card is freeze" /></div>}
+                                        {cardStatus === "deactive" && <div className="disabled-overlay" style={{ display: 'none', position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}><DisabledOverlay t={t} message="Your card is frozen" /></div>}
                                     </div>
-                                    <div onClick={() => openModal("download")} style={{ cursor: "pointer" }} className={styles.iconBox}>
-                                        <img src={FileDown} alt="" />
-                                        <span>{t('Download Statement')}</span>
-                                    </div>
+                                    {/* Permission: mastercard.statement.download */}
+                                    {can("mastercard.statement.download") && (
+                                        <div onClick={() => openModal("download")} style={{ cursor: "pointer" }} className={styles.iconBox}>
+                                            <img src={FileDown} alt="" />
+                                            <span>{t('Download Statement')}</span>
+                                        </div>
+                                    )}
                                 </div>
 
-                                <div onClick={() => setCardPurchased(false)} className={styles.giftDiv} style={{ alignSelf: "stretch", flex: 2, backgroundColor: "#421cb1", borderRadius: "6px", background: `url(${Giftpng})`, backgroundSize: "cover", backgroundPosition: "right", backgroundRepeat: "no-repeat" }}>
-                                    {/* <img src={Giftpng} alt="" /> */}
-                                    <div>
+                                {/* Permission: mastercard.card.create */}
+                                {can("mastercard.card.create") && (
+                                    <div onClick={() => setCardPurchased(false)} className={styles.giftDiv} style={{ alignSelf: "stretch", flex: 2, backgroundColor: "#421cb1", borderRadius: "6px", background: `url(${Giftpng})`, backgroundSize: "cover", backgroundPosition: "right", backgroundRepeat: "no-repeat" }}>
+                                        {/* <img src={Giftpng} alt="" /> */}
                                         <div>
-                                            <img style={{ width: "24px" }} src={CreditCardP} alt="" />
-                                            <h3>{t('Create an Add-On Card')}</h3>
+                                            <div>
+                                                <img style={{ width: "24px" }} src={CreditCardP} alt="" />
+                                                <h3>{t('Create an Add-On Card')}</h3>
+                                            </div>
+                                            <p>{t('Send joy in just a few clicks!')}<br />{t('Create your')} <span>{t('InstaPay Mastercard Gift')}</span> {t('Card now.')}</p>
                                         </div>
-                                        <p>{t('Send joy in just a few clicks!')}<br />{t('Create your')} <span>{t('InstaPay Mastercard Gift')}</span> {t('Card now.')}</p>
                                     </div>
-                                </div>
+                                )}
                             </div>
                         </div>
 
@@ -1060,7 +1100,8 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
                     </form>
                 </ModalBody>
             </Modal>
-            {(showModals.addFunds || addFundsMobile) &&
+            {/* Permission: mastercard.funds.add */}
+            {can("mastercard.funds.add") && (showModals.addFunds || addFundsMobile) &&
                 <AddFundsModal
                     setCurrentCardDetails={setCurrentCardDetails}
                     card={cards[current]}
@@ -1068,7 +1109,8 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
                     setOpen={setShowModals} />
             }
 
-            {(showModals.ctc || ctcMobile) &&
+            {/* Permission: mastercard.transfer.card-to-card */}
+            {can("mastercard.transfer.card-to-card") && (showModals.ctc || ctcMobile) &&
                 <CardtoCard
                     currentCardDetails={currentCardDetails}
                     card={cards[current]}
@@ -1077,7 +1119,8 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
                     setOpen={setShowModals}
                 />
             }
-            {(showModals.ctw || ctwMobile) &&
+            {/* Permission: mastercard.transfer.card-to-wallet */}
+            {can("mastercard.transfer.card-to-wallet") && (showModals.ctw || ctwMobile) &&
                 <CardtoWallet
                     currentCardDetails={currentCardDetails}
                     card={cards[current]}
@@ -1086,52 +1129,55 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
                     setOpen={setShowModals}
                 />
             }
-            <Modal style={{ minWidth: "700px" }} isOpen={showModals.download} toggle={() => setShowModals({ ...showModals, download: false })}>
-                <ModalHeader toggle={() => setShowModals({ ...showModals, download: false })}>
-                    {t("Download Your Statement")}
-                </ModalHeader>
+            {/* Permission: mastercard.statement.download */}
+            {can("mastercard.statement.download") && (
+                <Modal style={{ minWidth: "700px" }} isOpen={showModals.download} toggle={() => setShowModals({ ...showModals, download: false })}>
+                    <ModalHeader toggle={() => setShowModals({ ...showModals, download: false })}>
+                        {t("Download Your Statement")}
+                    </ModalHeader>
 
-                <ModalBody>
-                    <div className='date-range-ms'>
-                        <h5 style={{ fontWeight: 600, marginBottom: "15px" }}>{t("Select The Date Range")}.</h5>
-                        <DateRangePicker
-                            maxDate={new Date()}
-                            ranges={[dateRanges]}
-                            onChange={handleChange}
-                        />
-                    </div>
+                    <ModalBody>
+                        <div className='date-range-ms'>
+                            <h5 style={{ fontWeight: 600, marginBottom: "15px" }}>{t("Select The Date Range")}.</h5>
+                            <DateRangePicker
+                                maxDate={new Date()}
+                                ranges={[dateRanges]}
+                                onChange={handleChange}
+                            />
+                        </div>
 
-                    <div style={{ marginTop: "20px" }}>
-                        <h5 style={{ fontWeight: 600, marginBottom: "15px" }}>{t("Select The Type")}.</h5>
-                        <select
-                            style={{ width: "100%", outline: "none", padding: "7px 10px", borderRadius: "5px", borderColor: "lightgray" }}
-                            value={fileType}
-                            onChange={(e) => setFileType(e.target.value)}
+                        <div style={{ marginTop: "20px" }}>
+                            <h5 style={{ fontWeight: 600, marginBottom: "15px" }}>{t("Select The Type")}.</h5>
+                            <select
+                                style={{ width: "100%", outline: "none", padding: "7px 10px", borderRadius: "5px", borderColor: "lightgray" }}
+                                value={fileType}
+                                onChange={(e) => setFileType(e.target.value)}
+                            >
+                                <option value="pdf">PDF</option>
+                                <option value="docx">DOCX</option>
+                            </select>
+                        </div>
+                    </ModalBody>
+                    <ModalFooter>
+                        <button
+                            onClick={handleDownload}
+                            disabled={downloading}
+                            style={{
+                                border: 'none',
+                                outline: "none",
+                                padding: "7px 15px",
+                                borderRadius: "5px",
+                                fontWeight: 600,
+                                background: downloading ? "#ccc" : "#5526e0",
+                                color: "white",
+                                cursor: downloading ? "not-allowed" : "pointer"
+                            }}
                         >
-                            <option value="pdf">PDF</option>
-                            <option value="docx">DOCX</option>
-                        </select>
-                    </div>
-                </ModalBody>
-                <ModalFooter>
-                    <button
-                        onClick={handleDownload}
-                        disabled={downloading}
-                        style={{
-                            border: 'none',
-                            outline: "none",
-                            padding: "7px 15px",
-                            borderRadius: "5px",
-                            fontWeight: 600,
-                            background: downloading ? "#ccc" : "#5526e0",
-                            color: "white",
-                            cursor: downloading ? "not-allowed" : "pointer"
-                        }}
-                    >
-                        {downloading ? t("Downloading") : t("Download")}
-                    </button>
-                </ModalFooter>
-            </Modal>
+                            {downloading ? t("Downloading") : t("Download")}
+                        </button>
+                    </ModalFooter>
+                </Modal>
+            )}
         </>
     );
 };

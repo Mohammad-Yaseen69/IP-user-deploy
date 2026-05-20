@@ -1,5 +1,8 @@
 import { lazy } from 'react';
+import { usePermission } from "../hooks/GeneralUse/usePermission";
 import BusinessAccount from '../Components/AddBeneficiary/BusinessAccount';
+import { useNavigate, Navigate } from 'react-router';
+import { MENU } from '../Layout/SidebarNew/SbNMenu';
 const QrCode = lazy(() => import("../Components/QrCode"));
 const QRScan = lazy(() => import("../Components/QrScan"));
 const ChatbotQrCode = lazy(() => import("../Components/ChatbotQrCode"));
@@ -62,35 +65,74 @@ const ReceiptInvoice = lazy(() => import("../Components/ReceiptInvoices"))
 const InvoicePayment = lazy(() => import("../Components/ReceiptInvoices/InvoicePayment"))
 const InvoicePaymentQr = lazy(() => import("../Components/ReceiptInvoices/InvoicePaymentQr"))
 const PlansSubscription = lazy(() => import("../Components/PlansSubscriptions"))
+const PlanPaymentLink = lazy(() => import("../Components/PlanPaymentLink"))
 const StoreCreate = lazy(() => import("../Components/StoreCreate"))
 const GuestLogin = lazy(() => import("../Components/guestDashboard/auth"))
+const DelegateAccess = lazy(() => import("../Components/DelegateAccess"))
+const CreateAgentPassword = lazy(() => import("../Components/CreateAgentPassword"))
+const AgentLogin = lazy(() => import("../Components/Auth/agentAuth/index"))
+const LogActivity = lazy(() => import("../Components/LogActivity"))
 
+
+const PermissionRoute = ({ permission, children }) => {
+    const can = usePermission();
+
+    if (!can(permission)) {
+        let fallbackPath = null;
+        for (const section of MENU) {
+            if (section.menu) {
+                for (const item of section.menu) {
+                    if (item.type === "link" && item.url) {
+                        if (!item.permission || can(item.permission)) {
+                            try {
+                                const urlObj = new URL(item.url, window.location.origin);
+                                fallbackPath = urlObj.pathname + urlObj.search;
+                            } catch (e) {
+                                fallbackPath = item.url;
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+            if (fallbackPath) break;
+        }
+
+        if (fallbackPath && fallbackPath !== window.location.pathname) {
+            return <Navigate to={fallbackPath} replace />;
+        }
+
+        return <div style={{ padding: "2rem", textAlign: "center", width: "100%", marginTop: "10vh" }}>You don&apos;t have permission to view this page.</div>;
+    }
+
+    return children;
+}
 
 export const routes = [
-    { path: "/", component: <HomeNewUpdated /> },
-    { path: "/dashboard", component: <HomeNewUpdated /> },
-    { path: "/dashboard/default", component: <HomeNewUpdated /> },
-    { path: "/wallets", component: <WalletsNew /> },
-    { path: "/transactions", component: <TransactionsNewApi /> },
-    { path: "/other-transactions", component: <OtherTransactions /> },
-    { path: "/payments", component: <PaymentsNewer /> },
+    { path: "/", component: <PermissionRoute permission="dashboard.view"><HomeNewUpdated /></PermissionRoute> },
+    { path: "/dashboard", component: <PermissionRoute permission="dashboard.view"><HomeNewUpdated /></PermissionRoute> },
+    { path: "/dashboard/default", component: <PermissionRoute permission="dashboard.view"><HomeNewUpdated /></PermissionRoute> },
+    { path: "/wallets", component: <PermissionRoute permission="wallet.view"><WalletsNew /></PermissionRoute> },
+    { path: "/transactions", component: <PermissionRoute permission="transactions.main.view"><TransactionsNewApi /></PermissionRoute> },
+    { path: "/other-transactions", component: <PermissionRoute permission="schedules.view"><OtherTransactions /></PermissionRoute> },
+    { path: "/payments", component: <PermissionRoute permission="payments.view"><PaymentsNewer /></PermissionRoute> },
     // card payment success or failure
     { path: "/payments/:status/:token", component: <CardPayment /> },
-    { path: "/beneficiaries", component: <Beneficiaries /> },
-    { path: "/beneficiaries/add", component: <AddBeneficiary /> },
-    { path: "/beneficiaries/edit", component: <EditBeneficiary /> },
-    { path: "/beneficiaries/edit/business", component: <BusinessAccount /> },
-    { path: "/referrals", component: <ReferralsNew /> },
-    { path: "/quotations", component: <Quotations /> },
-    { path: "/payment-requests", component: <PendingNew /> },
-    { path: "/chips-in", component: <ChipsInNew /> },
-    { path: "/portfolio", component: <Portfolio /> },
+    { path: "/beneficiaries", component: <PermissionRoute permission="beneficiaries.view"><Beneficiaries /></PermissionRoute> },
+    { path: "/beneficiaries/add", component: <PermissionRoute permission="beneficiaries.add"><AddBeneficiary /></PermissionRoute> },
+    { path: "/beneficiaries/edit", component: <PermissionRoute permission="beneficiaries.edit"><EditBeneficiary /></PermissionRoute> },
+    { path: "/beneficiaries/edit/business", component: <PermissionRoute permission="beneficiaries.edit"><BusinessAccount /></PermissionRoute> },
+    { path: "/referrals", component: <PermissionRoute permission="referrals.view"><ReferralsNew /></PermissionRoute> },
+    { path: "/quotations", component: <PermissionRoute permission="quotations.view"><Quotations /></PermissionRoute> },
+    { path: "/payment-requests", component: <PermissionRoute permission="payment-request.view"><PendingNew /></PermissionRoute> },
+    { path: "/chips-in", component: <PermissionRoute permission="qr-sticker.view"><ChipsInNew /></PermissionRoute> },
+    { path: "/portfolio", component: <PermissionRoute permission="portfolio.view"><Portfolio /></PermissionRoute> },
 
-    { path: "/payment-address", component: <PaymentAddress /> },
-    { path: "/analytics", component: <Analytics /> },
-    { path: "/settings", component: <Settings /> },
-    { path: "/profile/me", component: <UserProfile /> },
-    { path: "/my-profile", component: <ProfileTest /> },
+    { path: "/payment-address", component: <PermissionRoute permission="payment-address.view"><PaymentAddress /></PermissionRoute> },
+    { path: "/analytics", component: <PermissionRoute permission="analytics.view"><Analytics /></PermissionRoute> },
+    { path: "/settings", component: <PermissionRoute permission="settings.view"><Settings /></PermissionRoute> },
+    { path: "/profile/me", component: <PermissionRoute permission="user-profile.view"><UserProfile /></PermissionRoute> },
+    { path: "/my-profile", component: <PermissionRoute permission="user-profile.view"><ProfileTest /></PermissionRoute> },
     { path: "/users/settings", component: <UserSettingsNew /> },
     { path: "/users/settings-new", component: <UserSettingsUpdated /> },
     { path: "/profile/:user_name", component: <UserProfilePublic /> },
@@ -103,13 +145,15 @@ export const routes = [
     { path: "/onboarding/add-users", component: <BroadcastSignup /> },
     { path: "/payment-status/:type/:status/:code", component: <PaymentStatus /> },
     { path: "/create-password/:token", component: <CreatePassword /> },
-    { path: "/geo-fencing", component: <GeoFencing /> },
-    { path: "/my-mastercard", component: <MyMasterCard /> },
-    { path: "/my-mastercard/:status/:code", component: <MyMasterCard /> },
+    { path: "/geo-fencing", component: <PermissionRoute permission="geo-fencing.view"><GeoFencing /></PermissionRoute> },
+    { path: "/my-mastercard", component: <PermissionRoute permission="mastercard.view"><MyMasterCard /></PermissionRoute> },
+    { path: "/my-mastercard/:status/:code", component: <PermissionRoute permission="mastercard.view"><MyMasterCard /></PermissionRoute> },
     { path: "/create-pin", component: <CreatePin /> },
     { path: "/update-pin", component: <UpdatePin /> },
-    { path: "/invoices", component: <ReceiptInvoice /> },
+    { path: "/invoices", component: <PermissionRoute permission="invoices.view"><ReceiptInvoice /></PermissionRoute> },
     { path: "/store-create", component: <StoreCreate /> },
+    { path: "/delegate-access", component: <PermissionRoute permission="delegate-access.view"><DelegateAccess /></PermissionRoute> },
+    { path: "/activity", component: <PermissionRoute permission="activity-logs.view"><LogActivity /></PermissionRoute> },
     { path: "*", component: <NotFound type='Page' /> }
 ]
 export const publicRoutes = [
@@ -140,14 +184,20 @@ export const publicRoutes = [
     { path: "/set-account-pin/:accountId/:platformType", component: <CreatePinChatBot /> },
     { path: "/verify-bot-pin/:accountId/:platformType", component: <VerifyPinChatBot /> },
     { path: "/qr-quickerpay/:wallet_id", component: <QrQuickerPay /> },
-    { path: "/invoice/:username/:invoiceId", component: <InvoicePayment /> },
-    { path: "/invoice/qr/:username/:invoiceId", component: <InvoicePaymentQr /> },
+    { path: "/invoice/:username/:invoiceId", component: <PermissionRoute permission="invoices.payment.pay"><InvoicePayment /></PermissionRoute> },
+    { path: "/invoice/qr/:username/:invoiceId", component: <PermissionRoute permission="invoices.payment.pay"><InvoicePaymentQr /></PermissionRoute> },
     { path: "/pay/subscription/:subscriptionId", component: <PlansSubscription /> },
+    { path: "/pay/plan/:username/:planId", component: <PlanPaymentLink /> },
+    { path: "/create-agent-password/:token", component: <CreateAgentPassword /> },
+
     { path: "*", component: <NotFound type='Page' /> }
 ]
 export const authRoutes = [
     { path: `/login`, component: <Auth /> },
+    // { path: `/agent-login`, component: <Auth /> },
+    { path: `/agent-login`, component: <AgentLogin /> },
     { path: `/forgot-password`, component: <AuthNew /> },
+    { path: `/forgot-password/agent`, component: <AuthNew /> },
     { path: `/signup`, component: <Auth /> },
     { path: `/signup/:code`, component: <Auth /> },
     { path: "*", component: <NotFound type='Page' /> }
