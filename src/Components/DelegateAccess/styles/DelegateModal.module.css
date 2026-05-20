@@ -576,6 +576,14 @@
 }
 
 @media (max-width: 600px) {
+    .modalFooter {
+        flex-wrap: wrap;
+
+        .footerLeft {
+            width: 100%;
+        }
+    }
+
     .sidebar {
         display: none;
     }
@@ -588,6 +596,7 @@
         padding: 16px;
     }
 }
+
 
 input:disabled {
     background: #f3f3f3;
