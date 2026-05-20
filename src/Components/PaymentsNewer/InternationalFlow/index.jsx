@@ -41,6 +41,7 @@ import StepTwo from "./StepTwo"
 import styles from "./styles/index.module.css"
 import VendorBalanceModal from "./VendorBalanceModal"
 import WalletsComponent from "./WalletsComponent"
+import { useIdempotency } from "../../../hooks/Payments/useIdempotency"
 
 const leftSideContent = [
     "Enter The Amount",
@@ -204,6 +205,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
     const [showDetailsModal, setShowDetailsModal] = useState(false)
     const [showAddressModal, setShowAddressModal] = useState(false)
     const [loading, setLoading] = useState(false)
+    const { getKey, reset } = useIdempotency()
     const [requiredMissingFields, setRequiredMissingFields] = useState({
         beneficiary: {
             basic: [],
@@ -762,7 +764,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
 
             const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/initiat-international${internationalData.selectedSavedCard?._id ? "-pan" : ""}-transaction`,
                 { data: enc },
-                { headers: authHeader }
+                { headers: { ...authHeader, "idempotency-key": getKey() } }
             )
             const dec = decryptData(res.data.data)
             console.log(dec)
@@ -812,7 +814,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
 
             const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/paypal/initiate-international-${internationalData.payoutChannel?.vendor === "thunes" ? "payment" : "payout"}`,
                 { data: enc },
-                { headers: authHeader }
+                { headers: { ...authHeader, "idempotency-key": getKey() } }
             )
             const dec = decryptData(res.data.data)
             window.location.href = dec?.url
@@ -857,7 +859,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
 
             const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/collection/international`,
                 { data: enc },
-                { headers: authHeader }
+                { headers: { ...authHeader, "idempotency-key": getKey() } }
             )
             const decrypted = decryptData(res.data.data)
 
@@ -1091,11 +1093,11 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
 
             if (internationalData.payoutChannel?.vendor === "thunes") {
                 res = await axios.post(`${import.meta.env.VITE_THUNES_API}/confirmTransaction`, data, {
-                    headers: authHeader
+                    headers: { ...authHeader, "idempotency-key": getKey() }
                 })
             } else {
                 res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/payment/confirm-transaction`, { data: encryptData(data) }, {
-                    headers: authHeader
+                    headers: { ...authHeader, "idempotency-key": getKey() }
                 })
             }
             const decrypted = decryptData(res.data.data)
@@ -1531,10 +1533,12 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                                                                 isLoading={loading}
                                                                 isOpen={internationalData.showOtpModal}
                                                                 toggle={() => {
+                                                                    reset()
                                                                     updateInternationalData("showOtpModal", false)
                                                                 }}
                                                                 resendHandler={createTransaction}
                                                                 error={international.otpError}
+                                                                resetIdempotency={reset}
                                                             />
                                                         }
                                                     </div>
@@ -1551,6 +1555,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                                                         (internationalData.transactionTypeSelected)
                                                         &&
                                                         <button className={styles.transparent} disabled={loading} onClick={() => {
+                                                            reset()
                                                             if (subStep === 4 && internationalData.payment_type?.value) {
                                                                 updateInternationalData("payment_type", {})
                                                             }
@@ -1772,10 +1777,12 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                                                                                     isLoading={loading}
                                                                                     isOpen={internationalData.showOtpModal}
                                                                                     toggle={() => {
+                                                                                        reset()
                                                                                         updateInternationalData("showOtpModal", false)
                                                                                     }}
                                                                                     resendHandler={createTransaction}
                                                                                     error={international.otpError}
+                                                                                    resetIdempotency={reset}
                                                                                 />
                                                                             }
                                                                         </div>
