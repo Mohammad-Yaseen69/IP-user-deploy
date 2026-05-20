@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next"
 import InstaPayLoader from "../../Loader"
 import styles from "../InternationalFlow/styles/stepone.module.css"
-import { useContext, useEffect, useMemo, useState } from "react"
+import { useContext, useEffect, useMemo, useRef, useState } from "react"
 import { UserContext } from "../../../Context/UserContext"
 import er_icon from "../InternationalFlow/files/exchange_rate.svg"
 import chev_down from "../InternationalFlow/files/chev_down.svg"
@@ -21,7 +21,16 @@ const StepTwo = ({ data, dataHandler, getExchangeRate, showFee, inNonInstapay = 
     const [amountLoading, setAmountLoading] = useState(false)
     const [receivingAmountLoading, setReceivingAmountLoading] = useState(false)
     const width = useWindowWidth()
+    const controllerRef = useRef(null)
+    const abortPreviousRequest = () => {
+        if (controllerRef.current) {
+            controllerRef.current.abort()
+        }
 
+        controllerRef.current = new AbortController()
+
+        return controllerRef.current.signal
+    }
     useEffect(() => {
         if (userWallets?.length > 0 && !data.currency?._id && !data.currency_wallet?._id && !data.wallet?._id) {
             const def = userWallets?.[0]?.wallet_type === "insta" && !userWallets?.[0]?.blocked && !userWallets?.[0]?.admin_blocked && userWallets?.[0]?.status?.toLowerCase() === "active"
@@ -45,23 +54,23 @@ const StepTwo = ({ data, dataHandler, getExchangeRate, showFee, inNonInstapay = 
         setAmountLoading(e)
     }
 
-    useEffect(() => {
-        dataHandler("exchange_rate", {})
-        dataHandler("exchange_rate_error", "")
+    // useEffect(() => {
+    //     dataHandler("exchange_rate", {})
+    //     dataHandler("exchange_rate_error", "")
 
-        if (api_timeout) {
-            clearTimeout(api_timeout);
-        }
-        api_timeout = setTimeout(() => {
-            if (String(data?.amount)?.replaceAll(",", "") && data?.currency?.currency?.code) {
-                getExchangeRate(String(data?.amount)?.replaceAll(",", ""), setLimitType, "instant", data.currency?.currency?.code, setter)
-            }
-        }, 1000)
+    //     if (api_timeout) {
+    //         clearTimeout(api_timeout);
+    //     }
+    //     api_timeout = setTimeout(() => {
+    //         if (String(data?.amount)?.replaceAll(",", "") && data?.currency?.currency?.code) {
+    //             getExchangeRate(String(data?.amount)?.replaceAll(",", ""), setLimitType, "instant", data.currency?.currency?.code, setter)
+    //         }
+    //     }, 1000)
 
-        return () => {
-            clearTimeout(api_timeout)
-        }
-    }, [data?.currency, data.reCallApi])
+    //     return () => {
+    //         clearTimeout(api_timeout)
+    //     }
+    // }, [data?.currency, data.reCallApi])
 
     const wallets = useMemo(() => {
         return userWallets.filter(item => item?.wallet_type === "insta" && !item?.blocked && !item?.admin_blocked && item?.status === "active").map(item => {
@@ -90,32 +99,94 @@ const StepTwo = ({ data, dataHandler, getExchangeRate, showFee, inNonInstapay = 
             const pos = cursor + (newLen - prevLen);
             e.target.setSelectionRange(pos, pos);
         });
+        dataHandler("recipient_amount", "")
+        dataHandler("exchange_rate", {})
+        dataHandler("exchange_rate_error", "")
         if (api_timeout) {
             clearTimeout(api_timeout);
         }
-        api_timeout = setTimeout(() => {
-            dataHandler("exchange_rate", {})
-            dataHandler("exchange_rate_error", "")
-            getExchangeRate(String(data?.amount)?.replaceAll(",", ""), setLimitType, "instant", data.currency?.currency?.code, setter)
-        }, 1000)
+        api_timeout = setTimeout(async () => {
+
+            const amount = String(e.target.value)?.replaceAll(",", "")
+
+            if (!amount || !data?.currency?.currency?.code) return
+
+            try {
+
+                const signal = abortPreviousRequest()
+
+                await getExchangeRate(
+                    amount,
+                    setLimitType,
+                    "instant",
+                    data.currency?.currency?.code,
+                    setter,
+                    undefined,
+                    signal
+                )
+
+            } catch (error) {
+
+                if (error?.name === "AbortError") {
+                    console.log("Previous request aborted")
+                } else {
+                    console.log(error)
+                }
+            }
+
+        }, 700)
     };
     const handleKeyUpR = (e) => {
+
         const cursor = e.target.selectionStart;
         const prevLen = e.target.value.length;
+
         formatCurrency(e.target.value, false, setValueR);
+
         requestAnimationFrame(() => {
             const newLen = e.target.value.length;
             const pos = cursor + (newLen - prevLen);
             e.target.setSelectionRange(pos, pos);
         });
+
+        dataHandler("amount", "")
+        dataHandler("exchange_rate", {})
+        dataHandler("exchange_rate_error", "")
+
         if (api_timeout) {
             clearTimeout(api_timeout);
         }
-        api_timeout = setTimeout(() => {
-            dataHandler("exchange_rate", {})
-            dataHandler("exchange_rate_error", "")
-            getExchangeRate(String(data?.recipient_amount)?.replaceAll(",", ""), setLimitType, "instant", data.currency?.currency?.code, setterR, "to")
-        }, 1000)
+
+        api_timeout = setTimeout(async () => {
+
+            const amount = String(e.target.value)?.replaceAll(",", "")
+
+            if (!amount || !data?.currency?.currency?.code) return
+
+            try {
+
+                const signal = abortPreviousRequest()
+
+                await getExchangeRate(
+                    amount,
+                    setLimitType,
+                    "instant",
+                    data.currency?.currency?.code,
+                    setterR,
+                    "to",
+                    signal
+                )
+
+            } catch (error) {
+
+                if (error?.name === "AbortError") {
+                    console.log("Previous request aborted")
+                } else {
+                    console.log(error)
+                }
+            }
+
+        }, 700)
     };
 
     const handleBlur = (e) => {
