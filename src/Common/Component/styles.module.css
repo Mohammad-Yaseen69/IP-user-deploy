@@ -64,3 +64,13 @@
          border-color: #6366f1;
      }
  }
+
+ @media (max-width: 700px) {
+     .paginationWrapper {
+         justify-content: center;
+         flex-wrap: nowrap;
+         padding: 0;
+         margin: 0;
+
+     }
+ }

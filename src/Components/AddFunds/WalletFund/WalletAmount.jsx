@@ -17,13 +17,13 @@ const WalletAmount = ({ setSubStep, amount, setAmount, wallet, limits, setLimits
     const { t } = useTranslation()
 
     useEffect(() => {
-        if (amount === 0 || amount === 0.00 ) {
+        if (amount === 0 || amount === 0.00) {
             console.log("adfadf")
             setAmount((limits.min)?.toFixed(2))
         }
 
     }, [limits, amount])
-    const {  userDetails } = useContext(UserContext)
+    const { userDetails } = useContext(UserContext)
     // const [fee, setFee] = useState(0)
 
     // useEffect(() => {
@@ -105,7 +105,7 @@ const WalletAmount = ({ setSubStep, amount, setAmount, wallet, limits, setLimits
 
 
 
-    useEffect(() => { 
+    useEffect(() => {
         console.log(formattedAmount)
         setAmount(String(formattedAmount ?? "")?.replaceAll(",", ""))
     }, [formattedAmount])
@@ -187,7 +187,7 @@ const WalletAmount = ({ setSubStep, amount, setAmount, wallet, limits, setLimits
                     />
                 </div>
                 {
-                    ( formattedAmount.toString() !== "0") && (!amount || amount < limits.min || amount > limits.max)
+                    (formattedAmount.toString() !== "0") && (!amount || amount < limits.min || amount > limits.max)
                         ?
                         <div style={{
                             height: "100px",
@@ -319,9 +319,9 @@ const WalletAmount = ({ setSubStep, amount, setAmount, wallet, limits, setLimits
                                 setSubStep(prev => prev + 1)
                             }}
                             disabled={
-                                Number(formattedAmount?.toString()?.replaceAll(",", "")) === 0 || 
-                                !amount || 
-                                amount < limits.min || 
+                                Number(formattedAmount?.toString()?.replaceAll(",", "")) === 0 ||
+                                !amount ||
+                                amount < limits.min ||
                                 amount > limits.max
                             }
                         >

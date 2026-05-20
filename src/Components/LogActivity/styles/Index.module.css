@@ -27,6 +27,17 @@
             justify-content: center;
             gap: 10px;
 
+            .mobileCOntainer {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 10px;
+                height: 100%;
+
+                br {
+                    display: none;
+                }
+            }
 
             .searchBox {
                 margin-top: 10px;
@@ -38,10 +49,12 @@
                 background: var(--Greyscale-0, #FFF);
                 box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.03);
                 padding: 7px 24px;
+                width: 100%;
 
                 Search {
                     border-radius: 9.416px;
                     border: 1.25px solid var(--Greyscale-400, #898F8F);
+                    width: 100%;
 
                 }
 
@@ -61,4 +74,37 @@
     .searchBox input::placeholder {
         color: #aaa;
     }
+}
+
+@media (max-width: 700px) {
+    .container {
+        padding: 16px;
+    }
+
+
+    .main {
+        height: auto;
+        padding: var(--md, 0px) !important;
+
+    }
+
+    .searchCont {
+        flex-direction: column;
+        flex-wrap: wrap;
+
+        .searchBox {
+            width: 100%;
+        }
+
+        .mobileCOntainer {
+            display: block !important;
+            width: 100% !important;
+
+            br {
+                display: block !important;
+            }
+        }
+    }
+
+
 }
