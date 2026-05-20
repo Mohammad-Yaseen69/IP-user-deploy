@@ -124,7 +124,7 @@ const SidebarNew = ({ setShowModal, showModal }) => {
                                         ?
                                         <>
                                             {
-                                                MENU.map((item, i) => (
+                                                filteredMenu.map((item, i) => (
 
                                                     <Fragment key={i}>
                                                         <li style={{ width: togglSidebar ? "100%" : "auto" }} className={item.className}>
