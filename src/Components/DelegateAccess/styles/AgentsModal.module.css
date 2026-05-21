@@ -505,10 +505,11 @@
     overflow: hidden;
 }
 
-@media (max-width: 600px) {
-    .modalFooter {
+@media (max-width: 700px) {
+ .modalFooter {
         flex-wrap: wrap;
-        .footerLeft{
+
+        .footerLeft {
             width: 100%;
         }
     }

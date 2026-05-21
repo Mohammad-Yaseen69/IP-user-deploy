@@ -12,7 +12,8 @@ import AgentsModal from "./Components/AgentsModal"
 import Paginations from "../../Common/Component/Paginations"
 import { usePermission } from "../../hooks/GeneralUse/usePermission"
 import userFour from "./images/UsersFour.svg"
-import { FaRegUserCircle } from "react-icons/fa"
+import { FaHistory, FaRegUserCircle } from "react-icons/fa"
+import { useNavigate } from "react-router"
 const DelegateAccess = () => {
     const width = useWindowWidth()
     const { t } = useTranslation()
@@ -23,6 +24,7 @@ const DelegateAccess = () => {
     const [editData, setEditData] = useState(null)
     const [page, setPage] = useState(1)
     const [limit, setLimit] = useState(10)
+    const naviagte = useNavigate()
     const handleRoleAgentToggle = () => {
         setIsRole(prev => !prev)
     }
@@ -102,7 +104,7 @@ const DelegateAccess = () => {
 
                     </div>
 
-                    {isRole ? (
+                    {width > 700 && (isRole ? (
                         hasPermission("delegate-access.roles.add") && (
                             <button className={styles.addBtn} onClick={handleModalOpen}>
                                 {t("Add Role")}<Plus size={20} />
@@ -114,7 +116,7 @@ const DelegateAccess = () => {
                                 {t("Add Agent")}  <Plus size={20} />
                             </button>
                         )
-                    )}
+                    ))}
                 </div>
                 <div className={styles.searchCont}>
                     <div className={styles.searchBox}>
@@ -134,6 +136,7 @@ const DelegateAccess = () => {
                     roleLoading={roleLoading || agentsLoading}
                     setEditData={setEditData}
                     setShowModal={setShowModal}
+
                 />            {showModal && (
                     isRole ? (
                         <RoleModal
@@ -166,6 +169,25 @@ const DelegateAccess = () => {
                         />
                     )
                 )}
+
+                <div className={styles.mobileAddBtn}>
+                    <button className={styles.addBtn2} onClick={() => naviagte("/activity")}>
+                        <FaHistory size={20} /> {t("Activity Feed")}
+                    </button>
+                    {width < 700 && (isRole ? (
+                        hasPermission("delegate-access.roles.add") && (
+                            <button className={styles.addBtn} onClick={handleModalOpen}>
+                                {t("Add Role")}<Plus size={20} />
+                            </button>
+                        )
+                    ) : (
+                        hasPermission("delegate-access.agents.add") && (
+                            <button className={styles.addBtn} onClick={handleModalOpen}>
+                                {t("Add Agent")}  <Plus size={20} />
+                            </button>
+                        )
+                    ))}
+                </div>
                 <Paginations page={page} totalPages={totalPages} setPage={setPage}
                     limit={limit} setLimit={setLimit} />
 

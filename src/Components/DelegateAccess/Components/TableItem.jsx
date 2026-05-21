@@ -97,7 +97,7 @@ function TableItem({ setMenuOpenFor, width, item, index, menuOpenFor, isRole, se
             className={`${styles.tr} ${styles.dataRow}`}
             onClick={() => setMenuOpenFor(null)}
         >
-            {isRole ? (
+            {width > 700 ? (isRole ? (
                 <>
                     {width > 700 && (
                         <div style={{ flex: 0.05, textAlign: "center" }} className={`${styles.td} ${styles.serial}`}>
@@ -205,79 +205,249 @@ function TableItem({ setMenuOpenFor, width, item, index, menuOpenFor, isRole, se
                         </div>
                     )}
                 </>
-            )}
+            )) : (isRole ? (
+                <>
 
-            <div
-                style={{ flex: isPhone ? 0.15 : 0.1, display: "flex", justifyContent: "flex-end" }}
-                className={`${styles.td} ${styles.actions}`}
-                onClick={(e) => e.stopPropagation()}
-            >
-                <button
-                    className={styles.threeDotsBtn}
-                    style={{ display: "flex", justifyContent: "center", alignItems: "center", background: "none", border: "none", cursor: "pointer" }}
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        setMenuOpenFor((prev) => prev === item?._id ? null : item?._id);
-                    }}
-                >
-                    <MoreHorizontal size={18} />
-                </button>
 
-                {menuOpenFor === item?._id && (
-                    <div className={styles.actionsMenu} onClick={(e) => e.stopPropagation()}>
-                        {hasPermission(isRole ? "delegate-access.roles.view-details" : "delegate-access.agents.view-details") && (
-                            <div className={styles.menuItem} onClick={() => {
-                                setIsViewModal(true)
-                                setMenuOpenFor(null)
-                            }}>
-                                {t("View")}
-                            </div>
-                        )}
-                        {hasPermission(isRole ? "delegate-access.roles.edit" : "delegate-access.agents.edit") && (
-                            <div className={styles.menuItem} onClick={() => {
-                                setMenuOpenFor(null);
-                                setEditData(item);
-                                setShowModal(true);
-                            }}>
-                                {t("Edit")}
-                            </div>
-                        )}
-                        {!isRole && item?.status === "pending" && hasPermission("delegate-access.agents.email.resend") && (
-                            <div className={styles.menuItem} onClick={() => resendEmail()}>
-                                {isResending ? t("Resending...") : t("Resend Email")}
-                            </div>
-                        )}
-                        {hasPermission(isRole ? "delegate-access.roles.delete" : "delegate-access.agents.delete") && (
-                            <div className={`${styles.menuItem} ${styles.danger}`} onClick={() => {
-                                setIsDeleteModal(true)
-                                setMenuOpenFor(null)
-                            }}>
-                                {isDeleting ? t("Deleting...") : t("Delete")}
-                            </div>
-                        )}
+                    <div className={styles.td}>
+                        <div style={{ color: "#6E7687", fontWeight: "500" }}>{t("Title")}</div>   {truncate(item?.title, 15) || "—"}
                     </div>
-                )}
+                    <div  className={styles.td}>
+                        <div style={{ color: "#6E7687", fontWeight: "500" }}>{t("Description")}</div>       {truncate(item?.description, 35)}
+                    </div>
 
-                {isDeleteModal && (
-                    <DeleteConfirmModal
-                        isOpen={isDeleteModal}
-                        toggle={() => setIsDeleteModal(false)}
-                        onConfirm={() => isRole ? deleteRole() : deleteAgents()}
-                        itemName={item?.title || item?.name || item?.first_name}
-                        isLoading={isDeleting || isDeletingAgents}
-                        isSuccess={isRole ? deleteRoleSuccess : deleteAgentsSuccess}
-                        isError={isRole ? deleteRoleError : deleteAgentsError}
-                    />
-                )}
-                {isViewModal && (
-                    <ViewDetailModal
-                        isOpen={isViewModal}
-                        toggle={() => setIsViewModal(false)}
-                        item={item}
-                        isRole={isRole}
-                    />
-                )}
-            </div>
+                    <div className={styles.td}>
+                        <div style={{ color: "#6E7687", fontWeight: "500" }}>{t("Permissions")}</div>
+                        <span style={{
+                            background: "#f0f0f0",
+                            color: "#444",
+                            padding: "2px 10px",
+                            borderRadius: "12px",
+                            fontSize: "12px",
+                            fontWeight: 600,
+                        }}>
+                            {item?.permissions?.length ?? 0} {t("permissions")}
+                        </span>
+                    </div>
+                </>
+            ) : (
+                <>
+                    <div className={styles.td}>
+                        <div>  {item?.first_name + " " + item?.last_name || "—"}</div>
+                        <div style={{ display: "flex", flexDirection: "row", gap: "4px", marginTop: "4px" }}>
+                            <div >
+                                {isUpdatingStatus ? (
+                                    <span style={{ fontSize: "12px" }}>{t("Updating...")}</span>
+                                ) : (
+                                    <select
+                                        disabled={item?.status === "pending" || !hasPermission("delegate-access.agents.status.update")}
+                                        value={item?.status || ""}
+                                        onChange={(e) => updateStatus(e.target.value)}
+                                        style={{
+                                            background: item?.status === "pending"
+                                                ? "#e0e0e0"
+                                                : item?.status === "active"
+                                                    ? "#EDFAF0"
+                                                    : item?.status === "inactive"
+                                                        ? "#ffeaea"
+                                                        : item?.status === "suspended"
+                                                            ? "#fff3e0"
+                                                            : "#f0f0f0",
+
+                                            color: item?.status === "pending"
+                                                ? "#888"
+                                                : item?.status === "active"
+                                                    ? "#097224"
+                                                    : item?.status === "inactive"
+                                                        ? "#c0392b"
+                                                        : item?.status === "suspended"
+                                                            ? "#e67e22"
+                                                            : "#444",
+
+                                            padding: "2px 8px",
+                                            borderRadius: "12px",
+                                            fontSize: "12px",
+                                            fontWeight: 600,
+                                            border: "none",
+                                            outline: "none",
+                                            cursor: (item?.status === "pending" || !hasPermission("delegate-access.agents.status.update")) ? "not-allowed" : "pointer",
+                                            textTransform: "capitalize",
+                                            width: "100%",
+                                            opacity: (item?.status === "pending" || !hasPermission("delegate-access.agents.status.update")) ? 0.7 : 1
+                                        }}
+                                    >
+                                        <option value="pending">{t("Pending")}</option>
+                                        <option value="active">{t("Active")}</option>
+                                        <option value="inactive">{t("Inactive")}</option>
+                                        <option value="suspended">{t("Suspended")}</option>
+                                    </select>
+                                )}
+                            </div>
+                            <div
+                                className={`${styles.actions}`}
+                                onClick={(e) => e.stopPropagation()}
+                            >
+                                <button
+                                    className={styles.threeDotsBtn}
+                                    style={{ display: "flex", justifyContent: "center", alignItems: "center", background: "none", border: "none", cursor: "pointer" }}
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        setMenuOpenFor((prev) => prev === item?._id ? null : item?._id);
+                                    }}
+                                >
+                                    <MoreHorizontal size={18} />
+                                </button>
+
+                                {menuOpenFor === item?._id && (
+                                    <div className={styles.actionsMenu} onClick={(e) => e.stopPropagation()}>
+                                        {hasPermission(isRole ? "delegate-access.roles.view-details" : "delegate-access.agents.view-details") && (
+                                            <div className={styles.menuItem} onClick={() => {
+                                                setIsViewModal(true)
+                                                setMenuOpenFor(null)
+                                            }}>
+                                                {t("View")}
+                                            </div>
+                                        )}
+                                        {hasPermission(isRole ? "delegate-access.roles.edit" : "delegate-access.agents.edit") && (
+                                            <div className={styles.menuItem} onClick={() => {
+                                                setMenuOpenFor(null);
+                                                setEditData(item);
+                                                setShowModal(true);
+                                            }}>
+                                                {t("Edit")}
+                                            </div>
+                                        )}
+                                        {!isRole && item?.status === "pending" && hasPermission("delegate-access.agents.email.resend") && (
+                                            <div className={styles.menuItem} onClick={() => resendEmail()}>
+                                                {isResending ? t("Resending...") : t("Resend Email")}
+                                            </div>
+                                        )}
+                                        {hasPermission(isRole ? "delegate-access.roles.delete" : "delegate-access.agents.delete") && (
+                                            <div className={`${styles.menuItem} ${styles.danger}`} onClick={() => {
+                                                setIsDeleteModal(true)
+                                                setMenuOpenFor(null)
+                                            }}>
+                                                {isDeleting ? t("Deleting...") : t("Delete")}
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
+
+                                {isDeleteModal && (
+                                    <DeleteConfirmModal
+                                        isOpen={isDeleteModal}
+                                        toggle={() => setIsDeleteModal(false)}
+                                        onConfirm={() => isRole ? deleteRole() : deleteAgents()}
+                                        itemName={item?.title || item?.name || item?.first_name}
+                                        isLoading={isDeleting || isDeletingAgents}
+                                        isSuccess={isRole ? deleteRoleSuccess : deleteAgentsSuccess}
+                                        isError={isRole ? deleteRoleError : deleteAgentsError}
+                                    />
+                                )}
+                                {isViewModal && (
+                                    <ViewDetailModal
+                                        isOpen={isViewModal}
+                                        toggle={() => setIsViewModal(false)}
+                                        item={item}
+                                        isRole={isRole}
+                                    />
+                                )}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className={styles.td}>
+                        <div style={{ color: "#6E7687", fontWeight: "500" }}>{t("Phone")}</div>
+                        <div> {item?.phone || "—"}</div>
+                    </div>
+
+                    <div className={styles.td}>
+                        <div style={{ color: "#6E7687", fontWeight: "500" }}>{t("Email")}</div>
+                        <div>{truncate(item?.email, 20) || "—"}</div>
+                    </div>
+
+                    <div className={`${styles.td}`}>
+                        <div style={{ color: "#6E7687", fontWeight: "500" }}>{t("Role")}</div>
+                        <div> {truncate(item?.role?.title, 15) || "—"}</div>
+                    </div>
+
+
+                </>
+            ))}
+
+            {width > 700 && (
+                <div
+                    style={{ flex: isPhone ? 0.15 : 0.1, display: "flex", justifyContent: "flex-end" }}
+                    className={`${styles.td} ${styles.actions}`}
+                    onClick={(e) => e.stopPropagation()}
+                >
+                    <button
+                        className={styles.threeDotsBtn}
+                        style={{ display: "flex", justifyContent: "center", alignItems: "center", background: "none", border: "none", cursor: "pointer" }}
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            setMenuOpenFor((prev) => prev === item?._id ? null : item?._id);
+                        }}
+                    >
+                        <MoreHorizontal size={18} />
+                    </button>
+
+                    {menuOpenFor === item?._id && (
+                        <div className={styles.actionsMenu} onClick={(e) => e.stopPropagation()}>
+                            {hasPermission(isRole ? "delegate-access.roles.view-details" : "delegate-access.agents.view-details") && (
+                                <div className={styles.menuItem} onClick={() => {
+                                    setIsViewModal(true)
+                                    setMenuOpenFor(null)
+                                }}>
+                                    {t("View")}
+                                </div>
+                            )}
+                            {hasPermission(isRole ? "delegate-access.roles.edit" : "delegate-access.agents.edit") && (
+                                <div className={styles.menuItem} onClick={() => {
+                                    setMenuOpenFor(null);
+                                    setEditData(item);
+                                    setShowModal(true);
+                                }}>
+                                    {t("Edit")}
+                                </div>
+                            )}
+                            {!isRole && item?.status === "pending" && hasPermission("delegate-access.agents.email.resend") && (
+                                <div className={styles.menuItem} onClick={() => resendEmail()}>
+                                    {isResending ? t("Resending...") : t("Resend Email")}
+                                </div>
+                            )}
+                            {hasPermission(isRole ? "delegate-access.roles.delete" : "delegate-access.agents.delete") && (
+                                <div className={`${styles.menuItem} ${styles.danger}`} onClick={() => {
+                                    setIsDeleteModal(true)
+                                    setMenuOpenFor(null)
+                                }}>
+                                    {isDeleting ? t("Deleting...") : t("Delete")}
+                                </div>
+                            )}
+                        </div>
+                    )}
+
+                    {isDeleteModal && (
+                        <DeleteConfirmModal
+                            isOpen={isDeleteModal}
+                            toggle={() => setIsDeleteModal(false)}
+                            onConfirm={() => isRole ? deleteRole() : deleteAgents()}
+                            itemName={item?.title || item?.name || item?.first_name}
+                            isLoading={isDeleting || isDeletingAgents}
+                            isSuccess={isRole ? deleteRoleSuccess : deleteAgentsSuccess}
+                            isError={isRole ? deleteRoleError : deleteAgentsError}
+                        />
+                    )}
+                    {isViewModal && (
+                        <ViewDetailModal
+                            isOpen={isViewModal}
+                            toggle={() => setIsViewModal(false)}
+                            item={item}
+                            isRole={isRole}
+                        />
+                    )}
+                </div>
+            )}
         </div>
     )
 }
