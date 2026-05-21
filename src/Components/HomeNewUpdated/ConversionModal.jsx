@@ -12,11 +12,13 @@ import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
 import { InactivityContext } from "../../InactivityWrapper";
 import { LimitsErrorMessage } from "../PaymentsNewer/OTPConfirmation";
+import { useIdempotency } from "../../hooks/Payments/useIdempotency";
 
 const ConversionModal = ({ isOpen, toggleModal, amount, exchangeAmount, currency, exchangeCurrency, exchangePrice, setEnteredCurrency, setResultCurrency, setUserCurrency, setExchangedCurrency, exchangeFee, fxDet }) => {
     const { setIsExtended } = useContext(InactivityContext)
     const { t } = useTranslation()
     const { userWallets, authHeader, getUserWallets } = useContext(UserContext)
+    const { getKey, reset } = useIdempotency()
     const [complete, setComplete] = useState(false)
     const pRef = useRef(null)
     const divRef = useRef(null)
@@ -54,6 +56,7 @@ const ConversionModal = ({ isOpen, toggleModal, amount, exchangeAmount, currency
         setResendTimer(0)
         setStep(1)
         setComplete(false)
+        reset()
     }, [isOpen])
 
     useEffect(() => {
@@ -184,12 +187,18 @@ const ConversionModal = ({ isOpen, toggleModal, amount, exchangeAmount, currency
 
             const encrpted = encryptData(currentWallet?.wallet_type === "crypto" ? crypto_data : data)
             axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/${currentWallet?.wallet_type === "crypto" ? "crypto" : "wallet/insta-wallet-conversion"}`, { data: encrpted }, {
-                headers: authHeader
+                headers: {
+                    ...authHeader,
+                    "Idempotency-Key": getKey()
+                }
             })
                 .then(res => {
                     const decrypted = decryptData(res.data.data)
                     console.log(decrypted)
                     getUserWallets()
+                    if(step === 1){
+                        confirmConversion()
+                    }
                     setStep(2)
                 })
                 .catch(err => {
@@ -200,6 +209,7 @@ const ConversionModal = ({ isOpen, toggleModal, amount, exchangeAmount, currency
                     }
                     const error = LimitsErrorMessage(decrypted?.code ?? decrypted?.message)
                     if (error) {
+                        reset()
                         setError(error)
                     } else {
                         setError(t("We cannot process your request at the moment, please try again later."))

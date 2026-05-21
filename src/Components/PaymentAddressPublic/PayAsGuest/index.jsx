@@ -29,6 +29,7 @@ import MobileWalletStatus from "./MobileWalletStatus";
 import PlaidBankTransfer from "../../AddFunds/WalletFundsFlow/PlaidBankTransfer";
 import { isCardValid, isPersonalInfoValid, isShippingValid } from "../../../utils/Functions/validations";
 import allCountries from "../../PaymentsNewer/CountriesData.json";
+import { useIdempotency } from "../../../hooks/Payments/useIdempotency";
 
 const initialState = {
   loading: false,
@@ -95,7 +96,7 @@ const PayAsGuest = ({
   const dataHandler = (field, value) => {
     dispatch({ type: "UPDATE_FIELD", field, value });
   };
-
+  const { getKey, reset } = useIdempotency()
 
   const isReferenceRequired = useMemo(() => {
     const usernamesList = ["spmfrance", "usharellc"]
@@ -165,6 +166,11 @@ const PayAsGuest = ({
         `${import.meta.env.VITE_IP_DEV_API}/api/guest-pay${subscriptionId ? "/initiate-subscription-paypal" : "/initiate-paypal"}`,
         {
           data: enc,
+        },
+        {
+          headers: {
+            "idempotency-key": getKey()
+          }
         }
       );
 
@@ -284,6 +290,9 @@ const PayAsGuest = ({
         }/api/guest-pay${subscriptionId ? "/subscription/initiate-card-payment" : "/initiate-card-payment"}`,
         {
           data: enc,
+        },
+        {
+          headers: { "idempotency-key": getKey() }
         }
       );
 
@@ -431,6 +440,7 @@ const PayAsGuest = ({
     }
   };
   const onBackClickHandler = () => {
+    reset()
     switch (data.step) {
       case 1:
         toggle();

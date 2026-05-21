@@ -43,6 +43,7 @@ import { apiErrorMessage } from "../InternationalFlow";
 import useTopupLimitCheck from "../../../hooks/Payments/useTopupLimitCheck";
 import GeneralNoticeModal from "../GeneralNoticeModal";
 import PlaidBankTransfer from "../../AddFunds/WalletFundsFlow/PlaidBankTransfer";
+import { useIdempotency } from "../../../hooks/Payments/useIdempotency";
 
 const leftSideContent = [
     "Choose the beneficiary!",
@@ -120,6 +121,7 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
     const { userDetails, authHeader, setProfileLockTime, userWallets, getUserWallets } = useContext(UserContext)
     const [data, dispatch] = useReducer(reducer, initialState)
     const { limitStatus, clearStatus } = useTopupLimitCheck(data?.currency?.currency?.code, +String(data?.amount)?.replaceAll(",", ""), data?.payment_type?.value)
+    const { getKey, reset } = useIdempotency()
 
     useEffect(() => {
         getUserWallets()
@@ -283,7 +285,7 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
             const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}${url}`,
                 payload,
                 {
-                    headers: authHeader
+                    headers: { ...authHeader, "idempotency-key": getKey() }
                 }
             )
 
@@ -369,7 +371,7 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
 
             const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/initiat-w2w${data.selectedSavedCard?._id ? "-pan" : ""}-transaction`,
                 { data: enc },
-                { headers: authHeader }
+                { headers: { ...authHeader, "idempotency-key": getKey() } }
             )
             const dec = decryptData(res.data.data)
             console.log(dec)
@@ -431,7 +433,7 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
 
             const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/paypal/initiate-w2w-payment`,
                 { data: enc },
-                { headers: authHeader }
+                { headers: { ...authHeader, "idempotency-key": getKey() } }
             )
             const dec = decryptData(res.data.data)
             window.location.href = dec?.url
@@ -1070,9 +1072,11 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
                                                                     isLoading={data.loading}
                                                                     isOpen={data.showOtpModal}
                                                                     toggle={() => {
+                                                                        reset()
                                                                         dataHandler("showOtpModal", false)
                                                                     }}
                                                                     resendHandler={sendOtp}
+                                                                    resetIdempotency={reset}
                                                                 />
                                                             }
                                                         </>
@@ -1088,6 +1092,7 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
                                                         data.step > 1
                                                         &&
                                                         <button className={styles.transparent} disabled={data.loading} onClick={() => {
+                                                            reset()
                                                             if (data.step === 4 && data.payment_type?.value) {
                                                                 dataHandler("payment_type", {})
                                                                 dataHandler("payment_duration", {
@@ -1329,10 +1334,13 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
                                                                                 isLoading={data.loading}
                                                                                 isOpen={data.showOtpModal}
                                                                                 toggle={() => {
+                                                                                    reset()
                                                                                     dataHandler("showOtpModal", false)
                                                                                 }}
                                                                                 resendHandler={sendOtp}
                                                                                 error={data.otpError}
+                                                                                resetIdempotency={reset}
+
                                                                             />
                                                                         }
                                                                     </>

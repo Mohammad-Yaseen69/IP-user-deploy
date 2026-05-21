@@ -21,6 +21,7 @@ import { LimitsErrorMessage } from "../PaymentsNewer/OTPConfirmation";
 import { WidgetSDK } from "@keabank/websdk";
 import { apiWrapper } from "../../utils/Functions/apiWrapper";
 import MobileWalletStatus from "../PaymentAddressPublic/PayAsGuest/MobileWalletStatus";
+import { useIdempotency } from "../../hooks/Payments/useIdempotency";
 
 
 const sdk = new WidgetSDK({
@@ -44,6 +45,7 @@ const ConfirmWalletFund = ({ setSubStep, wallet = {}, amount, payoutChannel, car
     const { userDetails, authHeader, userWallets } = useContext(UserContext)
     const [error, setError] = useState("")
     const [loading, setLoading] = useState(false)
+    const { getKey, reset } = useIdempotency()
 
     const isCrypto = useMemo(() => {
         return wallet?.wallet_type === "crypto"
@@ -90,9 +92,8 @@ const ConfirmWalletFund = ({ setSubStep, wallet = {}, amount, payoutChannel, car
                     // api
                     const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/initiat${type === "add_fund" ? "" : partnerId ? "-partner-kyc" : type === 'kyc_fee' ? "-kyc" : "-kyb"}${paymentWithSavedCard ? "-pan" : ""}-transaction`, {
                         data: enc
-                    }, {
-                        headers: authHeader
-                    })
+                    }, { headers: { ...authHeader, "idempotency-key": getKey() } }
+                    )
                     const dec = decryptData(res.data.data)
                     console.log(dec)
                     // if (paymentWithSavedCard) {
@@ -144,7 +145,7 @@ const ConfirmWalletFund = ({ setSubStep, wallet = {}, amount, payoutChannel, car
                     const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/paypal/initiate-payment`, {
                         data: encryptData(data)
                     }, {
-                        headers: authHeader,
+                        headers: { ...authHeader, "idempotency-key": getKey() },
                         timeout: 20000
                     })
                     const decrypted = await decryptData(res.data.data)
@@ -188,7 +189,9 @@ const ConfirmWalletFund = ({ setSubStep, wallet = {}, amount, payoutChannel, car
                         endpoint: `/api/crypto/${isCrypto ? "crypto" : "wallet"}-topup`,
                         isEncrypted: true,
                         method: "POST",
-                        payload
+                        payload,
+                        idempotencyKey: getKey()
+
                     })
 
                     console.log(response)
@@ -233,7 +236,8 @@ const ConfirmWalletFund = ({ setSubStep, wallet = {}, amount, payoutChannel, car
                         endpoint: `/api/collection/transfer`,
                         isEncrypted: true,
                         method: "POST",
-                        payload
+                        payload,
+                        idempotencyKey: getKey()
                     })
 
                     console.log(response, "response from api")
@@ -276,7 +280,7 @@ const ConfirmWalletFund = ({ setSubStep, wallet = {}, amount, payoutChannel, car
                         const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/collection/create-payment-order`, {
                             data: encryptData(data)
                         }, {
-                            headers: authHeader
+                            headers: { ...authHeader, "idempotency-key": getKey() }
                         })
                         const decrypted = await decryptData(res.data.data)
 
