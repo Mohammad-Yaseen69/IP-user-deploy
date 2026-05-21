@@ -212,7 +212,7 @@ function TableItem({ setMenuOpenFor, width, item, index, menuOpenFor, isRole, se
                     <div className={styles.td}>
                         <div style={{ color: "#6E7687", fontWeight: "500" }}>{t("Title")}</div>   {truncate(item?.title, 15) || "—"}
                     </div>
-                    <div  className={styles.td}>
+                    <div className={styles.td}>
                         <div style={{ color: "#6E7687", fontWeight: "500" }}>{t("Description")}</div>       {truncate(item?.description, 35)}
                     </div>
 

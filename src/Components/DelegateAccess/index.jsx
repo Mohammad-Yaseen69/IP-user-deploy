@@ -171,9 +171,11 @@ const DelegateAccess = () => {
                 )}
 
                 <div className={styles.mobileAddBtn}>
-                    <button className={styles.addBtn2} onClick={() => naviagte("/activity")}>
-                        <FaHistory size={20} /> {t("Activity Feed")}
-                    </button>
+                    {
+                        width < 700 && <button className={styles.addBtn2} onClick={() => naviagte("/activity")}>
+                            <FaHistory size={20} /> {t("Activity Feed")}
+                        </button>
+                    }
                     {width < 700 && (isRole ? (
                         hasPermission("delegate-access.roles.add") && (
                             <button className={styles.addBtn} onClick={handleModalOpen}>
