@@ -18,6 +18,7 @@ import { logger } from '@sentry/react';
 import { useMutation } from '@tanstack/react-query';
 import { apiWrapper } from '../../utils/Functions/apiWrapper';
 import AdditionalFilesSection from './AdditionalFilesSection';
+import { useIdempotency } from '../../hooks/Payments/useIdempotency';
 
 const industries = [
     "Arts & Entertainment",
@@ -59,6 +60,7 @@ const Verification = () => {
     const [sourceOfFund, setSourceOfFund] = useState("")
     const [occupationOther, setOccupationOther] = useState("")
     const [loading, setLoading] = useState(false)
+    const { getKey, } = useIdempotency()
 
     const { mutateAsync, isPending } = useMutation({
         mutationFn: (payload) => apiWrapper({
@@ -66,6 +68,8 @@ const Verification = () => {
             method: "PUT",
             payload,
             isEncrypted: true,
+            idempotencyKey: getKey()
+
         })
     })
 
@@ -254,19 +258,19 @@ const Verification = () => {
 
     if (showRefreshScreen) {
         return (
-            <div style={{ 
+            <div style={{
                 // width: "100vw", 
                 // height: "100vh", 
-                background: "#fff", 
-                display: "flex", 
-                flexDirection: "column", 
-                justifyContent: "center", 
+                background: "#fff",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
                 alignItems: "center",
                 gap: "1.5rem",
             }}>
                 <AiOutlineClockCircle size={80} className="text-warning" />
-                <h2 style={{ 
-                    color: "#1a1a1a", 
+                <h2 style={{
+                    color: "#1a1a1a",
                     fontWeight: 600,
                     textAlign: "center",
                     maxWidth: "500px",
@@ -274,20 +278,20 @@ const Verification = () => {
                 }}>
                     {t("Your KYC Verification is currently being processed")}
                 </h2>
-                <p style={{ 
-                    color: "#666", 
-                    fontSize: "1rem", 
+                <p style={{
+                    color: "#666",
+                    fontSize: "1rem",
                     textAlign: "center",
                     maxWidth: "400px",
                     lineHeight: 1.6
                 }}>
                     {t("Please refresh the page to get the latest verification status. This may take a few moments.")}
                 </p>
-                <Button 
-                    style={{ 
-                        background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)", 
-                        border: "none", 
-                        outline: "none", 
+                <Button
+                    style={{
+                        background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+                        border: "none",
+                        outline: "none",
                         borderRadius: "10px",
                         padding: "12px 32px",
                         fontSize: "1rem",
@@ -512,7 +516,7 @@ const Verification = () => {
                         <p>{t("Kemit Kingdom reserves the right to request any additional documents (Enhanced Due Diligence - EDD) or further information necessary for conducting thorough \nverifications, in accordance with its legal obligations.")}</p>
                     </Col>
                     {userDetails?.user?.kyc_additional_file?.length > 0 && (
-                        <AdditionalFilesSection 
+                        <AdditionalFilesSection
                             files={userDetails.user.kyc_additional_file}
                             userId={userDetails?._id}
                             uploadEndpoint={`${import.meta.env.VITE_IP_DEV_API}/api/user/upload-additional-file/${userDetails?._id}`}
