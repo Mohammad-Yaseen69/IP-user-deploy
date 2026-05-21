@@ -128,7 +128,8 @@ export const MENU = [
                 type: "link",
                 url: `${window.location.origin}/delegate-access`,
                 showOnly: "business",
-                permission: "delegate-access.view"
+                permission: "delegate-access.view",
+                showOnly: "business"
             },
             {
                 title: "Activity Feed",
@@ -137,7 +138,8 @@ export const MENU = [
                 type: "link",
                 url: `${window.location.origin}/activity`,
                 showOnly: "business",
-                permission: "activity-logs.view"
+                permission: "activity-logs.view",
+                showOnly: "business"
             },
             {
                 title: "Beneficiaries",

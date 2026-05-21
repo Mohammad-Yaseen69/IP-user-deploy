@@ -815,7 +815,7 @@ const Index = () => {
         setBiometricLoading(false)
         setIsPressed(false)
         console.log(err)
-        setIsLoginError("Biometric verification failed..")
+        setIsLoginError("Biometric verification failed")
         return
       }
 
