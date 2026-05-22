@@ -389,26 +389,29 @@ const RoleModal = ({ isRole, isOpen, onClose, t, width, isEdit, editData }) => {
                                 <div className={styles.modalHeader}>
                                     <h2 className={styles.modalTitle}><div><FaUserCircle color="#fff" /></div> {t("Add Role")}</h2>
                                 </div>
-                                {STEPS.map((st, idx) => {
-                                    const isDone = step > st.id
-                                    const isActive = step === st.id
-                                    return (
-                                        <div key={st.id} className={styles.stepItem} style={{ position: 'relative' }}>
-                                            {idx < STEPS.length - 1 && (
-                                                <div style={{ position: 'absolute', left: 22, top: '100%', width: 2, height: 12, background: isDone ? '#5626e6' : '#e0e0e0', zIndex: 0 }} />
-                                            )}
-                                            <div
-                                                className={`${styles.stepIcon} ${isActive ? styles.active : ''} ${isDone ? styles.done : ''}`}
-                                            >
-                                                {isDone ? <CheckCircle size={14} /> : st.icon}
+                                <div className={styles.stepsWrapper}>
+
+                                    {STEPS.map((st, idx) => {
+                                        const isDone = step > st.id
+                                        const isActive = step === st.id
+                                        return (
+                                            <div key={st.id} className={styles.stepItem} style={{ position: 'relative' }}>
+                                                {idx < STEPS.length - 1 && (
+                                                    <div style={{ position: 'absolute', left: 22, top: '100%', width: 2, height: 12, background: isDone ? '#5626e6' : '#e0e0e0', zIndex: 0 }} />
+                                                )}
+                                                <div
+                                                    className={`${styles.stepIcon} ${isActive ? styles.active : ''} ${isDone ? styles.done : ''}`}
+                                                >
+                                                    {isDone ? <CheckCircle size={14} /> : st.icon}
+                                                </div>
+                                                <span className={`${styles.stepLabel} ${isActive ? styles.active : ''} ${isDone ? styles.done : ''}`}>
+                                                    <p>{t("STEP")}{st.id}</p>
+                                                    {t(st.label)}
+                                                </span>
                                             </div>
-                                            <span className={`${styles.stepLabel} ${isActive ? styles.active : ''} ${isDone ? styles.done : ''}`}>
-                                                <p>{t("STEP")}{st.id}</p>
-                                                {t(st.label)}
-                                            </span>
-                                        </div>
-                                    )
-                                })}
+                                        )
+                                    })}
+                                </div>
                             </div>
                             <div className={styles.stepContainer}>
 
@@ -505,7 +508,7 @@ const RoleModal = ({ isRole, isOpen, onClose, t, width, isEdit, editData }) => {
                                 <button className={styles.btnCancel} onClick={onClose} type="button">{t("Cancel")}</button>
                                 <div>
                                     {step > 1 && (
-                                        <button className={styles.btnBack} onClick={() => setStep(p => p - 1)} type="button"><ChevronsLeft /> {t("Back")}</button>
+                                        <button className={styles.btnBack} onClick={() => setStep(p => p - 1)} type="button"> {t("Back")}</button>
                                     )}
                                     <button
                                         className={styles.btnNext}
@@ -517,7 +520,7 @@ const RoleModal = ({ isRole, isOpen, onClose, t, width, isEdit, editData }) => {
                                             ? (isCreating || isUpdating ?
                                                 <><Spinner size="sm" /> {t("Saving...")}</>
                                                 : (isEdit ? t("Update") : t("Create role")))
-                                            : t("Next")} {step < 2 ? <ChevronRight /> : <Plus size={20} />}
+                                            : t("Next")} {step < 3 ? <ChevronRight /> : <Plus size={20} />}
                                     </button>
                                 </div>
                             </div>

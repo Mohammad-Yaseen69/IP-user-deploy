@@ -279,12 +279,28 @@
 
 @media (max-width: 700px) {
     .logo {
-        margin-bottom: 0px;
-        padding: 0px;
+        display: none;
     }
 
     .otpContainer {
         margin: 5px 0px;
+    }
+
+    .centerText {
+        p {
+            margin: 0;
+        }
+    }
+
+    .verifyBtn {
+        border-radius: var(--sm, 6px);
+        background: linear-gradient(277deg, #E64067 -9.52%, #5926F0 62.22%, #4828A0 119.38%), #4A32E3;
+    }
+
+    .toggle_sms {
+        p {
+            text-align: center;
+        }
     }
 
     .otpInput {

@@ -25,7 +25,8 @@ export const apiWrapper = async ({
     isPublic = false,
     isDecrypted = true,
     isFormData = false,
-    server = "main"
+    server = "main",
+    idempotencyKey = null
 }) => {
     try {
         let dataToSend;
@@ -50,6 +51,7 @@ export const apiWrapper = async ({
             headers: {
                 ...(isPublic ? {} : authHeader),
                 ...(isFormData ? { "Content-Type": "multipart/form-data" } : {}),
+                ...(idempotencyKey ? { "Idempotency-Key": idempotencyKey } : {}),  // ← ADD THIS
             },
             data: method === METHODS.GET ? undefined : dataToSend,
             ...(server === "ecommerce" ? {

@@ -185,14 +185,31 @@
     background: #e6e6f0;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 700px) {
+    .container {
+        padding: 16px;
+    }
+
     .receiptsCont {
         flex-wrap: wrap;
         gap: 10px;
 
         .addBtn {
             width: 100%;
+
         }
+    }
+
+    .top {
+        margin-bottom: 16px;
+    }
+
+    .topright {
+        display: none;
+    }
+
+    .headerTitle h1 {
+        font-size: 24px;
     }
 
     .main {
@@ -208,6 +225,37 @@
         flex-direction: column;
         align-items: flex-start;
         gap: 16px;
+    }
+
+    .tabBtn {
+        width: 100%;
+    }
+
+    .mobileAddBtn {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        .addBtn {
+            border-radius: var(--sm, 6px);
+            background: linear-gradient(277deg, #E64067 -9.52%, #5926F0 62.22%, #4828A0 119.38%), #4A32E3;
+        }
+
+        .addBtn2 {
+            display: flex;
+            height: 40px;
+            padding: var(--sm, 8px) var(--md, 16px);
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            border-radius: var(--sm, 6px);
+            border: 1px solid var(--border-subtle, #E1E5EE);
+            background: var(--Greyscale-15, #F3F3F4);
+        }
+    }
+
+    .tabSwitcher {
+        width: 100%;
     }
 
     .filterBar {

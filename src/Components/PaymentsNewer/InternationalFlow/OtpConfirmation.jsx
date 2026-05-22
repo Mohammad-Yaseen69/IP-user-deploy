@@ -6,7 +6,7 @@ import { UserContext } from "../../../Context/UserContext"
 import { useNavigate } from "react-router"
 import { ChevronRight } from "react-feather"
 
-const OtpConfirmation = ({ isOpen, toggle, callback, data, dataHandler, resendHandler, isLoading, error = "" }) => {
+const OtpConfirmation = ({ isOpen, toggle, callback, data, dataHandler, resendHandler, isLoading, error = "", resetIdempotency }) => {
     const { t } = useTranslation()
     const { userDetails } = useContext(UserContext)
     const numberOfFields = 6;
@@ -34,6 +34,7 @@ const OtpConfirmation = ({ isOpen, toggle, callback, data, dataHandler, resendHa
 
     const handlePaste = (event) => {
         event.preventDefault();
+        resetIdempotency()
         const pasteData = event?.clipboardData?.getData('text')?.replace(/[^0-9]/g, '')?.slice(0, numberOfFields);
         let newOTPValues = [...otpValues];
 
@@ -54,6 +55,7 @@ const OtpConfirmation = ({ isOpen, toggle, callback, data, dataHandler, resendHa
 
     const handleInputChange = (index, value) => {
         dataHandler("otpError", "")
+        resetIdempotency()
         let numericValue = value.replace(/[^0-9]/g, '');
         if (numericValue < 0 || String(numericValue)?.includes("+") || String(numericValue)?.includes("-") || String(numericValue)?.includes("e")) {
             return
