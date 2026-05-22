@@ -993,7 +993,9 @@ const Login = ({ country, setIsLoginForm, }) => {
     };
     const resolvedCredential = getResolvedCredential();
     const isCredentialValid = isPhoneNumber.test(resolvedCredential) || isEmail.test(resolvedCredential);
-
+    const availableMethods = methods.filter(
+        m => m.avail && m.attr !== currentOtpMethod
+    )
     return (
         <>
 
@@ -1403,7 +1405,12 @@ const Login = ({ country, setIsLoginForm, }) => {
                                         </p>
                                     }
                                     {methods.filter(m => m.avail).length > 1 &&
-                                        <div className={styles.otp_methods}>
+                                        <div className={styles.otp_methods} style={{
+                                            gridTemplateColumns:
+                                                availableMethods.length === 1
+                                                    ? "1fr"
+                                                    : "repeat(2, minmax(0, 1fr))"
+                                        }}>
                                             {isMobile ? (
                                                 <>
                                                     {methods.map((method, index) => {
