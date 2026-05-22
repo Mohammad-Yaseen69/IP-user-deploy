@@ -254,19 +254,19 @@ const Verification = () => {
 
     if (showRefreshScreen) {
         return (
-            <div style={{ 
+            <div style={{
                 // width: "100vw", 
                 // height: "100vh", 
-                background: "#fff", 
-                display: "flex", 
-                flexDirection: "column", 
-                justifyContent: "center", 
+                background: "#fff",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
                 alignItems: "center",
                 gap: "1.5rem",
             }}>
                 <AiOutlineClockCircle size={80} className="text-warning" />
-                <h2 style={{ 
-                    color: "#1a1a1a", 
+                <h2 style={{
+                    color: "#1a1a1a",
                     fontWeight: 600,
                     textAlign: "center",
                     maxWidth: "500px",
@@ -274,20 +274,20 @@ const Verification = () => {
                 }}>
                     {t("Your KYC Verification is currently being processed")}
                 </h2>
-                <p style={{ 
-                    color: "#666", 
-                    fontSize: "1rem", 
+                <p style={{
+                    color: "#666",
+                    fontSize: "1rem",
                     textAlign: "center",
                     maxWidth: "400px",
                     lineHeight: 1.6
                 }}>
                     {t("Please refresh the page to get the latest verification status. This may take a few moments.")}
                 </p>
-                <Button 
-                    style={{ 
-                        background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)", 
-                        border: "none", 
-                        outline: "none", 
+                <Button
+                    style={{
+                        background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+                        border: "none",
+                        outline: "none",
                         borderRadius: "10px",
                         padding: "12px 32px",
                         fontSize: "1rem",
@@ -511,9 +511,9 @@ const Verification = () => {
                         <h4 style={{ fontSize: "18px" }}>{t("Additional Documents:")}</h4>
                         <p>{t("Kemit Kingdom reserves the right to request any additional documents (Enhanced Due Diligence - EDD) or further information necessary for conducting thorough \nverifications, in accordance with its legal obligations.")}</p>
                     </Col>
-                    {userDetails?.user?.kyc_additional_file?.length > 0 && (
-                        <AdditionalFilesSection 
-                            files={userDetails.user.kyc_additional_file}
+                    {userDetails?.user?.kyc_additional_file?.filter(file => file?.purpose !== "mastercard_kyc")?.length > 0 && (
+                        <AdditionalFilesSection
+                            files={userDetails.user.kyc_additional_file?.filter(file => file?.purpose !== "mastercard_kyc")}
                             userId={userDetails?._id}
                             uploadEndpoint={`${import.meta.env.VITE_IP_DEV_API}/api/user/upload-additional-file/${userDetails?._id}`}
                             authHeader={authHeader}

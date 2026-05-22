@@ -11,17 +11,28 @@ const AdditionalDocumentModal = ({ isOpen, toggle, accounType }) => {
     const { userDetails } = useContext(UserContext)
 
     const accountType = userDetails?.account_type || accounType
-    const files = accountType === "individual"
+    const allFiles = accountType === "individual"
         ? userDetails?.user?.kyc_additional_file
         : userDetails?.company?.kyb_additional_file
 
-    const requestedFiles = (files || []).filter(
-        (item) => item?.status === "requested" || item?.status === "decline" || item?.status === "declined"
+    const mastercardFiles = (allFiles || []).filter(
+        (item) => item?.purpose === "mastercard_kyc" && (item?.status === "requested" || item?.status === "decline" || item?.status === "declined")
     )
+
+    const otherFiles = (allFiles || []).filter(
+        (item) => item?.purpose !== "mastercard_kyc" && (item?.status === "requested" || item?.status === "decline" || item?.status === "declined")
+    )
+
+    const showMastercardOnly = mastercardFiles.length > 0
+    const requestedFiles = showMastercardOnly ? mastercardFiles : otherFiles
 
     const handleRedirect = () => {
         toggle()
-        navigate('/settings?tab=verification&scroll=additional-files')
+        if (showMastercardOnly) {
+            navigate('/my-mastercard')
+        } else {
+            navigate('/settings?tab=verification&scroll=additional-files')
+        }
     }
 
     return (
