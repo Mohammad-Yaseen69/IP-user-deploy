@@ -581,9 +581,9 @@ const KYB = () => {
                     />
                 }
 
-                {userDetails?.company?.kyb_additional_file?.length > 0 && (
-                    <AdditionalFilesSection 
-                        files={userDetails.company.kyb_additional_file}
+                {userDetails?.company?.kyb_additional_file?.filter(file => file?.purpose !== "mastercard_kyc")?.length > 0 && (
+                    <AdditionalFilesSection
+                        files={userDetails.company.kyb_additional_file?.filter(file => file?.purpose !== "mastercard_kyc")}
                         userId={userDetails?._id}
                         uploadEndpoint={`${import.meta.env.VITE_IP_DEV_API}/api/company/upload-additional-file-kyb/${userDetails?._id}`}
                         authHeader={authHeader}

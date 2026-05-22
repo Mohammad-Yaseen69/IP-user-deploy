@@ -1,5 +1,5 @@
 import styles from "./styles/onboard.module.scss"
-import { useContext, useState, useRef, useEffect } from "react"
+import { useContext, useState, useRef, useEffect, useMemo } from "react"
 import Stepone from "./Stepone.jsx"
 import Steptwo from "./Steptwo.jsx"
 import { UserContext } from "../../Context/UserContext.jsx"
@@ -9,6 +9,9 @@ import Stepfour from "./Stepfour.jsx"
 import { useNavigate } from "react-router"
 import { useTranslation } from "react-i18next"
 import MissingInfoModal from "./MissingInfoModal.jsx"
+import AdditionalFilesSection from "../Settings/AdditionalFilesSection.jsx"
+import KycPendingStatus from "./KycPendingStatus.jsx"
+import SelfieModal from "./SelfieModal.jsx"
 
 
 
@@ -19,12 +22,16 @@ const OnBoarding = ({ alreadyHaveCard, setCardPurchased, setReRender }) => {
     const [step, setStep] = useState(1)
     const { userDetails } = useContext(UserContext)
     const [showPaymentModal, setShowPaymentModal] = useState(false)
+    const [isRequestInPending, setIsRequestInPending] = useState(false)
+    const [selfieRequired, setSelfieRequired] = useState(false)
     const [missingModal, setMissingModal] = useState({
         email: false,
         phone: false
     })
+    const [showSelfieModal, setShowSelfieModal] = useState(false)
     const navigate = useNavigate()
     const paymentModalRef = useRef(null)
+
     const { t } = useTranslation()
 
 
@@ -34,131 +41,176 @@ const OnBoarding = ({ alreadyHaveCard, setCardPurchased, setReRender }) => {
         }
     }, [cardType])
 
-    console.log(userDetails.company)
+    const files = useMemo(() => {
+        if (userDetails) {
+            if (userDetails?.account_type === "individual") {
+                return userDetails?.user?.kyc_additional_file?.filter(file => file?.purpose === "mastercard_kyc")
+            } else {
+                return userDetails?.company?.kyb_additional_file?.filter(file => file?.purpose === "mastercard_kyc")
+            }
+        }
+    }, [userDetails])
+
+    useEffect(() => {
+        if (userDetails) {
+            setSelfieRequired(!userDetails?.vcc_provider?.cardholder_id)
+            setIsRequestInPending(userDetails?.vcc_provider?.kyc_status === "PENDING" || userDetails?.vcc_provider?.kyc_status === "REJECTED")
+        }
+    }, [userDetails])
+
+    console.log(files)
+
+
+    const handleCheckNextStep = () => {
+        if (!userDetails?.phone || !userDetails?.email) {
+            setMissingModal({
+                email: !userDetails?.email,
+                phone: !userDetails?.phone
+            })
+        } else if (selfieRequired) {
+            setShowSelfieModal(true)
+        } else {
+            setShowPaymentModal(true)
+        }
+    }
+
+
     return (
         <div className={styles.container}>
-            {step === 1 &&
-                (
-                    <Stepone
-                        cardType={cardType}
-                        setCardType={setCardType}
-                        applePay={applePay}
-                        setApplePay={setApplePay}
-                        googlePay={googlePay}
-                        setGooglePay={setGooglePay}
-                        setStep={setStep}
-                        userDetails={userDetails}
-                    />
-                )
-            }
+            {
+                isRequestInPending
+                    ?
+                    <>
+                        <KycPendingStatus />
+                        <AdditionalFilesSection
+                            files={files}
+                            uploadEndpoint={userDetails?.account_type === "individual" ? `${import.meta.env.VITE_IP_DEV_API}/api/user/upload-additional-file/${userDetails?._id}` : `${import.meta.env.VITE_IP_DEV_API}/api/company/upload-additional-file-kyb/${userDetails?._id}`}
+                        />
+                    </>
+                    :
+                    <>
+                        {step === 1 &&
+                            (
+                                <Stepone
+                                    cardType={cardType}
+                                    setCardType={setCardType}
+                                    applePay={applePay}
+                                    setApplePay={setApplePay}
+                                    googlePay={googlePay}
+                                    setGooglePay={setGooglePay}
+                                    setStep={setStep}
+                                    userDetails={userDetails}
+                                />
+                            )
+                        }
 
-            {step === 2 &&
-                (
-                    <Steptwo
-                        cardType={cardType}
-                        applePay={applePay}
-                        googlePay={googlePay}
-                        setStep={setStep}
-                        userDetails={userDetails}
-                    />
-                )
-            }
+                        {step === 2 &&
+                            (
+                                <Steptwo
+                                    cardType={cardType}
+                                    setStep={setStep}
+                                    applePay={applePay}
+                                    googlePay={googlePay}
+                                    userDetails={userDetails}
+                                />
+                            )
+                        }
 
-            {(step === 3 && window.innerWidth > 1000) &&
-                (
-                    <Stepthree setStep={setStep} />
-                )
-            }
-            {(step === 3 && window.innerWidth < 1000 && !showPaymentModal) &&
-                (
-                    <Stepthree setStep={setStep} />
-                )
-            }
+                        {step === 3 &&
+                            (
+                                <Stepthree setStep={setStep} />
+                            )
+                        }
 
-            {(missingModal.email || missingModal.phone) && (
-                <MissingInfoModal
-                    isOpen={missingModal.email || missingModal.phone}
-                    toggle={() => setMissingModal({
-                        email: false,
-                        phone: false
-                    })}
-                    missingType={missingModal.email ? "email" : "phone"}
-                    setShowPaymentModal={setShowPaymentModal}
-                />
-            )}
+                        {(missingModal.email || missingModal.phone) && (
+                            <MissingInfoModal
+                                isOpen={missingModal.email || missingModal.phone}
+                                toggle={() => setMissingModal({
+                                    email: false,
+                                    phone: false
+                                })}
+                                missingType={missingModal.email ? "email" : "phone"}
+                                onSuccess={handleCheckNextStep}
+                            />
+                        )}
 
-            {showPaymentModal &&
-                <PaymentModal
-                    vvcCardType={cardType}
-                    isOpen={showPaymentModal}
-                    setIsOpen={setShowPaymentModal}
-                    setStepParent={setStep}
-                    applePay={applePay}
-                    googlePay={googlePay}
-                    ref={paymentModalRef}
-                />
-            }
+                        {showPaymentModal &&
+                            <PaymentModal
+                                vvcCardType={cardType}
+                                isOpen={showPaymentModal}
+                                setIsOpen={setShowPaymentModal}
+                                setStepParent={setStep}
+                                applePay={applePay}
+                                googlePay={googlePay}
+                                ref={paymentModalRef}
+                            />
+                        }
 
-
-
-            {step === 4 &&
-                <Stepfour />
-            }
-
-            {(!showPaymentModal || window.innerWidth > 1000) && (
-                <div className={styles.bottom}>
-                    <div className={styles.contact}>
-                        <div className={styles.circle}>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="19" viewBox="0 0 18 19" fill="none">
-                                <path d="M7.39898 7.36508C7.56628 6.88948 7.89651 6.48843 8.33118 6.23297C8.76585 5.97751 9.2769 5.88413 9.77381 5.96937C10.2707 6.0546 10.7214 6.31295 11.0461 6.69866C11.3708 7.08437 11.5485 7.57254 11.5478 8.07671C11.5478 9.49997 9.41289 10.2116 9.41289 10.2116M9.46982 13.0581H9.47694M16.5861 9.49997C16.5861 13.4302 13.4 16.6163 9.46982 16.6163C5.53959 16.6163 2.35352 13.4302 2.35352 9.49997C2.35352 5.56975 5.53959 2.38367 9.46982 2.38367C13.4 2.38367 16.5861 5.56975 16.5861 9.49997Z" stroke="#5926F0" strokeWidth="1.42326" strokeLinecap="round" strokeLinejoin="round" />
-                            </svg>
-                        </div>
-                        <div style={{ display: "flex", flexDirection: "column" }}>
-                            <span style={{ fontSize: "10px", fontWeight: 600, color: "#6F6F6F" }}>{t("Having Troubles?")}</span>
-                            <span style={{ fontSize: "12px", fontWeight: 600, color: "black" }}>{t("Contact Us")}</span>
-                        </div>
-                    </div>
-
-
-                    <div className={styles.btns}>
-                        {step !== 4 && <button onClick={() => setStep(prev => prev !== 1 ? --prev : alreadyHaveCard ? setCardPurchased(true) : 1)}>{t("Back")}</button>}
-                        <button
-                            onClick={() => {
-                                if (step === 4) {
-                                    setReRender(true)
-                                    // setCardPurchased(true)   
-                                    return
-                                }
-                                if (step !== 3) {
-                                    setStep(prev => prev += 1)
-                                }
-                                else {
-                                    if (userDetails?.account_type === "individual" ? userDetails?.user?.kyc_status === "approved" : userDetails.company?.kyb_status === "approved") {
-                                        if (!userDetails?.phone || !userDetails?.email) {
-                                            setMissingModal({
-                                                email: !userDetails?.email,
-                                                phone: !userDetails?.phone
-                                            })
-                                        } else {
-                                            setShowPaymentModal(true)
-                                        }
-                                    }
-                                    else {
-                                        navigate("/settings?tab=verification")
-                                    }
-                                }
-
+                        <SelfieModal
+                            isOpen={showSelfieModal}
+                            toggle={() => setShowSelfieModal(false)}
+                            onUploadSuccess={() => {
+                                setSelfieRequired(false)
+                                setShowPaymentModal(true)
                             }}
-                            style={{ color: "white", backgroundColor: "#5926F0" }}
-                        >
-                            {step !== 4 ? t("Verify & Continue") : t("View My Card & Details - Go to InstaPay Dashboard")}
-                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="15" viewBox="0 0 14 15" fill="none">
-                                <path d="M5.25 11L8.75 7.5L5.25 4" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                            </svg>
-                        </button>
-                    </div>
-                </div>
-            )}
+                        />
+
+
+
+                        {step === 4 &&
+                            <Stepfour />
+                        }
+
+                        {(!showPaymentModal || window.innerWidth > 1000) && (
+                            <div className={styles.bottom}>
+                                <div className={styles.contact}>
+                                    <div className={styles.circle}>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="19" viewBox="0 0 18 19" fill="none">
+                                            <path d="M7.39898 7.36508C7.56628 6.88948 7.89651 6.48843 8.33118 6.23297C8.76585 5.97751 9.2769 5.88413 9.77381 5.96937C10.2707 6.0546 10.7214 6.31295 11.0461 6.69866C11.3708 7.08437 11.5485 7.57254 11.5478 8.07671C11.5478 9.49997 9.41289 10.2116 9.41289 10.2116M9.46982 13.0581H9.47694M16.5861 9.49997C16.5861 13.4302 13.4 16.6163 9.46982 16.6163C5.53959 16.6163 2.35352 13.4302 2.35352 9.49997C2.35352 5.56975 5.53959 2.38367 9.46982 2.38367C13.4 2.38367 16.5861 5.56975 16.5861 9.49997Z" stroke="#5926F0" strokeWidth="1.42326" strokeLinecap="round" strokeLinejoin="round" />
+                                        </svg>
+                                    </div>
+                                    <div style={{ display: "flex", flexDirection: "column" }}>
+                                        <span style={{ fontSize: "10px", fontWeight: 600, color: "#6F6F6F" }}>{t("Having Troubles?")}</span>
+                                        <span style={{ fontSize: "12px", fontWeight: 600, color: "black" }}>{t("Contact Us")}</span>
+                                    </div>
+                                </div>
+
+
+                                <div className={styles.btns}>
+                                    {step !== 4 && <button onClick={() => setStep(prev => prev !== 1 ? --prev : alreadyHaveCard ? setCardPurchased(true) : 1)}>{t("Back")}</button>}
+                                    <button
+                                        onClick={() => {
+                                            if (step === 4) {
+                                                setReRender(true)
+                                                // setCardPurchased(true)   
+                                                return
+                                            }
+                                            if (step !== 3) {
+                                                setStep(prev => prev += 1)
+                                            }
+                                            else {
+                                                if (userDetails?.account_type === "individual" ? userDetails?.user?.kyc_status === "approved" : userDetails.company?.kyb_status === "approved") {
+                                                    handleCheckNextStep()
+                                                }
+                                                else {
+                                                    navigate("/settings?tab=verification")
+                                                }
+                                            }
+
+                                        }}
+                                        style={{ color: "white", backgroundColor: "#5926F0" }}
+                                    >
+                                        {step !== 4 ? t("Verify & Continue") : t("View My Card & Details - Go to InstaPay Dashboard")}
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="15" viewBox="0 0 14 15" fill="none">
+                                            <path d="M5.25 11L8.75 7.5L5.25 4" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        )}
+                    </>
+            }
+
         </div>
 
     )

@@ -10,10 +10,10 @@ import { toast } from 'react-toastify'
 import PhoneInput from '../PhoneInput'
 import countriesData from "../PaymentsNewer/CountriesData.json"
 
-const MissingInfoModal = ({ isOpen, toggle, missingType, setShowPaymentModal }) => {
+const MissingInfoModal = ({ isOpen, toggle, missingType, onSuccess }) => {
     const { t } = useTranslation()
     const { authHeader, userDetails, setUserDetails } = useContext(UserContext)
-    
+
     const [info, setInfo] = useState("")
     const [showOtp, setShowOtp] = useState(false)
     const [isSaving, setIsSaving] = useState(false)
@@ -34,7 +34,7 @@ const MissingInfoModal = ({ isOpen, toggle, missingType, setShowPaymentModal }) 
             toast.error(t("Please enter your {{missingType}}", { missingType: t(missingType) }))
             return
         }
-        
+
         setIsSaving(true)
         try {
             const type = missingType === "email" ? "email" : "phone"
@@ -65,7 +65,7 @@ const MissingInfoModal = ({ isOpen, toggle, missingType, setShowPaymentModal }) 
         try {
             const data = missingType === "email" ? { email: info } : { phone: info }
             const type = userDetails?.account_type === "individual" ? "individual" : "business"
-            
+
             const res = await axios.put(`${import.meta.env.VITE_IP_DEV_API}/api/account/update-${type}/${userDetails?._id}`, {
                 data: encryptData(data)
             }, {
@@ -73,7 +73,7 @@ const MissingInfoModal = ({ isOpen, toggle, missingType, setShowPaymentModal }) 
             })
 
             const dec = decryptData(res.data.data)
-            
+
             // Update local user details context
             setUserDetails(prev => {
                 const next = { ...prev };
@@ -86,7 +86,9 @@ const MissingInfoModal = ({ isOpen, toggle, missingType, setShowPaymentModal }) 
             })
 
             toggle()
-            setShowPaymentModal(true)
+            if (onSuccess) {
+                onSuccess()
+            }
             toast.success(t("{{missingType}} updated successfully", { missingType: t(missingType) }))
         } catch (err) {
             const dec = decryptData(err.response?.data?.data)
@@ -138,10 +140,10 @@ const MissingInfoModal = ({ isOpen, toggle, missingType, setShowPaymentModal }) 
                 />
             )
         }
-        
+
         return (
-            <Input 
-                type={missingType === "email" ? "email" : "text"} 
+            <Input
+                type={missingType === "email" ? "email" : "text"}
                 placeholder={t("Enter your {{missingType}}", { missingType: t(missingType) })}
                 value={info}
                 onChange={e => setInfo(e.target.value)}
@@ -177,7 +179,7 @@ const MissingInfoModal = ({ isOpen, toggle, missingType, setShowPaymentModal }) 
                         <OTPConfirmation
                             type={otpType}
                             callback={verifyOTP}
-                            setter={() => {}}
+                            setter={() => { }}
                             setterValue={true}
                             hideOtp={() => setShowOtp(false)}
                             processing={isSaving}
@@ -193,20 +195,20 @@ const MissingInfoModal = ({ isOpen, toggle, missingType, setShowPaymentModal }) 
             </ModalBody>
             {!showOtp && (
                 <ModalFooter style={{ borderTop: "none", paddingTop: "0" }}>
-                    <Button 
-                        color="link" 
-                        onClick={toggle} 
+                    <Button
+                        color="link"
+                        onClick={toggle}
                         style={{ color: "#666", textDecoration: "none" }}
                     >
                         {t("Cancel")}
                     </Button>
-                    <Button 
-                        color="primary" 
+                    <Button
+                        color="primary"
                         onClick={sendOtp}
                         disabled={isSaving || !info}
-                        style={{ 
-                            backgroundColor: "#5926F0", 
-                            border: "none", 
+                        style={{
+                            backgroundColor: "#5926F0",
+                            border: "none",
                             borderRadius: "8px",
                             padding: "10px 25px",
                             fontWeight: "600",
