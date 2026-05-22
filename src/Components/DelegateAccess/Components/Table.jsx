@@ -13,7 +13,7 @@ const DelegateTable = ({ filteredInvoices, setEditData, setShowModal, isRole, ro
     <div className={styles.tableWrapper}>
       <div className={styles.table}>
 
-        {isRole ? (
+        {width > 700 && (isRole ? (
           <div className={`${styles.tr} ${styles.thead}`}>
             {width > 700 && (
               <div style={{ flex: 0.09 }} className={`${styles.th} ${styles.serial}`}>
@@ -62,7 +62,7 @@ const DelegateTable = ({ filteredInvoices, setEditData, setShowModal, isRole, ro
             <div style={{ flex: width <= 700 ? 0.15 : 0.1 }} className={`${styles.th} ${styles.actions}`}>
             </div>
           </div>
-        )}
+        ))}
 
         {roleLoading ? (
           <div style={{ padding: "40px", textAlign: "center" }}>

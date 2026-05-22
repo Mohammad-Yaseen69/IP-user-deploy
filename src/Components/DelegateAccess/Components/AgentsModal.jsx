@@ -391,26 +391,28 @@ const AgentsModal = ({ isRole, isOpen, onClose, t, width, roles, isEdit, editDat
                                     <div className={s.modalHeader}>
                                         <h2 className={s.modalTitle}><div><img src={userFour} width={20} height={20} loading="lazy" alt="" /></div> {isEdit ? t("Edit Agent") : t("Add Agent")}</h2>
                                     </div>
-                                    {STEPS.map((st, idx) => {
-                                        const isDone = step > st.id
-                                        const isActive = step === st.id
-                                        return (
-                                            <div key={st.id} className={s.stepItem} style={{ position: 'relative' }}>
-                                                {idx < STEPS.length - 1 && (
-                                                    <div style={{ position: 'absolute', left: 22, top: '100%', width: 2, height: 12, background: isDone ? '#5626e6' : '#e0e0e0', zIndex: 0 }} />
-                                                )}
-                                                <div
-                                                    className={`${s.stepIcon} ${isActive ? s.active : ''} ${isDone ? s.done : ''}`}
-                                                >
-                                                    {isDone ? <CheckCircle size={14} /> : st.icon}
+                                    <div className={s.stepsWrapper}>
+                                        {STEPS.map((st, idx) => {
+                                            const isDone = step > st.id
+                                            const isActive = step === st.id
+                                            return (
+                                                <div key={st.id} className={s.stepItem} style={{ position: 'relative' }}>
+                                                    {idx < STEPS.length - 1 && (
+                                                        <div style={{ position: 'absolute', left: 22, top: '100%', width: 2, height: 12, background: isDone ? '#5626e6' : '#e0e0e0', zIndex: 0 }} />
+                                                    )}
+                                                    <div
+                                                        className={`${s.stepIcon} ${isActive ? s.active : ''} ${isDone ? s.done : ''}`}
+                                                    >
+                                                        {isDone ? <CheckCircle size={14} /> : st.icon}
+                                                    </div>
+                                                    <span className={`${s.stepLabel} ${isActive ? s.active : ''} ${isDone ? s.done : ''}`}>
+                                                        <p>{t("STEP")}{st.id}</p>
+                                                        {t(st.label)}
+                                                    </span>
                                                 </div>
-                                                <span className={`${s.stepLabel} ${isActive ? s.active : ''} ${isDone ? s.done : ''}`}>
-                                                    <p>{t("STEP")}{st.id}</p>
-                                                    {t(st.label)}
-                                                </span>
-                                            </div>
-                                        )
-                                    })}
+                                            )
+                                        })}
+                                    </div>
                                 </div>
 
                                 <div className={s.stepContainer}>
@@ -537,7 +539,7 @@ const AgentsModal = ({ isRole, isOpen, onClose, t, width, roles, isEdit, editDat
                                     <button className={s.btnCancel} onClick={onClose} type="button">{t("Cancel")}</button>
                                     <div>
                                         {step > 1 && (
-                                            <button className={s.btnBack} onClick={() => setStep(p => p - 1)} type="button"><ChevronsLeft /> {t("Back")}</button>
+                                            <button className={s.btnBack} onClick={() => setStep(p => p - 1)} type="button"> {t("Back")}</button>
                                         )}
                                         <button
                                             className={s.btnNext}
@@ -549,7 +551,7 @@ const AgentsModal = ({ isRole, isOpen, onClose, t, width, roles, isEdit, editDat
                                                 ? (isCreating || isUpdating ?
                                                     <><Spinner size="sm" /> {t("Saving...")}</>
                                                     : (isEdit ? t("Update") : t("Create & Send Invite")))
-                                                : t("Next")} {step < 2 ? <ChevronRight /> : <Plus size={20} />}
+                                                : t("Next")} {step < 3 ? <ChevronRight /> : <Plus size={20} />}
                                         </button>
                                     </div>
                                 </div>

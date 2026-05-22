@@ -2,6 +2,7 @@ import { ChevronRight, Eye, EyeOff } from "react-feather"
 import styles from "./styles/authStyle.module.css"
 import PhoneInput from "../../PhoneInput"
 import { Link } from "react-router-dom"
+import useWindowWidth from "../../../utils/useWindowWidth"
 const AuthStepOne = ({ isEmail,
     email,
     setEmail,
@@ -26,6 +27,7 @@ const AuthStepOne = ({ isEmail,
     locationLoading,
     profileLockTIme,
 }) => {
+    const width = useWindowWidth()
 
     const onFormSubmit = (e) => {
         e.preventDefault()
@@ -127,9 +129,7 @@ const AuthStepOne = ({ isEmail,
                     }
                 >
                     <span>
-                        {!emailVerified
-                            ? isPressed ? t("Continuing") : t("Continue")
-                            : isPressed ? t("Processing") : t("Login")}
+                        {t("Login")}
                     </span>
                     <ChevronRight />
                 </button>
@@ -157,6 +157,11 @@ const AuthStepOne = ({ isEmail,
                     </span>
                     <Link to={"/forgot-password/agent"} className={styles.forgot_pass}>
                         {t("Forgot Password?")}
+
+                    </Link>
+                    <Link to={"/forgot-password/agent"} className={styles.forgot_passmobile}>
+                        {t(" If you don't have an account Create an Account")}
+                        <span>{t("Forgot Password?")}</span>
                     </Link>
                 </div>
             </form>

@@ -336,7 +336,7 @@
     color: #111;
 }
 
-@media screen and (max-width: 900px) {
+@media screen and (max-width: 700px) {
 
     .wrapper,
     .body {
@@ -346,8 +346,7 @@
 
     .leftPanel,
     .left {
-        width: 100%;
-        min-height: 260px;
+        display: none;
     }
 
     .wrapperRight,
@@ -359,6 +358,11 @@
     .inputs {
         justify-content: center;
         flex-wrap: wrap;
+    }
+
+    .form_btn {
+        border-radius: var(--sm, 6px);
+        background: linear-gradient(277deg, #E64067 -9.52%, #5926F0 62.22%, #4828A0 119.38%), #4A32E3;
     }
 
     .inputs input {
