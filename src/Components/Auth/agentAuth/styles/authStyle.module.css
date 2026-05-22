@@ -259,6 +259,25 @@
             color: #F32D2D;
         }
 
+        .back_link {
+            width: 90%;
+            display: flex;
+            align-items: start;
+            justify-content: flex-start;
+            color: var(--primary, #000);
+            cursor: pointer;
+            span{
+                display: flex;
+                align-items: center;
+                gap: 5px;
+                font-family: Manrope;
+                font-size: 14px;
+                font-style: normal;
+                font-weight: 500;
+                line-height: 18px;
+            }
+        }
+
         .footer {
             width: 100%;
             display: flex;

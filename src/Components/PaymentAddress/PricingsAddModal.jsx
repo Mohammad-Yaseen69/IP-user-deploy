@@ -35,7 +35,7 @@ const PricingsAddModal = ({ isOpen, toggle, editMode = false, plan = null, onEdi
         }
     }, [editMode, plan, isOpen])
 
-    const formValid = title && description && price && billingCycle && tAndC && receivingWallet && Number(String(price).replace(",", "")) > 0
+    const formValid = title && description && price && billingCycle && tAndC && receivingWallet && Number(String(price).replace(/,/g, "")) > 0
 
     const handleSave = () => {
         const payload = {
