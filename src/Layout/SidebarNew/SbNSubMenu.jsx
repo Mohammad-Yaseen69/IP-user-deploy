@@ -14,7 +14,7 @@ import { usePermission } from "../../hooks/GeneralUse/usePermission";
 const SidebarSubMenu = ({ menu, className, setIsOpen, isOpen, level, showModal, setShowModal, profileCompletedPercentage, inheritSize }) => {
     const { togglSidebar } = useContext(CustomizerContext)
     const { clearData, userDetails } = useContext(UserContext)
-    const { pathname } = useLocation();
+    const { pathname, search } = useLocation();
     const navigate = useNavigate()
     const { t } = useTranslation();
     const checkPermission = usePermission()
@@ -33,11 +33,20 @@ const SidebarSubMenu = ({ menu, className, setIsOpen, isOpen, level, showModal, 
 
     function shouldSetActive({ item }) {
         var returnValue = false;
-        if (item?.url === pathname) {
-            returnValue = true;
+        if (item?.url) {
+            try {
+                const target = new URL(item.url);
+                if (target.search) {
+                    returnValue = pathname === target.pathname && search === target.search;
+                } else {
+                    returnValue = pathname === target.pathname;
+                }
+            } catch {
+                returnValue = pathname === item.url;
+            }
         }
         if (!returnValue && item?.menu) {
-            item?.menu.every((subItem) => {
+            item.menu.every((subItem) => {
                 returnValue = shouldSetActive({ item: subItem });
                 return !returnValue;
             });
@@ -54,7 +63,7 @@ const SidebarSubMenu = ({ menu, className, setIsOpen, isOpen, level, showModal, 
                 setIsOpen(temp);
             }
         });
-    }, []);
+    }, [pathname, search]);
 
     const handleEshopClick = () => {
         const eShopUrl = `${import.meta.env.VITE_IP_ECOM_URL}/dashboard/seller?fromMain=true`
