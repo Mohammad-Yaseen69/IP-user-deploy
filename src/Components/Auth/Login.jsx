@@ -1156,7 +1156,11 @@ const Login = ({ country, setIsLoginForm, }) => {
                                     display: "flex",
                                     alignItems: "center"
                                 }}>
-                                    <input className={styles.inp_con} type={showPassword ? "text" : "password"} placeholder={t("Enter your password")} value={password} onChange={e => setPassword(e.target.value)} autoComplete="off" />
+                                    <input className={styles.inp_con} type={showPassword ? "text" : "password"}
+                                        placeholder={t("Enter your password")}
+                                        value={password} onChange={e => setPassword(e.target.value)}
+                                        disabled={isPressed}
+                                        autoComplete="off" />
                                     <div style={{
                                         position: "absolute",
                                         top: "55%",

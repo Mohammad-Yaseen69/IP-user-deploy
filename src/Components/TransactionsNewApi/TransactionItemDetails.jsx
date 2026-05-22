@@ -15,7 +15,10 @@ import { UserContext } from "../../Context/UserContext"
 import { formatCurrency } from "../../Helper/AmountFormat"
 import { usePermission } from "../../hooks/GeneralUse/usePermission";
 
-const TransactionItemDetails = ({ item, badgeColor, desc, internationalReceiver, selectedCategory, setSelectedCategory, isEditMode, showCategories = false, addCategoriesToTransaction, message, setMessage, setIsEditMode, isSaving, note, setNote, fromReferral = false, vvc, amount, cardNo }) => {
+const TransactionItemDetails = ({ item, badgeColor, desc, internationalReceiver,
+    selectedCategory, setSelectedCategory, isEditMode,
+    showCategories = false, addCategoriesToTransaction, message, setMessage,
+    setIsEditMode, isSaving, note, setNote, fromReferral = false, vvc, amount, cardNo }) => {
     const { t } = useTranslation()
     const { userDetails } = useContext(UserContext)
     const can = usePermission();
@@ -91,7 +94,14 @@ const TransactionItemDetails = ({ item, badgeColor, desc, internationalReceiver,
         }
 
         if (item?.service_type === "topup") {
-            return `${item?.receiver?.user?.first_name ?? item?.receiver?.user?.company_name ?? ""} ${item?.receiver?.user?.last_name ?? ""}`.trim()
+            const receiver =
+                item?.receiver?.user ||
+                item?.receiver?.company
+
+            return `${receiver?.first_name ??
+                receiver?.company_name ??
+                ""
+                } ${receiver?.last_name ?? ""}`.trim()
         }
 
         return `${item?.sender?.user?.first_name ?? item?.senderCard?.account?.first_name ?? item.receiverCard?.account?.first_name ?? item?.receiverWallet?.account?.first_name ?? userDetails?.first_name ?? item?.sender?.user?.company_name ?? item?.senderCard?.account?.company_name ?? item.receiverCard?.account?.company_name ?? item?.receiverWallet?.account?.company_name ?? userDetails?.company_name ?? ""} ${item?.sender?.user?.last_name ?? item?.senderCard?.account?.last_name ?? item.receiverCard?.account?.last_name ?? item?.receiverWallet?.account?.last_name ?? userDetails?.last_name ?? ""}`.trim()
@@ -119,13 +129,19 @@ const TransactionItemDetails = ({ item, badgeColor, desc, internationalReceiver,
         }
 
         if (item?.service_type === "topup") {
-            const name = `${item?.receiver?.user?.first_name ?? item?.receiver?.user?.company_name ?? ""} ${item?.receiver?.user?.last_name ?? ""}`.trim()
+            const name = `${item?.receiver?.user?.first_name ??
+                item?.receiver?.company?.company_name ??
+                item?.receiver?.user?.company_name ??
+                ""
+                } ${item?.receiver?.user?.last_name ?? ""}`.trim()
+
             return name?.slice(0, 1)
         }
 
         const name = `${item?.sender?.user?.first_name ?? item?.senderCard?.account?.first_name ?? item.receiverCard?.account?.first_name ?? item?.receiverWallet?.account?.first_name ?? userDetails?.first_name ?? item?.sender?.user?.company_name ?? item?.senderCard?.account?.company_name ?? item.receiverCard?.account?.company_name ?? item?.receiverWallet?.account?.company_name ?? userDetails?.company_name ?? ""} ${item?.sender?.user?.last_name ?? item?.senderCard?.account?.last_name ?? item.receiverCard?.account?.last_name ?? item?.receiverWallet?.account?.last_name ?? userDetails?.last_name ?? ""}`.trim()
         return name?.slice(0, 1)
     }, [item, internationalReceiver, userDetails])
+
     return (
         <div className={styles.container}>
             <div className={styles.left}>
@@ -202,8 +218,8 @@ const TransactionItemDetails = ({ item, badgeColor, desc, internationalReceiver,
                 {
                     item?.agent?.first_name
                     &&
-                    <div style={{background: "#6f2ad9"}} className={styles.er_item}>
-                        <span style={{color:"white"}} >{t("Performed By:")} {item?.agent?.first_name} {item?.agent?.last_name}</span>
+                    <div style={{ background: "#6f2ad9" }} className={styles.er_item}>
+                        <span style={{ color: "white" }} >{t("Performed By:")} {item?.agent?.first_name} {item?.agent?.last_name}</span>
                     </div>
                 }
 

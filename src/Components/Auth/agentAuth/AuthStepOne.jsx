@@ -1,7 +1,8 @@
-import { ChevronRight, Eye, EyeOff } from "react-feather"
+import { ChevronLeft, ChevronRight, Eye, EyeOff } from "react-feather"
 import styles from "./styles/authStyle.module.css"
 import PhoneInput from "../../PhoneInput"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
+
 import useWindowWidth from "../../../utils/useWindowWidth"
 const AuthStepOne = ({ isEmail,
     email,
@@ -27,8 +28,8 @@ const AuthStepOne = ({ isEmail,
     locationLoading,
     profileLockTIme,
 }) => {
+    const naviagte = useNavigate()
     const width = useWindowWidth()
-
     const onFormSubmit = (e) => {
         e.preventDefault()
         if (!emailVerified) {
@@ -138,7 +139,9 @@ const AuthStepOne = ({ isEmail,
                         <span>{profileLockTIme > 0 ? isLoginError : t(isLoginError)}</span>
                     </div>
                 )}
-
+                <div className={styles.back_link} onClick={() => naviagte("/login")}>
+                    <span>  <ChevronLeft />   {("Back")}</span>
+                </div>
                 {locationLoading && (
                     <div className={styles.location_status}>
                         <span>{t("Reading Location...")}</span>
