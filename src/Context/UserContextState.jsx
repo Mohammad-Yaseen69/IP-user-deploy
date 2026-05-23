@@ -130,7 +130,7 @@ const UserState = ({ children }) => {
         };
     }, []);
 
-    console.log(window.location)
+    // console.log(window.location)
 
 
     const [profileLockTIme, setProfileLockTime] = useState(0)

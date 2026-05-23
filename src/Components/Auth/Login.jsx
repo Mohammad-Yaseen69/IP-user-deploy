@@ -993,7 +993,9 @@ const Login = ({ country, setIsLoginForm, }) => {
     };
     const resolvedCredential = getResolvedCredential();
     const isCredentialValid = isPhoneNumber.test(resolvedCredential) || isEmail.test(resolvedCredential);
-
+    const availableMethods = methods.filter(
+        m => m.avail && m.attr !== currentOtpMethod
+    )
     return (
         <>
 
@@ -1156,7 +1158,11 @@ const Login = ({ country, setIsLoginForm, }) => {
                                     display: "flex",
                                     alignItems: "center"
                                 }}>
-                                    <input className={styles.inp_con} type={showPassword ? "text" : "password"} placeholder={t("Enter your password")} value={password} onChange={e => setPassword(e.target.value)} autoComplete="off" />
+                                    <input className={styles.inp_con} type={showPassword ? "text" : "password"}
+                                        placeholder={t("Enter your password")}
+                                        value={password} onChange={e => setPassword(e.target.value)}
+                                        disabled={isPressed}
+                                        autoComplete="off" />
                                     <div style={{
                                         position: "absolute",
                                         top: "55%",
@@ -1399,7 +1405,12 @@ const Login = ({ country, setIsLoginForm, }) => {
                                         </p>
                                     }
                                     {methods.filter(m => m.avail).length > 1 &&
-                                        <div className={styles.otp_methods}>
+                                        <div className={styles.otp_methods} style={{
+                                            gridTemplateColumns:
+                                                availableMethods.length === 1
+                                                    ? "1fr"
+                                                    : "repeat(2, minmax(0, 1fr))"
+                                        }}>
                                             {isMobile ? (
                                                 <>
                                                     {methods.map((method, index) => {

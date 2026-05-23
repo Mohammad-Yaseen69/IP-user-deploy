@@ -183,14 +183,35 @@
             }
         }
 
+
         @media (max-width: 700px) {
+            .table {
+                min-height: 600px;
+            }
+
+            .dataRow {
+                display: flex;
+                padding: 12px var(--md, 16px);
+                flex-direction: column;
+                align-items: flex-start;
+                gap: var(--md, 16px);
+                align-self: stretch;
+                border-radius: var(--lg, 14px);
+                border: 1px solid var(--border-subtle, #E1E5EE);
+                background: #FFF;
+                margin-bottom: 10px;
+            }
+
+            .td {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                width: 100%;
+            }
+
             .modal {
-                height: 100vh;
-
+                height: 90vh;
+                overflow-y: auto;
             }
 
-            .modalBody {
-                height: 100vh;
-                overflow-y: scroll;
-            }
         }

@@ -40,6 +40,7 @@ import RecentTransactions from "./RecentTransactions";
 import StepFive from "./StepFive";
 import StepOne from "./StepOne";
 import StepTwo from "./StepTwo";
+import { useIdempotency } from "../../../hooks/Payments/useIdempotency";
 
 
 
@@ -142,7 +143,7 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, show
     const { userDetails, authHeader, setProfileLockTime, userWallets } = useContext(UserContext)
     const [data, dispatch] = useReducer(reducer, initialState)
     const { limitStatus, clearStatus } = useTopupLimitCheck(data?.currency?.currency?.code, +String(data?.amount)?.replaceAll(",", ""), data?.payment_type?.value)
-
+    const { getKey, reset } = useIdempotency()
     const dataHandler = (field, value) => {
         dispatch({ type: "UPDATE_FIELD", field, value });
     };
@@ -369,6 +370,7 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, show
     }
 
     const sendOtp = async (codeType = "") => {
+        reset()
         dataHandler("loading", true)
         try {
             const payload = generatePayload(codeType)
@@ -415,7 +417,7 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, show
             const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}${url}`,
                 payload,
                 {
-                    headers: authHeader
+                    headers: { ...authHeader, "Idempotency-Key": getKey() }
                 }
             )
 
@@ -492,7 +494,7 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, show
 
             const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/initiat-w2w${data.selectedSavedCard?._id ? "-pan" : ""}-transaction`,
                 { data: enc },
-                { headers: authHeader }
+                { headers: { ...authHeader, "Idempotency-Key": getKey() } }
             )
             const dec = decryptData(res.data.data)
             console.log(dec)
@@ -545,7 +547,13 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, show
 
             const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/paypal/initiate-w2w-payment`,
                 { data: enc },
-                { headers: authHeader }
+                {
+                    headers: {
+                        ...authHeader,
+                        "Idempotency-Key": getKey()
+                    },
+                }
+
             )
             const dec = decryptData(res.data.data)
             window.location.href = dec?.url
@@ -1011,6 +1019,7 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, show
 
 
     const handleBack = () => {
+        reset()
         if (data.step === 4 && invoiceId && !data.showShippingAddress) {
             navigate(`/invoice/${userDetails.username}/${invoiceId}`)
         }
@@ -1450,10 +1459,12 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, show
                                                                 isLoading={data.loading}
                                                                 isOpen={data.showOtpModal}
                                                                 toggle={() => {
+                                                                    reset()
                                                                     dataHandler("showOtpModal", false)
                                                                 }}
                                                                 resendHandler={sendOtp}
                                                                 error={data.otpError}
+                                                                resetIdempotency={reset}
                                                             />
                                                         }
 
@@ -1708,10 +1719,12 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, show
                                                                                     isLoading={data.loading}
                                                                                     isOpen={data.showOtpModal}
                                                                                     toggle={() => {
+                                                                                        reset()
                                                                                         dataHandler("showOtpModal", false)
                                                                                     }}
                                                                                     resendHandler={sendOtp}
                                                                                     error={data.otpError}
+                                                                                    resetIdempotency={reset}
                                                                                 />
                                                                             }
 

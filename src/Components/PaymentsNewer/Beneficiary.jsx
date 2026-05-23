@@ -441,7 +441,7 @@ const PaymentsBeneficiary = ({ beneficiary, setBeneficiary, setSubStep, type = "
                             ?
                             <>
                                 <XCircle size={12} color="red" />
-                                <span style={{ color: "red" }}>Something went wrong.</span>
+                                <span style={{ color: "red" }}>{t("Something went wrong.")}</span>
                             </>
                             :
                             <>
@@ -498,7 +498,7 @@ const PaymentsBeneficiary = ({ beneficiary, setBeneficiary, setSubStep, type = "
                             ?
                             <>
                                 <XCircle size={12} color="red" />
-                                <span style={{ color: "red" }}>Something went wrong.</span>
+                                <span style={{ color: "red" }}>{t("Something went wrong.")}</span>
                             </>
                             :
                             <>

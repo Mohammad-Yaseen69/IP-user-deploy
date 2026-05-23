@@ -31,6 +31,7 @@ import useTopupLimitCheck from "../../hooks/Payments/useTopupLimitCheck";
 import GeneralNoticeModal from "../PaymentsNewer/GeneralNoticeModal";
 import PlaidBankTransfer from "../AddFunds/WalletFundsFlow/PlaidBankTransfer";
 import { useQueryClient } from "@tanstack/react-query";
+import { useIdempotency } from "../../hooks/Payments/useIdempotency";
 
 const initialState = {
     step: 1,
@@ -94,6 +95,7 @@ const AcceptQuotation = ({ isOpen, toggle, item, type = "receive" }) => {
     const { userWallets, userDetails, authHeader, setProfileLockTime, verifyToken } = useContext(UserContext)
     const { limitStatus, clearStatus } = useTopupLimitCheck(item?.amount_reciever_currency?.currency?.code, +String(data?.amount)?.replaceAll(",", ""), data?.payment_type?.value)
     const queryClient = useQueryClient()
+    const { getKey, reset } = useIdempotency()
 
     const navigate = useNavigate()
     const dataHandler = (field, value) => {
@@ -146,6 +148,7 @@ const AcceptQuotation = ({ isOpen, toggle, item, type = "receive" }) => {
     }, [data])
 
     const handleBackClick = () => {
+        reset()
         switch (data.step) {
             case 1:
                 if (data.payment_type?.value === "wallet" && data.wallet?._id) {
@@ -403,7 +406,7 @@ const AcceptQuotation = ({ isOpen, toggle, item, type = "receive" }) => {
 
             const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/initiat-w2w${data.selectedSavedCard?._id ? "-pan" : ""}-transaction`,
                 { data: enc },
-                { headers: authHeader }
+                { headers: { ...authHeader, "idempotency-key": getKey() } }
             )
             const dec = decryptData(res.data.data)
             console.log(dec)
@@ -453,7 +456,7 @@ const AcceptQuotation = ({ isOpen, toggle, item, type = "receive" }) => {
 
             const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/paypal/initiate-w2w-payment`,
                 { data: enc },
-                { headers: authHeader }
+                { headers: { ...authHeader, "idempotency-key": getKey() } }
             )
             const dec = decryptData(res.data.data)
             window.location.href = dec?.url
@@ -491,7 +494,7 @@ const AcceptQuotation = ({ isOpen, toggle, item, type = "receive" }) => {
             const url = data.payment_type?.value === "mobile_wallet" ? "/api/collection/wallet-to-wallet" : "/api/quotation/quotation-wallet-to-wallet"
 
             const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}${url}`, formdata, {
-                headers: authHeader
+                headers: { ...authHeader, "idempotency-key": getKey() }
             })
 
             const dec = decryptData(res.data.data)
@@ -855,10 +858,13 @@ const AcceptQuotation = ({ isOpen, toggle, item, type = "receive" }) => {
                                                     isLoading={data.loading}
                                                     isOpen={data.show_otp}
                                                     toggle={() => {
+                                                        reset()
                                                         dataHandler("show_otp", false)
                                                     }}
                                                     resendHandler={sendOtp}
                                                     error={data.otp_error}
+                                                    resetIdempotency={reset}
+
                                                 />
                                             }
                                             {((data.payment_type?.value !== "bank" && data?.payment_type?.value !== "bank_transfer") || data.step < 2) &&
@@ -1058,10 +1064,13 @@ const AcceptQuotation = ({ isOpen, toggle, item, type = "receive" }) => {
                                                             isLoading={data.loading}
                                                             isOpen={data.show_otp}
                                                             toggle={() => {
+                                                                reset()
                                                                 dataHandler("show_otp", false)
                                                             }}
                                                             resendHandler={sendOtp}
                                                             error={data.otp_error}
+                                                            resetIdempotency={reset}
+
                                                         />
                                                     }
                                                 </>

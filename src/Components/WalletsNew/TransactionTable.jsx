@@ -22,7 +22,7 @@ import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
 import InstaPayLoader from "../Loader";
 import TransactionItemMobile from "../TransactionsNewApi/Mobile/TransactionItemMobile";
- 
+
 
 const TransactionsTable = ({ currentWallet, filtered, setFiltered }) => {
     const { t } = useTranslation()
@@ -285,10 +285,10 @@ const TransactionsTable = ({ currentWallet, filtered, setFiltered }) => {
         }
     }, [loaderRef.current, mobileLoaderRef.current])
 
-    
 
 
-    
+
+
 
     useEffect(() => {
         if (active === "All") {
@@ -311,7 +311,6 @@ const TransactionsTable = ({ currentWallet, filtered, setFiltered }) => {
             setFiltered(requestedTransactions)
         }
     }, [active])
-
     return (
         <div className={styles.table}>
             <div className={styles.menu}>
