@@ -294,8 +294,8 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, show
                     "payment_type": payment_type ?? "wallet_to_wallet",
                     'description': data.comment,
                     "token": data.exchange_rate?.token || "",
-                    // preserved_amount=${Number(String(data.recipient_amount)?.replace(",",""))}
-                    "preserved_amount": Number(String(data.recipient_amount)?.replace(",", "")),
+                    // preserved_amount=${Number(String(data.recipient_amount)?.replaceAll(",",""))}
+                    "preserved_amount": Number(String(data.recipient_amount)?.replaceAll(",", "")),
                 },
                 type: codeType || data.codeType
             }
@@ -317,7 +317,7 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, show
                     "date": date,
                     "timezone": data?.timezone,
                     "token": data.exchange_rate?.token || "",
-                    "preserved_amount": Number(String(data.recipient_amount)?.replace(",", ""))
+                    "preserved_amount": Number(String(data.recipient_amount)?.replaceAll(",", ""))
                 },
                 type: codeType || data.codeType
             }
@@ -339,7 +339,7 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, show
                     "date": date,
                     "timezone": data?.timezone,
                     "token": data.exchange_rate?.token || "",
-                    "preserved_amount": Number(String(data.recipient_amount)?.replace(",", ""))
+                    "preserved_amount": Number(String(data.recipient_amount)?.replaceAll(",", ""))
                 },
                 type: codeType || data.codeType
             }
@@ -626,7 +626,7 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, show
         console.log(data)
 
         try {
-            const url = `${import.meta.env.VITE_IP_DEV_API}/api/wallet/get-new-exchange-rate?from=${from}&to=${data.beneficiary_wallet?.currency?.code}&amount=${amount}&type=${payment_type ?? "wallet_to_wallet"}&level_id=${userDetails?.level?._id}&account_id=${userDetails?._id}&payment_type=${data.payment_type?.value ?? "wallet"}&receiver_wallet_id=${data.beneficiary_wallet?._id}&sender_wallet_id=${data.wallet?._id ?? data.currency?._id}&payment_method=${payment_method}${data.recipient_amount ? `&preserved_amount=${Number(String(data.recipient_amount)?.replace(",", ""))}` : ""}`
+            const url = `${import.meta.env.VITE_IP_DEV_API}/api/wallet/get-new-exchange-rate?from=${from}&to=${data.beneficiary_wallet?.currency?.code}&amount=${amount}&type=${payment_type ?? "wallet_to_wallet"}&level_id=${userDetails?.level?._id}&account_id=${userDetails?._id}&payment_type=${data.payment_type?.value ?? "wallet"}&receiver_wallet_id=${data.beneficiary_wallet?._id}&sender_wallet_id=${data.wallet?._id ?? data.currency?._id}&payment_method=${payment_method}${data.recipient_amount ? `&preserved_amount=${Number(String(data.recipient_amount)?.replaceAll(",", ""))}` : ""}`
 
             const res = await axios.get(url, { headers: authHeader })
             const decrypted = decryptData(res.data.data)

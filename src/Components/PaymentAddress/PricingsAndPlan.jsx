@@ -163,7 +163,7 @@ const PricingsAndPlan = ({ isInvoicePage = true }) => {
     const canSubscribePaymentPlan = can("payment-address.plan.subscribe")
 
     const filteredPlans = plans?.filter(p => {
-        if (!isInvoicePage && !p.showOnPaymentAddress) return false;
+        if (!isInvoicePage && p.showOnPaymentAddress === false) return false;
         return true;
     })
 
