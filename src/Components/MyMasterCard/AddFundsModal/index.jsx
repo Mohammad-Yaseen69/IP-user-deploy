@@ -67,7 +67,7 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card, setCurrentCardDetai
             method: "POST",
             payload: {
                 currency: "USD",
-                amount: Number(amount.replace(",", ""))
+                amount: Number(amount.replaceAll(",", ""))
             },
             isEncrypted: true,
         }),

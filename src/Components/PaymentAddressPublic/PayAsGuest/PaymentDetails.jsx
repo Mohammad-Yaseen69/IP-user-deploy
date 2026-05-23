@@ -52,7 +52,7 @@ const PaymentDetails = ({ data, dataHandler, isBankDeposit }) => {
                 <div className={styles.aao_item}>
                     <span>{t("Sending")}</span>
                     <span>
-                        {Number(String(data.exchange_rate?.sending?.amount)?.replace(",", ""))?.toLocaleString(
+                        {Number(String(data.exchange_rate?.sending?.amount)?.replaceAll(",", ""))?.toLocaleString(
                             "en-US",
                             { minimumFractionDigits: 2, maximumFractionDigits: 2 }
                         )}{" "}

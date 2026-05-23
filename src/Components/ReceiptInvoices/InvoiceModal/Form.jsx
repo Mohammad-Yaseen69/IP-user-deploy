@@ -50,7 +50,7 @@ const Form = ({ data, inputFieldChange, dataHandler }) => {
                     </div>
                 </div>
             </Field>
-            <Field label={t('Amount')} required={!data.amount || Number(data.amount.replace(",", "")) === 0}>
+            <Field label={t('Amount')} required={!data.amount || Number(data.amount.replaceAll(",", "")) === 0}>
                 <TextInput
                     value={data.amount}
                     onChange={(e) => {
