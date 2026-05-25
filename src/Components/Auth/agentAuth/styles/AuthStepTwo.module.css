@@ -240,8 +240,8 @@
 .otp_methods {
     display: grid;
     align-items: flex-start;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: var(--Gaps-Gap-Medium, 12px);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
     align-self: stretch;
 }
 
