@@ -18,6 +18,7 @@ import { logger } from '@sentry/react';
 import { useMutation } from '@tanstack/react-query';
 import { apiWrapper } from '../../utils/Functions/apiWrapper';
 import AdditionalFilesSection from './AdditionalFilesSection';
+import { useIdempotency } from '../../hooks/Payments/useIdempotency';
 
 const industries = [
     "Arts & Entertainment",
@@ -59,6 +60,7 @@ const Verification = () => {
     const [sourceOfFund, setSourceOfFund] = useState("")
     const [occupationOther, setOccupationOther] = useState("")
     const [loading, setLoading] = useState(false)
+    const { getKey, } = useIdempotency()
 
     const { mutateAsync, isPending } = useMutation({
         mutationFn: (payload) => apiWrapper({
@@ -66,6 +68,8 @@ const Verification = () => {
             method: "PUT",
             payload,
             isEncrypted: true,
+            idempotencyKey: getKey()
+
         })
     })
 

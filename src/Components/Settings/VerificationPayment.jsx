@@ -20,6 +20,7 @@ import { apiWrapper } from '../../utils/Functions/apiWrapper'
 import MobileWalletStatus from '../PaymentAddressPublic/PayAsGuest/MobileWalletStatus'
 import PlaidBankTransfer from '../AddFunds/WalletFundsFlow/PlaidBankTransfer'
 import ErrorModal from '../PaymentsNewer/InternationalFlow/ErrorModal'
+import { useIdempotency } from '../../hooks/Payments/useIdempotency'
 
 const paymentChannels = [
     {
@@ -61,6 +62,8 @@ const VerificationPayment = ({ isOpen, toggle, verify, desc, occupation, loading
         cardExpiry: "",
         CardCVC: ""
     })
+    const { reset } = useIdempotency()
+
     const [isValid, setIsValid] = useState(false)
     const { userDetails, userWallets, authHeader, setProfileLockTime, verifyToken, checkAuth } = useContext(UserContext)
     const [saving, setSaving] = useState(false)
@@ -537,7 +540,9 @@ const VerificationPayment = ({ isOpen, toggle, verify, desc, occupation, loading
                                         display: "flex",
                                         alignItems: "center",
                                     }}
-                                    onClick={() => setStep(prev => prev - 1)}
+                                    onClick={() =>
+                                        reset(),
+                                        setStep(prev => prev - 1)}
                                 >{t("Back")}</Button>
                             }
                             <Button
@@ -572,7 +577,7 @@ const VerificationPayment = ({ isOpen, toggle, verify, desc, occupation, loading
                             >{t("Next")}</Button>
                         </ModalFooter>
                     }
-                </Modal>
+                </Modal >
             }
             <Modal isOpen={showOtp} toggle={() => setShowOtp(!showOtp)}>
                 <ModalHeader toggle={() => setShowOtp(!showOtp)}>{t("Confirm")}</ModalHeader>
