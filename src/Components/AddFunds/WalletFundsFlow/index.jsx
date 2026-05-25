@@ -458,7 +458,7 @@ const WalletFundsFlow = ({ setAction }) => {
           const enc = encryptData({
             from: data?.wallet?.currency?.code,
             to: "USDT",
-            amount: Number(String(data?.amount)?.replace(",", "")),
+            amount: Number(String(data?.amount)?.replaceAll(",", "")),
           });
           const res = await axios.post(
             `${import.meta.env.VITE_IP_DEV_API}/api/crypto/rates`,
@@ -506,7 +506,7 @@ const WalletFundsFlow = ({ setAction }) => {
         try {
           const enc = encryptData({
             wallet_id: data?.wallet?.wallet_id,
-            amount: Number(String(data?.amount)?.replace(",", "")),
+            amount: Number(String(data?.amount)?.replaceAll(",", "")),
             accountId: userDetails?._id,
             isCryptoToFiat: true
           });
@@ -570,7 +570,7 @@ const WalletFundsFlow = ({ setAction }) => {
         try {
           const enc = encryptData({
             wallet_id: data?.wallet?._id,
-            amount: Number(String(data?.amount)?.replace(",", "")),
+            amount: Number(String(data?.amount)?.replaceAll(",", "")),
             accountId: userDetails?._id,
           });
           const res = await axios.post(
@@ -599,7 +599,7 @@ const WalletFundsFlow = ({ setAction }) => {
 
           const originalAmount =
             dec?.data?.amount ??
-            Number(String(data?.amount)?.replace(",", ""));
+            Number(String(data?.amount)?.replaceAll(",", ""));
 
           const feeInWallet = isPlaidConverted
             ? dec?.data?.fee_in_original ?? dec?.data?.fee ?? 0

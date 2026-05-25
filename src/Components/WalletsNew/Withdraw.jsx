@@ -66,7 +66,7 @@ const Withdraw = ({ isOpen, toggle, wallet }) => {
     return (
         <Modal isOpen={isOpen}>
             <ModalHeader toggle={toggle}>
-                {service_name_formatter(t("withdraw balance from PKR wallet").replace("PKR", wallet?.currency?.code))}
+                {service_name_formatter(t("withdraw balance from PKR wallet").replaceAll("PKR", wallet?.currency?.code))}
             </ModalHeader>
             {
                 userWithdrawals?.length > 0
@@ -368,7 +368,7 @@ const WithdrawOldFlow = ({
                 if (vendorBalanceInUSD < 4) {
                     setShowBalanceModal(true)
                     break;
-                } else if (Number(String(amount)?.replace(",", "")) >= vendorBalance) {
+                } else if (Number(String(amount)?.replaceAll(",", "")) >= vendorBalance) {
                     setShowBalanceModal(true)
                     break;
                 }
@@ -473,7 +473,7 @@ const WithdrawOldFlow = ({
                     &&
 
                     <AmountAndCurrency
-                        amount={String(amount)?.replace(",", "")}
+                        amount={String(amount)?.replaceAll(",", "")}
                         currency={wallet?.currency?.code}
                         payoutChannel={payoutChannel}
                         setAmount={setAmount}
@@ -516,7 +516,7 @@ const WithdrawOldFlow = ({
                     step === 3 && !confirmed
                     &&
                     <ConfirmSend
-                        amount={String(amount)?.replace(",", "")}
+                        amount={String(amount)?.replaceAll(",", "")}
                         beneficiary={[userDetails]}
                         comment={"Withdrawal"}
                         country={country}
@@ -589,7 +589,7 @@ const WithdrawOldFlow = ({
                     &&
                     <Receipt
                         beneficiary={[userDetails]}
-                        amount={String(amount)?.replace(",", "")}
+                        amount={String(amount)?.replaceAll(",", "")}
                         currency={wallet?.currency?.code}
                         country={country}
                         payoutChannel={payoutChannel}

@@ -31,7 +31,7 @@ const PayWithCrypto = ({ data = {}, dataHandler, type = "payment_address", invoi
 
     const { data: feeDetails } = useQuery({
         queryKey: ['CryptoFee', data.amount, data.currentWallet?.wallet_id],
-        queryFn: () => apiWrapper({ endpoint: `/api/guest-pay/crypto-fee/${data?.currentWallet?.wallet_id}/${Number(String(data.amount)?.replace(",", ""))}?payment_type=${type}&invoice_id=${invoiceId}` }).then(res => res),
+        queryFn: () => apiWrapper({ endpoint: `/api/guest-pay/crypto-fee/${data?.currentWallet?.wallet_id}/${Number(String(data.amount)?.replaceAll(",", ""))}?payment_type=${type}&invoice_id=${invoiceId}` }).then(res => res),
         retry: 2,
     })
 

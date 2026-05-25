@@ -58,7 +58,7 @@ const CryptoFund = ({ setAction }) => {
             const enc = encryptData({
                 from: cryptoCurrency?.currency?.code,
                 to: "USDT",
-                amount: Number(String(amountArg || amount)?.replace(",", ""))
+                amount: Number(String(amountArg || amount)?.replaceAll(",", ""))
             })
             const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/crypto/rates`, { data: enc }, {
                 headers: authHeader,
