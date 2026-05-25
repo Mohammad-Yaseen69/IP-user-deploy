@@ -120,6 +120,8 @@ const Layout = ({ children, classNames, ...rest }) => {
 
   useEffect(() => {
     console.log("checking files status")
+    if (location.pathname.toLowerCase().includes("my-mastercard")) return;
+
     if (userDetails?.account_type === "individual") {
       if (userDetails?.user?.kyc_additional_file?.length > 0 && userDetails?.user?.kyc_additional_file?.find((item) => item?.status === "declined" || item?.status === "requested")) {
         setShowAdditionalModal(true)
@@ -299,7 +301,7 @@ const Layout = ({ children, classNames, ...rest }) => {
           />
         }
 
-        {(showAdditionalFilesModal && !location.pathname.toLowerCase().includes("settings")) &&
+        {(showAdditionalFilesModal && !location.pathname.toLowerCase().includes("settings") && !location.pathname.toLowerCase().includes("my-mastercard")) &&
           <AdditionalDocumentModal
             isOpen={showAdditionalFilesModal}
             toggle={() => setShowAdditionalModal(false)}
