@@ -38,8 +38,9 @@ const AuthStepTwo = ({
     profileLockTIme,
     resolvedCredential,
 }) => {
-
-    const numberOfFields = 6
+    const availableMethods = methods.filter(
+        m => m.avail && m.attr !== currentOtpMethod
+    )
 
     return (
         <div className={styles.authForm}>
@@ -192,7 +193,12 @@ const AuthStepTwo = ({
                         <p style={{ fontSize: "13px", marginBottom: "8px" }}>
                             {t("Choose your preferred method to verify your identity:")}
                         </p>
-                        <div className={styles.otp_methods}>
+                        <div className={styles.otp_methods} style={{
+                            gridTemplateColumns:
+                                availableMethods.length === 1
+                                    ? "1fr"
+                                    : "repeat(2, minmax(0, 1fr))"
+                        }}>
                             {methods.map((method, index) => {
                                 if (!method.avail || method.attr === currentOtpMethod) return null
                                 return (
