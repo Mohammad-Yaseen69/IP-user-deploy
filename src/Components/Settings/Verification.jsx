@@ -515,9 +515,9 @@ const Verification = () => {
                         <h4 style={{ fontSize: "18px" }}>{t("Additional Documents:")}</h4>
                         <p>{t("Kemit Kingdom reserves the right to request any additional documents (Enhanced Due Diligence - EDD) or further information necessary for conducting thorough \nverifications, in accordance with its legal obligations.")}</p>
                     </Col>
-                    {userDetails?.user?.kyc_additional_file?.length > 0 && (
+                    {userDetails?.user?.kyc_additional_file?.filter(file => file?.purpose !== "mastercard_kyc")?.length > 0 && (
                         <AdditionalFilesSection
-                            files={userDetails.user.kyc_additional_file}
+                            files={userDetails.user.kyc_additional_file?.filter(file => file?.purpose !== "mastercard_kyc")}
                             userId={userDetails?._id}
                             uploadEndpoint={`${import.meta.env.VITE_IP_DEV_API}/api/user/upload-additional-file/${userDetails?._id}`}
                             authHeader={authHeader}

@@ -44,94 +44,96 @@ const ActivityTable = ({ filteredData, Loading }) => {
         <div className={styles.tableWrapper}>
             <div className={styles.table}>
 
-                <div className={`${styles.tr} ${styles.thead}`}>
+                {
+                    width > 700 && <div className={`${styles.tr} ${styles.thead}`}>
 
-                    {width > 700 && (
+                        {width > 700 && (
+                            <div
+                                style={{
+                                    flex: 0.04,
+                                    textAlign: "center",
+                                    justifyContent: "center"
+                                }}
+                                className={`${styles.th} ${styles.serial}`}
+                            >
+                                {t("S.No")}
+                            </div>
+                        )}
+
                         <div
                             style={{
-                                flex: 0.04,
-                                textAlign: "center",
-                                justifyContent: "center"
-                            }}
-                            className={`${styles.th} ${styles.serial}`}
-                        >
-                            {t("S.No")}
-                        </div>
-                    )}
-
-                    <div
-                        style={{
-                            flex: width <= 700 ? 0.20 : 0.14,
-                            textAlign: "center"
-                        }}
-                        className={styles.th}
-                    >
-                        {t("Date")}
-                    </div>
-
-                    <div
-                        style={{
-                            flex: width <= 700 ? 0.30 : 0.18,
-                            textAlign: "center"
-                        }}
-                        className={styles.th}
-                    >
-                        {t("Name")}
-                    </div>
-
-                    {width > 700 && (
-                        <div
-                            style={{
-                                flex: 0.14,
+                                flex: width <= 700 ? 0.20 : 0.14,
                                 textAlign: "center"
                             }}
                             className={styles.th}
                         >
-                            {t("Entity Type")}
+                            {t("Date")}
                         </div>
-                    )}
 
-                    <div
-                        style={{
-                            flex: width <= 700 ? 0.22 : 0.18,
-                            textAlign: "center"
-                        }}
-                        className={styles.th}
-                    >
-                        {t("Action")}
-                    </div>
-
-                    {width > 700 && (
                         <div
                             style={{
-                                flex: 0.26,
+                                flex: width <= 700 ? 0.30 : 0.18,
                                 textAlign: "center"
                             }}
                             className={styles.th}
                         >
-                            {t("Description")}
+                            {t("Name")}
                         </div>
-                    )}
 
-                    <div
-                        style={{
-                            flex: width <= 700 ? 0.18 : 0.12,
-                            textAlign: "center"
-                        }}
-                        className={styles.th}
-                    >
-                        {t("IP Address")}
-                    </div>
-                    <div
-                        style={{
-                            flex: width <= 700 ? 0.18 : 0.12,
-                            textAlign: "center"
-                        }}
-                        className={styles.th}
-                    >
-                    </div>
+                        {width > 700 && (
+                            <div
+                                style={{
+                                    flex: 0.14,
+                                    textAlign: "center"
+                                }}
+                                className={styles.th}
+                            >
+                                {t("Entity Type")}
+                            </div>
+                        )}
 
-                </div>
+                        <div
+                            style={{
+                                flex: width <= 700 ? 0.22 : 0.18,
+                                textAlign: "center"
+                            }}
+                            className={styles.th}
+                        >
+                            {t("Action")}
+                        </div>
+
+                        {width > 700 && (
+                            <div
+                                style={{
+                                    flex: 0.26,
+                                    textAlign: "center"
+                                }}
+                                className={styles.th}
+                            >
+                                {t("Description")}
+                            </div>
+                        )}
+
+                        <div
+                            style={{
+                                flex: width <= 700 ? 0.18 : 0.12,
+                                textAlign: "center"
+                            }}
+                            className={styles.th}
+                        >
+                            {t("IP Address")}
+                        </div>
+                        <div
+                            style={{
+                                flex: width <= 700 ? 0.18 : 0.12,
+                                textAlign: "center"
+                            }}
+                            className={styles.th}
+                        >
+                        </div>
+
+                    </div>
+                }
 
                 {Loading ? (
                     <div
@@ -145,107 +147,166 @@ const ActivityTable = ({ filteredData, Loading }) => {
                 ) : filteredData?.length > 0 ? (
 
                     filteredData.map((item, index) => (
-                        <div
-                            key={item?._id || index}
-                            className={`${styles.tr} ${styles.dataRow}`}
-                        >
-
-                            {width > 700 && (
+                        (
+                            width > 700 ?
                                 <div
-                                    style={{
-                                        flex: 0.04,
-                                        textAlign: "center",
-                                        justifyContent: "center"
-                                    }}
-                                    className={`${styles.td} ${styles.serial}`}
+                                    key={item?._id || index}
+                                    className={`${styles.tr} ${styles.dataRow}`}
                                 >
-                                    {index + 1}
-                                </div>
-                            )}
 
-                            <div
-                                style={{
-                                    flex: width <= 700 ? 0.20 : 0.14,
-                                    textAlign: "center"
-                                }}
-                                className={styles.td}
-                            >
-                                {item?.createdAt
-                                    ? new Date(item.createdAt).toLocaleDateString()
-                                    : "—"}
-                            </div>
+                                    {width > 700 && (
+                                        <div
+                                            style={{
+                                                flex: 0.04,
+                                                textAlign: "center",
+                                                justifyContent: "center"
+                                            }}
+                                            className={`${styles.td} ${styles.serial}`}
+                                        >
+                                            {index + 1}
+                                        </div>
+                                    )}
 
-                            <div
-                                style={{
-                                    flex: width <= 700 ? 0.30 : 0.18,
-                                    textAlign: "center"
-                                }}
-                                className={styles.td}
-                            >
-                                {item?.agent?.first_name || userDetails?.company_name || ""}{item?.agent?.last_name || ""}
-                            </div>
+                                    <div
+                                        style={{
+                                            flex: width <= 700 ? 0.20 : 0.14,
+                                            textAlign: "center"
+                                        }}
+                                        className={styles.td}
+                                    >
+                                        {item?.createdAt
+                                            ? new Date(item.createdAt).toLocaleDateString()
+                                            : "—"}
+                                    </div>
 
-                            {width > 700 && (
+                                    <div
+                                        style={{
+                                            flex: width <= 700 ? 0.30 : 0.18,
+                                            textAlign: "center"
+                                        }}
+                                        className={styles.td}
+                                    >
+                                        {item?.agent?.first_name || userDetails?.company_name || ""}{item?.agent?.last_name || ""}
+                                    </div>
+
+                                    {width > 700 && (
+                                        <div
+                                            style={{
+                                                flex: 0.14,
+                                                textAlign: "center"
+                                            }}
+                                            className={styles.td}
+                                        >
+                                            {item?.entityType || "—"}
+                                        </div>
+                                    )}
+
+                                    <div
+                                        style={{
+                                            flex: width <= 700 ? 0.22 : 0.18,
+                                            textAlign: "center",
+                                            wordBreak: "break-word"
+                                        }}
+                                        className={styles.td}
+                                    >
+                                        {truncate(item?.action, 15) || "—"}
+                                    </div>
+
+                                    {width > 700 && (
+                                        <div
+                                            style={{
+                                                flex: 0.26,
+                                                textAlign: "center",
+                                                wordBreak: "break-word"
+                                            }}
+                                            className={styles.td}
+                                        >
+                                            {dynamicDesc(item?.description)}
+                                        </div>
+                                    )}
+
+                                    <div
+                                        style={{
+                                            flex: width <= 700 ? 0.18 : 0.12,
+                                            textAlign: "center"
+                                        }}
+                                        className={styles.td}
+                                    >
+                                        {item?.ipAddress || "—"}
+                                    </div>
+                                    <div
+                                        style={{
+                                            flex: width <= 700 ? 0.18 : 0.12,
+                                            textAlign: "center"
+                                        }}
+                                        onClick={() => {
+                                            setSelectedActivity(item)
+                                            setShowModal(true)
+                                        }}
+                                        className={styles.td}
+                                    >
+                                        <MoreVertical size={18} />
+
+                                    </div>
+
+                                </div> :
                                 <div
-                                    style={{
-                                        flex: 0.14,
-                                        textAlign: "center"
-                                    }}
-                                    className={styles.td}
+                                    key={item?._id || index}
+                                    className={`${styles.tr} ${styles.dataRow}`}
                                 >
-                                    {item?.entityType || "—"}
+                                    <div
+                                        className={styles.td}
+                                    >
+
+                                        {item?.agent?.first_name || userDetails?.company_name || ""}{item?.agent?.last_name || ""}
+
+                                        <div
+                                            onClick={() => {
+                                                setSelectedActivity(item)
+                                                setShowModal(true)
+                                            }}
+                                        >
+                                            <MoreHorizontal size={18} />
+
+                                        </div>
+                                    </div>
+                                    <div
+
+                                        className={styles.td}
+                                    >
+                                        <div style={{ color: "#6E7687", fontWeight: "500" }}>{t("Action")}</div>
+
+                                        {truncate(item?.action, 15) || "—"}
+                                    </div>
+
+                                    <div
+
+                                        className={styles.td}
+                                    >
+                                        <div style={{ color: "#6E7687", fontWeight: "500" }}>{t("Description")}</div>
+
+                                        {dynamicDesc(item?.description)}
+                                    </div>
+
+                                    <div
+
+                                        className={styles.td}
+                                    >
+                                        <div style={{ color: "#6E7687", fontWeight: "500" }}>{t("Ip Address")}</div>
+                                        {item?.ipAddress || "—"}
+                                    </div>
+
+                                    <div
+
+                                        className={styles.td}
+                                    >
+                                        <div style={{ color: "#6E7687", fontWeight: "500" }}>{t("Date")}</div>
+
+                                        {item?.createdAt
+                                            ? new Date(item.createdAt).toLocaleDateString()
+                                            : "—"}                                    </div>
                                 </div>
-                            )}
-
-                            <div
-                                style={{
-                                    flex: width <= 700 ? 0.22 : 0.18,
-                                    textAlign: "center",
-                                    wordBreak: "break-word"
-                                }}
-                                className={styles.td}
-                            >
-                                {truncate(item?.action, 15) || "—"}
-                            </div>
-
-                            {width > 700 && (
-                                <div
-                                    style={{
-                                        flex: 0.26,
-                                        textAlign: "center",
-                                        wordBreak: "break-word"
-                                    }}
-                                    className={styles.td}
-                                >
-                                    {dynamicDesc(item?.description)}
-                                </div>
-                            )}
-
-                            <div
-                                style={{
-                                    flex: width <= 700 ? 0.18 : 0.12,
-                                    textAlign: "center"
-                                }}
-                                className={styles.td}
-                            >
-                                {item?.ipAddress || "—"}
-                            </div>
-                            <div
-                                style={{
-                                    flex: width <= 700 ? 0.18 : 0.12,
-                                    textAlign: "center"
-                                }}
-                                onClick={() => {
-                                    setSelectedActivity(item)
-                                    setShowModal(true)
-                                }}
-                                className={styles.td}
-                            >
-                                <MoreVertical size={18} />
-
-                            </div>
-
-                        </div>
+                        )
                     ))
 
                 ) : (
