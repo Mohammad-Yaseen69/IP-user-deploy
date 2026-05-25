@@ -53,7 +53,8 @@ const OnBoarding = ({ alreadyHaveCard, setCardPurchased, setReRender }) => {
 
     useEffect(() => {
         if (userDetails) {
-            setSelfieRequired(!userDetails?.vcc_provider?.cardholder_id)
+            const isSelfieUploaded = userDetails?.vcc_provider?.kyc_files?.find(file => file.kind === "selfie_with_id")
+            setSelfieRequired(!isSelfieUploaded)
             setIsRequestInPending(userDetails?.vcc_provider?.kyc_status === "PENDING" || userDetails?.vcc_provider?.kyc_status === "REJECTED")
         }
     }, [userDetails])
