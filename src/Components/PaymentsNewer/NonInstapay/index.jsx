@@ -41,6 +41,7 @@ import { createShambeToken } from '../../../Helper/CreateToken'
 import CreditCard from '../InternationalFlow/CreditCard'
 import { Link } from 'react-router-dom'
 import PlaidBankTransfer from '../../AddFunds/WalletFundsFlow/PlaidBankTransfer'
+import { useIdempotency } from '../../../hooks/Payments/useIdempotency'
 
 
 const leftSideContent = [
@@ -108,6 +109,7 @@ const NonInstapayPayment = ({ sendPaymentType, setSendPaymentType, setStep }) =>
     const { limitStatus, clearStatus } = useTopupLimitCheck(data?.currency?.currency?.code, +String(data?.amount)?.replaceAll(",", ""), data?.payment_type?.value)
     const [showCardModal, setShowCardModal] = useState(false)
     const { getExchangeRate: getPlainExchangeRate } = usePlainFx()
+    const { getKey, reset } = useIdempotency()
     const queryClient = useQueryClient()
     const navigate = useNavigate()
 
@@ -164,7 +166,8 @@ const NonInstapayPayment = ({ sendPaymentType, setSendPaymentType, setStep }) =>
                 endpoint: "/api/pre-wallet/confirm-transaction",
                 method: "POST",
                 isFormData: true,
-                payload
+                payload,
+                idempotencyKey: getKey()
             })
         },
         onSuccess: (dec) => {
@@ -196,7 +199,8 @@ const NonInstapayPayment = ({ sendPaymentType, setSendPaymentType, setStep }) =>
                 endpoint: "/api/paypal/initiate-non-ip-payment",
                 method: "POST",
                 isFormData: true,
-                payload
+                payload,
+                idempotencyKey: getKey()
             })
         },
         onSuccess: (dec) => {
@@ -228,7 +232,8 @@ const NonInstapayPayment = ({ sendPaymentType, setSendPaymentType, setStep }) =>
                 method: "POST",
                 isEncrypted: true,
                 payload,
-                isDecrypted: true
+                isDecrypted: true,
+                idempotencyKey: getKey()
             })
         },
         onSuccess: (dec) => {
@@ -471,6 +476,7 @@ const NonInstapayPayment = ({ sendPaymentType, setSendPaymentType, setStep }) =>
     }
 
     const handleBack = () => {
+        reset()
         if (data.step === 4 && data.payment_type?.value) {
             dataHandler("payment_type", {})
             dataHandler("payment_duration", {
@@ -741,12 +747,17 @@ const NonInstapayPayment = ({ sendPaymentType, setSendPaymentType, setStep }) =>
                                     callback={data.payment_type?.value === "card" ? initiateCardPayment : data.payment_type?.value === "paypal" ? initiatePaypalPayment : data?.payment_type?.value === "mobile_wallet" ? () => { } : confirmWalletPayment}
                                     data={data}
                                     dataHandler={dataHandler}
+                                    resetIdempotency={reset}
                                     isLoading={data.loading}
                                     isOpen={data.showOtpModal}
                                     toggle={() => {
                                         dataHandler("showOtpModal", false)
+                                        reset()
                                     }}
-                                    resendHandler={sendOtp}
+                                    resendHandler={() => {
+                                        sendOtp()
+                                        reset()
+                                    }}
                                     error={data.otpError}
                                 />
                             }
