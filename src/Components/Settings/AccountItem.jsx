@@ -33,11 +33,12 @@ const AccountItem = ({ data }) => {
 
 
     const onChange = () => {
-        if ((data.name.toLowerCase().includes("insta") || data.name.toLowerCase().includes("telegram")) && !checked) {
+        if ((data.name.toLowerCase().includes("insta") ||
+            data.name.toLowerCase().includes("telegram") ||
+            data.name.toLowerCase().includes("whatsapp")) && !checked) {
             if (userDetails?.username) {
                 setShowModal(true)
-            }
-            else {
+            } else {
                 setNoUser(true)
             }
         } else {
@@ -47,41 +48,63 @@ const AccountItem = ({ data }) => {
 
     const sendOtp = async () => {
         setSaving(true)
-        const data = {
+        const payload = {
             data: {
-                type: "unlink-insta"
+                type: data.name.toLowerCase().includes("whatsapp") ? "unlink-whatsapp" : "unlink-insta"
             },
             type: codeType
         }
-        const enc = encryptData(data)
+        const enc = encryptData(payload)
         try {
             const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/send-otp`, { data: enc }, {
                 headers: authHeader
             })
-
             const dec = decryptData(res.data.data)
             setToken(dec?.token)
             setShowOtp(true)
         } catch (error) {
             const dec = decryptData(error?.response?.data?.data)
             toast.error(dec?.message)
-        }
-        finally {
+        } finally {
             setSaving(false)
         }
     }
 
     const otpCallback = (setter, type, otp, setError) => {
         setSaving(true)
-        const socialType = data.name.toLowerCase().includes("insta") ? "insta" : "telegram"
-        const requestData = {
-            token,
-            otp,
-            type: codeType
+
+        if (data.name.toLowerCase().includes("whatsapp")) {
+            axios.put(
+                `${import.meta.env.VITE_IP_DEV_API}/api/bot/whatsapp-bot/unlink`,
+                { token, otp, type: codeType },
+                {
+                    headers: {
+                        ...authHeader,
+                        "source": "user",
+                        "x-api-secret": import.meta.env.VITE_API_SECRET_KEY
+                    }
+                }
+            )
+                .then(res => {
+                    verifyToken()
+                    setter(true)
+                    toast.success("WhatsApp account unlinked successfully!")
+                })
+                .catch(error => {
+                    const dec = decryptData(error?.response?.data?.data)
+                    setError(dec?.message ?? "We cannot process your request at the moment, please try again later.")
+                    toast.error(dec?.message ?? "We cannot process your request at the moment, please try again later.")
+                })
+                .finally(() => setSaving(false))
+            return
         }
-        axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/instagram/${socialType}-unlink/${userDetails?._id}`, { data: encryptData(requestData) }, {
-            headers: authHeader
-        })
+
+        const socialType = data.name.toLowerCase().includes("insta") ? "insta" : "telegram"
+        const requestData = { token, otp, type: codeType }
+        axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/instagram/${socialType}-unlink/${userDetails?._id}`,
+            { data: encryptData(requestData) },
+            { headers: authHeader }
+        )
             .then(res => {
                 verifyToken()
                 setter(true)
@@ -89,13 +112,10 @@ const AccountItem = ({ data }) => {
             })
             .catch(error => {
                 const dec = decryptData(error?.response?.data?.data)
-                console.log(dec)
-                setError(dec?.message ?? "We cannot process your request at the moment, please try again later.")
-                toast.error(dec?.message ?? "We cannot process your request at the moment, please try again later.")
+                setError(dec?.message ?? "We cannot process your request at the moment, please try again later.")
+                toast.error(dec?.message ?? "We cannot process your request at the moment, please try again later.")
             })
-            .finally(() => {
-                setSaving(false)
-            })
+            .finally(() => setSaving(false))
     }
 
     useEffect(() => {
@@ -104,6 +124,9 @@ const AccountItem = ({ data }) => {
         }
         else if (data.name.toLowerCase().includes("telegram")) {
             setChecked(userDetails?.telegram_bot ? true : false)
+        }
+        else if (data.name.toLowerCase().includes("whatsapp")) {
+            setChecked(userDetails?.whatsapp_bot ? true : false)
         }
     }, [userDetails])
 
@@ -141,6 +164,7 @@ const AccountItem = ({ data }) => {
             }
         }
     }, [redirect, userDetails])
+    console.log("data", data)
     return (
         <div className={styles.card} ref={data.name.toLowerCase().includes("insta") ? conRef : null}>
             <div className={styles.top}>
@@ -151,9 +175,27 @@ const AccountItem = ({ data }) => {
                         <H4>{t(data.name)}</H4>
                     </div>
 
-                    {(data.name.toLowerCase().includes("insta") || data.name.toLowerCase().includes("telegram")) &&
+                    {(data.name.toLowerCase().includes("insta") ||
+                        data.name.toLowerCase().includes("telegram") ||
+                        data.name.toLowerCase().includes("whatsapp")) &&
                         <>
-                            {checked ? <></> : <Info style={{ cursor: "pointer" }} onClick={() => setShowModal(true)} />}
+                            {checked ? <button
+                                type="button"
+                                onClick={sendOtp}
+                                style={{
+                                    background: "#ffebed",
+                                    color: "#D00416",
+                                    border: "1px solid #D00416",
+                                    borderRadius: "6px",
+                                    padding: "4px 12px",
+                                    fontSize: "12px",
+                                    cursor: "pointer",
+                                    fontWeight: 600
+                                }}
+                            >
+                                {t("Unlink")}
+                            </button>
+                                : <Info style={{ cursor: "pointer" }} onClick={() => setShowModal(true)} />}
                         </>
                     }
 
@@ -218,18 +260,20 @@ const AccountItem = ({ data }) => {
 
                 <span
                     style={{
-                        backgroundColor: (data.name.toLowerCase().includes("insta") || (data.name.toLowerCase().includes("telegram")))
+                        backgroundColor: (data.name.toLowerCase().includes("insta") ||
+                            (data.name.toLowerCase().includes("telegram")) ||
+                            (data.name.toLowerCase().includes("whatsapp")))
                             ? checked ? "#84EBB4" : "#ffebed"
                             : "#FFDB43",
-                        color: (data.name.toLowerCase().includes("insta") || (data.name.toLowerCase().includes("telegram")))
+                        color: (data.name.toLowerCase().includes("insta") || (data.name.toLowerCase().includes("telegram")) || (data.name.toLowerCase().includes("whatsapp")))
                             ? checked ? "#00875A" : "#D00416"
                             : "#DFB400",
                     }}>
-                    {(data.name.toLowerCase().includes("insta") || (data.name.toLowerCase().includes("telegram")))
-                        ?
-                        checked ? t("Connected") : t("Not Connected")
-                        :
-                        t("Coming Soon")
+                    {(data.name.toLowerCase().includes("insta") ||
+                        data.name.toLowerCase().includes("telegram") ||
+                        data.name.toLowerCase().includes("whatsapp"))
+                        ? checked ? t("Connected") : t("Not Connected")
+                        : t("Coming Soon")
                     }
                 </span>
             </div>
@@ -246,6 +290,15 @@ const AccountItem = ({ data }) => {
             }
             {
                 (data.name.toLowerCase().includes("telegram") && showModal) ?
+                    <LinktoTelegramModal
+                        isOpen={showModal}
+                        toggle={() => {
+                            setShowModal(!showModal)
+                        }}
+                    /> : ""
+            }
+            {
+                (data.name.toLowerCase().includes("Whatsapp") && showModal) ?
                     <LinktoTelegramModal
                         isOpen={showModal}
                         toggle={() => {
