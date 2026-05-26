@@ -22,7 +22,7 @@ export const AccountsData = [
         img: wa,
         name: "Whatsapp",
         enabled: false,
-        available: false
+        available: true
     },
     {
         img: fb,
