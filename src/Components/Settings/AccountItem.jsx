@@ -12,6 +12,7 @@ import OTPConfirmation from '../UserSettingsNew/OTPConfirmation'
 import { useLocation, useNavigate } from 'react-router'
 import LinkToInstagramModal from '../LinkToInstagramModal'
 import LinktoTelegramModal from "../LinkToTelegramModal"
+import LinkToWhatsappModal from "../LinkToWhatsappModal"
 import { Info } from 'react-feather'
 
 const AccountItem = ({ data }) => {
@@ -298,8 +299,8 @@ const AccountItem = ({ data }) => {
                     /> : ""
             }
             {
-                (data.name.toLowerCase().includes("Whatsapp") && showModal) ?
-                    <LinktoTelegramModal
+                (data.name.toLowerCase().includes("whatsapp") && showModal) ?
+                    <LinkToWhatsappModal
                         isOpen={showModal}
                         toggle={() => {
                             setShowModal(!showModal)

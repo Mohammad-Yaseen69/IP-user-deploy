@@ -24,7 +24,7 @@ const steps = [
     {
         step: "Step 03 – From InstaPay Instagram Profile Page",
         name: "Step 03 – From InstaPay Instagram Profile Page",
-        desc: `The InstaPay chatbot will then ask for the InstaPay verification code. Enter the code you obtained from the InstaPay settings under \"My Social Network Accounts\" and click send.`
+        desc: `The InstaPay chatbot will then ask for your InstaPay PIN. Enter the PIN you have set up on your InstaPay account and click send.`
     },
     {
         step: "Step 04 – From InstaPay Instagram Profile Page",
@@ -60,7 +60,7 @@ const LinkToInstagramModal = ({ isOpen, toggle }) => {
     const [timer, setTimer] = useState(120)
     const [showSuccess, setShowSuccess] = useState(false)
 
-  
+
     useEffect(() => {
         let interval;
         if (timer > 0) {
