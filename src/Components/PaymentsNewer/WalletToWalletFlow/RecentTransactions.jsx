@@ -37,8 +37,10 @@ const RecentTransactions = ({ dataHandler, type, setShowRecent = () => { }, setS
     const { t } = useTranslation()
     const { data, isError } = useQuery({
         queryKey: ["RecentTransaction", type, userDetails?._id],
-        queryFn: () => getRecentTransaction(authHeader, userDetails?._id, type)
-    })
+        queryFn: () => getRecentTransaction(authHeader, userDetails?._id, type),
+        staleTime: 0,
+        gcTime: 0,
+    }) 
     const width = useWindowWidth()
     const payoutChannelData = usePayoutChannel(userDetails)
 
@@ -110,6 +112,8 @@ const RecentTransactions = ({ dataHandler, type, setShowRecent = () => { }, setS
             dataHandler("beneficiary", beneficiary)
             dataHandler("currency", currency?.currency?.code)
             dataHandler("currency_wallet", currency)
+            dataHandler("flow", `${userDetails?.account_type === "individual" ? "C" : "B"}2${beneficiary?.beneficiary_type === "individual" ? "C" : "B"}`)
+            dataHandler("transactionType", beneficiary?.beneficiary_type === "individual" ? "C" : "B")
             dataHandler("payer", t?.payer)
             dataHandler("payoutChannel", { ...channel, vendor: t?.payer?.vendor ?? "thunes" })
             setSubStep(4)
