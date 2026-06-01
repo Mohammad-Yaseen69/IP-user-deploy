@@ -7,7 +7,7 @@ const KycPendingStatus = () => {
     const { t } = useTranslation();
 
     return (
-        <Col md="12" className="mb-4">
+        <Col md="12" className="mb-0">
             <Card style={{
                 border: '1px solid #e2e8f0',
                 borderRadius: '12px',

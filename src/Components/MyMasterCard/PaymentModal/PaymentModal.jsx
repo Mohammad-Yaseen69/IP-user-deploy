@@ -30,7 +30,7 @@ const PLACEHOLDER_CARD_TYPE = {
 
 const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay, googlePay }) => {
   const [step, setStep] = useState(1)
-  const { userWallets, getUserWallets, userDetails, authHeader, setProfileLockTime } = useContext(UserContext)
+  const { userWallets, getUserWallets, userDetails, authHeader, setProfileLockTime, checkAuth } = useContext(UserContext)
   const [walletState, setWalletState] = useState({})
   const [paymentType, setPaymentType] = useState("")
   const [loading, setLoading] = useState(false)
@@ -136,8 +136,7 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay,
   console.log(googlePay, applePay)
 
   const sendOtp = async (e) => {
-
-
+    
     if (paymentType !== "wallet") {
       if (!feeDetails.token) return false
     }
@@ -267,13 +266,23 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay,
       otp
     }
     try {
-      await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/mastercard/create-vvc`, { data: encryptData(data) }, {
+      const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/mastercard/create-vvc`, { data: encryptData(data) }, {
         headers: authHeader
       })
 
-      setToken(null)
-      setStep(4)
-      setshowOtpModal(false)
+      const dec = decryptData(res.data?.data)
+      const vcc_request_will_be_pending = dec?.vcc_request_will_be_pending
+
+      if (!vcc_request_will_be_pending) {
+        setToken(null)
+        setStep(4)
+        setshowOtpModal(false)
+      } else {
+        checkAuth()
+        setToken(null)
+        setshowOtpModal(false)
+        setIsOpen(false)
+      }
 
     } catch (err) {
       const decrypted = decryptData(err.response.data.data);

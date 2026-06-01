@@ -75,19 +75,17 @@ const MissingInfoModal = ({ isOpen, toggle, missingType, onSuccess }) => {
             const dec = decryptData(res.data.data)
 
             // Update local user details context
-            setUserDetails(prev => {
-                const next = { ...prev };
-                if (missingType === "email") {
-                    next.email = info;
-                } else if (missingType === "phone") {
-                    next.phone = info;
-                }
-                return next;
-            })
+            const updatedUser = { ...userDetails };
+            if (missingType === "email") {
+                updatedUser.email = info;
+            } else if (missingType === "phone") {
+                updatedUser.phone = info;
+            }
+            setUserDetails(updatedUser)
 
             toggle()
             if (onSuccess) {
-                onSuccess()
+                onSuccess(updatedUser)
             }
             toast.success(t("{{missingType}} updated successfully", { missingType: t(missingType) }))
         } catch (err) {
