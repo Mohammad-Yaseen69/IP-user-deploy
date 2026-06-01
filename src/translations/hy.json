@@ -3722,5 +3722,13 @@
   "Didn't receive the code?": "Կոդը չե՞ք ստացել։",
   "Verify and continue": "Հաստատել և շարունակել",
   "Your agent password has been successfully set. Please login to your agent account to continue.": "Ձեր գործակալի գաղտնաբառը հաջողությամբ սահմանվել է: Շարունակելու համար մուտք գործեք ձեր գործակալի հաշիվ:",
-  "Go to Login": "Մուտք գործել"
+  "Go to Login": "Մուտք գործել",
+  "whatsapp number.": "WhatsApp-ի համարը։",
+  "phone number.": "հեռախոսահամար",
+  "Additional Document for Your Mastercard": "Լրացուցիչ փաստաթուղթ ձեր Mastercard-ի համար",
+  "Please upload a clear selfie of yourself holding your ID card next to your face. Face and ID details must be clearly visible.": "Խնդրում ենք վերբեռնել ձեր պարզ սելֆիը՝ դեմքի կողքին պահելով ձեր անձը հաստատող քարտը։ Դեմքը և անձը հաստատող փաստաթղթի մանրամասները պետք է հստակ տեսանելի լինեն։",
+  "Capture": "Սևեռել",
+  "Take Photo": "Լուսանկարել",
+  "Reupload": "Վերբեռնել",
+  "Submit Document": "Ներկայացնել փաստաթուղթը"
 }

@@ -3717,5 +3717,13 @@
   "Didn't receive the code?": "Negavote kodo?",
   "Verify and continue": "Patvirtinti ir tęsti",
   "Your agent password has been successfully set. Please login to your agent account to continue.": "Jūsų agento slaptažodis sėkmingai nustatytas. Norėdami tęsti, prisijunkite prie savo agento paskyros.",
-  "Go to Login": "Eiti į prisijungimą"
+  "Go to Login": "Eiti į prisijungimą",
+  "whatsapp number.": "„WhatsApp“ numeris.",
+  "phone number.": "telefono numeris.",
+  "Additional Document for Your Mastercard": "Papildomas dokumentas jūsų „Mastercard“ kortelei",
+  "Please upload a clear selfie of yourself holding your ID card next to your face. Face and ID details must be clearly visible.": "Įkelkite aiškią asmenukę, kurioje laikote asmens tapatybės kortelę šalia veido. Veido ir asmens tapatybės kortelės duomenys turi būti aiškiai matomi.",
+  "Capture": "Užfiksuoti",
+  "Take Photo": "Fotografuoti",
+  "Reupload": "Įkelti iš naujo",
+  "Submit Document": "Pateikti dokumentą"
 }

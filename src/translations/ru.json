@@ -4093,5 +4093,13 @@
   "Didn't receive the code?": "Не получили код?",
   "Verify and continue": "Проверьте и продолжите",
   "Your agent password has been successfully set. Please login to your agent account to continue.": "Пароль для вашего агента успешно установлен. Пожалуйста, войдите в свою учетную запись агента, чтобы продолжить.",
-  "Go to Login": "Перейти к входу"
+  "Go to Login": "Перейти к входу",
+  "whatsapp number.": "Номер WhatsApp.",
+  "phone number.": "номер телефона.",
+  "Additional Document for Your Mastercard": "Дополнительный документ для вашей карты Mastercard",
+  "Please upload a clear selfie of yourself holding your ID card next to your face. Face and ID details must be clearly visible.": "Пожалуйста, загрузите четкое селфи, на котором вы держите удостоверение личности рядом с лицом. Лицо и данные удостоверения личности должны быть хорошо видны.",
+  "Capture": "Захватывать",
+  "Take Photo": "Сделать фото",
+  "Reupload": "Перезагрузка",
+  "Submit Document": "Отправить документ"
 }

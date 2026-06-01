@@ -3726,5 +3726,13 @@
   "Didn't receive the code?": "Kodni olmadingizmi?",
   "Verify and continue": "Tasdiqlang va davom eting",
   "Your agent password has been successfully set. Please login to your agent account to continue.": "Agentingiz paroli muvaffaqiyatli o'rnatildi. Davom etish uchun agent hisobingizga kiring.",
-  "Go to Login": "Kirish sahifasiga o'ting"
+  "Go to Login": "Kirish sahifasiga o'ting",
+  "whatsapp number.": "whatsapp raqami.",
+  "phone number.": "telefon raqami.",
+  "Additional Document for Your Mastercard": "Mastercard uchun qo'shimcha hujjat",
+  "Please upload a clear selfie of yourself holding your ID card next to your face. Face and ID details must be clearly visible.": "Iltimos, shaxsingizni tasdiqlovchi hujjatingizni yuzingiz yonida ushlab turgan holda o'zingizning aniq selfiingizni yuklang. Yuz va shaxsni tasdiqlovchi hujjat tafsilotlari aniq ko'rinishi kerak.",
+  "Capture": "Qo'lga olish",
+  "Take Photo": "Suratga olish",
+  "Reupload": "Qayta yuklash",
+  "Submit Document": "Hujjatni topshirish"
 }

@@ -3765,5 +3765,13 @@
   "Didn't receive the code?": "没有收到验证码？",
   "Verify and continue": "核实并继续",
   "Your agent password has been successfully set. Please login to your agent account to continue.": "您的经纪人密码已成功设置。请登录您的经纪人账户继续操作。",
-  "Go to Login": "前往登录"
+  "Go to Login": "前往登录",
+  "whatsapp number.": "WhatsApp号码。",
+  "phone number.": "电话号码。",
+  "Additional Document for Your Mastercard": "万事达卡附加文件",
+  "Please upload a clear selfie of yourself holding your ID card next to your face. Face and ID details must be clearly visible.": "请上传一张清晰的自拍照，照片中您需要手持身份证靠近脸部。面部和身份证件信息必须清晰可见。",
+  "Capture": "捕获",
+  "Take Photo": "拍照",
+  "Reupload": "重新上传",
+  "Submit Document": "提交文件"
 }
