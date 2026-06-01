@@ -47,7 +47,7 @@ const AuthStepOne = ({ isEmail,
             <div className={styles.logo}>
                 <img src={InstapayLogo} loading="lazy" alt="logo" />
             </div>       <div>
-                <h1>{t("Welcome Back Agent 👋 ")}</h1>
+                <h1>{t("Welcome Back Agent")}👋</h1>
                 <p>{t("Enter your phone and password ")} <br />
                     {t("to access your account")}</p>
             </div>
@@ -140,7 +140,7 @@ const AuthStepOne = ({ isEmail,
                     </div>
                 )}
                 <div className={styles.back_link} onClick={() => naviagte("/login")}>
-                    <span>  <ChevronLeft />   {("Back")}</span>
+                    <span>  <ChevronLeft />   {t("Back")}</span>
                 </div>
                 {locationLoading && (
                     <div className={styles.location_status}>
