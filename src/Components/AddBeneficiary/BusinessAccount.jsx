@@ -435,11 +435,11 @@ const BusinessAccount = ({ isInternational, toggleHandler }) => {
         setFilteringCountries(allowedCountries)
     }, [allowedCountries])
 
-    useEffect(() => {
-        if (bankCountry && country && bankCountry.toLowerCase() !== country.toLowerCase()) {
-            setShowConfirmation(true)
-        }
-    }, [bankCountry, country])
+    // useEffect(() => {
+    //     if (bankCountry && country && bankCountry.toLowerCase() !== country.toLowerCase()) {
+    //         setShowConfirmation(true)
+    //     }
+    // }, [bankCountry, country])
 
     useEffect(() => {
         if (formData.bank_name && formData.branch_name && formData.bank_account_number) {
