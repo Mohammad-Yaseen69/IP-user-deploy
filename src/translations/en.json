@@ -4097,5 +4097,13 @@
   "Didn't receive the code?": "Didn't receive the code?",
   "Verify and continue": "Verify and continue",
   "Your agent password has been successfully set. Please login to your agent account to continue.": "Your agent password has been successfully set. Please login to your agent account to continue.",
-  "Go to Login": "Go to Login"
+  "Go to Login": "Go to Login",
+  "whatsapp number.": "whatsapp number.",
+  "phone number.": "phone number.",
+  "Additional Document for Your Mastercard": "Additional Document for Your Mastercard",
+  "Please upload a clear selfie of yourself holding your ID card next to your face. Face and ID details must be clearly visible.": "Please upload a clear selfie of yourself holding your ID card next to your face. Face and ID details must be clearly visible.",
+  "Capture": "Capture",
+  "Take Photo": "Take Photo",
+  "Reupload": "Reupload",
+  "Submit Document": "Submit Document"
 }

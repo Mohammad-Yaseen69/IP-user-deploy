@@ -3722,5 +3722,13 @@
   "Didn't receive the code?": "Nesaņēmāt kodu?",
   "Verify and continue": "Pārbaudīt un turpināt",
   "Your agent password has been successfully set. Please login to your agent account to continue.": "Jūsu aģenta parole ir veiksmīgi iestatīta. Lūdzu, piesakieties savā aģenta kontā, lai turpinātu.",
-  "Go to Login": "Dodieties uz pieteikšanos"
+  "Go to Login": "Dodieties uz pieteikšanos",
+  "whatsapp number.": "WhatsApp numurs.",
+  "phone number.": "tālruņa numurs.",
+  "Additional Document for Your Mastercard": "Papildu dokuments jūsu Mastercard kartei",
+  "Please upload a clear selfie of yourself holding your ID card next to your face. Face and ID details must be clearly visible.": "Lūdzu, augšupielādējiet skaidru selfiju, kurā turat personas apliecību blakus sejai. Sejai un personas apliecības datiem jābūt skaidri redzamiem.",
+  "Capture": "Uztveršana",
+  "Take Photo": "Uzņemt fotoattēlu",
+  "Reupload": "Atkārtoti augšupielādēt",
+  "Submit Document": "Iesniegt dokumentu"
 }

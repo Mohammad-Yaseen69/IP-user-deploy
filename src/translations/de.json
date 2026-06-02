@@ -3762,5 +3762,13 @@
   "Didn't receive the code?": "Sie haben den Code nicht erhalten?",
   "Verify and continue": "Überprüfen und fortfahren",
   "Your agent password has been successfully set. Please login to your agent account to continue.": "Ihr Agentenpasswort wurde erfolgreich festgelegt. Bitte melden Sie sich in Ihrem Agentenkonto an, um fortzufahren.",
-  "Go to Login": "Zum Anmelden"
+  "Go to Login": "Zum Anmelden",
+  "whatsapp number.": "WhatsApp-Nummer.",
+  "phone number.": "Telefonnummer.",
+  "Additional Document for Your Mastercard": "Zusätzliches Dokument für Ihre Mastercard",
+  "Please upload a clear selfie of yourself holding your ID card next to your face. Face and ID details must be clearly visible.": "Bitte laden Sie ein klares Selfie hoch, auf dem Sie Ihren Ausweis neben Ihr Gesicht halten. Gesicht und Ausweisdaten müssen deutlich erkennbar sein.",
+  "Capture": "Erfassen",
+  "Take Photo": "Foto machen",
+  "Reupload": "Neu hochgeladen",
+  "Submit Document": "Dokument einreichen"
 }

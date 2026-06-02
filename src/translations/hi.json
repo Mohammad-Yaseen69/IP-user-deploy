@@ -4120,5 +4120,13 @@
   "Didn't receive the code?": "कोड प्राप्त नहीं हुआ?",
   "Verify and continue": "सत्यापित करें और जारी रखें",
   "Your agent password has been successfully set. Please login to your agent account to continue.": "आपका एजेंट पासवर्ड सफलतापूर्वक सेट हो गया है। कृपया आगे बढ़ने के लिए अपने एजेंट खाते में लॉग इन करें।",
-  "Go to Login": "लॉगिन पर जाएं"
+  "Go to Login": "लॉगिन पर जाएं",
+  "whatsapp number.": "व्हाट्सएप नंबर।",
+  "phone number.": "फ़ोन नंबर।",
+  "Additional Document for Your Mastercard": "आपके मास्टरकार्ड के लिए अतिरिक्त दस्तावेज़",
+  "Please upload a clear selfie of yourself holding your ID card next to your face. Face and ID details must be clearly visible.": "कृपया अपने चेहरे के पास अपना पहचान पत्र पकड़े हुए अपनी एक स्पष्ट सेल्फी अपलोड करें। चेहरा और पहचान पत्र की जानकारी स्पष्ट रूप से दिखाई देनी चाहिए।",
+  "Capture": "कब्जा",
+  "Take Photo": "फोटो लो",
+  "Reupload": "पुन: अपलोड",
+  "Submit Document": "दस्तावेज़ जमा करें"
 }

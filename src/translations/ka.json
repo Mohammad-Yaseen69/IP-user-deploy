@@ -3722,5 +3722,13 @@
   "Didn't receive the code?": "კოდი არ მიგიღიათ?",
   "Verify and continue": "დადასტურება და გაგრძელება",
   "Your agent password has been successfully set. Please login to your agent account to continue.": "თქვენი აგენტის პაროლი წარმატებით დაყენდა. გასაგრძელებლად, გთხოვთ, შეხვიდეთ თქვენს აგენტის ანგარიშზე.",
-  "Go to Login": "გადასვლა შესვლაზე"
+  "Go to Login": "გადასვლა შესვლაზე",
+  "whatsapp number.": "WhatsApp-ის ნომერი.",
+  "phone number.": "ტელეფონის ნომერი.",
+  "Additional Document for Your Mastercard": "დამატებითი დოკუმენტი თქვენი Mastercard-ისთვის",
+  "Please upload a clear selfie of yourself holding your ID card next to your face. Face and ID details must be clearly visible.": "გთხოვთ, ატვირთოთ თქვენივე მკაფიო სელფი, სადაც პირადობის მოწმობა სახის გვერდით გიჭირავთ. სახისა და პირადობის დამადასტურებელი დოკუმენტის დეტალები მკაფიოდ უნდა ჩანდეს.",
+  "Capture": "გადაღება",
+  "Take Photo": "ფოტოს გადაღება",
+  "Reupload": "ხელახლა ატვირთვა",
+  "Submit Document": "დოკუმენტის გაგზავნა"
 }

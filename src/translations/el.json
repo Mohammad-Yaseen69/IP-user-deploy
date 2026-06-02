@@ -3722,5 +3722,13 @@
   "Didn't receive the code?": "Δεν λάβατε τον κωδικό;",
   "Verify and continue": "Επαλήθευση και συνέχεια",
   "Your agent password has been successfully set. Please login to your agent account to continue.": "Ο κωδικός πρόσβασης του αντιπροσώπου σας ορίστηκε με επιτυχία. Συνδεθείτε στον λογαριασμό αντιπροσώπου σας για να συνεχίσετε.",
-  "Go to Login": "Μετάβαση στη Σύνδεση"
+  "Go to Login": "Μετάβαση στη Σύνδεση",
+  "whatsapp number.": "αριθμός whatsapp.",
+  "phone number.": "αριθμός τηλεφώνου.",
+  "Additional Document for Your Mastercard": "Επιπλέον έγγραφο για την Mastercard σας",
+  "Please upload a clear selfie of yourself holding your ID card next to your face. Face and ID details must be clearly visible.": "Παρακαλώ ανεβάστε μια ευκρινή selfie του εαυτού σας κρατώντας την ταυτότητά σας δίπλα στο πρόσωπό σας. Τα στοιχεία του προσώπου και της ταυτότητάς σας πρέπει να είναι ευδιάκριτα.",
+  "Capture": "Σύλληψη",
+  "Take Photo": "Τραβήξτε φωτογραφία",
+  "Reupload": "Επαναφόρτωση",
+  "Submit Document": "Υποβολή εγγράφου"
 }

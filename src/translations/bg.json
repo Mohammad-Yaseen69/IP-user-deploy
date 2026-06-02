@@ -3722,5 +3722,13 @@
   "Didn't receive the code?": "Не получихте кода?",
   "Verify and continue": "Проверете и продължете",
   "Your agent password has been successfully set. Please login to your agent account to continue.": "Паролата на вашия агент е зададена успешно. Моля, влезте в акаунта си, за да продължите.",
-  "Go to Login": "Отидете на Вход"
+  "Go to Login": "Отидете на Вход",
+  "whatsapp number.": "номер в WhatsApp.",
+  "phone number.": "телефонен номер.",
+  "Additional Document for Your Mastercard": "Допълнителен документ за вашата Mastercard",
+  "Please upload a clear selfie of yourself holding your ID card next to your face. Face and ID details must be clearly visible.": "Моля, качете ясно селфи, на което държите личната си карта до лицето си. Лицето и данните за личната карта трябва да са ясно видими.",
+  "Capture": "Заснемане",
+  "Take Photo": "Направи снимка",
+  "Reupload": "Повторно качване",
+  "Submit Document": "Изпращане на документ"
 }
