@@ -3717,5 +3717,13 @@
   "Didn't receive the code?": "Kodu almadınız?",
   "Verify and continue": "Təsdiqləyin və davam edin",
   "Your agent password has been successfully set. Please login to your agent account to continue.": "Agent parolunuz uğurla təyin edildi. Davam etmək üçün agent hesabınıza daxil olun.",
-  "Go to Login": "Giriş bölməsinə keçin"
+  "Go to Login": "Giriş bölməsinə keçin",
+  "whatsapp number.": "whatsapp nömrəsi.",
+  "phone number.": "telefon nömrəsi.",
+  "Additional Document for Your Mastercard": "Mastercard üçün əlavə sənəd",
+  "Please upload a clear selfie of yourself holding your ID card next to your face. Face and ID details must be clearly visible.": "Zəhmət olmasa, şəxsiyyət vəsiqənizi üzünüzün yanında tutduğunuz aydın selfini yükləyin. Üz və şəxsiyyət vəsiqəsi məlumatları aydın görünməlidir.",
+  "Capture": "Tutmaq",
+  "Take Photo": "Şəkil Çək",
+  "Reupload": "Yenidən yükləyin",
+  "Submit Document": "Sənədi təqdim edin"
 }
