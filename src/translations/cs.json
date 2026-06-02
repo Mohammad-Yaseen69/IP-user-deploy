@@ -3722,5 +3722,13 @@
   "Didn't receive the code?": "Neobdrželi jste kód?",
   "Verify and continue": "Ověřit a pokračovat",
   "Your agent password has been successfully set. Please login to your agent account to continue.": "Heslo vašeho agenta bylo úspěšně nastaveno. Pro pokračování se prosím přihlaste ke svému účtu agenta.",
-  "Go to Login": "Přejít na Přihlášení"
+  "Go to Login": "Přejít na Přihlášení",
+  "whatsapp number.": "číslo na WhatsAppu.",
+  "phone number.": "telefonní číslo.",
+  "Additional Document for Your Mastercard": "Další dokument k vaší kartě Mastercard",
+  "Please upload a clear selfie of yourself holding your ID card next to your face. Face and ID details must be clearly visible.": "Nahrajte prosím jasnou selfie, na které držíte svůj občanský průkaz vedle obličeje. Obličej a údaje o dokladu totožnosti musí být jasně viditelné.",
+  "Capture": "Zachycení",
+  "Take Photo": "Pořídit fotografii",
+  "Reupload": "Znovu nahrát",
+  "Submit Document": "Odeslat dokument"
 }

@@ -3791,5 +3791,13 @@
   "Didn't receive the code?": "Ban karɓi lambar ba?",
   "Verify and continue": "Tabbatar kuma ci gaba",
   "Your agent password has been successfully set. Please login to your agent account to continue.": "An saita kalmar sirrin wakilin ku cikin nasara. Da fatan za a shiga asusun wakilin ku don ci gaba.",
-  "Go to Login": "Je zuwa Shiga"
+  "Go to Login": "Je zuwa Shiga",
+  "whatsapp number.": "lambar WhatsApp.",
+  "phone number.": "lambar tarho.",
+  "Additional Document for Your Mastercard": "Ƙarin Takarda don Mastercard ɗinku",
+  "Please upload a clear selfie of yourself holding your ID card next to your face. Face and ID details must be clearly visible.": "Don Allah a ɗora hoton kanka mai haske wanda ke riƙe da katin shaidarka kusa da fuskarka. Dole ne a bayyane bayanan fuska da katin shaidarka.",
+  "Capture": "Kama",
+  "Take Photo": "Ɗauki Hoto",
+  "Reupload": "Sake lodawa",
+  "Submit Document": "Aika Takarda"
 }

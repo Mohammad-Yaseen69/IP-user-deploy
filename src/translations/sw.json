@@ -4120,5 +4120,13 @@
   "Didn't receive the code?": "Hukupokea msimbo?",
   "Verify and continue": "Thibitisha na uendelee",
   "Your agent password has been successfully set. Please login to your agent account to continue.": "Nenosiri la wakala wako limewekwa kwa ufanisi. Tafadhali ingia kwenye akaunti yako ya wakala ili kuendelea.",
-  "Go to Login": "Nenda kwenye Ingia"
+  "Go to Login": "Nenda kwenye Ingia",
+  "whatsapp number.": "nambari ya WhatsApp.",
+  "phone number.": "nambari ya simu.",
+  "Additional Document for Your Mastercard": "Hati ya Ziada kwa Mastercard yako",
+  "Please upload a clear selfie of yourself holding your ID card next to your face. Face and ID details must be clearly visible.": "Tafadhali pakia picha ya kujipiga picha iliyo wazi ukiwa umeshikilia kitambulisho chako karibu na uso wako. Maelezo ya uso na kitambulisho lazima yaonekane wazi.",
+  "Capture": "Nasa",
+  "Take Photo": "Piga Picha",
+  "Reupload": "Pakia tena",
+  "Submit Document": "Wasilisha Hati"
 }

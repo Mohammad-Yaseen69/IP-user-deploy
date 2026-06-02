@@ -4093,5 +4093,13 @@
   "Didn't receive the code?": "Não recebeu o código?",
   "Verify and continue": "Verifique e continue",
   "Your agent password has been successfully set. Please login to your agent account to continue.": "Sua senha de agente foi definida com sucesso. Faça login na sua conta de agente para continuar.",
-  "Go to Login": "Acesse a página de login."
+  "Go to Login": "Acesse a página de login.",
+  "whatsapp number.": "Número do WhatsApp.",
+  "phone number.": "número de telefone.",
+  "Additional Document for Your Mastercard": "Documento adicional para o seu Mastercard",
+  "Please upload a clear selfie of yourself holding your ID card next to your face. Face and ID details must be clearly visible.": "Envie uma selfie nítida sua segurando seu documento de identidade ao lado do rosto. O rosto e os dados do documento devem estar claramente visíveis.",
+  "Capture": "Capturar",
+  "Take Photo": "Tirar foto",
+  "Reupload": "Reenvio",
+  "Submit Document": "Enviar documento"
 }

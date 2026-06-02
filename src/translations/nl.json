@@ -3722,5 +3722,13 @@
   "Didn't receive the code?": "Heb je de code niet ontvangen?",
   "Verify and continue": "Verifiëren en verdergaan",
   "Your agent password has been successfully set. Please login to your agent account to continue.": "Uw agentenwachtwoord is succesvol ingesteld. Log in op uw agentenaccount om verder te gaan.",
-  "Go to Login": "Ga naar Inloggen"
+  "Go to Login": "Ga naar Inloggen",
+  "whatsapp number.": "WhatsApp-nummer.",
+  "phone number.": "telefoonnummer.",
+  "Additional Document for Your Mastercard": "Aanvullend document voor uw Mastercard",
+  "Please upload a clear selfie of yourself holding your ID card next to your face. Face and ID details must be clearly visible.": "Upload een duidelijke selfie waarop u uw identiteitskaart naast uw gezicht houdt. Uw gezicht en de gegevens op uw identiteitskaart moeten duidelijk zichtbaar zijn.",
+  "Capture": "Vastlegging",
+  "Take Photo": "Maak een foto",
+  "Reupload": "Opnieuw uploaden",
+  "Submit Document": "Document indienen"
 }

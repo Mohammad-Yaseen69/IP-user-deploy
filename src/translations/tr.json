@@ -4119,5 +4119,13 @@
   "Didn't receive the code?": "Kodu almadınız mı?",
   "Verify and continue": "Doğrulayın ve devam edin",
   "Your agent password has been successfully set. Please login to your agent account to continue.": "Temsilci parolanız başarıyla ayarlandı. Devam etmek için lütfen temsilci hesabınıza giriş yapın.",
-  "Go to Login": "Giriş sayfasına git"
+  "Go to Login": "Giriş sayfasına git",
+  "whatsapp number.": "WhatsApp numarası.",
+  "phone number.": "telefon numarası.",
+  "Additional Document for Your Mastercard": "Mastercard'ınız için Ek Belge",
+  "Please upload a clear selfie of yourself holding your ID card next to your face. Face and ID details must be clearly visible.": "Lütfen kimlik kartınızı yüzünüzün yanında tutarak çekilmiş net bir özçekim fotoğrafı yükleyin. Yüz ve kimlik bilgileriniz net bir şekilde görünmelidir.",
+  "Capture": "Esir almak",
+  "Take Photo": "Fotoğraf Çek",
+  "Reupload": "Yeniden yükle",
+  "Submit Document": "Belgeyi Gönder"
 }

@@ -182,7 +182,7 @@ const UserDets = ({ croppedCover, cover, dp, croppedDp, userDetails, user_name, 
 
                                 </div>
 
-                                {flagCheck("allowUserName", userDetails, invoice ? "invoice" : "paymentAddress") &&
+                                {flagCheck("allowUsername", userDetails, invoice ? "invoice" : "paymentAddress") &&
                                     <h6
                                         style={{
                                             margin: "0 6px 0 0",

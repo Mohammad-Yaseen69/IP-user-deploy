@@ -3722,5 +3722,13 @@
   "Didn't receive the code?": "Fick du inte koden?",
   "Verify and continue": "Verifiera och fortsätt",
   "Your agent password has been successfully set. Please login to your agent account to continue.": "Ditt agentlösenord har ställts in. Vänligen logga in på ditt agentkonto för att fortsätta.",
-  "Go to Login": "Gå till inloggning"
+  "Go to Login": "Gå till inloggning",
+  "whatsapp number.": "WhatsApp-nummer.",
+  "phone number.": "telefonnummer.",
+  "Additional Document for Your Mastercard": "Ytterligare dokument för ditt Mastercard",
+  "Please upload a clear selfie of yourself holding your ID card next to your face. Face and ID details must be clearly visible.": "Ladda upp en tydlig selfie på dig själv där du håller ditt ID-kort bredvid ansiktet. Ansikts- och ID-uppgifter måste vara tydligt synliga.",
+  "Capture": "Fånga",
+  "Take Photo": "Ta foto",
+  "Reupload": "Ladda upp igen",
+  "Submit Document": "Skicka in dokument"
 }
