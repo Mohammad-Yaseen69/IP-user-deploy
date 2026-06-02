@@ -435,11 +435,11 @@ const BusinessAccount = ({ isInternational, toggleHandler }) => {
         setFilteringCountries(allowedCountries)
     }, [allowedCountries])
 
-    useEffect(() => {
-        if (bankCountry && country && bankCountry.toLowerCase() !== country.toLowerCase()) {
-            setShowConfirmation(true)
-        }
-    }, [bankCountry, country])
+    // useEffect(() => {
+    //     if (bankCountry && country && bankCountry.toLowerCase() !== country.toLowerCase()) {
+    //         setShowConfirmation(true)
+    //     }
+    // }, [bankCountry, country])
 
     useEffect(() => {
         if (formData.bank_name && formData.branch_name && formData.bank_account_number) {
@@ -632,7 +632,7 @@ const BusinessAccount = ({ isInternational, toggleHandler }) => {
 
                             <FormGroup style={{ flex: 1, margin: 0 }}>
                                 <label className="col-form-label" htmlFor="relation">{t("Relationship With Beneficiary")}</label>
-                                {userDetails?.account_type === "individual" ?
+                                {/* {userDetails?.account_type === "individual" ?
                                     <NestedDropdown
                                         child={friendsAndFamily}
                                         parent={BeneficiaryRelation}
@@ -644,13 +644,13 @@ const BusinessAccount = ({ isInternational, toggleHandler }) => {
                                         disabled={isFieldsDisabled}
                                     />
                                     :
-                                    <Input type="select" name="relation" disabled={isFieldsDisabled} value={formData.relation} onChange={inputChangeHandler}>
-                                        <option value="">{t("Select Relationship")}</option>
-                                        {Object.keys(BUSINESS_RELATIONSHIPS).map((option, idx) => (
-                                            <option key={idx} value={option}> {BUSINESS_RELATIONSHIPS[option]} </option>
-                                        ))}
-                                    </Input>
-                                }
+                                } */}
+                                <Input type="select" name="relation" disabled={isFieldsDisabled} value={formData.relation} onChange={inputChangeHandler}>
+                                    <option value="">{t("Select Relationship")}</option>
+                                    {Object.keys(BUSINESS_RELATIONSHIPS).map((option, idx) => (
+                                        <option key={idx} value={option}> {BUSINESS_RELATIONSHIPS[option]} </option>
+                                    ))}
+                                </Input>
                             </FormGroup>
                         </div>
                     </FormGroup>
