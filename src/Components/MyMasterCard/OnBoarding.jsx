@@ -62,11 +62,12 @@ const OnBoarding = ({ alreadyHaveCard, setCardPurchased, setReRender }) => {
     console.log(files)
 
 
-    const handleCheckNextStep = () => {
-        if (!userDetails?.phone || !userDetails?.email) {
+    const handleCheckNextStep = (passedUser) => {
+        const currentData = (passedUser && passedUser._id) ? passedUser : userDetails;
+        if (!currentData?.phone || !currentData?.email) {
             setMissingModal({
-                email: !userDetails?.email,
-                phone: !userDetails?.phone
+                email: !currentData?.email,
+                phone: !currentData?.phone
             })
         } else if (selfieRequired) {
             setShowSelfieModal(true)
@@ -77,16 +78,21 @@ const OnBoarding = ({ alreadyHaveCard, setCardPurchased, setReRender }) => {
 
 
     return (
-        <div className={styles.container}>
+        <div style={isRequestInPending ? {
+            justifyContent: "center",
+            gap: "0px"
+        } : {}} className={styles.container}>
             {
                 isRequestInPending
                     ?
                     <>
                         <KycPendingStatus />
-                        <AdditionalFilesSection
-                            files={files}
-                            uploadEndpoint={userDetails?.account_type === "individual" ? `${import.meta.env.VITE_IP_DEV_API}/api/user/upload-additional-file/${userDetails?._id}` : `${import.meta.env.VITE_IP_DEV_API}/api/company/upload-additional-file-kyb/${userDetails?._id}`}
-                        />
+                        {files?.length > 0 &&
+                            <AdditionalFilesSection
+                                files={files}
+                                uploadEndpoint={userDetails?.account_type === "individual" ? `${import.meta.env.VITE_IP_DEV_API}/api/user/upload-additional-file/${userDetails?._id}` : `${import.meta.env.VITE_IP_DEV_API}/api/company/upload-additional-file-kyb/${userDetails?._id}`}
+                            />
+                        }
                     </>
                     :
                     <>

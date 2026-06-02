@@ -227,11 +227,11 @@ const OTPConfirmation = ({ setter, callback, setterValue, hideOtp, type = "", pr
                                     (
                                         authType === "sms"
                                             ? `${t("A one-time verification code has been sent to your")} ${(userDetails?.email || type === "email") ? "email address" : ""
-                                            }${!inBasic ? " and " : ""}${type === "phone"
+                                            }${!inBasic ? " and " : " "} ${type === "phone"
                                                 ? (userDetails?.phone?.slice(0, 3) === "971"
-                                                    ? "whatsapp number."
-                                                    : "phone number.")
-                                                : "SMS"
+                                                    ? t("whatsapp number.")
+                                                    : t("phone number."))
+                                                : t("SMS")
                                             }`
                                             :
                                             t("Enter a code shown in the app to make sure everything works fine.")
