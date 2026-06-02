@@ -4124,5 +4124,13 @@
   "Didn't receive the code?": "Tidak menerima kode?",
   "Verify and continue": "Verifikasi dan lanjutkan",
   "Your agent password has been successfully set. Please login to your agent account to continue.": "Kata sandi agen Anda telah berhasil diatur. Silakan masuk ke akun agen Anda untuk melanjutkan.",
-  "Go to Login": "Buka halaman Login"
+  "Go to Login": "Buka halaman Login",
+  "whatsapp number.": "Nomor WhatsApp.",
+  "phone number.": "nomor telepon.",
+  "Additional Document for Your Mastercard": "Dokumen Tambahan untuk Mastercard Anda",
+  "Please upload a clear selfie of yourself holding your ID card next to your face. Face and ID details must be clearly visible.": "Silakan unggah foto selfie yang jelas dengan Anda memegang kartu identitas di samping wajah Anda. Wajah dan detail identitas harus terlihat jelas.",
+  "Capture": "Menangkap",
+  "Take Photo": "Ambil Foto",
+  "Reupload": "Unggah ulang",
+  "Submit Document": "Kirim Dokumen"
 }

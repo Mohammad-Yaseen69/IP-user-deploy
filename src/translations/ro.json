@@ -3722,5 +3722,13 @@
   "Didn't receive the code?": "Nu ai primit codul?",
   "Verify and continue": "Verificați și continuați",
   "Your agent password has been successfully set. Please login to your agent account to continue.": "Parola agentului dumneavoastră a fost setată cu succes. Vă rugăm să vă conectați la contul de agent pentru a continua.",
-  "Go to Login": "Accesați Autentificare"
+  "Go to Login": "Accesați Autentificare",
+  "whatsapp number.": "număr de WhatsApp.",
+  "phone number.": "număr de telefon.",
+  "Additional Document for Your Mastercard": "Document suplimentar pentru cardul dumneavoastră Mastercard",
+  "Please upload a clear selfie of yourself holding your ID card next to your face. Face and ID details must be clearly visible.": "Te rugăm să încarci un selfie clar cu tine ținând actul de identitate lângă față. Detaliile feței și ale actului de identitate trebuie să fie clar vizibile.",
+  "Capture": "Capta",
+  "Take Photo": "Fă o fotografie",
+  "Reupload": "Reîncărcare",
+  "Submit Document": "Trimiteți documentul"
 }

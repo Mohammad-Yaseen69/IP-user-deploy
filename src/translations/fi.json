@@ -3722,5 +3722,13 @@
   "Didn't receive the code?": "Etkö saanut koodia?",
   "Verify and continue": "Vahvista ja jatka",
   "Your agent password has been successfully set. Please login to your agent account to continue.": "Agenttisalasanasi on asetettu onnistuneesti. Kirjaudu sisään agenttitilillesi jatkaaksesi.",
-  "Go to Login": "Siirry kirjautumiseen"
+  "Go to Login": "Siirry kirjautumiseen",
+  "whatsapp number.": "WhatsApp-numero.",
+  "phone number.": "puhelinnumero.",
+  "Additional Document for Your Mastercard": "Lisäasiakirja Mastercard-kortille",
+  "Please upload a clear selfie of yourself holding your ID card next to your face. Face and ID details must be clearly visible.": "Lataa selkeä selfie itsestäsi pitämässä henkilöllisyystodistusta kasvojesi vieressä. Kasvojen ja henkilöllisyystodistuksen tietojen on oltava selvästi näkyvissä.",
+  "Capture": "Kaapata",
+  "Take Photo": "Ota kuva",
+  "Reupload": "Lataa uudelleen",
+  "Submit Document": "Lähetä asiakirja"
 }

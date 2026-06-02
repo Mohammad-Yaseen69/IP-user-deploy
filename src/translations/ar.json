@@ -4120,5 +4120,13 @@
   "Didn't receive the code?": "ألم تستلم الرمز؟",
   "Verify and continue": "تحقق وتابع",
   "Your agent password has been successfully set. Please login to your agent account to continue.": "تم تعيين كلمة مرور الوكيل بنجاح. يرجى تسجيل الدخول إلى حساب الوكيل الخاص بك للمتابعة.",
-  "Go to Login": "انتقل إلى صفحة تسجيل الدخول"
+  "Go to Login": "انتقل إلى صفحة تسجيل الدخول",
+  "whatsapp number.": "رقم واتساب.",
+  "phone number.": "رقم التليفون.",
+  "Additional Document for Your Mastercard": "مستند إضافي لبطاقة ماستركارد الخاصة بك",
+  "Please upload a clear selfie of yourself holding your ID card next to your face. Face and ID details must be clearly visible.": "يرجى تحميل صورة سيلفي واضحة لك وأنت تحمل بطاقة هويتك بجانب وجهك. يجب أن يكون الوجه وتفاصيل الهوية واضحين تماماً.",
+  "Capture": "يأسر",
+  "Take Photo": "التقط صورة",
+  "Reupload": "إعادة رفع",
+  "Submit Document": "إرسال المستند"
 }

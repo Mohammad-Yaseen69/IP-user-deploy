@@ -3722,5 +3722,13 @@
   "Didn't receive the code?": "Nem kaptad meg a kódot?",
   "Verify and continue": "Ellenőrizd és folytasd",
   "Your agent password has been successfully set. Please login to your agent account to continue.": "Ügynöki jelszavát sikeresen beállítottuk. A folytatáshoz jelentkezzen be ügynöki fiókjába.",
-  "Go to Login": "Bejelentkezés"
+  "Go to Login": "Bejelentkezés",
+  "whatsapp number.": "WhatsApp-szám.",
+  "phone number.": "telefonszám.",
+  "Additional Document for Your Mastercard": "Kiegészítő dokumentum a Mastercard kártyádhoz",
+  "Please upload a clear selfie of yourself holding your ID card next to your face. Face and ID details must be clearly visible.": "Kérjük, töltsön fel egy tiszta szelfit, amelyen a személyazonosító okmányát tartja az arca mellett. Az arcának és a személyazonosító okmány adatainak jól láthatónak kell lenniük.",
+  "Capture": "Elfog",
+  "Take Photo": "Fotó készítése",
+  "Reupload": "Újratöltés",
+  "Submit Document": "Dokumentum beküldése"
 }

@@ -4119,5 +4119,13 @@
   "Didn't receive the code?": "Nie otrzymałeś kodu?",
   "Verify and continue": "Zweryfikuj i kontynuuj",
   "Your agent password has been successfully set. Please login to your agent account to continue.": "Hasło agenta zostało pomyślnie ustawione. Zaloguj się na swoje konto agenta, aby kontynuować.",
-  "Go to Login": "Przejdź do logowania"
+  "Go to Login": "Przejdź do logowania",
+  "whatsapp number.": "numer WhatsApp.",
+  "phone number.": "numer telefonu.",
+  "Additional Document for Your Mastercard": "Dodatkowy dokument do Twojej karty Mastercard",
+  "Please upload a clear selfie of yourself holding your ID card next to your face. Face and ID details must be clearly visible.": "Prześlij wyraźne selfie, na którym trzymasz dowód osobisty przy twarzy. Twarz i dane z dowodu osobistego muszą być wyraźnie widoczne.",
+  "Capture": "Schwytać",
+  "Take Photo": "Zrób zdjęcie",
+  "Reupload": "Prześlij ponownie",
+  "Submit Document": "Prześlij dokument"
 }
