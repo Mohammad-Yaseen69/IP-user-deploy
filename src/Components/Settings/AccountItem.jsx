@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
 import { H4, P } from '../../AbstractElements'
 import styles from "./styles/Accounts.module.scss"
-import { Modal, ModalBody, ModalHeader } from 'reactstrap'
+import { Modal, ModalBody, ModalHeader, } from 'reactstrap'
 import axios from 'axios'
 import { UserContext } from '../../Context/UserContext'
 import { decryptData } from '../../Helper/EssentilaMethods/Decryption'
@@ -12,8 +12,9 @@ import OTPConfirmation from '../UserSettingsNew/OTPConfirmation'
 import { useLocation, useNavigate } from 'react-router'
 import LinkToInstagramModal from '../LinkToInstagramModal'
 import LinktoTelegramModal from "../LinkToTelegramModal"
-import LinkToWhatsappModal from "../LinkToWhatsappModal"
 import { Info } from 'react-feather'
+import { Toggle } from '../MyMasterCard/CardPurchased'
+import { Tooltip } from '@mui/material'
 
 const AccountItem = ({ data }) => {
     const navigate = useNavigate()
@@ -27,6 +28,9 @@ const AccountItem = ({ data }) => {
     const [token, setToken] = useState("")
     const [saving, setSaving] = useState(false)
     const [codeType, setCodeType] = useState("sms")
+    const [channelEnabled, setChannelEnabled] = useState(false)
+    const [otpToken, setOtpToken] = useState("")
+    const [showChannelOtp, setShowChannelOtp] = useState(false)
 
     useEffect(() => {
         setCodeType(userDetails?.tfa ? "authenticator" : "sms")
@@ -130,7 +134,17 @@ const AccountItem = ({ data }) => {
             setChecked(userDetails?.whatsapp_bot ? true : false)
         }
     }, [userDetails])
-
+    useEffect(() => {
+        if (data.name.toLowerCase().includes("insta")) {
+            setChannelEnabled(!!userDetails?.instagram_channel_enabled)
+        }
+        else if (data.name.toLowerCase().includes("telegram")) {
+            setChannelEnabled(!!userDetails?.telegram_channel_enabled)
+        }
+        else if (data.name.toLowerCase().includes("whatsapp")) {
+            setChannelEnabled(!!userDetails?.whatsapp_channel_enabled)
+        }
+    }, [userDetails])
 
     const conRef = useRef()
     const location = useLocation()
@@ -165,7 +179,115 @@ const AccountItem = ({ data }) => {
             }
         }
     }, [redirect, userDetails])
-    console.log("data", data)
+    const sendChannelOtp = async () => {
+        try {
+            setSaving(true)
+
+            const payload = {
+                type: codeType,
+                data: {
+                    channel:
+                        data.name.toLowerCase().includes("insta")
+                            ? "instagram"
+                            : data.name.toLowerCase().includes("telegram")
+                                ? "telegram"
+                                : "whatsapp",
+                    enabled: true
+                }
+            }
+
+            const enc = encryptData(payload)
+
+            const res = await axios.post(
+                `${import.meta.env.VITE_IP_DEV_API}/api/wallet/send-otp`,
+                { data: enc },
+                {
+                    headers: {
+                        ...authHeader,
+                        "source": "user",
+                        "Content-Type": "application/json",
+                    }
+                }
+            )
+
+            const dec = decryptData(res.data.data)
+
+            setOtpToken(dec?.token)
+            setShowChannelOtp(true)
+
+        } catch (error) {
+            const dec = decryptData(error?.response?.data?.data)
+            toast.error(dec?.message || "Unable to send OTP")
+        } finally {
+            setSaving(false)
+        }
+    }
+    const channelOtpCallback = (setter, type, otp, setError) => {
+        setSaving(true)
+
+        const channel =
+            data.name.toLowerCase().includes("insta")
+                ? "instagram"
+                : data.name.toLowerCase().includes("telegram")
+                    ? "telegram"
+                    : "whatsapp"
+        axios.put(
+            `${import.meta.env.VITE_IP_DEV_API}/api/instagram/update-channel-switch`,
+            { token: otpToken, otp, type: codeType },
+            {
+                headers: {
+                    ...authHeader,
+                    "source": "user",
+                    "Content-Type": "application/json",
+                }
+            }
+        )
+            .then(() => {
+                setChannelEnabled(true)
+                setShowChannelOtp(false)
+                toast.success("Channel enabled successfully")
+                verifyToken()
+            })
+            .catch(error => {
+                const dec = decryptData(error?.response?.data?.data)
+                setError(dec?.message || "OTP invalid")
+                toast.error(dec?.message || "OTP invalid")
+            })
+            .finally(() => setSaving(false))
+    }
+    const disableChannel = async () => {
+        try {
+            setSaving(true)
+
+            const channel =
+                data.name.toLowerCase().includes("insta")
+                    ? "instagram"
+                    : data.name.toLowerCase().includes("telegram")
+                        ? "telegram"
+                        : "whatsapp"
+
+            await axios.put(
+                `${import.meta.env.VITE_IP_DEV_API}/api/instagram/update-channel-switch`,
+                { channel, enabled: false },
+                { headers: { ...authHeader, source: "user" } }
+            )
+
+            setChannelEnabled(false)
+            toast.success("Channel disabled")
+        } catch (e) {
+            toast.error("Disable failed")
+        } finally {
+            setSaving(false)
+        }
+    }
+    const handleChannelToggle = () => {
+        if (channelEnabled) {
+            disableChannel();
+        } else {
+            sendChannelOtp();
+        }
+    };
+
     return (
         <div className={styles.card} ref={data.name.toLowerCase().includes("insta") ? conRef : null}>
             <div className={styles.top}>
@@ -180,22 +302,32 @@ const AccountItem = ({ data }) => {
                         data.name.toLowerCase().includes("telegram") ||
                         data.name.toLowerCase().includes("whatsapp")) &&
                         <>
-                            {checked ? <button
-                                type="button"
-                                onClick={sendOtp}
-                                style={{
-                                    background: "#ffebed",
-                                    color: "#D00416",
-                                    border: "1px solid #D00416",
-                                    borderRadius: "6px",
-                                    padding: "4px 12px",
-                                    fontSize: "12px",
-                                    cursor: "pointer",
-                                    fontWeight: 600
-                                }}
-                            >
-                                {t("Unlink")}
-                            </button>
+                            {checked ?
+                                <>
+                                    <Tooltip title={channelEnabled ? "Disable Channel" : "Enable Channel"}>
+                                        <div style={{ display: "inline-flex" }}>
+                                            <Toggle
+                                                checked={channelEnabled}
+                                                onChange={handleChannelToggle}
+                                            />
+                                        </div>
+                                    </Tooltip>
+                                    <button
+                                        type="button"
+                                        onClick={sendOtp}
+                                        style={{
+                                            background: "#ffebed",
+                                            color: "#D00416",
+                                            border: "1px solid #D00416",
+                                            borderRadius: "6px",
+                                            padding: "4px 12px",
+                                            fontSize: "12px",
+                                            cursor: "pointer",
+                                            fontWeight: 600
+                                        }}
+                                    >
+                                        {t("Unlink")}
+                                    </button></>
                                 : <Info style={{ cursor: "pointer" }} onClick={() => setShowModal(true)} />}
                         </>
                     }
@@ -299,8 +431,8 @@ const AccountItem = ({ data }) => {
                     /> : ""
             }
             {
-                (data.name.toLowerCase().includes("whatsapp") && showModal) ?
-                    <LinkToWhatsappModal
+                (data.name.toLowerCase().includes("Whatsapp") && showModal) ?
+                    <LinktoTelegramModal
                         isOpen={showModal}
                         toggle={() => {
                             setShowModal(!showModal)
@@ -317,16 +449,25 @@ const AccountItem = ({ data }) => {
                 </ModalBody>
             </Modal> */}
 
-            <Modal isOpen={showOtp} toggle={() => setShowOtp(!showOtp)}>
-                <ModalHeader toggle={() => setShowOtp(!showOtp)}>{t("Confirm")}</ModalHeader>
+            <Modal isOpen={showOtp || showChannelOtp} toggle={() => {
+                setShowOtp(false);
+                setShowChannelOtp(false);
+            }}>
+                <ModalHeader toggle={() => {
+                    setShowOtp(false);
+                    setShowChannelOtp(false);
+                }}>{t("Confirm")}</ModalHeader>
                 <ModalBody>
                     <OTPConfirmation
-                        callback={otpCallback}
+                        callback={showChannelOtp ? channelOtpCallback : otpCallback}
                         setter={() => { }}
                         setterValue={true}
-                        hideOtp={() => setShowOtp(false)}
+                        hideOtp={() => {
+                            setShowOtp(false);
+                            setShowChannelOtp(false);
+                        }}
                         processing={saving}
-                        resendHandler={sendOtp}
+                        resendHandler={showChannelOtp ? sendChannelOtp : sendOtp}
                         authType={codeType}
                         setAuthType={setCodeType}
                     />

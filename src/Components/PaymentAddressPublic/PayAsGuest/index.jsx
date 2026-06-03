@@ -1,7 +1,7 @@
 import { Modal, ModalBody } from "reactstrap";
 import { useTranslation } from "react-i18next";
 import styles from "./styles/index.module.css";
-import { useEffect, useMemo, useReducer, useState } from "react";
+import { useContext, useEffect, useMemo, useReducer, useState } from "react";
 import StepOne from "./StepOne";
 import { Link } from "react-router-dom";
 import { ChevronRight, HelpCircle, X } from "react-feather";
@@ -30,12 +30,14 @@ import PlaidBankTransfer from "../../AddFunds/WalletFundsFlow/PlaidBankTransfer"
 import { isCardValid, isPersonalInfoValid, isShippingValid } from "../../../utils/Functions/validations";
 import allCountries from "../../PaymentsNewer/CountriesData.json";
 import { useIdempotency } from "../../../hooks/Payments/useIdempotency";
+import { UserContext } from "../../../Context/UserContext";
 
 const initialState = {
   loading: false,
   step: 1,
   payment_type: {},
   country: {},
+  countryData: {},
   cardNumber: "",
   expiry: "",
   cvc: "",
@@ -77,6 +79,19 @@ function reducer(state, action) {
       return state;
   }
 }
+
+const getCardPaymentRequiredFields = (countryData) => countryData?.card_payment_required_fields || {};
+
+const isCardPaymentAddressValid = (data) => {
+  const requiredFields = getCardPaymentRequiredFields(data.countryData);
+
+  return !(
+    (requiredFields.customer_town && !data.customerTown?.trim()) ||
+    (requiredFields.customer_street && !data.customerStreet?.trim()) ||
+    (requiredFields.customer_county && !data.customer_county?.trim())
+  );
+};
+
 const PayAsGuest = ({
   amount,
   isOpen,
@@ -93,6 +108,7 @@ const PayAsGuest = ({
 }) => {
   const { t } = useTranslation();
   const [data, dispatch] = useReducer(reducer, initialState);
+  const { allowedCountries, getAllActiveCountries } = useContext(UserContext)
   const dataHandler = (field, value) => {
     dispatch({ type: "UPDATE_FIELD", field, value });
   };
@@ -114,14 +130,31 @@ const PayAsGuest = ({
   // }, [subscriptionId])
 
   useEffect(() => {
+    getAllActiveCountries()
+  }, [])
+
+  useEffect(() => {
     if (isOpen && countryIsoCode) {
       const selected = allCountries.find(c => c.alpha3 === countryIsoCode);
       if (selected) {
+        dataHandler("countryData", allowedCountries.find(c => c.country_iso_code?.toUpperCase() === countryIsoCode))
         dataHandler("country", selected);
         dataHandler("step", 2);
       }
     }
   }, [isOpen, countryIsoCode])
+
+  useEffect(() => {
+    if (data.country?.alpha3) {
+      const selected = allowedCountries.find(c => c.country_iso_code?.toUpperCase() === data.country.alpha3);
+      if (selected) {
+        console.log(selected, "selected")
+        dataHandler("countryData", selected);
+      }
+    }
+  }, [data.country?.alpha3, allowedCountries])
+
+  console.log(data.countryData, "country", allowedCountries)
 
   const initiatePaypalPayment = async () => {
     dataHandler("loading", true);
@@ -499,7 +532,7 @@ const PayAsGuest = ({
         disabled =
           !isPersonalInfoValid(data, false) ||
           (isShipping ? !isShippingValid(data.shippingDetails) : false) ||
-          ((data?.country?.alpha3 === "USA" || data?.country?.alpha3 === "CAN") && (!data.customerTown || !data.customerStreet || !data.customer_county))
+          !isCardPaymentAddressValid(data)
       }
     }
 

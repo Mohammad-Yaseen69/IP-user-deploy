@@ -89,12 +89,11 @@ const OtpConfirmation = ({ isOpen, toggle, callback, data, dataHandler, resendHa
 
     useLayoutEffect(() => {
         const timeout = setTimeout(() => {
-            inputRefs?.current?.[0]?.focus()
+            requestAnimationFrame(() => {
+                inputRefs?.current?.[0]?.focus({ preventScroll: true })
+            })
         }, 300)
-
-        return () => {
-            clearTimeout(timeout)
-        }
+        return () => clearTimeout(timeout)
     }, [])
 
     const buttonRef = useRef(null)
@@ -112,10 +111,20 @@ const OtpConfirmation = ({ isOpen, toggle, callback, data, dataHandler, resendHa
         return () => {
             window.removeEventListener('keydown', handleKeyDown);
         };
-    }, []);
+    }, [isLoading, isAnyFieldEmpty]);
     return (
-        <Modal isOpen={isOpen} contentClassName="overflow-hidden" style={{ borderRadius: "1rem", width: "100vw", maxWidth: window.innerWidth > 1000 ? "800px" : "96vw", overflow: "hidden" }}>
-            <ModalBody className={styles.body}>
+        <Modal isOpen={isOpen}
+
+            contentClassName="overflow-hidden"
+            onClosed={() => {
+                document.body.style.overflow = ''
+                document.body.style.paddingRight = ''
+            }}
+            style={{ borderRadius: "1rem", width: "100vw", maxWidth: window.innerWidth > 1000 ? "800px" : "96vw", overflow: "hidden" }}>
+            <ModalBody className={styles.body} style={{
+                WebkitTransform: 'translateZ(0)',
+                transform: 'translateZ(0)'
+            }}>
                 <div className={styles.left}>
                     <h5>
                         {
@@ -226,6 +235,7 @@ const OtpConfirmation = ({ isOpen, toggle, callback, data, dataHandler, resendHa
                             dataHandler("error", "")
                             dataHandler("otpError", "")
                             dataHandler("otp_error", "")
+                            dataHandler("loading", false)
                             toggle()
                         }}>{t("Back")}</button>
                         <button
