@@ -17,7 +17,7 @@ import useChannels from "../../hooks/BeneficiaryHooks/useChannels";
 import DateMomentUtils from '@date-io/moment';
 import { MuiPickersUtilsProvider, DatePicker } from '@material-ui/pickers';
 import { service_name_formatter } from "../TransactionsNewApi/TransactionItem";
-import { bankExtrasInitial, BUSINESS_RELATIONSHIPS, idTypeData, friendsAndFamily, BeneficiaryRelation } from "../../utils/Data";
+import { bankExtrasInitial, BUSINESS_RELATIONSHIPS, idTypeData, friendsAndFamily, BeneficiaryRelation, C2B_RELATIONSHIPS } from "../../utils/Data";
 import useAddress from "../../hooks/BeneficiaryHooks/useAddress";
 import useBenCreateFunc from "../../hooks/BeneficiaryHooks/useBenCreateFunc";
 import useBenEditFunc from "../../hooks/BeneficiaryHooks/useBenEditFunc";
@@ -116,6 +116,7 @@ const BusinessAccount = ({ isInternational, toggleHandler }) => {
         address: "",
         email: "",
         relation: "",
+        relationC2B: "",
         account_type: "Bank",
         account_holder_name: "",
         bank_name: "",
@@ -186,6 +187,7 @@ const BusinessAccount = ({ isInternational, toggleHandler }) => {
                 address: user?.address ?? prev.address,
                 email: user?.email ?? prev.email,
                 relation: user?.relation ?? prev.relation,
+                relationC2B: user?.relationC2B ?? prev.relationC2B,
                 account_type: user?.account_type ?? prev.account_type,
                 account_holder_name: user?.bank_details?.[0]?.account_holder_name ?? prev.account_holder_name,
                 bank_name: user?.bank_details?.[0]?.name ?? prev.bank_name,
@@ -632,25 +634,21 @@ const BusinessAccount = ({ isInternational, toggleHandler }) => {
 
                             <FormGroup style={{ flex: 1, margin: 0 }}>
                                 <label className="col-form-label" htmlFor="relation">{t("Relationship With Beneficiary")}</label>
-                                {/* {userDetails?.account_type === "individual" ?
-                                    <NestedDropdown
-                                        child={friendsAndFamily}
-                                        parent={BeneficiaryRelation}
-                                        value={formData.relation}
-                                        setter={(val) => {
-                                            inputChangeHandler({ target: { name: "relation", value: val } })
-                                        }}
-                                        subKey="Friends & Family"
-                                        disabled={isFieldsDisabled}
-                                    />
+                                {userDetails?.account_type === "individual" ?
+                                    <Input type="select" name="relationC2B" disabled={isFieldsDisabled} value={formData.relationC2B} onChange={inputChangeHandler}>
+                                        <option value="">{t("Select Relationship")}</option>
+                                        {Object.keys(C2B_RELATIONSHIPS).map((option, idx) => (
+                                            <option key={idx} value={option}> {C2B_RELATIONSHIPS[option]} </option>
+                                        ))}
+                                    </Input>
                                     :
-                                } */}
-                                <Input type="select" name="relation" disabled={isFieldsDisabled} value={formData.relation} onChange={inputChangeHandler}>
-                                    <option value="">{t("Select Relationship")}</option>
-                                    {Object.keys(BUSINESS_RELATIONSHIPS).map((option, idx) => (
-                                        <option key={idx} value={option}> {BUSINESS_RELATIONSHIPS[option]} </option>
-                                    ))}
-                                </Input>
+                                    <Input type="select" name="relation" disabled={isFieldsDisabled} value={formData.relation} onChange={inputChangeHandler}>
+                                        <option value="">{t("Select Relationship")}</option>
+                                        {Object.keys(BUSINESS_RELATIONSHIPS).map((option, idx) => (
+                                            <option key={idx} value={option}> {BUSINESS_RELATIONSHIPS[option]} </option>
+                                        ))}
+                                    </Input>
+                                }
                             </FormGroup>
                         </div>
                     </FormGroup>
@@ -990,7 +988,7 @@ const BusinessAccount = ({ isInternational, toggleHandler }) => {
                                 !city ||
                                 mobileNumber.length < 9 ||
                                 !formData.address ||
-                                !formData.relation ||
+                                !(userDetails?.account_type === "individual" ? formData.relationC2B : formData.relation) ||
                                 (!completedBank && !completedCard && !completedCrypto && !completedWallet && !cashPickupCompleted && instapayWallets.some(item => item.length < 8 || item.length > 8))
                             }
                             onClick={addBeneficiaryHandler}
