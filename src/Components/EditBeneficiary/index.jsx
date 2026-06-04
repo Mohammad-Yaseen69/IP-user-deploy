@@ -56,7 +56,6 @@ const EditBeneficiary = () => {
     const [countryCode, setCountryCode] = useState("")
     const [isEditMode, setIsEditMode] = useState(false)
 
-    // instapay wallet
     const [instapayWallets, setInstapayWallets] = useState([])
     const [apiWallets, setApiWallets] = useState([])
     const [walletIds, setWalletIds] = useState([])
@@ -68,9 +67,7 @@ const EditBeneficiary = () => {
 
     const [duplicateWallet, setDuplicateWallet] = useState(false)
 
-    // api bank details
 
-    // const show confirmation
     const [loading, setLoading] = useState(false)
     const [isAddressRequired,] = useState(true)
     const [clicked, setClicked] = useState(false)

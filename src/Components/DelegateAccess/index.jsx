@@ -2,7 +2,6 @@ import { useQuery } from "@tanstack/react-query"
 import { useEffect, useState } from "react"
 import { Plus, Search, User, Users } from "react-feather"
 import { useTranslation } from "react-i18next"
-import { apiWrapper } from "../../utils/Functions/apiWrapper"
 import useWindowWidth from "../../utils/useWindowWidth"
 import TopRight from "../topRight"
 import RoleModal from "./Components/RoleModal"
@@ -14,6 +13,7 @@ import { usePermission } from "../../hooks/GeneralUse/usePermission"
 import userFour from "./images/UsersFour.svg"
 import { FaHistory, FaRegUserCircle } from "react-icons/fa"
 import { useNavigate } from "react-router"
+import { apiWrapper } from "../../utils/Functions/apiWrapper"
 const DelegateAccess = () => {
     const width = useWindowWidth()
     const { t } = useTranslation()
