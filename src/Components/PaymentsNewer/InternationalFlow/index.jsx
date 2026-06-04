@@ -42,6 +42,8 @@ import styles from "./styles/index.module.css"
 import VendorBalanceModal from "./VendorBalanceModal"
 import WalletsComponent from "./WalletsComponent"
 import { useIdempotency } from "../../../hooks/Payments/useIdempotency"
+import SelectSender from "./SelectSender"
+import { usePermission } from "../../../hooks/GeneralUse/usePermission"
 
 const leftSideContent = [
     "Enter The Amount",
@@ -134,6 +136,13 @@ const initialState = {
     transactionType: "",
     flow: "",
     transactionTypeSelected: false,
+    isThirdPartyAllowed: true,
+    isRecipientTypeSelected: false,
+    isSendingTypeSelected: false,
+    sendingType: "",
+    showSenderSelection: false,
+    selectedSender: null,
+    senderType: "account" //"account" || "third-party"
 }
 
 const beneficiaryRequiredFields = [
@@ -199,13 +208,15 @@ function reducer(state, action) {
 const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRecent, setShowRecent }) => {
     const { t } = useTranslation()
     const navigate = useNavigate()
-    const { userDetails, authHeader, setProfileLockTime, getUserBeneficiaries } = useContext(UserContext)
+    const { userDetails, authHeader, setProfileLockTime, getUserBeneficiaries, isAgentLogin } = useContext(UserContext)
     const [subStep, setSubStep] = useState(0)
     const [internationalData, dispatch] = useReducer(reducer, initialState);
     const [showDetailsModal, setShowDetailsModal] = useState(false)
     const [showAddressModal, setShowAddressModal] = useState(false)
     const [loading, setLoading] = useState(false)
     const { getKey, reset } = useIdempotency()
+    const can = usePermission()
+
     const [requiredMissingFields, setRequiredMissingFields] = useState({
         beneficiary: {
             basic: [],
@@ -246,14 +257,30 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
         if (userDetails?.tfa) {
             updateInternationalData("codeType", "authenticator")
         }
-    }, [userDetails])
+        if (userDetails?.account_type && !internationalData.sendingType) {
+            const defaultSendingType = userDetails.account_type === "individual" ? "C" : "B";
+            updateInternationalData("sendingType", defaultSendingType);
+        }
+
+        if (can("payments.send-as-third-party.send") === false && isAgentLogin) {
+            updateInternationalData("isThirdPartyAllowed", false);
+        }
+
+    }, [userDetails, internationalData.sendingType, isAgentLogin])
+
+
 
 
     const disabledButton = useMemo(() => {
         switch (subStep) {
             case 1:
                 if (!internationalData.transactionTypeSelected) {
-                    return !internationalData.transactionType
+                    if (!internationalData.isRecipientTypeSelected) {
+                        return !internationalData.transactionType
+                    }
+                    if (internationalData.isThirdPartyAllowed && !internationalData.isSendingTypeSelected) {
+                        return !internationalData.sendingType
+                    }
                 }
 
                 if (userDetails?.account_type === "individual" ? userDetails?.user?.kyc_status !== "approved" : userDetails?.company?.kyb_status !== "approved") {
@@ -263,6 +290,11 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                 return !internationalData.amount || Number(String(internationalData.amount)?.replaceAll(",", "")) < 1 || !internationalData.currency || !internationalData.currency_wallet?.currency?.code || !internationalData.country?.name || !internationalData?.payoutChannel?.name || !internationalData?.payer?.name || internationalData.error || internationalData.exchange_rate_error || !internationalData.exchange_rate?.receiver?.amount > 0 || vendorBalanceLoading
 
             case 2:
+                if (internationalData.showSenderSelection) {
+                    if (internationalData.senderType !== 'account') {
+                        return !internationalData.selectedSender?._id
+                    }
+                }
                 return !internationalData.beneficiary?._id
 
             case 3:
@@ -674,11 +706,15 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                 purpose_of_remittance: internationalData.reason,
                 user_id: userDetails?.account_type === "business" ? userDetails?.company?._id : userDetails?.user?._id,
                 beneficiary_id: internationalData.beneficiary?._id,
+                ...(internationalData.senderType === "third-party" && internationalData.selectedSender?._id ? {
+                    sender_id: internationalData.selectedSender._id,
+                } : {}),
                 service: { id: internationalData.payoutChannel?.id },
                 transaction_type: internationalData.flow,
                 wallet_id: internationalData.wallet?._id ?? internationalData.currency_wallet?._id,
                 token: internationalData.quotation_details?.token,
-                vendor: internationalData.payoutChannel?.vendor
+                vendor: internationalData.payoutChannel?.vendor,
+                sender_id: internationalData.senderType === "third-party" ? internationalData.selectedSender?._id : undefined,
             }
 
             if (internationalData.payoutChannel?.vendor === "thunes") {
@@ -754,6 +790,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                     wallet_id: internationalData.currency_wallet?._id,
                     amount: internationalData.exchange_rate?.total * 100,
                     payment_type: internationalData.payment_type?.value ?? "card",
+                    sender_id: internationalData.senderType === "third-party" ? internationalData.selectedSender?._id : undefined,
                 }
             }
 
@@ -912,7 +949,16 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                         return
                     }
 
-                    if (!internationalData.transactionTypeSelected) {
+                    if (!internationalData.isRecipientTypeSelected) {
+                        updateInternationalData("isRecipientTypeSelected", true)
+                        if (!internationalData.isThirdPartyAllowed) {
+                            updateInternationalData("transactionTypeSelected", true)
+                        }
+                        return
+                    }
+
+                    if (internationalData.isThirdPartyAllowed && !internationalData.isSendingTypeSelected) {
+                        updateInternationalData("isSendingTypeSelected", true)
                         updateInternationalData("transactionTypeSelected", true)
                         return
                     }
@@ -938,6 +984,11 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                 }
             case 2:
                 console.log(internationalData.payerRequiredFields, internationalData?.payoutChannel.value, internationalData?.beneficiary)
+
+                if (internationalData.showSenderSelection) {
+                    setSubStep(prev => prev + 1)
+                    return
+                }
 
                 if (!internationalData.beneficiary?.address) {
                     return setShowAddressModal(true)
@@ -1062,9 +1113,17 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
         if (requiredMissingFields.beneficiary.basic?.length >= 1 || requiredMissingFields.beneficiary.extras?.length >= 1) {
             setShowDetailsModal(true)
         } else {
-            setSubStep(prev => prev + 1)
+            if (subStep === 0) {
+                setSubStep(prev => prev + 1)
+            } else {
+                if (internationalData.isThirdPartyAllowed && internationalData.senderType === "third-party") {
+                    updateInternationalData("showSenderSelection", true)
+                } else {
+                    setSubStep(prev => prev + 1)
+                }
+            }
         }
-    }, [requiredMissingFields.beneficiary])
+    }, [requiredMissingFields.beneficiary, internationalData.isThirdPartyAllowed])
 
 
 
@@ -1460,10 +1519,16 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                                             {
                                                 subStep === 2
                                                 &&
-                                                <StepTwo
-                                                    data={internationalData}
-                                                    dataHandler={updateInternationalData}
-                                                />
+                                                (!internationalData.showSenderSelection ?
+                                                    <StepTwo
+                                                        data={internationalData}
+                                                        dataHandler={updateInternationalData}
+                                                    /> :
+                                                    <SelectSender
+                                                        data={internationalData}
+                                                        dataHandler={updateInternationalData}
+                                                    />
+                                                )
                                             }
                                             {
                                                 subStep === 3
@@ -1555,7 +1620,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                                                 </Link>
                                                 <div className={styles?.buttons}>
                                                     {
-                                                        (internationalData.transactionTypeSelected)
+                                                        (internationalData.transactionTypeSelected || (internationalData.isThirdPartyAllowed && internationalData.isRecipientTypeSelected))
                                                         &&
                                                         <button className={styles.transparent} disabled={loading} onClick={() => {
                                                             reset()
@@ -1571,8 +1636,17 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                                                                 updateInternationalData("showCard", true)
                                                             }
                                                             else if (internationalData.transactionTypeSelected && subStep === 1) {
-                                                                dispatch({ type: "RESET_FIRST_STEP_DATA" })
-                                                                updateInternationalData("transactionTypeSelected", false)
+                                                                if (internationalData.isThirdPartyAllowed) {
+                                                                    updateInternationalData("transactionTypeSelected", false)
+                                                                    updateInternationalData("isSendingTypeSelected", false)
+                                                                } else {
+                                                                    dispatch({ type: "RESET_FIRST_STEP_DATA" })
+                                                                }
+                                                            }
+                                                            else if (!internationalData.transactionTypeSelected && internationalData.isThirdPartyAllowed && internationalData.isRecipientTypeSelected) {
+                                                                updateInternationalData("isRecipientTypeSelected", false)
+                                                            } else if (internationalData.showSenderSelection && subStep === 2) {
+                                                                updateInternationalData("showSenderSelection", false)
                                                             }
                                                             else {
                                                                 setSubStep(prev => prev - 1)
@@ -1704,10 +1778,16 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                                                                 {
                                                                     subStep === 2
                                                                     &&
-                                                                    <StepTwo
-                                                                        data={internationalData}
-                                                                        dataHandler={updateInternationalData}
-                                                                    />
+                                                                    (!internationalData.showSenderSelection ?
+                                                                        <StepTwo
+                                                                            data={internationalData}
+                                                                            dataHandler={updateInternationalData}
+                                                                        /> :
+                                                                        <SelectSender
+                                                                            data={internationalData}
+                                                                            dataHandler={updateInternationalData}
+                                                                        />
+                                                                    )
                                                                 }
                                                                 {
                                                                     subStep === 3
@@ -1801,9 +1881,10 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                                                     </Link>
                                                     <div className={styles?.buttons}>
                                                         {
-                                                            (subStep > 1 || internationalData.transactionTypeSelected)
+                                                            (internationalData.transactionTypeSelected || (internationalData.isThirdPartyAllowed && internationalData.isRecipientTypeSelected))
                                                             &&
-                                                            <button disabled={loading} onClick={() => {
+                                                            <button className={styles.transparent} disabled={loading} onClick={() => {
+                                                                reset()
                                                                 if (subStep === 4 && internationalData.payment_type?.value) {
                                                                     updateInternationalData("payment_type", {})
                                                                 }
@@ -1816,15 +1897,23 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                                                                     updateInternationalData("showCard", true)
                                                                 }
                                                                 else if (internationalData.transactionTypeSelected && subStep === 1) {
-                                                                    dispatch({ type: "RESET_FIRST_STEP_DATA" })
-                                                                    updateInternationalData("transactionTypeSelected", false)
+                                                                    if (internationalData.isThirdPartyAllowed) {
+                                                                        updateInternationalData("isSendingTypeSelected", false)
+                                                                        updateInternationalData("transactionTypeSelected", false)
+                                                                    } else {
+                                                                        dispatch({ type: "RESET_FIRST_STEP_DATA" })
+                                                                        updateInternationalData("transactionTypeSelected", false)
+                                                                    }
+                                                                }
+                                                                else if (!internationalData.transactionTypeSelected && internationalData.isThirdPartyAllowed && internationalData.isRecipientTypeSelected) {
+                                                                    updateInternationalData("isRecipientTypeSelected", false)
+                                                                } else if (internationalData.showSenderSelection && subStep === 2) {
+                                                                    updateInternationalData("showSenderSelection", false)
                                                                 }
                                                                 else {
                                                                     setSubStep(prev => prev - 1)
                                                                 }
-                                                            }}>
-                                                                <ChevronLeft />
-                                                            </button>
+                                                            }}><ChevronLeft /></button>
                                                         }
                                                         <button disabled={disabledButton || loading} className={styles.full} onClick={handleClick}>
                                                             {

@@ -10,7 +10,8 @@ const TransactionTypeSelection = ({ data, dataHandler }) => {
 
     const handleSelect = (type) => {
         dataHandler("transactionType", type);
-        dataHandler("flow", `${userDetails?.account_type === "individual" ? "C" : "B"}2${type}`);
+        const sender = data?.sendingType || (userDetails?.account_type === "individual" ? "C" : "B");
+        dataHandler("flow", `${sender}2${type}`);
     };
 
     return (
