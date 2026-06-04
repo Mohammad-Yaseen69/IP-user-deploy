@@ -261,7 +261,10 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
             const defaultSendingType = userDetails.account_type === "individual" ? "C" : "B";
             updateInternationalData("sendingType", defaultSendingType);
         }
+    }, [userDetails, internationalData.sendingType])
 
+
+    useEffect(() => {
         if (userDetails?.isThirdPartyAllowed) {
             if (isAgentLogin) {
                 updateInternationalData("isThirdPartyAllowed", can("payments.send-as-third-party.send"));
@@ -269,8 +272,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                 updateInternationalData("isThirdPartyAllowed", true);
             }
         }
-    }, [userDetails, internationalData.sendingType, isAgentLogin])
-
+    }, [userDetails, isAgentLogin])
 
 
 
