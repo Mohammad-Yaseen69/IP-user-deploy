@@ -713,7 +713,8 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
             const res = await axios.post(url, {
                 data: enc
             }, {
-                headers: authHeader
+                headers: authHeader,
+                timeout: 50000
             })
 
             const dec = decryptData(res.data.data)
@@ -764,7 +765,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
 
             const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/initiat-international${internationalData.selectedSavedCard?._id ? "-pan" : ""}-transaction`,
                 { data: enc },
-                { headers: { ...authHeader, "idempotency-key": getKey() } }
+                { headers: { ...authHeader, "idempotency-key": getKey() }, timeout: 50000 }
             )
             const dec = decryptData(res.data.data)
             console.log(dec)
@@ -1093,11 +1094,13 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
 
             if (internationalData.payoutChannel?.vendor === "thunes") {
                 res = await axios.post(`${import.meta.env.VITE_THUNES_API}/confirmTransaction`, data, {
-                    headers: { ...authHeader, "idempotency-key": getKey() }
+                    headers: { ...authHeader, "idempotency-key": getKey() },
+                    timeout: 50000
                 })
             } else {
                 res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/payment/confirm-transaction`, { data: encryptData(data) }, {
-                    headers: { ...authHeader, "idempotency-key": getKey() }
+                    headers: { ...authHeader, "idempotency-key": getKey() },
+                    timeout: 50000
                 })
             }
             const decrypted = decryptData(res.data.data)
@@ -1198,7 +1201,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
         }
     }, [transaction_status, code])
 
-    console.log(internationalData.exchange_rate)
+    // console.log("international.otpError",internationalData)
     return (
         <>
             {
@@ -1537,7 +1540,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                                                                     updateInternationalData("showOtpModal", false)
                                                                 }}
                                                                 resendHandler={createTransaction}
-                                                                error={international.otpError}
+                                                                error={internationalData.otpError}
                                                                 resetIdempotency={reset}
                                                             />
                                                         }
@@ -1781,7 +1784,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                                                                                         updateInternationalData("showOtpModal", false)
                                                                                     }}
                                                                                     resendHandler={createTransaction}
-                                                                                    error={international.otpError}
+                                                                                    error={internationalData.otpError}
                                                                                     resetIdempotency={reset}
                                                                                 />
                                                                             }

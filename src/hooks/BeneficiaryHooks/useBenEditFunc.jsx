@@ -46,6 +46,7 @@ const useBenEditFunc = ({
     const [walletNumberError, setWalletNumberError] = useState("")
     const { userDetails, authHeader } = useContext(UserContext)
     const [saveloading, setsaveloading] = useState(false)
+    const isIndividualToBusiness = inBusiness && userDetails?.account_type === "individual"
 
 
     let extras = { ...basicExtras, ...additionFields }
@@ -78,7 +79,8 @@ const useBenEditFunc = ({
             country_name: country ?? "",
             country: countryId ?? "",
             country_iso_code: countryIsoCode,
-            relation: formData.relation ?? "",
+            relation: isIndividualToBusiness ? "OTHER" : formData.relation ?? "",
+            relationC2B: isIndividualToBusiness ? formData.relationC2B ?? "" : undefined,
             account: userDetails._id ?? "",
             representativeDetails: representativeFields || {},
             beneficiary_type: inBusiness ? "business" : "individual",
@@ -185,6 +187,8 @@ const useBenEditFunc = ({
             if (!mobileNumber?.trim() && field === "phone") missing.push(field)
             if (!formData[field]?.trim() && !country?.trim() && field === "country") missing.push(field)
             if (!formData[field]?.trim() && !city?.trim() && field === "city") missing.push(field)
+            if (field === "relation" && isIndividualToBusiness && !formData.relationC2B?.trim()) missing.push(field)
+            if (field === "relation" && isIndividualToBusiness) return
             if (!formData[field]?.trim() && field !== 'city' && field !== 'phone' && field !== 'country' && field !== 'first_name' && field !== 'last_name') missing.push(field)
         })
 

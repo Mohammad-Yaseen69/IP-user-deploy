@@ -629,23 +629,24 @@ const IndividualAccount = ({ mobileView, handleChangeNumber, toggleSuccess, filt
                                             </FormGroup>
                                             <FormGroup style={{ flex: 1, margin: 0 }}>
                                                 <label className="col-form-label" htmlFor="relation">{t("Relationship With Beneficiary")} <span className="req_star">*</span></label>
-                                                {userDetails?.account_type === "individual" ?
-                                                    <NestedDropdown
-                                                        child={friendsAndFamily}
-                                                        parent={BeneficiaryRelation}
-                                                        value={formData.relation}
-                                                        setter={(val) => {
-                                                            inputChangeHandler({ target: { name: "relation", value: val } })
-                                                        }}
-                                                        subKey="Friends & Family"
-                                                    /> :
+                                                <NestedDropdown
+                                                    child={friendsAndFamily}
+                                                    parent={BeneficiaryRelation}
+                                                    value={formData.relation}
+                                                    setter={(val) => {
+                                                        inputChangeHandler({ target: { name: "relation", value: val } })
+                                                    }}
+                                                    subKey="Friends & Family"
+                                                />
+                                                {/* {userDetails?.account_type === "individual" ?
+                                                     :
                                                     <Input type="select" name="relation" value={formData.relation} onChange={inputChangeHandler}>
                                                         <option value="">{t("Select Relationship")}</option>
                                                         {Object.keys(BUSINESS_RELATIONSHIPS).map((option, idx) => (
                                                             <option key={idx} value={option}> {BUSINESS_RELATIONSHIPS[option]} </option>
                                                         ))}
                                                     </Input>
-                                                }
+                                                } */}
                                             </FormGroup>
                                         </div>
                                     </FormGroup>
