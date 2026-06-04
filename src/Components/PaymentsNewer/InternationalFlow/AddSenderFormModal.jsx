@@ -14,11 +14,18 @@ import { MuiPickersUtilsProvider, DatePicker } from "@material-ui/pickers";
 import iso2 from "../../AddFunds/WalletFund/countries_iso2.json";
 import { useQuery } from "@tanstack/react-query";
 import { apiWrapper } from "../../../utils/Functions/apiWrapper";
-import { BeneficiaryRelation, BUSINESS_RELATIONSHIPS, friendsAndFamily, idTypeData, occupations } from "../../../utils/Data";
+import { BeneficiaryRelation, BUSINESS_RELATIONSHIPS, friendsAndFamily, occupations } from "../../../utils/Data";
 
 const optionalEmail = z.string().optional().refine((value) => !value || z.string().email().safeParse(value).success, {
     message: "Enter a valid email address",
 });
+
+const idTypeData = {
+    'passport': 'Passport',
+    'id-card': "Id Card",
+    'driving-license': "Driving License",
+    'residence-permit': "Residence Permit"
+}
 
 const baseAddressSchema = {
     email: optionalEmail,
@@ -146,6 +153,8 @@ const AddSenderFormModal = ({ isOpen, toggle, data, senderAccountType, onSubmit,
     const { userDetails } = useContext(UserContext);
     const [phoneError, setPhoneError] = useState("");
     const schema = senderAccountType === "business" ? businessSenderSchema : individualSenderSchema;
+    const [, forceUpdate] = useState({});
+
 
     console.log(editSender, "edit sender")
     const form = useForm({
@@ -224,12 +233,19 @@ const AddSenderFormModal = ({ isOpen, toggle, data, senderAccountType, onSubmit,
     console.log(editSender, "editing sender")
 
     useEffect(() => {
+        if (!isOpen) return;
+
+        if (!editSender) {
+            reset();
+            return;
+        }
+
         const values = editSender || {};
         const representative = values.representative || {};
         const extras = values.extras || {};
         const representativeExtras = representative.extras || {};
 
-        console.log(values?.phone, "phone")
+        console.log(values?.phone, "phone h bhai")
         reset({
             sender_type: senderAccountType,
             first_name: values.first_name || "",
@@ -281,7 +297,8 @@ const AddSenderFormModal = ({ isOpen, toggle, data, senderAccountType, onSubmit,
                 },
             },
         });
-    }, [senderAccountType, data?.country?.name, data?.country?.alpha3, editSender, reset, editSender]);
+        forceUpdate({})
+    }, [senderAccountType, data?.country?.name, data?.country?.alpha3, editSender, editSender?.phone, isOpen]);
 
     useEffect(() => {
         register("state_name");
@@ -424,6 +441,7 @@ const AddSenderFormModal = ({ isOpen, toggle, data, senderAccountType, onSubmit,
         <label style={fieldStyle}>
             <span style={{ color: "#454545", fontSize: "12px", fontWeight: 700 }}>{t("Phone Number")} <span style={{ color: "#E64067" }}>*</span></span>
             <PhoneInput
+                key={editSender?._id || "new"}
                 customStyles={{
                     boxShadow: "none",
                     border: "1px solid #E5E5E5",
@@ -434,8 +452,9 @@ const AddSenderFormModal = ({ isOpen, toggle, data, senderAccountType, onSubmit,
                 setPhone={(phone) => setValue("phone", phone)}
                 disabled={!selectedCountryIsoCode}
                 setCountry={() => { }}
-                phone={selectedPhone?.trim()}
+                phone={(editSender ? editSender.phone : selectedPhone)?.trim()}
                 setError={setPhoneError}
+                inThirdParty={true}
                 error={phoneError}
             />
             {renderNestedError("phone")}
@@ -500,123 +519,123 @@ const AddSenderFormModal = ({ isOpen, toggle, data, senderAccountType, onSubmit,
             </ModalHeader>
             <ModalBody style={{ maxHeight: "78vh", overflow: "auto" }}>
                 <MuiPickersUtilsProvider utils={DateMomentUtils}>
-                <form onSubmit={handleSubmit(submitForm)} style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-                    <div style={{ display: "flex", justifyContent: "space-between", gap: "12px", alignItems: "center", flexWrap: "wrap" }}>
-                        <div style={{ display: "flex", alignItems: "center", gap: "8px", fontWeight: 800 }}>
-                            <Plus size={16} color="#5926F0" />
-                            {senderAccountType === "business" ? t("Business Sender") : t("Individual Sender")}
+                    <form onSubmit={handleSubmit(submitForm)} style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+                        <div style={{ display: "flex", justifyContent: "space-between", gap: "12px", alignItems: "center", flexWrap: "wrap" }}>
+                            <div style={{ display: "flex", alignItems: "center", gap: "8px", fontWeight: 800 }}>
+                                <Plus size={16} color="#5926F0" />
+                                {senderAccountType === "business" ? t("Business Sender") : t("Individual Sender")}
+                            </div>
+                            <label style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "12px", fontWeight: 700, color: "#606060" }}>
+                                <input type="checkbox" {...register("save_for_future")} />
+                                {t("Save for future")}
+                            </label>
                         </div>
-                        <label style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "12px", fontWeight: 700, color: "#606060" }}>
-                            <input type="checkbox" {...register("save_for_future")} />
-                            {t("Save for future")}
-                        </label>
-                    </div>
 
-                    <input type="hidden" {...register("sender_type")} value={senderAccountType} />
+                        <input type="hidden" {...register("sender_type")} value={senderAccountType} />
 
-                    {senderAccountType === "individual" ?
-                        <>
-                            <div style={{ fontSize: "13px", fontWeight: 800, color: "#5926F0" }}>{t("Personal Details")}</div>
-                            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: "12px" }}>
-                                {renderField("first_name", "First Name", "text", null, true)}
-                                {renderField("last_name", "Last Name", "text", null, true)}
-                                {renderDateField("dob", "Date of Birth", true)}
-                                {renderField("gender", "Gender", "text", [
-                                    { value: "MALE", label: "Male" },
-                                    { value: "FEMALE", label: "Female" },
-                                    { value: "OTHER", label: "Other" },
-                                ])}
-                                {renderField("occupation", "Occupation", "text", Object.keys(occupations).map(key => ({ value: key, label: occupations[key] })))}
-                                {renderField("source_of_funds", "Source of Funds", "text", [
-                                    { value: "SALARY", label: "Salary" },
-                                    { value: "SAVINGS", label: "Savings" },
-                                    { value: "BUSINESS", label: "Business" },
-                                    { value: "OTHER", label: "Other" },
-                                ])}
-                                {renderRelationshipField()}
-                            </div>
-                        </>
-                        :
-                        <>
-                            <div style={{ fontSize: "13px", fontWeight: 800, color: "#5926F0" }}>{t("Business Details")}</div>
-                            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: "12px" }}>
-                                {renderField("company_name", "Company Name", "text", null, true)}
-                                {renderField("trading_name", "Trading Name")}
-                                {renderField("registration_number", "Registration Number")}
-                                {renderField("tax_id", "Tax ID")}
-                                {renderDateField("date_of_incorporation", "Date of Incorporation")}
-                                {renderField("business_relationship", "Business Relationship", "text", Object.keys(BUSINESS_RELATIONSHIPS).map(key => ({ value: key, label: BUSINESS_RELATIONSHIPS[key] })))}
-                            </div>
-                        </>
-                    }
-
-                    <div style={{ fontSize: "13px", fontWeight: 800, color: "#5926F0" }}>{t("Contact and Address")}</div>
-                    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: "12px" }}>
-                        {renderField("email", "Email", "email")}
-                        {renderPhoneField()}
-                        {renderField("address", "Address", "text", null, true)}
-                        {renderLocationFields()}
-                        {renderField("postal_code", "Postal Code")}
-                    </div>
-
-                    {senderAccountType === "business" &&
-                        <>
-                            <div style={{ fontSize: "13px", fontWeight: 800, color: "#5926F0" }}>{t("Representative Details")}</div>
-                            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: "12px" }}>
-                                {renderField("representative.first_name", "First Name", "text", null, true)}
-                                {renderField("representative.last_name", "Last Name", "text", null, true)}
-                                {renderField("representative.address", "Address")}
-                                {renderField("representative.postal_code", "Postal Code")}
-                                {renderDateField("representative.dob", "Date of Birth")}
-                                {renderField("representative.gender", "Gender", "text", [
-                                    { value: "MALE", label: "Male" },
-                                    { value: "FEMALE", label: "Female" },
-                                    { value: "OTHER", label: "Other" },
-                                ])}
-                            </div>
-                        </>
-                    }
-
-                    <div style={{ fontSize: "13px", fontWeight: 800, color: "#5926F0" }}>{t("Identity Details")}</div>
-                    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: "12px" }}>
-                        {senderAccountType === "business" ?
+                        {senderAccountType === "individual" ?
                             <>
-                                {renderField("representative.extras.idNumber", "ID Number")}
-                                {renderField("representative.extras.documentType", "Document Type", "text", Object.keys(idTypeData).map(key => ({ value: key, label: idTypeData[key] })))}
-                                {renderDateField("representative.extras.dateOfIssue", "Date of Issue")}
-                                {renderDateField("representative.extras.dateOfExpiry", "Date of Expiry")}
+                                <div style={{ fontSize: "13px", fontWeight: 800, color: "#5926F0" }}>{t("Personal Details")}</div>
+                                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: "12px" }}>
+                                    {renderField("first_name", "First Name", "text", null, true)}
+                                    {renderField("last_name", "Last Name", "text", null, true)}
+                                    {renderDateField("dob", "Date of Birth", true)}
+                                    {renderField("gender", "Gender", "text", [
+                                        { value: "MALE", label: "Male" },
+                                        { value: "FEMALE", label: "Female" },
+                                        { value: "OTHER", label: "Other" },
+                                    ])}
+                                    {renderField("occupation", "Occupation", "text", Object.keys(occupations).map(key => ({ value: key, label: occupations[key] })))}
+                                    {renderField("source_of_funds", "Source of Funds", "text", [
+                                        { value: "SALARY", label: "Salary" },
+                                        { value: "SAVINGS", label: "Savings" },
+                                        { value: "BUSINESS", label: "Business" },
+                                        { value: "OTHER", label: "Other" },
+                                    ])}
+                                    {renderRelationshipField()}
+                                </div>
                             </>
                             :
                             <>
-                                {renderField("extras.idNumber", "ID Number")}
-                                {renderField("extras.documentType", "Document Type", "text", Object.keys(idTypeData).map(key => ({ value: key, label: idTypeData[key] })))}
-                                {renderDateField("extras.dateOfIssue", "Date of Issue")}
-                                {renderDateField("extras.dateOfExpiry", "Date of Expiry")}
+                                <div style={{ fontSize: "13px", fontWeight: 800, color: "#5926F0" }}>{t("Business Details")}</div>
+                                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: "12px" }}>
+                                    {renderField("company_name", "Company Name", "text", null, true)}
+                                    {renderField("trading_name", "Trading Name")}
+                                    {renderField("registration_number", "Registration Number")}
+                                    {renderField("tax_id", "Tax ID")}
+                                    {renderDateField("date_of_incorporation", "Date of Incorporation")}
+                                    {renderField("business_relationship", "Business Relationship", "text", Object.keys(BUSINESS_RELATIONSHIPS).map(key => ({ value: key, label: BUSINESS_RELATIONSHIPS[key] })))}
+                                </div>
                             </>
                         }
-                    </div>
 
-                    <div style={{ fontSize: "13px", fontWeight: 800, color: "#5926F0" }}>{t("Documents")}</div>
-                    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: "12px" }}>
-                        {renderFileField("id_front", senderAccountType === "business" ? "Representative ID Front" : "ID Front")}
-                        {renderFileField("id_back", senderAccountType === "business" ? "Representative ID Back" : "ID Back")}
-                        {renderFileField("selfie", senderAccountType === "business" ? "Representative Selfie" : "Selfie")}
-                        {senderAccountType === "business" ?
+                        <div style={{ fontSize: "13px", fontWeight: 800, color: "#5926F0" }}>{t("Contact and Address")}</div>
+                        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: "12px" }}>
+                            {renderField("email", "Email", "email")}
+                            {renderPhoneField()}
+                            {renderField("address", "Address", "text", null, true)}
+                            {renderLocationFields()}
+                            {renderField("postal_code", "Postal Code")}
+                        </div>
+
+                        {senderAccountType === "business" &&
                             <>
-                                {renderFileField("kyb_registry_extract", "Registry Extract")}
-                                {renderFileField("kyb_proof_of_authority", "Proof of Authority")}
-                                {renderFileField("kyb_ubos", "UBO Documentation")}
-                                {renderFileField("kyb_id_collection", "ID Documents Collection")}
-                                {renderFileField("kyb_additional_docs", "Additional Documents")}
+                                <div style={{ fontSize: "13px", fontWeight: 800, color: "#5926F0" }}>{t("Representative Details")}</div>
+                                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: "12px" }}>
+                                    {renderField("representative.first_name", "First Name", "text", null, true)}
+                                    {renderField("representative.last_name", "Last Name", "text", null, true)}
+                                    {renderField("representative.address", "Address")}
+                                    {renderField("representative.postal_code", "Postal Code")}
+                                    {renderDateField("representative.dob", "Date of Birth")}
+                                    {renderField("representative.gender", "Gender", "text", [
+                                        { value: "MALE", label: "Male" },
+                                        { value: "FEMALE", label: "Female" },
+                                        { value: "OTHER", label: "Other" },
+                                    ])}
+                                </div>
                             </>
-                            : null}
-                    </div>
+                        }
 
-                    <button disabled={isSubmitting} type="submit" style={{ alignSelf: "flex-end", border: "none", borderRadius: "8px", background: isSubmitting ? "#9E8AED" : "#5926F0", color: "#fff", padding: "10px 16px", fontWeight: 800, display: "flex", alignItems: "center", gap: "8px" }}>
-                        <CheckCircle size={16} />
-                        {isSubmitting ? t(editSender ? "Updating Sender" : "Adding Sender") : t(editSender ? "Update Sender" : "Use This Sender")}
-                    </button>
-                </form>
+                        <div style={{ fontSize: "13px", fontWeight: 800, color: "#5926F0" }}>{t("Identity Details")}</div>
+                        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: "12px" }}>
+                            {senderAccountType === "business" ?
+                                <>
+                                    {renderField("representative.extras.idNumber", "ID Number")}
+                                    {renderField("representative.extras.documentType", "Document Type", "text", Object.keys(idTypeData).map(key => ({ value: key, label: idTypeData[key] })))}
+                                    {renderDateField("representative.extras.dateOfIssue", "Date of Issue")}
+                                    {renderDateField("representative.extras.dateOfExpiry", "Date of Expiry")}
+                                </>
+                                :
+                                <>
+                                    {renderField("extras.idNumber", "ID Number")}
+                                    {renderField("extras.documentType", "Document Type", "text", Object.keys(idTypeData).map(key => ({ value: key, label: idTypeData[key] })))}
+                                    {renderDateField("extras.dateOfIssue", "Date of Issue")}
+                                    {renderDateField("extras.dateOfExpiry", "Date of Expiry")}
+                                </>
+                            }
+                        </div>
+
+                        <div style={{ fontSize: "13px", fontWeight: 800, color: "#5926F0" }}>{t("Documents")}</div>
+                        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: "12px" }}>
+                            {renderFileField("id_front", senderAccountType === "business" ? "Representative ID Front" : "ID Front")}
+                            {renderFileField("id_back", senderAccountType === "business" ? "Representative ID Back" : "ID Back")}
+                            {renderFileField("selfie", senderAccountType === "business" ? "Representative Selfie" : "Selfie")}
+                            {senderAccountType === "business" ?
+                                <>
+                                    {renderFileField("kyb_registry_extract", "Registry Extract")}
+                                    {renderFileField("kyb_proof_of_authority", "Proof of Authority")}
+                                    {renderFileField("kyb_ubos", "UBO Documentation")}
+                                    {renderFileField("kyb_id_collection", "ID Documents Collection")}
+                                    {renderFileField("kyb_additional_docs", "Additional Documents")}
+                                </>
+                                : null}
+                        </div>
+
+                        <button disabled={isSubmitting} type="submit" style={{ alignSelf: "flex-end", border: "none", borderRadius: "8px", background: isSubmitting ? "#9E8AED" : "#5926F0", color: "#fff", padding: "10px 16px", fontWeight: 800, display: "flex", alignItems: "center", gap: "8px" }}>
+                            <CheckCircle size={16} />
+                            {isSubmitting ? t(editSender ? "Updating Sender" : "Adding Sender") : t(editSender ? "Update Sender" : "Use This Sender")}
+                        </button>
+                    </form>
                 </MuiPickersUtilsProvider>
             </ModalBody>
         </Modal>

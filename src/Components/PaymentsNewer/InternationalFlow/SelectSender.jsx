@@ -8,6 +8,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { apiWrapper } from "../../../utils/Functions/apiWrapper";
 import { toast } from "react-toastify";
 import { getExtractedPhone } from "../../../utils/Functions";
+import { usePermission } from "../../../hooks/GeneralUse/usePermission";
 
 const getAccountName = (userDetails) => {
     if (userDetails?.account_type === "business") {
@@ -64,9 +65,9 @@ const buildSenderFormData = (values) => {
     return formData;
 };
 
-const normalizeSenderList = (res) => {
-    if (Array.isArray(res?.senderList)) return res.senderList;
-    if (Array.isArray(res?.data?.senderList)) return res.data.senderList;
+const normalizeSenderList = (res, type) => {
+    if (Array.isArray(res?.senderList)) return res.senderList?.filter(s => s.sender_type === type);
+    if (Array.isArray(res?.data?.senderList)) return res.data.senderList?.filter(s => s.sender_type === type);
     return [];
 };
 
@@ -106,6 +107,7 @@ const SelectSender = ({ data, dataHandler }) => {
     const { t } = useTranslation();
     const { userDetails } = useContext(UserContext);
     const queryClient = useQueryClient();
+    const can = usePermission();
     const [showAddSenderModal, setShowAddSenderModal] = useState(false);
     const [editingSender, setEditingSender] = useState(null);
     const [pendingSavedSender, setPendingSavedSender] = useState(null);
@@ -123,13 +125,15 @@ const SelectSender = ({ data, dataHandler }) => {
     //     enabled: !!data?.country?.alpha3 && !!data?.payoutChannel?.id && !!data?.flow,
     // })
 
+    const [createdSenders, setCreatedSenders] = useState([]);
+
     const senderQueryKey = ["userSenders", userDetails?._id];
     const { data: savedSenders = [], isLoading: isLoadingSenders } = useQuery({
         queryKey: senderQueryKey,
         queryFn: () => apiWrapper({
             endpoint: `/api/sender/get-user-senders/${userDetails?._id}`,
             isDecrypted: true,
-        }).then(normalizeSenderList),
+        }).then((res) => normalizeSenderList(res, senderAccountType)),
         enabled: !!userDetails?._id,
         retry: 1
     });
@@ -206,17 +210,20 @@ const SelectSender = ({ data, dataHandler }) => {
     );
 
     const displayedSenders = useMemo(() => {
-        if (!hasCreatedSenderSelected || !selectedSender?._id) {
-            return filteredSavedSenders.map(sender => buildSelectedSender(sender, "saved"));
+        let list = [...createdSenders];
+
+        filteredSavedSenders.forEach(sender => {
+            if (!list.some(item => item._id === sender._id)) {
+                list.push(buildSelectedSender(sender, "saved"));
+            }
+        });
+
+        if (selectedSender?._id && !list.some(item => item._id === selectedSender._id)) {
+            list.unshift(selectedSender);
         }
 
-        return [
-            selectedSender,
-            ...filteredSavedSenders
-                .filter(sender => sender._id !== selectedSender._id)
-                .map(sender => buildSelectedSender(sender, "saved")),
-        ];
-    }, [filteredSavedSenders, hasCreatedSenderSelected, selectedSender]);
+        return list;
+    }, [filteredSavedSenders, createdSenders, selectedSender]);
 
     const selectOwnAccount = () => {
         dataHandler("senderType", "account");
@@ -237,19 +244,20 @@ const SelectSender = ({ data, dataHandler }) => {
         console.log(sender)
 
         dataHandler("senderType", "third-party");
-        dataHandler("selectedSender", buildSelectedSender(sender, "saved"));
+        dataHandler("selectedSender", buildSelectedSender(sender, sender.source || "saved"));
     };
 
     const confirmSavedSenderSelection = () => {
         if (!pendingSavedSender) return;
 
         dataHandler("senderType", "third-party");
-        dataHandler("selectedSender", buildSelectedSender(pendingSavedSender, "saved"));
+        dataHandler("selectedSender", buildSelectedSender(pendingSavedSender, pendingSavedSender.source || "saved"));
         setPendingSavedSender(null);
     };
 
     const handleNewSender = (sender) => {
         const selected = buildSelectedSender(sender, "created-in-flow");
+        setCreatedSenders(prev => [selected, ...prev]);
 
         dataHandler("senderType", "third-party");
         dataHandler("selectedSender", selected);
@@ -287,34 +295,37 @@ const SelectSender = ({ data, dataHandler }) => {
         color: "#5926F0",
     };
 
-    console.log(editingSender, "editing sender")
     const renderSenderActions = (sender) => (
         <span style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-            <button
-                type="button"
-                onClick={(event) => {
-                    event.stopPropagation();
-                    setEditingSender({
-                        ...sender,
-                        phone: getExtractedPhone({}, sender.country_iso_code, sender.phone)
-                    });
-                }}
-                style={actionButtonStyle}
-                title={t("Edit")}
-            >
-                <Edit2 size={15} />
-            </button>
-            <button
-                type="button"
-                onClick={(event) => {
-                    event.stopPropagation();
-                    setConfirmDeleteSender(sender);
-                }}
-                style={{ ...actionButtonStyle, color: "#E64067" }}
-                title={t("Remove")}
-            >
-                <Trash2 size={15} />
-            </button>
+            {can("payments.send-as-third-party.edit") && (
+                <button
+                    type="button"
+                    onClick={(event) => {
+                        event.stopPropagation();
+                        setEditingSender({
+                            ...sender,
+                            phone: getExtractedPhone({}, sender.country_iso_code, sender.phone)
+                        });
+                    }}
+                    style={actionButtonStyle}
+                    title={t("Edit")}
+                >
+                    <Edit2 size={15} />
+                </button>
+            )}
+            {can("payments.send-as-third-party.delete") && (
+                <button
+                    type="button"
+                    onClick={(event) => {
+                        event.stopPropagation();
+                        setConfirmDeleteSender(sender);
+                    }}
+                    style={{ ...actionButtonStyle, color: "#E64067" }}
+                    title={t("Remove")}
+                >
+                    <Trash2 size={15} />
+                </button>
+            )}
         </span>
     );
 
@@ -344,79 +355,58 @@ const SelectSender = ({ data, dataHandler }) => {
                 </div>
             </div>
 
-            <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: "12px" }}>
-                <button type="button" onClick={selectOwnAccount} style={cardStyle(data?.senderType === "account")}>
-                    <User size={22} color="#5926F0" />
-                    <span style={{ flex: 1 }}>
-                        <strong style={{ display: "block", fontSize: "14px" }}>{t("Use my own account")}</strong>
-                        <span style={{ display: "block", color: "#777", fontSize: "12px", fontWeight: 600 }}>{getAccountName(userDetails)}</span>
-                    </span>
-                    {data?.senderType === "account" ? <CheckCircle size={18} color="#5926F0" /> : null}
-                </button>
-                <button type="button" onClick={startThirdParty} style={cardStyle(data?.senderType === "third-party")}>
-                    <Users size={22} color="#5926F0" />
-                    <span style={{ flex: 1 }}>
-                        <strong style={{ display: "block", fontSize: "14px" }}>{t("Third-party sender")}</strong>
-                        <span style={{ display: "block", color: "#777", fontSize: "12px", fontWeight: 600 }}>{t("Select a saved sender or add a new one")}</span>
-                    </span>
-                    {data?.senderType === "third-party" ? <CheckCircle size={18} color="#5926F0" /> : null}
-                </button>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "12px", flexWrap: "wrap" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "8px", color: "#202020", fontWeight: 800 }}>
+                    <Save size={16} color="#5926F0" />
+                    {t("Saved Senders")}
+                </div>
+                {filteredSavedSenders.length > 0 && can("payments.send-as-third-party.add") &&
+                    <button
+                        type="button"
+                        onClick={() => setShowAddSenderModal(true)}
+                        style={{ border: "none", borderRadius: "8px", background: "#5926F0", color: "#fff", padding: "10px 14px", fontWeight: 800, display: "flex", alignItems: "center", gap: "8px" }}
+                    >
+                        <Plus size={16} />
+                        {t("Add New Sender")}
+                    </button>
+                }
             </div>
 
-            {data?.senderType === "third-party" &&
-                <>
-                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "12px", flexWrap: "wrap" }}>
-                        <div style={{ display: "flex", alignItems: "center", gap: "8px", color: "#202020", fontWeight: 800 }}>
-                            <Save size={16} color="#5926F0" />
-                            {t("Saved Senders")}
+            {isLoadingSenders ?
+                <div style={{ border: "1px dashed #D9D9D9", borderRadius: "8px", padding: "18px", background: "#FCFCFC", color: "#777", fontSize: "13px", fontWeight: 700 }}>
+                    {t("Loading saved senders")}
+                </div>
+                :
+                displayedSenders.length > 0 ?
+                    <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: "10px" }}>
+                        {displayedSenders.map(sender => {
+                            return (
+                                <div key={sender._id} role="button" tabIndex={0} onClick={() => selectSavedSender(sender)} onKeyDown={(event) => event.key === "Enter" ? selectSavedSender(sender) : null} style={cardStyle(selectedSavedSenderId === sender._id)}>
+                                    {sender.sender_type === "business" ? <Briefcase size={20} color="#5926F0" /> : <User size={20} color="#5926F0" />}
+                                    {renderSenderSummary(sender)}
+                                    {renderSenderActions(sender)}
+                                    {selectedSavedSenderId === sender._id ? <CheckCircle size={18} color="#5926F0" /> : null}
+                                </div>
+                            );
+                        })}
+                    </div>
+                    :
+                    <div style={{ border: "1px dashed #D9D9D9", borderRadius: "8px", padding: "18px", background: "#FCFCFC", display: "flex", flexDirection: "column", gap: "12px" }}>
+                        <div style={{ color: "#202020", fontWeight: 800 }}>{t("No saved senders yet")}</div>
+                        <div style={{ color: "#777", fontSize: "13px", fontWeight: 600 }}>
+                            {t("Add a third-party sender to save their details for the next transfer.")}
                         </div>
-                        {filteredSavedSenders.length > 0 &&
+                        {can("payments.send-as-third-party.add") && (
                             <button
                                 type="button"
                                 onClick={() => setShowAddSenderModal(true)}
-                                style={{ border: "none", borderRadius: "8px", background: "#5926F0", color: "#fff", padding: "10px 14px", fontWeight: 800, display: "flex", alignItems: "center", gap: "8px" }}
+                                style={{ border: "none", borderRadius: "8px", background: "#5926F0", color: "#fff", padding: "10px 14px", fontWeight: 800, display: "flex", alignItems: "center", gap: "8px", width: "fit-content" }}
                             >
                                 <Plus size={16} />
                                 {t("Add New Sender")}
                             </button>
-                        }
+                        )}
                     </div>
-
-                    {isLoadingSenders ?
-                        <div style={{ border: "1px dashed #D9D9D9", borderRadius: "8px", padding: "18px", background: "#FCFCFC", color: "#777", fontSize: "13px", fontWeight: 700 }}>
-                            {t("Loading saved senders")}
-                        </div>
-                        :
-                        displayedSenders.length > 0 ?
-                            <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: "10px" }}>
-                                {displayedSenders.map(sender => {
-                                    return (
-                                        <div key={sender._id} role="button" tabIndex={0} onClick={() => selectSavedSender(sender)} onKeyDown={(event) => event.key === "Enter" ? selectSavedSender(sender) : null} style={cardStyle(selectedSavedSenderId === sender._id)}>
-                                            {sender.sender_type === "business" ? <Briefcase size={20} color="#5926F0" /> : <User size={20} color="#5926F0" />}
-                                            {renderSenderSummary(sender)}
-                                            {renderSenderActions(sender)}
-                                            {selectedSavedSenderId === sender._id ? <CheckCircle size={18} color="#5926F0" /> : null}
-                                        </div>
-                                    );
-                                })}
-                            </div>
-                            :
-                            <div style={{ border: "1px dashed #D9D9D9", borderRadius: "8px", padding: "18px", background: "#FCFCFC", display: "flex", flexDirection: "column", gap: "12px" }}>
-                                <div style={{ color: "#202020", fontWeight: 800 }}>{t("No saved senders yet")}</div>
-                                <div style={{ color: "#777", fontSize: "13px", fontWeight: 600 }}>
-                                    {t("Add a third-party sender to save their details for the next transfer.")}
-                                </div>
-                                <button
-                                    type="button"
-                                    onClick={() => setShowAddSenderModal(true)}
-                                    style={{ border: "none", borderRadius: "8px", background: "#5926F0", color: "#fff", padding: "10px 14px", fontWeight: 800, display: "flex", alignItems: "center", gap: "8px", width: "fit-content" }}
-                                >
-                                    <Plus size={16} />
-                                    {t("Add New Sender")}
-                                </button>
-                            </div>
-                    }
-                </>
             }
 
             <AddSenderFormModal

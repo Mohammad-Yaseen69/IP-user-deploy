@@ -43,6 +43,7 @@ import VendorBalanceModal from "./VendorBalanceModal"
 import WalletsComponent from "./WalletsComponent"
 import { useIdempotency } from "../../../hooks/Payments/useIdempotency"
 import SelectSender from "./SelectSender"
+import { usePermission } from "../../../hooks/GeneralUse/usePermission"
 
 const leftSideContent = [
     "Enter The Amount",
@@ -207,13 +208,15 @@ function reducer(state, action) {
 const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRecent, setShowRecent }) => {
     const { t } = useTranslation()
     const navigate = useNavigate()
-    const { userDetails, authHeader, setProfileLockTime, getUserBeneficiaries } = useContext(UserContext)
+    const { userDetails, authHeader, setProfileLockTime, getUserBeneficiaries, isAgentLogin } = useContext(UserContext)
     const [subStep, setSubStep] = useState(0)
     const [internationalData, dispatch] = useReducer(reducer, initialState);
     const [showDetailsModal, setShowDetailsModal] = useState(false)
     const [showAddressModal, setShowAddressModal] = useState(false)
     const [loading, setLoading] = useState(false)
     const { getKey, reset } = useIdempotency()
+    const can = usePermission()
+
     const [requiredMissingFields, setRequiredMissingFields] = useState({
         beneficiary: {
             basic: [],
@@ -258,7 +261,14 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
             const defaultSendingType = userDetails.account_type === "individual" ? "C" : "B";
             updateInternationalData("sendingType", defaultSendingType);
         }
-    }, [userDetails, internationalData.sendingType])
+
+        if (can("payments.send-as-third-party.send") === false && isAgentLogin) {
+            updateInternationalData("isThirdPartyAllowed", false);
+        }
+
+    }, [userDetails, internationalData.sendingType, isAgentLogin])
+
+
 
 
     const disabledButton = useMemo(() => {
@@ -703,7 +713,8 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                 transaction_type: internationalData.flow,
                 wallet_id: internationalData.wallet?._id ?? internationalData.currency_wallet?._id,
                 token: internationalData.quotation_details?.token,
-                vendor: internationalData.payoutChannel?.vendor
+                vendor: internationalData.payoutChannel?.vendor,
+                sender_id: internationalData.senderType === "third-party" ? internationalData.selectedSender?._id : undefined,
             }
 
             if (internationalData.payoutChannel?.vendor === "thunes") {
@@ -778,6 +789,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                     wallet_id: internationalData.currency_wallet?._id,
                     amount: internationalData.exchange_rate?.total * 100,
                     payment_type: internationalData.payment_type?.value ?? "card",
+                    sender_id: internationalData.senderType === "third-party" ? internationalData.selectedSender?._id : undefined,
                 }
             }
 
@@ -1102,9 +1114,8 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
         } else {
             if (subStep === 0) {
                 setSubStep(prev => prev + 1)
-
             } else {
-                if (internationalData.isThirdPartyAllowed) {
+                if (internationalData.isThirdPartyAllowed && internationalData.senderType === "third-party") {
                     updateInternationalData("showSenderSelection", true)
                 } else {
                     setSubStep(prev => prev + 1)
