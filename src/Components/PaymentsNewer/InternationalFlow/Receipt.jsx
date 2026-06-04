@@ -26,7 +26,7 @@ const Receipt = ({ data, showTrxBtn = true, transactionStatus, isFullWidth = fal
 
     useEffect(() => {
         if (data.payment_type?.value === "mobile_wallet" && !isGuest) return;
-
+        if (isGuest) return;
         const timer = setInterval(() => {
             setCountdown((prev) => {
                 if (prev <= 1) {
