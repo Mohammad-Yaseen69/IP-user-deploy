@@ -122,26 +122,6 @@ export const MENU = [
                 permission: "payments.view"
             },
             {
-                title: "Delegate Access",
-                icon: <img loading="lazy" src={delegate} style={{ marginRight: "12px" }} />,
-                activeIcon: <img loading="lazy" src={delegate_a} style={{ marginRight: "12px" }} />,
-                type: "link",
-                url: `${window.location.origin}/delegate-access`,
-                showOnly: "business",
-                permission: "delegate-access.view",
-                showOnly: "business"
-            },
-            {
-                title: "Activity Feed",
-                icon: < img loading="lazy" src={Feed} style={{ marginRight: "12px" }} />,
-                activeIcon: <img loading="lazy" src={Feed_a} style={{ marginRight: "12px" }} />,
-                type: "link",
-                url: `${window.location.origin}/activity`,
-                showOnly: "business",
-                permission: "activity-logs.view",
-                showOnly: "business"
-            },
-            {
                 title: "Beneficiaries",
                 icon: <img loading="lazy" src={ben} style={{ marginRight: "12px" }} />,
                 activeIcon: <img loading="lazy" src={ben_a} style={{ marginRight: "12px" }} />,
@@ -277,6 +257,26 @@ export const MENU = [
                 type: "link",
                 url: `${window.location.origin}/settings`,
                 permission: "settings.view"
+            },
+            {
+                title: "Delegate Access",
+                icon: <img loading="lazy" src={delegate} style={{ marginRight: "12px" }} />,
+                activeIcon: <img loading="lazy" src={delegate_a} style={{ marginRight: "12px" }} />,
+                type: "link",
+                url: `${window.location.origin}/delegate-access`,
+                showOnly: "business",
+                permission: "delegate-access.view",
+                showOnly: "business"
+            },
+            {
+                title: "Activity Feed",
+                icon: < img loading="lazy" src={Feed} style={{ marginRight: "12px" }} />,
+                activeIcon: <img loading="lazy" src={Feed_a} style={{ marginRight: "12px" }} />,
+                type: "link",
+                url: `${window.location.origin}/activity`,
+                showOnly: "business",
+                permission: "activity-logs.view",
+                showOnly: "business"
             },
             // {
             //     title: "Dark Mode",
