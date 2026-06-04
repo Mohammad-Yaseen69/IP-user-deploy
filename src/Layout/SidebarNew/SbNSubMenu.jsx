@@ -83,7 +83,13 @@ const SidebarSubMenu = ({ menu, className, setIsOpen, isOpen, level, showModal, 
     })
     return (
         // <ul className={`${className ? className : ""}`} onClick={verifyToken}>
-        <ul style={{ width: togglSidebar ? "100%" : "auto" }} className={`${className ? className : ""}`}>
+        <ul style={{
+            width: togglSidebar ? "100%" : "auto",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            flexDirection: "column",
+        }} className={`${className ? className : ""}`}>
             {filteredMenu?.map((item, i) => {
                 return (
                     <>
