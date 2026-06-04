@@ -138,7 +138,7 @@ export const bankExtrasInitial = {
     msisdn: "",
     sort_code: "",
     country_iso_code: "",
-    iban:"",
+    iban: "",
     swift_bic_code: "",
 }
 
@@ -177,16 +177,28 @@ export const withdrawlsFields = {
 }
 
 export const BUSINESS_RELATIONSHIPS = {
-  EMPLOYEE: "Employee",
-  CUSTOMER: "Customer",
-  VENDOR_SERVICE: "Vendor Service",
-  PROVIDER: "Provider",
-  BUSINESS_PARTNER: "Business Partner",
-  INVESTOR: "Investor",
-  THIRD_PARTY: "Third Party",
-  AFFILIATED_ENTITY: "Affiliated Entity",
-  AFFILIATED_BUSINESS: "Affiliated Business"
+    EMPLOYEE: "Employee",
+    CUSTOMER: "Customer",
+    VENDOR_SERVICE: "Vendor Service",
+    PROVIDER: "Provider",
+    BUSINESS_PARTNER: "Business Partner",
+    INVESTOR: "Investor",
+    THIRD_PARTY: "Third Party",
+    AFFILIATED_ENTITY: "Affiliated Entity",
+    AFFILIATED_BUSINESS: "Affiliated Business"
 };
+
+export const C2B_RELATIONSHIPS = {
+    SUPPLIER_VENDOR: "Supplier / Vendor",
+    MERCHANT: "Merchant",
+    CORPORATE_CLIENT_CUSTOMER: "Corporate Client / Customer",
+    BUSINESS_PARTNER: "Business Partner",
+    SERVICE_PROVIDER: "Service Provider",
+    AFFILIATE_SUBSIDIARY: "Affiliate / Subsidiary",
+    EMPLOYER_CONTRACTOR: "Employer / Contractor",
+    OWN_BUSINESS_ACCOUNT: "Own Business Account",
+    OTHER_BUSINESS_RELATIONSHIP: "Other Business Relationship",
+}
 
 
 export const iso2Toiso3Convert = (iso2 = "") => {
