@@ -136,7 +136,7 @@ const initialState = {
     transactionType: "",
     flow: "",
     transactionTypeSelected: false,
-    isThirdPartyAllowed: true,
+    isThirdPartyAllowed: false,
     isRecipientTypeSelected: false,
     isSendingTypeSelected: false,
     sendingType: "",
@@ -262,10 +262,13 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
             updateInternationalData("sendingType", defaultSendingType);
         }
 
-        if (can("payments.send-as-third-party.send") === false && isAgentLogin) {
-            updateInternationalData("isThirdPartyAllowed", false);
+        if (userDetails?.isThirdPartyAllowed) {
+            if (isAgentLogin) {
+                updateInternationalData("isThirdPartyAllowed", can("payments.send-as-third-party.send"));
+            } else {
+                updateInternationalData("isThirdPartyAllowed", true);
+            }
         }
-
     }, [userDetails, internationalData.sendingType, isAgentLogin])
 
 
