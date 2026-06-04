@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import addStyles from "../styles/permission.module.css";
 import { Toggle } from '../../MyMasterCard/CardPurchased';
 export const service_name_formatter = (service_name = "", lower = false) => {
-    return service_name.split("_").map(item => `${item[0].toUpperCase()}${lower ? item.slice(1).toLowerCase() : item.slice(1)}`).join(" ")
+    return service_name?.split("-")?.map(item => `${item[0].toUpperCase()}${lower ? item.slice(1).toLowerCase() : item.slice(1)}`)?.join(" ")
 }
 
 const PermissionTree = ({
