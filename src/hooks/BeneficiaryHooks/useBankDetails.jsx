@@ -45,6 +45,8 @@ const useBankDetails = ({ accNumType, setFormData, handleBankExtraChange, bankEx
     useEffect(() => {
         const minLength = accNumType === "IBAN" ? 14 : 7
         if (debouncedValue.length < minLength) {
+            if (queryMetadata.isForEdit) return
+
             setFormData(prev => ({
                 ...prev,
                 [bankNameKey]: "",
