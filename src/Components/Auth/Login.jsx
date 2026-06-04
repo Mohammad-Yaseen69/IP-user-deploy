@@ -1253,7 +1253,7 @@ const Login = ({ country, setIsLoginForm, }) => {
                                             </div>
 
                                             <Link style={linkStyle} to="/agent-login">
-                                                {t("Register as Agent")}
+                                                {t("Sign in as Agent")}
                                             </Link>
                                         </div></>
                                 )
