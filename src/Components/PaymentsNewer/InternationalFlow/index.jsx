@@ -272,9 +272,11 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                 updateInternationalData("isThirdPartyAllowed", true);
             }
         }
+        console.log(userDetails?.isThirdPartyAllowed, "is third party")
     }, [userDetails, isAgentLogin])
 
 
+    console.log(subStep, "subStep")
 
     const disabledButton = useMemo(() => {
         switch (subStep) {
@@ -1127,7 +1129,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                 }
             }
         }
-    }, [requiredMissingFields.beneficiary, internationalData.isThirdPartyAllowed])
+    }, [requiredMissingFields.beneficiary])
 
 
 
