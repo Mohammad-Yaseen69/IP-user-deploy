@@ -46,14 +46,15 @@ const CurConversion = ({ extCurrency = "", showHeading = true }) => {
 
     const balance = useMemo(() => userWallets.find(item => item?.currency?.code === userCurrency)?.balance?.available, [userWallets, userCurrency])
 
-
-
-
-
     const convertCurrency = async () => {
         setError("")
         setLoading(false)
         const getRates = () => {
+            if (!enteredCurrency || enteredCurrency <= 0 || enteredCurrency === "undefined") {
+                setFxDet({})
+                setLoading(false)
+                return
+            }
             if (enteredCurrency <= 0) {
                 setFxDet({})
                 setLoading(false)
@@ -138,8 +139,10 @@ const CurConversion = ({ extCurrency = "", showHeading = true }) => {
             clearTimeout(timeout)
         }
         timeout = setTimeout(() => {
-            if (!enteredCurrency) {
+            if (!enteredCurrency || enteredCurrency === "undefined") {
                 setResultCurrency("")
+                setFxDet({})
+
             } else {
                 convertCurrency()
             }
@@ -182,7 +185,10 @@ const CurConversion = ({ extCurrency = "", showHeading = true }) => {
     };
     const errorCode = error?.split("Error Code: ")[1];
     useEffect(() => {
-        setEnteredCurrency(String(formattedAmount)?.replaceAll(",", ""))
+        const cleaned = String(formattedAmount)?.replaceAll(",", "")
+        if (cleaned && cleaned !== "undefined") {  
+            setEnteredCurrency(cleaned)
+        }
     }, [formattedAmount])
     return (
         <div className={styles.container}>
