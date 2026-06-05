@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Search, Filter, ArrowUp, ArrowDown } from "react-feather";
+import { Search, Filter, ArrowUp, ArrowDown, Info, Copy, Plus } from "react-feather";
 import styles from "../styles/RecentTransactions.module.css";
 
 const transactions = [
@@ -44,7 +44,10 @@ const RecentTransactions = () => {
       tx.id.toLowerCase().includes(search.toLowerCase()) ||
       tx.type.toLowerCase().includes(search.toLowerCase())
   );
-
+  const handleCopyIBAN = () => {
+    navigator.clipboard.writeText("YOUR_IBAN_HERE");
+    alert("IBAN copied to clipboard!");
+  };
   return (
     <div className={styles.section}>
       <div className={styles.header}>
@@ -98,14 +101,14 @@ const RecentTransactions = () => {
                           tx.type === "Send"
                             ? "rgba(239,68,68,0.1)"
                             : tx.type === "Received"
-                            ? "rgba(34,197,94,0.1)"
-                            : "rgba(245,158,11,0.1)",
+                              ? "rgba(34,197,94,0.1)"
+                              : "rgba(245,158,11,0.1)",
                         color:
                           tx.type === "Send"
                             ? "#ef4444"
                             : tx.type === "Received"
-                            ? "#22c55e"
-                            : "#f59e0b",
+                              ? "#22c55e"
+                              : "#f59e0b",
                       }}
                     >
                       {tx.type === "Send" ? (
@@ -137,10 +140,35 @@ const RecentTransactions = () => {
         </table>
 
         {filtered.length === 0 && (
-          <div className={styles.empty}>No transactions found.</div>
+          <div className={styles.emptyContainer}>
+            <div className={styles.iconWrapper}>
+              <Info size={32} className={styles.centerIcon} />
+            </div>
+
+            <div className={styles.textContent}>
+              <h3 className={styles.title}>No transactions yet</h3>
+              <p className={styles.description}>
+                Your virtual bank is ready to receive money. Send a SEPA transfer using
+                your IBAN, top up by card, or move funds from another wallet to get started.
+              </p>
+            </div>
+
+            {/* Action Buttons */}
+            <div className={styles.buttonGroup}>
+              <button className={styles.secondaryButton} onClick={handleCopyIBAN}>
+                <Copy size={20} />
+                <span>Copy IBAN to receive</span>
+              </button>
+
+              <button className={styles.primaryButton}>
+                <Plus size={20} />
+                <span>Add funds</span>
+              </button>
+            </div>
+          </div>
         )}
       </div>
-    </div>
+    </div >
   );
 };
 

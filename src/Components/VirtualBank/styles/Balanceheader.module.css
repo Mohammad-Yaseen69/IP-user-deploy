@@ -1,115 +1,175 @@
 .card {
-    padding: 20px;
+    /* Exact Figma Padding and Layout constraints */
+    padding: 24px 24px 16px 24px;
     display: flex;
     flex-direction: column;
-    gap: 18px;
-    width: 100%;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex: 1 0 0;
+    align-self: stretch;
+
     border-radius: var(--md, 10px);
     border: 1px solid var(--gray-gray-100, #EFF1F6);
     background: #FFF;
-    height: 100%;
+    box-sizing: border-box;
 }
 
 .topBar {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    width: 100%;
+}
+
+.leftInfo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
 .accountTag {
-    font-size: 13px;
-    color: #667085;
+    font-size: 14px;
+    color: #101828;
+    /* gray-900 */
+    font-weight: 500;
+}
+
+.activeBadge {
+    background: #ECFDF5;
+    /* green-50 */
+    color: #047857;
+    /* green-700 */
+    font-size: 12px;
+    padding: 2px 8px;
+    border-radius: 16px;
     font-weight: 500;
 }
 
 .rightActions {
     display: flex;
     align-items: center;
-    gap: 8px;
-}
-
-.activeBadge {
-    background: #ecfdf3;
-    color: #039855;
-    font-size: 11px;
-    padding: 4px 10px;
-    border-radius: 20px;
-    font-weight: 600;
 }
 
 .iconBtn {
     display: flex;
-    height: 32px;
-    padding: 0 var(--sm, 8px) 0 var(--md, 16px);
+    padding: 8px 12px;
     align-items: center;
-    gap: 8px;
-    border-radius: var(--sm, 6px);
-    background: var(--bg-surface, #EFF1F6);
-    border: none;
+    gap: 6px;
+    border-radius: 6px;
+    background: #F8F9FA;
+    border: 1px solid #E4E7EC;
+    color: #344054;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.iconBtn:hover {
+    background: #F1F2F4;
 }
 
 .balanceSection {
     display: flex;
     align-items: baseline;
-    gap: 10px;
+    gap: 8px;
+    margin: 16px 0;
+    flex-direction: column;
 }
 
 .balance {
-    font-size: 34px;
+    font-size: 36px;
     font-weight: 700;
     color: #101828;
     margin: 0;
+    letter-spacing: -0.02em;
 }
 
 .growth {
-    color: #12b76a;
-    font-weight: 600;
-    font-size: 13px;
+    color: #12B76A;
+    /* green-500 */
+    font-weight: 500;
+    font-size: 14px;
 }
 
+/* Info Box */
 .infoBox {
-    border-radius: var(--sm, 6px);
-    border: 1px solid blue/blue-50;
-    background: radial-gradient(174.69% 292.21% at 68.74% -77.63%,
-            #eff6ff 0%,
-            #ffffff 100%);
-    padding: 14px;
     display: flex;
-    align-items: center;
+    /* Figma Exact Padding: Top/Bottom 16px, Left/Right 24px */
+    padding: 16px 24px;
     justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 12px;
+    align-items: center;
+    /* Elements vertical center align hain */
+    align-self: stretch;
+    width: 100%;
+    box-sizing: border-box;
+
+    /* Border and Background Gradients from Figma */
+    border-radius: var(--sm, 6px);
+    border: 1px solid #D1E9FF;
+    /* Figma: blue/blue-50 token background */
+    background: radial-gradient(174.69% 292.21% at 68.74% -77.63%, #EFF6FF 0%, #FFFFFF 100%);
+    gap: 16px;
 }
 
 .item {
-    display: flex;
+    display: inline-flex;
     align-items: center;
     gap: 8px;
+    /* Elements ke beech ka gap */
 }
 
 .label {
-    font-size: 10px;
-    text-transform: uppercase;
-    color: #98a2b3;
-    font-weight: 700;
+    color: #667085;
+    /* gray/gray-500 tint */
+    font-size: 13px;
+    font-weight: 500;
+    text-transform: none;
+    /* Figma mein uppercase nahi hai regular title case hai */
 }
 
 .value {
-    font-size: 12px;
-    font-family: monospace;
-    color: #344054;
+    color: #101828;
+    /* gray-900 */
+    font-size: 13px;
+    font-weight: 600;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    /* Figma regular text fallback */
 }
 
 .copyIcon {
     cursor: pointer;
-    color: #98a2b3;
+    color: #98A2B3;
+    /* gray-400 */
+    display: flex;
+    align-items: center;
+    transition: color 0.15s ease;
+}
+
+.copyIcon:hover {
+    color: #475467;
+    /* Darker grey on hover */
 }
 
 .currency {
     display: flex;
+    padding: 4px 10px;
     align-items: center;
     gap: 6px;
-    font-size: 12px;
+    border-radius: 6px;
+    background: #F2F4F7;
+    /* Light grey badge backdrop if visible */
+}
+
+.flagIcon {
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+}
+
+.currencyText {
     color: #344054;
+    /* gray-700 */
+    font-size: 13px;
     font-weight: 500;
 }

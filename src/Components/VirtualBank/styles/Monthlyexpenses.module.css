@@ -15,10 +15,13 @@
 }
 
 .card {
-  background: var(--card-bg);
-  border: 1px solid var(--border-color);
+  margin-top: 10px;
+  border-radius: var(--md, 10px);
+  border: 1px solid var(--border-subtle, #E1E5EE);
+  background: #FFF;
   border-radius: 14px;
   padding: 18px 20px;
+
 }
 
 .cardHeader {
@@ -110,6 +113,14 @@
   display: flex;
   align-items: center;
   gap: 10px;
+  display: flex;
+  height: 48px;
+  padding: var(--sm, 8px) var(--md, 16px);
+  justify-content: space-between;
+  align-items: center;
+  align-self: stretch;
+  border-radius: var(--sm, 6px);
+  background: #F2EEFF;
 }
 
 .barLabel {

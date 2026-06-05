@@ -54,7 +54,7 @@
 .topPanel {
     display: flex;
     align-items: flex-start;
-    gap: 0;
+    gap: 10px;
     background: var(--card-bg);
     border: 1px solid var(--border-color);
     border-radius: 16px;
