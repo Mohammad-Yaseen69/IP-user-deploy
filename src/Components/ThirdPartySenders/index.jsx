@@ -41,6 +41,8 @@ const ThirdPartySenders = () => {
 
     const senderQueryKey = ["userSenders", userDetails?._id];
 
+
+
     const { data: savedSenders = [], isLoading } = useQuery({
         queryKey: senderQueryKey,
         queryFn: () => apiWrapper({
@@ -139,6 +141,11 @@ const ThirdPartySenders = () => {
         justifyContent: "center",
         color: "#5926F0",
     };
+
+    if (!userDetails?.isThirdPartyAllowed) {
+        return <>
+        </>
+    }
 
     const renderSenderSummary = (sender) => (
         <span style={{ flex: 1, minWidth: 0 }}>
