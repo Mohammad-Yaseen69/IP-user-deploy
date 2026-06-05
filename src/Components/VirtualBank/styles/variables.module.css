@@ -1,0 +1,43 @@
+
+.virtualBankRoot {
+  --bg-main: #f8f9fc;
+  --card-bg: #ffffff;
+  --border-color: #e8eaf0;
+  --border-light: #f1f3f8;
+  --hover-bg: #f5f6fa;
+  --selected-bg: #f0f1ff;
+  --iban-bg: #fafbfe;
+  --input-bg: #f8f9fc;
+  --flag-bg: #f1f3f8;
+  --accent-color: #6366f1;
+  --accent-light: rgba(99, 102, 241, 0.08);
+  --accent-light-border: #c7c8f7;
+  --text-primary: #0f1117;
+  --text-secondary: #374151;
+  --text-muted: #9ca3af;
+
+  font-family: "DM Sans", "Segoe UI", sans-serif;
+  background: var(--bg-main);
+  color: var(--text-primary);
+  min-height: 100vh;
+}
+
+@media (prefers-color-scheme: dark) {
+  .virtualBankRoot {
+    --bg-main: #ffff;
+    --card-bg: #151826;
+    --border-color: #232640;
+    --border-light: #1a1d2e;
+    --hover-bg: #1c1f32;
+    --selected-bg: #1e203a;
+    --iban-bg: #12142a;
+    --input-bg: #1a1d2e;
+    --flag-bg: #1c1f32;
+    --accent-color: #818cf8;
+    --accent-light: rgba(129, 140, 248, 0.1);
+    --accent-light-border: #3d3e7a;
+    --text-primary: #f1f5f9;
+    --text-secondary: #cbd5e1;
+    --text-muted: #64748b;
+  }
+}
