@@ -8,6 +8,7 @@ import MonthlyExpenses from './components/MonthlyExpenses'
 import QuickActions from './components/QuickActions'
 import RecentTransactions from './components/RecentTransactions'
 import TabsNav from './components/TabsNav'
+import IBAN from './IBAN'
 import styles from "./styles/index.module.css"
 const VirtualBank = () => {
     const { t } = useTranslation();
@@ -39,35 +40,38 @@ const VirtualBank = () => {
                     {width > 1000 && <TopRight />}
                 </div>
             </div>
-            <div className={styles.main}>
+            {
+                showGetIBAN ? <IBAN/>: <div className={styles.main}>
 
-                <div className={styles.topPanel}>
-                    <AccountsSidebar
-                        selectedAccount={selectedAccount}
-                        onSelect={setSelectedAccount}
-                    />
-                    <div className={styles.panelDivider} />
-                    <BalanceHeader />
-                </div>
-
-                <div className={styles.section}>
-                    <QuickActions />
-                </div>
-
-                <div className={styles.section}>
-                    <TabsNav activeTab={activeTab} onTabChange={setActiveTab} />
-                </div>
-
-                {activeTab === "overview" && (
-                    <div className={styles.tabContent}>
-                        <MonthlyExpenses />
-
-                        <div className={styles.section}>
-                            <RecentTransactions />
-                        </div>
+                    <div className={styles.topPanel}>
+                        <AccountsSidebar
+                            selectedAccount={selectedAccount}
+                            onSelect={setSelectedAccount}
+                            setShowGetIBAN={setShowGetIBAN}
+                        />
+                        <div className={styles.panelDivider} />
+                        <BalanceHeader />
                     </div>
-                )}
-            </div>
+
+                    <div className={styles.section}>
+                        <QuickActions />
+                    </div>
+
+                    <div className={styles.section}>
+                        <TabsNav activeTab={activeTab} onTabChange={setActiveTab} />
+                    </div>
+
+                    {activeTab === "overview" && (
+                        <div className={styles.tabContent}>
+                            <MonthlyExpenses />
+
+                            <div className={styles.section}>
+                                <RecentTransactions />
+                            </div>
+                        </div>
+                    )}
+                </div>
+            }
         </div>
     )
 }
