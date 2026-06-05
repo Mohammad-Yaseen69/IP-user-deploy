@@ -148,7 +148,7 @@ const getStates = async (iso2Value) => {
     return res?.data || [];
 };
 
-const AddSenderFormModal = ({ isOpen, toggle, data, senderAccountType, onSubmit, isSubmitting = false, editSender = null }) => {
+const AddSenderFormModal = ({ isOpen, toggle, data, senderAccountType, onSubmit, isSubmitting = false, editSender = null, addingFromMenu = false }) => {
     const { t } = useTranslation();
     const { userDetails } = useContext(UserContext);
     const [phoneError, setPhoneError] = useState("");
@@ -185,7 +185,7 @@ const AddSenderFormModal = ({ isOpen, toggle, data, senderAccountType, onSubmit,
             tax_id: "",
             date_of_incorporation: "",
             business_relationship: "",
-            save_for_future: false,
+            save_for_future: addingFromMenu && !editSender,
             extras: {
                 idNumber: "",
                 documentType: "",
@@ -298,7 +298,7 @@ const AddSenderFormModal = ({ isOpen, toggle, data, senderAccountType, onSubmit,
             },
         });
         forceUpdate({})
-    }, [senderAccountType, data?.country?.name, data?.country?.alpha3, editSender, editSender?.phone, isOpen]);
+    }, [senderAccountType, data?.country?.name, data?.country?.alpha3, editSender, editSender?.phone, isOpen, addingFromMenu]);
 
     useEffect(() => {
         register("state_name");
@@ -509,6 +509,10 @@ const AddSenderFormModal = ({ isOpen, toggle, data, senderAccountType, onSubmit,
             ...values,
             ...hiddenCountryValues,
             account: userDetails?._id,
+            ...(addingFromMenu && !editSender ? {
+                save_for_future: true,
+                addingFromMenu: true,
+            } : {}),
         });
     };
 
@@ -525,10 +529,17 @@ const AddSenderFormModal = ({ isOpen, toggle, data, senderAccountType, onSubmit,
                                 <Plus size={16} color="#5926F0" />
                                 {senderAccountType === "business" ? t("Business Sender") : t("Individual Sender")}
                             </div>
-                            <label style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "12px", fontWeight: 700, color: "#606060" }}>
-                                <input type="checkbox" {...register("save_for_future")} />
-                                {t("Save for future")}
-                            </label>
+                            {!addingFromMenu && (
+                                <label style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "12px", fontWeight: 700, color: "#606060" }}>
+                                    <input type="checkbox" {...register("save_for_future")} />
+                                    {t("Save for future")}
+                                </label>
+                            )}
+                            {addingFromMenu && !editSender && (
+                                <span style={{ fontSize: "12px", fontWeight: 700, color: "#5926F0" }}>
+                                    {t("Save for future")}
+                                </span>
+                            )}
                         </div>
 
                         <input type="hidden" {...register("sender_type")} value={senderAccountType} />
@@ -633,7 +644,7 @@ const AddSenderFormModal = ({ isOpen, toggle, data, senderAccountType, onSubmit,
 
                         <button disabled={isSubmitting} type="submit" style={{ alignSelf: "flex-end", border: "none", borderRadius: "8px", background: isSubmitting ? "#9E8AED" : "#5926F0", color: "#fff", padding: "10px 16px", fontWeight: 800, display: "flex", alignItems: "center", gap: "8px" }}>
                             <CheckCircle size={16} />
-                            {isSubmitting ? t(editSender ? "Updating Sender" : "Adding Sender") : t(editSender ? "Update Sender" : "Use This Sender")}
+                            {isSubmitting ? t(editSender ? "Updating Sender" : "Adding Sender") : t(editSender ? "Update Sender" : addingFromMenu ? "Add Sender" : "Use This Sender")}
                         </button>
                     </form>
                 </MuiPickersUtilsProvider>

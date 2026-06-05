@@ -72,6 +72,7 @@ const DelegateAccess = lazy(() => import("../Components/DelegateAccess"))
 const CreateAgentPassword = lazy(() => import("../Components/CreateAgentPassword"))
 const AgentLogin = lazy(() => import("../Components/Auth/agentAuth/index"))
 const LogActivity = lazy(() => import("../Components/LogActivity"))
+const ThirdPartySenders = lazy(() => import("../Components/ThirdPartySenders"))
 
 
 const PermissionRoute = ({ permission, children }) => {
@@ -154,6 +155,7 @@ export const routes = [
     { path: "/store-create", component: <StoreCreate /> },
     { path: "/delegate-access", component: <PermissionRoute permission="delegate-access.view"><DelegateAccess /></PermissionRoute> },
     { path: "/activity", component: <PermissionRoute permission="activity-logs.view"><LogActivity /></PermissionRoute> },
+    { path: "/third-party-senders", component: <PermissionRoute permission="payments.send-as-third-party.view"><ThirdPartySenders /></PermissionRoute> },
     { path: "*", component: <NotFound type='Page' /> }
 ]
 export const publicRoutes = [
