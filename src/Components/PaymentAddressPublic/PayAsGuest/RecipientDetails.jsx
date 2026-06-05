@@ -11,6 +11,11 @@ import CANCounties from "./CANCounties.json";
 
 const RecipientDetails = ({ data, dataHandler, isShipping, isReferenceRequired }) => {
     const { t } = useTranslation();
+    const cardPaymentRequiredFields = data.countryData?.card_payment_required_fields || {};
+    const showCardPaymentAddressFields =
+        data.payment_type?.value === "card" &&
+        Object.values(cardPaymentRequiredFields).some(Boolean);
+    const countyOptions = data?.country?.alpha3 === "USA" ? USCounties : data?.country?.alpha3 === "CAN" ? CANCounties : null;
 
 
 
@@ -107,44 +112,59 @@ const RecipientDetails = ({ data, dataHandler, isShipping, isReferenceRequired }
                     </div>
 
                     {
-                        data.payment_type?.value === "card" && (data?.country?.alpha3 === "USA" || data?.country?.alpha3 === "CAN") &&
+                        showCardPaymentAddressFields &&
                         <>
-                            <div className={styles.inpt_co}>
-                                <label>
-                                    {t("Customer Town")}
-                                </label>
-                                <input
-                                    type="text"
-                                    value={data.customerTown}
-                                    onChange={(e) => dataHandler("customerTown", e.target.value)}
-                                    required={data.payment_type?.value === "card"}
-                                />
-                            </div>
-                            <div className={styles.inpt_co}>
-                                <label>
-                                    {t("Customer Street")}{" "}
-                                </label>
-                                <input
-                                    type="text"
-                                    value={data.customerStreet}
-                                    onChange={(e) => dataHandler("customerStreet", e.target.value)}
-                                    required={data.payment_type?.value === "card"}
-                                />
-                            </div>
-                            <div className={styles.inpt_co}>
-                                <label>
-                                    {t("Customer County")}{" "}
-                                </label>
-                                <CitiesDropDown
-                                    country={data.customer_county}
-                                    isState={true}
-                                    setUserCity={v => dataHandler("customer_county", v)}
-                                    userCity={data.customer_county}
-                                    stateData={data?.country?.alpha3 === "USA" ? USCounties : CANCounties}
-                                    title='Select County'
-                                    background='#f6f6f6'
-                                />
-                            </div>
+                            {cardPaymentRequiredFields.customer_town &&
+                                <div className={styles.inpt_co}>
+                                    <label>
+                                        {t("Customer Town")} <span>*</span>{" "}
+                                    </label>
+                                    <input
+                                        type="text"
+                                        value={data.customerTown || ""}
+                                        onChange={(e) => dataHandler("customerTown", e.target.value)}
+                                        required={cardPaymentRequiredFields.customer_town}
+                                    />
+                                </div>
+                            }
+                            {cardPaymentRequiredFields.customer_street &&
+                                <div className={styles.inpt_co}>
+                                    <label>
+                                        {t("Customer Street")} <span>*</span>{" "}
+                                    </label>
+                                    <input
+                                        type="text"
+                                        value={data.customerStreet || ""}
+                                        onChange={(e) => dataHandler("customerStreet", e.target.value)}
+                                        required={cardPaymentRequiredFields.customer_street}
+                                    />
+                                </div>
+                            }
+                            {cardPaymentRequiredFields.customer_county &&
+                                <div className={styles.inpt_co}>
+                                    <label>
+                                        {t("Customer County")} <span>*</span>{" "}
+                                    </label>
+                                    {countyOptions ?
+                                        <CitiesDropDown
+                                            country={data.customer_county}
+                                            isState={true}
+                                            setUserCity={v => dataHandler("customer_county", v)}
+                                            userCity={data.customer_county}
+                                            stateData={countyOptions}
+                                            title='Select County'
+                                            background='#f6f6f6'
+                                        />
+                                        :
+                                        <input
+                                            type="text"
+                                            value={data.customer_county || ""}
+                                            onChange={(e) => dataHandler("customer_county", e.target.value)}
+                                            required={cardPaymentRequiredFields.customer_county}
+                                        />
+                                    }
+                                </div>
+                            }
                         </>
                     }
 

@@ -63,6 +63,7 @@ const useBenCreateFunc = ({
         ]
 
         let extras = { ...basicExtras, ...additionFields }
+        const isIndividualToBusiness = inBusiness && userDetails?.account_type === "individual"
 
         for (const key in extras) {
             if (extras[key]) {
@@ -84,7 +85,8 @@ const useBenCreateFunc = ({
             country: countryId,
             country_iso_code: countryIsoCode,
             representativeDetails: representativeFields || {},
-            relation: formData.relation,
+            relation: isIndividualToBusiness ? "OTHER" : formData.relation,
+            relationC2B: isIndividualToBusiness ? formData.relationC2B : undefined,
             account: userDetails._id,
             beneficiary_type: inBusiness ? "business" : "individual",
             account_type: account_types.filter(item => item !== null),
