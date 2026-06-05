@@ -48,6 +48,8 @@ import delegate_a from "./files/delegate_a.svg";
 import delegate from "./files/delegate.svg";
 import Feed from "./files/Feed.svg";
 import Feed_a from "./files/Feed_a.svg";
+import v_bank_a from "./files/v_bank_a.svg";
+import v_bank from "./files/v_bank.svg";
 
 
 export const MENU = [
@@ -192,6 +194,16 @@ export const MENU = [
                 activeIcon: <img loading="lazy" src={analytics_a} style={{ marginRight: "12px" }} />,
                 type: "link",
                 url: `${window.location.origin}/analytics`,
+                permission: "analytics.view"
+            },
+            {
+                title: "My virtual bank",
+                url: "/virtual-bank",
+
+                icon: <img loading="lazy" src={v_bank} style={{ marginRight: "12px" }} />,
+                activeIcon: <img loading="lazy" src={v_bank_a} style={{ marginRight: "12px" }} />,
+                type: "link",
+                url: `${window.location.origin}/virtual-bank`,
                 permission: "analytics.view"
             },
             // {
