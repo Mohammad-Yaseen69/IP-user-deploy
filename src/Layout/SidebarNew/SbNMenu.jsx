@@ -122,6 +122,14 @@ export const MENU = [
                 permission: "payments.view"
             },
             {
+                title: "Third-Party Senders",
+                icon: <img loading="lazy" src={paym} style={{ marginRight: "12px" }} />,
+                activeIcon: <img loading="lazy" src={paym_a} style={{ marginRight: "12px" }} />,
+                type: "link",
+                url: `${window.location.origin}/third-party-senders`,
+                permission: "payments.send-as-third-party.view"
+            },
+            {
                 title: "Delegate Access",
                 icon: <img loading="lazy" src={delegate} style={{ marginRight: "12px" }} />,
                 activeIcon: <img loading="lazy" src={delegate_a} style={{ marginRight: "12px" }} />,
