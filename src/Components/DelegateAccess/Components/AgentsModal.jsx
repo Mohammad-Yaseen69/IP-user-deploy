@@ -242,7 +242,7 @@ const AgentsModal = ({ isRole, isOpen, onClose, t, width, roles, isEdit, editDat
         !form.email
 
     const isStepTwoInvalid =
-        !form.role || selectedPermissions.length === 0
+         selectedPermissions.length === 0
 
     const isNextDisabled =
         (step === 1 && isStepOneInvalid) ||
