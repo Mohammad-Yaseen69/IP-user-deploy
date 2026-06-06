@@ -41,7 +41,7 @@ const VirtualBank = () => {
                 </div>
             </div>
             {
-                showGetIBAN ? <IBAN/>: <div className={styles.main}>
+                showGetIBAN ? <IBAN /> : <div className={styles.main}>
 
                     <div className={styles.topPanel}>
                         <AccountsSidebar
@@ -65,6 +65,14 @@ const VirtualBank = () => {
                         <div className={styles.tabContent}>
                             <MonthlyExpenses />
 
+                            <div className={styles.section}>
+                                <RecentTransactions />
+                            </div>
+                        </div>
+                    )}
+
+                    {activeTab === "transaction-history" && (
+                        <div className={styles.tabContent}>
                             <div className={styles.section}>
                                 <RecentTransactions />
                             </div>

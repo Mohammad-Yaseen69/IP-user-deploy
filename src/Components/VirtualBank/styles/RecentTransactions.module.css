@@ -30,6 +30,8 @@
     padding: 4px 8px;
     border-radius: 6px;
     transition: background 0.15s;
+    text-decoration: underline;
+    color: #444CE7;
 }
 
 .viewAll:hover {
