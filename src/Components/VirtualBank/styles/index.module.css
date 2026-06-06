@@ -1,0 +1,108 @@
+.container {
+    padding: 24px;
+    background-color: #fcfcfc;
+    min-height: 100vh;
+    font-family: 'Inter', sans-serif;
+}
+
+.top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    position: relative;
+    margin: 0px;
+    padding: 0px;
+}
+
+.headerTitle {
+
+    margin: 0px;
+    padding: 0px;
+}
+
+.headerTitle h1 {
+    color: #5626e6;
+    font-size: 40px;
+    font-style: normal;
+    font-weight: 700;
+    margin: 0px;
+    padding: 0px;
+}
+
+.headerTitle p {
+    color: #868686;
+    font-size: 14px;
+    font-weight: 400;
+    margin: 0px;
+    padding: 0px;
+}
+
+.topright {
+    margin-top: 100px;
+}
+
+.main {
+    height: auto;
+    padding: var(--md, 16px);
+    align-items: flex-start;
+    gap: var(--lg, 24px);
+    align-self: stretch;
+    border-radius: var(--md, 10px);
+    background: #FFF;
+}
+
+.topPanel {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 18px 22px;
+    overflow: hidden;
+}
+
+
+
+.section {
+    display: flex;
+    padding-top: var(--md, 16px);
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    align-self: stretch;
+}
+
+.tabContent {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+@media (max-width: 900px) {
+    .container {
+        padding: 16px 16px;
+    }
+
+    .topPanel {
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .panelDivider {
+        width: 100%;
+        height: 1px;
+        margin: 0;
+    }
+}
+
+@media (max-width: 600px) {
+    .container {
+        padding: 12px;
+        gap: 14px;
+    }
+
+    .headerTitle h1 {
+        font-size: 17px;
+    }
+}
