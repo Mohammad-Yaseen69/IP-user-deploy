@@ -94,29 +94,7 @@ const RecentTransactions = () => {
                 <td className={styles.dateCell}>{tx.date}</td>
                 <td>
                   <div className={styles.typeCell}>
-                    <span
-                      className={styles.typeIcon}
-                      style={{
-                        background:
-                          tx.type === "Send"
-                            ? "rgba(239,68,68,0.1)"
-                            : tx.type === "Received"
-                              ? "rgba(34,197,94,0.1)"
-                              : "rgba(245,158,11,0.1)",
-                        color:
-                          tx.type === "Send"
-                            ? "#ef4444"
-                            : tx.type === "Received"
-                              ? "#22c55e"
-                              : "#f59e0b",
-                      }}
-                    >
-                      {tx.type === "Send" ? (
-                        <ArrowUp size={11} />
-                      ) : (
-                        <ArrowDown size={11} />
-                      )}
-                    </span>
+                   
                     {tx.type}
                   </div>
                 </td>
@@ -153,7 +131,6 @@ const RecentTransactions = () => {
               </p>
             </div>
 
-            {/* Action Buttons */}
             <div className={styles.buttonGroup}>
               <button className={styles.secondaryButton} onClick={handleCopyIBAN}>
                 <Copy size={20} />

@@ -197,7 +197,7 @@ export const MENU = [
                 permission: "analytics.view"
             },
             {
-                title: "My virtual bank",
+                title: "My virtual IBAN",
                 url: "/virtual-bank",
 
                 icon: <img loading="lazy" src={v_bank} style={{ marginRight: "12px" }} />,
