@@ -1,0 +1,299 @@
+import { useMemo, useState, useContext, useEffect } from "react"
+import { useTranslation } from "react-i18next"
+import { Modal, ModalBody } from "reactstrap"
+import useWindowWidth from "../../../utils/useWindowWidth"
+import { UserContext } from "../../../Context/UserContext"
+import ContactBox from "../../MyMasterCard/PaymentModal/ContactBox"
+import addFundsStyles from "../../MyMasterCard/styles/addFunds.module.scss"
+import {
+    getContinueLabel,
+    getDisabledState,
+    goBack,
+    goNext,
+    isSidebarStepActive,
+    isSidebarStepCompleted,
+    SIDEBAR_STEPS,
+    STEPS,
+} from "../../../stateMachines/convertFunds"
+import AmountStep from "./AmountStep"
+import WalletStep from "./WalletStep"
+import ReviewStep from "./ReviewStep"
+import DoneStep from "./DoneStep"
+import styles from "./convertFunds.module.scss"
+import SidebarProgress from "../VirtualIbanModal/SidebarProgress"
+
+/* ---- SVG icons ---- */
+const CoinsIcon = () => (
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+        <circle cx="6.75" cy="6.75" r="4.5" stroke="#F8F9FC" strokeWidth="1.2" />
+        <circle cx="11.25" cy="11.25" r="4.5" stroke="#F8F9FC" strokeWidth="1.2" />
+        <path d="M10.125 6.75C10.125 8.61396 8.61396 10.125 6.75 10.125" stroke="#F8F9FC" strokeWidth="1.2" />
+    </svg>
+)
+
+const WalletIcon = () => (
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+        <rect x="2.25" y="4.5" width="13.5" height="11.25" rx="1.5" stroke="#F8F9FC" strokeWidth="1.2" />
+        <path d="M2.25 7.5H15.75" stroke="#F8F9FC" strokeWidth="1.2" />
+        <circle cx="13.5" cy="10.5" r="1" fill="#F8F9FC" />
+    </svg>
+)
+
+const IdBadgeIcon = () => (
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+        <rect x="3" y="2.25" width="12" height="13.5" rx="1.5" stroke="#F8F9FC" strokeWidth="1.2" />
+        <circle cx="9" cy="8.25" r="2.25" stroke="#F8F9FC" strokeWidth="1.2" />
+        <path d="M5.25 14.25C5.25 12.1789 6.92893 10.5 9 10.5C11.0711 10.5 12.75 12.1789 12.75 14.25" stroke="#F8F9FC" strokeWidth="1.2" />
+        <path d="M7.5 3.75H10.5" stroke="#F8F9FC" strokeWidth="1.2" strokeLinecap="round" />
+    </svg>
+)
+
+const SealCheckSmall = () => (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+        <path d="M12 2L4 6V11C4 16.55 7.16 21.74 12 23C16.84 21.74 20 16.55 20 11V6L12 2Z" stroke="#F8F9FC" strokeWidth="1.5" strokeLinejoin="round" />
+        <path d="M9 12L11 14L15 10" stroke="#F8F9FC" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+)
+
+const ConvertIcon = () => (
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+        <path d="M12.75 2.25L15.75 5.25L12.75 8.25" stroke="#F2EEFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M2.25 5.25H15.75" stroke="#F2EEFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M5.25 15.75L2.25 12.75L5.25 9.75" stroke="#F2EEFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M15.75 12.75H2.25" stroke="#F2EEFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+)
+
+const ChevronLeft = () => (
+    <svg width="14" height="14" viewBox="0 0 14 15" fill="none">
+        <path d="M8.75 11L5.25 7.5L8.75 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+)
+
+const ChevronRight = () => (
+    <svg width="14" height="14" viewBox="0 0 14 15" fill="none">
+        <path d="M5.25 11L8.75 7.5L5.25 4" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+)
+
+const SIDEBAR_ICONS = {
+    [STEPS.AMOUNT]: () => <CoinsIcon />,
+    [STEPS.WALLET]: () => <WalletIcon />,
+    [STEPS.REVIEW]: () => <IdBadgeIcon />,
+    [STEPS.DONE]: () => <SealCheckSmall />,
+}
+
+// Mock wallet data for the convert flow
+const MOCK_WALLETS = [
+    { code: "EUR", walletId: "3MKTGFY7", balance: "€53,180.07" },
+    { code: "USD", walletId: "7HKWPR92", balance: "$12,450.00" },
+    { code: "GBP", walletId: "9XLQNM41", balance: "£8,320.50" },
+    { code: "INR", walletId: "2BVTJF85", balance: "₹9,00,000.00" },
+]
+
+const ConvertFundsModal = ({ isOpen, toggle }) => {
+    const { t } = useTranslation()
+    const width = useWindowWidth()
+
+    const { userWallets, getUserWallets } = useContext(UserContext)
+
+    const [currentStep, setCurrentStep] = useState(STEPS.AMOUNT)
+    const [amount, setAmount] = useState("2000")
+    const [fromWallet, setFromWallet] = useState("EUR")
+    const [toWallet, setToWallet] = useState("USD")
+
+    useEffect(() => {
+        getUserWallets()
+    }, [])
+
+    const wallets = useMemo(() => {
+        if (userWallets?.length > 0) {
+            const active = userWallets
+                .filter(item => item?.wallet_type === "insta" && !item?.blocked && !item?.admin_blocked && item?.status === "active")
+                .map(item => ({
+                    code: item?.currency?.code,
+                    walletId: item?.wallet_id,
+                    balance: `${item?.currency?.symbol || ""}${Number(item?.balance || 0).toLocaleString("en-US", { minimumFractionDigits: 2 })}`,
+                }))
+            if (active.length > 1) return active
+        }
+        return MOCK_WALLETS
+    }, [userWallets])
+
+    const machineData = useMemo(
+        () => ({
+            amount,
+            fromWallet,
+            toWallet,
+        }),
+        [amount, fromWallet, toWallet]
+    )
+
+    const disabled = getDisabledState(currentStep, machineData)
+    const continueLabel = getContinueLabel(currentStep, t)
+
+    const resetState = () => {
+        setCurrentStep(STEPS.AMOUNT)
+        setAmount("2000")
+        setFromWallet("EUR")
+        setToWallet("USD")
+    }
+
+    const handleClose = () => {
+        resetState()
+        toggle?.()
+    }
+
+    const handleContinue = () => {
+        const { nextStep } = goNext(currentStep, machineData)
+        if (nextStep) {
+            setCurrentStep(nextStep)
+        } else if (currentStep === STEPS.DONE) {
+            resetState()
+        }
+    }
+
+    const handleBack = () => {
+        const { prevStep } = goBack(currentStep, machineData)
+        if (prevStep === null) handleClose()
+        else setCurrentStep(prevStep)
+    }
+
+    const renderStepContent = () => {
+        switch (currentStep) {
+            case STEPS.AMOUNT:
+                return (
+                    <AmountStep
+                        amount={amount}
+                        setAmount={setAmount}
+                        currencyCode={fromWallet}
+                    />
+                )
+            case STEPS.WALLET:
+                return (
+                    <WalletStep
+                        fromWallet={fromWallet}
+                        setFromWallet={setFromWallet}
+                        toWallet={toWallet}
+                        setToWallet={setToWallet}
+                        wallets={wallets}
+                    />
+                )
+            case STEPS.REVIEW:
+                return (
+                    <ReviewStep
+                        amount={amount}
+                        fromWallet={fromWallet}
+                        toWallet={toWallet}
+                    />
+                )
+            case STEPS.DONE:
+                return <DoneStep />
+            default:
+                return null
+        }
+    }
+
+    const showFooter = width > 1000
+    const isDone = currentStep === STEPS.DONE
+
+    const renderBody = () => (
+        <div
+            className={styles.modalLayout}
+            style={{ flexDirection: width < 1000 ? "column" : "row" }}
+        >
+            {width >= 1000 && (
+                <div className={addFundsStyles.left}>
+                    <div>
+                        <div className={styles.bankHeader}>
+                            <div className={styles.bankIcon}>
+                                <ConvertIcon />
+                            </div>
+                            <h2>{t("Convert funds")}</h2>
+                        </div>
+                        <div
+                            className={addFundsStyles.progressEffect}
+                            style={{ marginTop: "2rem" }}
+                        >
+                            {SIDEBAR_STEPS.map((item, index) => {
+                                const IconComponent = SIDEBAR_ICONS[item.stepName]
+                                return (
+                                    <SidebarProgress
+                                        key={item.stepName}
+                                        stepLabel={item.stepLabel}
+                                        label={item.label}
+                                        Icon={IconComponent}
+                                        isActive={isSidebarStepActive(item, currentStep)}
+                                        isCompleted={isSidebarStepCompleted(item, currentStep)}
+                                        showBar={index < SIDEBAR_STEPS.length - 1}
+                                    />
+                                )
+                            })}
+                        </div>
+                    </div>
+                    <div className={addFundsStyles.contactBox}>
+                        <ContactBox />
+                    </div>
+                </div>
+            )}
+
+            <div
+                className={styles.rightPanel}
+                style={{ width: width < 1000 ? "100%" : undefined }}
+            >
+                <div className={styles.content}>{renderStepContent()}</div>
+
+                {showFooter && (
+                    <div className={styles.footer}>
+                        <button
+                            type="button"
+                            className={styles.cancelBtn}
+                            onClick={handleClose}
+                        >
+                            {t("Cancel")}
+                        </button>
+                        <div className={styles.footerNav}>
+                            {!isDone && (
+                                <button
+                                    type="button"
+                                    className={styles.backBtn}
+                                    onClick={handleBack}
+                                >
+                                    <ChevronLeft />
+                                    {t("Back")}
+                                </button>
+                            )}
+                            <button
+                                type="button"
+                                className={styles.nextBtn}
+                                disabled={disabled}
+                                onClick={handleContinue}
+                            >
+                                {isDone ? t("Convert more") : continueLabel}
+                                <ChevronRight />
+                            </button>
+                        </div>
+                    </div>
+                )}
+            </div>
+        </div>
+    )
+
+    return (
+        <>
+            <Modal
+                isOpen={isOpen && width > 1000}
+                style={{ minWidth: "900px" }}
+                toggle={handleClose}
+            >
+                <ModalBody style={{ padding: "20px" }}>{renderBody()}</ModalBody>
+            </Modal>
+
+            {isOpen && width < 1000 && (
+                <div style={{ padding: "16px" }}>{renderBody()}</div>
+            )}
+        </>
+    )
+}
+
+export default ConvertFundsModal
