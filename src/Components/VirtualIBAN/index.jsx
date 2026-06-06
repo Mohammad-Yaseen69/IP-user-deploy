@@ -11,6 +11,7 @@ import TabsNav from './components/TabsNav'
 import IBAN from './IBAN/IBAN'
 import styles from "./styles/index.module.css"
 import IBANDetails from './IBAN/IBANDetails'
+import Manage from './Manage/Manage'
 const VirtualBank = () => {
     const { t } = useTranslation();
     const width = useWindowWidth();
@@ -84,6 +85,13 @@ const VirtualBank = () => {
                         <div className={styles.tabContent}>
                             <div className={styles.section}>
                                 <IBANDetails />
+                            </div>
+                        </div>
+                    )}
+                    {activeTab === "manage" && (
+                        <div className={styles.tabContent}>
+                            <div className={styles.section}>
+                                <Manage />
                             </div>
                         </div>
                     )}

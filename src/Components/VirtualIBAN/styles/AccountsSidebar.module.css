@@ -24,6 +24,7 @@
     /* 21px */
     letter-spacing: -0.42px;
     width: 100%;
+    border-bottom: 1px dotted #E1E5EE;
 }
 
 .accountItemCon {
