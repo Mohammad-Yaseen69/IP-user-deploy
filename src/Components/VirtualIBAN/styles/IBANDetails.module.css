@@ -1,0 +1,372 @@
+.ibanWrapper {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--md, 16px);
+  align-self: stretch;
+  width: 100%;
+}
+
+/* ─── Left Selector Box ─────────────────────────── */
+.box1 {
+  display: flex;
+  width: 260px;
+  min-width: 220px;
+  padding: var(--md, 16px);
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 24px;
+  border-radius: 10px;
+  border: 1px solid var(--Border-primary, #E7E7E7);
+  background: #FFF;
+  flex-shrink: 0;
+  align-self: flex-start;
+}
+
+.boxheader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  align-self: stretch;
+  width: 100%;
+}
+
+.boxheader span {
+  color: var(--gray-gray-900, #1B1F2A);
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 150%;
+  letter-spacing: -0.42px;
+}
+
+.moreBtn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #6B7280;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  border-radius: 4px;
+  transition: background 0.15s;
+}
+
+.moreBtn:hover {
+  background-color: #F3F4F6;
+}
+
+.BoxItems {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+.boxItem {
+  display: flex;
+  padding: 12px 14px;
+  align-items: center;
+  gap: 10px;
+  align-self: stretch;
+  border-radius: 8px;
+  border: 1.5px solid transparent;
+  background: #F5F3FF;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.boxItem:hover {
+  background: #EDE9FE;
+  border-color: #C4B5FD;
+}
+
+.boxItem.active {
+  background: #EDE9FE;
+  border-color: #7C3AED;
+}
+
+.radioOuter {
+  width: 18px;
+  height: 18px;
+  border: 2px solid #D1D5DB;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.tabsCont {
+  display: flex;
+  align-items: start;
+  justify-content: start;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.boxItem.active .radioOuter {
+  border-color: #4F46E5;
+}
+
+.radioInner {
+  width: 9px;
+  height: 9px;
+  background-color: #4F46E5;
+  border-radius: 50%;
+}
+
+.itemText {
+  color: #1F2937;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.box2 {
+  display: flex;
+  padding: var(--md, 16px);
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+  align-self: stretch;
+  border-radius: var(--md, 10px);
+  background: var(--Background-Surface-secondary, #FFF);
+  border: 1px solid var(--Border-primary, #E7E7E7);
+  flex-grow: 1;
+}
+
+.currencyTabs {
+  display: flex;
+  gap: 10px;
+  width: 70%;
+}
+
+.currencyTab {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  border-radius: 6px;
+  border-radius: var(--sm, 6px);
+  background: var(--bg-canvas, #F8F9FC);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: #374151;
+  flex: 1;
+}
+
+.currencyTab:hover {
+  border-color: #C4B5FD;
+  background: #F5F3FF;
+}
+
+.currencyTabActive {
+  background: #EEF2FF;
+  color: #3730A3;
+  font-weight: 600;
+  border-radius: var(--sm, 6px);
+  border: 1px solid #4F46E5;
+  background: blue/blue-50;
+}
+
+.currencyRadioOuter {
+  width: 16px;
+  height: 16px;
+  border: 2px solid #D1D5DB;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: border-color 0.2s;
+}
+
+.currencyTabActive .currencyRadioOuter {
+  border-color: #4F46E5;
+}
+
+.currencyRadioInner {
+  width: 8px;
+  height: 8px;
+  background: #4F46E5;
+  border-radius: 50%;
+}
+
+.currencyIconWrapper {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.currencySymbol {
+  color: white;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.detailsContainer {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.detailRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 11px 14px;
+  transition: background 0.15s;
+  box-sizing: border-box;
+  gap: 8px;
+}
+
+.detailRow:last-child {
+  border-bottom: none;
+}
+
+.detailRow:hover {
+  background: #FAFBFF;
+}
+
+.label {
+  color: #6B7280;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  min-width: 160px;
+  flex-shrink: 0;
+}
+
+.valueGroup {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  justify-content: space-between;
+}
+
+.value {
+  color: #1B1F2A;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  text-align: start;
+  word-break: break-all;
+  width: 100%;
+}
+
+.mono {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 12.5px;
+  letter-spacing: 0.3px;
+}
+
+.inlineCopyBtn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #9CA3AF;
+  display: flex;
+  align-items: center;
+  padding: 3px;
+  border-radius: 4px;
+  flex-shrink: 0;
+  transition: color 0.15s, background 0.15s;
+}
+
+.inlineCopyBtn:hover {
+  color: #4F46E5;
+  background: #EEF2FF;
+}
+
+.copiedIcon {
+  color: #16A34A;
+}
+
+.warningNotice {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  padding: 12px 14px;
+  background: #EDE9FE;
+  border: 1px solid #C4B5FD;
+  border-radius: 8px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.warningIcon {
+  color: #4F46E5;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.warningText {
+  color: #3730A3;
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.copyButton {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  background: none;
+  border: none;
+  color: #4F46E5;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 6px 0;
+  transition: color 0.2s ease;
+}
+
+.copyButton:hover {
+  color: #4338CA;
+}
+
+@media (max-width: 768px) {
+  .ibanWrapper {
+    flex-direction: column;
+  }
+
+  .box1 {
+    width: 100%;
+  }
+
+  .label {
+    min-width: 120px;
+    font-size: 12px;
+  }
+
+  .value {
+    font-size: 12px;
+  }
+
+  .currencyTabs {
+    align-self: stretch;
+  }
+
+  .currencyTab {
+    flex: 1;
+    text-align: center;
+  }
+}

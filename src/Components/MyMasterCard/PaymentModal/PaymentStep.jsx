@@ -47,7 +47,8 @@ const PaymentStep = (
         marginTop,
         cardToWallet,
         applePay,
-        googlePay
+        googlePay,
+        hideButtons = false
     }) => {
     const { t } = useTranslation()
     const { authHeader } = useContext(UserContext)
@@ -252,7 +253,7 @@ const PaymentStep = (
                 </div>
             }
 
-            {(window.innerWidth > 1000 && setStep) &&
+            {(window.innerWidth > 1000 && setStep && !hideButtons) &&
                 <div className={styles.btns}>
                     <button
                         onClick={() => {

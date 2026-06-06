@@ -16,7 +16,7 @@ export const paymentInfoJSX = (feeDetails, addFunds, title, t) => (
     </div>
 )
 
-const ConfirmationStep = ({ feeDetails, walletState, setStep, sendOtp, addFunds, cardDets, paymentType }) => {
+const ConfirmationStep = ({ feeDetails, walletState, setStep, sendOtp, addFunds, cardDets, paymentType, hideButtons }) => {
     const { t } = useTranslation();
     return (
         <div className={styles.step3}>
@@ -58,7 +58,8 @@ const ConfirmationStep = ({ feeDetails, walletState, setStep, sendOtp, addFunds,
                         <div className={styles.feeInfo}>
                             <h3>{t("Card activation fee")}</h3>
                             <h3>{feeDetails.fee}{feeDetails.currency}</h3>
-                        </div>}
+                        </div>
+                    }
 
                     {addFunds && (
                         <>
@@ -80,7 +81,7 @@ const ConfirmationStep = ({ feeDetails, walletState, setStep, sendOtp, addFunds,
                 </div>
             </div>
 
-            {(window.innerWidth > 1000 && !addFunds) &&
+            {(window.innerWidth > 1000 && !addFunds && !hideButtons) &&
                 <div className={styles.btns}>
                     <button onClick={() => setStep(2)}>{t("Back")}</button>
                     <button
