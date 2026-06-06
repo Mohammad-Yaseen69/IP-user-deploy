@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { MoreHorizontal, Plus } from "react-feather";
 import styles from "../styles/AccountsSidebar.module.css";
+import VirtualIbanModal from "../VirtualIbanModal";
+
 
 const accounts = [
     {
@@ -22,6 +24,17 @@ const accounts = [
 ];
 
 const AccountsSidebar = ({ selectedAccount, onSelect, setShowGetIBAN }) => {
+    const [showModal, setShowModal] = useState(false)
+
+    const handleOpenModal = () => {
+        setShowModal(true)
+    }
+
+    const handleCloseModal = () => {
+        setShowModal(false)
+    }
+
+
     return (
         <div className={styles.sidebar}>
             <p className={styles.label}>Your accounts <span> <MoreHorizontal /></span></p>
@@ -48,13 +61,20 @@ const AccountsSidebar = ({ selectedAccount, onSelect, setShowGetIBAN }) => {
                 ))}
 
             </div>
-            <div className={styles.openNew} onClick={() => setShowGetIBAN(true)}>
+            <div className={styles.openNew} onClick={handleOpenModal}>
                 <div className={styles.plusIcon}>
                     <Plus size={14} />
                 </div>
                 <span>Open new IBAN</span>
 
             </div>
+
+            <VirtualIbanModal
+                isOpen={showModal}
+                toggle={handleCloseModal}
+            />
+
+        
 
         </div>
     );

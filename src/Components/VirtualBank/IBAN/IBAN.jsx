@@ -1,7 +1,19 @@
 import { ArrowRight, Clock, Globe, Shield } from 'react-feather'
 import styles from "../styles/IBAN.module.css"
+import VirtualIbanModal from '../VirtualIbanModal'
+import { useState } from 'react'
 
 const IBAN = () => {
+    const [showModal, setShowModal] = useState(false)
+
+    const handleOpenModal = () => {
+        setShowModal(true)
+    }
+
+    const handleCloseModal = () => {
+        setShowModal(false)
+    }
+
     return (
         <div className={styles.container}>
             <div className={styles.mainContent}>
@@ -26,7 +38,7 @@ const IBAN = () => {
                             <p>Receive worldwide</p>
                         </div>
                     </div>
-                    <button className={styles.buttonGroup1} >
+                    <button onClick={handleOpenModal} className={styles.buttonGroup1} >
                         Open virtual bank account <ArrowRight />
                     </button>
                 </div>
@@ -86,6 +98,11 @@ const IBAN = () => {
                 </div>
 
             </div>
+
+            <VirtualIbanModal
+                isOpen={showModal}
+                toggle={handleCloseModal}
+            />
         </div>
     )
 }
