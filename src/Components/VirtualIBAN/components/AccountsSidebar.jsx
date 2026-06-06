@@ -47,6 +47,7 @@ const AccountsSidebar = ({ selectedAccount, onSelect, setShowGetIBAN }) => {
                             }`}
                         onClick={() => onSelect(acc.id)}
                     >
+                        <input type="radio" />
                         <div className={styles.flagBox}>
                             <span>{acc.flag}</span>
                         </div>
@@ -54,9 +55,7 @@ const AccountsSidebar = ({ selectedAccount, onSelect, setShowGetIBAN }) => {
                             <span className={styles.accName}>{acc.name}</span>
                             <span className={styles.accCurrency}>{acc.currency}</span>
                         </div>
-                        {acc.badge && (
-                            <span className={styles.activeBadge}>{acc.badge}</span>
-                        )}
+                        
                     </div>
                 ))}
 
@@ -65,7 +64,11 @@ const AccountsSidebar = ({ selectedAccount, onSelect, setShowGetIBAN }) => {
                 <div className={styles.plusIcon}>
                     <Plus size={14} />
                 </div>
-                <span>Open new IBAN</span>
+                <div className={styles.accInfo}>
+
+                    <span>Open new IBAN</span>
+                    <span className={styles.accCurrency}>{("MT · GB · DE jurisdictions")}</span>
+                </div>
 
             </div>
 
@@ -74,7 +77,7 @@ const AccountsSidebar = ({ selectedAccount, onSelect, setShowGetIBAN }) => {
                 toggle={handleCloseModal}
             />
 
-        
+
 
         </div>
     );

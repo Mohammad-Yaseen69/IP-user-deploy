@@ -5,7 +5,6 @@ import { FaFingerprint } from "react-icons/fa6";
 
 const Manage = () => {
     return (
-        <div className={styles.container}>
             <div className={styles.card}>
 
                 <div className={styles.section}>
@@ -88,7 +87,6 @@ const Manage = () => {
                 </div>
 
             </div>
-        </div>
     );
 };
 

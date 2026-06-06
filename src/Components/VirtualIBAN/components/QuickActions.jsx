@@ -10,7 +10,7 @@ const MODAL_MAP = {
     1: "addFunds",
     2: "convertFunds",
     3: "withdrawal",
-    7: "unsubscribe",
+    8: "unsubscribe",
 }
 
 const QuickActions = () => {
