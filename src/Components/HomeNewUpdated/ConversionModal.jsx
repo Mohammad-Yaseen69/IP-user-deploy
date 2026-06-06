@@ -166,7 +166,19 @@ const ConversionModal = ({ isOpen, toggleModal, amount, exchangeAmount, currency
 
 
     const confirmConversion = () => {
+        if (!currentWallet?._id || !exchangedWallet?._id) {
+            setError(t("Wallet not found. Please try again."))
+            return
+        }
+        if (saving) return
+
         setSaving(true)
+        if (+currentWallet.balance.available <= +amount) {
+            setError(t("Insufficient Balance"))
+            setSaving(false)
+            return
+        }
+
         if (+currentWallet.balance.available > +amount) {
             const data = {
                 sender_wallet_id: currentWallet._id,
@@ -196,9 +208,7 @@ const ConversionModal = ({ isOpen, toggleModal, amount, exchangeAmount, currency
                     const decrypted = decryptData(res.data.data)
                     console.log(decrypted)
                     getUserWallets()
-                    if(step === 1){
-                        confirmConversion()
-                    }
+                    
                     setStep(2)
                 })
                 .catch(err => {

@@ -54,6 +54,15 @@ const CurConversion = ({ extCurrency = "", showHeading = true }) => {
         setError("")
         setLoading(false)
         const getRates = () => {
+            const userWallet = userWallets?.find(item => item?.currency?.code === userCurrency)
+            const receiverWallet = userWallets?.find(item => item?.currency?.code === exchangedCurrency)
+
+            if (!userWallet?._id || !receiverWallet?._id) {
+                setFxDet({})
+                setLoading(false)
+                return
+            }
+
             if (enteredCurrency <= 0) {
                 setFxDet({})
                 setLoading(false)
@@ -66,8 +75,6 @@ const CurConversion = ({ extCurrency = "", showHeading = true }) => {
                 return
             } else {
                 setLoading(true)
-                const userWallet = userWallets?.find(item => item?.currency?.code === userCurrency)
-                const receiverWallet = userWallets?.find(item => item?.currency?.code === exchangedCurrency)
 
                 const cryptoPayload = {
                     is_conversion: true,
