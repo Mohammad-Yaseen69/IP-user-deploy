@@ -9,99 +9,13 @@ import { apiWrapper } from "../../../utils/Functions/apiWrapper";
 import { toast } from "react-toastify";
 import { getExtractedPhone } from "../../../utils/Functions";
 import { usePermission } from "../../../hooks/GeneralUse/usePermission";
-
-const getAccountName = (userDetails) => {
-    if (userDetails?.account_type === "business") {
-        return userDetails?.company?.company_name || userDetails?.company?.name || "Business account";
-    }
-
-    return `${userDetails?.user?.first_name || ""} ${userDetails?.user?.last_name || ""}`.trim() || "My account";
-};
-
-const senderFileFields = [
-    "id_front",
-    "id_back",
-    "selfie",
-    "kyb_registry_extract",
-    "kyb_proof_of_authority",
-    "kyb_ubos",
-    "kyb_id_collection",
-    "kyb_additional_docs",
-];
-
-const appendFileIfSelected = (formData, values, fieldName) => {
-    const file = values?.[fieldName]?.[0];
-
-    if (file) {
-        formData.append(fieldName, file);
-    }
-};
-
-const cleanSenderPayload = (values) => {
-    const payload = { ...values };
-
-    senderFileFields.forEach((fieldName) => {
-        delete payload[fieldName];
-    });
-    delete payload._id;
-    delete payload.sender_id;
-    delete payload.name;
-    delete payload.source;
-    delete payload.hidden;
-    delete payload.createdAt;
-    delete payload.expireAt;
-    delete payload.__v;
-
-    return payload;
-};
-
-const buildSenderFormData = (values) => {
-    const formData = new FormData();
-    const payload = cleanSenderPayload(values);
-
-    formData.append("data", JSON.stringify(payload));
-    senderFileFields.forEach((fieldName) => appendFileIfSelected(formData, values, fieldName));
-
-    return formData;
-};
-
-const normalizeSenderList = (res, type) => {
-    if (Array.isArray(res?.senderList)) return res.senderList?.filter(s => s.sender_type === type);
-    if (Array.isArray(res?.data?.senderList)) return res.data.senderList?.filter(s => s.sender_type === type);
-    return [];
-};
-
-const normalizeAddedSender = (res) => res?.senderData || res?.data?.senderData || res?.data || res;
-
-const getSenderName = (sender = {}) => {
-    if (sender.sender_type === "business") {
-        return sender.company_name || sender.trading_name || "Business sender";
-    }
-
-    return `${sender.first_name || ""} ${sender.last_name || ""}`.trim() || sender.name || "Individual sender";
-};
-
-const buildSelectedSender = (sender = {}, source = "saved") => ({
-    ...sender,
-    _id: sender._id || sender.sender_id,
-    sender_id: sender._id || sender.sender_id,
-    sender_type: sender.sender_type,
-    name: getSenderName(sender),
-    first_name: sender.first_name,
-    last_name: sender.last_name,
-    company_name: sender.company_name,
-    trading_name: sender.trading_name,
-    email: sender.email,
-    phone: sender.phone,
-    address: sender.address,
-    city: sender.city,
-    postal_code: sender.postal_code,
-    country_name: sender.country_name,
-    country_iso_code: sender.country_iso_code,
-    save_for_future: sender.save_for_future,
-    hidden: sender.hidden,
-    source,
-});
+import {
+    buildSelectedSender,
+    buildSenderFormData,
+    getSenderName,
+    normalizeAddedSender,
+    normalizeSenderList,
+} from "./senderHelpers";
 
 const SelectSender = ({ data, dataHandler }) => {
     const { t } = useTranslation();

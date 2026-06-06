@@ -127,7 +127,7 @@ const TransactionItem = ({ item, activeItem, setActiveItem, index, fromReferral 
 
 
     const externalStatusDescription = useMemo(() => {
-        if (item?.payment_type === "external_funds") {
+        if (item?.payment_type === "non_instapay") {
             return item?.description || undefined
         }
         return statuses?.[item?.external_status?.split("_")?.[1]]?.[i18n.language]?.message ?? ""
@@ -216,7 +216,9 @@ const TransactionItem = ({ item, activeItem, setActiveItem, index, fromReferral 
     }, [item, internationalReceiver])
 
     return (
-        <div>
+        <div style={item?.third_party_sender?._id ? {
+            borderLeft: "4px solid #6228e5"
+        } : {}}>
             <div className={styles.body_item} onClick={() => {
                 // if(vvc) return
                 if (!can("transactions.main.details.view")) return;
