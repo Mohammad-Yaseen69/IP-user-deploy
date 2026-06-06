@@ -16,13 +16,12 @@ import {
     STEPS,
 } from "../../../stateMachines/convertFunds"
 import AmountStep from "./AmountStep"
-import WalletStep from "./WalletStep"
 import ReviewStep from "./ReviewStep"
 import DoneStep from "./DoneStep"
 import styles from "./convertFunds.module.scss"
 import SidebarProgress from "../VirtualIbanModal/SidebarProgress"
+import PaymentStep from "../../MyMasterCard/PaymentModal/PaymentStep"
 
-/* ---- SVG icons ---- */
 const CoinsIcon = () => (
     <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
         <circle cx="6.75" cy="6.75" r="4.5" stroke="#F8F9FC" strokeWidth="1.2" />
@@ -99,34 +98,39 @@ const ConvertFundsModal = ({ isOpen, toggle }) => {
 
     const [currentStep, setCurrentStep] = useState(STEPS.AMOUNT)
     const [amount, setAmount] = useState("2000")
-    const [fromWallet, setFromWallet] = useState("EUR")
-    const [toWallet, setToWallet] = useState("USD")
+    const [wallet, setWallet] = useState({})
 
     useEffect(() => {
         getUserWallets()
     }, [])
 
-    const wallets = useMemo(() => {
-        if (userWallets?.length > 0) {
-            const active = userWallets
-                .filter(item => item?.wallet_type === "insta" && !item?.blocked && !item?.admin_blocked && item?.status === "active")
-                .map(item => ({
-                    code: item?.currency?.code,
-                    walletId: item?.wallet_id,
-                    balance: `${item?.currency?.symbol || ""}${Number(item?.balance || 0).toLocaleString("en-US", { minimumFractionDigits: 2 })}`,
-                }))
-            if (active.length > 1) return active
-        }
-        return MOCK_WALLETS
-    }, [userWallets])
+    const filteredWallets = useMemo(() => {
+        return userWallets
+            ?.filter(item =>
+                item?.wallet_type === "insta" &&
+                !item?.blocked &&
+                !item?.admin_blocked &&
+                item?.status === "active"
+            )
+            ?.map(item => ({
+                name: item?.currency?.code,
+                ...item,
+            }))
+            ?.sort((a, b) => {
+                if (a.isSufficient && !b.isSufficient) return -1;
+                if (!a.isSufficient && b.isSufficient) return 1;
+                if (b?.default === true) return 1;
+                if (a?.default === true) return -1;
+                return b?.balance?.available - a?.balance?.available;
+            });
+    }, [userWallets]);
 
     const machineData = useMemo(
         () => ({
             amount,
-            fromWallet,
-            toWallet,
+            wallet,
         }),
-        [amount, fromWallet, toWallet]
+        [amount, wallet]
     )
 
     const disabled = getDisabledState(currentStep, machineData)
@@ -135,8 +139,7 @@ const ConvertFundsModal = ({ isOpen, toggle }) => {
     const resetState = () => {
         setCurrentStep(STEPS.AMOUNT)
         setAmount("2000")
-        setFromWallet("EUR")
-        setToWallet("USD")
+        setWallet({})
     }
 
     const handleClose = () => {
@@ -166,25 +169,29 @@ const ConvertFundsModal = ({ isOpen, toggle }) => {
                     <AmountStep
                         amount={amount}
                         setAmount={setAmount}
-                        currencyCode={fromWallet}
+                        currencyCode={"EUR"}
                     />
                 )
             case STEPS.WALLET:
                 return (
-                    <WalletStep
-                        fromWallet={fromWallet}
-                        setFromWallet={setFromWallet}
-                        toWallet={toWallet}
-                        setToWallet={setToWallet}
-                        wallets={wallets}
-                    />
+                    <div>
+                        <span style={{ fontSize: "24px", color: 'black', fontWeight: 600, marginBottom: "20px" }}>{t("Choose The Wallet")}</span>
+                        <div style={{ maxHeight: width < 1000 ? '70vh' : "450px", overflow: "auto" }}>
+                            <PaymentStep
+                                filteredWallets={filteredWallets}
+                                paymentType={"wallet"}
+                                setWalletState={setWallet}
+                                walletState={wallet}
+                                cardToWallet={true}
+                            />
+                        </div >
+                    </div>
                 )
             case STEPS.REVIEW:
                 return (
                     <ReviewStep
                         amount={amount}
-                        fromWallet={fromWallet}
-                        toWallet={toWallet}
+                        wallet={wallet}
                     />
                 )
             case STEPS.DONE:

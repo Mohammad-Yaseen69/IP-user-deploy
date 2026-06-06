@@ -49,7 +49,7 @@ export const getDisabledState = (stepName, data) => {
         case STEPS.AMOUNT:
             return !data.amount || parseFloat(data.amount) <= 0
         case STEPS.WALLET:
-            return !data.fromWallet || !data.toWallet || data.fromWallet === data.toWallet
+            return !data.wallet?.currency?.code
         case STEPS.REVIEW:
         case STEPS.DONE:
             return false
