@@ -9,7 +9,7 @@ import file from "./files/file.svg"
 import location from "./files/location.svg"
 import status_styles from "../PaymentsNewer/InternationalFlow/styles/receipt.module.css"
 import { Check } from "react-feather"
-import { Button } from "reactstrap"
+import { Badge, Button } from "reactstrap"
 import ImageSwiperView from "../ImageSwiperView"
 import { UserContext } from "../../Context/UserContext"
 import { formatCurrency } from "../../Helper/AmountFormat"
@@ -305,6 +305,26 @@ const TransactionItemDetails = ({ item, badgeColor, desc, internationalReceiver,
                                     <span>{country?.name}</span>
                                 </div>
                             </div>
+                        }
+                        {
+                            item?.third_party_sender?._id && (
+                                <div className={styles.r_item}>
+                                    <span>{t("Third Party Sender")}: </span>
+                                    <p className={styles.p_type}>{item?.third_party_sender?.first_name ?? item?.third_party_sender?.company_name ?? ""} {item?.third_party_sender?.last_name ?? ""} </p>
+                                    <span style={{
+                                        backgroundColor: "#6228e5",
+                                        borderRadius: "999px",
+                                        padding: "2px 8px",
+                                        color: "white",
+                                        fontSize: "12px",
+                                        display: "flex",
+                                        justifyContent: "center",
+                                        minWidth: "0px"
+                                    }}  >
+                                        {item?.third_party_sender?.sender_type}
+                                    </span >
+                                </div>
+                            )
                         }
                         <div className={styles.r_item}>
                             <span>{t("As")}: </span>
