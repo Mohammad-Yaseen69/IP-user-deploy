@@ -8,8 +8,9 @@ import MonthlyExpenses from './components/MonthlyExpenses'
 import QuickActions from './components/QuickActions'
 import RecentTransactions from './components/RecentTransactions'
 import TabsNav from './components/TabsNav'
-import IBAN from './IBAN'
+import IBAN from './IBAN/IBAN'
 import styles from "./styles/index.module.css"
+import IBANDetails from './IBAN/IBANDetails'
 const VirtualBank = () => {
     const { t } = useTranslation();
     const width = useWindowWidth();
@@ -75,6 +76,14 @@ const VirtualBank = () => {
                         <div className={styles.tabContent}>
                             <div className={styles.section}>
                                 <RecentTransactions />
+                            </div>
+                        </div>
+                    )}
+
+                    {activeTab === "ibanassets" && (
+                        <div className={styles.tabContent}>
+                            <div className={styles.section}>
+                                <IBANDetails />
                             </div>
                         </div>
                     )}

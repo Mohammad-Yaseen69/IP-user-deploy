@@ -8,7 +8,7 @@ import IBAN_icon from "../files/images/IBAN.svg"
 const tabs = [
   { id: "overview", label: "Overview", icon: OverViewIcon },
   { id: "transaction-history", label: "Transaction History", icon: TransecitonHis },
-  { id: "vibanassets", label: "My vIBAN Assets", icon: IBAN_icon },
+  { id: "ibanassets", label: "My vIBAN Assets", icon: IBAN_icon },
   { id: "manage", label: "Manage", icon: mange },
 ];
 

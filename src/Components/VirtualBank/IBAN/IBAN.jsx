@@ -1,5 +1,5 @@
 import { ArrowRight, Clock, Globe, Shield } from 'react-feather'
-import styles from "./styles/IBAN.module.css"
+import styles from "../styles/IBAN.module.css"
 
 const IBAN = () => {
     return (
