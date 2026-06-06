@@ -24,6 +24,7 @@ import { countriesInDiffLangs } from "../../../Data/CountriesWithTranslations/co
 import CitiesData from "../../CitiesDropDown/CitiesData.json"
 import useGetAllChannelPayers from "../../../hooks/Payments/International/useGetAllChannelPayers"
 import TransactionTypeSelection from "./TransactionTypeSelection"
+import SendingTypeSelection from "./SendingTypeSelection"
 import axios from "axios"
 import { decryptData } from "../../../Helper/EssentilaMethods/Decryption"
 import bd from "../files/bd.png"
@@ -637,7 +638,13 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
                             :
                             ""
                     }
-                </> : <TransactionTypeSelection data={data} dataHandler={dataHandler} />
+                </> : (
+                    !data.isRecipientTypeSelected ? (
+                        <TransactionTypeSelection data={data} dataHandler={dataHandler} />
+                    ) : (
+                        <SendingTypeSelection data={data} dataHandler={dataHandler} />
+                    )
+                )
             }
         </div>
     )

@@ -330,6 +330,41 @@
     },
     {
         "module": "payments",
+        "feature": "send-as-third-party",
+        "action": "send",
+        "key": "payments.send-as-third-party.send",
+        "description": "Send Third Party International Transfer"
+    },
+    {
+        "module": "payments",
+        "feature": "send-as-third-party",
+        "action": "view",
+        "key": "payments.send-as-third-party.view",
+        "description": "View Third Party saved senders Menu"
+    },
+    {
+        "module": "payments",
+        "feature": "send-as-third-party",
+        "action": "add",
+        "key": "payments.send-as-third-party.add",
+        "description": "Add New Third Party Senders."
+    },
+    {
+        "module": "payments",
+        "feature": "send-as-third-party",
+        "action": "edit",
+        "key": "payments.send-as-third-party.edit",
+        "description": "Edit Third Party Senders."
+    },
+    {
+        "module": "payments",
+        "feature": "send-as-third-party",
+        "action": "delete",
+        "key": "payments.send-as-third-party.delete",
+        "description": "Delete Third Party Senders."
+    },
+    {
+        "module": "payments",
         "feature": "wallet",
         "action": "send",
         "key": "payments.wallet.send",

@@ -79,6 +79,11 @@ const SidebarSubMenu = ({ menu, className, setIsOpen, isOpen, level, showModal, 
         if (item.showOnly === "business") {
             return userDetails?.account_type === "business"
         }
+
+        if(item?.permission === "payments.send-as-third-party.view"){
+            return userDetails?.isThirdPartyAllowed
+        }
+
         return true
     })
     return (
