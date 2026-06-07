@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { ChevronDown } from "react-feather";
 import styles from "../styles/MonthlyExpenses.module.css";
+import IncomeExpenseChart from "./IncomeExpenseChart";
 
 const expenseData = [
   { label: "Entertainment", amount: "€43,15.06", color: "#6366f1", percent: 35 },
@@ -108,26 +109,18 @@ const MonthlyExpenses = () => {
           </div>
 
           <div className={styles.bigAmount}>EUR 5,000.00</div>
-
+          <div className={styles.chartWrapper}>
+            <IncomeExpenseChart />
+          </div>
           <div className={styles.barGroup}>
             <div className={styles.barRow}>
               <span className={styles.barLabel}>Incoming</span>
-              <div className={styles.barTrack}>
-                <div
-                  className={styles.barFill}
-                  style={{ width: "72%", background: "#6366f1" }}
-                />
-              </div>
+
               <span className={styles.barAmount}>EUR 1923.00</span>
             </div>
             <div className={styles.barRow}>
               <span className={styles.barLabel}>Outgoing</span>
-              <div className={styles.barTrack}>
-                <div
-                  className={styles.barFill}
-                  style={{ width: "55%", background: "#0ea5e9" }}
-                />
-              </div>
+
               <span className={styles.barAmount}>EUR 1923.00</span>
             </div>
           </div>

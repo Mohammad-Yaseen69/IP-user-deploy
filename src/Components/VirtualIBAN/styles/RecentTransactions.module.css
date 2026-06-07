@@ -1,7 +1,7 @@
 .section {
-    background: var(--card-bg);
-    border: 1px solid var(--border-color);
-    border-radius: 14px;
+    border-radius: var(--md, 10px);
+    border: 1px solid var(--Border-primary, #E7E7E7);
+    background: #FFF;
     padding: 18px 20px;
     width: 100%;
 }
@@ -11,6 +11,7 @@
     align-items: center;
     justify-content: space-between;
     margin-bottom: 14px;
+    width: 100%;
 }
 
 .title {

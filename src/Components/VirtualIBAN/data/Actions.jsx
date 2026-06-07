@@ -10,9 +10,9 @@ export const actions = [
             <path d="M3.375 12.375H14.625" stroke="#5926F0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
             <path d="M5.625 7.875L3.375 5.625L5.625 3.375" stroke="#5926F0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
             <path d="M14.625 5.625H3.375" stroke="#5926F0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-        </svg>, label: "Current funds", sub: "Move funds to Wallet", color: "#0ea5e9"
+        </svg>, label: "Current funds", sub: "Move funds to Wallet", color: "#10b981"
     },
-    { id: 3, icon: <ArrowRight size={20} />, label: "Withdraw balance", sub: "To the verified account", color: "#f59e0b" },
+    { id: 3, icon: <ArrowRight size={20} />, label: "Withdraw balance", sub: "To the verified account", color: "#5926F0" },
     {
         id: 4, icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
             <path d="M14.0625 12.375V4.5C14.0625 4.05245 13.8847 3.62322 13.5682 3.30676C13.2518 2.99029 12.8226 2.8125 12.375 2.8125H2.8125" stroke="#5926F0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
@@ -26,7 +26,8 @@ export const actions = [
             <path d="M14.625 2.8125H3.375C3.06434 2.8125 2.8125 3.06434 2.8125 3.375V14.625C2.8125 14.9357 3.06434 15.1875 3.375 15.1875H14.625C14.9357 15.1875 15.1875 14.9357 15.1875 14.625V3.375C15.1875 3.06434 14.9357 2.8125 14.625 2.8125Z" stroke="#5926F0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
             <path d="M6.75 9.5625L9 11.8125L11.25 9.5625" stroke="#5926F0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
             <path d="M9 6.1875V11.8125" stroke="#5926F0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-        </svg>, label: "Beneficiaries", sub: "Manage recipients", color: "#8b5cf6"
+        </svg>,
+        label: "Request money from vIBAN", sub: "Send a payment request link", color: "#8b5cf6"
     },
     {
         id: 6, icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
@@ -36,14 +37,14 @@ export const actions = [
             <path d="M5.625 6.75C6.86764 6.75 7.875 5.74264 7.875 4.5C7.875 3.25736 6.86764 2.25 5.625 2.25C4.38236 2.25 3.375 3.25736 3.375 4.5C3.375 5.74264 4.38236 6.75 5.625 6.75Z" stroke="#5926F0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
             <path d="M12.375 14.0625C13.6176 14.0625 14.625 13.0551 14.625 11.8125C14.625 10.5699 13.6176 9.5625 12.375 9.5625C11.1324 9.5625 10.125 10.5699 10.125 11.8125C10.125 13.0551 11.1324 14.0625 12.375 14.0625Z" stroke="#5926F0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
             <path d="M12.375 6.75C13.6176 6.75 14.625 5.74264 14.625 4.5C14.625 3.25736 13.6176 2.25 12.375 2.25C11.1324 2.25 10.125 3.25736 10.125 4.5C10.125 5.74264 11.1324 6.75 12.375 6.75Z" stroke="#5926F0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-        </svg>, label: "Crypto", sub: "Access existing schemes", color: "#f43f5e"
+        </svg>, label: "Beneficiaries", sub: "Quick access to saved recipients", color: "#5926F0"
     },
     {
         id: 7, icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
             <path d="M9 1.125V16.875" stroke="#5926F0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
             <path d="M15.1875 9L9 11.8125L2.8125 9" stroke="#5926F0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
             <path d="M9 1.125L15.1875 9L9 16.875L2.8125 9L9 1.125Z" stroke="#5926F0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-        </svg>, label: "Unacallable", sub: "Freeze the card instantly", color: "#64748b"
+        </svg>, label: "Crypto", sub: "Crypto receiving address", color: "#64748b"
     },
     {
         id: 8, icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
@@ -56,6 +57,6 @@ export const actions = [
             <path d="M5.10254 11.25L12.8974 6.75" stroke="#EF4444" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
             <path d="M4.5 13.5L5.10258 11.25L2.8125 10.6875" stroke="#EF4444" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
             <path d="M15.1875 7.3125L12.8975 6.75L13.5 4.5" stroke="#EF4444" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-        </svg>, label: "Unacallable", sub: "Freeze the card instantly", color: "#64748b"
+        </svg>, label: "Unsubscribe", sub: "Cancel virtual account", color: "#EF4444"
     },
 ];
