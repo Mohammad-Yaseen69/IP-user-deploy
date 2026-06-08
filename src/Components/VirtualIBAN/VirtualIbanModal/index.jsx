@@ -32,12 +32,13 @@ import {
     getContinueLabel,
     getDisabledState,
     getJurisdiction,
+    getSidebarSteps,
     goBack,
     goNext,
     isSidebarStepActive,
     isSidebarStepCompleted,
+    JURISDICTIONS,
     MOCK_WALLET_STATE,
-    SIDEBAR_STEPS,
     STEPS,
 } from "../../../stateMachines/virtualIbanPayment"
 import DoneStep from "./DoneStep"
@@ -49,7 +50,7 @@ import styles from "./virtualIbanModal.module.scss"
 import VerificationStep from "./VerificationStep"
 import useSendOtp from "../../../hooks/GeneralUse/useSendOtp"
 import OTPConfirmation from "../../UserSettingsNew/OTPConfirmation"
-import { useCreateVirtualIban, virtualIbanQueryKeys } from "../hooks/useVirtualIban"
+import { useCreateVirtualIban, useVirtualIbans, virtualIbanQueryKeys } from "../hooks/useVirtualIban"
 import SocketsService from "../../../Services/Socket"
 
 const SIDEBAR_ICONS = {
@@ -98,6 +99,11 @@ const normalizeSocketIban = (iban) => {
     }
 }
 
+const getIbanCountry = (iban) => {
+    const country = String(iban?.iban || iban?.country || iban?.jurisdiction || "").slice(0, 2).toUpperCase()
+    return country === "UK" ? "GB" : country
+}
+
 
 
 const VirtualIbanModal = ({ isOpen, toggle, onCreated }) => {
@@ -108,7 +114,7 @@ const VirtualIbanModal = ({ isOpen, toggle, onCreated }) => {
     const { userWallets, getUserWallets, userDetails, authHeader } = useContext(UserContext)
 
     const [currentStep, setCurrentStep] = useState(STEPS.JURISDICTION)
-    const [jurisdiction, setJurisdiction] = useState("MT")
+    const [jurisdiction, setJurisdiction] = useState("")
     const [feesAccepted, setFeesAccepted] = useState(false)
     const [paymentType, setPaymentType] = useState("")
     const [walletState, setWalletState] = useState({})
@@ -138,6 +144,7 @@ const VirtualIbanModal = ({ isOpen, toggle, onCreated }) => {
     })
 
     const createVirtualIban = useCreateVirtualIban()
+    const { data: existingIbans = [] } = useVirtualIbans()
     const { sendOtp, isSendingOtp } = useSendOtp({
         onSuccess: (token) => {
             setOtpToken(token)
@@ -148,6 +155,14 @@ const VirtualIbanModal = ({ isOpen, toggle, onCreated }) => {
             toast.error(err?.message || t("Unable to send OTP"))
         },
     })
+
+    const isKycApproved = useMemo(() => {
+        if (userDetails?.account_type === "individual") {
+            return userDetails?.user?.kyc_status === "approved"
+        }
+
+        return userDetails?.company?.kyb_status === "approved"
+    }, [userDetails])
 
     const socketConfig = useMemo(() => ({
         url: import.meta.env.VITE_IP_DEV_API,
@@ -250,6 +265,41 @@ const VirtualIbanModal = ({ isOpen, toggle, onCreated }) => {
             ?.map(item => ({ name: item?.currency?.code, ...item }))
     }, [userWallets])
 
+    const jurisdictionAvailability = useMemo(() => {
+        const existingCountries = new Set(
+            (Array.isArray(existingIbans) ? existingIbans : [])
+                .map(getIbanCountry)
+                .filter(Boolean)
+        )
+
+        return Object.values(JURISDICTIONS).reduce((acc, option) => {
+            if (option.id === "GB") {
+                acc[option.id] = { disabledReason: "Coming Soon" }
+                return acc
+            }
+
+            if (existingCountries.has(option.id)) {
+                acc[option.id] = { disabledReason: `${option.title} already exists` }
+                return acc
+            }
+
+            acc[option.id] = { disabledReason: "" }
+            return acc
+        }, {})
+    }, [existingIbans])
+
+    useEffect(() => {
+        if (jurisdiction && jurisdictionAvailability?.[jurisdiction]?.disabledReason) {
+            setJurisdiction("")
+        }
+    }, [jurisdiction, jurisdictionAvailability])
+
+    useEffect(() => {
+        if (isKycApproved && currentStep === STEPS.VERIFICATION) {
+            setCurrentStep(STEPS.PAYMENT_METHOD)
+        }
+    }, [currentStep, isKycApproved])
+
     const jurisdictionInfo = getJurisdiction(jurisdiction)
 
     const feeDetails = useMemo(
@@ -266,8 +316,14 @@ const VirtualIbanModal = ({ isOpen, toggle, onCreated }) => {
             selectedSaveCard,
             cardDetail,
             cardNumberError,
+            kycApproved: isKycApproved,
         }),
-        [jurisdiction, feesAccepted, paymentType, walletState, selectedSaveCard, cardDetail, cardNumberError]
+        [jurisdiction, feesAccepted, paymentType, walletState, selectedSaveCard, cardDetail, cardNumberError, isKycApproved]
+    )
+
+    const sidebarSteps = useMemo(
+        () => getSidebarSteps(machineData),
+        [machineData]
     )
 
     const isCreating = isSendingOtp || createVirtualIban.isPending
@@ -276,7 +332,7 @@ const VirtualIbanModal = ({ isOpen, toggle, onCreated }) => {
 
     const resetState = () => {
         setCurrentStep(STEPS.JURISDICTION)
-        setJurisdiction("MT")
+        setJurisdiction("")
         setFeesAccepted(false)
         setPaymentType("")
         setWalletState({})
@@ -363,6 +419,12 @@ const VirtualIbanModal = ({ isOpen, toggle, onCreated }) => {
     }
 
     const handleContinue = async () => {
+        if (currentStep === STEPS.JURISDICTION && jurisdictionAvailability?.[jurisdiction]?.disabledReason) {
+            toast.error(t(jurisdictionAvailability[jurisdiction].disabledReason))
+            setJurisdiction("")
+            return
+        }
+
         if (currentStep === STEPS.SUMMARY) {
             await handleSendOtp()
             return
@@ -400,6 +462,7 @@ const VirtualIbanModal = ({ isOpen, toggle, onCreated }) => {
                     <JurisdictionStep
                         jurisdiction={jurisdiction}
                         setJurisdiction={setJurisdiction}
+                        availability={jurisdictionAvailability}
                     />
                 )
             case STEPS.FEES:
@@ -517,7 +580,7 @@ const VirtualIbanModal = ({ isOpen, toggle, onCreated }) => {
                             className={addFundsStyles.progressEffect}
                             style={{ marginTop: "2rem" }}
                         >
-                            {SIDEBAR_STEPS.map((item, index) => (
+                            {sidebarSteps.map((item, index) => (
                                 <SidebarProgress
                                     key={item.stepName}
                                     stepLabel={item.stepLabel}
@@ -529,9 +592,10 @@ const VirtualIbanModal = ({ isOpen, toggle, onCreated }) => {
                                     )}
                                     isCompleted={isSidebarStepCompleted(
                                         item,
-                                        currentStep
+                                        currentStep,
+                                        machineData
                                     )}
-                                    showBar={index < SIDEBAR_STEPS.length - 1}
+                                    showBar={index < sidebarSteps.length - 1}
                                 />
                             ))}
                         </div>

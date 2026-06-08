@@ -87,7 +87,7 @@ export const useVirtualIbanTransferFee = () =>
                 method: "POST",
                 payload,
                 isEncrypted: true,
-                isDecrypted: false,
+                isDecrypted: true,
             }),
     })
 

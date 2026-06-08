@@ -9,35 +9,47 @@ const FLAGS = {
     GB,
 }
 
-const JurisdictionStep = ({ jurisdiction, setJurisdiction }) => {
+const JurisdictionStep = ({ jurisdiction, setJurisdiction, availability = {} }) => {
     const { t } = useTranslation()
 
     return (
         <div>
             <p className={styles.stepTitle}>{t("Select the IBAN jurisdiction")}</p>
             <div className={styles.jurisdictionList}>
-                {Object.values(JURISDICTIONS).map((option) => (
-                    <button
-                        key={option.id}
-                        type="button"
-                        className={`${styles.jurisdictionOption} ${jurisdiction === option.id ? styles.selected : ""
-                            }`}
-                        onClick={() => setJurisdiction(option.id)}
-                    >
-                        <span className={styles.radio} />
+                {Object.values(JURISDICTIONS).map((option) => {
+                    const disabledReason = availability?.[option.id]?.disabledReason
+                    const isDisabled = Boolean(disabledReason)
 
-                        <div className={styles.flag}>
-                            <img
-                                src={FLAGS[option.id]}
-                                alt=""
-                            />
-                        </div>
-                        <div className={styles.optionText}>
-                            <h4>{t(option.title)}</h4>
-                            <p>{t(option.subtitle)}</p>
-                        </div>
-                    </button>
-                ))}
+                    return (
+                        <button
+                            key={option.id}
+                            type="button"
+                            disabled={isDisabled}
+                            className={`${styles.jurisdictionOption} ${jurisdiction === option.id ? styles.selected : ""} ${isDisabled ? styles.disabledOption : ""}`}
+                            onClick={() => {
+                                if (!isDisabled) setJurisdiction(option.id)
+                            }}
+                        >
+                            <span className={styles.radio} />
+
+                            <div className={styles.flag}>
+                                <img
+                                    src={FLAGS[option.id]}
+                                    alt=""
+                                />
+                            </div>
+                            <div className={styles.optionText}>
+                                <div className={styles.optionTitleRow}>
+                                    <h4>{t(option.title)}</h4>
+                                    {disabledReason && (
+                                        <span className={styles.disabledBadge}>{t(disabledReason)}</span>
+                                    )}
+                                </div>
+                                <p>{t(option.subtitle)}</p>
+                            </div>
+                        </button>
+                    )
+                })}
             </div>
         </div>
     )
