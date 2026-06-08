@@ -1,6 +1,8 @@
 import { Copy, ArrowUpRight, Eye } from "react-feather"
 import styles from "../styles/Balanceheader.module.css"
 import { useSyncVirtualIbanBalance } from "../hooks/useVirtualIban"
+import UK_Image from "../files/images/UK.svg"
+
 
 const formatAmount = (amount, currency) => {
   const value = Number(amount || 0)
@@ -31,7 +33,7 @@ const BalanceHeader = ({ iban, isLoading }) => {
     <div className={styles.card}>
       <div className={styles.topBar}>
         <div className={styles.leftInfo}>
-          <span className={styles.accountTag}>{currency} IBAN</span>
+          <span className={styles.accountTag}><img src={UK_Image} alt="" />  IBAN</span>
           <span className={styles.activeBadge}>{status}</span>
         </div>
 

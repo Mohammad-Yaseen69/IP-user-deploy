@@ -112,7 +112,6 @@ const PayAsGuest = ({
   const dataHandler = (field, value) => {
     dispatch({ type: "UPDATE_FIELD", field, value });
   };
-  const { getKey, reset } = useIdempotency()
 
   const isReferenceRequired = useMemo(() => {
     const usernamesList = ["spmfrance", "usharellc"]
