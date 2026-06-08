@@ -2,6 +2,8 @@ import { Copy, ArrowUpRight, Eye } from "react-feather"
 import styles from "../styles/Balanceheader.module.css"
 import { useSyncVirtualIbanBalance } from "../hooks/useVirtualIban"
 import UK_Image from "../files/images/UK.svg"
+import Malta_Image from "../files/images/Malta.svg"
+import { getVirtualIbanCountry, normalizeVirtualIban } from "../utils/virtualIban"
 
 
 const formatAmount = (amount, currency) => {
@@ -13,13 +15,21 @@ const formatAmount = (amount, currency) => {
   })
 }
 
-const BalanceHeader = ({ iban, isLoading,setActiveTab }) => {
-  const ibanId = iban?._id || iban?.id
+const BalanceHeader = ({ iban, isLoading, setActiveTab, onShowDetails }) => {
+  const mappedIban = normalizeVirtualIban(iban) || {}
+  const ibanId = mappedIban?._id || mappedIban?.id
   const { data: syncedBalance } = useSyncVirtualIbanBalance(ibanId)
-  const currentBalance = syncedBalance?.balance ?? iban?.balance ?? 0
-  const status = syncedBalance?.status || iban?.status || "ACTIVE"
-  const bic = iban?.bank?.bic || iban?.bic || "-"
-  const currency = syncedBalance?.currency || iban?.currency || "EUR"
+  const currentBalance = syncedBalance?.balance ?? mappedIban?.balance ?? 0
+  const status = syncedBalance?.status || mappedIban?.status || "ACTIVE"
+  const bic = mappedIban?.bank?.bic || mappedIban?.swift_code || "-"
+  const currency = syncedBalance?.currency || mappedIban?.currency || "EUR"
+  const country = getVirtualIbanCountry(mappedIban)
+  const flag = country === "GB" ? UK_Image : Malta_Image
+
+  const handleShowDetails = () => {
+    onShowDetails?.()
+    setActiveTab?.("ibanassets")
+  }
 
   const handleCopy = (text) => {
     if (text && text !== "-") navigator.clipboard.writeText(text)
@@ -33,13 +43,13 @@ const BalanceHeader = ({ iban, isLoading,setActiveTab }) => {
     <div className={styles.card}>
       <div className={styles.topBar}>
         <div className={styles.leftInfo}>
-          <span className={styles.accountTag}><img src={UK_Image} alt="" />  IBAN</span>
+          <span className={styles.accountTag}><img src={flag} alt="" />  IBAN</span>
           <span className={styles.activeBadge}>{status}</span>
         </div>
 
         <div className={styles.rightActions}>
           <button
-            onClick={() => setActiveTab("ibanassets")}
+            onClick={handleShowDetails}
 
             className={styles.iconBtn}>
             <span>Virtual bank details</span>
@@ -60,11 +70,11 @@ const BalanceHeader = ({ iban, isLoading,setActiveTab }) => {
         <div className={styles.item}>
           <span className={styles.label}>IBAN</span>
           <div>
-            <span className={styles.value}>{iban?.iban || "-"}</span>
+            <span className={styles.value}>{mappedIban?.iban || "-"}</span>
             <Copy
               size={16}
               className={styles.copyIcon}
-              onClick={() => handleCopy(iban?.iban)}
+              onClick={() => handleCopy(mappedIban?.iban)}
             />
           </div>
         </div>
