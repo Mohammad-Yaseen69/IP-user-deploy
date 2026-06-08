@@ -13,6 +13,9 @@ import styles from "./styles/index.module.css"
 import IBANDetails from './IBAN/IBANDetails'
 import Manage from './Manage/Manage'
 import { useVirtualIbans } from './hooks/useVirtualIban'
+import { transactions } from './data/Actions'
+import Empty from './components/Empty'
+import { asVirtualIbanArray } from './utils/virtualIban'
 const VirtualBank = () => {
     const { t } = useTranslation();
     const width = useWindowWidth();
@@ -22,11 +25,7 @@ const VirtualBank = () => {
     const [showGetIBAN, setShowGetIBAN] = useState(false);
     const ibanDetailsRef = useRef(null);
 
-    console.log("rawIbans", rawIbans)
-    const ibans = useMemo(
-        () => Array.isArray(rawIbans) ? rawIbans : [],
-        [rawIbans]
-    )
+    const ibans = useMemo(() => asVirtualIbanArray(rawIbans), [rawIbans])
 
     const selectedIban = useMemo(
         () => ibans.find((iban) => (iban?._id || iban?.id) === selectedAccount) || ibans[0],
@@ -52,11 +51,28 @@ const VirtualBank = () => {
         setSelectedAccount(ibans[0]?._id || ibans[0]?.id || null);
     };
 
-    useEffect(() => {
-        if (activeTab === "ibanassets" && ibanDetailsRef.current) {
-            ibanDetailsRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+    const scrollToIbanDetails = () => {
+        const scroll = () => {
+            ibanDetailsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
         }
-    }, [activeTab]);
+
+        if (typeof window !== "undefined" && window.requestAnimationFrame) {
+            window.requestAnimationFrame(scroll)
+        } else {
+            setTimeout(scroll, 0)
+        }
+    }
+
+    const handleShowIbanDetails = () => {
+        setActiveTab("ibanassets")
+        scrollToIbanDetails()
+    }
+
+    useEffect(() => {
+        if (activeTab === "ibanassets") {
+            scrollToIbanDetails()
+        }
+    }, [activeTab, selectedAccount]);
     return (
         <div className={styles.container}>
             <div className={styles.top}>
@@ -83,7 +99,11 @@ const VirtualBank = () => {
                                 isLoading={ibansLoading}
                             />
                             <div className={styles.panelDivider} />
-                            <BalanceHeader iban={selectedIban} isLoading={ibansLoading} />
+                            <BalanceHeader
+                                iban={selectedIban}
+                                isLoading={ibansLoading}
+                                onShowDetails={handleShowIbanDetails}
+                            />
                         </div>
 
                         <div className={styles.section}>
@@ -96,19 +116,28 @@ const VirtualBank = () => {
 
                         {activeTab === "overview" && (
                             <div className={styles.tabContent}>
-                                <MonthlyExpenses />
+                                {transactions.length !== 0 ? (
+                                    <Empty />
+                                ) :
+                                    <>
+                                        <MonthlyExpenses />
 
-                                <div className={styles.section}>
-                                    <RecentTransactions />
-                                </div>
+                                        <div className={styles.section}>
+                                            <RecentTransactions transactions={transactions} setActiveTab={setActiveTab} />
+                                        </div>
+                                    </>}
                             </div>
                         )}
 
                         {activeTab === "transaction-history" && (
                             <div className={styles.tabContent}>
                                 <div className={styles.section}>
-                                    <RecentTransactions />
-                                </div>
+                                    {transactions.length !== 0 ? (
+                                        <Empty />
+                                    ) :
+
+                                        <RecentTransactions transactions={transactions} setActiveTab={setActiveTab} />
+                                    }                                </div>
                             </div>
                         )}
 
