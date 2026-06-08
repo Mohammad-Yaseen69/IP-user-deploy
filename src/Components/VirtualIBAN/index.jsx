@@ -1,4 +1,4 @@
-import { useState, useRef, useMemo,useEffect } from 'react'
+import { useState, useRef, useMemo, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import useWindowWidth from '../../utils/useWindowWidth'
 import TopRight from '../topRight'
@@ -113,7 +113,7 @@ const VirtualBank = () => {
                         )}
 
                         {activeTab === "ibanassets" && (
-                            <div className={styles.tabContent}>
+                            <div className={styles.tabContent} ref={ibanDetailsRef}>
                                 <div className={styles.section}>
                                     <IBANDetails ibanId={selectedIban?._id || selectedIban?.id} fallbackIban={selectedIban} />
                                 </div>
