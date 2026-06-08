@@ -30,7 +30,7 @@ const ReviewStep = ({ amount, wallet, feeDetails, iban }) => {
                 <div className={styles.reviewRow}>
                     <span className={styles.reviewRowLabel}>{t("Amount")}</span>
                     <span className={styles.reviewRowValue}>
-                        {iban?.currency} {formatAmount(amount)}
+                        {iban?.currency} {feeDetails?.sending?.value}
                     </span>
                 </div>
 
@@ -44,14 +44,17 @@ const ReviewStep = ({ amount, wallet, feeDetails, iban }) => {
                 <div className={styles.reviewRow}>
                     <span className={styles.reviewRowLabel}>{t("Total")}</span>
                     <span className={styles.reviewRowValue}>
-                        <MoneyValue value={feeDetails?.total || feeDetails?.sending} />
+                        <MoneyValue value={feeDetails?.total} />
                     </span>
                 </div>
 
                 <div className={styles.reviewRow}>
                     <span className={styles.reviewRowLabel}>{t("Exchange Rate")}</span>
                     <span className={styles.reviewRowValue}>
-                        <MoneyValue value={feeDetails?.exchanged_rate} />
+                        <MoneyValue value={{
+                            currency: feeDetails?.recipient?.currency,
+                            value: feeDetails?.exchanged_rate?.value
+                        }} />
                     </span>
                 </div>
 

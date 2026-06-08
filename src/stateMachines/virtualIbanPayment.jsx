@@ -63,13 +63,24 @@ export const SIDEBAR_STEPS = [
     { stepName: STEPS.DONE, stepLabel: "STEP 05", label: "Done" },
 ]
 
+export const getSidebarSteps = (data = {}) => {
+    const hiddenSteps = data?.kycApproved ? [STEPS.VERIFICATION] : []
+
+    return SIDEBAR_STEPS
+        .filter((item) => !hiddenSteps.includes(item.stepName))
+        .map((item, index) => ({
+            ...item,
+            stepLabel: `STEP ${String(index + 1).padStart(2, "0")}`,
+        }))
+}
+
 export const transitions = {
     [STEPS.JURISDICTION]: {
         next: () => STEPS.FEES,
         back: () => null,
     },
     [STEPS.FEES]: {
-        next: () => STEPS.VERIFICATION,
+        next: (data) => data?.kycApproved ? STEPS.PAYMENT_METHOD : STEPS.VERIFICATION,
         back: () => STEPS.JURISDICTION,
     },
     [STEPS.VERIFICATION]: {
@@ -77,8 +88,8 @@ export const transitions = {
         back: () => STEPS.FEES,
     },
     [STEPS.PAYMENT_METHOD]: {
-        next: (data) => data.paymentType === "paypal" ? STEPS.SUMMARY : STEPS.PAYMENT_DETAILS,
-        back: () => STEPS.VERIFICATION,
+        next: (data) => data?.paymentType === "paypal" ? STEPS.SUMMARY : STEPS.PAYMENT_DETAILS,
+        back: (data) => data?.kycApproved ? STEPS.FEES : STEPS.VERIFICATION,
     },
     [STEPS.PAYMENT_DETAILS]: {
         next: () => STEPS.SUMMARY,
@@ -86,7 +97,7 @@ export const transitions = {
     },
     [STEPS.SUMMARY]: {
         next: () => STEPS.PENDING,
-        back: (data) => data.paymentType === "paypal" ? STEPS.PAYMENT_METHOD : STEPS.PAYMENT_DETAILS,
+        back: (data) => data?.paymentType === "paypal" ? STEPS.PAYMENT_METHOD : STEPS.PAYMENT_DETAILS,
     },
     [STEPS.PENDING]: {
         next: () => STEPS.DONE,
@@ -159,14 +170,8 @@ export const isSidebarStepActive = (sidebarItem, currentStep) => {
     return sidebarItem.stepName === currentStep
 }
 
-export const isSidebarStepCompleted = (sidebarItem, currentStep) => {
-    const order = [
-        STEPS.JURISDICTION,
-        STEPS.FEES,
-        STEPS.VERIFICATION,
-        STEPS.PAYMENT_METHOD,
-        STEPS.DONE,
-    ]
+export const isSidebarStepCompleted = (sidebarItem, currentStep, data = {}) => {
+    const order = getSidebarSteps(data).map((item) => item.stepName)
     const currentRank =
         currentStep === STEPS.SUMMARY || currentStep === STEPS.PAYMENT_DETAILS
             ? order.indexOf(STEPS.PAYMENT_METHOD)

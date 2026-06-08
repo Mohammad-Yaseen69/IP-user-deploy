@@ -9,6 +9,7 @@ import IBANDetails from "../IBAN/IBANDetails.jsx";
 import { X } from "react-feather";
 import { useNavigate } from "react-router";
 import { Tooltip } from "@mui/material";
+import { useSyncVirtualIbanBalance } from "../hooks/useVirtualIban.jsx";
 
 const MODAL_MAP = {
     1: "deposit",
@@ -18,6 +19,9 @@ const MODAL_MAP = {
 }
 
 const QuickActions = ({ selectedIban }) => {
+    const ibanId = selectedIban?._id || selectedIban?.id
+    const { data: syncedBalance } = useSyncVirtualIbanBalance(ibanId)
+    const currentBalance = syncedBalance?.balance ?? selectedIban?.balance ?? 0
     const navigate = useNavigate()
     const [modals, setModals] = useState({
         deposit: false,
@@ -133,9 +137,9 @@ const QuickActions = ({ selectedIban }) => {
             <UnsubscribeModal
                 isOpen={modals.unsubscribe}
                 toggle={() => closeModal("unsubscribe")}
-                hasBalance={true}
+                hasBalance={currentBalance > 0}
                 onWithdraw={handleUnsubscribeWithdraw}
-                onUnsubscribe={(data) => alert(`Unsubscribed with reason: ${data?.reason}`)}
+                onUnsubscribe={(data) => alert(`Unsubscribed feature coming soon`)}
             />
         </div>
     );
