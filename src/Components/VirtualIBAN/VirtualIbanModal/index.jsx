@@ -51,6 +51,7 @@ import VerificationStep from "./VerificationStep"
 import useSendOtp from "../../../hooks/GeneralUse/useSendOtp"
 import OTPConfirmation from "../../UserSettingsNew/OTPConfirmation"
 import { useCreateVirtualIban, useVirtualIbans, virtualIbanQueryKeys } from "../hooks/useVirtualIban"
+import { getVirtualIbanCountry, normalizeVirtualIban } from "../utils/virtualIban"
 import SocketsService from "../../../Services/Socket"
 
 const SIDEBAR_ICONS = {
@@ -84,27 +85,6 @@ const ChevronRight = () => (
         />
     </svg>
 )
-
-const normalizeSocketIban = (iban) => {
-    if (!iban) return null
-
-    return {
-        ...iban,
-        _id: iban?._id || iban?.id,
-        bank: iban?.bank || {
-            name: iban?.bank_name,
-            bic: iban?.swift_code,
-            address: iban?.bank_address,
-        },
-    }
-}
-
-const getIbanCountry = (iban) => {
-    const country = String(iban?.iban || iban?.country || iban?.jurisdiction || "").slice(0, 2).toUpperCase()
-    return country === "UK" ? "GB" : country
-}
-
-
 
 const VirtualIbanModal = ({ isOpen, toggle, onCreated }) => {
     const { t } = useTranslation()
@@ -183,7 +163,7 @@ const VirtualIbanModal = ({ isOpen, toggle, onCreated }) => {
                 return
             }
 
-            const iban = normalizeSocketIban(data?.iban)
+            const iban = normalizeVirtualIban(data?.iban)
 
             setCreatedIban(iban)
             setPendingTransactionId(data?.transaction_id || pendingTransactionId)
@@ -268,7 +248,7 @@ const VirtualIbanModal = ({ isOpen, toggle, onCreated }) => {
     const jurisdictionAvailability = useMemo(() => {
         const existingCountries = new Set(
             (Array.isArray(existingIbans) ? existingIbans : [])
-                .map(getIbanCountry)
+                .map(getVirtualIbanCountry)
                 .filter(Boolean)
         )
 

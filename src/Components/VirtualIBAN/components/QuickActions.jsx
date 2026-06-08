@@ -117,7 +117,7 @@ const QuickActions = ({ selectedIban }) => {
                             <X />
                         </button>
 
-                        <IBANDetails />
+                        <IBANDetails ibanId={ibanId} fallbackIban={selectedIban} />
                     </div>
                 </div>
             )}

@@ -6,16 +6,18 @@ import success from "./icons/success.png"
 import MT from "./icons/mt.svg"
 import GB from "./icons/uk.svg"
 import { Copy } from "react-feather"
+import { normalizeVirtualIban } from "../utils/virtualIban"
 
 
 const FLAGS = { MT, GB }
 const DoneStep = ({ jurisdiction, iban, onGoToAccount }) => {
     const { t } = useTranslation()
     const info = getJurisdiction(jurisdiction)
-    const ibanNumber = iban?.iban || info.iban
-    const bic = iban?.bank?.bic || iban?.swift_code || info.bic
-    const currency = iban?.currency || info.currencyCode
-    const status = iban?.status || "ACTIVE"
+    const mappedIban = normalizeVirtualIban(iban) || {}
+    const ibanNumber = mappedIban?.iban || info.iban
+    const bic = mappedIban?.bank?.bic || mappedIban?.swift_code || info.bic
+    const currency = mappedIban?.currency || info.currencyCode
+    const status = mappedIban?.status || "ACTIVE"
 
     const copyIban = () => {
         navigator.clipboard?.writeText(ibanNumber.replace(/\s/g, ""))

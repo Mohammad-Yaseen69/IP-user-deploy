@@ -1,26 +1,16 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { apiWrapper } from "../../../utils/Functions/apiWrapper"
+import {
+    asVirtualIban,
+    asVirtualIbanArray,
+    unwrapVirtualIbanResponse,
+} from "../utils/virtualIban"
 
 export const virtualIbanQueryKeys = {
     all: ["virtual-iban"],
     list: () => [...virtualIbanQueryKeys.all, "list"],
     detail: (id) => [...virtualIbanQueryKeys.all, "detail", id],
     balance: (id) => [...virtualIbanQueryKeys.all, "balance", id],
-}
-
-const unwrap = (res) => res?.data?.data ?? res?.data ?? res
-
-const asArray = (value) => {
-    const unwrapped = unwrap(value)
-
-    if (Array.isArray(unwrapped)) return unwrapped
-    if (Array.isArray(unwrapped?.data)) return unwrapped.data
-    if (Array.isArray(unwrapped?.ibans)) return unwrapped.ibans
-    if (Array.isArray(unwrapped?.virtualIbans)) return unwrapped.virtualIbans
-    if (Array.isArray(unwrapped?.items)) return unwrapped.items
-    if (Array.isArray(unwrapped?.results)) return unwrapped.results
-
-    return []
 }
 
 export const useVirtualIbans = () =>
@@ -33,8 +23,7 @@ export const useVirtualIbans = () =>
                 isDecrypted: true,
             })
 
-            console.log(res, "res in useVirtualIbans")
-            return res?.data || []
+            return asVirtualIbanArray(res)
         },
     })
 
@@ -45,9 +34,10 @@ export const useVirtualIbanDetails = (ibanId) =>
             const res = await apiWrapper({
                 endpoint: `/api/virtual-iban/${ibanId}`,
                 method: "GET",
-                isDecrypted: false,
+                isDecrypted: true,
             })
-            return unwrap(res)
+
+            return asVirtualIban(res)
         },
         enabled: !!ibanId,
     })
@@ -59,9 +49,9 @@ export const useSyncVirtualIbanBalance = (ibanId) =>
             const res = await apiWrapper({
                 endpoint: `/api/virtual-iban/balance/${ibanId}`,
                 method: "GET",
-                isDecrypted: false,
+                isDecrypted: true,
             })
-            return unwrap(res)
+            return unwrapVirtualIbanResponse(res)
         },
         enabled: !!ibanId,
     })
@@ -101,7 +91,7 @@ export const useExecuteVirtualIbanTransfer = () => {
                 method: "POST",
                 payload,
                 isEncrypted: true,
-                isDecrypted: false,
+                isDecrypted: true,
             }),
         onSuccess: (_, variables) => {
             queryClient.invalidateQueries({ queryKey: virtualIbanQueryKeys.list() })

@@ -4,8 +4,7 @@ import styles from "../styles/AccountsSidebar.module.css"
 import VirtualIbanModal from "../VirtualIbanModal"
 import UK_Image from "../files/images/UK.svg"
 import Malta_Image from "../files/images/Malta.svg"
-
-const getIbanCountry = (iban = "") => iban.slice(0, 2).toUpperCase()
+import { getVirtualIbanCountry } from "../utils/virtualIban"
 
 const AccountsSidebar = ({ selectedAccount, onSelect, accounts = [], isLoading }) => {
     const [showModal, setShowModal] = useState(false)
@@ -35,7 +34,7 @@ const AccountsSidebar = ({ selectedAccount, onSelect, accounts = [], isLoading }
                 {
                     accounts.map((acc, index) => {
                         const id = acc?._id || acc?.id
-                        const country = getIbanCountry(acc?.iban)
+                        const country = getVirtualIbanCountry(acc)
 
                         return (
                             <div
@@ -45,7 +44,7 @@ const AccountsSidebar = ({ selectedAccount, onSelect, accounts = [], isLoading }
                             >
                                 <input type="radio" checked={selectedAccount === id} readOnly />
                                 <div className={styles.flagBox}>
-                                    <img src={country === "UK" ? UK_Image : Malta_Image} alt="" />
+                                    <img src={country === "GB" ? UK_Image : Malta_Image} alt="" />
                                 </div>
 
                                 <div className={styles.accInfo}>
