@@ -15,6 +15,7 @@ import { useNavigate } from 'react-router';
 import TrustpaymentPage from '../AddFunds/WalletFund/CreditTransaction';
 import { apiErrorMessage } from './InternationalFlow';
 import { useQueryClient } from '@tanstack/react-query';
+import { useIdempotency } from '../../hooks/Payments/useIdempotency';
 
 export const possibleErrors = {
     sdl400: "Daily Sending Limit exceeded",
@@ -65,6 +66,7 @@ const OTPConfirmation = ({
 }) => {
     const { t } = useTranslation()
     const queryClient = useQueryClient()
+    const { getKey, reset } = useIdempotency()
 
     const numberOfFields = 6;
     const [otpValues, setOTPValues] = useState(Array(numberOfFields).fill(''));
@@ -182,9 +184,7 @@ const OTPConfirmation = ({
                 data.append("otp", otp ? otp.join("") : otpValues.join(""))
                 data.append("token", token || requestObject?.token)
                 data.append("type", authType)
-                axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/insta-payment-request-w2w`, data, {
-                    headers: authHeader
-                })
+                axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/insta-payment-request-w2w`, data, { headers: { ...authHeader, "idempotency-key": getKey() } })
                     .then(res => {
                         const decrypted = decryptData(res.data.data)
                         setIsSaving(false)
