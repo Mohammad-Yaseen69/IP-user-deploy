@@ -218,26 +218,28 @@
     align-self: stretch;
     width: 100%;
     max-width: 1054px;
-    /* Figma width */
     margin: 0 auto;
     text-align: center;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
-/* Icon Styling */
 .iconWrapper {
     display: flex;
-    padding: 16px;
+    width: 52px;
+    height: 52px;
+    padding: var(--sm, 8px);
     justify-content: center;
     align-items: center;
-    border-radius: 50%;
-    background-color: #EEF4FF;
-    /* blue/blue-50 */
-    color: #3538CD;
-    /* Primary Indigo/Blue icon color */
+    gap: 10px;
+    aspect-ratio: 1/1;
+    border-radius: var(--lg, 14px);
+    background: linear-gradient(300deg, #3B17A8, #3B17A8 -48.33%, #5926F0 85.85%);
 }
 
-/* Typography */
+.centerIcon {
+    color: #F2EEFF;
+}
+
 .textContent {
     display: flex;
     flex-direction: column;
@@ -247,7 +249,6 @@
 
 .title {
     color: #101828;
-    /* gray/gray-900 */
     font-size: 24px;
     font-weight: 600;
     line-height: 32px;
@@ -255,22 +256,22 @@
 }
 
 .description {
-    color: #667085;
-    /* Typography/tertiary (gray-500) */
+    color: var(--Typography-tertiary, rgba(31, 31, 33, 0.56));
+    text-align: center;
+    font-family: Inter;
     font-size: 16px;
-    font-weight: 400;
-    line-height: 24px;
-    margin: 0;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 150%;
+    letter-spacing: -0.48px;
 }
 
-/* Buttons Layout */
 .buttonGroup {
     display: flex;
     align-items: center;
     gap: 12px;
 }
 
-/* Base Button Styles */
 .primaryButton,
 .secondaryButton {
     display: inline-flex;
@@ -285,10 +286,8 @@
     transition: all 0.2s ease;
 }
 
-/* Primary Button (+ Add funds) */
 .primaryButton {
     background-color: #444CE7;
-    /* text-primary / Brand blue */
     border: 1px solid #444CE7;
     color: #FFFFFF;
 }
@@ -297,13 +296,11 @@
     background-color: #3538CD;
 }
 
-/* Secondary Button (Copy IBAN) */
 .secondaryButton {
-    background-color: #FFFFFF;
-    border: 1px solid #D0D5DD;
-    /* gray-300 */
+    border-radius: var(--sm, 6px) ;
+    border: none;
+    background: var(--Greyscale-15, #F3F3F4);
     color: #344054;
-    /* gray-700 */
 }
 
 .secondaryButton:hover {

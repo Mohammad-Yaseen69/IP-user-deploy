@@ -2,12 +2,13 @@ import React, { useState } from "react";
 import { MoreHorizontal, Plus } from "react-feather";
 import styles from "../styles/AccountsSidebar.module.css";
 import VirtualIbanModal from "../VirtualIbanModal";
-
+import UK_Image from "../files/images/UK.svg"
+import Malta_Image from "../files/images/Malta.svg"
 
 const accounts = [
     {
         id: 1,
-        flag: "🇬🇧",
+        flag: UK_Image,
         name: "Primary IBAN",
         currency: "GB-IBAN",
         badge: "Active",
@@ -15,7 +16,7 @@ const accounts = [
     },
     {
         id: 2,
-        flag: "🇪🇺",
+        flag: Malta_Image,
         name: "Secondary IBAN",
         currency: "EU-IBAN",
         badge: null,
@@ -47,15 +48,21 @@ const AccountsSidebar = ({ selectedAccount, onSelect, setShowGetIBAN }) => {
                             }`}
                         onClick={() => onSelect(acc.id)}
                     >
-                        <input type="radio" />
+                        <input
+                            type="radio"
+                            name="accountSelection"
+                            checked={selectedAccount === acc.id}
+                            onChange={() => onSelect(acc.id)}
+                        />
+
                         <div className={styles.flagBox}>
-                            <span>{acc.flag}</span>
+                            <img src={acc?.flag} alt="" />
                         </div>
-                        <div className={styles.accInfo} >
+
+                        <div className={styles.accInfo}>
                             <span className={styles.accName}>{acc.name}</span>
                             <span className={styles.accCurrency}>{acc.currency}</span>
                         </div>
-                        
                     </div>
                 ))}
 
