@@ -1,9 +1,12 @@
-import React from "react";
 import styles from "../styles/Manage.module.css";
 import { ArrowRight, Download, File, Globe, Sliders } from "react-feather";
 import { FaFingerprint } from "react-icons/fa6";
+import { Tooltip } from "@mui/material";
+import { useNavigate } from "react-router";
 
 const Manage = () => {
+    const navigate = useNavigate()
+
     return (
             <div className={styles.card}>
 
@@ -47,7 +50,10 @@ const Manage = () => {
                         </div>
                     </div>
 
-                    <button className={styles.linkBtn}>
+                    <button
+                        className={styles.linkBtn}
+                        onClick={() => navigate("/geo-fencing")}
+                    >
                         Go to settings <ArrowRight size={15}/>
                     </button>
                 </div>
@@ -64,9 +70,13 @@ const Manage = () => {
                         </div>
                     </div>
 
-                    <button className={styles.linkBtn}>
-                        Download <Download size={15} />
-                    </button>
+                    <Tooltip title="Coming Soon" arrow placement="top">
+                        <span>
+                            <button className={styles.linkBtn}>
+                                Download <Download size={15} />
+                            </button>
+                        </span>
+                    </Tooltip>
                 </div>
 
                 <div className={styles.row}>
@@ -81,7 +91,10 @@ const Manage = () => {
                         </div>
                     </div>
 
-                    <button className={styles.linkBtn}>
+                    <button
+                        className={styles.linkBtn}
+                        onClick={() => navigate("/settings?tab=tfa")}
+                    >
                         Go to settings <ArrowRight size={15}/>
                     </button>
                 </div>
