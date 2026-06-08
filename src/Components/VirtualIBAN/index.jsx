@@ -99,7 +99,7 @@ const VirtualBank = () => {
                                 <MonthlyExpenses />
 
                                 <div className={styles.section}>
-                                    <RecentTransactions />
+                                    <RecentTransactions setActiveTab={setActiveTab} />
                                 </div>
                             </div>
                         )}
@@ -107,7 +107,7 @@ const VirtualBank = () => {
                         {activeTab === "transaction-history" && (
                             <div className={styles.tabContent}>
                                 <div className={styles.section}>
-                                    <RecentTransactions />
+                                    <RecentTransactions setActiveTab={setActiveTab} />
                                 </div>
                             </div>
                         )}
