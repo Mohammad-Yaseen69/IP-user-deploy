@@ -208,7 +208,6 @@ const ConversionModal = ({ isOpen, toggleModal, amount, exchangeAmount, currency
                     const decrypted = decryptData(res.data.data)
                     console.log(decrypted)
                     getUserWallets()
-                    
                     setStep(2)
                 })
                 .catch(err => {
