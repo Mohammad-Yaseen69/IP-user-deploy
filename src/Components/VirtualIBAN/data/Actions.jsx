@@ -3,7 +3,7 @@ import { PlusCircle, ArrowRight } from "react-feather";
 
 
 export const actions = [
-    { id: 1, icon: <PlusCircle size={20} />, label: "Add funds", sub: "Deposit to your account", color: "#6366f1" },
+    { id: 1, icon: <PlusCircle size={20} />, label: "Deposit", sub: "Deposit to your account", color: "#6366f1" },
     {
         id: 2, icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
             <path d="M12.375 10.125L14.625 12.375L12.375 14.625" stroke="#5926F0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />

@@ -4,8 +4,11 @@ import styles from '../styles/IBANDetails.module.css'
 
 const EU_DATA = {
     accountHolderName: 'KEMIT KINGDOM - K2 - SA',
-    iban: 'MT24SYPL39480776971982696571227',
-    bicBankCode: 'SYPLMTM2',
+    IBAN: 'MT24SYPL39480776971982696571227',
+    Bank_name: "SYSTEM PAY SERVICES (MALTA) LIMITED",
+    accNumebr: "Plaza De San Nicolas 4, Bilbao, 48005, ES",
+    Bank_code: "SYPLMTM2"
+
 }
 
 const INTL_DATA = {
@@ -16,7 +19,7 @@ const INTL_DATA = {
         bankCode: 'BBVAESMMXXX',
         bankName: 'Banco Bilbao Vizcaya Argentaria, S.A.',
         bankAddress: 'Plaza De San Nicolas 4, Bilbao, 48005, ES',
-        paymentReference: 'REF PY9F4G3',
+        paymentReference: 'REF PY9F4G3'
     },
     eur: {
         beneficiaryName: 'System Pay Services (Malta) Limited',
@@ -67,6 +70,7 @@ const EUPanel = () => {
     return (
         <div className={styles.box2}>
             <div className={styles.detailsContainer}>
+                <p>Add money to this account to top up your vIBAN.</p>
                 <DetailRow
                     label="Account holder name"
                     value={EU_DATA.accountHolderName}
@@ -74,17 +78,42 @@ const EUPanel = () => {
                     copiedKey={copiedKey}
                     onCopy={copy}
                 />
+
                 <DetailRow
                     label="IBAN"
-                    value={EU_DATA.iban}
-                    copyKey="iban"
+                    value={EU_DATA.IBAN}
+                    copyKey="bic"
+                    copiedKey={copiedKey}
+                    onCopy={copy}
+                    mono
+                />
+                <DetailRow
+                    label="Bank name"
+                    value={EU_DATA.Bank_name}
+                    copyKey="bic"
+                    copiedKey={copiedKey}
+                    onCopy={copy}
+                    mono
+                />
+                <DetailRow
+                    label="Bank address"
+                    value={EU_DATA.Bank_name}
+                    copyKey="bic"
+                    copiedKey={copiedKey}
+                    onCopy={copy}
+                    mono
+                />
+                <DetailRow
+                    label="Payment reference"
+                    value={EU_DATA.Bank_name}
+                    copyKey="bic"
                     copiedKey={copiedKey}
                     onCopy={copy}
                     mono
                 />
                 <DetailRow
                     label="BIC / Bank Code"
-                    value={EU_DATA.bicBankCode}
+                    value={EU_DATA.Bank_code}
                     copyKey="bic"
                     copiedKey={copiedKey}
                     onCopy={copy}
@@ -139,20 +168,23 @@ const InternationalPanel = () => {
 
 
                 <div className={styles.detailsContainer}>
-                    <DetailRow label="Beneficiary name" value={data.beneficiaryName} copyKey="bname" copiedKey={copiedKey} onCopy={copy} />
-                    <DetailRow label="Beneficiary address" value={data.beneficiaryAddress} copyKey="baddr" copiedKey={copiedKey} onCopy={copy} />
-                    <DetailRow label="Account number" value={data.accountNumber} copyKey="accno" copiedKey={copiedKey} onCopy={copy} mono />
-                    <DetailRow label="Bank Code" value={data.bankCode} copyKey="bcode" copiedKey={copiedKey} onCopy={copy} mono />
-                    <DetailRow label="Bank name" value={data.bankName} copyKey="bname2" copiedKey={copiedKey} onCopy={copy} />
-                    <DetailRow label="Bank address" value={data.bankAddress} copyKey="baddr2" copiedKey={copiedKey} onCopy={copy} />
-                    <DetailRow label="Payment reference" value={data.paymentReference} copyKey="ref" copiedKey={copiedKey} onCopy={copy} mono />
-                </div>
-
+                    <p>Add money to this account to top up your vIBAN.</p>
+                    <DetailRow label="Beneficiary name" value={data.beneficiaryName} />
+                    <DetailRow label="Beneficiary address" value={data.beneficiaryAddress} />
+                    <DetailRow label="Account number" value={data.accountNumber} />
+                    <DetailRow label="Bank Code" value={data.bankCode} />
+                    <DetailRow label="Bank name" value={data.bankName} />
+                    <DetailRow label="Bank address" value={data.bankAddress} />
+                    <DetailRow label="Payment reference" value={data.paymentReference} /></div>
+                <button className={styles.copyButton} onClick={() => copy(allText, 'all-eu')}>
+                    {copiedKey === 'all-eu'
+                        ? <><Check size={15} /><span>Copied!</span></>
+                        : <><Copy size={15} /><span>Copy all details</span></>}
+                </button>
                 <div className={styles.warningNotice}>
                     <AlertCircle size={15} className={styles.warningIcon} />
                     <p className={styles.warningText}>
-                        Please ensure correct reference number is quoted in payment instruction else we will
-                        not be able to automatically credit funds to your account, which may cause additional delays.
+                        Please ensure correct reference number is quoted in payment instruction else we will not be able to automatically credit funds to your account, which may cause additional delays.
                     </p>
                 </div>
 

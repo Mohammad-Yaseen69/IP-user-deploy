@@ -78,3 +78,51 @@
     line-height: 150%;
     letter-spacing: -0.33px;
 }
+
+.modalOverlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    padding: 20px;
+}
+
+.modalContent {
+    background: #fff;
+    width: 100%;
+    max-width: 1100px;
+    max-height: 90vh;
+    overflow-y: auto;
+    border-radius: 20px;
+    padding: 24px;
+    position: relative;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+}
+
+.closeBtn {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    width: 36px;
+    height: 36px;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    background-color: white;
+
+}
+
+.closeBtn:hover {
+    background: #e5e7eb;
+}
+
+@media (max-width: 768px) {
+    .modalContent {
+        max-width: 100%;
+        padding: 16px;
+        border-radius: 16px;
+    }
+}

@@ -35,7 +35,7 @@ const statusColors = {
   failed: { bg: "rgba(239,68,68,0.1)", color: "#ef4444" },
 };
 
-const RecentTransactions = () => {
+const RecentTransactions = ({setActiveTab}) => {
   const [search, setSearch] = useState("");
 
   const filtered = transactions.filter(
@@ -52,7 +52,7 @@ const RecentTransactions = () => {
     <>
       <div className={styles.header}>
         <h3 className={styles.title}>Recent Transactions</h3>
-        <button className={styles.viewAll}>View All</button>
+        <button className={styles.viewAll} onClick={()=>setActiveTab("transaction-history")}>View All</button>
       </div>
 
       <div className={styles.section}>

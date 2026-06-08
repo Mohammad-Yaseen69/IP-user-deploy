@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import useWindowWidth from '../../utils/useWindowWidth'
 import TopRight from '../topRight'
@@ -18,6 +18,7 @@ const VirtualBank = () => {
     const [selectedAccount, setSelectedAccount] = useState(1);
     const [activeTab, setActiveTab] = useState("overview");
     const [showGetIBAN, setShowGetIBAN] = useState(false);
+    const ibanDetailsRef = useRef(null);
 
     const handleOpenIBAN = () => {
         setShowGetIBAN(true);
@@ -28,6 +29,12 @@ const VirtualBank = () => {
         setShowGetIBAN(false);
         setSelectedAccount(1);
     };
+
+    useEffect(() => {
+        if (activeTab === "ibanassets" && ibanDetailsRef.current) {
+            ibanDetailsRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+    }, [activeTab]);
     return (
         <div className={styles.container}>
             <div className={styles.top}>
@@ -52,7 +59,7 @@ const VirtualBank = () => {
                             setShowGetIBAN={setShowGetIBAN}
                         />
                         <div className={styles.panelDivider} />
-                        <BalanceHeader />
+                        <BalanceHeader setActiveTab={setActiveTab} />
                     </div>
 
                     <div className={styles.section}>
@@ -68,7 +75,7 @@ const VirtualBank = () => {
                             <MonthlyExpenses />
 
                             <div className={styles.section}>
-                                <RecentTransactions />
+                                <RecentTransactions setActiveTab={setActiveTab} />
                             </div>
                         </div>
                     )}
@@ -76,13 +83,13 @@ const VirtualBank = () => {
                     {activeTab === "transaction-history" && (
                         <div className={styles.tabContent}>
                             <div className={styles.section}>
-                                <RecentTransactions />
+                                <RecentTransactions setActiveTab={setActiveTab} />
                             </div>
                         </div>
                     )}
 
                     {activeTab === "ibanassets" && (
-                        <div className={styles.tabContent}>
+                        <div className={styles.tabContent} ref={ibanDetailsRef}>
                             <div className={styles.section}>
                                 <IBANDetails />
                             </div>

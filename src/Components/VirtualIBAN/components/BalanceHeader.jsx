@@ -3,7 +3,7 @@ import { Copy, ArrowUpRight, Eye } from "react-feather";
 import styles from "../styles/Balanceheader.module.css";
 import UK_Image from "../files/images/UK.svg"
 
-const BalanceHeader = () => {
+const BalanceHeader = ({ setActiveTab }) => {
   const handleCopy = (text) => {
     navigator.clipboard.writeText(text);
   };
@@ -17,7 +17,10 @@ const BalanceHeader = () => {
         </div>
 
         <div className={styles.rightActions}>
-          <button className={styles.iconBtn}>
+          <button
+            onClick={() => setActiveTab("ibanassets")}
+
+            className={styles.iconBtn}>
             <span>Virtual bank details</span>
             <ArrowUpRight size={16} />
           </button>
@@ -27,9 +30,9 @@ const BalanceHeader = () => {
       <div className={styles.balanceSection}>
         <div>
           <h1 className={styles.balance}>€0.00 <span>.00</span></h1>
-          <Eye color="#5926F0" size={15} />
+          {/* <Eye color="#5926F0" size={15} /> */}
         </div>
-        <span className={styles.growth}><ArrowUpRight size={15} /> 0.00%</span>
+        {/* <span className={styles.growth}><ArrowUpRight size={15} /> 0.00%</span> */}
       </div>
 
       <div className={styles.infoBox}>

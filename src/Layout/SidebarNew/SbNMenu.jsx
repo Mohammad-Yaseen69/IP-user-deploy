@@ -85,6 +85,16 @@ export const MENU = [
                 permission: "mastercard.view"
             },
             {
+                title: "My virtual IBAN",
+                url: "/virtual-IBAN",
+
+                icon: <img loading="lazy" src={v_bank} style={{ marginRight: "12px" }} />,
+                activeIcon: <img loading="lazy" src={v_bank_a} style={{ marginRight: "12px" }} />,
+                type: "link",
+                url: `${window.location.origin}/virtual-IBAN`,
+                permission: "analytics.view"
+            },
+            {
                 title: "Transactions",
                 icon: <img loading="lazy" src={tran} style={{ marginRight: "12px" }} />,
                 activeIcon: <img loading="lazy" src={tran_a} style={{ marginRight: "12px" }} />,
@@ -205,16 +215,7 @@ export const MENU = [
                 url: `${window.location.origin}/analytics`,
                 permission: "analytics.view"
             },
-            {
-                title: "My virtual IBAN",
-                url: "/virtual-IBAN",
 
-                icon: <img loading="lazy" src={v_bank} style={{ marginRight: "12px" }} />,
-                activeIcon: <img loading="lazy" src={v_bank_a} style={{ marginRight: "12px" }} />,
-                type: "link",
-                url: `${window.location.origin}/virtual-IBAN`,
-                permission: "analytics.view"
-            },
             // {
             //     title: "Store",
             //     icon: <img loading="lazy" src={shopingcard} style={{ marginRight: "12px" }} />,

@@ -38,7 +38,9 @@ const AccountsSidebar = ({ selectedAccount, onSelect, setShowGetIBAN }) => {
 
     return (
         <div className={styles.sidebar}>
-            <p className={styles.label}>Your accounts <span> <MoreHorizontal /></span></p>
+            <p className={styles.label}>Your accounts 
+                {/* <span> <MoreHorizontal /></span> */}
+            </p>
 
             <div className={styles.accountItemCon}>
                 {accounts.map((acc) => (
