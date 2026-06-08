@@ -21,49 +21,6 @@
     align-self: stretch;
 }
 
-.searchCont {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    width: 100%;
-
-    .search {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        width: 100%;
-        border-radius: var(--SPACING-spacing-0, 8px);
-        background: #FFF;
-        box-shadow: 0 4.328px 35.702px 0 rgba(0, 0, 0, 0.06);
-        padding: 8px 14px;
-
-        input {
-            border: none;
-            outline: none;
-            padding: 0px;
-            font-weight: 600;
-        }
-    }
-}
-
-.desktopViewOnly {
-    display: block;
-}
-
-.mobileViewOnly {
-    display: none;
-}
-
-@media (max-width: 700px) {
-    .desktopViewOnly {
-        display: none !important;
-    }
-
-    .mobileViewOnly {
-        display: block !important;
-    }
-}
-
 .top div {
     display: flex;
     justify-content: space-between;

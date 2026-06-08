@@ -32,14 +32,8 @@ export const deletePlan = async (planId) => {
     return decryptData(response.data.data)?.data
 }
 
-export const getUserPlans = async (username, isPaymentAddress = false, search = "") => {
-    const params = new URLSearchParams({
-        type: "private",
-        isPaymentAddress: String(isPaymentAddress),
-        ...(search && { search: search.trim() }),
-    })
-
-    const response = await axios.get(`${path}/get-user-plans/${username}?${params.toString()}`, {
+export const getUserPlans = async (username, isPaymentAddress = false) => {
+    const response = await axios.get(`${path}/get-user-plans/${username}?type=private&isPaymentAddress=${isPaymentAddress}`, {
         headers: getAuthHeader(),
     })
     return decryptData(response.data.data)?.data
