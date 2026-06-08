@@ -290,9 +290,9 @@ const VirtualIbanModal = ({ isOpen, toggle, onCreated }) => {
     }, [existingIbans])
 
     useEffect(() => {
-        // if (jurisdiction && jurisdictionAvailability?.[jurisdiction]?.disabledReason) {
-        //     setJurisdiction("")
-        // }
+        if (jurisdiction && jurisdictionAvailability?.[jurisdiction]?.disabledReason) {
+            setJurisdiction("")
+        }
     }, [jurisdiction, jurisdictionAvailability])
 
     useEffect(() => {
@@ -539,11 +539,11 @@ const VirtualIbanModal = ({ isOpen, toggle, onCreated }) => {
     }
 
     const handleContinue = async () => {
-        // if (currentStep === STEPS.JURISDICTION && jurisdictionAvailability?.[jurisdiction]?.disabledReason) {
-        //     toast.error(t(jurisdictionAvailability[jurisdiction].disabledReason))
-        //     setJurisdiction("")
-        //     return
-        // }
+        if (currentStep === STEPS.JURISDICTION && jurisdictionAvailability?.[jurisdiction]?.disabledReason) {
+            toast.error(t(jurisdictionAvailability[jurisdiction].disabledReason))
+            setJurisdiction("")
+            return
+        }
 
         if (currentStep === STEPS.SUMMARY) {
             await handleSendOtp()
@@ -582,7 +582,7 @@ const VirtualIbanModal = ({ isOpen, toggle, onCreated }) => {
                     <JurisdictionStep
                         jurisdiction={jurisdiction}
                         setJurisdiction={setJurisdiction}
-                        // availability={jurisdictionAvailability}
+                        availability={jurisdictionAvailability}
                     />
                 )
             case STEPS.FEES:

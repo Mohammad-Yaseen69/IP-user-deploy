@@ -11,6 +11,8 @@ const FLAGS = { MT, GB }
 const FeesStep = ({ jurisdiction, feesAccepted, setFeesAccepted }) => {
     const { t } = useTranslation()
     const info = getJurisdiction(jurisdiction)
+    const activationFeeCurrency = info.activationFeeCurrency || "USD"
+    const monthlyFeeCurrency = info.monthlyFeeCurrency || activationFeeCurrency
 
     return (
         <div>
@@ -33,7 +35,7 @@ const FeesStep = ({ jurisdiction, feesAccepted, setFeesAccepted }) => {
 
                     <div>
                         <span className={styles.feeLabel}>{t("ONE TIME")}</span>
-                        <div className={styles.feeAmount}>EUR {info.activationFee}</div>
+                        <div className={styles.feeAmount}>{activationFeeCurrency} {info.activationFee}</div>
                         <div className={styles.feeDesc}>{t("Activation fee")}</div>
                     </div>
                 </div>
@@ -44,7 +46,7 @@ const FeesStep = ({ jurisdiction, feesAccepted, setFeesAccepted }) => {
 
                     <div>
                         <span className={styles.feeLabel}>{t("MONTHLY")}</span>
-                        <div className={styles.feeAmount}>EUR {info.monthlyFee}</div>
+                        <div className={styles.feeAmount}>{monthlyFeeCurrency} {info.monthlyFee}</div>
                         <div className={styles.feeDesc}>{t("Maintenance fee")}</div>
                     </div>
                 </div>
@@ -72,7 +74,13 @@ const FeesStep = ({ jurisdiction, feesAccepted, setFeesAccepted }) => {
                 />
                 <p>
                     {t(
-                        "I understand and agree to the fees above. I authorise InstaPay to charge the activation fee of EUR 4.00 and monthly fee of EUR 4.99 from my selected wallet."
+                        "I understand and agree to the fees above. I authorise InstaPay to charge the activation fee of {{activationFeeCurrency}} {{activationFee}} and monthly fee of {{monthlyFeeCurrency}} {{monthlyFee}} from my selected wallet.",
+                        {
+                            activationFeeCurrency,
+                            activationFee: info.activationFee,
+                            monthlyFeeCurrency,
+                            monthlyFee: info.monthlyFee,
+                        }
                     )}
                 </p>
             </label>

@@ -12,7 +12,7 @@ export const STEPS = {
 }
 
 export const VIRTUAL_IBAN_ACTIVATION_FEE = 4
-export const VIRTUAL_IBAN_ACTIVATION_FEE_CURRENCY = "EUR"
+export const VIRTUAL_IBAN_ACTIVATION_FEE_CURRENCY = "USD"
 
 export const JURISDICTIONS = {
     MT: {
@@ -27,6 +27,7 @@ export const JURISDICTIONS = {
         activationFee: "4.00",
         activationFeeCurrency: VIRTUAL_IBAN_ACTIVATION_FEE_CURRENCY,
         monthlyFee: "4.99",
+        monthlyFeeCurrency: VIRTUAL_IBAN_ACTIVATION_FEE_CURRENCY,
         included: [
             "Dedicated MT IBAN registered in your name",
             "SEPA + SWIFT receiving worldwide",
@@ -46,6 +47,7 @@ export const JURISDICTIONS = {
         activationFee: "4.00",
         activationFeeCurrency: VIRTUAL_IBAN_ACTIVATION_FEE_CURRENCY,
         monthlyFee: "4.99",
+        monthlyFeeCurrency: VIRTUAL_IBAN_ACTIVATION_FEE_CURRENCY,
         included: [
             "Dedicated GB IBAN registered in your name",
             "Faster Payments + SWIFT receiving",
@@ -223,6 +225,6 @@ export const buildMockFeeDetails = (jurisdiction, paymentType, paymentFee = {}) 
 
 export const MOCK_WALLET_STATE = {
     _id: "mock-wallet",
-    name: "EUR",
-    wallet_id: "EUR-WALLET-001",
+    name: "USD",
+    wallet_id: "USD-WALLET-001",
 }
