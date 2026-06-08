@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { ChevronDown } from "react-feather";
-import styles from "../styles/MonthlyExpenses.module.css";
+import styles from "../styles/Monthlyexpenses.module.css";
 import IncomeExpenseChart from "./IncomeExpenseChart";
 
 const expenseData = [
