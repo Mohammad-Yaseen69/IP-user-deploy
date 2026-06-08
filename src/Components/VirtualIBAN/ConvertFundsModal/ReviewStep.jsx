@@ -1,57 +1,70 @@
 import { useTranslation } from "react-i18next"
-import { getExchangeRate } from "../../../stateMachines/convertFunds"
 import styles from "./convertFunds.module.scss"
 
-const ReviewStep = ({ amount, wallet }) => {
+const formatAmount = (amount) => {
+    const num = Number(amount || 0)
+    return num.toLocaleString("en-US", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+    })
+}
+
+const MoneyValue = ({ value }) => {
+    if (!value) return "-"
+    return `${value.currency} ${formatAmount(value.value)}`
+}
+
+const ReviewStep = ({ amount, wallet, feeDetails, iban }) => {
     const { t } = useTranslation()
-
-
-    const rateInfo = 1
-    const formatAmount = (val) => {
-        const num = parseFloat(val)
-        if (isNaN(num)) return val
-        return num.toLocaleString("en-US", {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2,
-        })
-    }
-
-    const convertedAmount = (parseFloat(amount) * rateInfo.rate).toFixed(2)
 
     return (
         <div>
             <div className={styles.reviewLabel}>{t("Review & Confirm")}</div>
             <div className={styles.reviewTable}>
-                {/* From */}
-                {/* <div className={styles.reviewRow}>
+                <div className={styles.reviewRow}>
                     <span className={styles.reviewRowLabel}>{t("From")}</span>
-                    <span className={styles.reviewRowValue}>
-                        {fromWallet} {t("Wallet")}
-                    </span>
-                </div> */}
-
-
+                    <span className={styles.reviewRowValue}>{iban?.currency} IBAN</span>
+                </div>
 
                 <div className={styles.reviewRow}>
                     <span className={styles.reviewRowLabel}>{t("Amount")}</span>
                     <span className={styles.reviewRowValue}>
-                        {"EUR"} {formatAmount(amount)}
+                        {iban?.currency} {formatAmount(amount)}
                     </span>
                 </div>
 
-                {/* Exchange Rate */}
-                {/* <div className={styles.reviewRow}>
+                <div className={styles.reviewRow}>
+                    <span className={styles.reviewRowLabel}>{t("Fee")}</span>
+                    <span className={styles.reviewRowValue}>
+                        <MoneyValue value={feeDetails?.fee} />
+                    </span>
+                </div>
+
+                <div className={styles.reviewRow}>
+                    <span className={styles.reviewRowLabel}>{t("Total")}</span>
+                    <span className={styles.reviewRowValue}>
+                        <MoneyValue value={feeDetails?.total || feeDetails?.sending} />
+                    </span>
+                </div>
+
+                <div className={styles.reviewRow}>
                     <span className={styles.reviewRowLabel}>{t("Exchange Rate")}</span>
                     <span className={styles.reviewRowValue}>
-                        1 {fromWallet} = {rateInfo.rate} {toWallet}
+                        <MoneyValue value={feeDetails?.exchanged_rate} />
                     </span>
-                </div> */}
+                </div>
 
-                {/* You Receive */}
                 <div className={styles.reviewRow}>
                     <span className={styles.reviewRowLabel}>{t("You Receive")}</span>
                     <span className={styles.reviewRowValue}>
-                        {wallet?.currency?.code} {formatAmount(convertedAmount)}
+                        <MoneyValue value={feeDetails?.recipient} />
+                    </span>
+                </div>
+
+                <div className={styles.reviewRow}>
+                    <span className={styles.reviewRowLabel}>{t("Destination")}</span>
+                    <span className={styles.reviewRowValue}>
+                        {wallet?.currency?.code || wallet?.name} {t("Wallet")}
                     </span>
                 </div>
             </div>
