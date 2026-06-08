@@ -1,0 +1,308 @@
+.section {
+    border-radius: var(--md, 10px);
+    border: 1px solid var(--Border-primary, #E7E7E7);
+    background: #FFF;
+    padding: 18px 20px;
+    width: 100%;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+    width: 100%;
+}
+
+.title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+.viewAll {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--accent-color);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 6px;
+    transition: background 0.15s;
+    text-decoration: underline;
+    color: #444CE7;
+}
+
+.viewAll:hover {
+    background: var(--accent-light);
+}
+
+.toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+
+}
+
+.searchBox {
+    position: relative;
+    display: flex;
+    align-items: center;
+    flex: 1;
+    max-width: 100%;
+    border-radius: 8px;
+    border: 1px solid var(--Greyscale-50, #E7E9E9);
+    background: var(--Greyscale-0, #FFF);
+
+    /* Card/Small */
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.03);
+}
+
+.searchIcon {
+    position: absolute;
+    left: 10px;
+    color: var(--text-muted);
+}
+
+.searchInput {
+    width: 100%;
+    padding: 8px 12px 8px 32px;
+    border: 1px solid var(--border-color);
+    border-radius: 9px;
+    background: var(--input-bg);
+    color: var(--text-primary);
+    font-size: 12.5px;
+    outline: none;
+    transition: border-color 0.15s;
+}
+
+.searchInput::placeholder {
+    color: var(--text-muted);
+}
+
+.searchInput:focus {
+    border-color: var(--accent-color);
+}
+
+.toolbarRight {
+    display: flex;
+    gap: 8px;
+}
+
+.toolBtn {
+    display: flex;
+    height: 36px;
+    padding: var(--sm, 8px) var(--md, 16px);
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    border-radius: var(--sm, 6px);
+    background: var(--Greyscale-15, #F3F3F4);
+    border: none;
+}
+
+.toolBtn:hover {
+    background: var(--hover-bg);
+    color: var(--text-primary);
+}
+
+.tableWrapper {
+    overflow-x: auto;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table thead {
+    border-bottom: 1px solid var(--border-color);
+    background: var(--bg-surface, #EFF1F6);
+    border-radius: 20px;
+}
+
+.table thead tr th {
+    color: var(--gray-gray-600, #6E7687) !important;
+
+    font-family: Inter;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    letter-spacing: -0.42px;
+    padding: 8px 12px;
+    text-align: left;
+
+    white-space: nowrap;
+}
+
+.row {
+    transition: background 0.12s ease;
+    color: var(--gray-gray-600, #6E7687) !important;
+
+}
+
+.row:hover {
+    background: var(--hover-bg);
+}
+
+.row td {
+    font-size: 12.5px;
+    color: var(--text-secondary);
+    padding: 12px 12px;
+    border-bottom: 1px solid var(--border-light);
+    white-space: nowrap;
+}
+
+.dateCell {
+    color: var(--Light-Mode-Text, #151514) !important;
+    font-family: Inter;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 150%;
+    letter-spacing: -0.42px;
+}
+
+.typeCell {
+    color: var(--text-secondary, #6E7687);
+    font-family: Inter;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 150%;
+    letter-spacing: -0.42px;
+}
+
+
+
+.txId {
+    color: var(--text-secondary, #6E7687) !important;
+    font-family: Inter;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 150%;
+    letter-spacing: -0.42px;
+}
+
+.amount {
+    color: var(--text-secondary, #6E7687);
+    font-family: Inter;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 150%;
+    letter-spacing: -0.42px;
+}
+
+.badge {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 9px;
+    border-radius: 20px;
+}
+
+.emptyContainer {
+    display: flex;
+    padding: 48px 0;
+    flex-direction: column;
+    align-items: center;
+    gap: 32px;
+    align-self: stretch;
+    width: 100%;
+    max-width: 1054px;
+    margin: 0 auto;
+    text-align: center;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.iconWrapper {
+    display: flex;
+    width: 52px;
+    height: 52px;
+    padding: var(--sm, 8px);
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    aspect-ratio: 1/1;
+    border-radius: var(--lg, 14px);
+    background: linear-gradient(300deg, #3B17A8, #3B17A8 -48.33%, #5926F0 85.85%);
+}
+
+.centerIcon {
+    color: #F2EEFF;
+}
+
+.textContent {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-width: 600px;
+}
+
+.title {
+    color: #101828;
+    font-size: 24px;
+    font-weight: 600;
+    line-height: 32px;
+    margin: 0;
+}
+
+.description {
+    color: var(--Typography-tertiary, rgba(31, 31, 33, 0.56));
+    text-align: center;
+    font-family: Inter;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 150%;
+    letter-spacing: -0.48px;
+}
+
+.buttonGroup {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.primaryButton,
+.secondaryButton {
+    display: inline-flex;
+    padding: 10px 18px;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.primaryButton {
+    background-color: #444CE7;
+    border: 1px solid #444CE7;
+    color: #FFFFFF;
+}
+
+.primaryButton:hover {
+    background-color: #3538CD;
+}
+
+.secondaryButton {
+    border-radius: var(--sm, 6px) ;
+    border: none;
+    background: var(--Greyscale-15, #F3F3F4);
+    color: #344054;
+}
+
+.secondaryButton:hover {
+    background-color: #F9FAFB;
+}

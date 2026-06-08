@@ -1,0 +1,139 @@
+.sidebar {
+    display: flex;
+    width: 299px;
+    padding: var(--md, 16px);
+    flex-direction: column;
+    align-items: flex-start;
+    border-radius: var(--md, 10px);
+    border: 1px solid #E4DBFF;
+    background: #FFF;
+}
+
+.label {
+    color: var(--gray-gray-900, #1B1F2A);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-family: Inter;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 150%;
+    letter-spacing: -0.42px;
+    width: 100%;
+    border-bottom: 1px dotted #E1E5EE;
+    padding-bottom: 10px;
+    span{
+        color: #5926F0;
+    }
+}
+
+.accountItemCon {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--sm, 8px);
+    align-self: stretch;
+    margin-bottom: 8px;
+}
+
+.accountItem {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 12px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.18s ease;
+    border-radius: var(--sm, 6px);
+    background: var(--bg-canvas, #F8F9FC);
+    width: 100%;
+
+}
+
+.accountItem:hover {
+    background: var(--hover-bg);
+}
+
+.accountItem.selected {
+    border-radius: var(--sm, 6px);
+    border: 1px solid #E4DBFF;
+    background: #F2EEFF;
+}
+
+.flagBox {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--flag-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
+}
+
+.accInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    flex: 1;
+}
+
+.accName {
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--text-primary);
+    white-space: nowrap;
+}
+
+.accCurrency {
+    color: var(--text-muted, #9AA3B2);
+
+    font-family: Inter;
+    font-size: 11px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 150%;
+    letter-spacing: -0.33px;
+}
+
+.activeBadge {
+    font-size: 9.5px;
+    font-weight: 600;
+    color: #22c55e;
+    background: rgba(34, 197, 94, 0.1);
+    border: 1px solid rgba(34, 197, 94, 0.25);
+    padding: 2px 7px;
+    border-radius: 20px;
+}
+
+.openNew {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: var(--sm, 8px);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.18s ease;
+    border-radius: var(--sm, 6px);
+    background: var(--bg-canvas, #F8F9FC);
+    width: 100%;
+}
+
+
+.openNew:hover {
+    background: var(--hover-bg);
+}
+
+.plusIcon {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--accent-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--accent-color);
+    flex-shrink: 0;
+}

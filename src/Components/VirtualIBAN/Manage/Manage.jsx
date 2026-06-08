@@ -1,0 +1,93 @@
+import React from "react";
+import styles from "../styles/Manage.module.css";
+import { ArrowRight, Download, File, Globe, Sliders } from "react-feather";
+import { FaFingerprint } from "react-icons/fa6";
+
+const Manage = () => {
+    return (
+            <div className={styles.card}>
+
+                <div className={styles.section}>
+                    <div className={styles.header}>
+                        <div className={styles.icon}><Sliders
+                            size={24}
+                            color="#5926F0"
+                            strokeWidth={2}
+                        /></div>
+                        <div>
+                            <h3>Limits & controls</h3>
+                            <p>Configure transfer limits and regional restrictions</p>
+                        </div>
+                    </div>
+
+                    <div className={styles.inputs}>
+                        <div className={styles.inputGroup}>
+                            <label>Daily outgoing limit</label>
+                            <input type="text" value="€1500.00" readOnly />
+                        </div>
+
+                        <div className={styles.inputGroup}>
+                            <label>Per transaction limit</label>
+                            <input type="text" value="€1500.00" readOnly />
+                        </div>
+
+                        <div className={styles.inputGroup}>
+                            <label>Monthly volume threshold</label>
+                            <input type="text" value="€1500.00" readOnly />
+                        </div>
+                    </div>
+                </div>
+
+                <div className={styles.row}>
+                    <div className={styles.left}>
+                        <div className={styles.icon}><Globe color="#5926F0" /></div>
+                        <div>
+                            <h4>Payment corridors</h4>
+                            <p>Regional restrictions</p>
+                        </div>
+                    </div>
+
+                    <button className={styles.linkBtn}>
+                        Go to settings <ArrowRight size={15}/>
+                    </button>
+                </div>
+
+                <div className={styles.row}>
+                    <div className={styles.left}>
+                        <div className={styles.icon}><File color="#5926F0" /></div>
+                        <div>
+                            <h4>Legal agreements</h4>
+                            <p>
+                                View and download your signed agreements,
+                                MSAs, and service contracts.
+                            </p>
+                        </div>
+                    </div>
+
+                    <button className={styles.linkBtn}>
+                        Download <Download size={15} />
+                    </button>
+                </div>
+
+                <div className={styles.row}>
+                    <div className={styles.left}>
+                        <div className={styles.icon}><FaFingerprint color="#5926F0" /></div>
+                        <div>
+                            <h4>Security & 2FA</h4>
+                            <p>
+                                Manage password, two-factor authentication,
+                                and active session devices.
+                            </p>
+                        </div>
+                    </div>
+
+                    <button className={styles.linkBtn}>
+                        Go to settings <ArrowRight size={15}/>
+                    </button>
+                </div>
+
+            </div>
+    );
+};
+
+export default Manage;

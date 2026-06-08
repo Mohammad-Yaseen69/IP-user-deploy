@@ -1,0 +1,140 @@
+
+.card {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+    padding: 20px;
+    width: 100%;
+}
+
+.section {
+    margin-bottom: 20px;
+}
+
+.header {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.header h3 {
+    color: var(--text-primary, #1B1F2A);
+    text-align: start;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+}
+
+.header p {
+    color: var(--text-secondary, #6E7687);
+    text-align: center;
+    font-family: Inter;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 150%;
+
+}
+
+.icon {
+    display: flex;
+    width: 48px;
+    height: 48px;
+    padding: var(--sm, 8px);
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+    aspect-ratio: 1/1;
+    border-radius: var(--sm, 6px);
+    background: #F2EEFF;
+}
+
+.inputs {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding: 0 var(--md, 16px);
+
+}
+
+.inputGroup {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+}
+
+.inputGroup label {
+    color: var(--gray-gray-600, #6E7687) !important;
+    text-align: center;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 150%;
+    letter-spacing: -0.48px;
+}
+
+.inputGroup input {
+    width: 30%;
+    padding: 10px 12px;
+    border-radius: var(--sm, 6px);
+    border: 1px solid var(--Greyscale-25, #E4E3E5);
+    background: var(--Greyscale-0, #FFF);
+    box-shadow: 0 1px 1.5px 0 rgba(44, 54, 53, 0.03);
+    text-align: start;
+}
+
+.row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 0;
+    border-top: 1px solid #f1f5f9;
+}
+
+.left {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+}
+
+.left h4 {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-primary, #1B1F2A);
+    text-align: start;
+    font-family: Inter;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 150%;
+    letter-spacing: -0.48px;
+}
+
+.left p {
+    margin-top: 4px;
+    color: var(--text-secondary, #6E7687);
+    text-align: start;
+    font-family: Inter;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 150%;
+    letter-spacing: -0.42px;
+}
+
+.linkBtn {
+    border: none;
+    background: transparent;
+    color: #5b5ce2;
+    cursor: pointer;
+    font-weight: 500;
+    display: flex;
+    height: 32px;
+    padding: 0 12px;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+}

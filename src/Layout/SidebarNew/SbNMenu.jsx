@@ -48,6 +48,8 @@ import delegate_a from "./files/delegate_a.svg";
 import delegate from "./files/delegate.svg";
 import Feed from "./files/Feed.svg";
 import Feed_a from "./files/Feed_a.svg";
+import v_bank_a from "./files/v_bank_a.svg";
+import v_bank from "./files/v_bank.svg";
 
 
 export const MENU = [
@@ -81,6 +83,16 @@ export const MENU = [
                 type: "link",
                 url: `${window.location.origin}/my-mastercard`,
                 permission: "mastercard.view"
+            },
+            {
+                title: "My virtual IBAN",
+                url: "/virtual-IBAN",
+
+                icon: <img loading="lazy" src={v_bank} style={{ marginRight: "12px" }} />,
+                activeIcon: <img loading="lazy" src={v_bank_a} style={{ marginRight: "12px" }} />,
+                type: "link",
+                url: `${window.location.origin}/virtual-IBAN`,
+                permission: "analytics.view"
             },
             {
                 title: "Transactions",
@@ -203,6 +215,7 @@ export const MENU = [
                 url: `${window.location.origin}/analytics`,
                 permission: "analytics.view"
             },
+
             // {
             //     title: "Store",
             //     icon: <img loading="lazy" src={shopingcard} style={{ marginRight: "12px" }} />,
