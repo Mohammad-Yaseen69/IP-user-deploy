@@ -215,7 +215,7 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
         }
         api_timeout = setTimeout(() => {
             if (data?.amount && data?.currency) {
-                if (!data.payer?.id) {
+                if (!data.payer?.id || !data.country?.id) {
                     setLoading(false)
                 } else {
                     getExchangeRate(String(data?.amount)?.replaceAll(",", ""), setLimitType, "", data.currency, true, setter)
@@ -275,7 +275,7 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
             const pos = cursor + (newLen - prevLen);
             e.target.setSelectionRange(pos, pos);
         });
-        if (data?.currency && data?.payer && data.country && data?.payoutChannel) {
+        if (data?.currency && data?.payer?.id && data?.country?.id && data?.payoutChannel?.id) {
             dataHandler("exchange_rate", {})
             dataHandler("exchange_rate_error", "")
             if (api_timeout) {
@@ -296,7 +296,7 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
     const handleKeyUpR = (e) => {
         formatCurrency(e.target.value, false, setValueR);
 
-        if (data?.currency && data?.payer && data.country && data?.payoutChannel) {
+        if (data?.currency && data?.payer?.id && data?.country?.id && data?.payoutChannel?.id) {
             dataHandler("exchange_rate", {})
             dataHandler("exchange_rate_error", "")
             if (api_timeout) {
@@ -595,6 +595,9 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
                                     dataHandler("country", item)
                                     dataHandler("payoutChannel", {})
                                     dataHandler("payer", {})
+                                    dataHandler("receiving_amount", "")  
+                                    dataHandler("exchange_rate", {})    
+                                    dataHandler("exchange_rate_error", "")
                                 }}
                                 toggle={() => toggleModalHandler("country")}
                                 searchable={true}
