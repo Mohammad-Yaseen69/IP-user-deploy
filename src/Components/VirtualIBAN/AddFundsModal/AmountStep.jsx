@@ -1,40 +1,30 @@
-import { useState } from "react"
 import { useTranslation } from "react-i18next"
+import {
+    formatAmountValue,
+    getAmountNumber,
+    getCurrencySymbol,
+    handleAmountInputBlur,
+    handleAmountInputChange,
+    handleAmountInputKeyUp,
+} from "../utils/amount"
 import styles from "./addFundsModal.module.scss"
 
 const QUICK_AMOUNTS = [100, 500, 2500]
+const MAX_AMOUNT = "53180.07"
 
-const AmountStep = ({ amount, setAmount }) => {
+const AmountStep = ({ amount, setAmount, currencyCode = "EUR" }) => {
     const { t } = useTranslation()
-    const [activeQuick, setActiveQuick] = useState(
-        QUICK_AMOUNTS.includes(parseFloat(amount)) ? parseFloat(amount) : null
-    )
+    const numericAmount = getAmountNumber(amount)
+    const maxAmount = getAmountNumber(MAX_AMOUNT)
+    const activeQuick = QUICK_AMOUNTS.includes(numericAmount) ? numericAmount : null
+    const symbol = getCurrencySymbol(currencyCode)
 
-    const handleQuickSelect = (val) => {
-        setActiveQuick(val)
-        setAmount(val.toString())
+    const handleQuickSelect = (value) => {
+        setAmount(formatAmountValue(value))
     }
 
     const handleMaxClick = () => {
-        setActiveQuick(null)
-        setAmount("53180.07")
-    }
-
-    const handleInputChange = (e) => {
-        const val = e.target.value.replace(/[^0-9.]/g, "")
-        setAmount(val)
-        const numVal = parseFloat(val)
-        setActiveQuick(QUICK_AMOUNTS.includes(numVal) ? numVal : null)
-    }
-
-    const formatDisplay = (val) => {
-        if (!val) return ""
-        const num = parseFloat(val)
-        if (isNaN(num)) return val
-        return num.toLocaleString("en-US", {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2,
-        })
+        setAmount(formatAmountValue(MAX_AMOUNT))
     }
 
     return (
@@ -42,28 +32,30 @@ const AmountStep = ({ amount, setAmount }) => {
             <div className={styles.amountLabel}>{t("Amount to add")}</div>
             <div className={styles.amountInputBox}>
                 <div className={styles.amountDisplay}>
-                    <span className={styles.currencySymbol}>€</span>
+                    <span className={styles.currencySymbol}>{symbol}</span>
                     <input
                         className={styles.amountInput}
                         type="text"
-                        value={formatDisplay(amount)}
-                        onChange={handleInputChange}
+                        value={amount}
+                        onChange={(event) => handleAmountInputChange(event, setAmount)}
+                        onKeyUp={(event) => handleAmountInputKeyUp(event, setAmount)}
+                        onBlur={(event) => handleAmountInputBlur(event, setAmount)}
                         placeholder="0.00"
                         autoFocus
                     />
                 </div>
                 <div className={styles.quickAmounts}>
-                    {QUICK_AMOUNTS.map((val) => (
+                    {QUICK_AMOUNTS.map((value) => (
                         <button
-                            key={val}
-                            className={`${styles.quickBtn} ${activeQuick === val ? styles.active : ""}`}
-                            onClick={() => handleQuickSelect(val)}
+                            key={value}
+                            className={`${styles.quickBtn} ${activeQuick === value ? styles.active : ""}`}
+                            onClick={() => handleQuickSelect(value)}
                         >
-                            €{val.toLocaleString()}
+                            {symbol}{value.toLocaleString()}
                         </button>
                     ))}
                     <button
-                        className={styles.quickBtn}
+                        className={`${styles.quickBtn} ${numericAmount === maxAmount ? styles.active : ""}`}
                         onClick={handleMaxClick}
                     >
                         {t("Max")}

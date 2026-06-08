@@ -23,6 +23,7 @@ import styles from "./convertFunds.module.scss"
 import SidebarProgress from "../VirtualIbanModal/SidebarProgress"
 import PaymentStep from "../../MyMasterCard/PaymentModal/PaymentStep"
 import { useExecuteVirtualIbanTransfer, useVirtualIbanTransferFee } from "../hooks/useVirtualIban"
+import { getAmountNumber } from "../utils/amount"
 
 const CoinsIcon = () => (
     <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
@@ -161,7 +162,7 @@ const ConvertFundsModal = ({ isOpen, toggle, selectedIban }) => {
         const res = await feePreview.mutateAsync({
             iban_id: ibanId,
             wallet_id: wallet?.wallet_id,
-            amount: Number(amount),
+            amount: getAmountNumber(amount),
         })
         setFeeDetails(res?.data)
     }

@@ -1,8 +1,9 @@
 import { useTranslation } from "react-i18next"
+import { getAmountNumber } from "../utils/amount"
 import styles from "./convertFunds.module.scss"
 
 const formatAmount = (amount) => {
-    const num = Number(amount || 0)
+    const num = getAmountNumber(amount)
     return num.toLocaleString("en-US", {
         minimumFractionDigits: 2,
         maximumFractionDigits: 2,

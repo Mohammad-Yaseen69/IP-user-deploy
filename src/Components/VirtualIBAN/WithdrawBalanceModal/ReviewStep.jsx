@@ -1,6 +1,7 @@
 import { useTranslation } from "react-i18next"
 import { SOURCE_IBAN, LINKED_BANKS, TRANSFER_SPEEDS } from "../../../stateMachines/withdrawBalance"
 import { Euro } from "../../MyMasterCard/files"
+import { getAmountNumber } from "../utils/amount"
 import styles from "./withdrawBalance.module.scss"
 
 const ReviewStep = ({ amount, transferSpeed, selectedBank }) => {
@@ -10,7 +11,7 @@ const ReviewStep = ({ amount, transferSpeed, selectedBank }) => {
     const bankInfo = LINKED_BANKS.find((b) => b.id === selectedBank)
 
     const formatAmount = (val) => {
-        const num = parseFloat(val)
+        const num = getAmountNumber(val)
         if (isNaN(num)) return val
         return num.toLocaleString("en-US", {
             minimumFractionDigits: 2,
