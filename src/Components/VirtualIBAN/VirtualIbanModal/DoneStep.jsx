@@ -9,12 +9,15 @@ import { Copy } from "react-feather"
 
 
 const FLAGS = { MT, GB }
-const DoneStep = ({ jurisdiction, onGoToAccount }) => {
+const DoneStep = ({ jurisdiction, iban, onGoToAccount }) => {
     const { t } = useTranslation()
     const info = getJurisdiction(jurisdiction)
+    const ibanNumber = iban?.iban || info.iban
+    const bic = iban?.bank?.bic || info.bic
+    const currency = iban?.currency || info.currencyCode
 
     const copyIban = () => {
-        navigator.clipboard?.writeText(info.iban.replace(/\s/g, ""))
+        navigator.clipboard?.writeText(ibanNumber.replace(/\s/g, ""))
         toast.success(t("IBAN copied"))
     }
 
@@ -45,14 +48,14 @@ const DoneStep = ({ jurisdiction, onGoToAccount }) => {
                     </h4>
                     <span className={styles.activeBadge}>{t("Active")}</span>
                 </div>
-                <div className={styles.ibanNumber}>{info.iban}</div>
+                <div className={styles.ibanNumber}>{ibanNumber}</div>
                 <div className={styles.ibanMeta}>
                     <div className={styles.metaBlock}>
                         <span>{t("BIC / SWIFT")}</span>
                         <strong>
-                            {info.bic}
+                            {bic}
                             <Copy color="black" size={16} onClick={() => {
-                                navigator.clipboard?.writeText(info.bic)
+                                navigator.clipboard?.writeText(bic)
                                 toast.success(t("Copied"))
                             }} />
                         </strong>
@@ -61,7 +64,7 @@ const DoneStep = ({ jurisdiction, onGoToAccount }) => {
                         <span>{t("Currency")}</span>
                         <strong>
                             <img src={FLAGS[jurisdiction]} alt="" width={20} />
-                            {t(info.currency)}
+                            {currency}
                         </strong>
                     </div>
                 </div>

@@ -55,10 +55,15 @@ export const goBack = (stepName, data) => {
     return { prevStep: t.back(data) }
 }
 
+const getAmountNumber = (amount) => {
+    const value = Number(String(amount ?? "").replace(/,/g, ""))
+    return Number.isFinite(value) ? value : 0
+}
+
 export const getDisabledState = (stepName, data) => {
     switch (stepName) {
         case STEPS.AMOUNT:
-            return !data.amount || parseFloat(data.amount) <= 0
+            return !data.amount || getAmountNumber(data.amount) <= 0
         case STEPS.DESTINATION:
             return !data.selectedBank
         case STEPS.SPEED:

@@ -1,30 +1,13 @@
-import React, { useState } from "react";
-import { MoreHorizontal, Plus } from "react-feather";
-import styles from "../styles/AccountsSidebar.module.css";
-import VirtualIbanModal from "../VirtualIbanModal";
+import { useState } from "react"
+import { MoreHorizontal, Plus } from "react-feather"
+import styles from "../styles/AccountsSidebar.module.css"
+import VirtualIbanModal from "../VirtualIbanModal"
 import UK_Image from "../files/images/UK.svg"
 import Malta_Image from "../files/images/Malta.svg"
 
-const accounts = [
-    {
-        id: 1,
-        flag: UK_Image,
-        name: "Primary IBAN",
-        currency: "GB-IBAN",
-        badge: "Active",
-        active: true,
-    },
-    {
-        id: 2,
-        flag: Malta_Image,
-        name: "Secondary IBAN",
-        currency: "EU-IBAN",
-        badge: null,
-        active: false,
-    },
-];
+const getIbanCountry = (iban = "") => iban.slice(0, 2).toUpperCase()
 
-const AccountsSidebar = ({ selectedAccount, onSelect, setShowGetIBAN }) => {
+const AccountsSidebar = ({ selectedAccount, onSelect, accounts = [], isLoading }) => {
     const [showModal, setShowModal] = useState(false)
 
     const handleOpenModal = () => {
@@ -35,7 +18,6 @@ const AccountsSidebar = ({ selectedAccount, onSelect, setShowGetIBAN }) => {
         setShowModal(false)
     }
 
-
     return (
         <div className={styles.sidebar}>
             <p className={styles.label}>Your accounts 
@@ -43,53 +25,56 @@ const AccountsSidebar = ({ selectedAccount, onSelect, setShowGetIBAN }) => {
             </p>
 
             <div className={styles.accountItemCon}>
-                {accounts.map((acc) => (
-                    <div
-                        key={acc.id}
-                        className={`${styles.accountItem} ${selectedAccount === acc.id ? styles.selected : ""
-                            }`}
-                        onClick={() => onSelect(acc.id)}
-                    >
-                        <input
-                            type="radio"
-                            name="accountSelection"
-                            checked={selectedAccount === acc.id}
-                            onChange={() => onSelect(acc.id)}
-                        />
+                {isLoading && <div className={styles.accCurrency}>Loading accounts...</div>}
+                {
+                    !isLoading && accounts.length === 0 && (
+                        <div className={styles.accCurrency}>No virtual IBANs yet</div>
+                    )
+                }
 
-                        <div className={styles.flagBox}>
-                            <img src={acc?.flag} alt="" />
-                        </div>
+                {
+                    accounts.map((acc, index) => {
+                        const id = acc?._id || acc?.id
+                        const country = getIbanCountry(acc?.iban)
 
-                        <div className={styles.accInfo}>
-                            <span className={styles.accName}>{acc.name}</span>
-                            <span className={styles.accCurrency}>{acc.currency}</span>
-                        </div>
-                    </div>
-                ))}
+                        return (
+                            <div
+                                key={id}
+                                className={`${styles.accountItem} ${selectedAccount === id ? styles.selected : ""}`}
+                                onClick={() => onSelect(id)}
+                            >
+                                <input type="radio" checked={selectedAccount === id} readOnly />
+                                <div className={styles.flagBox}>
+                                    <span>{country || "--"}</span>
+                                </div>
+                                <div className={styles.accInfo}>
+                                    <span className={styles.accName}>
+                                        {index === 0 ? "Primary IBAN" : `IBAN ${index + 1}`}
+                                    </span>
+                                    <span className={styles.accCurrency}>{acc?.currency} IBAN</span>
+                                </div>
+                            </div>
+                        )
+                    })
+                }
+            </div >
 
-            </div>
             <div className={styles.openNew} onClick={handleOpenModal}>
                 <div className={styles.plusIcon}>
                     <Plus size={14} />
                 </div>
                 <div className={styles.accInfo}>
-
                     <span>Open new IBAN</span>
-                    <span className={styles.accCurrency}>{("MT · GB · DE jurisdictions")}</span>
+                    <span className={styles.accCurrency}>MT jurisdictions</span>
                 </div>
-
             </div>
 
             <VirtualIbanModal
                 isOpen={showModal}
                 toggle={handleCloseModal}
             />
+        </div >
+    )
+}
 
-
-
-        </div>
-    );
-};
-
-export default AccountsSidebar;
+export default AccountsSidebar

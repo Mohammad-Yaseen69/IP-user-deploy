@@ -1,5 +1,6 @@
 import { useTranslation } from "react-i18next"
 import { FUNDING_METHODS, MOCK_WALLETS } from "../../../stateMachines/addFundsFlow"
+import { getAmountNumber } from "../utils/amount"
 import styles from "./addFundsModal.module.scss"
 
 const ReviewStep = ({ amount, fundingMethod, selectedWallet }) => {
@@ -9,7 +10,7 @@ const ReviewStep = ({ amount, fundingMethod, selectedWallet }) => {
     const walletInfo = MOCK_WALLETS.find((w) => w.id === selectedWallet)
 
     const formatAmount = (val) => {
-        const num = parseFloat(val)
+        const num = getAmountNumber(val)
         if (isNaN(num)) return val
         return num.toLocaleString("en-US", {
             minimumFractionDigits: 2,

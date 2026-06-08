@@ -17,7 +17,7 @@ const MODAL_MAP = {
     8: "unsubscribe",
 }
 
-const QuickActions = () => {
+const QuickActions = ({ selectedIban }) => {
     const navigate = useNavigate()
     const [modals, setModals] = useState({
         deposit: false,
@@ -128,6 +128,7 @@ const QuickActions = () => {
             <ConvertFundsModal
                 isOpen={modals.convertFunds}
                 toggle={() => closeModal("convertFunds")}
+                selectedIban={selectedIban}
             />
             <UnsubscribeModal
                 isOpen={modals.unsubscribe}
