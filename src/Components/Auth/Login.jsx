@@ -1575,14 +1575,38 @@ const Login = ({ country, setIsLoginForm, }) => {
                                     </button>
                                 }
                                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', alignItems: 'flex-start' }}>
-                                    <div className={styles.bottom_text}>
-                                        <span>{t("Don't Have an Account? Sign Up").split("?")?.[0]} </span>
-                                        <Link to={"/signup"} onClick={() => setIsLoginForm(false)}>{t("Sign Up")}</Link>
-                                    </div>
-                                    <div className={styles.bottom_text}>
-                                        <span>{t("Are you an Agent?")} </span>
-                                        <Link to={"/agent-login"} >{t("Sign in as Agent")}</Link>
-                                    </div>
+                                    {
+                                        isPressed ? (<>
+                                            ‎
+                                        </>) : (
+                                            <>
+                                                <div className={styles.bottom_text}>
+                                                    <span>{t("Don't Have an Account? Sign Up").split("?")?.[0]} </span>
+                                                </div>
+
+                                                <div
+                                                    style={{
+                                                        display: "flex",
+                                                        alignItems: "center",
+                                                        gap: "5px",
+                                                        justifyContent: "center",
+                                                    }}
+                                                >
+                                                    <Link style={linkStyle}
+                                                        to="/signup" onClick={() => setIsLoginForm(false)}>
+                                                        {t("Sign Up")}
+                                                    </Link>
+
+                                                    <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                                                        <span style={{ color: "#888", fontWeight: 600 }}>OR</span>
+                                                    </div>
+
+                                                    <Link style={linkStyle} to="/agent-login">
+                                                        {t("Sign in as Agent")}
+                                                    </Link>
+                                                </div></>
+                                        )
+                                    }
                                 </div>
                                 <div className={styles.btns}>
                                     {
