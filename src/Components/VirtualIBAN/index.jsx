@@ -116,7 +116,7 @@ const VirtualBank = () => {
 
                         {activeTab === "overview" && (
                             <div className={styles.tabContent}>
-                                {transactions.length === 0 ? (
+                                {transactions.length !== 0 ? (
                                     <Empty />
                                 ) :
                                     <>
@@ -132,7 +132,7 @@ const VirtualBank = () => {
                         {activeTab === "transaction-history" && (
                             <div className={styles.tabContent}>
                                 <div className={styles.section}>
-                                    {transactions.length === 0 ? (
+                                    {transactions.length !== 0 ? (
                                         <Empty />
                                     ) :
 
