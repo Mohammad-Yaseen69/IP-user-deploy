@@ -51,7 +51,7 @@ const BalanceHeader = ({ iban, isLoading,setActiveTab }) => {
       <div className={styles.balanceSection}>
         <div>
           <h1 className={styles.balance}>{formatAmount(currentBalance, currency)}</h1>
-          <Eye color="#5926F0" size={15} />
+          {/* <Eye color="#5926F0" size={15} /> */}
         </div>
         {/* <span className={styles.growth}><ArrowUpRight size={15} /> 0.00%</span> */}
       </div>
