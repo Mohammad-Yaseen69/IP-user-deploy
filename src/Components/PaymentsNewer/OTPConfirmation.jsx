@@ -348,9 +348,7 @@ const OTPConfirmation = ({
                 // console.log(item)
             })
 
-            axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/quotation/create-quotation`, formdata, {
-                headers: authHeader
-            })
+            axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/quotation/create-quotation`, formdata, { headers: { ...authHeader, "idempotency-key": getKey() } })
                 .then(res => {
                     const decrypted = decryptData(res.data.data)
                     setIsSaving(false)
@@ -463,6 +461,7 @@ const OTPConfirmation = ({
 
     const resendOTP = (typeOfAuth) => {
         let data;
+        reset()
         if (type === "request" && requestObject) {
             if (requestObject?.paymentType?.value === "standard") {
                 data = {
@@ -766,6 +765,7 @@ const OTPConfirmation = ({
                                         <span style={{
                                             fontSize: "12px",
                                         }} onClick={() => {
+                                            reset()
                                             if (authType !== "sms") {
                                                 inputRefs?.current?.[0]?.focus()
                                                 setOTPValues(Array(numberOfFields).fill(''))
