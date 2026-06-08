@@ -45,8 +45,9 @@ const AccountsSidebar = ({ selectedAccount, onSelect, accounts = [], isLoading }
                             >
                                 <input type="radio" checked={selectedAccount === id} readOnly />
                                 <div className={styles.flagBox}>
-                                    <span>{country || "--"}</span>
+                                    <img src={country === "UK" ? UK_Image : Malta_Image} alt="" />
                                 </div>
+
                                 <div className={styles.accInfo}>
                                     <span className={styles.accName}>
                                         {index === 0 ? "Primary IBAN" : `IBAN ${index + 1}`}
@@ -59,16 +60,17 @@ const AccountsSidebar = ({ selectedAccount, onSelect, accounts = [], isLoading }
                 }
             </div >
 
-            <div className={styles.openNew} onClick={handleOpenModal}>
-                <div className={styles.plusIcon}>
-                    <Plus size={14} />
+            {!isLoading &&
+                < div className={styles.openNew} onClick={handleOpenModal}>
+                    <div className={styles.plusIcon}>
+                        <Plus size={14} />
+                    </div>
+                    <div className={styles.accInfo}>
+                        <span>Open new IBAN</span>
+                        <span className={styles.accCurrency}>MT jurisdictions</span>
+                    </div>
                 </div>
-                <div className={styles.accInfo}>
-                    <span>Open new IBAN</span>
-                    <span className={styles.accCurrency}>MT jurisdictions</span>
-                </div>
-            </div>
-
+            }
             <VirtualIbanModal
                 isOpen={showModal}
                 toggle={handleCloseModal}

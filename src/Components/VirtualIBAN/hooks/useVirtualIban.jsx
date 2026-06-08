@@ -67,20 +67,15 @@ export const useSyncVirtualIbanBalance = (ibanId) =>
     })
 
 export const useCreateVirtualIban = () => {
-    const queryClient = useQueryClient()
-
     return useMutation({
         mutationFn: (payload) =>
             apiWrapper({
-                endpoint: "/api/virtual-iban",
+                endpoint: "/api/virtual-iban/initiate",
                 method: "POST",
                 payload,
                 isEncrypted: true,
-                isDecrypted: false,
+                isDecrypted: true,
             }),
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: virtualIbanQueryKeys.list() })
-        },
     })
 }
 

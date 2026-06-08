@@ -13,8 +13,9 @@ const DoneStep = ({ jurisdiction, iban, onGoToAccount }) => {
     const { t } = useTranslation()
     const info = getJurisdiction(jurisdiction)
     const ibanNumber = iban?.iban || info.iban
-    const bic = iban?.bank?.bic || info.bic
+    const bic = iban?.bank?.bic || iban?.swift_code || info.bic
     const currency = iban?.currency || info.currencyCode
+    const status = iban?.status || "ACTIVE"
 
     const copyIban = () => {
         navigator.clipboard?.writeText(ibanNumber.replace(/\s/g, ""))
@@ -46,7 +47,7 @@ const DoneStep = ({ jurisdiction, iban, onGoToAccount }) => {
                     <h4>
                         {t(info.title)} - {info.subtitle.split("·")[0].trim()}
                     </h4>
-                    <span className={styles.activeBadge}>{t("Active")}</span>
+                    <span className={styles.activeBadge}>{t(status)}</span>
                 </div>
                 <div className={styles.ibanNumber}>{ibanNumber}</div>
                 <div className={styles.ibanMeta}>

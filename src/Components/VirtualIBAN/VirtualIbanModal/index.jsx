@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next"
 import { Modal, ModalBody } from "reactstrap"
 import axios from "axios"
 import { toast } from "react-toastify"
+import { useQueryClient } from "@tanstack/react-query"
 import useWindowWidth from "../../../utils/useWindowWidth"
 import {
     CircleCheck,
@@ -42,12 +43,14 @@ import {
 import DoneStep from "./DoneStep"
 import FeesStep from "./FeesStep"
 import JurisdictionStep from "./JurisdictionStep"
+import PendingStep from "./PendingStep"
 import SidebarProgress from "./SidebarProgress"
 import styles from "./virtualIbanModal.module.scss"
 import VerificationStep from "./VerificationStep"
 import useSendOtp from "../../../hooks/GeneralUse/useSendOtp"
 import OTPConfirmation from "../../UserSettingsNew/OTPConfirmation"
-import { useCreateVirtualIban } from "../hooks/useVirtualIban"
+import { useCreateVirtualIban, virtualIbanQueryKeys } from "../hooks/useVirtualIban"
+import SocketsService from "../../../Services/Socket"
 
 const SIDEBAR_ICONS = {
     [STEPS.JURISDICTION]: JurisIcon,
@@ -81,11 +84,26 @@ const ChevronRight = () => (
     </svg>
 )
 
+const normalizeSocketIban = (iban) => {
+    if (!iban) return null
+
+    return {
+        ...iban,
+        _id: iban?._id || iban?.id,
+        bank: iban?.bank || {
+            name: iban?.bank_name,
+            bic: iban?.swift_code,
+            address: iban?.bank_address,
+        },
+    }
+}
+
 
 
 const VirtualIbanModal = ({ isOpen, toggle, onCreated }) => {
     const { t } = useTranslation()
     const width = useWindowWidth()
+    const queryClient = useQueryClient()
 
     const { userWallets, getUserWallets, userDetails, authHeader } = useContext(UserContext)
 
@@ -98,6 +116,8 @@ const VirtualIbanModal = ({ isOpen, toggle, onCreated }) => {
     const [otpToken, setOtpToken] = useState("")
     const [codeType, setCodeType] = useState("sms")
     const [createdIban, setCreatedIban] = useState(null)
+    const [pendingTransactionId, setPendingTransactionId] = useState("")
+    const [pendingTransactionRef, setPendingTransactionRef] = useState("")
 
     const [saveCard, setSaveCard] = useState(false)
     const [cards, setCards] = useState([])
@@ -128,6 +148,52 @@ const VirtualIbanModal = ({ isOpen, toggle, onCreated }) => {
             toast.error(err?.message || t("Unable to send OTP"))
         },
     })
+
+    const socketConfig = useMemo(() => ({
+        url: import.meta.env.VITE_IP_DEV_API,
+        transports: ["websocket", "polling", "flashsocket"],
+    }), [])
+
+    useEffect(() => {
+        if (currentStep !== STEPS.PENDING || !userDetails?._id) return
+
+        const socketsService = new SocketsService(socketConfig, () => { })
+
+        const handleVirtualIbanCreated = (data) => {
+            if (
+                pendingTransactionId &&
+                data?.transaction_id &&
+                data.transaction_id !== pendingTransactionId
+            ) {
+                return
+            }
+
+            const iban = normalizeSocketIban(data?.iban)
+
+            setCreatedIban(iban)
+            setPendingTransactionId(data?.transaction_id || pendingTransactionId)
+            setPendingTransactionRef(data?.transaction_ref || pendingTransactionRef)
+            toast.success(t("Your virtual IBAN is ready"))
+            setCurrentStep(STEPS.DONE)
+        }
+
+        socketsService.connect()
+        socketsService.connectToServer(userDetails._id)
+        socketsService.socket.on("virtual_iban:created", handleVirtualIbanCreated)
+
+        return () => {
+            socketsService.socket.off("virtual_iban:created", handleVirtualIbanCreated)
+            socketsService.disconnect()
+        }
+    }, [
+        currentStep,
+        pendingTransactionId,
+        pendingTransactionRef,
+        queryClient,
+        socketConfig,
+        t,
+        userDetails?._id,
+    ])
 
     useEffect(() => {
         if (userDetails?.tfa) {
@@ -218,6 +284,8 @@ const VirtualIbanModal = ({ isOpen, toggle, onCreated }) => {
         setOtpToken("")
         setCodeType("sms")
         setCreatedIban(null)
+        setPendingTransactionId("")
+        setPendingTransactionRef("")
         setSelectedSaveCard({})
         setCardDetails({
             cardNumber: "",
@@ -228,9 +296,25 @@ const VirtualIbanModal = ({ isOpen, toggle, onCreated }) => {
         setCardNumberError(null)
     }
 
+    const refreshCreatedIban = () => {
+        queryClient.invalidateQueries({ queryKey: virtualIbanQueryKeys.list() })
+        if (createdIban?._id) {
+            queryClient.invalidateQueries({ queryKey: virtualIbanQueryKeys.detail(createdIban._id) })
+            queryClient.invalidateQueries({ queryKey: virtualIbanQueryKeys.balance(createdIban._id) })
+        }
+        onCreated?.(createdIban)
+    }
+
     const handleClose = () => {
+        if (currentStep === STEPS.DONE && createdIban) {
+            refreshCreatedIban()
+        }
         resetState()
         toggle?.()
+    }
+
+    const handleCreatedClose = () => {
+        handleClose()
     }
 
     const getCreatePayload = () => ({
@@ -262,11 +346,14 @@ const VirtualIbanModal = ({ isOpen, toggle, onCreated }) => {
                 otp,
                 type: type || codeType,
             })
-            setCreatedIban(res?.data)
+            const transactionId = res?.transaction_id || res?.data?.transaction_id || res?.data?.transaction?.id
+            const transactionRef = res?.transaction_ref || res?.data?.transaction_ref || res?.data?.transaction?.reference_id
+            setPendingTransactionId(transactionId || "")
+            setPendingTransactionRef(transactionRef || "")
+            setCreatedIban(null)
             setter?.(true)
             setShowOtp(false)
-            setCurrentStep(STEPS.DONE)
-            onCreated?.(res?.data)
+            setCurrentStep(STEPS.PENDING)
         } catch (error) {
             const dec = decryptData(error?.response?.data?.data)
             const message = dec?.message || error?.message || t("We are unable to process your request at the moment. Please try again later.")
@@ -383,12 +470,18 @@ const VirtualIbanModal = ({ isOpen, toggle, onCreated }) => {
                         hideButtons={true}
                     />
                 )
+            case STEPS.PENDING:
+                return (
+                    <PendingStep
+                        transactionRef={pendingTransactionRef}
+                    />
+                )
             case STEPS.DONE:
                 return (
                     <DoneStep
                         jurisdiction={jurisdiction}
                         iban={createdIban}
-                        onGoToAccount={handleClose}
+                        onGoToAccount={handleCreatedClose}
                     />
                 )
             default:
@@ -396,7 +489,7 @@ const VirtualIbanModal = ({ isOpen, toggle, onCreated }) => {
         }
     }
 
-    const showFooter = currentStep !== STEPS.DONE && (width > 1000)
+    const showFooter = ![STEPS.PENDING, STEPS.DONE].includes(currentStep) && (width > 1000)
 
     const renderBody = () => (
         <div

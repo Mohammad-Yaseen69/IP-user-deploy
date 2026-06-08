@@ -7,6 +7,7 @@ export const STEPS = {
     PAYMENT_METHOD: "PAYMENT_METHOD",
     PAYMENT_DETAILS: "PAYMENT_DETAILS",
     SUMMARY: "SUMMARY",
+    PENDING: "PENDING",
     DONE: "DONE",
 }
 
@@ -84,8 +85,12 @@ export const transitions = {
         back: () => STEPS.PAYMENT_METHOD,
     },
     [STEPS.SUMMARY]: {
-        next: () => STEPS.DONE,
+        next: () => STEPS.PENDING,
         back: (data) => data.paymentType === "paypal" ? STEPS.PAYMENT_METHOD : STEPS.PAYMENT_DETAILS,
+    },
+    [STEPS.PENDING]: {
+        next: () => STEPS.DONE,
+        back: () => null,
     },
     [STEPS.DONE]: {
         next: () => null,
@@ -118,6 +123,7 @@ export const getDisabledState = (stepName, data) => {
             return false
         case STEPS.VERIFICATION:
         case STEPS.SUMMARY:
+        case STEPS.PENDING:
         case STEPS.DONE:
             return false
         default:
@@ -164,6 +170,8 @@ export const isSidebarStepCompleted = (sidebarItem, currentStep) => {
     const currentRank =
         currentStep === STEPS.SUMMARY || currentStep === STEPS.PAYMENT_DETAILS
             ? order.indexOf(STEPS.PAYMENT_METHOD)
+            : currentStep === STEPS.PENDING
+                ? order.indexOf(STEPS.DONE)
             : order.indexOf(currentStep)
     const itemRank = order.indexOf(sidebarItem.stepName)
     return itemRank >= 0 && itemRank < currentRank
