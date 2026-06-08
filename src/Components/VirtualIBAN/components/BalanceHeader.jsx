@@ -1,6 +1,7 @@
 import React from "react";
 import { Copy, ArrowUpRight, Eye } from "react-feather";
 import styles from "../styles/BalanceHeader.module.css";
+import UK_Image from "../files/images/UK.svg"
 
 const BalanceHeader = () => {
   const handleCopy = (text) => {
@@ -11,7 +12,7 @@ const BalanceHeader = () => {
     <div className={styles.card}>
       <div className={styles.topBar}>
         <div className={styles.leftInfo}>
-          <span className={styles.accountTag}>Primary Account - GB IBAN</span>
+          <span className={styles.accountTag}> <img src={UK_Image} alt="" /> Primary Account - GB IBAN</span>
           <span className={styles.activeBadge}>Active</span>
         </div>
 
