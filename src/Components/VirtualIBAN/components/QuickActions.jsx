@@ -5,6 +5,7 @@ import WithdrawBalanceModal from "../WithdrawBalanceModal";
 import AddFundsModal from "../AddFundsModal";
 import ConvertFundsModal from "../ConvertFundsModal";
 import UnsubscribeModal from "../UnsubscribeModal/index.jsx";
+import StatementModal from "../StatementModal";
 import IBANDetails from "../IBAN/IBANDetails.jsx";
 import { X } from "react-feather";
 import { useNavigate } from "react-router";
@@ -15,6 +16,7 @@ const MODAL_MAP = {
     1: "deposit",
     2: "convertFunds",
     3: "withdrawal",
+    4: "statement",
     8: "unsubscribe",
 }
 
@@ -27,6 +29,7 @@ const QuickActions = ({ selectedIban }) => {
         deposit: false,
         convertFunds: false,
         withdrawal: false,
+        statement: false,
         unsubscribe: false,
 
     })
@@ -140,6 +143,10 @@ const QuickActions = ({ selectedIban }) => {
                 hasBalance={currentBalance > 0}
                 onWithdraw={handleUnsubscribeWithdraw}
                 onUnsubscribe={(data) => alert(`Unsubscribed feature coming soon`)}
+            />
+            <StatementModal
+                isOpen={modals.statement}
+                toggle={() => closeModal("statement")}
             />
         </div>
     );
