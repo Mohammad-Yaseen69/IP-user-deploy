@@ -40,6 +40,8 @@ import {
     JURISDICTIONS,
     MOCK_WALLET_STATE,
     STEPS,
+    VIRTUAL_IBAN_ACTIVATION_FEE,
+    VIRTUAL_IBAN_ACTIVATION_FEE_CURRENCY,
 } from "../../../stateMachines/virtualIbanPayment"
 import DoneStep from "./DoneStep"
 import FeesStep from "./FeesStep"
@@ -53,6 +55,7 @@ import OTPConfirmation from "../../UserSettingsNew/OTPConfirmation"
 import { useCreateVirtualIban, useVirtualIbans, virtualIbanQueryKeys } from "../hooks/useVirtualIban"
 import { getVirtualIbanCountry, normalizeVirtualIban } from "../utils/virtualIban"
 import SocketsService from "../../../Services/Socket"
+import usePlainFx from "../../../hooks/Payments/usePlainFx"
 
 const SIDEBAR_ICONS = {
     [STEPS.JURISDICTION]: JurisIcon,
@@ -85,6 +88,14 @@ const ChevronRight = () => (
         />
     </svg>
 )
+
+const parseAmount = (value) => {
+    const amount = Number(String(value ?? "").replace(/,/g, ""))
+    return Number.isFinite(amount) ? amount : 0
+}
+
+const getWalletCurrencyCode = (wallet) =>
+    wallet?.currency?.code || wallet?.currency_code || wallet?.name || ""
 
 const VirtualIbanModal = ({ isOpen, toggle, onCreated }) => {
     const { t } = useTranslation()
@@ -125,6 +136,16 @@ const VirtualIbanModal = ({ isOpen, toggle, onCreated }) => {
 
     const createVirtualIban = useCreateVirtualIban()
     const { data: existingIbans = [] } = useVirtualIbans()
+    const {
+        getExchangeRate: getPlainExchangeRate,
+        isPending: isActivationFxPending,
+    } = usePlainFx()
+    const [activationFeeFx, setActivationFeeFx] = useState({
+        amount: VIRTUAL_IBAN_ACTIVATION_FEE,
+        currency: VIRTUAL_IBAN_ACTIVATION_FEE_CURRENCY,
+        exchangeRate: 1,
+        error: "",
+    })
     const { sendOtp, isSendingOtp } = useSendOtp({
         onSuccess: (token) => {
             setOtpToken(token)
@@ -269,9 +290,9 @@ const VirtualIbanModal = ({ isOpen, toggle, onCreated }) => {
     }, [existingIbans])
 
     useEffect(() => {
-        if (jurisdiction && jurisdictionAvailability?.[jurisdiction]?.disabledReason) {
-            setJurisdiction("")
-        }
+        // if (jurisdiction && jurisdictionAvailability?.[jurisdiction]?.disabledReason) {
+        //     setJurisdiction("")
+        // }
     }, [jurisdiction, jurisdictionAvailability])
 
     useEffect(() => {
@@ -281,10 +302,87 @@ const VirtualIbanModal = ({ isOpen, toggle, onCreated }) => {
     }, [currentStep, isKycApproved])
 
     const jurisdictionInfo = getJurisdiction(jurisdiction)
+    const selectedWalletCurrency = getWalletCurrencyCode(walletState)
+
+    useEffect(() => {
+        if (paymentType !== "wallet" || !selectedWalletCurrency) {
+            setActivationFeeFx({
+                amount: VIRTUAL_IBAN_ACTIVATION_FEE,
+                currency: VIRTUAL_IBAN_ACTIVATION_FEE_CURRENCY,
+                exchangeRate: 1,
+                error: "",
+            })
+            return
+        }
+
+        let isActive = true
+
+        const convertActivationFee = async () => {
+            if (selectedWalletCurrency === VIRTUAL_IBAN_ACTIVATION_FEE_CURRENCY) {
+                setActivationFeeFx({
+                    amount: VIRTUAL_IBAN_ACTIVATION_FEE,
+                    currency: VIRTUAL_IBAN_ACTIVATION_FEE_CURRENCY,
+                    exchangeRate: 1,
+                    error: "",
+                })
+                return
+            }
+
+            setActivationFeeFx((prev) => ({
+                ...prev,
+                amount: 0,
+                currency: selectedWalletCurrency,
+                exchangeRate: null,
+                error: "",
+            }))
+
+            try {
+                const convertedAmount = parseAmount(
+                    await getPlainExchangeRate(
+                        VIRTUAL_IBAN_ACTIVATION_FEE_CURRENCY,
+                        selectedWalletCurrency,
+                        VIRTUAL_IBAN_ACTIVATION_FEE
+                    )
+                )
+
+                if (!convertedAmount) {
+                    throw new Error("Invalid FX amount")
+                }
+
+                if (isActive) {
+                    setActivationFeeFx({
+                        amount: convertedAmount,
+                        currency: selectedWalletCurrency,
+                        exchangeRate: convertedAmount / VIRTUAL_IBAN_ACTIVATION_FEE,
+                        error: "",
+                    })
+                }
+            } catch {
+                if (isActive) {
+                    setActivationFeeFx({
+                        amount: 0,
+                        currency: selectedWalletCurrency,
+                        exchangeRate: null,
+                        error: t("Unable to fetch the exchange rate for this wallet"),
+                    })
+                }
+            }
+        }
+
+        convertActivationFee()
+
+        return () => {
+            isActive = false
+        }
+    }, [getPlainExchangeRate, paymentType, selectedWalletCurrency, t])
 
     const feeDetails = useMemo(
-        () => buildMockFeeDetails(jurisdiction, paymentType),
-        [jurisdiction, paymentType]
+        () => buildMockFeeDetails(jurisdiction, paymentType, {
+            amount: activationFeeFx.amount ?? VIRTUAL_IBAN_ACTIVATION_FEE,
+            currency: activationFeeFx.currency || VIRTUAL_IBAN_ACTIVATION_FEE_CURRENCY,
+            exchangeRate: activationFeeFx.exchangeRate,
+        }),
+        [activationFeeFx, jurisdiction, paymentType]
     )
 
     const machineData = useMemo(
@@ -307,7 +405,26 @@ const VirtualIbanModal = ({ isOpen, toggle, onCreated }) => {
     )
 
     const isCreating = isSendingOtp || createVirtualIban.isPending
-    const disabled = getDisabledState(currentStep, machineData) || isCreating
+    const isActivationFxBlocked =
+        paymentType === "wallet" &&
+        !!selectedWalletCurrency &&
+        selectedWalletCurrency !== VIRTUAL_IBAN_ACTIVATION_FEE_CURRENCY &&
+        (
+            isActivationFxPending ||
+            activationFeeFx.currency !== selectedWalletCurrency ||
+            !!activationFeeFx.error ||
+            !activationFeeFx.amount
+        )
+    const isActivationBalanceInsufficient =
+        paymentType === "wallet" &&
+        !!walletState?.wallet_id &&
+        !!activationFeeFx.amount &&
+        parseAmount(walletState?.balance?.available) < parseAmount(activationFeeFx.amount)
+    const disabled =
+        getDisabledState(currentStep, machineData) ||
+        isCreating ||
+        isActivationFxBlocked ||
+        isActivationBalanceInsufficient
     const continueLabel = getContinueLabel(currentStep, t)
 
     const resetState = () => {
@@ -322,6 +439,12 @@ const VirtualIbanModal = ({ isOpen, toggle, onCreated }) => {
         setCreatedIban(null)
         setPendingTransactionId("")
         setPendingTransactionRef("")
+        setActivationFeeFx({
+            amount: VIRTUAL_IBAN_ACTIVATION_FEE,
+            currency: VIRTUAL_IBAN_ACTIVATION_FEE_CURRENCY,
+            exchangeRate: 1,
+            error: "",
+        })
         setSelectedSaveCard({})
         setCardDetails({
             cardNumber: "",
@@ -357,11 +480,28 @@ const VirtualIbanModal = ({ isOpen, toggle, onCreated }) => {
         wallet_id: walletState?.wallet_id,
         currencyCode: jurisdictionInfo.currencyCode,
         name: userDetails?.full_name || userDetails?.name || userDetails?.username || "Virtual IBAN",
+        activation_fee: {
+            amount: parseAmount(feeDetails?.totalFee),
+            currency: feeDetails?.currency,
+            base_amount: VIRTUAL_IBAN_ACTIVATION_FEE,
+            base_currency: VIRTUAL_IBAN_ACTIVATION_FEE_CURRENCY,
+            exchange_rate: activationFeeFx.exchangeRate,
+        },
     })
 
     const handleSendOtp = async (otpCodeType = codeType) => {
         if (!walletState?.wallet_id) {
             toast.error(t("Please select an InstaPay wallet to pay the activation fee"))
+            return
+        }
+
+        if (isActivationFxBlocked) {
+            toast.error(activationFeeFx.error || t("Please wait while we convert the activation fee"))
+            return
+        }
+
+        if (isActivationBalanceInsufficient) {
+            toast.error(t("Insufficient wallet balance for the activation fee"))
             return
         }
 
@@ -399,11 +539,11 @@ const VirtualIbanModal = ({ isOpen, toggle, onCreated }) => {
     }
 
     const handleContinue = async () => {
-        if (currentStep === STEPS.JURISDICTION && jurisdictionAvailability?.[jurisdiction]?.disabledReason) {
-            toast.error(t(jurisdictionAvailability[jurisdiction].disabledReason))
-            setJurisdiction("")
-            return
-        }
+        // if (currentStep === STEPS.JURISDICTION && jurisdictionAvailability?.[jurisdiction]?.disabledReason) {
+        //     toast.error(t(jurisdictionAvailability[jurisdiction].disabledReason))
+        //     setJurisdiction("")
+        //     return
+        // }
 
         if (currentStep === STEPS.SUMMARY) {
             await handleSendOtp()
@@ -442,7 +582,7 @@ const VirtualIbanModal = ({ isOpen, toggle, onCreated }) => {
                     <JurisdictionStep
                         jurisdiction={jurisdiction}
                         setJurisdiction={setJurisdiction}
-                        availability={jurisdictionAvailability}
+                        // availability={jurisdictionAvailability}
                     />
                 )
             case STEPS.FEES:
@@ -490,6 +630,7 @@ const VirtualIbanModal = ({ isOpen, toggle, onCreated }) => {
                         applePay={false}
                         googlePay={false}
                         hideButtons={true}
+                        allowWalletSelection={true}
                         marginTop="1rem"
                     />
                 )
@@ -509,7 +650,8 @@ const VirtualIbanModal = ({ isOpen, toggle, onCreated }) => {
                         sendOtp={handleSendOtp}
                         setStep={() => setCurrentStep(STEPS.PAYMENT_METHOD)}
                         paymentType={paymentType}
-                        cardDets={{ currency: jurisdictionInfo.currencyCode }}
+                        cardDets={{ currency: VIRTUAL_IBAN_ACTIVATION_FEE_CURRENCY }}
+                        feeLabel="IBAN activation fee"
                         hideButtons={true}
                     />
                 )
@@ -616,7 +758,11 @@ const VirtualIbanModal = ({ isOpen, toggle, onCreated }) => {
                                 disabled={disabled}
                                 onClick={handleContinue}
                             >
-                                {isCreating ? t("Processing...") : continueLabel}
+                                {isActivationFxPending && isActivationFxBlocked
+                                    ? t("Converting...")
+                                    : isCreating
+                                        ? t("Processing...")
+                                        : continueLabel}
                                 <ChevronRight />
                             </button>
                         </div>

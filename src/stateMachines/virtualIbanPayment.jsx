@@ -11,6 +11,9 @@ export const STEPS = {
     DONE: "DONE",
 }
 
+export const VIRTUAL_IBAN_ACTIVATION_FEE = 4
+export const VIRTUAL_IBAN_ACTIVATION_FEE_CURRENCY = "EUR"
+
 export const JURISDICTIONS = {
     MT: {
         id: "MT",
@@ -21,7 +24,8 @@ export const JURISDICTIONS = {
         bic: "IPT12345",
         currency: "Euro - EUR",
         currencyCode: "EUR",
-        activationFee: "9.99",
+        activationFee: "4.00",
+        activationFeeCurrency: VIRTUAL_IBAN_ACTIVATION_FEE_CURRENCY,
         monthlyFee: "4.99",
         included: [
             "Dedicated MT IBAN registered in your name",
@@ -39,7 +43,8 @@ export const JURISDICTIONS = {
         bic: "IPT12345",
         currency: "Pound Sterling - GBP",
         currencyCode: "GBP",
-        activationFee: "9.99",
+        activationFee: "4.00",
+        activationFeeCurrency: VIRTUAL_IBAN_ACTIVATION_FEE_CURRENCY,
         monthlyFee: "4.99",
         included: [
             "Dedicated GB IBAN registered in your name",
@@ -184,18 +189,33 @@ export const isSidebarStepCompleted = (sidebarItem, currentStep, data = {}) => {
 
 export const getJurisdiction = (id) => JURISDICTIONS[id] ?? JURISDICTIONS.MT
 
-export const buildMockFeeDetails = (jurisdiction, paymentType) => {
+const formatFeeAmount = (amount) =>
+    Number(amount || 0).toLocaleString("en-US", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+    })
+
+export const buildMockFeeDetails = (jurisdiction, paymentType, paymentFee = {}) => {
     const info = getJurisdiction(jurisdiction)
+    const baseAmount = VIRTUAL_IBAN_ACTIVATION_FEE
+    const baseCurrency = info.activationFeeCurrency || VIRTUAL_IBAN_ACTIVATION_FEE_CURRENCY
+    const feeAmount = formatFeeAmount(paymentFee.amount ?? baseAmount)
+    const feeCurrency = paymentFee.currency || baseCurrency
+
     return {
-        fee: info.activationFee,
-        currency: info.currencyCode,
-        totalFee: info.activationFee,
+        fee: feeAmount,
+        currency: feeCurrency,
+        totalFee: feeAmount,
+        baseFee: formatFeeAmount(baseAmount),
+        baseCurrency,
+        exchangeRate: paymentFee.exchangeRate,
         feeDetails: {
-            amount: info.activationFee,
+            amount: feeAmount,
             fee: "0.00",
-            totalAmount: info.activationFee,
-            currency: info.currencyCode,
-            amountToTopup: info.activationFee,
+            totalAmount: feeAmount,
+            currency: feeCurrency,
+            amountToTopup: feeAmount,
+            exchangeRate: paymentFee.exchangeRate,
         },
         paymentType,
     }

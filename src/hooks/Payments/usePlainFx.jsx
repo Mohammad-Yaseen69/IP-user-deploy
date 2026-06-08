@@ -6,13 +6,12 @@ const usePlainFx = () => {
     const { mutateAsync, isPending } = useMutation({
         mutationFn: (payload) => apiWrapper({
             endpoint: `/api/wallet/get-plain-exchange-rate?from=${payload.from}&to=${payload.to}&amount=${payload.amount}`
-        }).then(dec => dec.exchangeRate?.result),
+        }).then(dec => dec?.exchangeRate?.result ?? dec?.exchangeRate?.exchanged_amount),
     })
 
     const getExchangeRate = useCallback(async (from, to, amount) => {
         try {
             const data = await mutateAsync({ from, to, amount });
-            console.log("Fx Result", data)
             return data;
         } catch (error) {
             console.error("FX Error:", error);

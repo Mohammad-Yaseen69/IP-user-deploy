@@ -48,7 +48,8 @@ const PaymentStep = (
         cardToWallet,
         applePay,
         googlePay,
-        hideButtons = false
+        hideButtons = false,
+        allowWalletSelection = false
     }) => {
     const { t } = useTranslation()
     const { authHeader } = useContext(UserContext)
@@ -157,6 +158,7 @@ const PaymentStep = (
                                 amount={amount}
                                 cardToWallet={cardToWallet}
                                 addFunds={addFunds}
+                                allowWalletSelection={allowWalletSelection}
                                 paymentType={paymentType}
                                 filteredWallets={filteredWallets}
                             />
