@@ -37,11 +37,7 @@
     background: var(--gray-gray-50, #F8F9FC);
 }
 
-.card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
-    border-color: var(--accent-light-border);
-}
+
 
 .iconWrap {
     width: 40px;
