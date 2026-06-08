@@ -20,8 +20,8 @@ const AccountsSidebar = ({ selectedAccount, onSelect, accounts = [], isLoading }
 
     return (
         <div className={styles.sidebar}>
-            <p className={styles.label}>
-                Your accounts <span><MoreHorizontal /></span>
+            <p className={styles.label}>Your accounts 
+                {/* <span> <MoreHorizontal /></span> */}
             </p>
 
             <div className={styles.accountItemCon}>

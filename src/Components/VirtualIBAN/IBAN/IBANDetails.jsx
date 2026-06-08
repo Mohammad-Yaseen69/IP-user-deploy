@@ -1,7 +1,37 @@
-import { useState } from "react"
-import { MoreHorizontal, Copy, Check, AlertCircle } from "react-feather"
-import { useVirtualIbanDetails } from "../hooks/useVirtualIban"
-import styles from "../styles/IBANDetails.module.css"
+import { useState } from 'react'
+import { MoreHorizontal, Copy, Check, AlertCircle } from 'react-feather'
+import styles from '../styles/IBANDetails.module.css'
+import { useVirtualIbanDetails } from '../hooks/useVirtualIban'
+
+const EU_DATA = {
+    accountHolderName: 'KEMIT KINGDOM - K2 - SA',
+    IBAN: 'MT24SYPL39480776971982696571227',
+    Bank_name: "SYSTEM PAY SERVICES (MALTA) LIMITED",
+    accNumebr: "Plaza De San Nicolas 4, Bilbao, 48005, ES",
+    Bank_code: "SYPLMTM2"
+
+}
+
+const INTL_DATA = {
+    usd: {
+        beneficiaryName: 'SYSTEM PAY SERVICES MALTA LTD',
+        beneficiaryAddress: 'Ruby Workspaces Office 3 Pendergardens Triq Gort, San Giljan, STJ 9023, MT',
+        accountNumber: 'ES9601828510912010000487',
+        bankCode: 'BBVAESMMXXX',
+        bankName: 'Banco Bilbao Vizcaya Argentaria, S.A.',
+        bankAddress: 'Plaza De San Nicolas 4, Bilbao, 48005, ES',
+        paymentReference: 'REF PY9F4G3'
+    },
+    eur: {
+        beneficiaryName: 'System Pay Services (Malta) Limited',
+        beneficiaryAddress: 'Ruby Workspaces Office 3 Pendergardens Triq Gort, San Giljan, STJ 9023, MT',
+        accountNumber: 'ES8201828510940200010371',
+        bankCode: 'BBVAESMMXXX',
+        bankName: 'Banco Bilbao Vizcaya Argentaria, S.A.',
+        bankAddress: 'De San Nicolas 4, Bilboa, 48005, ES',
+        paymentReference: 'REF 6JL69V3',
+    },
+}
 
 function useCopy() {
     const [copiedKey, setCopiedKey] = useState(null)

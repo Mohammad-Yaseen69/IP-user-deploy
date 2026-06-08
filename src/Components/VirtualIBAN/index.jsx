@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useState, useRef, useMemo, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import useWindowWidth from '../../utils/useWindowWidth'
 import TopRight from '../topRight'
@@ -20,6 +20,7 @@ const VirtualBank = () => {
     const [selectedAccount, setSelectedAccount] = useState(null);
     const [activeTab, setActiveTab] = useState("overview");
     const [showGetIBAN, setShowGetIBAN] = useState(false);
+    const ibanDetailsRef = useRef(null);
 
     console.log("rawIbans", rawIbans)
     const ibans = useMemo(
@@ -50,6 +51,12 @@ const VirtualBank = () => {
         setShowGetIBAN(false);
         setSelectedAccount(ibans[0]?._id || ibans[0]?.id || null);
     };
+
+    useEffect(() => {
+        if (activeTab === "ibanassets" && ibanDetailsRef.current) {
+            ibanDetailsRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+    }, [activeTab]);
     return (
         <div className={styles.container}>
             <div className={styles.top}>
@@ -106,7 +113,7 @@ const VirtualBank = () => {
                         )}
 
                         {activeTab === "ibanassets" && (
-                            <div className={styles.tabContent}>
+                            <div className={styles.tabContent} ref={ibanDetailsRef}>
                                 <div className={styles.section}>
                                     <IBANDetails ibanId={selectedIban?._id || selectedIban?.id} fallbackIban={selectedIban} />
                                 </div>

@@ -13,7 +13,7 @@ const formatAmount = (amount, currency) => {
   })
 }
 
-const BalanceHeader = ({ iban, isLoading }) => {
+const BalanceHeader = ({ iban, isLoading,setActiveTab }) => {
   const ibanId = iban?._id || iban?.id
   const { data: syncedBalance } = useSyncVirtualIbanBalance(ibanId)
   const currentBalance = syncedBalance?.balance ?? iban?.balance ?? 0
@@ -38,7 +38,10 @@ const BalanceHeader = ({ iban, isLoading }) => {
         </div>
 
         <div className={styles.rightActions}>
-          <button className={styles.iconBtn}>
+          <button
+            onClick={() => setActiveTab("ibanassets")}
+
+            className={styles.iconBtn}>
             <span>Virtual bank details</span>
             <ArrowUpRight size={16} />
           </button>
@@ -50,7 +53,7 @@ const BalanceHeader = ({ iban, isLoading }) => {
           <h1 className={styles.balance}>{formatAmount(currentBalance, currency)}</h1>
           <Eye color="#5926F0" size={15} />
         </div>
-        <span className={styles.growth}><ArrowUpRight size={15} /> 0.00%</span>
+        {/* <span className={styles.growth}><ArrowUpRight size={15} /> 0.00%</span> */}
       </div>
 
       <div className={styles.infoBox}>
