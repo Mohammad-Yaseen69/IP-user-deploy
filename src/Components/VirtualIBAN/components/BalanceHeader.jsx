@@ -1,6 +1,6 @@
 import React from "react";
 import { Copy, ArrowUpRight, Eye } from "react-feather";
-import styles from "../styles/BalanceHeader.module.css";
+import styles from "../styles/Balanceheader.module.css";
 import UK_Image from "../files/images/UK.svg"
 
 const BalanceHeader = () => {
