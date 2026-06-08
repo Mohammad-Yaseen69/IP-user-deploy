@@ -13,6 +13,8 @@ import styles from "./styles/index.module.css"
 import IBANDetails from './IBAN/IBANDetails'
 import Manage from './Manage/Manage'
 import { useVirtualIbans } from './hooks/useVirtualIban'
+import { transactions } from './data/Actions'
+import Empty from './components/Empty'
 import { asVirtualIbanArray } from './utils/virtualIban'
 const VirtualBank = () => {
     const { t } = useTranslation();
@@ -114,19 +116,28 @@ const VirtualBank = () => {
 
                         {activeTab === "overview" && (
                             <div className={styles.tabContent}>
-                                <MonthlyExpenses />
+                                {transactions.length !== 0 ? (
+                                    <Empty />
+                                ) :
+                                    <>
+                                        <MonthlyExpenses />
 
-                                <div className={styles.section}>
-                                    <RecentTransactions setActiveTab={setActiveTab} />
-                                </div>
+                                        <div className={styles.section}>
+                                            <RecentTransactions transactions={transactions} setActiveTab={setActiveTab} />
+                                        </div>
+                                    </>}
                             </div>
                         )}
 
                         {activeTab === "transaction-history" && (
                             <div className={styles.tabContent}>
                                 <div className={styles.section}>
-                                    <RecentTransactions setActiveTab={setActiveTab} />
-                                </div>
+                                    {transactions.length !== 0 ? (
+                                        <Empty />
+                                    ) :
+
+                                        <RecentTransactions transactions={transactions} setActiveTab={setActiveTab} />
+                                    }                                </div>
                             </div>
                         )}
 

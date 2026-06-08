@@ -129,7 +129,6 @@
 .table thead tr th {
     color: var(--gray-gray-600, #6E7687) !important;
 
-    font-family: Inter;
     font-size: 14px;
     font-style: normal;
     font-weight: 500;
@@ -161,7 +160,6 @@
 
 .dateCell {
     color: var(--Light-Mode-Text, #151514) !important;
-    font-family: Inter;
     font-size: 14px;
     font-style: normal;
     font-weight: 500;
@@ -171,7 +169,6 @@
 
 .typeCell {
     color: var(--text-secondary, #6E7687);
-    font-family: Inter;
     font-size: 14px;
     font-style: normal;
     font-weight: 500;
@@ -183,7 +180,6 @@
 
 .txId {
     color: var(--text-secondary, #6E7687) !important;
-    font-family: Inter;
     font-size: 14px;
     font-style: normal;
     font-weight: 500;
@@ -193,7 +189,6 @@
 
 .amount {
     color: var(--text-secondary, #6E7687);
-    font-family: Inter;
     font-size: 14px;
     font-style: normal;
     font-weight: 500;
@@ -258,7 +253,6 @@
 .description {
     color: var(--Typography-tertiary, rgba(31, 31, 33, 0.56));
     text-align: center;
-    font-family: Inter;
     font-size: 16px;
     font-style: normal;
     font-weight: 500;
