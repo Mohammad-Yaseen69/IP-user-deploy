@@ -2,6 +2,7 @@ import { useMemo, useState, useContext, useEffect } from "react"
 import { useTranslation } from "react-i18next"
 import { Modal, ModalBody } from "reactstrap"
 import axios from "axios"
+import { toast } from "react-toastify"
 import useWindowWidth from "../../../utils/useWindowWidth"
 import {
     CircleCheck,
@@ -44,6 +45,9 @@ import JurisdictionStep from "./JurisdictionStep"
 import SidebarProgress from "./SidebarProgress"
 import styles from "./virtualIbanModal.module.scss"
 import VerificationStep from "./VerificationStep"
+import useSendOtp from "../../../hooks/GeneralUse/useSendOtp"
+import OTPConfirmation from "../../UserSettingsNew/OTPConfirmation"
+import { useCreateVirtualIban } from "../hooks/useVirtualIban"
 
 const SIDEBAR_ICONS = {
     [STEPS.JURISDICTION]: JurisIcon,
@@ -77,7 +81,9 @@ const ChevronRight = () => (
     </svg>
 )
 
-const VirtualIbanModal = ({ isOpen, toggle }) => {
+
+
+const VirtualIbanModal = ({ isOpen, toggle, onCreated }) => {
     const { t } = useTranslation()
     const width = useWindowWidth()
 
@@ -88,6 +94,10 @@ const VirtualIbanModal = ({ isOpen, toggle }) => {
     const [feesAccepted, setFeesAccepted] = useState(false)
     const [paymentType, setPaymentType] = useState("")
     const [walletState, setWalletState] = useState({})
+    const [showOtp, setShowOtp] = useState(false)
+    const [otpToken, setOtpToken] = useState("")
+    const [codeType, setCodeType] = useState("sms")
+    const [createdIban, setCreatedIban] = useState(null)
 
     const [saveCard, setSaveCard] = useState(false)
     const [cards, setCards] = useState([])
@@ -106,6 +116,24 @@ const VirtualIbanModal = ({ isOpen, toggle }) => {
         maxCardNumberLength: 16,
         cvcLength: 3
     })
+
+    const createVirtualIban = useCreateVirtualIban()
+    const { sendOtp, isSendingOtp } = useSendOtp({
+        onSuccess: (token) => {
+            setOtpToken(token)
+            setShowOtp(true)
+        },
+        onError: (err) => {
+            console.log(err, "error")
+            toast.error(err?.message || t("Unable to send OTP"))
+        },
+    })
+
+    useEffect(() => {
+        if (userDetails?.tfa) {
+            setCodeType("authenticator")
+        }
+    }, [userDetails])
 
     useEffect(() => {
         getUserWallets()
@@ -176,7 +204,8 @@ const VirtualIbanModal = ({ isOpen, toggle }) => {
         [jurisdiction, feesAccepted, paymentType, walletState, selectedSaveCard, cardDetail, cardNumberError]
     )
 
-    const disabled = getDisabledState(currentStep, machineData)
+    const isCreating = isSendingOtp || createVirtualIban.isPending
+    const disabled = getDisabledState(currentStep, machineData) || isCreating
     const continueLabel = getContinueLabel(currentStep, t)
 
     const resetState = () => {
@@ -185,6 +214,10 @@ const VirtualIbanModal = ({ isOpen, toggle }) => {
         setFeesAccepted(false)
         setPaymentType("")
         setWalletState({})
+        setShowOtp(false)
+        setOtpToken("")
+        setCodeType("sms")
+        setCreatedIban(null)
         setSelectedSaveCard({})
         setCardDetails({
             cardNumber: "",
@@ -200,11 +233,51 @@ const VirtualIbanModal = ({ isOpen, toggle }) => {
         toggle?.()
     }
 
-    const handleContinue = () => {
-        if (currentStep === STEPS.SUMMARY) {
-            // When APIs are ready: await sendOtp() and setShowOtpModal(true) instead of advancing
-            // Since we skip OTP_CONFIRMATION, we go directly to DONE
+    const getCreatePayload = () => ({
+        wallet_id: walletState?.wallet_id,
+        currencyCode: jurisdictionInfo.currencyCode,
+        name: userDetails?.full_name || userDetails?.name || userDetails?.username || "Virtual IBAN",
+    })
+
+    const handleSendOtp = async (otpCodeType = codeType) => {
+        if (!walletState?.wallet_id) {
+            toast.error(t("Please select an InstaPay wallet to pay the activation fee"))
+            return
+        }
+
+        try {
+            setCodeType(otpCodeType || codeType)
+            await sendOtp(getCreatePayload(), otpCodeType || codeType)
+        } catch (error) {
+            const dec = decryptData(error?.response?.data?.data)
+            const message = dec?.message || error?.message || t("We are unable to process your request at the moment. Please try again later.")
+            toast.error(message)
+        }
+    }
+
+    const verifyOtp = async (setter, type = "", otp, setOtpError) => {
+        try {
+            const res = await createVirtualIban.mutateAsync({
+                token: otpToken,
+                otp,
+                type: type || codeType,
+            })
+            setCreatedIban(res?.data)
+            setter?.(true)
+            setShowOtp(false)
             setCurrentStep(STEPS.DONE)
+            onCreated?.(res?.data)
+        } catch (error) {
+            const dec = decryptData(error?.response?.data?.data)
+            const message = dec?.message || error?.message || t("We are unable to process your request at the moment. Please try again later.")
+            setOtpError?.(message)
+            toast.error(message)
+        }
+    }
+
+    const handleContinue = async () => {
+        if (currentStep === STEPS.SUMMARY) {
+            await handleSendOtp()
             return
         }
 
@@ -303,7 +376,7 @@ const VirtualIbanModal = ({ isOpen, toggle }) => {
                                         ? { name: `${selectedSaveCard.brand?.toUpperCase()} Card`, wallet_id: `•••• ${selectedSaveCard.last4}` }
                                         : { name: cardDetail.cardHolderName || "Payment Card", wallet_id: cardDetail.cardNumber ? `•••• ${cardDetail.cardNumber.slice(-4)}` : "" })
                         }
-                        sendOtp={() => setCurrentStep(STEPS.DONE)}
+                        sendOtp={handleSendOtp}
                         setStep={() => setCurrentStep(STEPS.PAYMENT_METHOD)}
                         paymentType={paymentType}
                         cardDets={{ currency: jurisdictionInfo.currencyCode }}
@@ -314,6 +387,7 @@ const VirtualIbanModal = ({ isOpen, toggle }) => {
                 return (
                     <DoneStep
                         jurisdiction={jurisdiction}
+                        iban={createdIban}
                         onGoToAccount={handleClose}
                     />
                 )
@@ -405,7 +479,7 @@ const VirtualIbanModal = ({ isOpen, toggle }) => {
                                 disabled={disabled}
                                 onClick={handleContinue}
                             >
-                                {continueLabel}
+                                {isCreating ? t("Processing...") : continueLabel}
                                 <ChevronRight />
                             </button>
                         </div>
@@ -428,6 +502,21 @@ const VirtualIbanModal = ({ isOpen, toggle }) => {
             {isOpen && width < 1000 && (
                 <div style={{ padding: "16px" }}>{renderBody()}</div>
             )}
+
+            <Modal isOpen={showOtp} toggle={() => setShowOtp(false)} centered>
+                <ModalBody>
+                    <OTPConfirmation
+                        setter={() => { }}
+                        setterValue={true}
+                        hideOtp={() => setShowOtp(false)}
+                        callback={verifyOtp}
+                        processing={createVirtualIban.isPending}
+                        resendHandler={handleSendOtp}
+                        authType={codeType}
+                        setAuthType={setCodeType}
+                    />
+                </ModalBody>
+            </Modal>
 
         </>
     )
