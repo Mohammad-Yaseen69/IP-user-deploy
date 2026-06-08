@@ -3,7 +3,7 @@ import styles from "../styles/IBAN.module.css"
 import VirtualIbanModal from '../VirtualIbanModal'
 import { useState } from 'react'
 
-const IBAN = () => {
+const IBAN = ({ onCreated }) => {
     const [showModal, setShowModal] = useState(false)
 
     const handleOpenModal = () => {
@@ -102,6 +102,7 @@ const IBAN = () => {
             <VirtualIbanModal
                 isOpen={showModal}
                 toggle={handleCloseModal}
+                onCreated={onCreated}
             />
         </div>
     )
