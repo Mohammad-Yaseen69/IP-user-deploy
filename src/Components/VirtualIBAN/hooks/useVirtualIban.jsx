@@ -25,6 +25,30 @@ export const useVirtualIbans = () =>
 
             return asVirtualIbanArray(res)
         },
+        gcTime: 0,
+        cacheTime: 0,
+        staleTime: 0,
+        refetchOnMount: "always",
+        refetchOnWindowFocus: false,
+    })
+
+export const usePendingStatus = () =>
+    useQuery({
+        queryKey: ["PendingStatus:VirtualIban"],
+        queryFn: async () => {
+            const res = await apiWrapper({
+                endpoint: "/api/virtual-iban/creation-status",
+                method: "GET",
+                isDecrypted: true,
+            })
+
+            return res?.data?.inProgress || res?.data?.data?.inProgress || false
+        },
+        gcTime: 0,
+        cacheTime: 0,
+        staleTime: 0,
+        refetchOnMount: "always",
+        refetchOnWindowFocus: false,
     })
 
 export const useVirtualIbanDetails = (ibanId) =>
@@ -40,7 +64,32 @@ export const useVirtualIbanDetails = (ibanId) =>
             return asVirtualIban(res)
         },
         enabled: !!ibanId,
+        gcTime: 0,
+        staleTime: 0
     })
+
+export const useVirtualIbanBlock = () => {
+    const queryClient = useQueryClient()
+
+    return useMutation({
+        mutationFn: async ({ ibanId, action }) =>
+            apiWrapper({
+                endpoint: `/api/virtual-iban/${ibanId}/action`,
+                method: "POST",
+                payload: { action },
+                isDecrypted: true,
+                isEncrypted: true,
+            }),
+        onSuccess: (_, variables) => {
+            const ibanId = variables?.ibanId
+            if (ibanId) {
+                queryClient.invalidateQueries({ queryKey: virtualIbanQueryKeys.list() })
+                queryClient.invalidateQueries({ queryKey: virtualIbanQueryKeys.detail(ibanId) })
+                queryClient.invalidateQueries({ queryKey: virtualIbanQueryKeys.balance(ibanId) })
+            }
+        }
+    })
+}
 
 export const useSyncVirtualIbanBalance = (ibanId) =>
     useQuery({
@@ -54,6 +103,8 @@ export const useSyncVirtualIbanBalance = (ibanId) =>
             return unwrapVirtualIbanResponse(res)
         },
         enabled: !!ibanId,
+        gcTime: 0,
+        staleTime: 0
     })
 
 export const useCreateVirtualIban = () => {
@@ -68,6 +119,8 @@ export const useCreateVirtualIban = () => {
             }),
     })
 }
+
+export const useUpdateVirtualIbanStatus = useVirtualIbanBlock
 
 export const useVirtualIbanTransferFee = () =>
     useMutation({
