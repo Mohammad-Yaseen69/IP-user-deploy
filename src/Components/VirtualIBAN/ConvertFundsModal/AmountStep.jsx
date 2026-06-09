@@ -23,6 +23,7 @@ const AmountStep = ({ amount, setAmount, currencyCode = "EUR", availableBalance 
     const handleQuickSelect = (value) => {
         setAmount(formatAmountValue(value))
     }
+    const amountLength = amount?.length || 0;
 
     return (
         <div>
@@ -39,6 +40,7 @@ const AmountStep = ({ amount, setAmount, currencyCode = "EUR", availableBalance 
                         onBlur={(event) => handleAmountInputBlur(event, setAmount)}
                         size={getAmountInputSize(amount)}
                         placeholder="0.00"
+                        maxLength={12}
                         autoFocus
                     />
                 </div>
