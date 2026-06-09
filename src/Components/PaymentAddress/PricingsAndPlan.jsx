@@ -13,6 +13,8 @@ import { Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap'
 import { ButtonForRequests } from "../ReceiptInvoices/UI/FormElements"
 import { toast } from "react-toastify"
 import { apiWrapper } from "../../utils/Functions/apiWrapper"
+import { Search } from "react-feather"
+import { useDebounce } from "../../hooks/useDebounce/useDebounce"
 
 const PricingsAndPlan = ({ isInvoicePage = true }) => {
     const { t } = useTranslation()
@@ -27,12 +29,13 @@ const PricingsAndPlan = ({ isInvoicePage = true }) => {
     const [planToRemoveSync, setPlanToRemoveSync] = useState(null)
     const { userDetails } = useContext(UserContext)
     const queryClient = useQueryClient()
-
+    const [search, setSearch] = useState("")
+    const debouncedSearch = useDebounce(search, 400)
     const menuRefs = useRef({})
 
     const { data, isLoading } = useQuery({
-        queryKey: ["GetUserPlans", userDetails?.username],
-        queryFn: () => getUserPlans(userDetails?.username, !isInvoicePage),
+        queryKey: ["GetUserPlans", userDetails?.username, debouncedSearch, isInvoicePage],
+        queryFn: () => getUserPlans(userDetails?.username, !isInvoicePage, debouncedSearch),
         enabled: !!userDetails?.username,
         staleTime: 0,
         gcTime: 0,
@@ -55,7 +58,6 @@ const PricingsAndPlan = ({ isInvoicePage = true }) => {
         return () => document.removeEventListener('mousedown', handleDocumentClick)
     }, [openMenuPlanId])
 
-    // Mutations
     const { mutateAsync: addMutate, isPending: isAdding } = useMutation({
         mutationFn: (payload) => addPlan(payload),
         onError: (error) => {
@@ -132,7 +134,7 @@ const PricingsAndPlan = ({ isInvoicePage = true }) => {
             description: updatedPlan.description,
             title: updatedPlan.title,
             account: updatedPlan.account || userDetails?._id,
-            receivingWallet: updatedPlan.receivingWallet || updatedPlan.currency, // keep compatibility
+            receivingWallet: updatedPlan.receivingWallet || updatedPlan.currency,
             billingCycle: updatedPlan.billingCycle,
             termsAndConditions: updatedPlan.tAndC,
             showOnPaymentAddress: updatedPlan.showOnPaymentAddress
@@ -198,7 +200,17 @@ const PricingsAndPlan = ({ isInvoicePage = true }) => {
                 {!isInvoicePage && <p>{t("The plans shown here are currently synced to your public payment address.")}</p>}
                 {isInvoicePage && <p>{t("Create subscription plans or pricing packages to display on your public Payment Address.")}</p>}
             </div>
-
+            <div className={styles.searchCont}>
+                <div className={styles.search}>
+                    <Search />
+                    <input
+                        type="text"
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                        placeholder={t('Search for Invoice')}
+                    />
+                </div>
+            </div>
             {isLoading && <div style={{ padding: 20 }}>{t('Loading plans...')}</div>}
 
             {(!isLoading && filteredPlans?.length === 0) && isInvoicePage &&
@@ -221,9 +233,11 @@ const PricingsAndPlan = ({ isInvoicePage = true }) => {
             }
 
             {filteredPlans?.length > 0 && (
-                <div style={{
-                    overflowX: 'auto', width: '100%', minHeight: '100px',
-                }}>
+                <div
+                    className={styles.desktopViewOnly}
+                    style={{
+                        overflowX: 'auto', width: '100%', minHeight: '100px',
+                    }}>
                     <table style={{ width: '100%', borderCollapse: 'collapse', background: '#FFF', minWidth: 680 }}>
                         <thead>
                             <tr style={{ color: '#5B5B5B', fontWeight: 600, fontSize: 14 }}>

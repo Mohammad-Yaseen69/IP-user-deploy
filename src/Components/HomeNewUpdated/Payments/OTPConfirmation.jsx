@@ -8,6 +8,7 @@ import { encryptData } from '../../../Helper/EssentilaMethods/Encryption';
 import { UserContext } from '../../../Context/UserContext';
 import { useTranslation } from 'react-i18next';
 import { InactivityContext } from '../../../InactivityWrapper';
+import { useIdempotency } from '../../../hooks/Payments/useIdempotency';
 
 const OTPConfirmation = ({ setStep, createdTransaction = "", setTransactionDetails, type = "", paymentDetails = "", requestObject = "" }) => {
     const { t } = useTranslation()
@@ -26,6 +27,7 @@ const OTPConfirmation = ({ setStep, createdTransaction = "", setTransactionDetai
     const [isAnyFieldEmpty, setIsAnyFieldEmpty] = useState(true);
     const [otpError, setOtpError] = useState("")
     const { setIsExtended } = useContext(InactivityContext)
+    const { getKey, reset } = useIdempotency()
 
     useEffect(() => {
         setIsExtended(true)
@@ -123,9 +125,7 @@ const OTPConfirmation = ({ setStep, createdTransaction = "", setTransactionDetai
                     const encrypted = encryptData(data)
                     axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/insta-payment-request-w2w`, {
                         data: encrypted
-                    }, {
-                        headers: authHeader
-                    })
+                    }, { headers: { ...authHeader, "idempotency-key": getKey() } })
                         .then(res => {
                             const decrypted = decryptData(res.data.data)
                             if (decrypted.status) {
