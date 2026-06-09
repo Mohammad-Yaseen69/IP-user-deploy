@@ -33,14 +33,13 @@ const REASONS = [
 ]
 
 /**
- * UnsubscribeModal
  *
- * @param {boolean}  isOpen         Whether the modal is visible
- * @param {function} toggle         Close handler
- * @param {boolean}  hasBalance     When true  → shows "with balance" flow
- *                                  When false → shows "without balance" flow
- * @param {function} onWithdraw     Called when user clicks "Take me to Withdraw funds"
- * @param {function} onUnsubscribe  Called when user confirms the unsubscribe action
+ * @param {boolean}  isOpen        
+ * @param {function} toggle        
+ * @param {boolean}  hasBalance     
+ *                                 
+ * @param {function} onWithdraw   
+ * @param {function} onUnsubscribe 
  */
 const UnsubscribeModal = ({
     isOpen,
@@ -74,21 +73,17 @@ const UnsubscribeModal = ({
         handleClose()
     }
 
-    /* ─── Flow 1: "Unsubscribe with balance" ─── */
     const renderWithBalance = () => (
         <div className={styles.container}>
-            {/* Header Row */}
             <div className={styles.headerRow}>
                 <div className={styles.redAsteriskBadge}>✳</div>
                 <h2 className={styles.title}>{t("Unsubscribe your virtual account?")}</h2>
             </div>
 
-            {/* Center purple warning icon */}
             <div className={`${styles.iconBox} ${styles.iconPurple}`}>
                 <WarningTriangleIcon />
             </div>
 
-            {/* Content */}
             <h3 className={styles.subtitle}>
                 {t("You can't unsubscribe if you still have a balance.")}
             </h3>
@@ -96,7 +91,6 @@ const UnsubscribeModal = ({
                 {t("You must withdraw your vIBAN balance before unsubscribing.")}
             </p>
 
-            {/* Actions */}
             <div className={styles.actions}>
                 <button
                     type="button"
@@ -116,41 +110,35 @@ const UnsubscribeModal = ({
         </div>
     )
 
-    /* ─── Flow 2: "Unsubscribe without balance" ─── */
     const renderWithoutBalance = () => (
         <div className={styles.container}>
-            {/* Header Row */}
             <div className={styles.headerRow}>
                 <div className={styles.redAsteriskBadge}>✳</div>
                 <h2 className={styles.title}>{t("Unsubscribe your virtual account?")}</h2>
             </div>
 
-            {/* Center red lock icon */}
             <div className={`${styles.iconBox} ${styles.iconRed}`}>
                 <LockIcon />
             </div>
 
-            {/* Title & Subtitle */}
             <h3 className={styles.subtitle}>
                 {t("This will pause all activity")}
             </h3>
             <p className={styles.description}>
-                {t("Your IBAN will reject incoming transfers and you won't be able to send or convert funds. You can unfreeze in one tap from this screen.")}
+                {t("Your IBAN will reject incoming transfers and you won't be able to send or convert funds.")}
             </p>
 
-            {/* Consequences table */}
             <div className={styles.consequenceTable}>
                 <div className={styles.consequenceRow}>
                     <span className={styles.consequenceLabel}>{t("Incoming SEPA transfers")}</span>
                     <span className={styles.consequenceValue}>{t("Will be rejected and returned")}</span>
                 </div>
-                <div className={styles.consequenceRow}>
+                {/* <div className={styles.consequenceRow}>
                     <span className={styles.consequenceLabel}>{t("Card payments")}</span>
                     <span className={styles.consequenceValue}>{t("Declined")}</span>
-                </div>
+                </div> */}
             </div>
 
-            {/* Reason dropdown */}
             <div className={styles.reasonSection}>
                 <label className={styles.reasonLabel}>
                     {t("Reason")} <span className={styles.optional}>({t("optional")})</span>
@@ -168,7 +156,6 @@ const UnsubscribeModal = ({
                 </select>
             </div>
 
-            {/* Confirmation checkbox */}
             <div className={styles.checkboxRow}>
                 <input
                     type="radio"

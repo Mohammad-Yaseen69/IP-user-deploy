@@ -496,6 +496,7 @@
     border-radius: var(--RADIUS-radius-2, 8px);
     background: #FAFAFA;
     padding: 12px;
+    cursor: pointer;
 
     .circle {
         display: flex;
@@ -962,6 +963,8 @@
                 font-size: 14px;
                 font-weight: 700;
                 margin-bottom: 0;
+                display: inline;
+                gap: 2px;
             }
         }
     }

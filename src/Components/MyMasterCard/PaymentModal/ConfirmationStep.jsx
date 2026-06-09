@@ -74,7 +74,7 @@ const ConfirmationStep = ({ feeDetails, walletState, setStep, sendOtp, addFunds,
                     {!addFunds &&
                         <div className={styles.feeInfo}>
                             <h3>{t(feeLabel || "Card activation fee")}</h3>
-                            <h3>{feeDetails.fee}{feeDetails.currency}</h3>
+                            <h3>{feeDetails.fee} {feeDetails.currency}</h3>
                         </div>
                     }
 
