@@ -23,18 +23,20 @@ const IBAN = ({ onCreated }) => {
                 <div className={styles.leftSection}>
                     <p className={styles.subHeading}>{t("My Virtual Account")}</p>
                     <h1 className={styles.heading}>
-                        {t("Get a dedicated IBAN")} <br /> {t("in your name.")}
+                        Get a dedicated European <br /> IBAN in your name.
+
                     </h1>
                     <p className={styles.description}>
                     </p>
 
                     <div className={styles.buttonGroup}>
 
-                        <h5>{t("SEPA + SWIFT")}</h5>
-                        <p>{t("Receive worldwide")}</p>
+                        <h5>SEPA + SWIFT</h5>
+                        <p>Send and receive worldwide
+                        </p>
                     </div>
                     <button onClick={handleOpenModal} className={styles.buttonGroup1} >
-                        {t("Open virtual bank account")} <ArrowRight />
+                        Open your virtual bank account <ArrowRight />
                     </button>
                 </div>
 
