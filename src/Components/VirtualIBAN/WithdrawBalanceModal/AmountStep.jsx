@@ -19,6 +19,7 @@ const AmountStep = ({
     setAmount,
     availableBalance = SOURCE_IBAN.balance,
     currencyCode = SOURCE_IBAN.currency,
+    sourceIban,
 }) => {
     const { t } = useTranslation()
     const numericAmount = getAmountNumber(amount)
@@ -26,6 +27,8 @@ const AmountStep = ({
     const quickAmounts = getQuickAmountsFromBalance(sourceBalance)
     const symbol = getCurrencySymbol(currencyCode)
     const exceedsBalance = numericAmount > sourceBalance
+    const sourceTitle = sourceIban?.name || sourceIban?.title || `${currencyCode} IBAN`
+    const sourceNumber = sourceIban?.iban || sourceIban?.account_number || sourceIban?.accountNumber || "-"
 
     const handleQuickSelect = (value) => {
         setAmount(formatAmountValue(value))
@@ -51,7 +54,7 @@ const AmountStep = ({
                     />
                 </div>
                 <div className={styles.availableText}>
-                    {t("Available")} &middot; {symbol}{formatAmountValue(sourceBalance)} {currencyCode}
+                    {t("Available")} {symbol}{formatAmountValue(sourceBalance)}
                 </div>
                 {exceedsBalance && (
                     <div className={styles.balanceError}>
@@ -80,8 +83,8 @@ const AmountStep = ({
                             <img src={MT} alt="MT" />
                         </div>
                         <div className={styles.sourceInfo}>
-                            <h4>{SOURCE_IBAN.title}</h4>
-                            <p>{SOURCE_IBAN.iban}</p>
+                            <h4>{sourceTitle}</h4>
+                            <p>{sourceNumber}</p>
                         </div>
                     </div>
                     <div className={styles.sourceBalance}>
