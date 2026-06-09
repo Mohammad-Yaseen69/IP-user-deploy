@@ -5,6 +5,7 @@ import { Tooltip } from "@mui/material"
 import UK_Image from "../files/images/UK.svg"
 import Malta_Image from "../files/images/Malta.svg"
 import { getVirtualIbanCountry, normalizeVirtualIban } from "../utils/virtualIban"
+import { useTranslation } from "react-i18next"
 
 
 const formatAmount = (amount, currency) => {
@@ -27,7 +28,7 @@ const BalanceHeader = ({ iban, isLoading, setActiveTab, onShowDetails }) => {
   const currency = syncedBalance?.currency || mappedIban?.currency || "EUR"
   const country = getVirtualIbanCountry(mappedIban)
   const flag = country === "GB" ? UK_Image : Malta_Image
-
+  const { t } = useTranslation()
   const handleShowDetails = () => {
     if (isBlocked) return
 
@@ -40,20 +41,20 @@ const BalanceHeader = ({ iban, isLoading, setActiveTab, onShowDetails }) => {
   }
 
   if (isLoading) {
-    return <div className={styles.card}>Loading account...</div>
+    return <div className={styles.card}>{t("Loading account...")}</div>
   }
 
   return (
     <div className={styles.card}>
       <div className={styles.topBar}>
         <div className={styles.leftInfo}>
-          <span className={styles.accountTag}><img src={flag} alt="" />  IBAN</span>
+          <span className={styles.accountTag}><img src={flag} alt="" /> {t("IBAN")}</span>
           <span className={styles.activeBadge}>{status}</span>
         </div>
 
         <div className={styles.rightActions}>
           <Tooltip
-            title={isBlocked ? "This virtual IBAN is paused. Reactivate it to view deposit details." : ""}
+            title={isBlocked ? t("This virtual IBAN is paused. Reactivate it to view deposit details.") : ""}
             arrow
             placement="top"
           >
@@ -63,7 +64,7 @@ const BalanceHeader = ({ iban, isLoading, setActiveTab, onShowDetails }) => {
                 disabled={isBlocked}
                 className={`${styles.iconBtn} ${isBlocked ? styles.disabledBtn : ""}`}
               >
-                <span>Virtual bank details</span>
+                <span>{t("Virtual bank details")}</span>
                 <ArrowUpRight size={16} />
               </button>
             </span>
@@ -81,7 +82,7 @@ const BalanceHeader = ({ iban, isLoading, setActiveTab, onShowDetails }) => {
 
       <div className={styles.infoBox}>
         <div className={styles.item}>
-          <span className={styles.label}>IBAN</span>
+          <span className={styles.label}>{t("IBAN")}</span>
           <div>
             <span className={styles.value}>{mappedIban?.iban || "-"}</span>
             <Copy
@@ -93,7 +94,7 @@ const BalanceHeader = ({ iban, isLoading, setActiveTab, onShowDetails }) => {
         </div>
 
         <div className={styles.item}>
-          <span className={styles.label}>BIC</span>
+          <span className={styles.label}>{t("BIC")}</span>
           <div>
             <span className={styles.value}>{bic}</span>
             <Copy
@@ -104,7 +105,7 @@ const BalanceHeader = ({ iban, isLoading, setActiveTab, onShowDetails }) => {
           </div>
         </div>
         <div className={styles.item}>
-          <span className={styles.label}>Currency</span>
+          <span className={styles.label}>{t("Currency")}</span>
           <div>
             <div className={styles.currencyIcon}>
               <svg xmlns="http://www.w3.org/2000/svg" width="11" height="12" viewBox="0 0 11 12" fill="none">

@@ -4,6 +4,7 @@ import OverViewIcon from "../files/images/OverView.svg"
 import mange from "../files/images/Mange.svg"
 import TransecitonHis from "../files/images/TransectionHistory.svg"
 import IBAN_icon from "../files/images/IBAN.svg"
+import { useTranslation } from "react-i18next";
 
 const tabs = [
   { id: "overview", label: "Overview", icon: OverViewIcon },
@@ -13,6 +14,7 @@ const tabs = [
 ];
 
 const TabsNav = ({ activeTab, onTabChange }) => {
+  const { t } = useTranslation()
   return (
     <div className={styles.tabsWrapper}>
       {tabs.map((tab) => (
@@ -22,7 +24,7 @@ const TabsNav = ({ activeTab, onTabChange }) => {
           onClick={() => onTabChange(tab.id)}
         >
           <img src={tab.icon} alt={tab.label} className={styles.icon} />
-          {tab.label}
+          {t(tab.label)}
         </button>
       ))}
     </div>
