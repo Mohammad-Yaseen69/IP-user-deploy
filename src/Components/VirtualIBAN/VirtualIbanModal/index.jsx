@@ -95,9 +95,18 @@ const ChevronRight = () => (
 )
 
 const parseAmount = (value) => {
-    const amount = Number(String(value ?? "").replace(/,/g, ""))
+    const amount = Number(String(value ?? "").replace(/[^\d.-]/g, ""))
     return Number.isFinite(amount) ? amount : 0
 }
+
+const getWalletAvailableBalance = (wallet) =>
+    parseAmount(
+        wallet?.balance?.available ??
+        wallet?.balance?.available_balance ??
+        wallet?.available_balance ??
+        wallet?.availableBalance ??
+        wallet?.available
+    )
 
 const getWalletCurrencyCode = (wallet) =>
     wallet?.currency?.code || wallet?.currency_code || wallet?.name || ""
@@ -452,7 +461,7 @@ const VirtualIbanModal = ({
         paymentType === "wallet" &&
         !!walletState?.wallet_id &&
         !!activationFeeFx.amount &&
-        parseAmount(walletState?.balance?.available) < parseAmount(activationFeeFx.amount)
+        getWalletAvailableBalance(walletState) < parseAmount(activationFeeFx.amount)
     const disabled =
         getDisabledState(currentStep, machineData) ||
         isCreating ||
@@ -665,19 +674,29 @@ const VirtualIbanModal = ({
                         paymentType={paymentType}
                         saveCard={saveCard}
                         setCardDetails={setCardDetails}
+                        amount={VIRTUAL_IBAN_ACTIVATION_FEE}
                         setFeeDetails={() => { }}
                         setSaveCard={setSaveCard}
                         setSelectedSaveCard={setSelectedSaveCard}
                         setStep={() => { }}
                         setWalletState={setWalletState}
-                        vvcCardType="standard"
                         walletState={walletState}
                         setCards={setCards}
                         selectedSaveCard={selectedSaveCard}
                         applePay={false}
                         googlePay={false}
                         hideButtons={true}
-                        allowWalletSelection={true}
+                        getWalletIsSufficient={(wallet) => {
+                            const walletCurrency = getWalletCurrencyCode(wallet)
+                            const feeAmount =
+                                walletCurrency === activationFeeFx.currency
+                                    ? activationFeeFx.amount
+                                    : walletCurrency === VIRTUAL_IBAN_ACTIVATION_FEE_CURRENCY
+                                        ? VIRTUAL_IBAN_ACTIVATION_FEE
+                                        : activationFeeFx.amount
+
+                            return !!feeAmount && getWalletAvailableBalance(wallet) >= parseAmount(feeAmount)
+                        }}
                         marginTop="1rem"
                     />
                 )

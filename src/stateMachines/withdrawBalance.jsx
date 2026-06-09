@@ -110,40 +110,22 @@ export const SOURCE_IBAN = {
     currency: "EUR",
 }
 
-// Mock linked bank accounts
-export const LINKED_BANKS = [
-    {
-        id: "cib",
-        name: "CIB",
-        lastFour: "4821",
-        conversion: "EUR to EGP",
-        country: "EG",
-        selected: true,
-    },
-    {
-        id: "federal",
-        name: "Federal Bank",
-        lastFour: "9204",
-        conversion: "EUR to INR",
-        country: "IN",
-        selected: false,
-    },
-]
-
 // Transfer speed options
 export const TRANSFER_SPEEDS = [
     {
         id: "instant",
         label: "Instant",
         description: "Arrives in seconds",
-        fee: "0.50",
+        feeRate: 0.015,
+        feePercent: "1.5%",
         icon: "lightning",
     },
     {
         id: "saver",
         label: "Saver",
         description: "Arrives in 2-3 business days",
-        fee: "0",
+        feeRate: 0.008,
+        feePercent: "0.8%",
         icon: "speedometer",
     },
 ]

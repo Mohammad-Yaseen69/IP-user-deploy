@@ -51,7 +51,8 @@ const AccountsSidebar = ({ selectedAccount, onSelect, accounts = [], isLoading }
 
                                 <div className={styles.accInfo}>
                                     <span className={styles.accName}>
-                                        {index === 0 ? t("Primary IBAN") : t("IBAN {{number}}", { number: index + 1 })}
+                                        {country === "GB" ? t("UK IBAN") : t("Malta IBAN")}
+                                        {/* {index === 0 ? t("Primary IBAN") : t("IBAN {{number}}", { number: index + 1 })} */}
                                     </span>
                                     <span className={styles.accCurrency}>{t("{{currency}} IBAN", { currency: acc?.currency })}</span>
                                 </div>

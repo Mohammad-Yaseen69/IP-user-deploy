@@ -49,7 +49,8 @@ const PaymentStep = (
         applePay,
         googlePay,
         hideButtons = false,
-        allowWalletSelection = false
+        allowWalletSelection = false,
+        getWalletIsSufficient
     }) => {
     const { t } = useTranslation()
     const { authHeader } = useContext(UserContext)
@@ -159,6 +160,7 @@ const PaymentStep = (
                                 cardToWallet={cardToWallet}
                                 addFunds={addFunds}
                                 allowWalletSelection={allowWalletSelection}
+                                isSufficientOverride={getWalletIsSufficient?.(wallet_l)}
                                 paymentType={paymentType}
                                 filteredWallets={filteredWallets}
                             />
