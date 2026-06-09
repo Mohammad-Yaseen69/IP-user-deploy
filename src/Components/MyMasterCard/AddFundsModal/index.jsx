@@ -474,7 +474,7 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card, setCurrentCardDetai
             setStep(prev => prev - 1)
         }
     }
-
+    // console.log("data", card?.currency)
 
     const renderData = () => (
         <div style={{ width: "100%", display: "flex", gap: "20px", flexDirection: width < 1000 ? "column" : "" }}>
@@ -577,21 +577,24 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card, setCurrentCardDetai
                 {step === 1 &&
                     <div className={styles.amount}>
                         <p>{t("Amount")}</p>
-                        <input
-                            value={amount}
-                            onChange={(e) => {
-                                if (e.target.value === "") {
-                                    setAmount("");
-                                    return;
-                                }
-                                setAmount(e.target.value);
-                            }}
-                            onKeyUp={(e) => formatCurrency(e.target.value, false, setAmount)}
-                            onBlur={(e) => formatCurrency(e.target.value, true, setAmount)}
-                            type="text"
-                            placeholder={t('30.00')}
-                            data-type="currency"
-                        />
+                        <div className={styles.amountInput}>
+                            <input
+                                value={amount}
+                                onChange={(e) => {
+                                    if (e.target.value === "") {
+                                        setAmount("");
+                                        return;
+                                    }
+                                    setAmount(e.target.value);
+                                }}
+                                onKeyUp={(e) => formatCurrency(e.target.value, false, setAmount)}
+                                onBlur={(e) => formatCurrency(e.target.value, true, setAmount)}
+                                type="text"
+                                placeholder={t('30.00')}
+                                data-type="currency"
+                            />
+                            <span>{card?.currency || "USD"}</span>
+                        </div>
                     </div>
                 }
 

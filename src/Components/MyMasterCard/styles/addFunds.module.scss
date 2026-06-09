@@ -131,6 +131,24 @@
         text-transform: capitalize;
     }
 
+    .amountInput {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 360px;
+        max-width: 100%;
+
+        span {
+            position: absolute;
+            right: 0;
+            color: #7D7D7D;
+            font-family: Manrope;
+            font-size: 18px;
+            font-weight: 700;
+        }
+    }
+
     input {
         background-color: white;
         border: none;

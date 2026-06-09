@@ -670,8 +670,11 @@ const PayAsGuest = ({
     const getPayouts = async () => {
       dataHandler("loading", true);
       try {
+        const levelId = typeof user?.level === "string"
+          ? user?.level
+          : user?.level?._id;
         const res = await axios.get(
-          `${import.meta.env.VITE_IP_DEV_API}/api/guest-pay/payment-methods/${user?.level?._id}?accountId=${user?._id}&country_iso_code=${data?.country?.alpha3}${type === "invoice" ? "&isInvoice=true" : ""}`
+          `${import.meta.env.VITE_IP_DEV_API}/api/guest-pay/payment-methods/${levelId}?accountId=${user?._id}&country_iso_code=${data?.country?.alpha3}${type === "invoice" ? "&isInvoice=true" : ""}`
         );
         const dec = decryptData(res.data.data);
         setAllowed(dec?.data ?? []);
@@ -682,12 +685,12 @@ const PayAsGuest = ({
         dataHandler("loading", false);
       }
     };
+    const levelId = typeof user?.level === "string" ? user?.level : user?.level?._id;
 
-    if (user?.level?._id && data?.country?.alpha3) {
+    if (levelId && data?.country?.alpha3) {
       getPayouts();
     }
   }, [user, data?.country]);
-
 
   return (
     <>

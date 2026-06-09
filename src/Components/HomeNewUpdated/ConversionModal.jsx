@@ -13,6 +13,7 @@ import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
 import { InactivityContext } from "../../InactivityWrapper";
 import { LimitsErrorMessage } from "../PaymentsNewer/OTPConfirmation";
 import { useIdempotency } from "../../hooks/Payments/useIdempotency";
+import { formatCurrency } from "../../Helper/AmountFormat";
 
 const ConversionModal = ({ isOpen, toggleModal, amount, exchangeAmount, currency, exchangeCurrency, exchangePrice, setEnteredCurrency, setResultCurrency, setUserCurrency, setExchangedCurrency, exchangeFee, fxDet }) => {
     const { setIsExtended } = useContext(InactivityContext)
@@ -237,7 +238,6 @@ const ConversionModal = ({ isOpen, toggleModal, amount, exchangeAmount, currency
             confirmConversion()
         }
     }, [complete])
-
     return (
         <Modal isOpen={isOpen} toggle={() => {
             toggleModal()
@@ -283,7 +283,7 @@ const ConversionModal = ({ isOpen, toggleModal, amount, exchangeAmount, currency
                         <div className={styles.two_items} style={{ flexWrap: "wrap" }}>
                             <div className={styles.currency_info}>
                                 <span style={{ whiteSpace: "nowrap" }}>{t("Amount After Fee")}: </span>
-                                <p style={{ whiteSpace: "nowrap" }}>{Number(fxDet?.sending?.amount)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} {currency}</p>
+                                <p style={{ whiteSpace: "nowrap" }}>{formatCurrency(fxDet?.sending?.amount)} {currency}</p>
                             </div>
                             <div className={styles.currency_info}>
                                 <span style={{ whiteSpace: "nowrap" }}>{t("You Will Receive")}: </span>
