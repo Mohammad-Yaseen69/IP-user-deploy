@@ -11,6 +11,7 @@ export const virtualIbanQueryKeys = {
     list: () => [...virtualIbanQueryKeys.all, "list"],
     detail: (id) => [...virtualIbanQueryKeys.all, "detail", id],
     balance: (id) => [...virtualIbanQueryKeys.all, "balance", id],
+    processingStatus: () => [...virtualIbanQueryKeys.all, "processing-status"],
 }
 
 export const useVirtualIbans = () =>
@@ -32,9 +33,9 @@ export const useVirtualIbans = () =>
         refetchOnWindowFocus: false,
     })
 
-export const usePendingStatus = () =>
+export const usePendingStatus = (enabled = true) =>
     useQuery({
-        queryKey: ["PendingStatus:VirtualIban"],
+        queryKey: virtualIbanQueryKeys.processingStatus(),
         queryFn: async () => {
             const res = await apiWrapper({
                 endpoint: "/api/virtual-iban/creation-status",
@@ -44,6 +45,7 @@ export const usePendingStatus = () =>
 
             return res?.data?.inProgress || res?.data?.data?.inProgress || false
         },
+        enabled,
         gcTime: 0,
         cacheTime: 0,
         staleTime: 0,
@@ -67,6 +69,8 @@ export const useVirtualIbanDetails = (ibanId) =>
         gcTime: 0,
         staleTime: 0
     })
+
+export const useVirtualIbanProcessingStatus = usePendingStatus
 
 export const useVirtualIbanBlock = () => {
     const queryClient = useQueryClient()
@@ -100,7 +104,8 @@ export const useSyncVirtualIbanBalance = (ibanId) =>
                 method: "GET",
                 isDecrypted: true,
             })
-            return unwrapVirtualIbanResponse(res)
+            const data = unwrapVirtualIbanResponse(res)
+            return data === true || data?.inProgress === true
         },
         enabled: !!ibanId,
         gcTime: 0,
