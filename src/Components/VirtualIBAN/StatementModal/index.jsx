@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Modal, ModalBody } from "reactstrap"
 import { FileText } from "react-feather"
 import { useTranslation } from "react-i18next"
@@ -35,7 +35,48 @@ const StatementModal = ({ isOpen, toggle }) => {
     const { t } = useTranslation()
     const [period, setPeriod] = useState("Last month")
     const [format, setFormat] = useState("pdf")
+    const [isDownloading, setIsDownloading] = useState(false)
+    const [secondsLeft, setSecondsLeft] = useState(10)
+    const handleFileDownload = () => {
+        const link = document.createElement("a")
 
+        if (format === "pdf") {
+            link.href =
+                "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"
+            link.download = "statement.pdf"
+        } else {
+            const csvContent =
+                "Date,Description,Amount\n2024-01-01,Payment,100\n2024-01-02,Transfer,50"
+
+            const blob = new Blob([csvContent], {
+                type: "text/csv;charset=utf-8;",
+            })
+
+            link.href = URL.createObjectURL(blob)
+            link.download = "statement.csv"
+        }
+
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+    }
+    useEffect(() => {
+        let interval
+
+        if (isDownloading && secondsLeft > 0) {
+            interval = setInterval(() => {
+                setSecondsLeft((prev) => prev - 1)
+            }, 1000)
+        }
+
+        if (isDownloading && secondsLeft === 0) {
+            handleFileDownload()
+            setIsDownloading(false)
+            setSecondsLeft(10)
+        }
+
+        return () => clearInterval(interval)
+    }, [isDownloading, secondsLeft])
     return (
         <Modal
             isOpen={isOpen}
@@ -109,7 +150,19 @@ const StatementModal = ({ isOpen, toggle }) => {
                             </div>
                         </section>
                     </div>
+                    {isDownloading && (
+                        <div className={styles.downloadMessage}>
+                            <div className={styles.loader}></div>
 
+                            <h4>{t("Downloading Statement")}</h4>
+
+                            <p>
+                                {t("Your")} {format.toUpperCase()} {t("statement is being prepared. This may take up some seconds")}
+                            </p>
+
+
+                        </div>
+                    )}
                     <div className={styles.footer}>
                         <button
                             type="button"
@@ -118,8 +171,16 @@ const StatementModal = ({ isOpen, toggle }) => {
                         >
                             {t("Cancel")}
                         </button>
-                        <button type="button" className={styles.downloadBtn}>
-                            {t("Download statement")}
+                        <button type="button" className={styles.downloadBtn}
+                            disabled={isDownloading}
+                            onClick={() => {
+                                setIsDownloading(true)
+                                setSecondsLeft(10)
+                            }}
+                        >
+                            {isDownloading
+                                ? t("Preparing...")
+                                : t("Download statement")}
                         </button>
                     </div>
                 </div>

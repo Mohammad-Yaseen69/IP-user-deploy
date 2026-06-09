@@ -88,8 +88,16 @@ export const MENU = [
                 title: "My virtual IBAN",
                 url: "/virtual-IBAN",
 
-                icon: <img loading="lazy" src={v_bank} style={{ marginRight: "12px" }} />,
-                activeIcon: <img loading="lazy" src={v_bank_a} style={{ marginRight: "12px" }} />,
+                icon: <img loading="lazy" src={v_bank} style={{
+                    width: "18px",
+                    height: "18px",
+                    marginRight: "12px",
+                }} />,
+                activeIcon: <img loading="lazy" src={v_bank_a} style={{
+                    width: "18px",
+                    height: "18px",
+                    marginRight: "12px",
+                }} />,
                 type: "link",
                 url: `${window.location.origin}/virtual-IBAN`,
                 permission: "analytics.view"

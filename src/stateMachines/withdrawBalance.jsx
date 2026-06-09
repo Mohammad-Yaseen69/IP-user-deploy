@@ -3,8 +3,8 @@
 export const STEPS = {
     AMOUNT: "AMOUNT",
     DESTINATION: "DESTINATION",
-    SPEED: "SPEED",
     REVIEW: "REVIEW",
+    OTP: "OTP",
     DONE: "DONE",
 }
 
@@ -14,28 +14,27 @@ export const SIDEBAR_STEPS = [
         stepName: STEPS.DESTINATION,
         stepLabel: "STEP 02",
         label: "Destination",
-        alsoActiveFor: [STEPS.SPEED],
     },
     { stepName: STEPS.REVIEW, stepLabel: "STEP 03", label: "Review & Confirm" },
-    { stepName: STEPS.DONE, stepLabel: "STEP 04", label: "Done" },
+    { stepName: STEPS.DONE, stepLabel: "STEP 04", label: "Done", alsoActiveFor: [STEPS.OTP] },
 ]
 
 export const transitions = {
     [STEPS.AMOUNT]: {
-        next: () => STEPS.SPEED,
-        back: () => null,
-    },
-    [STEPS.SPEED]: {
         next: () => STEPS.DESTINATION,
-        back: () => STEPS.AMOUNT,
+        back: () => null,
     },
     [STEPS.DESTINATION]: {
         next: () => STEPS.REVIEW,
-        back: () => STEPS.SPEED,
+        back: () => STEPS.AMOUNT,
     },
     [STEPS.REVIEW]: {
+        next: () => STEPS.OTP,
+        back: () => STEPS.DESTINATION,
+    },
+    [STEPS.OTP]: {
         next: () => STEPS.DONE,
-        back: () => STEPS.SPEED,
+        back: () => STEPS.REVIEW,
     },
     [STEPS.DONE]: {
         next: () => null,
@@ -56,19 +55,21 @@ export const goBack = (stepName, data) => {
 }
 
 const getAmountNumber = (amount) => {
-    const value = Number(String(amount ?? "").replace(/,/g, ""))
+    const value = Number(String(amount ?? "").replace(/[^\d.-]/g, ""))
     return Number.isFinite(value) ? value : 0
 }
 
 export const getDisabledState = (stepName, data) => {
+    const amount = getAmountNumber(data.amount)
+    const availableBalance = getAmountNumber(data.availableBalance ?? SOURCE_IBAN.balance)
+
     switch (stepName) {
         case STEPS.AMOUNT:
-            return !data.amount || getAmountNumber(data.amount) <= 0
+            return !data.amount || amount <= 0 || amount > availableBalance
         case STEPS.DESTINATION:
-            return !data.selectedBank
-        case STEPS.SPEED:
-            return !data.transferSpeed
+            return !data.selectedBank || !data.transferSpeed
         case STEPS.REVIEW:
+        case STEPS.OTP:
         case STEPS.DONE:
             return false
         default:
@@ -79,7 +80,7 @@ export const getDisabledState = (stepName, data) => {
 export const getContinueLabel = (stepName, t) => {
     switch (stepName) {
         case STEPS.REVIEW:
-            return t("Authenticate and confirm")
+            return t("Confirm")
         default:
             return t("Next")
     }
@@ -93,8 +94,8 @@ export const isSidebarStepActive = (sidebarItem, currentStep) => {
 export const isSidebarStepCompleted = (sidebarItem, currentStep) => {
     const order = [STEPS.AMOUNT, STEPS.DESTINATION, STEPS.REVIEW, STEPS.DONE]
     const currentRank =
-        currentStep === STEPS.SPEED
-            ? order.indexOf(STEPS.DESTINATION)
+        currentStep === STEPS.OTP
+            ? order.indexOf(STEPS.DONE)
             : order.indexOf(currentStep)
     const itemRank = order.indexOf(sidebarItem.stepName)
     return itemRank >= 0 && itemRank < currentRank

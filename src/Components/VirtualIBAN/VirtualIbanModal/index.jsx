@@ -52,10 +52,15 @@ import styles from "./virtualIbanModal.module.scss"
 import VerificationStep from "./VerificationStep"
 import useSendOtp from "../../../hooks/GeneralUse/useSendOtp"
 import OTPConfirmation from "../../UserSettingsNew/OTPConfirmation"
-import { useCreateVirtualIban, useVirtualIbans, virtualIbanQueryKeys } from "../hooks/useVirtualIban"
+import {
+    useCreateVirtualIban,
+    useVirtualIbans,
+    virtualIbanQueryKeys,
+} from "../hooks/useVirtualIban"
 import { getVirtualIbanCountry, normalizeVirtualIban } from "../utils/virtualIban"
 import SocketsService from "../../../Services/Socket"
 import usePlainFx from "../../../hooks/Payments/usePlainFx"
+import InstaPayLoader from "../../Loader"
 
 const SIDEBAR_ICONS = {
     [STEPS.JURISDICTION]: JurisIcon,
@@ -97,7 +102,13 @@ const parseAmount = (value) => {
 const getWalletCurrencyCode = (wallet) =>
     wallet?.currency?.code || wallet?.currency_code || wallet?.name || ""
 
-const VirtualIbanModal = ({ isOpen, toggle, onCreated }) => {
+const VirtualIbanModal = ({
+    isOpen,
+    toggle,
+    onCreated,
+    resumeProcessingData,
+    resumeProcessingLoading = false,
+}) => {
     const { t } = useTranslation()
     const width = useWindowWidth()
     const queryClient = useQueryClient()
@@ -115,6 +126,7 @@ const VirtualIbanModal = ({ isOpen, toggle, onCreated }) => {
     const [createdIban, setCreatedIban] = useState(null)
     const [pendingTransactionId, setPendingTransactionId] = useState("")
     const [pendingTransactionRef, setPendingTransactionRef] = useState("")
+    const [isResumedPending, setIsResumedPending] = useState(false)
 
     const [saveCard, setSaveCard] = useState(false)
     const [cards, setCards] = useState([])
@@ -135,7 +147,7 @@ const VirtualIbanModal = ({ isOpen, toggle, onCreated }) => {
     })
 
     const createVirtualIban = useCreateVirtualIban()
-    const { data: existingIbans = [] } = useVirtualIbans()
+    const { data: existingIbans = [], isLoading: existingIbansLoading } = useVirtualIbans()
     const {
         getExchangeRate: getPlainExchangeRate,
         isPending: isActivationFxPending,
@@ -171,12 +183,24 @@ const VirtualIbanModal = ({ isOpen, toggle, onCreated }) => {
     }), [])
 
     useEffect(() => {
+        if (resumeProcessingData === true) {
+            setCreatedIban(null)
+            setJurisdiction("MT")
+            setPendingTransactionId("")
+            setPendingTransactionRef("")
+            setIsResumedPending(true)
+            setCurrentStep(STEPS.PENDING)
+        }
+    }, [resumeProcessingData])
+
+    useEffect(() => {
         if (currentStep !== STEPS.PENDING || !userDetails?._id) return
 
         const socketsService = new SocketsService(socketConfig, () => { })
 
         const handleVirtualIbanCreated = (data) => {
             if (
+                !isResumedPending &&
                 pendingTransactionId &&
                 data?.transaction_id &&
                 data.transaction_id !== pendingTransactionId
@@ -187,8 +211,15 @@ const VirtualIbanModal = ({ isOpen, toggle, onCreated }) => {
             const iban = normalizeVirtualIban(data?.iban)
 
             setCreatedIban(iban)
+            setJurisdiction(data?.jurisdiction || data?.country || getVirtualIbanCountry(iban) || jurisdiction || "MT")
             setPendingTransactionId(data?.transaction_id || pendingTransactionId)
             setPendingTransactionRef(data?.transaction_ref || pendingTransactionRef)
+            queryClient.setQueryData(virtualIbanQueryKeys.processingStatus(), false)
+            queryClient.invalidateQueries({ queryKey: virtualIbanQueryKeys.list() })
+            if (iban?._id) {
+                queryClient.invalidateQueries({ queryKey: virtualIbanQueryKeys.detail(iban._id) })
+                queryClient.invalidateQueries({ queryKey: virtualIbanQueryKeys.balance(iban._id) })
+            }
             toast.success(t("Your virtual IBAN is ready"))
             setCurrentStep(STEPS.DONE)
         }
@@ -203,6 +234,8 @@ const VirtualIbanModal = ({ isOpen, toggle, onCreated }) => {
         }
     }, [
         currentStep,
+        isResumedPending,
+        jurisdiction,
         pendingTransactionId,
         pendingTransactionRef,
         queryClient,
@@ -439,6 +472,7 @@ const VirtualIbanModal = ({ isOpen, toggle, onCreated }) => {
         setCreatedIban(null)
         setPendingTransactionId("")
         setPendingTransactionRef("")
+        setIsResumedPending(false)
         setActivationFeeFx({
             amount: VIRTUAL_IBAN_ACTIVATION_FEE,
             currency: VIRTUAL_IBAN_ACTIVATION_FEE_CURRENCY,
@@ -465,7 +499,12 @@ const VirtualIbanModal = ({ isOpen, toggle, onCreated }) => {
     }
 
     const handleClose = () => {
+        if (currentStep === STEPS.PENDING) {
+            return
+        }
+
         if (currentStep === STEPS.DONE && createdIban) {
+            queryClient.setQueryData(virtualIbanQueryKeys.processingStatus(), false)
             refreshCreatedIban()
         }
         resetState()
@@ -576,6 +615,14 @@ const VirtualIbanModal = ({ isOpen, toggle, onCreated }) => {
     }
 
     const renderStepContent = () => {
+        if (resumeProcessingLoading || existingIbansLoading) {
+            return (
+                <div className={styles.loaderWrap}>
+                    <InstaPayLoader fallback transparent fullHeight />
+                </div>
+            )
+        }
+
         switch (currentStep) {
             case STEPS.JURISDICTION:
                 return (
@@ -778,6 +825,8 @@ const VirtualIbanModal = ({ isOpen, toggle, onCreated }) => {
                 isOpen={isOpen && width > 1000}
                 style={{ minWidth: "900px" }}
                 toggle={handleClose}
+                backdrop={currentStep === STEPS.PENDING ? "static" : true}
+                keyboard={currentStep !== STEPS.PENDING}
             >
                 <ModalBody style={{ padding: "20px" }}>{renderBody()}</ModalBody>
             </Modal>

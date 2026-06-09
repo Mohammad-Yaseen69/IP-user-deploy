@@ -45,14 +45,17 @@ export const goBack = (stepName, data) => {
 }
 
 const getAmountNumber = (amount) => {
-    const value = Number(String(amount ?? "").replace(/,/g, ""))
+    const value = Number(String(amount ?? "").replace(/[^\d.-]/g, ""))
     return Number.isFinite(value) ? value : 0
 }
 
 export const getDisabledState = (stepName, data) => {
+    const amount = getAmountNumber(data.amount)
+    const availableBalance = getAmountNumber(data.availableBalance)
+
     switch (stepName) {
         case STEPS.AMOUNT:
-            return !data.amount || getAmountNumber(data.amount) <= 0
+            return !data.amount || amount <= 0 || amount > availableBalance
         case STEPS.WALLET:
             return !data.wallet?.currency?.code
         case STEPS.REVIEW:

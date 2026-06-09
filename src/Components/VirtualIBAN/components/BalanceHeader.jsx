@@ -1,6 +1,7 @@
 import { Copy, ArrowUpRight, Eye } from "react-feather"
 import styles from "../styles/Balanceheader.module.css"
 import { useSyncVirtualIbanBalance } from "../hooks/useVirtualIban"
+import { Tooltip } from "@mui/material"
 import UK_Image from "../files/images/UK.svg"
 import Malta_Image from "../files/images/Malta.svg"
 import { getVirtualIbanCountry, normalizeVirtualIban } from "../utils/virtualIban"
@@ -21,12 +22,15 @@ const BalanceHeader = ({ iban, isLoading, setActiveTab, onShowDetails }) => {
   const { data: syncedBalance } = useSyncVirtualIbanBalance(ibanId)
   const currentBalance = syncedBalance?.balance ?? mappedIban?.balance ?? 0
   const status = syncedBalance?.status || mappedIban?.status || "ACTIVE"
+  const isBlocked = String(status).toUpperCase() === "BLOCKED" || String(status).toUpperCase() === "INACTIVE"
   const bic = mappedIban?.bank?.bic || mappedIban?.swift_code || "-"
   const currency = syncedBalance?.currency || mappedIban?.currency || "EUR"
   const country = getVirtualIbanCountry(mappedIban)
   const flag = country === "GB" ? UK_Image : Malta_Image
 
   const handleShowDetails = () => {
+    if (isBlocked) return
+
     onShowDetails?.()
     setActiveTab?.("ibanassets")
   }
@@ -48,13 +52,22 @@ const BalanceHeader = ({ iban, isLoading, setActiveTab, onShowDetails }) => {
         </div>
 
         <div className={styles.rightActions}>
-          <button
-            onClick={handleShowDetails}
-
-            className={styles.iconBtn}>
-            <span>Virtual bank details</span>
-            <ArrowUpRight size={16} />
-          </button>
+          <Tooltip
+            title={isBlocked ? "This virtual IBAN is paused. Reactivate it to view deposit details." : ""}
+            arrow
+            placement="top"
+          >
+            <span>
+              <button
+                onClick={handleShowDetails}
+                disabled={isBlocked}
+                className={`${styles.iconBtn} ${isBlocked ? styles.disabledBtn : ""}`}
+              >
+                <span>Virtual bank details</span>
+                <ArrowUpRight size={16} />
+              </button>
+            </span>
+          </Tooltip>
         </div>
       </div>
 
