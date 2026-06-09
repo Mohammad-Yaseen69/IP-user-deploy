@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { ChevronDown } from "react-feather";
 import styles from "../styles/Monthlyexpenses.module.css";
 import IncomeExpenseChart from "./IncomeExpenseChart";
@@ -18,7 +19,7 @@ const DonutChart = ({ data }) => {
   const radius = 58;
   const strokeWidth = 22;
   const circumference = 2 * Math.PI * radius;
-
+  const { t } = useTranslation()
   let offset = 0;
   const segments = data.map((item) => {
     const dash = (item.percent / 100) * circumference;
@@ -53,7 +54,7 @@ const DonutChart = ({ data }) => {
         fill="var(--text-muted)"
         fontWeight="500"
       >
-        Total
+        {t("Total")}
       </text>
       <text
         x={cx}
@@ -63,13 +64,14 @@ const DonutChart = ({ data }) => {
         fill="var(--text-primary)"
         fontWeight="700"
       >
-        €5,000
+        {t("€5,000")}
       </text>
     </svg>
   );
 };
 
 const MonthlyExpenses = () => {
+  const { t } = useTranslation();
   const [period, setPeriod] = useState("This month");
 
   return (
@@ -77,9 +79,9 @@ const MonthlyExpenses = () => {
       <div className={styles.twoCol}>
         <div className={styles.card}>
           <div className={styles.cardHeader}>
-            <h3 className={styles.title}>Monthly Expenses</h3>
+            <h3 className={styles.title}>{t("Monthly Expenses")}</h3>
             <button className={styles.periodBtn}>
-              {period} <ChevronDown size={13} />
+              {t(period)} <ChevronDown size={13} />
             </button>
           </div>
 
@@ -92,8 +94,8 @@ const MonthlyExpenses = () => {
                     className={styles.dot}
                     style={{ background: item.color }}
                   />
-                  <span className={styles.legendLabel}>{item.label}</span>
-                  <span className={styles.legendAmt}>{item.amount}</span>
+                  <span className={styles.legendLabel}>{t(item.label)}</span>
+                  <span className={styles.legendAmt}>{t(item.amount)}</span>
                 </div>
               ))}
             </div>
@@ -102,26 +104,26 @@ const MonthlyExpenses = () => {
 
         <div className={styles.card}>
           <div className={styles.cardHeader}>
-            <h3 className={styles.title}>Income/Expenses</h3>
+            <h3 className={styles.title}>{t("Income/Expenses")}</h3>
             <button className={styles.periodBtn}>
-              This month <ChevronDown size={13} />
+              {t("This month")} <ChevronDown size={13} />
             </button>
           </div>
 
-          <div className={styles.bigAmount}>EUR 5,000.00</div>
+          <div className={styles.bigAmount}>{t("EUR 5,000.00")}</div>
           <div className={styles.chartWrapper}>
             <IncomeExpenseChart />
           </div>
           <div className={styles.barGroup}>
             <div className={styles.barRow}>
-              <span className={styles.barLabel}>Incoming</span>
+              <span className={styles.barLabel}>{t("Incoming")}</span>
 
-              <span className={styles.barAmount}>EUR 1923.00</span>
+              <span className={styles.barAmount}>{t("EUR 1923.00")}</span>
             </div>
             <div className={styles.barRow}>
-              <span className={styles.barLabel}>Outgoing</span>
+              <span className={styles.barLabel}>{t("Outgoing")}</span>
 
-              <span className={styles.barAmount}>EUR 1923.00</span>
+              <span className={styles.barAmount}>{t("EUR 1923.00")}</span>
             </div>
           </div>
         </div>

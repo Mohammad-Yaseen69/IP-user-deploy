@@ -5,9 +5,11 @@ import VirtualIbanModal from "../VirtualIbanModal"
 import UK_Image from "../files/images/UK.svg"
 import Malta_Image from "../files/images/Malta.svg"
 import { getVirtualIbanCountry } from "../utils/virtualIban"
+import { useTranslation } from "react-i18next"
 
 const AccountsSidebar = ({ selectedAccount, onSelect, accounts = [], isLoading }) => {
     const [showModal, setShowModal] = useState(false)
+    const { t } = useTranslation()
 
     const handleOpenModal = () => {
         setShowModal(true)
@@ -19,15 +21,15 @@ const AccountsSidebar = ({ selectedAccount, onSelect, accounts = [], isLoading }
 
     return (
         <div className={styles.sidebar}>
-            <p className={styles.label}>Your accounts 
+            <p className={styles.label}>{t("Your accounts")}
                 {/* <span> <MoreHorizontal /></span> */}
             </p>
 
             <div className={styles.accountItemCon}>
-                {isLoading && <div className={styles.accCurrency}>Loading accounts...</div>}
+                {isLoading && <div className={styles.accCurrency}>{t("Loading accounts...")}</div>}
                 {
                     !isLoading && accounts.length === 0 && (
-                        <div className={styles.accCurrency}>No virtual IBANs yet</div>
+                        <div className={styles.accCurrency}>{t("No virtual IBANs yet")}</div>
                     )
                 }
 
@@ -49,9 +51,9 @@ const AccountsSidebar = ({ selectedAccount, onSelect, accounts = [], isLoading }
 
                                 <div className={styles.accInfo}>
                                     <span className={styles.accName}>
-                                        {index === 0 ? "Primary IBAN" : `IBAN ${index + 1}`}
+                                        {index === 0 ? t("Primary IBAN") : t("IBAN {{number}}", { number: index + 1 })}
                                     </span>
-                                    <span className={styles.accCurrency}>{acc?.currency} IBAN</span>
+                                    <span className={styles.accCurrency}>{t("{{currency}} IBAN", { currency: acc?.currency })}</span>
                                 </div>
                             </div>
                         )
@@ -59,17 +61,17 @@ const AccountsSidebar = ({ selectedAccount, onSelect, accounts = [], isLoading }
                 }
             </div >
 
-            {!isLoading &&
+            {/* {!isLoading &&
                 < div className={styles.openNew} onClick={handleOpenModal}>
                     <div className={styles.plusIcon}>
                         <Plus size={14} />
                     </div>
                     <div className={styles.accInfo}>
-                        <span>Open new IBAN</span>
-                        <span className={styles.accCurrency}>MT jurisdictions</span>
+                        <span>{t("Open new IBAN")}</span>
+                        <span className={styles.accCurrency}>{t("MT jurisdictions")}</span>
                     </div>
                 </div>
-            }
+            } */}
             <VirtualIbanModal
                 isOpen={showModal}
                 toggle={handleCloseModal}
