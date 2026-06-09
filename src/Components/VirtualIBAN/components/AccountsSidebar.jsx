@@ -61,7 +61,7 @@ const AccountsSidebar = ({ selectedAccount, onSelect, accounts = [], isLoading }
                 }
             </div >
 
-            {!isLoading &&
+            {/* {!isLoading &&
                 < div className={styles.openNew} onClick={handleOpenModal}>
                     <div className={styles.plusIcon}>
                         <Plus size={14} />
@@ -71,7 +71,7 @@ const AccountsSidebar = ({ selectedAccount, onSelect, accounts = [], isLoading }
                         <span className={styles.accCurrency}>{t("MT jurisdictions")}</span>
                     </div>
                 </div>
-            }
+            } */}
             <VirtualIbanModal
                 isOpen={showModal}
                 toggle={handleCloseModal}
