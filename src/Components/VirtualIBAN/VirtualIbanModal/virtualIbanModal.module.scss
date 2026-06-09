@@ -266,14 +266,14 @@
     h5 {
         color: var(--primary, #5926F0);
 
-        /* Body/XXSmall/Medium */
-        font-family: Inter;
         font-size: 15px;
         font-style: normal;
         font-weight: 500;
         line-height: 150%;
-        /* 16.5px */
         letter-spacing: -0.33px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
     }
 
     >div {
@@ -292,7 +292,6 @@
 
             p {
                 color: var(--blue-blue-700, #3B17A8);
-                font-family: Inter;
                 font-size: 13px;
                 font-style: normal;
                 font-weight: 500;
@@ -390,7 +389,6 @@
 
             h3 {
                 color: var(--Greyscale-900, #0C0A20);
-                font-family: Inter;
                 font-size: 16px;
                 font-style: normal;
                 font-weight: 600;
@@ -404,7 +402,6 @@
                 text-align: center;
 
                 /* Body/XXSmall/Medium */
-                font-family: Inter;
                 font-size: 13px;
                 font-style: normal;
                 font-weight: 600;

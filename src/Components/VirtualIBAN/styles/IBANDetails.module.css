@@ -126,9 +126,11 @@
   font-weight: 500;
   line-height: 1.4;
 }
-.cont1{
+
+.cont1 {
   width: 100%;
 }
+
 .box2 {
   display: flex;
   padding: var(--md, 16px);
@@ -176,7 +178,11 @@
   background: #EEF2FF;
   color: #3730A3;
   font-weight: 600;
-  border: 1px solid #4F46E5;
+  border: 1px solid #4A32E3;
+}
+
+.currencyTab input[type="radio"]:checked {
+  accent-color: #4A32E3;
 }
 
 .currencyIcon {
@@ -205,14 +211,14 @@
   transition: border-color 0.2s;
 }
 
-.currencyTabActive .currencyRadioOuter {
-  border-color: #4F46E5;
+.currencyTab.active .currencyRadioOuter {
+  border-color: #4A32E3;
 }
 
 .currencyRadioInner {
   width: 8px;
   height: 8px;
-  background: #4F46E5;
+  background: #4A32E3;
   border-radius: 50%;
 }
 
@@ -328,29 +334,31 @@
 
 .warningNotice {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: 9px;
   padding: 12px 14px;
-  background: #EDE9FE;
-  border: 1px solid #C4B5FD;
-  border-radius: 8px;
+  border-radius: var(--md, 10px);
+  border: 1px solid var(--border-subtle, #E1E5EE);
+  background: #E4DBFF;
   width: 100%;
   box-sizing: border-box;
 }
 
 .warningIcon {
-  color: #4F46E5;
+  color: #fff;
   flex-shrink: 0;
   margin-top: 1px;
 }
 
 .warningText {
-  color: #3730A3;
-  font-family: 'Inter', sans-serif;
-  font-size: 12px;
-  font-weight: 400;
-  line-height: 1.6;
+  color: var(--primary, #5926F0);
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 150%;
+  letter-spacing: -0.33px;
   margin: 0;
+  padding: 0;
 }
 
 .copyButton {
