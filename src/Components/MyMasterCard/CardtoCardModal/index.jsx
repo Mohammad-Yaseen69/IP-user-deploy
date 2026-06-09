@@ -355,9 +355,12 @@ const CardtoCard = ({ setOpen, isOpen, card, currentCardDetails, setCurrentCardD
   }
   const buttons = () => (
     <div className={styles.btns}>
-      <button onClick={handleBack} className={styles.back}>
-        {t("Back")}
-      </button>
+      {data.step !== 1 &&
+
+        <button onClick={handleBack} className={styles.back}>
+          {t("Back")}
+        </button>
+      }
       <button style={{ opacity: data.disabled && .5 }} disabled={data.disabled} onClick={handleNext} className={styles.continue}>
         {data.step === 4 ? t("Proceed To Payment") : data.step === 5 ? t("I Agree") : t("Verify & Continue")}
       </button>
