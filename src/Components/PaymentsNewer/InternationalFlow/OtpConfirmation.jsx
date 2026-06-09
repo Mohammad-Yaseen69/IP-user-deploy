@@ -6,7 +6,7 @@ import { UserContext } from "../../../Context/UserContext"
 import { useNavigate } from "react-router"
 import { ChevronRight } from "react-feather"
 
-const OtpConfirmation = ({ isOpen, toggle, callback, data, dataHandler, resendHandler, isLoading, error = "", resetIdempotency }) => {
+const OtpConfirmation = ({ isOpen, toggle, callback, data, dataHandler, resendHandler, isLoading, error = "", resetIdempotency = () => { } }) => {
     const { t } = useTranslation()
     const { userDetails } = useContext(UserContext)
     const numberOfFields = 6;
