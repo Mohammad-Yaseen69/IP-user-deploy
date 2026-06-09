@@ -65,58 +65,86 @@
 
 .amountInputBox {
     background: #eff1f6;
-    border: 1px solid #e1e5ee;
-    border-radius: 10px;
-    padding: 24px 20px 16px;
+    border: 0;
+    border-radius: 24px;
+    padding: 34px 24px 30px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 16px;
+    gap: 24px;
 }
 
 .amountDisplay {
     display: flex;
     align-items: baseline;
-    gap: 4px;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
 }
 
 .currencySymbol {
     font-family: Inter, sans-serif;
-    font-size: 24px;
+    font-size: 44px;
     font-weight: 600;
     color: #6e7687;
+    line-height: 1;
 }
 
 .amountInput {
     font-family: Inter, sans-serif;
-    font-size: 40px;
+    font-size: 64px;
     font-weight: 600;
     color: #0c0a20;
     background: transparent;
     border: none;
     outline: none;
     text-align: center;
-    width: 200px;
+    // min-width: 1ch;
+    // line-height: 1;
+
     &::placeholder {
         color: #bbb;
     }
 }
 
+.availableText {
+    font-family: Inter, sans-serif;
+    font-size: 18px;
+    font-weight: 500;
+    color: #6e7687;
+    line-height: 1.4;
+    text-align: center;
+    margin-top: -4px;
+}
+
+.balanceError {
+    color: #d92d20;
+    font-family: Inter, sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.4;
+    margin-top: -16px;
+    text-align: center;
+}
+
 .quickAmounts {
     display: flex;
-    gap: 8px;
+    gap: 10px;
     flex-wrap: wrap;
     justify-content: center;
+    width: 100%;
 }
 
 .quickBtn {
-    padding: 6px 14px;
+    min-width: 86px;
+    min-height: 40px;
+    padding: 0 16px;
     border-radius: 100px;
     border: 1px solid #e4e3e5;
     background: #fff;
     font-family: Inter, sans-serif;
-    font-size: 11px;
-    font-weight: 500;
+    font-size: 15px;
+    font-weight: 600;
     color: #44424f;
     cursor: pointer;
     transition: all 0.15s ease;
@@ -130,6 +158,11 @@
         background: #5926f0;
         border-color: #5926f0;
         color: #fff;
+    }
+
+    &:disabled {
+        cursor: not-allowed;
+        opacity: 0.55;
     }
 }
 

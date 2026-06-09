@@ -65,32 +65,34 @@ const SIDEBAR_ICONS = {
     [STEPS.DONE]: () => <span ><img src={SealCheck} /></span>,
 }
 
-const WithdrawBalanceModal = ({ isOpen, toggle }) => {
+const WithdrawBalanceModal = ({ isOpen, toggle, selectedIban, availableBalance }) => {
     const { t } = useTranslation()
     const width = useWindowWidth()
 
     const [currentStep, setCurrentStep] = useState(STEPS.AMOUNT)
-    const [amount, setAmount] = useState("2500")
+    const [amount, setAmount] = useState("")
     const [transferSpeed, setTransferSpeed] = useState("instant")
     const [selectedBank, setSelectedBank] = useState("cib")
+    const sourceAvailableBalance = availableBalance ?? selectedIban?.balance ?? 0
 
     const machineData = useMemo(
         () => ({
             amount,
             transferSpeed,
             selectedBank,
+            availableBalance: sourceAvailableBalance,
         }),
-        [amount, transferSpeed, selectedBank]
+        [amount, transferSpeed, selectedBank, sourceAvailableBalance]
     )
 
     const disabled = getDisabledState(currentStep, machineData)
     const continueLabel = getContinueLabel(currentStep, t)
 
     const resetState = () => {
-        setCurrentStep(STEPS.AMOUNT)
-        setAmount("2500")
-        setTransferSpeed("instant")
-        setSelectedBank("cib")
+            setCurrentStep(STEPS.AMOUNT)
+            setAmount("")
+            setTransferSpeed("instant")
+            setSelectedBank("cib")
     }
 
     const handleClose = () => {
@@ -117,7 +119,14 @@ const WithdrawBalanceModal = ({ isOpen, toggle }) => {
     const renderStepContent = () => {
         switch (currentStep) {
             case STEPS.AMOUNT:
-                return <AmountStep amount={amount} setAmount={setAmount} />
+                return (
+                    <AmountStep
+                        amount={amount}
+                        setAmount={setAmount}
+                        availableBalance={sourceAvailableBalance}
+                        currencyCode={selectedIban?.currency || "EUR"}
+                    />
+                )
             case STEPS.DESTINATION:
                 return (
                     <DestinationStep

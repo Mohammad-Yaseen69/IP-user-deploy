@@ -2,30 +2,33 @@ import { useTranslation } from "react-i18next"
 import { SOURCE_IBAN } from "../../../stateMachines/withdrawBalance"
 import {
     formatAmountValue,
+    getAmountInputSize,
     getAmountNumber,
     getCurrencySymbol,
+    getQuickAmountsFromBalance,
     handleAmountInputBlur,
     handleAmountInputChange,
     handleAmountInputKeyUp,
+    isSameAmount,
 } from "../utils/amount"
 import styles from "./withdrawBalance.module.scss"
 import MT from "../VirtualIbanModal/icons/mt.svg"
 
-const QUICK_AMOUNTS = [100, 500, 2500]
-
-const AmountStep = ({ amount, setAmount }) => {
+const AmountStep = ({
+    amount,
+    setAmount,
+    availableBalance = SOURCE_IBAN.balance,
+    currencyCode = SOURCE_IBAN.currency,
+}) => {
     const { t } = useTranslation()
     const numericAmount = getAmountNumber(amount)
-    const sourceBalance = getAmountNumber(SOURCE_IBAN.balance)
-    const activeQuick = QUICK_AMOUNTS.includes(numericAmount) ? numericAmount : null
-    const symbol = getCurrencySymbol(SOURCE_IBAN.currency)
+    const sourceBalance = getAmountNumber(availableBalance)
+    const quickAmounts = getQuickAmountsFromBalance(sourceBalance)
+    const symbol = getCurrencySymbol(currencyCode)
+    const exceedsBalance = numericAmount > sourceBalance
 
     const handleQuickSelect = (value) => {
         setAmount(formatAmountValue(value))
-    }
-
-    const handleMaxClick = () => {
-        setAmount(formatAmountValue(SOURCE_IBAN.balance))
     }
 
     return (
@@ -41,29 +44,30 @@ const AmountStep = ({ amount, setAmount }) => {
                         onChange={(event) => handleAmountInputChange(event, setAmount)}
                         onKeyUp={(event) => handleAmountInputKeyUp(event, setAmount)}
                         onBlur={(event) => handleAmountInputBlur(event, setAmount)}
+                        size={getAmountInputSize(amount)}
                         placeholder="0.00"
                         autoFocus
                     />
                 </div>
                 <div className={styles.availableText}>
-                    {t("Available")} · {symbol}{SOURCE_IBAN.balance} {SOURCE_IBAN.currency}
+                    {t("Available")} &middot; {symbol}{formatAmountValue(sourceBalance)} {currencyCode}
                 </div>
+                {exceedsBalance && (
+                    <div className={styles.balanceError}>
+                        {t("Amount cannot exceed available balance")}
+                    </div>
+                )}
                 <div className={styles.quickAmounts}>
-                    {QUICK_AMOUNTS.map((value) => (
+                    {quickAmounts.map(({ percent, value }) => (
                         <button
-                            key={value}
-                            className={`${styles.quickBtn} ${activeQuick === value ? styles.active : ""}`}
+                            key={percent}
+                            className={`${styles.quickBtn} ${isSameAmount(numericAmount, value) ? styles.active : ""}`}
                             onClick={() => handleQuickSelect(value)}
+                            disabled={sourceBalance <= 0}
                         >
-                            {symbol}{value.toLocaleString()}
+                            {symbol}{formatAmountValue(value)}
                         </button>
                     ))}
-                    <button
-                        className={`${styles.quickBtn} ${numericAmount === sourceBalance ? styles.active : ""}`}
-                        onClick={handleMaxClick}
-                    >
-                        {t("Max")}
-                    </button>
                 </div>
             </div>
 
@@ -71,7 +75,7 @@ const AmountStep = ({ amount, setAmount }) => {
                 <div className={styles.fromLabel}>{t("From")}</div>
                 <div className={styles.sourceCard}>
                     <div className={styles.sourceCardLeft}>
-                        <div className={styles.flag}>
+                        <div className={styles.flagBox}>
                             <img src={MT} alt="MT" />
                         </div>
                         <div className={styles.sourceInfo}>
@@ -80,7 +84,7 @@ const AmountStep = ({ amount, setAmount }) => {
                         </div>
                     </div>
                     <div className={styles.sourceBalance}>
-                        <h4>{symbol}{SOURCE_IBAN.balance}</h4>
+                        <h4>{symbol}{formatAmountValue(sourceBalance)}</h4>
                         <p>{t("Available")}</p>
                     </div>
                 </div>

@@ -2,20 +2,23 @@ import { useTranslation } from "react-i18next"
 import {
     formatAmountValue,
     getAmountNumber,
+    getAmountInputSize,
     getCurrencySymbol,
+    getQuickAmountsFromBalance,
     handleAmountInputBlur,
     handleAmountInputChange,
     handleAmountInputKeyUp,
+    isSameAmount,
 } from "../utils/amount"
 import styles from "./convertFunds.module.scss"
 
-const QUICK_AMOUNTS = [100, 500, 2500]
-
-const AmountStep = ({ amount, setAmount, currencyCode }) => {
+const AmountStep = ({ amount, setAmount, currencyCode = "EUR", availableBalance = 0 }) => {
     const { t } = useTranslation()
     const numericAmount = getAmountNumber(amount)
-    const activeQuick = QUICK_AMOUNTS.includes(numericAmount) ? numericAmount : null
+    const sourceBalance = getAmountNumber(availableBalance)
+    const quickAmounts = getQuickAmountsFromBalance(sourceBalance)
     const symbol = getCurrencySymbol(currencyCode)
+    const exceedsBalance = numericAmount > sourceBalance
 
     const handleQuickSelect = (value) => {
         setAmount(formatAmountValue(value))
@@ -34,18 +37,28 @@ const AmountStep = ({ amount, setAmount, currencyCode }) => {
                         onChange={(event) => handleAmountInputChange(event, setAmount)}
                         onKeyUp={(event) => handleAmountInputKeyUp(event, setAmount)}
                         onBlur={(event) => handleAmountInputBlur(event, setAmount)}
+                        size={getAmountInputSize(amount)}
                         placeholder="0.00"
                         autoFocus
                     />
                 </div>
+                <div className={styles.availableText}>
+                    {t("Available")} &middot; {symbol}{formatAmountValue(sourceBalance)} {currencyCode}
+                </div>
+                {exceedsBalance && (
+                    <div className={styles.balanceError}>
+                        {t("Amount cannot exceed available balance")}
+                    </div>
+                )}
                 <div className={styles.quickAmounts}>
-                    {QUICK_AMOUNTS.map((value) => (
+                    {quickAmounts.map(({ percent, value }) => (
                         <button
-                            key={value}
-                            className={`${styles.quickBtn} ${activeQuick === value ? styles.active : ""}`}
+                            key={percent}
+                            className={`${styles.quickBtn} ${isSameAmount(numericAmount, value) ? styles.active : ""}`}
                             onClick={() => handleQuickSelect(value)}
+                            disabled={sourceBalance <= 0}
                         >
-                            {symbol}{value.toLocaleString()}
+                            {symbol}{formatAmountValue(value)}
                         </button>
                     ))}
                 </div>

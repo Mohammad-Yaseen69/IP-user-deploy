@@ -127,6 +127,8 @@ const QuickActions = ({ selectedIban }) => {
             <WithdrawBalanceModal
                 isOpen={modals.withdrawal}
                 toggle={() => closeModal("withdrawal")}
+                selectedIban={selectedIban}
+                availableBalance={currentBalance}
             />
             {/* <AddFundsModal
                 isOpen={modals.addFunds}
@@ -136,6 +138,7 @@ const QuickActions = ({ selectedIban }) => {
                 isOpen={modals.convertFunds}
                 toggle={() => closeModal("convertFunds")}
                 selectedIban={selectedIban}
+                availableBalance={currentBalance}
             />
             <UnsubscribeModal
                 isOpen={modals.unsubscribe}

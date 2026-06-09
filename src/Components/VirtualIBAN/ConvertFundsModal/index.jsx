@@ -96,7 +96,7 @@ const MOCK_WALLETS = [
 const getErrorMessage = (error, fallback) =>
     error?.response?.data?.message || error?.message || fallback
 
-const ConvertFundsModal = ({ isOpen, toggle, selectedIban }) => {
+const ConvertFundsModal = ({ isOpen, toggle, selectedIban, availableBalance }) => {
     const { t } = useTranslation()
     const width = useWindowWidth()
 
@@ -108,6 +108,7 @@ const ConvertFundsModal = ({ isOpen, toggle, selectedIban }) => {
     const [feeDetails, setFeeDetails] = useState(null)
     const feePreview = useVirtualIbanTransferFee()
     const executeTransfer = useExecuteVirtualIbanTransfer()
+    const sourceAvailableBalance = availableBalance ?? selectedIban?.balance ?? 0
 
     useEffect(() => {
         getUserWallets()
@@ -138,8 +139,9 @@ const ConvertFundsModal = ({ isOpen, toggle, selectedIban }) => {
         () => ({
             amount,
             wallet,
+            availableBalance: sourceAvailableBalance,
         }),
-        [amount, wallet]
+        [amount, wallet, sourceAvailableBalance]
     )
 
     const disabled = getDisabledState(currentStep, machineData)
@@ -223,6 +225,7 @@ const ConvertFundsModal = ({ isOpen, toggle, selectedIban }) => {
                         amount={amount}
                         setAmount={setAmount}
                         currencyCode={selectedIban?.currency || "EUR"}
+                        availableBalance={sourceAvailableBalance}
                     />
                 )
             case STEPS.WALLET:
