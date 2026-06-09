@@ -46,6 +46,7 @@ const AmountStep = ({
                         onBlur={(event) => handleAmountInputBlur(event, setAmount)}
                         size={getAmountInputSize(amount)}
                         placeholder="0.00"
+                        maxLength={12}
                         autoFocus
                     />
                 </div>
