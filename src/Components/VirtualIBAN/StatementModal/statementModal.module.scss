@@ -5,7 +5,7 @@
 }
 
 .container {
-    min-height: 714px;
+    min-height: 560px;
     padding: 32px 27px 31px;
     display: flex;
     flex-direction: column;
@@ -45,7 +45,7 @@
     padding-top: 24px;
 }
 
-.section + .section {
+.section+.section {
     margin-top: 24px;
 }
 
@@ -64,6 +64,43 @@
     flex-wrap: wrap;
 }
 
+.downloadMessage {
+    margin-top: 24px;
+    padding: 20px;
+    border-radius: 12px;
+    background: #f8f9fa;
+    text-align: center;
+
+    h4 {
+        margin: 10px 0 5px;
+    }
+
+    p {
+        margin: 0 0 10px;
+        color: #666;
+    }
+
+    strong {
+        font-size: 18px;
+    }
+}
+
+.loader {
+    width: 32px;
+    height: 32px;
+    border: 3px solid #ddd;
+    border-top-color: #000;
+    border-radius: 50%;
+    margin: 0 auto;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
 .periodTab {
     min-width: 108px;
     height: 48px;
@@ -78,9 +115,9 @@
     transition: background 160ms ease, color 160ms ease, box-shadow 160ms ease;
 }
 
-.periodTab:hover {
-    background: #ececf0;
-}
+// .periodTab:hover {
+//     background: #ececf0;
+// }
 
 .activePeriod {
     background: #5632e8;

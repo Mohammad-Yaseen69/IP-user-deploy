@@ -202,10 +202,10 @@ const ConvertFundsModal = ({ isOpen, toggle, selectedIban, availableBalance }) =
                 return
             }
 
-        const { nextStep } = goNext(currentStep, machineData)
-        if (nextStep) {
-            setCurrentStep(nextStep)
-        }
+            const { nextStep } = goNext(currentStep, machineData)
+            if (nextStep) {
+                setCurrentStep(nextStep)
+            }
         } catch (error) {
             toast.error(getErrorMessage(error, t("Unable to process convert funds request")))
         }
@@ -276,7 +276,10 @@ const ConvertFundsModal = ({ isOpen, toggle, selectedIban, availableBalance }) =
                             <div className={styles.bankIcon}>
                                 <ConvertIcon />
                             </div>
-                            <h2>{t("Convert funds")}</h2>
+                            <h2>{t("Move funds to")}
+                                <br />
+                                {t("InstaPay wallet")}
+                            </h2>
                         </div>
                         <div
                             className={addFundsStyles.progressEffect}

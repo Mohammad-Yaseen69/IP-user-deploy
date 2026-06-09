@@ -117,7 +117,7 @@ const VirtualBank = () => {
                         {activeTab === "overview" && (
                             <div className={styles.tabContent}>
                                 {transactions.length !== 0 ? (
-                                    <Empty />
+                                    <Empty selectedIban={selectedIban} />
                                 ) :
                                     <>
                                         <MonthlyExpenses />
@@ -133,7 +133,7 @@ const VirtualBank = () => {
                             <div className={styles.tabContent}>
                                 <div className={styles.section}>
                                     {transactions.length !== 0 ? (
-                                        <Empty />
+                                        <Empty selectedIban={selectedIban} />
                                     ) :
 
                                         <RecentTransactions transactions={transactions} setActiveTab={setActiveTab} />
