@@ -271,7 +271,6 @@ const PricingsAndPlan = ({ isInvoicePage = true }) => {
                                                 <circle cx="11" cy="17" r="1.5" fill="#888" />
                                             </svg>
                                         </span>
-                                        {/** menu is rendered via portal below to escape overflow/z-index issues */}
                                     </td>
                                 </tr>
                             ))}
