@@ -17,6 +17,7 @@ import {
 import AmountStep from "./AmountStep"
 import DestinationStep from "./DestinationStep"
 import ReviewStep from "./ReviewStep"
+import OTPConfirmation from "./OTPConfirmation"
 import DoneStep from "./DoneStep"
 import styles from "./withdrawBalance.module.scss"
 import SidebarProgress from "../VirtualIbanModal/SidebarProgress"
@@ -73,6 +74,7 @@ const WithdrawBalanceModal = ({ isOpen, toggle, selectedIban, availableBalance }
     const [amount, setAmount] = useState("")
     const [transferSpeed, setTransferSpeed] = useState("instant")
     const [selectedBank, setSelectedBank] = useState("cib")
+    const [authType, setAuthType] = useState("authenticator")
     const sourceAvailableBalance = availableBalance ?? selectedIban?.balance ?? 0
 
     const machineData = useMemo(
@@ -93,6 +95,7 @@ const WithdrawBalanceModal = ({ isOpen, toggle, selectedIban, availableBalance }
             setAmount("")
             setTransferSpeed("instant")
             setSelectedBank("cib")
+            setAuthType("authenticator")
     }
 
     const handleClose = () => {
@@ -130,17 +133,10 @@ const WithdrawBalanceModal = ({ isOpen, toggle, selectedIban, availableBalance }
             case STEPS.DESTINATION:
                 return (
                     <DestinationStep
-                        selectedBank={selectedBank}
-                        setSelectedBank={setSelectedBank}
-                        showBankOnly={true}
-                    />
-                )
-            case STEPS.SPEED:
-                return (
-                    <DestinationStep
                         transferSpeed={transferSpeed}
                         setTransferSpeed={setTransferSpeed}
-                        showSpeedOnly={true}
+                        selectedBank={selectedBank}
+                        setSelectedBank={setSelectedBank}
                     />
                 )
             case STEPS.REVIEW:
@@ -151,6 +147,19 @@ const WithdrawBalanceModal = ({ isOpen, toggle, selectedIban, availableBalance }
                         selectedBank={selectedBank}
                     />
                 )
+            case STEPS.OTP:
+                return (
+                    <OTPConfirmation
+                        setter={setCurrentStep}
+                        setterValue={STEPS.DONE}
+                        hideOtp={() => {}}
+                        callback={async (setter) => setter(true)}
+                        resendHandler={() => {}}
+                        authType={authType}
+                        setAuthType={setAuthType}
+                        onCancel={handleClose}
+                    />
+                )
             case STEPS.DONE:
                 return <DoneStep />
             default:
@@ -158,7 +167,7 @@ const WithdrawBalanceModal = ({ isOpen, toggle, selectedIban, availableBalance }
         }
     }
 
-    const showFooter = width > 1000
+    const showFooter = width > 1000 && currentStep !== STEPS.OTP
     const isDone = currentStep === STEPS.DONE
 
     const renderBody = () => (

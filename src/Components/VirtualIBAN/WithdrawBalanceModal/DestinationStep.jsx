@@ -4,8 +4,13 @@ import styles from "./withdrawBalance.module.scss"
 
 const LightningIcon = () => (
     <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-        <path d="M8.66667 1.33334L3.33334 9.33334H8L7.33334 14.6667L12.6667 6.66668H8L8.66667 1.33334Z"
-            stroke="#5926F0" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
+        <path
+            d="M8.66667 1.33334L3.33334 9.33334H8L7.33334 14.6667L12.6667 6.66668H8L8.66667 1.33334Z"
+            stroke="#5926F0"
+            strokeWidth="1.2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+        />
     </svg>
 )
 
@@ -22,6 +27,18 @@ const SpeedIcons = {
     speedometer: SpeedometerIcon,
 }
 
+const BankFlag = ({ country }) => (
+    <div
+        className={styles.bankFlag}
+        style={{
+            background:
+                country === "EG"
+                    ? "linear-gradient(180deg, #CE1126 33%, #FFF 33%, #FFF 66%, #000 66%)"
+                    : "linear-gradient(180deg, #FF9933 33%, #FFF 33%, #FFF 66%, #138808 66%)",
+        }}
+    />
+)
+
 const DestinationStep = ({
     transferSpeed,
     setTransferSpeed,
@@ -34,7 +51,35 @@ const DestinationStep = ({
 
     return (
         <div>
-            {/* Transfer Speed */}
+            {!showSpeedOnly && (
+                <>
+                    <div className={styles.sectionLabel}>{t("Linked bank accounts")}</div>
+                    <div className={styles.bankList}>
+                        {LINKED_BANKS.map((bank) => {
+                            const isSelected = selectedBank === bank.id
+
+                            return (
+                                <button
+                                    type="button"
+                                    key={bank.id}
+                                    className={`${styles.bankOption} ${isSelected ? styles.selected : ""}`}
+                                    onClick={() => setSelectedBank(bank.id)}
+                                >
+                                    <div className={styles.bankLeft}>
+                                        <div className={styles.radioBtn} />
+                                        <div className={styles.bankInfo}>
+                                            <h4>{bank.name}</h4>
+                                            <p>....{bank.lastFour} - {bank.conversion}</p>
+                                        </div>
+                                    </div>
+                                    <BankFlag country={bank.country} />
+                                </button>
+                            )
+                        })}
+                    </div>
+                </>
+            )}
+
             {!showBankOnly && (
                 <>
                     <div className={styles.sectionLabel}>{t("Select speed")}</div>
@@ -42,8 +87,10 @@ const DestinationStep = ({
                         {TRANSFER_SPEEDS.map((speed) => {
                             const SpeedIcon = SpeedIcons[speed.icon]
                             const isSelected = transferSpeed === speed.id
+
                             return (
-                                <div
+                                <button
+                                    type="button"
                                     key={speed.id}
                                     className={`${styles.speedOption} ${isSelected ? styles.selected : ""}`}
                                     onClick={() => setTransferSpeed(speed.id)}
@@ -58,47 +105,8 @@ const DestinationStep = ({
                                             <p>{t(speed.description)}</p>
                                         </div>
                                     </div>
-                                    <div className={styles.speedFee}>
-                                        €{speed.fee}
-                                    </div>
-                                </div>
-                            )
-                        })}
-                    </div>
-                </>
-            )}
-
-            {/* Linked Bank Accounts */}
-            {!showSpeedOnly && (
-                <>
-                    <div className={styles.sectionLabel}>{t("Linked bank accounts")}</div>
-                    <div className={styles.bankList}>
-                        {LINKED_BANKS.map((bank) => {
-                            const isSelected = selectedBank === bank.id
-                            return (
-                                <div
-                                    key={bank.id}
-                                    className={`${styles.bankOption} ${isSelected ? styles.selected : ""}`}
-                                    onClick={() => setSelectedBank(bank.id)}
-                                >
-                                    <div className={styles.bankLeft}>
-                                        <div className={styles.radioBtn} />
-                                        <div className={styles.bankInfo}>
-                                            <h4>{bank.name}</h4>
-                                            <p>····{bank.lastFour} · {bank.conversion}</p>
-                                        </div>
-                                    </div>
-                                    <div className={styles.bankFlag}>
-                                        {/* Simple flag placeholder */}
-                                        <div style={{
-                                            width: '100%',
-                                            height: '100%',
-                                            background: bank.country === 'EG'
-                                                ? 'linear-gradient(180deg, #CE1126 33%, #FFF 33%, #FFF 66%, #000 66%)'
-                                                : 'linear-gradient(180deg, #FF9933 33%, #FFF 33%, #FFF 66%, #138808 66%)',
-                                        }} />
-                                    </div>
-                                </div>
+                                    <div className={styles.speedFee}>EUR {speed.fee}</div>
+                                </button>
                             )
                         })}
                     </div>
