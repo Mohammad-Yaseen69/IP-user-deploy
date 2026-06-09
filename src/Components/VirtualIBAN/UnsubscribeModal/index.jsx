@@ -32,21 +32,14 @@ const REASONS = [
     "Other",
 ]
 
-/**
- *
- * @param {boolean}  isOpen        
- * @param {function} toggle        
- * @param {boolean}  hasBalance     
- *                                 
- * @param {function} onWithdraw   
- * @param {function} onUnsubscribe 
- */
 const UnsubscribeModal = ({
     isOpen,
     toggle,
     hasBalance = true,
+    isBlocked = false,
+    isProcessing = false,
     onWithdraw,
-    onUnsubscribe,
+    onToggleStatus,
 }) => {
     const { t } = useTranslation()
 
@@ -68,16 +61,18 @@ const UnsubscribeModal = ({
         onWithdraw?.()
     }
 
-    const handleUnsubscribe = () => {
-        onUnsubscribe?.({ reason })
-        handleClose()
+    const handleToggleStatus = async () => {
+        const shouldClose = await onToggleStatus?.({ reason, action: isBlocked ? "UNBLOCK" : "BLOCK" })
+        if (shouldClose !== false) {
+            handleClose()
+        }
     }
 
     const renderWithBalance = () => (
         <div className={styles.container}>
             <div className={styles.headerRow}>
-                <div className={styles.redAsteriskBadge}>✳</div>
-                <h2 className={styles.title}>{t("Unsubscribe your virtual account?")}</h2>
+                <div className={styles.redAsteriskBadge}>*</div>
+                <h2 className={styles.title}>{t("Pause your virtual account?")}</h2>
             </div>
 
             <div className={`${styles.iconBox} ${styles.iconPurple}`}>
@@ -85,10 +80,10 @@ const UnsubscribeModal = ({
             </div>
 
             <h3 className={styles.subtitle}>
-                {t("You can't unsubscribe if you still have a balance.")}
+                {t("You can't pause this IBAN if it still has a balance.")}
             </h3>
             <p className={styles.description}>
-                {t("You must withdraw your vIBAN balance before unsubscribing.")}
+                {t("You must withdraw your vIBAN balance before pausing it.")}
             </p>
 
             <div className={styles.actions}>
@@ -110,51 +105,61 @@ const UnsubscribeModal = ({
         </div>
     )
 
-    const renderWithoutBalance = () => (
+    const renderToggleStatus = () => (
         <div className={styles.container}>
             <div className={styles.headerRow}>
-                <div className={styles.redAsteriskBadge}>✳</div>
-                <h2 className={styles.title}>{t("Unsubscribe your virtual account?")}</h2>
+                <div className={styles.redAsteriskBadge}>*</div>
+                <h2 className={styles.title}>
+                    {isBlocked ? t("Reactivate your virtual account?") : t("Pause your virtual account?")}
+                </h2>
             </div>
 
-            <div className={`${styles.iconBox} ${styles.iconRed}`}>
+            <div className={`${styles.iconBox} ${isBlocked ? styles.iconPurple : styles.iconRed}`}>
                 <LockIcon />
             </div>
 
             <h3 className={styles.subtitle}>
-                {t("This will pause all activity")}
+                {isBlocked ? t("This will resume account activity") : t("This will pause all activity")}
             </h3>
             <p className={styles.description}>
-                {t("Your IBAN will reject incoming transfers and you won't be able to send or convert funds.")}
+                {isBlocked
+                    ? t("Your IBAN will be available again for deposits, move funds, and conversion.")
+                    : t("Your IBAN will reject incoming transfers and you won't be able to deposit, move, or convert funds.")}
             </p>
 
             <div className={styles.consequenceTable}>
                 <div className={styles.consequenceRow}>
                     <span className={styles.consequenceLabel}>{t("Incoming SEPA transfers")}</span>
-                    <span className={styles.consequenceValue}>{t("Will be rejected and returned")}</span>
+                    <span className={isBlocked ? styles.consequenceValuePositive : styles.consequenceValue}>
+                        {isBlocked ? t("Will be accepted again") : t("Will be rejected and returned")}
+                    </span>
                 </div>
-                {/* <div className={styles.consequenceRow}>
-                    <span className={styles.consequenceLabel}>{t("Card payments")}</span>
-                    <span className={styles.consequenceValue}>{t("Declined")}</span>
-                </div> */}
+                <div className={styles.consequenceRow}>
+                    <span className={styles.consequenceLabel}>{t("Deposit and move funds")}</span>
+                    <span className={isBlocked ? styles.consequenceValuePositive : styles.consequenceValue}>
+                        {isBlocked ? t("Enabled") : t("Disabled")}
+                    </span>
+                </div>
             </div>
 
-            <div className={styles.reasonSection}>
-                <label className={styles.reasonLabel}>
-                    {t("Reason")} <span className={styles.optional}>({t("optional")})</span>
-                </label>
-                <select
-                    className={styles.reasonSelect}
-                    value={reason}
-                    onChange={(e) => setReason(e.target.value)}
-                >
-                    {REASONS.map((r) => (
-                        <option key={r} value={r}>
-                            {t(r)}
-                        </option>
-                    ))}
-                </select>
-            </div>
+            {!isBlocked && (
+                <div className={styles.reasonSection}>
+                    <label className={styles.reasonLabel}>
+                        {t("Reason")} <span className={styles.optional}>({t("optional")})</span>
+                    </label>
+                    <select
+                        className={styles.reasonSelect}
+                        value={reason}
+                        onChange={(e) => setReason(e.target.value)}
+                    >
+                        {REASONS.map((r) => (
+                            <option key={r} value={r}>
+                                {t(r)}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+            )}
 
             <div className={styles.checkboxRow}>
                 <input
@@ -163,13 +168,15 @@ const UnsubscribeModal = ({
                     checked={confirmed}
                     onClick={() => setConfirmed(!confirmed)}
                     id="unsub-confirm"
+                    readOnly
                 />
                 <label htmlFor="unsub-confirm" className={styles.checkboxLabel}>
-                    {t("I understand my account will be frozen until I unfreeze it.")}
+                    {isBlocked
+                        ? t("I understand my account activity will be re-enabled.")
+                        : t("I understand my account will be frozen until I reactivate it.")}
                 </label>
             </div>
 
-            {/* Actions */}
             <div className={styles.actions}>
                 <button
                     type="button"
@@ -180,12 +187,12 @@ const UnsubscribeModal = ({
                 </button>
                 <button
                     type="button"
-                    className={`${styles.primaryBtn} ${styles.btnRed}`}
-                    onClick={handleUnsubscribe}
-                    disabled={!confirmed}
-                    style={!confirmed ? { opacity: 0.5, cursor: "not-allowed" } : {}}
+                    className={`${styles.primaryBtn} ${isBlocked ? styles.btnPurple : styles.btnRed}`}
+                    onClick={handleToggleStatus}
+                    disabled={!confirmed || isProcessing}
+                    style={!confirmed || isProcessing ? { opacity: 0.5, cursor: "not-allowed" } : {}}
                 >
-                    {t("Unsubscribe")}
+                    {isProcessing ? t("Processing...") : isBlocked ? t("Reactivate") : t("Pause account")}
                 </button>
             </div>
         </div>
@@ -199,7 +206,7 @@ const UnsubscribeModal = ({
             style={{ maxWidth: "480px" }}
         >
             <ModalBody style={{ padding: 0, background: "transparent", border: "none" }}>
-                {hasBalance ? renderWithBalance() : renderWithoutBalance()}
+                {!isBlocked && hasBalance ? renderWithBalance() : renderToggleStatus()}
             </ModalBody>
         </Modal>
     )

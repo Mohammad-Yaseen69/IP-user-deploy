@@ -10,7 +10,8 @@ import IBANDetails from "../IBAN/IBANDetails.jsx";
 import { X } from "react-feather";
 import { useNavigate } from "react-router";
 import { Tooltip } from "@mui/material";
-import { useSyncVirtualIbanBalance } from "../hooks/useVirtualIban.jsx";
+import { toast } from "react-toastify";
+import { useSyncVirtualIbanBalance, useUpdateVirtualIbanStatus } from "../hooks/useVirtualIban.jsx";
 
 const MODAL_MAP = {
     1: "deposit",
@@ -20,10 +21,16 @@ const MODAL_MAP = {
     8: "unsubscribe",
 }
 
+const BLOCKED_DISABLED_ACTIONS = new Set([1, 2, 3])
+const BLOCKED_ACTION_TOOLTIP = "This virtual IBAN is paused. Reactivate it to deposit, move, convert, or withdraw funds."
+
 const QuickActions = ({ selectedIban }) => {
     const ibanId = selectedIban?._id || selectedIban?.id
     const { data: syncedBalance } = useSyncVirtualIbanBalance(ibanId)
     const currentBalance = syncedBalance?.balance ?? selectedIban?.balance ?? 0
+    const ibanStatus = syncedBalance?.status || selectedIban?.status || ""
+    const isBlocked = String(ibanStatus).toUpperCase() === "BLOCKED" || String(ibanStatus).toUpperCase() === "INACTIVE"
+    const updateIbanStatus = useUpdateVirtualIbanStatus()
     const navigate = useNavigate()
     const [modals, setModals] = useState({
         deposit: false,
@@ -38,6 +45,10 @@ const QuickActions = ({ selectedIban }) => {
     const closeModal = (key) => setModals((prev) => ({ ...prev, [key]: false }))
 
     const handleActionClick = (actionId) => {
+        if (isBlocked && BLOCKED_DISABLED_ACTIONS.has(actionId)) {
+            return
+        }
+
         switch (actionId) {
             case 5:
                 navigate("/payments?payment_action=req_money");
@@ -63,31 +74,65 @@ const QuickActions = ({ selectedIban }) => {
         openModal("withdrawal")
     }
 
+    const handleToggleIbanStatus = async ({ action }) => {
+        if (!ibanId) {
+            toast.error("Please select a virtual IBAN first")
+            return false
+        }
+
+        try {
+            await updateIbanStatus.mutateAsync({ ibanId, action })
+            toast.success(action === "BLOCK" ? "Virtual IBAN paused" : "Virtual IBAN reactivated")
+            return true
+        } catch (error) {
+            toast.error(error?.response?.data?.message || error?.message || "Unable to update virtual IBAN status")
+            return false
+        }
+    }
+
     return (
         <div className={styles.grid}>
             {actions.map((action) => {
+                const disabledByBlockedIban = isBlocked && BLOCKED_DISABLED_ACTIONS.has(action.id)
+                const actionLabel = action.id === 8 && isBlocked ? "Reactivate" : action.label
+                const actionSub = action.id === 8 && isBlocked ? "Resume virtual account" : action.sub
+                const actionColor = action.id === 8 && isBlocked ? "#5926F0" : action.color
                 const card = (
                     <button
                         key={action.id}
-                        className={styles.card}
+                        className={`${styles.card} ${disabledByBlockedIban ? styles.disabledCard : ""}`}
                         onClick={() => handleActionClick(action.id)}
+                        disabled={disabledByBlockedIban}
                     >
                         <div
                             className={styles.iconWrap}
                             style={{
-                                background: `${action.color}18`,
-                                color: action.color,
+                                background: `${actionColor}18`,
+                                color: actionColor,
                             }}
                         >
                             {action.icon}
                         </div>
 
                         <div className={styles.text}>
-                            <span className={styles.label}>{action.label}</span>
-                            <span className={styles.sub}>{action.sub}</span>
+                            <span className={styles.label}>{actionLabel}</span>
+                            <span className={styles.sub}>{disabledByBlockedIban ? "Paused IBAN" : actionSub}</span>
                         </div>
                     </button>
                 );
+
+                if (disabledByBlockedIban) {
+                    return (
+                        <Tooltip
+                            key={action.id}
+                            title={BLOCKED_ACTION_TOOLTIP}
+                            arrow
+                            placement="top"
+                        >
+                            <span className={styles.tooltipWrap}>{card}</span>
+                        </Tooltip>
+                    )
+                }
 
                 if (action.id === 7) {
                     return (
@@ -97,7 +142,7 @@ const QuickActions = ({ selectedIban }) => {
                             arrow
                             placement="top"
                         >
-                            <span>{card}</span>
+                            <span className={styles.tooltipWrap}>{card}</span>
                         </Tooltip>
                     );
                 }
@@ -145,7 +190,9 @@ const QuickActions = ({ selectedIban }) => {
                 toggle={() => closeModal("unsubscribe")}
                 hasBalance={currentBalance > 0}
                 onWithdraw={handleUnsubscribeWithdraw}
-                onUnsubscribe={(data) => alert(`Unsubscribed feature coming soon`)}
+                isBlocked={isBlocked}
+                isProcessing={updateIbanStatus.isPending}
+                onToggleStatus={handleToggleIbanStatus}
             />
             <StatementModal
                 isOpen={modals.statement}

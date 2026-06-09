@@ -303,6 +303,14 @@
     background-color: #F9FAFB;
 }
 
+.disabledButton,
+.disabledButton:hover {
+    opacity: 0.55;
+    cursor: not-allowed;
+    background-color: #9CA3AF;
+    border-color: #9CA3AF;
+}
+
 .modalOverlay {
     position: fixed;
     inset: 0;

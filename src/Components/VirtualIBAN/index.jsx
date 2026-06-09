@@ -12,20 +12,29 @@ import IBAN from './IBAN/IBAN'
 import styles from "./styles/index.module.css"
 import IBANDetails from './IBAN/IBANDetails'
 import Manage from './Manage/Manage'
-import { useVirtualIbans } from './hooks/useVirtualIban'
+import { useVirtualIbanProcessingStatus, useVirtualIbans } from './hooks/useVirtualIban'
 import { transactions } from './data/Actions'
 import Empty from './components/Empty'
 import { asVirtualIbanArray } from './utils/virtualIban'
+import VirtualIbanModal from './VirtualIbanModal'
+import InstaPayLoader from '../Loader'
+
 const VirtualBank = () => {
     const { t } = useTranslation();
     const width = useWindowWidth();
     const { data: rawIbans = [], isLoading: ibansLoading } = useVirtualIbans()
+    const {
+        data: ibanCreationStatus,
+        isLoading: ibanCreationStatusLoading,
+    } = useVirtualIbanProcessingStatus()
     const [selectedAccount, setSelectedAccount] = useState(null);
     const [activeTab, setActiveTab] = useState("overview");
     const [showGetIBAN, setShowGetIBAN] = useState(false);
     const ibanDetailsRef = useRef(null);
 
     const ibans = useMemo(() => asVirtualIbanArray(rawIbans), [rawIbans])
+    const creationInProgress = ibanCreationStatus === true
+    const isInitialLoading = ibansLoading || ibanCreationStatusLoading
 
     const selectedIban = useMemo(
         () => ibans.find((iban) => (iban?._id || iban?.id) === selectedAccount) || ibans[0],
@@ -88,7 +97,14 @@ const VirtualBank = () => {
                 </div>
             </div>
             {
-                showGetIBAN || (!ibansLoading && ibans.length === 0) ? <IBAN onCreated={handleBackToDashboard} /> :
+                isInitialLoading ? (
+                    <div style={{ minHeight: "520px", width: "100%" }}>
+                        <InstaPayLoader fallback transparent fullHeight />
+                    </div>
+                ) : creationInProgress ? (
+                    <div style={{ minHeight: "520px", width: "100%" }} />
+                ) :
+                    showGetIBAN || (ibans.length === 0) ? <IBAN onCreated={handleBackToDashboard} /> :
                     <div className={styles.main}>
                         <div className={styles.topPanel}>
                             <AccountsSidebar
@@ -157,6 +173,13 @@ const VirtualBank = () => {
                         )}
                     </div>
             }
+            <VirtualIbanModal
+                isOpen={creationInProgress}
+                toggle={() => { }}
+                onCreated={handleBackToDashboard}
+                resumeProcessingData={ibanCreationStatus}
+                resumeProcessingLoading={ibanCreationStatusLoading}
+            />
         </div>
     )
 }

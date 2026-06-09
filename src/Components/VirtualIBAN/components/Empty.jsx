@@ -4,9 +4,11 @@ import { useTranslation } from 'react-i18next';
 import IBANDetails from '../IBAN/IBANDetails';
 import styles from "../styles/RecentTransactions.module.css";
 import { toast } from 'react-toastify';
+import { Tooltip } from '@mui/material';
 
 const Empty = ({ selectedIban }) => {
     const [openModal, setOpenModal] = useState(false)
+    const isBlocked = String(selectedIban?.status || "").toUpperCase() === "BLOCKED" ||String(selectedIban?.status || "").toUpperCase() === "INACTIVE"
     const handleCopyIBAN = () => {
         const iban = selectedIban?.iban || selectedIban?.accountNumber || "";
         navigator.clipboard.writeText(iban);
@@ -35,12 +37,24 @@ const Empty = ({ selectedIban }) => {
                     <span>{t("Copy IBAN to receive")}</span>
                 </button>
 
-                <button className={styles.primaryButton}
-                    onClick={() => setOpenModal(true)}
+                <Tooltip
+                    title={isBlocked ? t("This virtual IBAN is paused. Reactivate it to view deposit details.") : ""}
+                    arrow
+                    placement="top"
                 >
-                    <PlusCircle size={20} />
-                    <span>{t("Deposit")}</span>
-                </button>
+                    <span>
+                        <button
+                            className={`${styles.primaryButton} ${isBlocked ? styles.disabledButton : ""}`}
+                            onClick={() => {
+                                if (!isBlocked) setOpenModal(true)
+                            }}
+                            disabled={isBlocked}
+                        >
+                            <PlusCircle size={20} />
+                            <span>{t("Deposit")}</span>
+                        </button>
+                    </span>
+                </Tooltip>
             </div>
             {openModal && (
                 <div
