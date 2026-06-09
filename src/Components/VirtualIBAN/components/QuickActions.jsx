@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import styles from "../styles/QuickActions.module.css";
 import { actions } from "../data/Actions.jsx";
 import WithdrawBalanceModal from "../WithdrawBalanceModal";
@@ -40,7 +41,7 @@ const QuickActions = ({ selectedIban }) => {
         unsubscribe: false,
 
     })
-
+    const { t } = useTranslation()
     const openModal = (key) => setModals((prev) => ({ ...prev, [key]: true }))
     const closeModal = (key) => setModals((prev) => ({ ...prev, [key]: false }))
 
@@ -115,8 +116,8 @@ const QuickActions = ({ selectedIban }) => {
                         </div>
 
                         <div className={styles.text}>
-                            <span className={styles.label}>{actionLabel}</span>
-                            <span className={styles.sub}>{disabledByBlockedIban ? "Paused IBAN" : actionSub}</span>
+                            <span className={styles.label}>{t(actionLabel)}</span>
+                            <span className={styles.sub}>{disabledByBlockedIban ? "Paused IBAN" : t(actionSub)}</span>
                         </div>
                     </button>
                 );
@@ -125,7 +126,7 @@ const QuickActions = ({ selectedIban }) => {
                     return (
                         <Tooltip
                             key={action.id}
-                            title={BLOCKED_ACTION_TOOLTIP}
+                            title={t(BLOCKED_ACTION_TOOLTIP)}
                             arrow
                             placement="top"
                         >

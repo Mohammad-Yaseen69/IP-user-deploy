@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { ArrowUp, Filter, Search } from "react-feather";
 import styles from "../styles/RecentTransactions.module.css";
+import { useTranslation } from 'react-i18next';
 
 
 const statusColors = {
@@ -9,7 +10,8 @@ const statusColors = {
   failed: { bg: "rgba(239,68,68,0.1)", color: "#ef4444" },
 };
 
-const RecentTransactions = ({setActiveTab,transactions}) => {
+const RecentTransactions = ({ setActiveTab, transactions }) => {
+  const { t } = useTranslation();
   const [search, setSearch] = useState("");
 
   const filtered = transactions.filter(
@@ -18,12 +20,14 @@ const RecentTransactions = ({setActiveTab,transactions}) => {
       tx.id.toLowerCase().includes(search.toLowerCase()) ||
       tx.type.toLowerCase().includes(search.toLowerCase())
   );
- 
+
   return (
     <>
       <div className={styles.header}>
-        <h3 className={styles.title}>Recent Transactions</h3>
-        <button className={styles.viewAll} onClick={()=>setActiveTab("transaction-history")}>View All</button>
+        <h3 className={styles.title}>{t("Recent Transactions")}</h3>
+        <button className={styles.viewAll} onClick={() => setActiveTab("transaction-history")}>
+          {t("View All")}
+        </button>
       </div>
 
       <div className={styles.section}>
@@ -32,7 +36,7 @@ const RecentTransactions = ({setActiveTab,transactions}) => {
             <Search size={14} className={styles.searchIcon} />
             <input
               type="text"
-              placeholder="Search..."
+              placeholder={t("Search...")}
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className={styles.searchInput}
@@ -40,10 +44,10 @@ const RecentTransactions = ({setActiveTab,transactions}) => {
           </div>
           <div className={styles.toolbarRight}>
             <button className={styles.toolBtn}>
-              <Filter size={13} /> Filter
+              <Filter size={13} /> <span>{t("Filter")}</span>
             </button>
             <button className={styles.toolBtn}>
-              <ArrowUp size={13} /> Sort By
+              <ArrowUp size={13} /> <span>{t("Sort By")}</span>
             </button>
           </div>
         </div>
@@ -53,12 +57,12 @@ const RecentTransactions = ({setActiveTab,transactions}) => {
               <tr style={{
                 borderRadius: "20px"
               }}>
-                <th>Date &amp; Time</th>
-                <th>Type</th>
-                <th>Transaction ID</th>
-                <th>Recipient</th>
-                <th>Amount</th>
-                <th>Status</th>
+                <th>{t("Date & Time")}</th>
+                <th>{t("Type")}</th>
+                <th>{t("Transaction ID")}</th>
+                <th>{t("Recipient")}</th>
+                <th>{t("Amount")}</th>
+                <th>{t("Status")}</th>
               </tr>
             </thead>
             <tbody>
@@ -68,7 +72,7 @@ const RecentTransactions = ({setActiveTab,transactions}) => {
                   <td>
                     <div className={styles.typeCell}>
 
-                      {tx.type}
+                      {t(tx.type)}
                     </div>
                   </td>
                   <td className={styles.txId}>{tx.id}</td>
@@ -82,7 +86,7 @@ const RecentTransactions = ({setActiveTab,transactions}) => {
                         color: statusColors[tx.status].color,
                       }}
                     >
-                      {tx.status.charAt(0).toUpperCase() + tx.status.slice(1)}
+                      {t(tx.status.charAt(0).toUpperCase() + tx.status.slice(1))}
                     </span>
                   </td>
                 </tr>
@@ -90,7 +94,7 @@ const RecentTransactions = ({setActiveTab,transactions}) => {
             </tbody>
           </table>
 
-          
+
         </div>
       </div >
     </>
