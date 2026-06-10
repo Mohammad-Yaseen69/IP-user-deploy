@@ -132,7 +132,7 @@ const VirtualBank = () => {
 
                         {activeTab === "overview" && (
                             <div className={styles.tabContent}>
-                                {transactions.length === 0 ? (
+                                {transactions.length !== 0 ? (
                                     <Empty selectedIban={selectedIban} />
                                 ) :
                                     <>
