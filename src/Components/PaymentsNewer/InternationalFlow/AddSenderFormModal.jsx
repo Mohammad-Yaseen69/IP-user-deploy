@@ -91,18 +91,18 @@ const businessSenderSchema = z.object({
     business_relationship: z.string().optional(),
     save_for_future: z.boolean().optional(),
     ...baseAddressSchema,
-        representative: z.object({
+    representative: z.object({
         first_name: z.string().min(1, "Representative first name is required"),
         last_name: z.string().min(1, "Representative last name is required"),
         nationality: z.string().optional(),
         address: z.string().optional(),
         postal_code: z.string().optional(),
-            dob: z.string().optional().refine((v) => !v || isPastOrToday(v), { message: "Date cannot be in the future" }),
+        dob: z.string().optional().refine((v) => !v || isPastOrToday(v), { message: "Date cannot be in the future" }),
         gender: z.string().optional(),
         extras: z.object({
             idNumber: z.string().optional(),
             documentType: z.string().optional(),
-                dateOfIssue: z.string().optional().refine((v) => !v || isPastOrToday(v), { message: "Date cannot be in the future" }),
+            dateOfIssue: z.string().optional().refine((v) => !v || isPastOrToday(v), { message: "Date cannot be in the future" }),
             dateOfExpiry: z.string().optional(),
             idCountryIsoCode: z.string().optional(),
         }),
