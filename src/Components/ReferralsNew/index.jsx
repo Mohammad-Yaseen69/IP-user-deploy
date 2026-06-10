@@ -10,7 +10,7 @@ import SocialModal from "../ShareBtn/SocialModal";
 import { UserContext } from "../../Context/UserContext";
 import axios from "axios";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
-import { Button, Card, CardBody, CardText } from "reactstrap";
+import { Button, Card, CardBody, CardText, Modal, ModalBody, ModalHeader } from "reactstrap";
 import { Link, useNavigate } from "react-router-dom";
 import countries from "../PaymentsNewer/CountriesData.json"
 import InstaPayLoader from "../Loader";
@@ -23,7 +23,7 @@ import TransactionItemMobile from "../TransactionsNewApi/Mobile/TransactionItemM
 import { usePermission } from "../../hooks/GeneralUse/usePermission";
 
 const ReferralsNew = () => {
-    const { referralLink, userDetails, authHeader, getInvitationLink, getReferralCommission, totalReferralAmount, userWallets, validateReceivingLimits, verifyToken } = useContext(UserContext)
+    const { referralLink, userDetails, authHeader, getInvitationLink, getReferralCommission, totalReferralAmount, userWallets, validateReceivingLimits, verifyToken, commisions } = useContext(UserContext)
 
     const isLimitReached = useMemo(() => validateReceivingLimits(), [])
     const can = usePermission()
@@ -33,10 +33,12 @@ const ReferralsNew = () => {
         }
     }, [userDetails])
 
+
     const [copied, setCopied] = useState(false)
     const [showShareModal, setShowShareModal] = useState(false)
     const [referrals, setReferrals] = useState([])
     const [isLoading, setIsLoading] = useState(true)
+    const [selectedReferral, setSelectedReferral] = useState(null)
 
     const handleCopy = () => {
         const textField = document.createElement('textarea');
@@ -73,6 +75,7 @@ const ReferralsNew = () => {
                                 joined: new Date(item?.referral?.createdAt).toLocaleDateString(),
                                 id: item?.referral?._id,
                                 name: item?.referral?.account_type === "individual" ? `${item?.referral?.user?.first_name} ${item?.referral?.user?.last_name}` : item?.referral?.company?.company_name,
+                                username: item?.referral?.username,
                                 status: "Referral Complete",
                                 amount: item?.totalCommission,
                                 country
@@ -98,6 +101,7 @@ const ReferralsNew = () => {
                                 joined: new Date(item?.referral?.createdAt).toLocaleDateString(),
                                 id: item?.referral?._id,
                                 name: item?.referral?.account_type === "individual" ? `${item?.referral?.user?.first_name} ${item?.referral?.user?.last_name}` : item?.referral?.company?.company_name,
+                                username: item?.referral?.username,
                                 status: "Referral Complete",
                                 amount: item?.totalCommission,
                                 country
@@ -120,6 +124,28 @@ const ReferralsNew = () => {
     }, [userDetails])
 
     const defaultWalletCurrency = useMemo(() => userWallets?.filter(item => item?.default)?.[0]?.currency, [userWallets])
+    const selectedReferralCommissions = useMemo(() => {
+        if (!selectedReferral?.id) {
+            return []
+        }
+
+        return (commisions ?? [])
+            ?.filter(item => item?.child?._id === selectedReferral.id)
+            ?.sort((a, b) => new Date(b?.createdAt) - new Date(a?.createdAt))
+    }, [commisions, selectedReferral])
+
+    const formatCommissionDate = (date) => {
+        if (!date) {
+            return t("N/A")
+        }
+
+        return new Date(date).toLocaleString()
+    }
+
+    const getCommissionAmount = (commission) => {
+        const amount = commission?.amount ?? commission?.commission ?? commission?.totalCommission ?? commission?.referralCommission ?? 0
+        return Number(amount).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+    }
 
     const [showMore, setShowMore] = useState(false)
     const toggleShowMore = () => setShowMore(prev => !prev);
@@ -209,6 +235,51 @@ const ReferralsNew = () => {
                                 }}
                             />
                         }
+                        <Modal isOpen={Boolean(selectedReferral)} toggle={() => setSelectedReferral(null)} centered>
+                            <ModalHeader toggle={() => setSelectedReferral(null)}>
+                                {selectedReferral?.name ? `${selectedReferral.name} ${t("Commissions")}` : t("Referral Commissions")}
+                            </ModalHeader>
+                            <ModalBody>
+                                <div className={styles.commission_summary}>
+                                    <span>{t("Total Commission")}</span>
+                                    <strong>${Number(selectedReferral?.amount ?? 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</strong>
+                                </div>
+                                {
+                                    selectedReferralCommissions?.length > 0
+                                        ?
+                                        <div className={styles.commission_timeline}>
+                                            {
+                                                selectedReferralCommissions.map((commission, index) => (
+                                                    <div className={styles.timeline_item} key={commission?._id ?? index}>
+                                                        <div className={styles.timeline_marker} />
+                                                        <div className={styles.timeline_content}>
+                                                            <div>
+                                                                <h6>{commission?.description ?? commission?.type ?? t("Commission Earned")}</h6>
+                                                                <strong>+${getCommissionAmount(commission)}</strong>
+                                                            </div>
+                                                            <span>{formatCommissionDate(commission?.createdAt ?? commission?.updatedAt)}</span>
+                                                            {
+                                                                commission?.status
+                                                                &&
+                                                                <p>{t("Status")}: {commission?.status}</p>
+                                                            }
+                                                            {
+                                                                (commission?.transaction?._id || commission?.transaction_id)
+                                                                &&
+                                                                <p>{t("Transaction ID")}: {commission?.transaction?._id ?? commission?.transaction_id}</p>
+                                                            }
+                                                        </div>
+                                                    </div>
+                                                ))
+                                            }
+                                        </div>
+                                        :
+                                        <div className={styles.empty_commissions}>
+                                            {t("No commissions found for this referral.")}
+                                        </div>
+                                }
+                            </ModalBody>
+                        </Modal>
                         <div className={styles.banner_con}>
                             <EarnMoneyBanner height="100%" showLink={false} headSize={"4cqi"} textSize={"2cqi"} radius={"30px"} minWidth="40vw" />
                             <div style={{ display: "flex", gap: "1.5rem", flex: 1 }}>
@@ -375,11 +446,12 @@ const ReferralsNew = () => {
                                                         <div style={{ color: "#6f6f6f", fontSize: ".85rem" }}>{t("Joined At")}</div>
                                                         <div style={{ color: "#6f6f6f", fontSize: ".85rem" }}>{t("Profile Link")}</div>
                                                         <div style={{ color: "#6f6f6f", fontSize: ".85rem" }}>{t("Commission")}</div>
+                                                        <div style={{ color: "#6f6f6f", fontSize: ".85rem" }}>{t("Action")}</div>
                                                     </div>
                                                     {
                                                         referrals.map(item => (
-                                                            <div key={item?._id} className={styles.item}>
-                                                                <RefItem item={item} />
+                                                            <div key={item?.id} className={styles.item}>
+                                                                <RefItem item={item} onViewCommissions={setSelectedReferral} />
                                                             </div>
                                                         ))
                                                     }
