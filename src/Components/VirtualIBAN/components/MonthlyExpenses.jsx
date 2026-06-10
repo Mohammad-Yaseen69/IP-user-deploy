@@ -2,132 +2,187 @@ import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ChevronDown } from "react-feather";
 import styles from "../styles/Monthlyexpenses.module.css";
-import IncomeExpenseChart from "./IncomeExpenseChart";
 
-const expenseData = [
-  { label: "Entertainment", amount: "€43,15.06", color: "#6366f1", percent: 35 },
-  { label: "Groceries", amount: "€98.25.00", color: "#0ea5e9", percent: 20 },
-  { label: "Transportation", amount: "€98.25.00", color: "#f59e0b", percent: 18 },
-  { label: "Utilities", amount: "€108.58.00", color: "#10b981", percent: 15 },
-  { label: "Misc", amount: "€108.58.00", color: "#f43f5e", percent: 12 },
-];
+import ReactApexChart from "react-apexcharts";
 
-const DonutChart = ({ data }) => {
-  const size = 160;
-  const cx = size / 2;
-  const cy = size / 2;
-  const radius = 58;
-  const strokeWidth = 22;
-  const circumference = 2 * Math.PI * radius;
+const incomeData = [80, 140, 320, 260, 200, 170];
+const expenseData = [100, 160, 200, 250, 340, 220];
+const categories = ["Jan", "Feb", "Mar", "Apr", "May", "Jun"];
+
+const getChartOptions = (type) => {
+  const isIncome = type === "income";
+
+  const lineColor = isIncome ? "#1dbf6e" : "#e55a5a";
+  const fillFrom = isIncome ? "rgba(40,180,100,0.35)" : "rgba(220,80,80,0.32)";
+  const fillTo = isIncome
+    ? "rgba(40,180,100,0.02)"
+    : "rgba(220,80,80,0.02)";
+  const tooltipBg = isIncome ? "#1a7a45" : "#c0392b";
+  const tooltipLabel = isIncome ? "Income" : "Expense";
+  const dotColor = isIncome ? "#1dbf6e" : "#e55a5a";
+
+  return {
+    chart: {
+      type: "area",
+      height: 160,
+      toolbar: { show: false },
+      zoom: { enabled: false },
+      sparkline: { enabled: false },
+    },
+    dataLabels: { enabled: false },
+    stroke: {
+      curve: "smooth",
+      width: 2.5,
+      colors: [lineColor],
+    },
+    fill: {
+      type: "gradient",
+      gradient: {
+        shadeIntensity: 1,
+        opacityFrom: 0.45,
+        opacityTo: 0.02,
+        stops: [0, 100],
+        colorStops: [
+          { offset: 0, color: lineColor, opacity: 0.38 },
+          { offset: 100, color: lineColor, opacity: 0.02 },
+        ],
+      },
+    },
+    colors: [lineColor],
+    xaxis: {
+      categories,
+      axisBorder: { show: false },
+      axisTicks: { show: false },
+      labels: {
+        style: {
+          fontSize: "11px",
+          colors: "#999",
+          fontFamily: "inherit",
+        },
+      },
+    },
+    yaxis: {
+      min: 0,
+      max: 420,
+      tickAmount: 4,
+      labels: {
+        style: {
+          fontSize: "11px",
+          colors: "#999",
+          fontFamily: "inherit",
+        },
+        formatter: (val) => val,
+      },
+    },
+    grid: {
+      borderColor: "rgba(180,180,180,0.15)",
+      strokeDashArray: 0,
+      xaxis: { lines: { show: false } },
+      yaxis: { lines: { show: true } },
+      padding: { top: 0, right: 10, bottom: 0, left: 10 },
+    },
+    markers: {
+      size: 0,
+      hover: {
+        size: 7,
+        sizeOffset: 2,
+        fillColor: "#fff",
+        strokeColor: dotColor,
+        strokeWidth: 2,
+      },
+    },
+    tooltip: {
+      custom: ({ series, seriesIndex, dataPointIndex }) => {
+        const val = series[seriesIndex][dataPointIndex];
+        return `
+          <div style="
+            background:${tooltipBg};
+            color:#fff;
+            border-radius:8px;
+            padding:6px 13px;
+            font-size:13px;
+            font-weight:600;
+            text-align:center;
+            line-height:1.5;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+          ">
+            $${val}
+            <br/>
+            <span style="font-size:10px;opacity:0.85;font-weight:400">${tooltipLabel}</span>
+          </div>
+        `;
+      },
+    },
+    legend: { show: false },
+  };
+};
+
+const ChartCard = ({
+  title,
+  amount,
+  type,
+  data,
+  filter,
+  onFilterChange,
+}) => {
   const { t } = useTranslation()
-  let offset = 0;
-  const segments = data.map((item) => {
-    const dash = (item.percent / 100) * circumference;
-    const gap = circumference - dash;
-    const seg = { ...item, dash, gap, offset };
-    offset += dash;
-    return seg;
-  });
-
   return (
-    <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
-      {segments.map((seg, i) => (
-        <circle
-          key={i}
-          cx={cx}
-          cy={cy}
-          r={radius}
-          fill="none"
-          stroke={seg.color}
-          strokeWidth={strokeWidth}
-          strokeDasharray={`${seg.dash} ${seg.gap}`}
-          strokeDashoffset={-seg.offset + circumference * 0.25}
-          strokeLinecap="butt"
-          style={{ transition: "all 0.5s ease" }}
+    <div className={styles.card}>
+      <div className={styles.cardHeader}>
+        <span className={styles.cardLabel}>{title}</span>
+        <select
+          className={styles.yearSelect}
+          value={filter}
+          onChange={(e) => onFilterChange(e.target.value)}
+        >
+          <option value="this_year">{t("This year")}</option>
+          <option value="last_year">{t("Last year")}</option>
+          <option value="this_month">{t("This month")}</option>
+        </select>
+      </div>
+
+      <div className={styles.amountRow}>
+        <span className={styles.amount}>{amount}</span>
+
+      </div>
+
+
+      <div className={styles.chartWrap}>
+        <ReactApexChart
+          options={getChartOptions(type)}
+          series={[{ name: title, data }]}
+          type="area"
+          height={160}
         />
-      ))}
-      <text
-        x={cx}
-        y={cy - 6}
-        textAnchor="middle"
-        fontSize="11"
-        fill="var(--text-muted)"
-        fontWeight="500"
-      >
-        {t("Total")}
-      </text>
-      <text
-        x={cx}
-        y={cy + 10}
-        textAnchor="middle"
-        fontSize="13"
-        fill="var(--text-primary)"
-        fontWeight="700"
-      >
-        {t("€5,000")}
-      </text>
-    </svg>
+      </div>
+    </div>
   );
 };
 
 const MonthlyExpenses = () => {
-  const { t } = useTranslation();
-  const [period, setPeriod] = useState("This month");
+  const [incomeFilter, setIncomeFilter] = useState("this_year");
+  const [expenseFilter, setExpenseFilter] = useState("this_year");
 
   return (
-    <div className={styles.section}>
-      <div className={styles.twoCol}>
-        <div className={styles.card}>
-          <div className={styles.cardHeader}>
-            <h3 className={styles.title}>{t("Monthly Expenses")}</h3>
-            <button className={styles.periodBtn}>
-              {t(period)} <ChevronDown size={13} />
-            </button>
-          </div>
-
-          <div className={styles.chartRow}>
-            <DonutChart data={expenseData} />
-            <div className={styles.legend}>
-              {expenseData.map((item, i) => (
-                <div key={i} className={styles.legendItem}>
-                  <span
-                    className={styles.dot}
-                    style={{ background: item.color }}
-                  />
-                  <span className={styles.legendLabel}>{t(item.label)}</span>
-                  <span className={styles.legendAmt}>{t(item.amount)}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        <div className={styles.card}>
-          <div className={styles.cardHeader}>
-            <h3 className={styles.title}>{t("Income/Expenses")}</h3>
-            <button className={styles.periodBtn}>
-              {t("This month")} <ChevronDown size={13} />
-            </button>
-          </div>
-
-          <div className={styles.bigAmount}>{t("EUR 5,000.00")}</div>
-          <div className={styles.chartWrapper}>
-            <IncomeExpenseChart />
-          </div>
-          <div className={styles.barGroup}>
-            <div className={styles.barRow}>
-              <span className={styles.barLabel}>{t("Incoming")}</span>
-
-              <span className={styles.barAmount}>{t("EUR 1923.00")}</span>
-            </div>
-            <div className={styles.barRow}>
-              <span className={styles.barLabel}>{t("Outgoing")}</span>
-
-              <span className={styles.barAmount}>{t("EUR 1923.00")}</span>
-            </div>
-          </div>
-        </div>
-      </div>
+    <div className={styles.wrapper}>
+      <ChartCard
+        title="Income"
+        amount="EUR 5,000.00"
+        badgeType="income"
+        type="income"
+        data={incomeData}
+        filter={incomeFilter}
+        onFilterChange={setIncomeFilter}
+      />
+      <ChartCard
+        title="Expense"
+        amount="EUR 7,000.00"
+        badgeType="expense"
+        type="expense"
+        data={expenseData}
+        filter={expenseFilter}
+        onFilterChange={setExpenseFilter}
+      />
     </div>
   );
 };
