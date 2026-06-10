@@ -12,7 +12,7 @@ import help from "./files/help.svg"
 import logo from "./files/ins_logo.svg"
 import styles from "./styles/receipt.module.css"
 
-const Receipt = ({ data, showTrxBtn = true, transactionStatus, isFullWidth = false, isGuest }) => {
+const Receipt = ({ data, showTrxBtn = true, transactionStatus, isFullWidth = false, isGuest, success }) => {
     const { t } = useTranslation()
     const [showShare, setShowShare] = useState(false)
     const navigate = useNavigate()
@@ -80,7 +80,7 @@ const Receipt = ({ data, showTrxBtn = true, transactionStatus, isFullWidth = fal
                                 <div className={styles.confirmed}>
                                     <div className={styles.c_left}>
                                         <h3 style={{ maxWidth: "15ch" }}
-                                        >{transactionStatus !== "error" ? t("Your payment is in process") : t("Your payment is Failed")}</h3>
+                                        >{transactionStatus === "error" ? t("Your payment is Failed") : success ? t("Your payment is Completed!") : t("Your payment is in process")}</h3>
                                         <p>{t("Thanks for Using InstaPay")}</p>
                                         {isGuest === false &&
                                             <p style={{
@@ -126,7 +126,7 @@ const Receipt = ({ data, showTrxBtn = true, transactionStatus, isFullWidth = fal
                             <div className={styles.td_top}>
                                 <h4>{t("Status")}</h4>
                                 <div className={styles.actions}>
-                                    <button onClick={() => window.open("https://insta-pay.ch/faq", "_blank")}>
+                                    <button onClick={() => window.open("https://guide.insta-pay.ch", "_blank")}>
                                         <img src={help} alt="" />
                                         <span>{t("Need help?")}</span>
                                     </button>
@@ -161,7 +161,7 @@ const Receipt = ({ data, showTrxBtn = true, transactionStatus, isFullWidth = fal
                                     !
                                 </div>
                                 <div className={styles.status_item}>
-                                    <h5>{transactionStatus !== "error" ? t("Transfer in progress") : t("Transaction Failed")}</h5>
+                                    <h5>{transactionStatus === "error" ? t("Transaction Failed") : success ? t("Transfer Completed") : t("Transfer in progress")}</h5>
                                 </div>
                             </div>
                         </div>
