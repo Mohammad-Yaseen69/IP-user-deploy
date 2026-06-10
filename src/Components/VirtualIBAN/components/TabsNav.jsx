@@ -5,6 +5,7 @@ import mange from "../files/images/Mange.svg"
 import TransecitonHis from "../files/images/TransectionHistory.svg"
 import IBAN_icon from "../files/images/IBAN.svg"
 import { useTranslation } from "react-i18next";
+import { usePermission } from "../../../hooks/GeneralUse/usePermission";
 
 const tabs = [
   { id: "overview", label: "Overview", icon: OverViewIcon },
@@ -15,9 +16,17 @@ const tabs = [
 
 const TabsNav = ({ activeTab, onTabChange }) => {
   const { t } = useTranslation()
+  const can = usePermission()
+  const visibleTabs = tabs.filter((tab) => {
+    if (tab.id === "transaction-history") return can("virtual-iban.transactions.view")
+    if (tab.id === "ibanassets") return can("virtual-iban.details.view")
+    if (tab.id === "manage") return can("virtual-iban.status.update")
+    return true
+  })
+
   return (
     <div className={styles.tabsWrapper}>
-      {tabs.map((tab) => (
+      {visibleTabs.map((tab) => (
         <button
           key={tab.id}
           className={`${styles.tab} ${activeTab === tab.id ? styles.active : ""}`}

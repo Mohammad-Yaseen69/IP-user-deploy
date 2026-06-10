@@ -100,7 +100,7 @@ export const MENU = [
                 }} />,
                 type: "link",
                 url: `${window.location.origin}/virtual-IBAN`,
-                permission: "analytics.view"
+                permission: "virtual-iban.view"
             },
             {
                 title: "Transactions",

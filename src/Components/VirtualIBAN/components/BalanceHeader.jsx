@@ -6,6 +6,7 @@ import UK_Image from "../files/images/UK.svg"
 import Malta_Image from "../files/images/Malta.svg"
 import { getVirtualIbanCountry, normalizeVirtualIban } from "../utils/virtualIban"
 import { useTranslation } from "react-i18next"
+import { usePermission } from "../../../hooks/GeneralUse/usePermission"
 
 
 const formatAmount = (amount, currency) => {
@@ -29,8 +30,12 @@ const BalanceHeader = ({ iban, isLoading, setActiveTab, onShowDetails }) => {
   const country = getVirtualIbanCountry(mappedIban)
   const flag = country === "GB" ? UK_Image : Malta_Image
   const { t } = useTranslation()
+  const can = usePermission()
+  const canViewDetails = can("virtual-iban.details.view")
+  const canViewBalance = can("virtual-iban.details.balance")
+  const canCopyDetails = can("virtual-iban.details.copy")
   const handleShowDetails = () => {
-    if (isBlocked) return
+    if (isBlocked || !canViewDetails) return
 
     onShowDetails?.()
     setActiveTab?.("ibanassets")
@@ -53,28 +58,30 @@ const BalanceHeader = ({ iban, isLoading, setActiveTab, onShowDetails }) => {
         </div>
 
         <div className={styles.rightActions}>
-          <Tooltip
-            title={isBlocked ? t("This virtual IBAN is paused. Reactivate it to view deposit details.") : ""}
-            arrow
-            placement="top"
-          >
-            <span>
-              <button
-                onClick={handleShowDetails}
-                disabled={isBlocked}
-                className={`${styles.iconBtn} ${isBlocked ? styles.disabledBtn : ""}`}
-              >
-                <span>{t("Virtual bank details")}</span>
-                <ArrowUpRight size={16} />
-              </button>
-            </span>
-          </Tooltip>
+          {canViewDetails && (
+            <Tooltip
+              title={isBlocked ? t("This virtual IBAN is paused. Reactivate it to view deposit details.") : ""}
+              arrow
+              placement="top"
+            >
+              <span>
+                <button
+                  onClick={handleShowDetails}
+                  disabled={isBlocked}
+                  className={`${styles.iconBtn} ${isBlocked ? styles.disabledBtn : ""}`}
+                >
+                  <span>{t("Virtual bank details")}</span>
+                  <ArrowUpRight size={16} />
+                </button>
+              </span>
+            </Tooltip>
+          )}
         </div>
       </div>
 
       <div className={styles.balanceSection}>
         <div>
-          <h1 className={styles.balance}>{formatAmount(currentBalance, currency)}</h1>
+          <h1 className={styles.balance}>{canViewBalance ? formatAmount(currentBalance, currency) : "****"}</h1>
           {/* <Eye color="#5926F0" size={15} /> */}
         </div>
         {/* <span className={styles.growth}><ArrowUpRight size={15} /> 0.00%</span> */}
@@ -84,24 +91,28 @@ const BalanceHeader = ({ iban, isLoading, setActiveTab, onShowDetails }) => {
         <div className={styles.item}>
           <span className={styles.label}>{t("IBAN")}</span>
           <div>
-            <span className={styles.value}>{mappedIban?.iban || "-"}</span>
-            <Copy
-              size={16}
-              className={styles.copyIcon}
-              onClick={() => handleCopy(mappedIban?.iban)}
-            />
+            <span className={styles.value}>{canViewDetails ? (mappedIban?.iban || "-") : "****"}</span>
+            {canCopyDetails && (
+              <Copy
+                size={16}
+                className={styles.copyIcon}
+                onClick={() => handleCopy(mappedIban?.iban)}
+              />
+            )}
           </div>
         </div>
 
         <div className={styles.item}>
           <span className={styles.label}>{t("BIC")}</span>
           <div>
-            <span className={styles.value}>{bic}</span>
-            <Copy
-              size={16}
-              className={styles.copyIcon}
-              onClick={() => handleCopy(bic)}
-            />
+            <span className={styles.value}>{canViewDetails ? bic : "****"}</span>
+            {canCopyDetails && (
+              <Copy
+                size={16}
+                className={styles.copyIcon}
+                onClick={() => handleCopy(bic)}
+              />
+            )}
           </div>
         </div>
         <div className={styles.item}>
