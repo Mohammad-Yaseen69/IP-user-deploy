@@ -20,6 +20,15 @@ const optionalEmail = z.string().optional().refine((value) => !value || z.string
     message: "Enter a valid email address",
 });
 
+const isPastOrToday = (value) => {
+    if (!value) return true;
+    const d = new Date(value);
+    if (Number.isNaN(d.getTime())) return false;
+    const today = new Date();
+    today.setHours(23, 59, 59, 999);
+    return d <= today;
+}
+
 const idTypeData = {
     'passport': 'Passport',
     'id-card': "Id Card",
@@ -53,7 +62,7 @@ const individualSenderSchema = z.object({
     sender_type: z.literal("individual"),
     first_name: z.string().min(1, "First name is required"),
     last_name: z.string().min(1, "Last name is required"),
-    dob: z.string().min(1, "Date of birth is required"),
+    dob: z.string().min(1, "Date of birth is required").refine((v) => isPastOrToday(v), { message: "Date cannot be in the future" }),
     gender: z.string().optional(),
     occupation: z.string().optional(),
     source_of_funds: z.string().optional(),
@@ -65,7 +74,7 @@ const individualSenderSchema = z.object({
     extras: z.object({
         idNumber: z.string().optional(),
         documentType: z.string().optional(),
-        dateOfIssue: z.string().optional(),
+        dateOfIssue: z.string().optional().refine((v) => !v || isPastOrToday(v), { message: "Date cannot be in the future" }),
         dateOfExpiry: z.string().optional(),
         idCountryIsoCode: z.string().optional(),
     }),
@@ -78,22 +87,22 @@ const businessSenderSchema = z.object({
     trading_name: z.string().optional(),
     registration_number: z.string().optional(),
     tax_id: z.string().optional(),
-    date_of_incorporation: z.string().optional(),
+    date_of_incorporation: z.string().optional().refine((v) => !v || isPastOrToday(v), { message: "Date cannot be in the future" }),
     business_relationship: z.string().optional(),
     save_for_future: z.boolean().optional(),
     ...baseAddressSchema,
-    representative: z.object({
+        representative: z.object({
         first_name: z.string().min(1, "Representative first name is required"),
         last_name: z.string().min(1, "Representative last name is required"),
         nationality: z.string().optional(),
         address: z.string().optional(),
         postal_code: z.string().optional(),
-        dob: z.string().optional(),
+            dob: z.string().optional().refine((v) => !v || isPastOrToday(v), { message: "Date cannot be in the future" }),
         gender: z.string().optional(),
         extras: z.object({
             idNumber: z.string().optional(),
             documentType: z.string().optional(),
-            dateOfIssue: z.string().optional(),
+                dateOfIssue: z.string().optional().refine((v) => !v || isPastOrToday(v), { message: "Date cannot be in the future" }),
             dateOfExpiry: z.string().optional(),
             idCountryIsoCode: z.string().optional(),
         }),
@@ -350,7 +359,7 @@ const AddSenderFormModal = ({ isOpen, toggle, data, senderAccountType, onSubmit,
         },
     };
 
-    const renderDateField = (name, label, required = false) => (
+    const renderDateField = (name, label, required = false, allowFuture = false) => (
         <label style={fieldStyle}>
             <span style={{ color: "#454545", fontSize: "12px", fontWeight: 700 }}>
                 {t(label)} {required ? <span style={{ color: "#E64067" }}>*</span> : null}
@@ -361,6 +370,8 @@ const AddSenderFormModal = ({ isOpen, toggle, data, senderAccountType, onSubmit,
                 style={{ ...inputStyle, padding: 0, display: "flex", justifyContent: "center", position: "static" }}
                 value={watch(name) || null}
                 onChange={(date) => setValue(name, date ? date.format("YYYY-MM-DD") : "", { shouldValidate: true, shouldDirty: true })}
+                disableFuture={!allowFuture}
+                {...(!allowFuture ? { maxDate: new Date() } : {})}
                 placeholder="DD/MM/YYYY"
                 InputProps={dateInputProps}
                 inputProps={{
@@ -614,14 +625,14 @@ const AddSenderFormModal = ({ isOpen, toggle, data, senderAccountType, onSubmit,
                                     {renderField("representative.extras.idNumber", "ID Number")}
                                     {renderField("representative.extras.documentType", "Document Type", "text", Object.keys(idTypeData).map(key => ({ value: key, label: idTypeData[key] })))}
                                     {renderDateField("representative.extras.dateOfIssue", "Date of Issue")}
-                                    {renderDateField("representative.extras.dateOfExpiry", "Date of Expiry")}
+                                    {renderDateField("representative.extras.dateOfExpiry", "Date of Expiry", false, true)}
                                 </>
                                 :
                                 <>
                                     {renderField("extras.idNumber", "ID Number")}
                                     {renderField("extras.documentType", "Document Type", "text", Object.keys(idTypeData).map(key => ({ value: key, label: idTypeData[key] })))}
                                     {renderDateField("extras.dateOfIssue", "Date of Issue")}
-                                    {renderDateField("extras.dateOfExpiry", "Date of Expiry")}
+                                    {renderDateField("extras.dateOfExpiry", "Date of Expiry", false, true)}
                                 </>
                             }
                         </div>
