@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ChevronDown } from "react-feather";
 import styles from "../styles/Monthlyexpenses.module.css";
+import { Select, MenuItem, FormControl } from '@material-ui/core';
 
 import ReactApexChart from "react-apexcharts";
 
@@ -156,15 +157,24 @@ const ChartCard = ({
     <div className={styles.card}>
       <div className={styles.cardHeader}>
         <span className={styles.cardLabel}>{title}</span>
-        <select
-          className={styles.yearSelect}
-          value={filter}
-          onChange={(e) => onFilterChange(e.target.value)}
-        >
-          <option value="this_year">{t("This year")}</option>
-          <option value="last_year">{t("Last year")}</option>
-          <option value="this_month">{t("This month")}</option>
-        </select>
+        <FormControl>
+          <Select
+            className={styles.yearSelect}
+            value={filter}
+            onChange={(e) => onFilterChange(e.target.value)}
+            disableUnderline
+            renderValue={(selected) => {
+              if (selected === 'this_year') return t('This year');
+              if (selected === 'last_year') return t('Last year');
+              if (selected === 'this_month') return t('This month');
+              return selected;
+            }}
+          >
+            <MenuItem value="this_year">{t("This year")}</MenuItem>
+            <MenuItem value="last_year">{t("Last year")}</MenuItem>
+            <MenuItem value="this_month">{t("This month")}</MenuItem>
+          </Select>
+        </FormControl>
       </div>
 
       <div className={styles.amountRow}>
