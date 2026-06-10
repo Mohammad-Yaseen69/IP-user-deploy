@@ -1,6 +1,3 @@
-/* =============================================
-   Unsubscribe Modal – Figma-matched styles
-   ============================================= */
 
 .container {
     background: #fff;
@@ -18,7 +15,6 @@
     font-family: 'Inter', sans-serif;
 }
 
-/* ---- Header Row ---- */
 .headerRow {
     display: flex;
     align-items: center;
@@ -49,7 +45,6 @@
     line-height: 1.3;
 }
 
-/* ---- Icon Box ---- */
 .iconBox {
     width: 80px;
     height: 80px;
@@ -68,7 +63,6 @@
     background: #D92D20;
 }
 
-/* ---- Typography ---- */
 .subtitle {
     font-size: 20px;
     font-weight: 600;
@@ -86,7 +80,6 @@
     max-width: 380px;
 }
 
-/* ---- Table ---- */
 .consequenceTable {
     width: 100%;
     background: #F8F9FC;
@@ -118,7 +111,11 @@
     font-weight: 600;
 }
 
-/* ---- Form elements ---- */
+.consequenceValuePositive {
+    color: #027A48;
+    font-weight: 600;
+}
+
 .reasonSection {
     width: 100%;
     text-align: left;
@@ -160,7 +157,6 @@
     }
 }
 
-/* ---- Radio / Checkbox row ---- */
 .checkboxRow {
     display: flex;
     align-items: flex-start;
@@ -191,7 +187,6 @@
     cursor: pointer;
 }
 
-/* ---- Action Buttons ---- */
 .actions {
     display: flex;
     justify-content: space-between;

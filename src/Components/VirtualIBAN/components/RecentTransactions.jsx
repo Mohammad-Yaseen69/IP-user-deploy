@@ -1,33 +1,8 @@
-import React, { useState } from "react";
-import { Search, Filter, ArrowUp, ArrowDown, Info, Copy, Plus } from "react-feather";
+import { useState } from "react";
+import { ArrowUp, Filter, Search } from "react-feather";
 import styles from "../styles/RecentTransactions.module.css";
+import { useTranslation } from 'react-i18next';
 
-const transactions = [
-  {
-    id: "TXN307645",
-    date: "05 Dec 2024, 11:32",
-    type: "Send",
-    recipient: "Guys R",
-    amount: "€255.06",
-    status: "active",
-  },
-  {
-    id: "TXN301838",
-    date: "18 Nov 2024, 19:57",
-    type: "Requested",
-    recipient: "Aria J",
-    amount: "€33.00",
-    status: "pending",
-  },
-  {
-    id: "TXN306047",
-    date: "02 Nov 2024, 03:02",
-    type: "Received",
-    recipient: "Aria S",
-    amount: "€1762.50",
-    status: "active",
-  },
-];
 
 const statusColors = {
   active: { bg: "rgba(34,197,94,0.1)", color: "#22c55e" },
@@ -35,7 +10,8 @@ const statusColors = {
   failed: { bg: "rgba(239,68,68,0.1)", color: "#ef4444" },
 };
 
-const RecentTransactions = () => {
+const RecentTransactions = ({ setActiveTab, transactions }) => {
+  const { t } = useTranslation();
   const [search, setSearch] = useState("");
 
   const filtered = transactions.filter(
@@ -44,15 +20,14 @@ const RecentTransactions = () => {
       tx.id.toLowerCase().includes(search.toLowerCase()) ||
       tx.type.toLowerCase().includes(search.toLowerCase())
   );
-  const handleCopyIBAN = () => {
-    navigator.clipboard.writeText("YOUR_IBAN_HERE");
-    alert("IBAN copied to clipboard!");
-  };
+
   return (
     <>
       <div className={styles.header}>
-        <h3 className={styles.title}>Recent Transactions</h3>
-        <button className={styles.viewAll}>View All</button>
+        <h3 className={styles.title}>{t("Recent Transactions")}</h3>
+        <button className={styles.viewAll} onClick={() => setActiveTab("transaction-history")}>
+          {t("View All")}
+        </button>
       </div>
 
       <div className={styles.section}>
@@ -61,7 +36,7 @@ const RecentTransactions = () => {
             <Search size={14} className={styles.searchIcon} />
             <input
               type="text"
-              placeholder="Search..."
+              placeholder={t("Search...")}
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className={styles.searchInput}
@@ -69,10 +44,10 @@ const RecentTransactions = () => {
           </div>
           <div className={styles.toolbarRight}>
             <button className={styles.toolBtn}>
-              <Filter size={13} /> Filter
+              <Filter size={13} /> <span>{t("Filter")}</span>
             </button>
             <button className={styles.toolBtn}>
-              <ArrowUp size={13} /> Sort By
+              <ArrowUp size={13} /> <span>{t("Sort By")}</span>
             </button>
           </div>
         </div>
@@ -82,12 +57,12 @@ const RecentTransactions = () => {
               <tr style={{
                 borderRadius: "20px"
               }}>
-                <th>Date &amp; Time</th>
-                <th>Type</th>
-                <th>Transaction ID</th>
-                <th>Recipient</th>
-                <th>Amount</th>
-                <th>Status</th>
+                <th>{t("Date & Time")}</th>
+                <th>{t("Type")}</th>
+                <th>{t("Transaction ID")}</th>
+                <th>{t("Recipient")}</th>
+                <th>{t("Amount")}</th>
+                <th>{t("Status")}</th>
               </tr>
             </thead>
             <tbody>
@@ -97,7 +72,7 @@ const RecentTransactions = () => {
                   <td>
                     <div className={styles.typeCell}>
 
-                      {tx.type}
+                      {t(tx.type)}
                     </div>
                   </td>
                   <td className={styles.txId}>{tx.id}</td>
@@ -111,7 +86,7 @@ const RecentTransactions = () => {
                         color: statusColors[tx.status].color,
                       }}
                     >
-                      {tx.status.charAt(0).toUpperCase() + tx.status.slice(1)}
+                      {t(tx.status.charAt(0).toUpperCase() + tx.status.slice(1))}
                     </span>
                   </td>
                 </tr>
@@ -119,33 +94,7 @@ const RecentTransactions = () => {
             </tbody>
           </table>
 
-          {filtered.length === 0 && (
-            <div className={styles.emptyContainer}>
-              <div className={styles.iconWrapper}>
-                <Info size={32} className={styles.centerIcon} />
-              </div>
 
-              <div className={styles.textContent}>
-                <h3 className={styles.title}>No transactions yet</h3>
-                <p className={styles.description}>
-                  Your virtual bank is ready to receive money. Send a SEPA transfer using
-                  your IBAN, top up by card, or move funds from another wallet to get started.
-                </p>
-              </div>
-
-              <div className={styles.buttonGroup}>
-                <button className={styles.secondaryButton} onClick={handleCopyIBAN}>
-                  <Copy size={20} />
-                  <span>Copy IBAN to receive</span>
-                </button>
-
-                <button className={styles.primaryButton}>
-                  <Plus size={20} />
-                  <span>Add funds</span>
-                </button>
-              </div>
-            </div>
-          )}
         </div>
       </div >
     </>

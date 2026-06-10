@@ -2,6 +2,8 @@ import { useMemo, useState, useContext, useEffect } from "react"
 import { useTranslation } from "react-i18next"
 import { Modal, ModalBody } from "reactstrap"
 import axios from "axios"
+import { toast } from "react-toastify"
+import { useQueryClient } from "@tanstack/react-query"
 import useWindowWidth from "../../../utils/useWindowWidth"
 import {
     CircleCheck,
@@ -30,20 +32,35 @@ import {
     getContinueLabel,
     getDisabledState,
     getJurisdiction,
+    getSidebarSteps,
     goBack,
     goNext,
     isSidebarStepActive,
     isSidebarStepCompleted,
+    JURISDICTIONS,
     MOCK_WALLET_STATE,
-    SIDEBAR_STEPS,
     STEPS,
+    VIRTUAL_IBAN_ACTIVATION_FEE,
+    VIRTUAL_IBAN_ACTIVATION_FEE_CURRENCY,
 } from "../../../stateMachines/virtualIbanPayment"
 import DoneStep from "./DoneStep"
 import FeesStep from "./FeesStep"
 import JurisdictionStep from "./JurisdictionStep"
+import PendingStep from "./PendingStep"
 import SidebarProgress from "./SidebarProgress"
 import styles from "./virtualIbanModal.module.scss"
 import VerificationStep from "./VerificationStep"
+import useSendOtp from "../../../hooks/GeneralUse/useSendOtp"
+import OTPConfirmation from "../../UserSettingsNew/OTPConfirmation"
+import {
+    useCreateVirtualIban,
+    useVirtualIbans,
+    virtualIbanQueryKeys,
+} from "../hooks/useVirtualIban"
+import { getVirtualIbanCountry, normalizeVirtualIban } from "../utils/virtualIban"
+import SocketsService from "../../../Services/Socket"
+import usePlainFx from "../../../hooks/Payments/usePlainFx"
+import InstaPayLoader from "../../Loader"
 
 const SIDEBAR_ICONS = {
     [STEPS.JURISDICTION]: JurisIcon,
@@ -77,17 +94,39 @@ const ChevronRight = () => (
     </svg>
 )
 
-const VirtualIbanModal = ({ isOpen, toggle }) => {
+const parseAmount = (value) => {
+    const amount = Number(String(value ?? "").replace(/,/g, ""))
+    return Number.isFinite(amount) ? amount : 0
+}
+
+const getWalletCurrencyCode = (wallet) =>
+    wallet?.currency?.code || wallet?.currency_code || wallet?.name || ""
+
+const VirtualIbanModal = ({
+    isOpen,
+    toggle,
+    onCreated,
+    resumeProcessingData,
+    resumeProcessingLoading = false,
+}) => {
     const { t } = useTranslation()
     const width = useWindowWidth()
+    const queryClient = useQueryClient()
 
     const { userWallets, getUserWallets, userDetails, authHeader } = useContext(UserContext)
 
     const [currentStep, setCurrentStep] = useState(STEPS.JURISDICTION)
-    const [jurisdiction, setJurisdiction] = useState("MT")
+    const [jurisdiction, setJurisdiction] = useState("")
     const [feesAccepted, setFeesAccepted] = useState(false)
     const [paymentType, setPaymentType] = useState("")
     const [walletState, setWalletState] = useState({})
+    const [showOtp, setShowOtp] = useState(false)
+    const [otpToken, setOtpToken] = useState("")
+    const [codeType, setCodeType] = useState("sms")
+    const [createdIban, setCreatedIban] = useState(null)
+    const [pendingTransactionId, setPendingTransactionId] = useState("")
+    const [pendingTransactionRef, setPendingTransactionRef] = useState("")
+    const [isResumedPending, setIsResumedPending] = useState(false)
 
     const [saveCard, setSaveCard] = useState(false)
     const [cards, setCards] = useState([])
@@ -106,6 +145,110 @@ const VirtualIbanModal = ({ isOpen, toggle }) => {
         maxCardNumberLength: 16,
         cvcLength: 3
     })
+
+    const createVirtualIban = useCreateVirtualIban()
+    const { data: existingIbans = [], isLoading: existingIbansLoading } = useVirtualIbans()
+    const {
+        getExchangeRate: getPlainExchangeRate,
+        isPending: isActivationFxPending,
+    } = usePlainFx()
+    const [activationFeeFx, setActivationFeeFx] = useState({
+        amount: VIRTUAL_IBAN_ACTIVATION_FEE,
+        currency: VIRTUAL_IBAN_ACTIVATION_FEE_CURRENCY,
+        exchangeRate: 1,
+        error: "",
+    })
+    const { sendOtp, isSendingOtp } = useSendOtp({
+        onSuccess: (token) => {
+            setOtpToken(token)
+            setShowOtp(true)
+        },
+        onError: (err) => {
+            console.log(err, "error")
+            toast.error(err?.message || t("Unable to send OTP"))
+        },
+    })
+
+    const isKycApproved = useMemo(() => {
+        if (userDetails?.account_type === "individual") {
+            return userDetails?.user?.kyc_status === "approved"
+        }
+
+        return userDetails?.company?.kyb_status === "approved"
+    }, [userDetails])
+
+    const socketConfig = useMemo(() => ({
+        url: import.meta.env.VITE_IP_DEV_API,
+        transports: ["websocket", "polling", "flashsocket"],
+    }), [])
+
+    useEffect(() => {
+        if (resumeProcessingData === true) {
+            setCreatedIban(null)
+            setJurisdiction("MT")
+            setPendingTransactionId("")
+            setPendingTransactionRef("")
+            setIsResumedPending(true)
+            setCurrentStep(STEPS.PENDING)
+        }
+    }, [resumeProcessingData])
+
+    useEffect(() => {
+        if (currentStep !== STEPS.PENDING || !userDetails?._id) return
+
+        const socketsService = new SocketsService(socketConfig, () => { })
+
+        const handleVirtualIbanCreated = (data) => {
+            if (
+                !isResumedPending &&
+                pendingTransactionId &&
+                data?.transaction_id &&
+                data.transaction_id !== pendingTransactionId
+            ) {
+                return
+            }
+
+            const iban = normalizeVirtualIban(data?.iban)
+
+            setCreatedIban(iban)
+            setJurisdiction(data?.jurisdiction || data?.country || getVirtualIbanCountry(iban) || jurisdiction || "MT")
+            setPendingTransactionId(data?.transaction_id || pendingTransactionId)
+            setPendingTransactionRef(data?.transaction_ref || pendingTransactionRef)
+            queryClient.setQueryData(virtualIbanQueryKeys.processingStatus(), false)
+            queryClient.invalidateQueries({ queryKey: virtualIbanQueryKeys.list() })
+            if (iban?._id) {
+                queryClient.invalidateQueries({ queryKey: virtualIbanQueryKeys.detail(iban._id) })
+                queryClient.invalidateQueries({ queryKey: virtualIbanQueryKeys.balance(iban._id) })
+            }
+            toast.success(t("Your virtual IBAN is ready"))
+            setCurrentStep(STEPS.DONE)
+        }
+
+        socketsService.connect()
+        socketsService.connectToServer(userDetails._id)
+        socketsService.socket.on("virtual_iban:created", handleVirtualIbanCreated)
+
+        return () => {
+            socketsService.socket.off("virtual_iban:created", handleVirtualIbanCreated)
+            socketsService.disconnect()
+        }
+    }, [
+        currentStep,
+        isResumedPending,
+        jurisdiction,
+        pendingTransactionId,
+        pendingTransactionRef,
+        queryClient,
+        socketConfig,
+        t,
+        userDetails?._id,
+    ])
+
+    useEffect(() => {
+        if (userDetails?.tfa) {
+            setCodeType("authenticator")
+        }
+    }, [userDetails])
 
     useEffect(() => {
         getUserWallets()
@@ -156,11 +299,123 @@ const VirtualIbanModal = ({ isOpen, toggle }) => {
             ?.map(item => ({ name: item?.currency?.code, ...item }))
     }, [userWallets])
 
+    const jurisdictionAvailability = useMemo(() => {
+        const existingCountries = new Set(
+            (Array.isArray(existingIbans) ? existingIbans : [])
+                .map(getVirtualIbanCountry)
+                .filter(Boolean)
+        )
+
+        return Object.values(JURISDICTIONS).reduce((acc, option) => {
+            if (option.id === "GB") {
+                acc[option.id] = { disabledReason: "Coming Soon" }
+                return acc
+            }
+
+            if (existingCountries.has(option.id)) {
+                acc[option.id] = { disabledReason: `${option.title} already exists` }
+                return acc
+            }
+
+            acc[option.id] = { disabledReason: "" }
+            return acc
+        }, {})
+    }, [existingIbans])
+
+    useEffect(() => {
+        if (jurisdiction && jurisdictionAvailability?.[jurisdiction]?.disabledReason) {
+            setJurisdiction("")
+        }
+    }, [jurisdiction, jurisdictionAvailability])
+
+    useEffect(() => {
+        if (isKycApproved && currentStep === STEPS.VERIFICATION) {
+            setCurrentStep(STEPS.PAYMENT_METHOD)
+        }
+    }, [currentStep, isKycApproved])
+
     const jurisdictionInfo = getJurisdiction(jurisdiction)
+    const selectedWalletCurrency = getWalletCurrencyCode(walletState)
+
+    useEffect(() => {
+        if (paymentType !== "wallet" || !selectedWalletCurrency) {
+            setActivationFeeFx({
+                amount: VIRTUAL_IBAN_ACTIVATION_FEE,
+                currency: VIRTUAL_IBAN_ACTIVATION_FEE_CURRENCY,
+                exchangeRate: 1,
+                error: "",
+            })
+            return
+        }
+
+        let isActive = true
+
+        const convertActivationFee = async () => {
+            if (selectedWalletCurrency === VIRTUAL_IBAN_ACTIVATION_FEE_CURRENCY) {
+                setActivationFeeFx({
+                    amount: VIRTUAL_IBAN_ACTIVATION_FEE,
+                    currency: VIRTUAL_IBAN_ACTIVATION_FEE_CURRENCY,
+                    exchangeRate: 1,
+                    error: "",
+                })
+                return
+            }
+
+            setActivationFeeFx((prev) => ({
+                ...prev,
+                amount: 0,
+                currency: selectedWalletCurrency,
+                exchangeRate: null,
+                error: "",
+            }))
+
+            try {
+                const convertedAmount = parseAmount(
+                    await getPlainExchangeRate(
+                        VIRTUAL_IBAN_ACTIVATION_FEE_CURRENCY,
+                        selectedWalletCurrency,
+                        VIRTUAL_IBAN_ACTIVATION_FEE
+                    )
+                )
+
+                if (!convertedAmount) {
+                    throw new Error("Invalid FX amount")
+                }
+
+                if (isActive) {
+                    setActivationFeeFx({
+                        amount: convertedAmount,
+                        currency: selectedWalletCurrency,
+                        exchangeRate: convertedAmount / VIRTUAL_IBAN_ACTIVATION_FEE,
+                        error: "",
+                    })
+                }
+            } catch {
+                if (isActive) {
+                    setActivationFeeFx({
+                        amount: 0,
+                        currency: selectedWalletCurrency,
+                        exchangeRate: null,
+                        error: t("Unable to fetch the exchange rate for this wallet"),
+                    })
+                }
+            }
+        }
+
+        convertActivationFee()
+
+        return () => {
+            isActive = false
+        }
+    }, [getPlainExchangeRate, paymentType, selectedWalletCurrency, t])
 
     const feeDetails = useMemo(
-        () => buildMockFeeDetails(jurisdiction, paymentType),
-        [jurisdiction, paymentType]
+        () => buildMockFeeDetails(jurisdiction, paymentType, {
+            amount: activationFeeFx.amount ?? VIRTUAL_IBAN_ACTIVATION_FEE,
+            currency: activationFeeFx.currency || VIRTUAL_IBAN_ACTIVATION_FEE_CURRENCY,
+            exchangeRate: activationFeeFx.exchangeRate,
+        }),
+        [activationFeeFx, jurisdiction, paymentType]
     )
 
     const machineData = useMemo(
@@ -172,19 +427,58 @@ const VirtualIbanModal = ({ isOpen, toggle }) => {
             selectedSaveCard,
             cardDetail,
             cardNumberError,
+            kycApproved: isKycApproved,
         }),
-        [jurisdiction, feesAccepted, paymentType, walletState, selectedSaveCard, cardDetail, cardNumberError]
+        [jurisdiction, feesAccepted, paymentType, walletState, selectedSaveCard, cardDetail, cardNumberError, isKycApproved]
     )
 
-    const disabled = getDisabledState(currentStep, machineData)
+    const sidebarSteps = useMemo(
+        () => getSidebarSteps(machineData),
+        [machineData]
+    )
+
+    const isCreating = isSendingOtp || createVirtualIban.isPending
+    const isActivationFxBlocked =
+        paymentType === "wallet" &&
+        !!selectedWalletCurrency &&
+        selectedWalletCurrency !== VIRTUAL_IBAN_ACTIVATION_FEE_CURRENCY &&
+        (
+            isActivationFxPending ||
+            activationFeeFx.currency !== selectedWalletCurrency ||
+            !!activationFeeFx.error ||
+            !activationFeeFx.amount
+        )
+    const isActivationBalanceInsufficient =
+        paymentType === "wallet" &&
+        !!walletState?.wallet_id &&
+        !!activationFeeFx.amount &&
+        parseAmount(walletState?.balance?.available) < parseAmount(activationFeeFx.amount)
+    const disabled =
+        getDisabledState(currentStep, machineData) ||
+        isCreating ||
+        isActivationFxBlocked ||
+        isActivationBalanceInsufficient
     const continueLabel = getContinueLabel(currentStep, t)
 
     const resetState = () => {
         setCurrentStep(STEPS.JURISDICTION)
-        setJurisdiction("MT")
+        setJurisdiction("")
         setFeesAccepted(false)
         setPaymentType("")
         setWalletState({})
+        setShowOtp(false)
+        setOtpToken("")
+        setCodeType("sms")
+        setCreatedIban(null)
+        setPendingTransactionId("")
+        setPendingTransactionRef("")
+        setIsResumedPending(false)
+        setActivationFeeFx({
+            amount: VIRTUAL_IBAN_ACTIVATION_FEE,
+            currency: VIRTUAL_IBAN_ACTIVATION_FEE_CURRENCY,
+            exchangeRate: 1,
+            error: "",
+        })
         setSelectedSaveCard({})
         setCardDetails({
             cardNumber: "",
@@ -195,16 +489,103 @@ const VirtualIbanModal = ({ isOpen, toggle }) => {
         setCardNumberError(null)
     }
 
+    const refreshCreatedIban = () => {
+        queryClient.invalidateQueries({ queryKey: virtualIbanQueryKeys.list() })
+        if (createdIban?._id) {
+            queryClient.invalidateQueries({ queryKey: virtualIbanQueryKeys.detail(createdIban._id) })
+            queryClient.invalidateQueries({ queryKey: virtualIbanQueryKeys.balance(createdIban._id) })
+        }
+        onCreated?.(createdIban)
+    }
+
     const handleClose = () => {
+        if (currentStep === STEPS.PENDING) {
+            return
+        }
+
+        if (currentStep === STEPS.DONE && createdIban) {
+            queryClient.setQueryData(virtualIbanQueryKeys.processingStatus(), false)
+            refreshCreatedIban()
+        }
         resetState()
         toggle?.()
     }
 
-    const handleContinue = () => {
+    const handleCreatedClose = () => {
+        handleClose()
+    }
+
+    const getCreatePayload = () => ({
+        wallet_id: walletState?.wallet_id,
+        currencyCode: jurisdictionInfo.currencyCode,
+        name: userDetails?.full_name || userDetails?.name || userDetails?.username || "Virtual IBAN",
+        activation_fee: {
+            amount: parseAmount(feeDetails?.totalFee),
+            currency: feeDetails?.currency,
+            base_amount: VIRTUAL_IBAN_ACTIVATION_FEE,
+            base_currency: VIRTUAL_IBAN_ACTIVATION_FEE_CURRENCY,
+            exchange_rate: activationFeeFx.exchangeRate,
+        },
+    })
+
+    const handleSendOtp = async (otpCodeType = codeType) => {
+        if (!walletState?.wallet_id) {
+            toast.error(t("Please select an InstaPay wallet to pay the activation fee"))
+            return
+        }
+
+        if (isActivationFxBlocked) {
+            toast.error(activationFeeFx.error || t("Please wait while we convert the activation fee"))
+            return
+        }
+
+        if (isActivationBalanceInsufficient) {
+            toast.error(t("Insufficient wallet balance for the activation fee"))
+            return
+        }
+
+        try {
+            setCodeType(otpCodeType || codeType)
+            await sendOtp(getCreatePayload(), otpCodeType || codeType)
+        } catch (error) {
+            const dec = decryptData(error?.response?.data?.data)
+            const message = dec?.message || error?.message || t("We are unable to process your request at the moment. Please try again later.")
+            toast.error(message)
+        }
+    }
+
+    const verifyOtp = async (setter, type = "", otp, setOtpError) => {
+        try {
+            const res = await createVirtualIban.mutateAsync({
+                token: otpToken,
+                otp,
+                type: type || codeType,
+            })
+            const transactionId = res?.transaction_id || res?.data?.transaction_id || res?.data?.transaction?.id
+            const transactionRef = res?.transaction_ref || res?.data?.transaction_ref || res?.data?.transaction?.reference_id
+            setPendingTransactionId(transactionId || "")
+            setPendingTransactionRef(transactionRef || "")
+            setCreatedIban(null)
+            setter?.(true)
+            setShowOtp(false)
+            setCurrentStep(STEPS.PENDING)
+        } catch (error) {
+            const dec = decryptData(error?.response?.data?.data)
+            const message = dec?.message || error?.message || t("We are unable to process your request at the moment. Please try again later.")
+            setOtpError?.(message)
+            toast.error(message)
+        }
+    }
+
+    const handleContinue = async () => {
+        if (currentStep === STEPS.JURISDICTION && jurisdictionAvailability?.[jurisdiction]?.disabledReason) {
+            toast.error(t(jurisdictionAvailability[jurisdiction].disabledReason))
+            setJurisdiction("")
+            return
+        }
+
         if (currentStep === STEPS.SUMMARY) {
-            // When APIs are ready: await sendOtp() and setShowOtpModal(true) instead of advancing
-            // Since we skip OTP_CONFIRMATION, we go directly to DONE
-            setCurrentStep(STEPS.DONE)
+            await handleSendOtp()
             return
         }
 
@@ -234,12 +615,21 @@ const VirtualIbanModal = ({ isOpen, toggle }) => {
     }
 
     const renderStepContent = () => {
+        if (resumeProcessingLoading || existingIbansLoading) {
+            return (
+                <div className={styles.loaderWrap}>
+                    <InstaPayLoader fallback transparent fullHeight />
+                </div>
+            )
+        }
+
         switch (currentStep) {
             case STEPS.JURISDICTION:
                 return (
                     <JurisdictionStep
                         jurisdiction={jurisdiction}
                         setJurisdiction={setJurisdiction}
+                        availability={jurisdictionAvailability}
                     />
                 )
             case STEPS.FEES:
@@ -287,6 +677,7 @@ const VirtualIbanModal = ({ isOpen, toggle }) => {
                         applePay={false}
                         googlePay={false}
                         hideButtons={true}
+                        allowWalletSelection={true}
                         marginTop="1rem"
                     />
                 )
@@ -303,18 +694,26 @@ const VirtualIbanModal = ({ isOpen, toggle }) => {
                                         ? { name: `${selectedSaveCard.brand?.toUpperCase()} Card`, wallet_id: `•••• ${selectedSaveCard.last4}` }
                                         : { name: cardDetail.cardHolderName || "Payment Card", wallet_id: cardDetail.cardNumber ? `•••• ${cardDetail.cardNumber.slice(-4)}` : "" })
                         }
-                        sendOtp={() => setCurrentStep(STEPS.DONE)}
+                        sendOtp={handleSendOtp}
                         setStep={() => setCurrentStep(STEPS.PAYMENT_METHOD)}
                         paymentType={paymentType}
-                        cardDets={{ currency: jurisdictionInfo.currencyCode }}
+                        cardDets={{ currency: VIRTUAL_IBAN_ACTIVATION_FEE_CURRENCY }}
+                        feeLabel="IBAN activation fee"
                         hideButtons={true}
+                    />
+                )
+            case STEPS.PENDING:
+                return (
+                    <PendingStep
+                        transactionRef={pendingTransactionRef}
                     />
                 )
             case STEPS.DONE:
                 return (
                     <DoneStep
                         jurisdiction={jurisdiction}
-                        onGoToAccount={handleClose}
+                        iban={createdIban}
+                        onGoToAccount={handleCreatedClose}
                     />
                 )
             default:
@@ -322,7 +721,7 @@ const VirtualIbanModal = ({ isOpen, toggle }) => {
         }
     }
 
-    const showFooter = currentStep !== STEPS.DONE && (width > 1000)
+    const showFooter = ![STEPS.PENDING, STEPS.DONE].includes(currentStep) && (width > 1000)
 
     const renderBody = () => (
         <div
@@ -350,7 +749,7 @@ const VirtualIbanModal = ({ isOpen, toggle }) => {
                             className={addFundsStyles.progressEffect}
                             style={{ marginTop: "2rem" }}
                         >
-                            {SIDEBAR_STEPS.map((item, index) => (
+                            {sidebarSteps.map((item, index) => (
                                 <SidebarProgress
                                     key={item.stepName}
                                     stepLabel={item.stepLabel}
@@ -362,9 +761,10 @@ const VirtualIbanModal = ({ isOpen, toggle }) => {
                                     )}
                                     isCompleted={isSidebarStepCompleted(
                                         item,
-                                        currentStep
+                                        currentStep,
+                                        machineData
                                     )}
-                                    showBar={index < SIDEBAR_STEPS.length - 1}
+                                    showBar={index < sidebarSteps.length - 1}
                                 />
                             ))}
                         </div>
@@ -405,7 +805,11 @@ const VirtualIbanModal = ({ isOpen, toggle }) => {
                                 disabled={disabled}
                                 onClick={handleContinue}
                             >
-                                {continueLabel}
+                                {isActivationFxPending && isActivationFxBlocked
+                                    ? t("Converting...")
+                                    : isCreating
+                                        ? t("Processing...")
+                                        : continueLabel}
                                 <ChevronRight />
                             </button>
                         </div>
@@ -421,6 +825,8 @@ const VirtualIbanModal = ({ isOpen, toggle }) => {
                 isOpen={isOpen && width > 1000}
                 style={{ minWidth: "900px" }}
                 toggle={handleClose}
+                backdrop={currentStep === STEPS.PENDING ? "static" : true}
+                keyboard={currentStep !== STEPS.PENDING}
             >
                 <ModalBody style={{ padding: "20px" }}>{renderBody()}</ModalBody>
             </Modal>
@@ -428,6 +834,21 @@ const VirtualIbanModal = ({ isOpen, toggle }) => {
             {isOpen && width < 1000 && (
                 <div style={{ padding: "16px" }}>{renderBody()}</div>
             )}
+
+            <Modal isOpen={showOtp} toggle={() => setShowOtp(false)} centered>
+                <ModalBody>
+                    <OTPConfirmation
+                        setter={() => { }}
+                        setterValue={true}
+                        hideOtp={() => setShowOtp(false)}
+                        callback={verifyOtp}
+                        processing={createVirtualIban.isPending}
+                        resendHandler={handleSendOtp}
+                        authType={codeType}
+                        setAuthType={setCodeType}
+                    />
+                </ModalBody>
+            </Modal>
 
         </>
     )

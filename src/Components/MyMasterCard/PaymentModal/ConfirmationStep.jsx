@@ -10,14 +10,28 @@ export const paymentInfoJSX = (feeDetails, addFunds, title, t) => (
     <div className={styles.paymentInfo}>
         <div style={{ display: "flex", flexDirection: "column", gap: "7px" }}>
             <p>{title || t("You Have to Pay")}</p>
-            <h1>{!addFunds ? (feeDetails?.totalFee ?? feeDetails?.fee) : feeDetails?.feeDetails?.totalAmount ?? feeDetails?.feeDetails?.amount}{!addFunds ? feeDetails.currency : feeDetails?.feeDetails?.currency}</h1>
+            <h1 style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "2px"
+            }}>{!addFunds ? (feeDetails?.totalFee ?? feeDetails?.fee) : feeDetails?.feeDetails?.totalAmount ?? feeDetails?.feeDetails?.amount} {!addFunds ? feeDetails.currency : feeDetails?.feeDetails?.currency}</h1>
         </div>
         <img src={Svg} style={{ position: "absolute", right: "10px", top: "0px" }} alt="" />
     </div>
 )
 
-const ConfirmationStep = ({ feeDetails, walletState, setStep, sendOtp, addFunds, cardDets, paymentType, hideButtons }) => {
+const ConfirmationStep = ({ feeDetails, walletState, setStep, sendOtp, addFunds, cardDets, paymentType, hideButtons, feeLabel }) => {
     const { t } = useTranslation();
+    const exchangeRate = Number(String(feeDetails?.exchangeRate ?? "").replace(/,/g, ""))
+    const showExchangeRate =
+        !addFunds &&
+        feeDetails?.baseCurrency &&
+        feeDetails?.currency &&
+        feeDetails.baseCurrency !== feeDetails.currency &&
+        Number.isFinite(exchangeRate) &&
+        exchangeRate > 0
+
     return (
         <div className={styles.step3}>
             <div className={styles.infoDiv}>
@@ -46,6 +60,14 @@ const ConfirmationStep = ({ feeDetails, walletState, setStep, sendOtp, addFunds,
                                 </div>
                             </div>
                         }
+                        {showExchangeRate &&
+                            <div style={{ justifyContent: "center" }}>
+                                <div style={{ flexDirection: "row" }} className={styles.er_details}>
+                                    <img src={er_icon} alt="" />
+                                    <span>1.00 {feeDetails.baseCurrency} = {exchangeRate.toFixed(2)} {feeDetails.currency}</span>
+                                </div>
+                            </div>
+                        }
                         {addFunds &&
                             <div>
                                 <h3 style={{ marginBottom: "0", fontSize: "18px" }}>{feeDetails?.feeDetails?.amount}{cardDets?.currency}</h3>
@@ -56,8 +78,8 @@ const ConfirmationStep = ({ feeDetails, walletState, setStep, sendOtp, addFunds,
 
                     {!addFunds &&
                         <div className={styles.feeInfo}>
-                            <h3>{t("Card activation fee")}</h3>
-                            <h3>{feeDetails.fee}{feeDetails.currency}</h3>
+                            <h3>{t(feeLabel || "Card activation fee")}</h3>
+                            <h3>{feeDetails.fee} {feeDetails.currency}</h3>
                         </div>
                     }
 

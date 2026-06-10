@@ -1,9 +1,11 @@
-import { ArrowRight, Clock, Globe, Shield } from 'react-feather'
+import { ArrowRight, Clock, EyeOff, Globe, Shield } from 'react-feather'
 import styles from "../styles/IBAN.module.css"
 import VirtualIbanModal from '../VirtualIbanModal'
 import { useState } from 'react'
-
-const IBAN = () => {
+import imageCard from "../files/images/Frame_2147236087.png"
+import { useTranslation } from 'react-i18next'
+const IBAN = ({ onCreated }) => {
+    const { t } = useTranslation()
     const [showModal, setShowModal] = useState(false)
 
     const handleOpenModal = () => {
@@ -19,49 +21,27 @@ const IBAN = () => {
             <div className={styles.mainContent}>
 
                 <div className={styles.leftSection}>
-                    <p className={styles.subHeading}>My Virtual Account</p>
+                    <p className={styles.subHeading}>{t("My Virtual Account")}</p>
                     <h1 className={styles.heading}>
-                        Get a dedicated IBAN <br /> in your name.
+                        Get a dedicated European <br /> IBAN in your name.
+
                     </h1>
                     <p className={styles.description}>
-                        Manage your global payments easily with a unique virtual account.
-                        Receive, hold, and convert multiple currencies in one place.
                     </p>
 
                     <div className={styles.buttonGroup}>
-                        <div>
-                            <h4>~2 min</h4>
-                            <p>Average onboarding</p>
-                        </div>
-                        <div>
-                            <h4>SEPA + SWIFT</h4>
-                            <p>Receive worldwide</p>
-                        </div>
+
+                        <h5>SEPA + SWIFT</h5>
+                        <p>Send and receive worldwide
+                        </p>
                     </div>
                     <button onClick={handleOpenModal} className={styles.buttonGroup1} >
-                        Open virtual bank account <ArrowRight />
+                        Open your virtual bank account <ArrowRight />
                     </button>
                 </div>
 
                 <div className={styles.rightSection}>
-                    <div className={styles.fade1} >
-                        <div className={styles.fade2}>
-                            <div className={styles.virtualCard}>
-                                <div className={styles.cardHeader}>
-                                    <span>Premium Account</span>
-                                    <span className={styles.cardLogo}>InstaPay</span>
-                                </div>
-                                <div className={styles.cardBalance}>
-                                    <p className={styles.balanceLabel}>Total Balance</p>
-                                    <h2 className={styles.balanceAmount}>€53,180.00</h2>
-                                </div>
-                                <div className={styles.cardFooter}>
-                                    <p className={styles.cardNumber}>•••• •••• •••• 8842</p>
-                                    <p className={styles.cardExpiry}>05/30</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <img src={imageCard} alt="" />
                 </div>
 
             </div>
@@ -69,31 +49,31 @@ const IBAN = () => {
 
                 <div className={styles.featureCard}>
                     <div className={`${styles.iconWrapper} ${styles.blueIcon}`}>
-                        <Shield size={20} />
+                        <Shield size={20} fill='#5926F033' />
                     </div>
-                    <h3 className={styles.cardTitle}>Funds safeguarded</h3>
+                    <h3 className={styles.cardTitle}>{t("Funds safeguarded")}</h3>
                     <p className={styles.cardDescription}>
-                        Held with a regulated tier-1 partner bank. Not lent or invested.
+                        {t("Held with a regulated tier-1 partner bank. Not lent or invested.")}
                     </p>
                 </div>
 
                 <div className={styles.featureCard}>
                     <div className={`${styles.iconWrapper} ${styles.purpleIcon}`}>
-                        <Clock size={20} />
+                        <Clock size={20} fill='#5926F033' />
                     </div>
-                    <h3 className={styles.cardTitle}>Instant verification</h3>
+                    <h3 className={styles.cardTitle}>{t("Verified in minutes")}</h3>
                     <p className={styles.cardDescription}>
-                        Most accounts are verified automatically within a few minutes.
+                        {t("Most accounts are issued the same day. Confirm proof of address")}
                     </p>
                 </div>
 
                 <div className={styles.featureCard}>
                     <div className={`${styles.iconWrapper} ${styles.greenIcon}`}>
-                        <Globe size={20} />
+                        <EyeOff size={20} fill='#5926F033' />
                     </div>
-                    <h3 className={styles.cardTitle}>Global coverage</h3>
+                    <h3 className={styles.cardTitle}>{t("No hidden fees")}</h3>
                     <p className={styles.cardDescription}>
-                        Access your money globally with multi-currency support and seamless tracking.
+                        {t("Free to receive in EUR. SWIFT and FX are priced upfront.")}
                     </p>
                 </div>
 
@@ -102,6 +82,7 @@ const IBAN = () => {
             <VirtualIbanModal
                 isOpen={showModal}
                 toggle={handleCloseModal}
+                onCreated={onCreated}
             />
         </div>
     )

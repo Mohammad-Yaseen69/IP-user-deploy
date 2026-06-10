@@ -73,6 +73,13 @@
     background: #F1F2F4;
 }
 
+.disabledBtn,
+.disabledBtn:hover {
+    opacity: 0.55;
+    cursor: not-allowed;
+    background: #F3F4F6;
+}
+
 .balanceSection {
     display: flex;
     align-items: baseline;

@@ -3,14 +3,14 @@ import { PlusCircle, ArrowRight } from "react-feather";
 
 
 export const actions = [
-    { id: 1, icon: <PlusCircle size={20} />, label: "Add funds", sub: "Deposit to your account", color: "#6366f1" },
+    { id: 1, icon: <PlusCircle size={20} />, label: "Deposit", sub: "Deposit to your account", color: "#6366f1" },
     {
         id: 2, icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
             <path d="M12.375 10.125L14.625 12.375L12.375 14.625" stroke="#5926F0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
             <path d="M3.375 12.375H14.625" stroke="#5926F0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
             <path d="M5.625 7.875L3.375 5.625L5.625 3.375" stroke="#5926F0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
             <path d="M14.625 5.625H3.375" stroke="#5926F0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-        </svg>, label: "Current funds", sub: "Move funds to Wallet", color: "#10b981"
+        </svg>, label: "Move funds", sub: "Move funds to Wallet", color: "#10b981"
     },
     { id: 3, icon: <ArrowRight size={20} />, label: "Withdraw balance", sub: "To the verified account", color: "#5926F0" },
     {
@@ -19,7 +19,7 @@ export const actions = [
             <path d="M7.3125 7.3125H11.8125" stroke="#5926F0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
             <path d="M7.3125 9.5625H11.8125" stroke="#5926F0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
             <path d="M1.6875 5.625C1.6875 5.625 1.125 5.20312 1.125 4.5C1.125 4.05245 1.30279 3.62322 1.61926 3.30676C1.93572 2.99029 2.36495 2.8125 2.8125 2.8125C3.26005 2.8125 3.68928 2.99029 4.00574 3.30676C4.32221 3.62322 4.5 4.05245 4.5 4.5V13.5C4.5 13.9476 4.67779 14.3768 4.99426 14.6932C5.31072 15.0097 5.73995 15.1875 6.1875 15.1875M6.1875 15.1875C6.63505 15.1875 7.06428 15.0097 7.38074 14.6932C7.69721 14.3768 7.875 13.9476 7.875 13.5C7.875 12.7969 7.3125 12.375 7.3125 12.375H15.1875C15.1875 12.375 15.75 12.7969 15.75 13.5C15.75 13.9476 15.5722 14.3768 15.2557 14.6932C14.9393 15.0097 14.5101 15.1875 14.0625 15.1875H6.1875Z" stroke="#5926F0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-        </svg>, label: "Statement", sub: "Download PDF", color: "#10b981"
+        </svg>, label: "Download statement", sub: "PDF or CSV", color: "#10b981"
     },
     {
         id: 5, icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
@@ -58,5 +58,32 @@ export const actions = [
             <path d="M4.5 13.5L5.10258 11.25L2.8125 10.6875" stroke="#EF4444" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
             <path d="M15.1875 7.3125L12.8975 6.75L13.5 4.5" stroke="#EF4444" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
         </svg>, label: "Unsubscribe", sub: "Cancel virtual account", color: "#EF4444"
+    },
+];
+
+export const transactions = [
+    {
+        id: "TXN307645",
+        date: "05 Dec 2024, 11:32",
+        type: "Send",
+        recipient: "Guys R",
+        amount: "€255.06",
+        status: "active",
+    },
+    {
+        id: "TXN301838",
+        date: "18 Nov 2024, 19:57",
+        type: "Requested",
+        recipient: "Aria J",
+        amount: "€33.00",
+        status: "pending",
+    },
+    {
+        id: "TXN306047",
+        date: "02 Nov 2024, 03:02",
+        type: "Received",
+        recipient: "Aria S",
+        amount: "€1762.50",
+        status: "active",
     },
 ];

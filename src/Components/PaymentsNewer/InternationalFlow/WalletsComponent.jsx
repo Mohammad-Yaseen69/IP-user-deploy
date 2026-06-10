@@ -122,6 +122,7 @@ export const WalletCard = ({
     card,
     amount,
     addFunds,
+    allowWalletSelection = false,
     paymentType,
     filteredWallets,
     cardToWallet
@@ -230,25 +231,25 @@ export const WalletCard = ({
 
 
     const handleClick = () => {
-        if ((!loading && !blocked) && (isSufficient || cardToWallet)) {
+        if ((!loading && !blocked) && (isSufficient || cardToWallet || allowWalletSelection)) {
             dataHandler("wallet", wallet)
         }
     }
 
     useEffect(() => {
-        if ((!loading && !blocked) && (isSufficient) && (!data?.wallet || Object.keys(data?.wallet).length === 0)) {
+        if ((!loading && !blocked) && (isSufficient || allowWalletSelection) && (!data?.wallet || Object.keys(data?.wallet).length === 0)) {
             if (wallet.default) {
                 dataHandler("wallet", wallet)
             }
         }
-    }, [wallet, loading, isSufficient, blocked])
+    }, [wallet, loading, isSufficient, blocked, allowWalletSelection])
 
     return (
         <div
             data-content={t("Insufficient Balance")}
             style={{ backgroundSize: "cover" }}
             data-block-content={t("Blocked Wallet")}
-            className={`${styles.card} ${(isSufficient || cardToWallet) ? "" : styles.disabled_card} ${blocked ? styles.blocked_card : ""} ${data?.wallet?._id === wallet?._id ? styles.active : ""}`}
+            className={`${styles.card} ${(isSufficient || cardToWallet || allowWalletSelection) ? "" : styles.disabled_card} ${blocked ? styles.blocked_card : ""} ${data?.wallet?._id === wallet?._id ? styles.active : ""}`}
             onClick={handleClick}
         >
             <div className={styles.top}>

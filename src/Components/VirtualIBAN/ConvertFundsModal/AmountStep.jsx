@@ -1,38 +1,29 @@
-import { useState } from "react"
 import { useTranslation } from "react-i18next"
+import {
+    formatAmountValue,
+    getAmountNumber,
+    getAmountInputSize,
+    getCurrencySymbol,
+    getQuickAmountsFromBalance,
+    handleAmountInputBlur,
+    handleAmountInputChange,
+    handleAmountInputKeyUp,
+    isSameAmount,
+} from "../utils/amount"
 import styles from "./convertFunds.module.scss"
 
-const QUICK_AMOUNTS = [100, 500, 2500]
-
-const AmountStep = ({ amount, setAmount, currencyCode }) => {
+const AmountStep = ({ amount, setAmount, currencyCode = "EUR", availableBalance = 0 }) => {
     const { t } = useTranslation()
-    const [activeQuick, setActiveQuick] = useState(
-        QUICK_AMOUNTS.includes(parseFloat(amount)) ? parseFloat(amount) : null
-    )
+    const numericAmount = getAmountNumber(amount)
+    const sourceBalance = getAmountNumber(availableBalance)
+    const quickAmounts = getQuickAmountsFromBalance(sourceBalance)
+    const symbol = getCurrencySymbol(currencyCode)
+    const exceedsBalance = numericAmount > sourceBalance
 
-    const symbol = currencyCode === "USD" ? "$" : currencyCode === "GBP" ? "£" : currencyCode === "INR" ? "₹" : "€"
-
-    const handleQuickSelect = (val) => {
-        setActiveQuick(val)
-        setAmount(val.toString())
+    const handleQuickSelect = (value) => {
+        setAmount(formatAmountValue(value))
     }
-
-    const handleInputChange = (e) => {
-        const val = e.target.value.replace(/[^0-9.]/g, "")
-        setAmount(val)
-        const numVal = parseFloat(val)
-        setActiveQuick(QUICK_AMOUNTS.includes(numVal) ? numVal : null)
-    }
-
-    const formatDisplay = (val) => {
-        if (!val) return ""
-        const num = parseFloat(val)
-        if (isNaN(num)) return val
-        return num.toLocaleString("en-US", {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2,
-        })
-    }
+    const amountLength = amount?.length || 0;
 
     return (
         <div>
@@ -43,20 +34,33 @@ const AmountStep = ({ amount, setAmount, currencyCode }) => {
                     <input
                         className={styles.amountInput}
                         type="text"
-                        value={formatDisplay(amount)}
-                        onChange={handleInputChange}
+                        value={amount}
+                        onChange={(event) => handleAmountInputChange(event, setAmount)}
+                        onKeyUp={(event) => handleAmountInputKeyUp(event, setAmount)}
+                        onBlur={(event) => handleAmountInputBlur(event, setAmount)}
+                        size={getAmountInputSize(amount)}
                         placeholder="0.00"
+                        maxLength={12}
                         autoFocus
                     />
                 </div>
+                <div className={styles.availableText}>
+                    {t("Available")} &middot; {symbol}{formatAmountValue(sourceBalance)} {currencyCode}
+                </div>
+                {exceedsBalance && (
+                    <div className={styles.balanceError}>
+                        {t("Amount cannot exceed available balance")}
+                    </div>
+                )}
                 <div className={styles.quickAmounts}>
-                    {QUICK_AMOUNTS.map((val) => (
+                    {quickAmounts.map(({ percent, value }) => (
                         <button
-                            key={val}
-                            className={`${styles.quickBtn} ${activeQuick === val ? styles.active : ""}`}
-                            onClick={() => handleQuickSelect(val)}
+                            key={percent}
+                            className={`${styles.quickBtn} ${isSameAmount(numericAmount, value) ? styles.active : ""}`}
+                            onClick={() => handleQuickSelect(value)}
+                            disabled={sourceBalance <= 0}
                         >
-                            {symbol}{val.toLocaleString()}
+                            {symbol}{formatAmountValue(value)}
                         </button>
                     ))}
                 </div>

@@ -1,6 +1,7 @@
 import { useMemo, useState, useContext, useEffect } from "react"
 import { useTranslation } from "react-i18next"
 import { Modal, ModalBody } from "reactstrap"
+import { toast } from "react-toastify"
 import useWindowWidth from "../../../utils/useWindowWidth"
 import { UserContext } from "../../../Context/UserContext"
 import ContactBox from "../../MyMasterCard/PaymentModal/ContactBox"
@@ -21,6 +22,8 @@ import DoneStep from "./DoneStep"
 import styles from "./convertFunds.module.scss"
 import SidebarProgress from "../VirtualIbanModal/SidebarProgress"
 import PaymentStep from "../../MyMasterCard/PaymentModal/PaymentStep"
+import { useExecuteVirtualIbanTransfer, useVirtualIbanTransferFee } from "../hooks/useVirtualIban"
+import { getAmountNumber } from "../utils/amount"
 
 const CoinsIcon = () => (
     <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
@@ -90,15 +93,22 @@ const MOCK_WALLETS = [
     { code: "INR", walletId: "2BVTJF85", balance: "₹9,00,000.00" },
 ]
 
-const ConvertFundsModal = ({ isOpen, toggle }) => {
+const getErrorMessage = (error, fallback) =>
+    error?.response?.data?.message || error?.message || fallback
+
+const ConvertFundsModal = ({ isOpen, toggle, selectedIban, availableBalance }) => {
     const { t } = useTranslation()
     const width = useWindowWidth()
 
     const { userWallets, getUserWallets } = useContext(UserContext)
 
     const [currentStep, setCurrentStep] = useState(STEPS.AMOUNT)
-    const [amount, setAmount] = useState("2000")
+    const [amount, setAmount] = useState("")
     const [wallet, setWallet] = useState({})
+    const [feeDetails, setFeeDetails] = useState(null)
+    const feePreview = useVirtualIbanTransferFee()
+    const executeTransfer = useExecuteVirtualIbanTransfer()
+    const sourceAvailableBalance = availableBalance ?? selectedIban?.balance ?? 0
 
     useEffect(() => {
         getUserWallets()
@@ -129,8 +139,9 @@ const ConvertFundsModal = ({ isOpen, toggle }) => {
         () => ({
             amount,
             wallet,
+            availableBalance: sourceAvailableBalance,
         }),
-        [amount, wallet]
+        [amount, wallet, sourceAvailableBalance]
     )
 
     const disabled = getDisabledState(currentStep, machineData)
@@ -138,8 +149,9 @@ const ConvertFundsModal = ({ isOpen, toggle }) => {
 
     const resetState = () => {
         setCurrentStep(STEPS.AMOUNT)
-        setAmount("2000")
+        setAmount("")
         setWallet({})
+        setFeeDetails(null)
     }
 
     const handleClose = () => {
@@ -147,12 +159,55 @@ const ConvertFundsModal = ({ isOpen, toggle }) => {
         toggle?.()
     }
 
-    const handleContinue = () => {
-        const { nextStep } = goNext(currentStep, machineData)
-        if (nextStep) {
-            setCurrentStep(nextStep)
-        } else if (currentStep === STEPS.DONE) {
-            resetState()
+    const previewFee = async () => {
+        const ibanId = selectedIban?._id || selectedIban?.id
+        const res = await feePreview.mutateAsync({
+            iban_id: ibanId,
+            wallet_id: wallet?.wallet_id,
+            amount: getAmountNumber(amount),
+        })
+        setFeeDetails(res?.data)
+    }
+
+    const confirmTransfer = async () => {
+        const ibanId = selectedIban?._id || selectedIban?.id
+        await executeTransfer.mutateAsync({
+            iban_id: ibanId,
+            wallet_id: wallet?.wallet_id,
+            token: feeDetails?.token,
+        })
+        setCurrentStep(STEPS.DONE)
+    }
+
+    const handleContinue = async () => {
+        if (!selectedIban) {
+            toast.error(t("Please select a virtual IBAN first"))
+            return
+        }
+
+        try {
+            if (currentStep === STEPS.WALLET) {
+                await previewFee()
+                setCurrentStep(STEPS.REVIEW)
+                return
+            }
+
+            if (currentStep === STEPS.REVIEW) {
+                await confirmTransfer()
+                return
+            }
+
+            if (currentStep === STEPS.DONE) {
+                resetState()
+                return
+            }
+
+            const { nextStep } = goNext(currentStep, machineData)
+            if (nextStep) {
+                setCurrentStep(nextStep)
+            }
+        } catch (error) {
+            toast.error(getErrorMessage(error, t("Unable to process convert funds request")))
         }
     }
 
@@ -169,7 +224,8 @@ const ConvertFundsModal = ({ isOpen, toggle }) => {
                     <AmountStep
                         amount={amount}
                         setAmount={setAmount}
-                        currencyCode={"EUR"}
+                        currencyCode={selectedIban?.currency || "EUR"}
+                        availableBalance={sourceAvailableBalance}
                     />
                 )
             case STEPS.WALLET:
@@ -192,6 +248,8 @@ const ConvertFundsModal = ({ isOpen, toggle }) => {
                     <ReviewStep
                         amount={amount}
                         wallet={wallet}
+                        feeDetails={feeDetails}
+                        iban={selectedIban}
                     />
                 )
             case STEPS.DONE:
@@ -203,6 +261,8 @@ const ConvertFundsModal = ({ isOpen, toggle }) => {
 
     const showFooter = width > 1000
     const isDone = currentStep === STEPS.DONE
+    const isProcessing = feePreview.isPending || executeTransfer.isPending
+    const footerDisabled = disabled || isProcessing || !selectedIban
 
     const renderBody = () => (
         <div
@@ -216,7 +276,10 @@ const ConvertFundsModal = ({ isOpen, toggle }) => {
                             <div className={styles.bankIcon}>
                                 <ConvertIcon />
                             </div>
-                            <h2>{t("Convert funds")}</h2>
+                            <h2>{t("Move funds to")}
+                                <br />
+                                {t("InstaPay wallet")}
+                            </h2>
                         </div>
                         <div
                             className={addFundsStyles.progressEffect}
@@ -264,6 +327,7 @@ const ConvertFundsModal = ({ isOpen, toggle }) => {
                                 <button
                                     type="button"
                                     className={styles.backBtn}
+                                    disabled={isProcessing}
                                     onClick={handleBack}
                                 >
                                     <ChevronLeft />
@@ -273,10 +337,10 @@ const ConvertFundsModal = ({ isOpen, toggle }) => {
                             <button
                                 type="button"
                                 className={styles.nextBtn}
-                                disabled={disabled}
+                                disabled={footerDisabled}
                                 onClick={handleContinue}
                             >
-                                {isDone ? t("Convert more") : continueLabel}
+                                {isProcessing ? t("Processing...") : isDone ? t("Convert more") : continueLabel}
                                 <ChevronRight />
                             </button>
                         </div>

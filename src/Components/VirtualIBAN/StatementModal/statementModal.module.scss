@@ -1,0 +1,343 @@
+.modalBody {
+    padding: 0;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.container {
+    min-height: 560px;
+    padding: 32px 27px 31px;
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    color: #1f2430;
+    font-family: Inter, sans-serif;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    gap: 22px;
+}
+
+.header h2 {
+    margin: 0;
+    color: #2d2f34;
+    font-size: 26px;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.headerIcon {
+    width: 42px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    background: #5a32ea;
+    color: #fff;
+    flex-shrink: 0;
+}
+
+.content {
+    flex: 1;
+    padding-top: 24px;
+}
+
+.section+.section {
+    margin-top: 24px;
+}
+
+.section h3 {
+    margin: 0 0 12px;
+    color: #667085;
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 1.2;
+}
+
+.periodTabs {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.downloadMessage {
+    margin-top: 24px;
+    padding: 20px;
+    border-radius: 12px;
+    background: #f8f9fa;
+    text-align: center;
+
+    h4 {
+        margin: 10px 0 5px;
+    }
+
+    p {
+        margin: 0 0 10px;
+        color: #666;
+    }
+
+    strong {
+        font-size: 18px;
+    }
+}
+
+.loader {
+    width: 32px;
+    height: 32px;
+    border: 3px solid #ddd;
+    border-top-color: #000;
+    border-radius: 50%;
+    margin: 0 auto;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.periodTab {
+    min-width: 108px;
+    height: 48px;
+    padding: 0 22px;
+    border: 0;
+    border-radius: 8px;
+    background: #f4f4f5;
+    color: #111827;
+    font-size: 18px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 160ms ease, color 160ms ease, box-shadow 160ms ease;
+}
+
+// .periodTab:hover {
+//     background: #ececf0;
+// }
+
+.activePeriod {
+    background: #5632e8;
+    color: #fff;
+    box-shadow: 0 8px 18px rgba(86, 50, 232, 0.18);
+}
+
+.customRange {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    max-width: 420px;
+    margin-top: 14px;
+}
+
+.customRange label {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    color: #667085;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.customRange input {
+    height: 42px;
+    padding: 0 12px;
+    border: 1px solid #e1e5ee;
+    border-radius: 8px;
+    color: #1f2430;
+    font-size: 14px;
+    outline: none;
+}
+
+.customRange input:focus {
+    border-color: #6a40ff;
+    box-shadow: 0 0 0 3px rgba(106, 64, 255, 0.12);
+}
+
+.formatGrid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 11px;
+}
+
+.formatCard {
+    height: 90px;
+    padding: 20px 30px;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    border: 1px solid #e4e5e8;
+    border-radius: 8px;
+    background: #fff;
+    text-align: left;
+    cursor: pointer;
+    box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04);
+    transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+
+.formatCard:hover {
+    border-color: #cfc7ff;
+}
+
+.activeFormat {
+    border-color: #6435ff;
+    box-shadow: 0 0 0 1px rgba(100, 53, 255, 0.08);
+}
+
+.radio {
+    width: 22px;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1.5px solid #c9ced8;
+    border-radius: 50%;
+    background: #fff;
+    flex-shrink: 0;
+}
+
+.radio span {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #5534e8;
+    box-shadow: 0 0 0 3px rgba(85, 52, 232, 0.16);
+}
+
+.activeFormat .radio {
+    border-color: #5534e8;
+}
+
+.fileBadge {
+    width: 42px;
+    height: 42px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1px;
+    border-radius: 8px;
+    background: #ede7ff;
+    color: #5a32ea;
+    flex-shrink: 0;
+}
+
+.fileBadge span {
+    color: #5a32ea;
+    font-size: 8px;
+    font-weight: 800;
+    line-height: 1;
+    text-transform: uppercase;
+}
+
+.formatText {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+}
+
+.formatText strong {
+    color: #141b2d;
+    font-size: 19px;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.formatText small {
+    color: #667085;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 1.2;
+}
+
+.footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding-top: 24px;
+}
+
+.cancelBtn,
+.downloadBtn {
+    height: 48px;
+    border: 0;
+    border-radius: 8px;
+    font-size: 18px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.cancelBtn {
+    padding: 0 16px;
+    background: transparent;
+    color: #737373;
+}
+
+.cancelBtn:hover {
+    color: #343840;
+}
+
+.downloadBtn {
+    min-width: 216px;
+    padding: 0 22px;
+    background: #5632e8;
+    color: #fff;
+    box-shadow: 0 10px 20px rgba(86, 50, 232, 0.18);
+}
+
+.downloadBtn:hover {
+    background: #4d2bd8;
+}
+
+@media (max-width: 720px) {
+    .container {
+        min-height: 620px;
+        padding: 24px 18px;
+    }
+
+    .header {
+        gap: 14px;
+    }
+
+    .header h2 {
+        font-size: 22px;
+    }
+
+    .section h3 {
+        font-size: 17px;
+    }
+
+    .periodTab {
+        min-width: 0;
+        height: 44px;
+        padding: 0 14px;
+        font-size: 15px;
+    }
+
+    .formatGrid,
+    .customRange {
+        grid-template-columns: 1fr;
+    }
+
+    .formatCard {
+        height: 82px;
+        padding: 16px;
+        gap: 14px;
+    }
+
+    .footer {
+        align-items: stretch;
+        flex-direction: column-reverse;
+    }
+
+    .cancelBtn,
+    .downloadBtn {
+        width: 100%;
+        font-size: 16px;
+    }
+}

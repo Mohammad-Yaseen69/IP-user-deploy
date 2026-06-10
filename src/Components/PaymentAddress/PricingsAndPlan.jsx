@@ -1,6 +1,7 @@
 import { useTranslation } from "react-i18next"
 import styles from "./styles/Pricings.module.css"
 import { useState, useRef, useEffect, useContext } from "react"
+import { createPortal } from 'react-dom'
 import PricingsAddModal from "./PricingsAddModal"
 import SubscribersModal from "./SubscribersModal"
 import { formatCurrency } from "../../Helper/AmountFormat";
@@ -48,10 +49,13 @@ const PricingsAndPlan = ({ isInvoicePage = true }) => {
 
     useEffect(() => {
         const handleDocumentClick = (e) => {
-            if (openMenuPlanId && menuRefs.current[openMenuPlanId]) {
-                if (!menuRefs.current[openMenuPlanId].contains(e.target)) {
-                    setOpenMenuPlanId(null)
-                }
+            if (!openMenuPlanId) return
+            const trigger = menuRefs.current[openMenuPlanId]
+            const portalEl = document.querySelector('[data-portal-menu-id="' + openMenuPlanId + '"]')
+            const clickedInsideTrigger = trigger && trigger.contains(e.target)
+            const clickedInsidePortal = portalEl && portalEl.contains(e.target)
+            if (!clickedInsideTrigger && !clickedInsidePortal) {
+                setOpenMenuPlanId(null)
             }
         }
         document.addEventListener('mousedown', handleDocumentClick)
@@ -236,9 +240,9 @@ const PricingsAndPlan = ({ isInvoicePage = true }) => {
                 <div
                     className={styles.desktopViewOnly}
                     style={{
-                        overflowX: 'auto', width: '100%', minHeight: '100px',
+                        overflowX: 'auto', width: '100%', minHeight: '500px', position: 'relative', zIndex: openMenuPlanId ? 0 : 20,
                     }}>
-                    <table style={{ width: '100%', borderCollapse: 'collapse', background: '#FFF', minWidth: 680 }}>
+                    <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 680 }}>
                         <thead>
                             <tr style={{ color: '#5B5B5B', fontWeight: 600, fontSize: 14 }}>
                                 <th style={{ padding: '14px 8px', textAlign: 'left' }}>{t('Title')}</th>
@@ -257,6 +261,7 @@ const PricingsAndPlan = ({ isInvoicePage = true }) => {
                                     <td style={{ padding: '12px 8px' }}>{t(plan.billingCycle)}</td>
                                     <td style={{ padding: '12px 8px', textAlign: 'center', position: 'relative' }}>
                                         <span
+                                            ref={el => menuRefs.current[plan.id || plan._id] = el}
                                             style={{ display: 'inline-block', cursor: 'pointer', borderRadius: 6, padding: 5, transition: 'background .15s', background: openMenuPlanId === (plan._id) ? '#eceaff' : 'transparent' }}
                                             onClick={() => setOpenMenuPlanId(openMenuPlanId === (plan.id || plan._id) ? null : (plan.id || plan._id))}
                                         >
@@ -266,33 +271,6 @@ const PricingsAndPlan = ({ isInvoicePage = true }) => {
                                                 <circle cx="11" cy="17" r="1.5" fill="#888" />
                                             </svg>
                                         </span>
-                                        {openMenuPlanId === (plan.id || plan._id) && (
-                                            <div ref={el => menuRefs.current[plan.id || plan._id] = el} style={{ position: 'absolute', top: 38, right: 16, background: '#fff', boxShadow: '0 4px 12px 0 rgba(0,0,0,0.13)', borderRadius: 10, zIndex: 10, minWidth: 150, padding: '3px 0', transition: 'opacity .2s' }}>
-                                                {isInvoicePage && canUpdatePaymentPlan && (
-                                                    <div style={{ padding: '8px 18px', cursor: 'pointer', color: '#5926F0', fontWeight: 600, fontSize: 14 }} onClick={() => handleEdit(plan)}>
-                                                        {t('Edit')}
-                                                    </div>
-                                                )}
-                                                {isInvoicePage && canSubscribePaymentPlan && (
-                                                    <div style={{ padding: '8px 18px', cursor: 'pointer', color: '#5926F0', fontWeight: 600, fontSize: 14 }} onClick={() => handleViewSubscription(plan?._id)}>
-                                                        {isGettingSubscribers ? t('Loading...') : t('Subscribers')}
-                                                    </div>
-                                                )}
-                                                <div style={{ padding: '8px 18px', cursor: 'pointer', color: '#5926F0', fontWeight: 600, fontSize: 14 }} onClick={() => handleCopyLink(plan.planId || plan._id)}>
-                                                    {t('Copy Link')}
-                                                </div>
-                                                {!isInvoicePage && (
-                                                    <div style={{ padding: '8px 18px', cursor: 'pointer', color: '#e11d48', fontWeight: 600, fontSize: 14 }} onClick={() => { setPlanToRemoveSync(plan); setShowRemoveSyncModal(true); setOpenMenuPlanId(null); }}>
-                                                        {t('Remove sync')}
-                                                    </div>
-                                                )}
-                                                {isInvoicePage && canDeletePaymentPlan && (
-                                                    <div style={{ padding: '8px 18px', cursor: 'pointer', color: '#e11d48', fontWeight: 600, fontSize: 14 }} onClick={() => handleDelete(plan._id)}>
-                                                        {isDeleting ? t('Deleting...') : t('Delete')}
-                                                    </div>
-                                                )}
-                                            </div>
-                                        )}
                                     </td>
                                 </tr>
                             ))}
@@ -300,6 +278,45 @@ const PricingsAndPlan = ({ isInvoicePage = true }) => {
                     </table>
                 </div>
             )}
+
+            {openMenuPlanId && menuRefs.current[openMenuPlanId] && (() => {
+                const anchor = menuRefs.current[openMenuPlanId];
+                const rect = anchor.getBoundingClientRect();
+                const menuWidth = 170;
+                const top = rect.bottom + window.scrollY + 6;
+                const left = Math.max(8, rect.right + window.scrollX - menuWidth + 8);
+                const plan = filteredPlans.find(p => (p.id || p._id) === openMenuPlanId);
+                if (!plan) return null;
+
+                return createPortal(
+                    <div data-portal-menu-id={openMenuPlanId} style={{ position: 'absolute', top, left, background: '#fff', boxShadow: '0 8px 24px rgba(2,6,23,0.12)', borderRadius: 10, zIndex: 2147483647, minWidth: menuWidth, padding: '3px 0', transition: 'opacity .12s' }}>
+                        {isInvoicePage && canUpdatePaymentPlan && (
+                            <div style={{ padding: '8px 18px', cursor: 'pointer', color: '#5926F0', fontWeight: 600, fontSize: 14 }} onClick={() => { handleEdit(plan); setOpenMenuPlanId(null); }}>
+                                {t('Edit')}
+                            </div>
+                        )}
+                        {isInvoicePage && canSubscribePaymentPlan && (
+                            <div style={{ padding: '8px 18px', cursor: 'pointer', color: '#5926F0', fontWeight: 600, fontSize: 14 }} onClick={async () => { await handleViewSubscription(plan?._id); setOpenMenuPlanId(null); }}>
+                                {isGettingSubscribers ? t('Loading...') : t('Subscribers')}
+                            </div>
+                        )}
+                        <div style={{ padding: '8px 18px', cursor: 'pointer', color: '#5926F0', fontWeight: 600, fontSize: 14 }} onClick={() => { handleCopyLink(plan.planId || plan._id); setOpenMenuPlanId(null); }}>
+                            {t('Copy Link')}
+                        </div>
+                        {!isInvoicePage && (
+                            <div style={{ padding: '8px 18px', cursor: 'pointer', color: '#e11d48', fontWeight: 600, fontSize: 14 }} onClick={() => { setPlanToRemoveSync(plan); setShowRemoveSyncModal(true); setOpenMenuPlanId(null); }}>
+                                {t('Remove sync')}
+                            </div>
+                        )}
+                        {isInvoicePage && canDeletePaymentPlan && (
+                            <div style={{ padding: '8px 18px', cursor: 'pointer', color: '#e11d48', fontWeight: 600, fontSize: 14 }} onClick={async () => { await handleDelete(plan._id); setOpenMenuPlanId(null); }}>
+                                {isDeleting ? t('Deleting...') : t('Delete')}
+                            </div>
+                        )}
+                    </div>,
+                    document.body
+                );
+            })()}
 
             {filteredPlans?.length > 0 && window.innerWidth < 700 && (
                 <div className={styles.mobileItems}>
