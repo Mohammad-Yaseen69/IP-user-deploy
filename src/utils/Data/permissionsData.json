@@ -273,6 +273,76 @@
         "description": "View Mastercard Transactions"
     },
     {
+        "module": "virtual-iban",
+        "feature": null,
+        "action": "view",
+        "key": "virtual-iban.view",
+        "description": "View Virtual IBAN Page"
+    },
+    {
+        "module": "virtual-iban",
+        "feature": "account",
+        "action": "create",
+        "key": "virtual-iban.account.create",
+        "description": "Create Virtual IBAN"
+    },
+    {
+        "module": "virtual-iban",
+        "feature": "details",
+        "action": "view",
+        "key": "virtual-iban.details.view",
+        "description": "View Virtual IBAN Details"
+    },
+    {
+        "module": "virtual-iban",
+        "feature": "details",
+        "action": "balance",
+        "key": "virtual-iban.details.balance",
+        "description": "View Virtual IBAN Balance"
+    },
+    {
+        "module": "virtual-iban",
+        "feature": "details",
+        "action": "copy",
+        "key": "virtual-iban.details.copy",
+        "description": "Copy Virtual IBAN Details"
+    },
+    {
+        "module": "virtual-iban",
+        "feature": "funds",
+        "action": "convert",
+        "key": "virtual-iban.funds.convert",
+        "description": "Move Funds from Virtual IBAN to Wallet"
+    },
+    {
+        "module": "virtual-iban",
+        "feature": "funds",
+        "action": "withdraw",
+        "key": "virtual-iban.funds.withdraw",
+        "description": "Withdraw Funds from Virtual IBAN"
+    },
+    {
+        "module": "virtual-iban",
+        "feature": "statement",
+        "action": "download",
+        "key": "virtual-iban.statement.download",
+        "description": "Download Virtual IBAN Statement"
+    },
+    {
+        "module": "virtual-iban",
+        "feature": "status",
+        "action": "update",
+        "key": "virtual-iban.status.update",
+        "description": "Update Virtual IBAN Status"
+    },
+    {
+        "module": "virtual-iban",
+        "feature": "transactions",
+        "action": "view",
+        "key": "virtual-iban.transactions.view",
+        "description": "View Virtual IBAN Transactions"
+    },
+    {
         "module": "invoices",
         "feature": null,
         "action": "view",

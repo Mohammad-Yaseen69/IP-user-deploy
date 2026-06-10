@@ -427,6 +427,42 @@
     }
 }
 
+.bankCountry {
+    flex-shrink: 0;
+    border-radius: 4px;
+    background: #f2eeff;
+    color: #5926f0;
+    font-family: Inter, sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 8px;
+}
+
+.emptyBanks {
+    border-radius: 6px;
+    border: 1px solid #e1e5ee;
+    background: #fff;
+    padding: 16px;
+    margin-bottom: 20px;
+
+    h4 {
+        margin: 0 0 6px;
+        color: #0c0a20;
+        font-family: Inter, sans-serif;
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+    p {
+        margin: 0;
+        color: #6e7687;
+        font-family: Inter, sans-serif;
+        font-size: 12px;
+        font-weight: 500;
+        line-height: 1.5;
+    }
+}
+
 /* ---- OTP Step ---- */
 .otpStep {
     min-height: 100%;

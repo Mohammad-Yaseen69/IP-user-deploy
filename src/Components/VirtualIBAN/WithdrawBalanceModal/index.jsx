@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react"
+import { useContext, useEffect, useMemo, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { Modal, ModalBody } from "reactstrap"
 import useWindowWidth from "../../../utils/useWindowWidth"
@@ -15,7 +15,7 @@ import {
     STEPS,
 } from "../../../stateMachines/withdrawBalance"
 import AmountStep from "./AmountStep"
-import DestinationStep from "./DestinationStep"
+import DestinationStep, { shouldShowSaverSpeed } from "./DestinationStep"
 import ReviewStep from "./ReviewStep"
 import OTPConfirmation from "./OTPConfirmation"
 import DoneStep from "./DoneStep"
@@ -24,6 +24,7 @@ import SidebarProgress from "../VirtualIbanModal/SidebarProgress"
 import GpsFix from "../VirtualIbanModal/icons/gpsFix.svg"
 import Coins from "../VirtualIbanModal/icons/coins.svg"
 import SealCheck from "../VirtualIbanModal/icons/SealCheck.svg"
+import { UserContext } from "../../../Context/UserContext"
 
 
 
@@ -66,37 +67,100 @@ const SIDEBAR_ICONS = {
     [STEPS.DONE]: () => <span ><img src={SealCheck} /></span>,
 }
 
+const getVirtualIbanNumber = (iban) =>
+    iban?.iban ||
+    iban?.ibanFull ||
+    iban?.account_number ||
+    iban?.accountNumber ||
+    iban?.virtual_iban ||
+    iban?.virtualIban ||
+    ""
+
+const getVirtualIbanTitle = (iban, fallbackCurrency = "EUR") =>
+    iban?.name ||
+    iban?.title ||
+    iban?.label ||
+    `${iban?.currency || fallbackCurrency} IBAN`
+
+const getWithdrawalBanks = (withdrawals = []) =>
+    (Array.isArray(withdrawals) ? withdrawals : [])
+        .filter((withdrawal) => withdrawal?.account_type?.includes("bank"))
+        .flatMap((withdrawal) =>
+            (withdrawal?.bank_details || []).map((bank, index) => ({
+                ...bank,
+                id: bank?._id || `${withdrawal?._id || "withdrawal"}-${index}`,
+                withdrawalId: withdrawal?._id,
+                iso_code: withdrawal?.iso_code,
+                withdrawal,
+            }))
+        )
+
 const WithdrawBalanceModal = ({ isOpen, toggle, selectedIban, availableBalance }) => {
     const { t } = useTranslation()
     const width = useWindowWidth()
-
+    const { userWithdrawals, getWithdrawals } = useContext(UserContext)
     const [currentStep, setCurrentStep] = useState(STEPS.AMOUNT)
     const [amount, setAmount] = useState("")
     const [transferSpeed, setTransferSpeed] = useState("instant")
-    const [selectedBank, setSelectedBank] = useState("cib")
+    const [selectedBank, setSelectedBank] = useState(null)
     const [authType, setAuthType] = useState("authenticator")
     const sourceAvailableBalance = availableBalance ?? selectedIban?.balance ?? 0
+    const currencyCode = selectedIban?.currency || "EUR"
+    const savedBanks = useMemo(() => getWithdrawalBanks(userWithdrawals || []), [userWithdrawals])
+    const sourceIban = useMemo(
+        () => ({
+            title: getVirtualIbanTitle(selectedIban, currencyCode),
+            iban: getVirtualIbanNumber(selectedIban),
+        }),
+        [selectedIban, currencyCode]
+    )
 
     const machineData = useMemo(
         () => ({
             amount,
             transferSpeed,
             selectedBank,
+            savedBanks,
             availableBalance: sourceAvailableBalance,
         }),
-        [amount, transferSpeed, selectedBank, sourceAvailableBalance]
+        [amount, transferSpeed, selectedBank, savedBanks, sourceAvailableBalance]
     )
 
     const disabled = getDisabledState(currentStep, machineData)
     const continueLabel = getContinueLabel(currentStep, t)
 
     const resetState = () => {
-            setCurrentStep(STEPS.AMOUNT)
-            setAmount("")
-            setTransferSpeed("instant")
-            setSelectedBank("cib")
-            setAuthType("authenticator")
+        setCurrentStep(STEPS.AMOUNT)
+        setAmount("")
+        setTransferSpeed("instant")
+        setSelectedBank(null)
+        setAuthType("authenticator")
     }
+
+    useEffect(() => {
+        if (isOpen && userWithdrawals === undefined) {
+            getWithdrawals?.()
+        }
+    }, [isOpen, userWithdrawals, getWithdrawals])
+
+    useEffect(() => {
+        if (!selectedBank?.id) return
+
+        const nextSelectedBank = savedBanks.find((bank) => bank.id === selectedBank.id)
+
+        if (!nextSelectedBank) {
+            setSelectedBank(null)
+            setTransferSpeed("instant")
+        } else if (nextSelectedBank !== selectedBank) {
+            setSelectedBank(nextSelectedBank)
+        }
+    }, [savedBanks, selectedBank])
+
+    useEffect(() => {
+        if (transferSpeed === "saver" && !shouldShowSaverSpeed(selectedBank)) {
+            setTransferSpeed("instant")
+        }
+    }, [selectedBank, transferSpeed])
 
     const handleClose = () => {
         resetState()
@@ -127,16 +191,20 @@ const WithdrawBalanceModal = ({ isOpen, toggle, selectedIban, availableBalance }
                         amount={amount}
                         setAmount={setAmount}
                         availableBalance={sourceAvailableBalance}
-                        currencyCode={selectedIban?.currency || "EUR"}
+                        currencyCode={currencyCode}
+                        sourceIban={sourceIban}
                     />
                 )
             case STEPS.DESTINATION:
                 return (
                     <DestinationStep
+                        amount={amount}
+                        currencyCode={currencyCode}
                         transferSpeed={transferSpeed}
                         setTransferSpeed={setTransferSpeed}
                         selectedBank={selectedBank}
                         setSelectedBank={setSelectedBank}
+                        savedBanks={savedBanks}
                     />
                 )
             case STEPS.REVIEW:
@@ -145,6 +213,8 @@ const WithdrawBalanceModal = ({ isOpen, toggle, selectedIban, availableBalance }
                         amount={amount}
                         transferSpeed={transferSpeed}
                         selectedBank={selectedBank}
+                        selectedIban={sourceIban}
+                        currencyCode={currencyCode}
                     />
                 )
             case STEPS.OTP:
@@ -152,9 +222,9 @@ const WithdrawBalanceModal = ({ isOpen, toggle, selectedIban, availableBalance }
                     <OTPConfirmation
                         setter={setCurrentStep}
                         setterValue={STEPS.DONE}
-                        hideOtp={() => {}}
+                        hideOtp={() => { }}
                         callback={async (setter) => setter(true)}
-                        resendHandler={() => {}}
+                        resendHandler={() => { }}
                         authType={authType}
                         setAuthType={setAuthType}
                         onCancel={handleClose}

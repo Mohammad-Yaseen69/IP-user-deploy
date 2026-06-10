@@ -45,7 +45,7 @@ const AmountStep = ({ amount, setAmount, currencyCode = "EUR", availableBalance 
                     />
                 </div>
                 <div className={styles.availableText}>
-                    {t("Available")} &middot; {symbol}{formatAmountValue(sourceBalance)} {currencyCode}
+                    {t("Available")} &middot; {symbol}{formatAmountValue(sourceBalance)}
                 </div>
                 {exceedsBalance && (
                     <div className={styles.balanceError}>

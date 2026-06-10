@@ -4,9 +4,12 @@ import VirtualIbanModal from '../VirtualIbanModal'
 import { useState } from 'react'
 import imageCard from "../files/images/Frame_2147236087.png"
 import { useTranslation } from 'react-i18next'
+import { usePermission } from '../../../hooks/GeneralUse/usePermission'
 const IBAN = ({ onCreated }) => {
     const { t } = useTranslation()
+    const can = usePermission()
     const [showModal, setShowModal] = useState(false)
+    const canCreateIban = can("virtual-iban.account.create")
 
     const handleOpenModal = () => {
         setShowModal(true)
@@ -23,7 +26,7 @@ const IBAN = ({ onCreated }) => {
                 <div className={styles.leftSection}>
                     <p className={styles.subHeading}>{t("My Virtual Account")}</p>
                     <h1 className={styles.heading}>
-                        Get a dedicated European <br /> IBAN in your name.
+                        {t("Get a dedicated European")} <br /> {t("IBAN in your name.")}
 
                     </h1>
                     <p className={styles.description}>
@@ -31,13 +34,15 @@ const IBAN = ({ onCreated }) => {
 
                     <div className={styles.buttonGroup}>
 
-                        <h5>SEPA + SWIFT</h5>
-                        <p>Send and receive worldwide
+                        <h5>{t("SEPA + SWIFT")}</h5>
+                        <p>{t("Send and receive worldwide")}
                         </p>
                     </div>
-                    <button onClick={handleOpenModal} className={styles.buttonGroup1} >
-                        Open your virtual bank account <ArrowRight />
-                    </button>
+                    {canCreateIban && (
+                        <button onClick={handleOpenModal} className={styles.buttonGroup1} >
+                            {t("Open your virtual bank account")} <ArrowRight />
+                        </button>
+                    )}
                 </div>
 
                 <div className={styles.rightSection}>
@@ -79,11 +84,13 @@ const IBAN = ({ onCreated }) => {
 
             </div>
 
-            <VirtualIbanModal
-                isOpen={showModal}
-                toggle={handleCloseModal}
-                onCreated={onCreated}
-            />
+            {canCreateIban && (
+                <VirtualIbanModal
+                    isOpen={showModal}
+                    toggle={handleCloseModal}
+                    onCreated={onCreated}
+                />
+            )}
         </div>
     )
 }

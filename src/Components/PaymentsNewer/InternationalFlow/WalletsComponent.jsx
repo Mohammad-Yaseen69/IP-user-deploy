@@ -123,6 +123,7 @@ export const WalletCard = ({
     amount,
     addFunds,
     allowWalletSelection = false,
+    isSufficientOverride,
     paymentType,
     filteredWallets,
     cardToWallet
@@ -202,7 +203,12 @@ export const WalletCard = ({
 
 
     const [isSufficient, setIsSufficient] = useState(false)
+    const hasSufficientOverride = typeof isSufficientOverride === "boolean"
+    const canUseWallet = hasSufficientOverride ? isSufficientOverride : isSufficient
+
     useEffect(() => {
+        if (hasSufficientOverride) return
+
         if (!isInVCard) {
             if (!blocked && wallet) {
                 let amount;
@@ -227,29 +233,29 @@ export const WalletCard = ({
         } else {
             getFee()
         }
-    }, [wallet, blocked, cardType])
+    }, [wallet, blocked, cardType, hasSufficientOverride])
 
 
     const handleClick = () => {
-        if ((!loading && !blocked) && (isSufficient || cardToWallet || allowWalletSelection)) {
+        if ((!loading && !blocked) && (canUseWallet || cardToWallet || allowWalletSelection)) {
             dataHandler("wallet", wallet)
         }
     }
 
     useEffect(() => {
-        if ((!loading && !blocked) && (isSufficient || allowWalletSelection) && (!data?.wallet || Object.keys(data?.wallet).length === 0)) {
+        if ((!loading && !blocked) && (canUseWallet || allowWalletSelection) && (!data?.wallet || Object.keys(data?.wallet).length === 0)) {
             if (wallet.default) {
                 dataHandler("wallet", wallet)
             }
         }
-    }, [wallet, loading, isSufficient, blocked, allowWalletSelection])
+    }, [wallet, loading, canUseWallet, blocked, allowWalletSelection])
 
     return (
         <div
             data-content={t("Insufficient Balance")}
             style={{ backgroundSize: "cover" }}
             data-block-content={t("Blocked Wallet")}
-            className={`${styles.card} ${(isSufficient || cardToWallet || allowWalletSelection) ? "" : styles.disabled_card} ${blocked ? styles.blocked_card : ""} ${data?.wallet?._id === wallet?._id ? styles.active : ""}`}
+            className={`${styles.card} ${(canUseWallet || cardToWallet || allowWalletSelection) ? "" : styles.disabled_card} ${blocked ? styles.blocked_card : ""} ${data?.wallet?._id === wallet?._id ? styles.active : ""}`}
             onClick={handleClick}
         >
             <div className={styles.top}>
