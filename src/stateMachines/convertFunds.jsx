@@ -86,7 +86,6 @@ export const isSidebarStepCompleted = (sidebarItem, currentStep) => {
     return itemRank >= 0 && itemRank < currentRank
 }
 
-// Mock exchange rates
 export const EXCHANGE_RATES = {
     "EUR-USD": { rate: 1.0847, inverse: 0.9219 },
     "EUR-GBP": { rate: 0.8612, inverse: 1.1611 },
