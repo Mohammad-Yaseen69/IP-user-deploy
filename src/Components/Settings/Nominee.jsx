@@ -15,7 +15,6 @@ const Nominee = () => {
     const [addNominee, setAddNominee] = useState(false)
     const can = usePermission()
     const isEdit = can("settings.nominee.update")
-    // context
     const { authHeader, userDetails } = useContext(UserContext)
 
 
