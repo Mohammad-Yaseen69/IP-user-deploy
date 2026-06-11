@@ -4,9 +4,12 @@ import VirtualIbanModal from '../VirtualIbanModal'
 import { useState } from 'react'
 import imageCard from "../files/images/Frame_2147236087.png"
 import { useTranslation } from 'react-i18next'
+import { usePermission } from '../../../hooks/GeneralUse/usePermission'
 const IBAN = ({ onCreated }) => {
     const { t } = useTranslation()
+    const can = usePermission()
     const [showModal, setShowModal] = useState(false)
+    const canCreateIban = can("virtual-iban.account.create")
 
     const handleOpenModal = () => {
         setShowModal(true)
@@ -35,9 +38,11 @@ const IBAN = ({ onCreated }) => {
                         <p>{t("Send and receive worldwide")}
                         </p>
                     </div>
-                    <button onClick={handleOpenModal} className={styles.buttonGroup1} >
-                        {t("Open your virtual bank account")} <ArrowRight />
-                    </button>
+                    {canCreateIban && (
+                        <button onClick={handleOpenModal} className={styles.buttonGroup1} >
+                            {t("Open your virtual bank account")} <ArrowRight />
+                        </button>
+                    )}
                 </div>
 
                 <div className={styles.rightSection}>
@@ -79,11 +84,13 @@ const IBAN = ({ onCreated }) => {
 
             </div>
 
-            <VirtualIbanModal
-                isOpen={showModal}
-                toggle={handleCloseModal}
-                onCreated={onCreated}
-            />
+            {canCreateIban && (
+                <VirtualIbanModal
+                    isOpen={showModal}
+                    toggle={handleCloseModal}
+                    onCreated={onCreated}
+                />
+            )}
         </div>
     )
 }

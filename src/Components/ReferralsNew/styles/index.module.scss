@@ -283,7 +283,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            min-width: 1100px;
+            min-width: 1250px;
 
             &>div:nth-child(1) {
                 width: 170px;
@@ -301,6 +301,10 @@
 
             &>div:nth-child(6) {
                 width: 170px;
+            }
+
+            &>div:nth-child(7) {
+                width: 120px;
             }
 
             // .details {
@@ -599,4 +603,107 @@
             }
         }
     }
+}
+
+.commission_summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 8px;
+    background: #f7f7fb;
+    padding: 1rem;
+    margin-bottom: 1.25rem;
+
+    span {
+        color: #6f6f6f;
+        font-size: .9rem;
+        font-weight: 600;
+    }
+
+    strong {
+        color: #15BD4E;
+        font-size: 1.25rem;
+        font-weight: 800;
+    }
+}
+
+.commission_timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    max-height: 420px;
+    overflow: auto;
+}
+
+.timeline_item {
+    display: flex;
+    gap: .85rem;
+    position: relative;
+    padding-bottom: 1rem;
+
+    &:not(:last-child)::before {
+        content: "";
+        position: absolute;
+        top: 14px;
+        left: 6px;
+        width: 2px;
+        height: calc(100% - 8px);
+        background: #e6e6ef;
+    }
+}
+
+.timeline_marker {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #5926F0;
+    box-shadow: 0 0 0 4px rgba(89, 38, 240, 0.12);
+    flex: 0 0 14px;
+    margin-top: 5px;
+    z-index: 1;
+}
+
+.timeline_content {
+    flex: 1;
+    border-radius: 8px;
+    border: 1px solid #efeff4;
+    padding: .85rem;
+
+    div {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 1rem;
+        margin-bottom: .35rem;
+    }
+
+    h6 {
+        margin-bottom: 0;
+        font-size: .95rem;
+        font-weight: 700;
+    }
+
+    strong {
+        color: #15BD4E;
+        white-space: nowrap;
+    }
+
+    span,
+    p {
+        display: block;
+        color: #6f6f6f;
+        font-size: .8rem;
+        margin-bottom: .25rem;
+        word-break: break-word;
+    }
+}
+
+.empty_commissions {
+    border-radius: 8px;
+    background: #f7f7fb;
+    color: #6f6f6f;
+    font-size: .9rem;
+    font-weight: 600;
+    padding: 1rem;
+    text-align: center;
 }

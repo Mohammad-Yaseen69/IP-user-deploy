@@ -18,9 +18,11 @@ import Empty from './components/Empty'
 import { asVirtualIbanArray } from './utils/virtualIban'
 import VirtualIbanModal from './VirtualIbanModal'
 import InstaPayLoader from '../Loader'
+import { usePermission } from '../../hooks/GeneralUse/usePermission'
 
 const VirtualBank = () => {
     const { t } = useTranslation();
+    const can = usePermission();
     const width = useWindowWidth();
     const { data: rawIbans = [], isLoading: ibansLoading } = useVirtualIbans()
     const {
@@ -35,6 +37,10 @@ const VirtualBank = () => {
     const ibans = useMemo(() => asVirtualIbanArray(rawIbans), [rawIbans])
     const creationInProgress = ibanCreationStatus === true
     const isInitialLoading = ibansLoading || ibanCreationStatusLoading
+    const canCreateIban = can("virtual-iban.account.create")
+    const canViewDetails = can("virtual-iban.details.view")
+    const canViewTransactions = can("virtual-iban.transactions.view")
+    const canUpdateStatus = can("virtual-iban.status.update")
 
     const selectedIban = useMemo(
         () => ibans.find((iban) => (iban?._id || iban?.id) === selectedAccount) || ibans[0],
@@ -51,6 +57,7 @@ const VirtualBank = () => {
     }, [ibans, selectedAccount])
 
     const handleOpenIBAN = () => {
+        if (!canCreateIban) return
         setShowGetIBAN(true);
         setSelectedAccount(null);
     };
@@ -73,6 +80,7 @@ const VirtualBank = () => {
     }
 
     const handleShowIbanDetails = () => {
+        if (!canViewDetails) return
         setActiveTab("ibanassets")
         scrollToIbanDetails()
     }
@@ -104,13 +112,13 @@ const VirtualBank = () => {
                 ) : creationInProgress ? (
                     <div style={{ minHeight: "520px", width: "100%" }} />
                 ) :
-                    showGetIBAN || (ibans.length === 0) ? <IBAN onCreated={handleBackToDashboard} /> :
+                    (showGetIBAN || (ibans.length === 0 && canCreateIban)) ? <IBAN onCreated={handleBackToDashboard} /> :
                     <div className={styles.main}>
                         <div className={styles.topPanel}>
                             <AccountsSidebar
                                 selectedAccount={selectedAccount}
                                 onSelect={setSelectedAccount}
-                                setShowGetIBAN={setShowGetIBAN}
+                                setShowGetIBAN={handleOpenIBAN}
                                 accounts={ibans}
                                 isLoading={ibansLoading}
                             />
@@ -132,20 +140,20 @@ const VirtualBank = () => {
 
                         {activeTab === "overview" && (
                             <div className={styles.tabContent}>
-                                {transactions.length !== 0 ? (
+                                {canViewTransactions && transactions.length !== 0 ? (
                                     <Empty selectedIban={selectedIban} />
-                                ) :
+                                ) : canViewTransactions ?
                                     <>
                                         <MonthlyExpenses />
 
                                         <div className={styles.section}>
                                             <RecentTransactions transactions={transactions} setActiveTab={setActiveTab} />
                                         </div>
-                                    </>}
+                                    </> : null}
                             </div>
                         )}
 
-                        {activeTab === "transaction-history" && (
+                        {activeTab === "transaction-history" && canViewTransactions && (
                             <div className={styles.tabContent}>
                                 <div className={styles.section}>
                                     {transactions.length !== 0 ? (
@@ -157,14 +165,14 @@ const VirtualBank = () => {
                             </div>
                         )}
 
-                        {activeTab === "ibanassets" && (
+                        {activeTab === "ibanassets" && canViewDetails && (
                             <div className={styles.tabContent} ref={ibanDetailsRef}>
                                 <div className={styles.section}>
                                     <IBANDetails ibanId={selectedIban?._id || selectedIban?.id} fallbackIban={selectedIban} />
                                 </div>
                             </div>
                         )}
-                        {activeTab === "manage" && (
+                        {activeTab === "manage" && canUpdateStatus && (
                             <div className={styles.tabContent}>
                                 <div className={styles.section}>
                                     <Manage />
@@ -173,13 +181,15 @@ const VirtualBank = () => {
                         )}
                     </div>
             }
-            <VirtualIbanModal
-                isOpen={creationInProgress}
-                toggle={() => { }}
-                onCreated={handleBackToDashboard}
-                resumeProcessingData={ibanCreationStatus}
-                resumeProcessingLoading={ibanCreationStatusLoading}
-            />
+            {canCreateIban && (
+                <VirtualIbanModal
+                    isOpen={creationInProgress}
+                    toggle={() => { }}
+                    onCreated={handleBackToDashboard}
+                    resumeProcessingData={ibanCreationStatus}
+                    resumeProcessingLoading={ibanCreationStatusLoading}
+                />
+            )}
         </div>
     )
 }
