@@ -6,10 +6,13 @@ import UK_Image from "../files/images/UK.svg"
 import Malta_Image from "../files/images/Malta.svg"
 import { getVirtualIbanCountry } from "../utils/virtualIban"
 import { useTranslation } from "react-i18next"
+import { usePermission } from "../../../hooks/GeneralUse/usePermission"
 
 const AccountsSidebar = ({ selectedAccount, onSelect, accounts = [], isLoading }) => {
     const [showModal, setShowModal] = useState(false)
     const { t } = useTranslation()
+    const can = usePermission()
+    const canCreateIban = can("virtual-iban.account.create")
 
     const handleOpenModal = () => {
         setShowModal(true)
@@ -73,10 +76,12 @@ const AccountsSidebar = ({ selectedAccount, onSelect, accounts = [], isLoading }
                     </div>
                 </div>
             } */}
-            <VirtualIbanModal
-                isOpen={showModal}
-                toggle={handleCloseModal}
-            />
+            {canCreateIban && (
+                <VirtualIbanModal
+                    isOpen={showModal}
+                    toggle={handleCloseModal}
+                />
+            )}
         </div >
     )
 }

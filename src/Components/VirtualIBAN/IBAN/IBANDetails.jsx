@@ -4,6 +4,7 @@ import styles from '../styles/IBANDetails.module.css'
 import { useVirtualIbanDetails } from '../hooks/useVirtualIban'
 import { normalizeVirtualIban } from '../utils/virtualIban'
 import { useTranslation } from 'react-i18next'
+import { usePermission } from '../../../hooks/GeneralUse/usePermission'
 
 const INTL_DATA = {
     usd: {
@@ -65,7 +66,10 @@ const IBANDetails = ({ ibanId, fallbackIban }) => {
     const [depositing, setDepositing] = useState("eu")
     const [intlCurrency, setIntlCurrency] = useState("usd")
     const { t } = useTranslation()
-    const { data, isFetching } = useVirtualIbanDetails(ibanId)
+    const can = usePermission()
+    const canViewDetails = can("virtual-iban.details.view")
+    const canCopyDetails = can("virtual-iban.details.copy")
+    const { data, isFetching } = useVirtualIbanDetails(canViewDetails ? ibanId : null)
     const { copiedKey, copy } = useCopy()
     const iban = useMemo(
         () => normalizeVirtualIban(data || fallbackIban) || {},
@@ -79,6 +83,8 @@ const IBANDetails = ({ ibanId, fallbackIban }) => {
         `${t("Bank name")}: ${iban?.bank?.name || ""}`,
         `${t("Bank address")}: ${bankAddress}`,
     ].filter((line) => !line.endsWith(": ")).join("\n")
+
+    if (!canViewDetails) return null
 
     return (
         <div className={styles.ibanWrapper}>
@@ -140,29 +146,31 @@ const IBANDetails = ({ ibanId, fallbackIban }) => {
                         <p>{t("Add money to this account to top up your vIBAN.")}</p>
                         {depositing === "eu" ? (
                             <>
-                                <DetailRow label={t("Account holder name")} value={iban?.account_holder_name} copyKey="holder" copiedKey={copiedKey} onCopy={copy} />
-                                <DetailRow label={t("IBAN")} value={iban?.iban} copyKey="iban" copiedKey={copiedKey} onCopy={copy} />
-                                <DetailRow label={t("BIC / Bank Code")} value={iban?.bank?.bic} copyKey="bic" copiedKey={copiedKey} onCopy={copy} />
-                                <DetailRow label={t("Bank name")} value={iban?.bank?.name} copyKey="bank" copiedKey={copiedKey} onCopy={copy} />
-                                <DetailRow label={t("Bank address")} value={bankAddress} copyKey="bank-address" copiedKey={copiedKey} onCopy={copy} />
+                                <DetailRow label={t("Account holder name")} value={iban?.account_holder_name} copyKey="holder" copiedKey={copiedKey} onCopy={canCopyDetails ? copy : null} />
+                                <DetailRow label={t("IBAN")} value={iban?.iban} copyKey="iban" copiedKey={copiedKey} onCopy={canCopyDetails ? copy : null} />
+                                <DetailRow label={t("BIC / Bank Code")} value={iban?.bank?.bic} copyKey="bic" copiedKey={copiedKey} onCopy={canCopyDetails ? copy : null} />
+                                <DetailRow label={t("Bank name")} value={iban?.bank?.name} copyKey="bank" copiedKey={copiedKey} onCopy={canCopyDetails ? copy : null} />
+                                <DetailRow label={t("Bank address")} value={bankAddress} copyKey="bank-address" copiedKey={copiedKey} onCopy={canCopyDetails ? copy : null} />
                             </>
                         ) : (
                             <>
-                                <DetailRow label={t("Beneficiary name")} value={INTL_DATA[intlCurrency]?.beneficiaryName} copyKey="intl-holder" copiedKey={copiedKey} onCopy={copy} />
-                                <DetailRow label={t("Beneficiary address")} value={INTL_DATA[intlCurrency]?.beneficiaryAddress} copyKey="intl-address" copiedKey={copiedKey} onCopy={copy} />
-                                <DetailRow label={t("Account number")} value={INTL_DATA[intlCurrency]?.accountNumber} copyKey="intl-account" copiedKey={copiedKey} onCopy={copy} />
-                                <DetailRow label={t("Bank Code")} value={INTL_DATA[intlCurrency]?.bankCode} copyKey="intl-bankcode" copiedKey={copiedKey} onCopy={copy} />
-                                <DetailRow label={t("Bank name")} value={INTL_DATA[intlCurrency]?.bankName} copyKey="intl-bank" copiedKey={copiedKey} onCopy={copy} />
-                                <DetailRow label={t("Bank address")} value={INTL_DATA[intlCurrency]?.bankAddress} copyKey="intl-bank-address" copiedKey={copiedKey} onCopy={copy} />
-                                <DetailRow label={t("Payment reference")} value={INTL_DATA[intlCurrency]?.paymentReference} copyKey="intl-reference" copiedKey={copiedKey} onCopy={copy} />
+                                <DetailRow label={t("Beneficiary name")} value={INTL_DATA[intlCurrency]?.beneficiaryName} copyKey="intl-holder" copiedKey={copiedKey} onCopy={canCopyDetails ? copy : null} />
+                                <DetailRow label={t("Beneficiary address")} value={INTL_DATA[intlCurrency]?.beneficiaryAddress} copyKey="intl-address" copiedKey={copiedKey} onCopy={canCopyDetails ? copy : null} />
+                                <DetailRow label={t("Account number")} value={INTL_DATA[intlCurrency]?.accountNumber} copyKey="intl-account" copiedKey={copiedKey} onCopy={canCopyDetails ? copy : null} />
+                                <DetailRow label={t("Bank Code")} value={INTL_DATA[intlCurrency]?.bankCode} copyKey="intl-bankcode" copiedKey={copiedKey} onCopy={canCopyDetails ? copy : null} />
+                                <DetailRow label={t("Bank name")} value={INTL_DATA[intlCurrency]?.bankName} copyKey="intl-bank" copiedKey={copiedKey} onCopy={canCopyDetails ? copy : null} />
+                                <DetailRow label={t("Bank address")} value={INTL_DATA[intlCurrency]?.bankAddress} copyKey="intl-bank-address" copiedKey={copiedKey} onCopy={canCopyDetails ? copy : null} />
+                                <DetailRow label={t("Payment reference")} value={INTL_DATA[intlCurrency]?.paymentReference} copyKey="intl-reference" copiedKey={copiedKey} onCopy={canCopyDetails ? copy : null} />
                             </>
                         )}
                     </div>
-                    <button className={styles.copyButton} onClick={() => copy(allText, "all-details")}>
-                        {copiedKey === "all-details"
-                            ? <><Check size={15} /><span>{t("Copied!")}</span></>
-                            : <><Copy size={15} /><span>{t("Copy all details")}</span></>}
-                    </button>
+                    {canCopyDetails && (
+                        <button className={styles.copyButton} onClick={() => copy(allText, "all-details")}>
+                            {copiedKey === "all-details"
+                                ? <><Check size={15} /><span>{t("Copied!")}</span></>
+                                : <><Copy size={15} /><span>{t("Copy all details")}</span></>}
+                        </button>
+                    )}
                     {depositing === "international" && (
                         <div className={styles.warningNotice}>
                             <AlertCircle size={20} className={styles.warningIcon} fill='#5926F0' />
