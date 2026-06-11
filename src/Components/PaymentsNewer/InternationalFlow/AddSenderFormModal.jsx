@@ -29,6 +29,24 @@ const isPastOrToday = (value) => {
     return d <= today;
 }
 
+const isAtLeastYears = (value, years) => {
+    if (!value) return false;
+
+    const [year, month, day] = value.split("-").map(Number);
+
+    const dob = new Date(year, month - 1, day);
+
+    const today = new Date();
+
+    const cutoff = new Date(
+        today.getFullYear() - years,
+        today.getMonth(),
+        today.getDate()
+    );
+
+    return dob <= cutoff;
+};
+
 const idTypeData = {
     'passport': 'Passport',
     'id-card': "Id Card",
@@ -62,7 +80,9 @@ const individualSenderSchema = z.object({
     sender_type: z.literal("individual"),
     first_name: z.string().min(1, "First name is required"),
     last_name: z.string().min(1, "Last name is required"),
-    dob: z.string().min(1, "Date of birth is required").refine((v) => isPastOrToday(v), { message: "Date cannot be in the future" }),
+    dob: z.string().min(1, "Date of birth is required").
+        refine((v) => isPastOrToday(v), { message: "Date cannot be in the future" }).
+        refine((v) => isAtLeastYears(v, 15), { message: "Sender must be at least 15 years old" }),
     gender: z.string().optional(),
     occupation: z.string().optional(),
     source_of_funds: z.string().optional(),
@@ -77,7 +97,22 @@ const individualSenderSchema = z.object({
         dateOfIssue: z.string().optional().refine((v) => !v || isPastOrToday(v), { message: "Date cannot be in the future" }),
         dateOfExpiry: z.string().optional(),
         idCountryIsoCode: z.string().optional(),
-    }),
+    }).refine((extras) => {
+        if (!extras.dateOfExpiry) return true;
+        const expiry = new Date(extras.dateOfExpiry);
+        if (Number.isNaN(expiry.getTime())) return false;
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        if (expiry < today) return false; // expiry cannot be in the past
+        if (extras.dateOfIssue) {
+            const issue = new Date(extras.dateOfIssue);
+            if (Number.isNaN(issue.getTime())) return false;
+            // expiry must be strictly after issue date
+            const minExpiry = new Date(issue.getFullYear(), issue.getMonth(), issue.getDate() + 1);
+            if (expiry < minExpiry) return false;
+        }
+        return true;
+    }, { message: "Date of expiry must be after issue date and cannot be in the past" }),
     ...senderFileFieldsSchema,
 });
 
@@ -97,7 +132,8 @@ const businessSenderSchema = z.object({
         nationality: z.string().optional(),
         address: z.string().optional(),
         postal_code: z.string().optional(),
-        dob: z.string().optional().refine((v) => !v || isPastOrToday(v), { message: "Date cannot be in the future" }),
+        dob: z.string().optional().refine((v) => !v || isPastOrToday(v), { message: "Date cannot be in the future" }).
+            refine((v) => !v || isAtLeastYears(v, 15), { message: "Representative must be at least 15 years old" }),
         gender: z.string().optional(),
         extras: z.object({
             idNumber: z.string().optional(),
@@ -105,7 +141,21 @@ const businessSenderSchema = z.object({
             dateOfIssue: z.string().optional().refine((v) => !v || isPastOrToday(v), { message: "Date cannot be in the future" }),
             dateOfExpiry: z.string().optional(),
             idCountryIsoCode: z.string().optional(),
-        }),
+        }).refine((extras) => {
+            if (!extras.dateOfExpiry) return true;
+            const expiry = new Date(extras.dateOfExpiry);
+            if (Number.isNaN(expiry.getTime())) return false;
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            if (expiry < today) return false;
+            if (extras.dateOfIssue) {
+                const issue = new Date(extras.dateOfIssue);
+                if (Number.isNaN(issue.getTime())) return false;
+                const minExpiry = new Date(issue.getFullYear(), issue.getMonth(), issue.getDate() + 1);
+                if (expiry < minExpiry) return false;
+            }
+            return true;
+        }, { message: "Date of expiry must be after issue date and cannot be in the past" }),
     }),
     ...senderFileFieldsSchema,
 });
@@ -364,28 +414,66 @@ const AddSenderFormModal = ({ isOpen, toggle, data, senderAccountType, onSubmit,
             <span style={{ color: "#454545", fontSize: "12px", fontWeight: 700 }}>
                 {t(label)} {required ? <span style={{ color: "#E64067" }}>*</span> : null}
             </span>
-            <DatePicker
-                format="DD/MM/YYYY"
-                className="form-control custom-datepicker"
-                style={{ ...inputStyle, padding: 0, display: "flex", justifyContent: "center", position: "static" }}
-                value={watch(name) || null}
-                onChange={(date) => setValue(name, date ? date.format("YYYY-MM-DD") : "", { shouldValidate: true, shouldDirty: true })}
-                disableFuture={!allowFuture}
-                {...(!allowFuture ? { maxDate: new Date() } : {})}
-                placeholder="DD/MM/YYYY"
-                InputProps={dateInputProps}
-                inputProps={{
-                    style: {
-                        background: "#fff",
-                        border: "none",
-                        boxShadow: "none",
-                        padding: "2px 0",
-                        minHeight: "40px",
-                    },
-                }}
-                clearable
-                autoOk
-            />
+            {
+                (() => {
+                    const isDob = /(^|\.)dob$/i.test(name);
+                    const isExpiry = /expiry/i.test(name);
+                    const pickerProps = {};
+
+                    if (!allowFuture) {
+                        pickerProps.disableFuture = true;
+                        pickerProps.maxDate = new Date();
+                    }
+
+                    if (isDob) {
+                        const maxDob = new Date();
+                        maxDob.setFullYear(maxDob.getFullYear() - 15);
+                        pickerProps.maxDate = maxDob;
+                        pickerProps.disableFuture = true;
+                    }
+                    if (isExpiry) {
+                        const issueFieldName = name.includes("representative")
+                            ? "representative.extras.dateOfIssue"
+                            : "extras.dateOfIssue";
+
+                        const issueDate = watch(issueFieldName);
+
+                        if (issueDate) {
+                            const [year, month, day] = issueDate.split("-").map(Number);
+
+                            pickerProps.minDate = new Date(year, month - 1, day + 1);
+                        } else {
+                            pickerProps.minDate = new Date();
+                        }
+                    }
+
+                    return (
+                        <DatePicker
+                            format="DD/MM/YYYY"
+                            className="form-control custom-datepicker"
+                            style={{ ...inputStyle, padding: 0, display: "flex", justifyContent: "center", position: "static" }}
+                            value={watch(name) || null}
+                            onChange={(date) => setValue(name, date ? date.format("YYYY-MM-DD") : "", { shouldValidate: true, shouldDirty: true })}
+                            placeholder="DD/MM/YYYY"
+                            InputProps={dateInputProps}
+                            inputProps={{
+                                style: {
+                                    background: "#fff",
+                                    border: "none",
+                                    boxShadow: "none",
+                                    padding: "2px 0",
+                                    minHeight: "40px",
+                                },
+                            }}
+                            minDate={pickerProps.minDate}
+                            disablePast={false}
+                            clearable
+                            autoOk
+                            {...pickerProps}
+                        />
+                    );
+                })()
+            }
             {renderNestedError(name)}
         </label>
     );
