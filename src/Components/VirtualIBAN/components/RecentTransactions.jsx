@@ -1,29 +1,140 @@
 import { useState, useEffect, useRef } from "react";
-import { ArrowUp, Filter, Search } from "react-feather";
+import { ArrowUp, Filter, Search, ChevronDown } from "react-feather";
 import styles from "../styles/RecentTransactions.module.css";
 import { useTranslation } from 'react-i18next';
 import Paginations from '../../../Common/Component/Paginations';
-import { Button, Menu, MenuItem, Divider, ListItemText } from '@mui/material'
+import { Button, Menu, MenuItem, Divider, ListItemText } from '@mui/material';
 
 const statusColors = {
-  COMPLETED: { bg: "rgba(34,197,94,0.1)", color: "#22c55e" },
-  COMMPLETED: { bg: "rgba(34,197,94,0.1)", color: "#22c55e" },
-  INITIATED: { bg: "rgba(245,158,11,0.1)", color: "#f59e0b" },
-  PROCESSING: { bg: "rgba(245,158,11,0.1)", color: "#f59e0b" },
-  PENDING: { bg: "rgba(245,158,11,0.1)", color: "#f59e0b" },
-  FAILED: { bg: "rgba(239,68,68,0.1)", color: "#ef4444" },
-  active: { bg: "rgba(34,197,94,0.1)", color: "#22c55e" },
-  pending: { bg: "rgba(245,158,11,0.1)", color: "#f59e0b" },
-  failed: { bg: "rgba(239,68,68,0.1)", color: "#ef4444" },
+  COMPLETED: { bg: "rgba(34,197,94,0.1)", color: "#16a34a" },
+  COMMPLETED: { bg: "rgba(34,197,94,0.1)", color: "#16a34a" },
+  INITIATED: { bg: "rgba(245,158,11,0.1)", color: "#b45309" },
+  PROCESSING: { bg: "rgba(245,158,11,0.1)", color: "#b45309" },
+  PENDING: { bg: "rgba(245,158,11,0.1)", color: "#b45309" },
+  FAILED: { bg: "rgba(239,68,68,0.1)", color: "#dc2626" },
 };
 
-const RecentTransactions = ({ setActiveTab, transactions, page, setPage, limit, setLimit, totalPages, setStatusFilter, setQ, setOrder }) => {
+/** "iban_to_wallet"  →  "Iban To Wallet" */
+const formatType = (type = "") =>
+  type
+    .split("_")
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(" ");
+
+/** Normalise the typo "COMMPLETED" → "COMPLETED" */
+const normalizeStatus = (raw) => {
+  if (!raw) return "PENDING";
+  return raw === "COMMPLETED" ? "COMPLETED" : raw;
+};
+
+const TransactionRow = ({ tx }) => {
+  const { t } = useTranslation();
+  const [open, setOpen] = useState(false);
+
+  const rawStatus =
+    tx.status || tx.bvnk_status || tx.ledger_transaction?.status || "PENDING";
+  const status = normalizeStatus(rawStatus);
+  const statusColor = statusColors[status] || statusColors.PENDING;
+
+  const dateStr = new Date(tx.createdAt).toLocaleDateString("en-US", {
+    year: "numeric", month: "short", day: "2-digit",
+    hour: "2-digit", minute: "2-digit",
+  });
+
+  return (
+    <>
+      <tr className={styles.row}>
+        <td className={styles.dateCell}>{dateStr}</td>
+
+        <td>
+          <span className={styles.typeChip}>
+            {t(formatType(tx.type || ""))}
+          </span>
+        </td>
+
+        <td className={styles.txId}>{tx.reference_id || tx._id}</td>
+
+        <td>{tx.virtual_iban?.account_holder_name || "N/A"}</td>
+
+        <td className={styles.amount}>
+          {tx.currency} {tx.amount?.toFixed(2)}
+        </td>
+
+        <td>
+          <div className={styles.statusCell}>
+            <span
+              className={styles.badge}
+              style={{ background: statusColor.bg, color: statusColor.color }}
+            >
+              {t(status)}
+            </span>
+
+
+          </div>
+
+        </td>
+        <td>
+          <button
+            className={`${styles.chevronBtn} ${open ? styles.chevronOpen : ""}`}
+            onClick={() => setOpen((prev) => !prev)}
+            aria-expanded={open}
+            aria-label={t("Toggle transaction details")}
+          >
+            <ChevronDown size={14} />
+          </button>
+        </td>
+      </tr>
+
+      {open && (
+        <tr className={styles.accordionRow}>
+          <td colSpan={6}>
+            <div className={styles.accordionInner}>
+
+              <div className={styles.detailGrid}>
+                <DetailItem label={t("Amount")}
+                  value={`${tx.currency} ${tx.amount?.toFixed(2)}`} />
+                <DetailItem label={t("Fee")}
+                  value={`${tx.currency} ${tx.fee?.toFixed(2)}`} />
+                <DetailItem label={t("Total")}
+                  value={`${tx.currency} ${tx.total?.toFixed(2)}`} />
+                <DetailItem label={t("Exchange Rate")}
+                  value={tx.exchange_rate?.toFixed(4) ?? "N/A"} />
+                <DetailItem label={t("Balance After")}
+                  value={`${tx.currency} ${tx.current_balance?.toFixed(2)}`} />
+                <DetailItem label={t("Transaction Type")}
+                  value={t(tx.transaction_type || "N/A")} />
+                <DetailItem label={t("Service Type")}
+                  value={t(formatType(tx.type || ""))} />
+                <DetailItem label={t("BVNK Status")}
+                  value={tx.bvnk_status || "N/A"} />
+              </div>
+
+            </div>
+          </td>
+        </tr>
+      )}
+    </>
+  );
+};
+
+const DetailItem = ({ label, value }) => (
+  <div className={styles.detailItem}>
+    <span className={styles.detailLabel}>{label}</span>
+    <span className={styles.detailValue}>{value}</span>
+  </div>
+);
+
+const RecentTransactions = ({
+  setActiveTab, transactions, page, setPage,
+  limit, setLimit, totalPages,
+  setStatusFilter, setQ, setOrder,
+}) => {
   const { t } = useTranslation();
   const [search, setSearch] = useState("");
   const [anchorFilter, setAnchorFilter] = useState(null);
   const [anchorSort, setAnchorSort] = useState(null);
   const searchDebounce = useRef(null);
-console.log(transactions)
+
   const openFilter = Boolean(anchorFilter);
   const openSort = Boolean(anchorSort);
 
@@ -31,10 +142,9 @@ console.log(transactions)
     if (!setQ) return;
     if (searchDebounce.current) clearTimeout(searchDebounce.current);
     searchDebounce.current = setTimeout(() => {
-      setQ(search || '');
+      setQ(search || "");
       setPage(1);
     }, 400);
-
     return () => clearTimeout(searchDebounce.current);
   }, [search, setQ, setPage]);
 
@@ -59,94 +169,78 @@ console.log(transactions)
               className={styles.searchInput}
             />
           </div>
+
           <div className={styles.toolbarRight}>
             <div>
-
-              <Button className={styles.toolBtn} onClick={(e) => setAnchorFilter(e.currentTarget)} startIcon={<Filter size={13} />}>
-                <span>{t('Filter')}</span>
+              <Button
+                className={styles.toolBtn}
+                onClick={(e) => setAnchorFilter(e.currentTarget)}
+                startIcon={<Filter size={13} />}
+              >
+                <span>{t("Filter")}</span>
               </Button>
-              <Menu anchorEl={anchorFilter} open={openFilter} onClose={() => setAnchorFilter(null)} anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }} transformOrigin={{ vertical: 'top', horizontal: 'right' }}>
-                <MenuItem onClick={() => { setStatusFilter(''); setPage(1); setAnchorFilter(null); }}>
-                  <ListItemText primary={t('All statuses')} />
+              <Menu
+                anchorEl={anchorFilter} open={openFilter}
+                onClose={() => setAnchorFilter(null)}
+                anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+                transformOrigin={{ vertical: "top", horizontal: "right" }}
+              >
+                <MenuItem onClick={() => { setStatusFilter(""); setPage(1); setAnchorFilter(null); }}>
+                  <ListItemText primary={t("All statuses")} />
                 </MenuItem>
                 <Divider />
-                {['INITIATED', 'PROCESSING', 'COMPLETED', 'FAILED'].map((s) => (
-                  <MenuItem key={s} onClick={() => { setStatusFilter(s); setPage(1); setAnchorFilter(null); }}>{s}</MenuItem>
+                {["INITIATED", "PROCESSING", "COMPLETED", "FAILED"].map((s) => (
+                  <MenuItem key={s} onClick={() => { setStatusFilter(s); setPage(1); setAnchorFilter(null); }}>
+                    {s}
+                  </MenuItem>
                 ))}
               </Menu>
             </div>
 
             <div>
-              <Button className={styles.toolBtn} onClick={(e) => setAnchorSort(e.currentTarget)} startIcon={<ArrowUp size={13} />}>
+              <Button
+                className={styles.toolBtn}
+                onClick={(e) => setAnchorSort(e.currentTarget)}
+                startIcon={<ArrowUp size={13} />}
+              >
                 <span>{t("Sort By")}</span>
               </Button>
-              <Menu anchorEl={anchorSort} open={openSort} onClose={() => setAnchorSort(null)} anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }} transformOrigin={{ vertical: 'top', horizontal: 'right' }}>
-                <MenuItem onClick={() => { setOrder('desc'); setPage(1); setAnchorSort(null); }}>{t('Date (newest)')}</MenuItem>
-                <MenuItem onClick={() => { setOrder('asc'); setPage(1); setAnchorSort(null); }}>{t('Date (oldest)')}</MenuItem>
+              <Menu
+                anchorEl={anchorSort} open={openSort}
+                onClose={() => setAnchorSort(null)}
+                anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+                transformOrigin={{ vertical: "top", horizontal: "right" }}
+              >
+                <MenuItem onClick={() => { setOrder("desc"); setPage(1); setAnchorSort(null); }}>
+                  {t("Date (newest)")}
+                </MenuItem>
+                <MenuItem onClick={() => { setOrder("asc"); setPage(1); setAnchorSort(null); }}>
+                  {t("Date (oldest)")}
+                </MenuItem>
               </Menu>
             </div>
           </div>
         </div>
+
         <div className={styles.tableWrapper}>
           <table className={styles.table}>
-            <thead >
-              <tr style={{
-                borderRadius: "20px"
-              }}>
+            <thead>
+              <tr>
                 <th>{t("Date & Time")}</th>
                 <th>{t("Type")}</th>
                 <th>{t("Transaction ID")}</th>
                 <th>{t("Recipient")}</th>
                 <th>{t("Amount")}</th>
                 <th>{t("Status")}</th>
+                <th>{t("")}</th>
               </tr>
             </thead>
             <tbody>
               {transactions.map((tx) => (
-                <tr key={tx._id} className={styles.row}>
-                  <td className={styles.dateCell}>
-                    {new Date(tx.createdAt).toLocaleDateString('en-US', {
-                      year: 'numeric',
-                      month: 'short',
-                      day: '2-digit',
-                      hour: '2-digit',
-                      minute: '2-digit'
-                    })}
-                  </td>
-                  <td>
-                    <div className={styles.typeCell}>
-                      {t(tx.type || 'N/A')}
-                    </div>
-                  </td>
-                  <td className={styles.txId}>{tx.reference_id || tx._id}</td>
-                  <td>{tx.virtual_iban?.account_holder_name || 'N/A'}</td>
-                  <td className={styles.amount}>{tx.currency} {tx.amount?.toFixed(2)}</td>
-                  <td>
-                    {(() => {
-                      const rawStatus =
-                        tx.status ||
-                        tx.bvnk_status ||
-                        tx.ledger_transaction?.status ||
-                        "PENDING";
-
-                      const txStatus =
-                        rawStatus === "COMMPLETED"
-                          ? "COMPLETED"
-                          : rawStatus;
-                      const statusColor =
-                        statusColors[txStatus] || statusColors.PENDING;
-                      return (
-                        <span className={styles.badge} style={{ background: statusColor.bg, color: statusColor.color }}>
-                          {t(txStatus)}
-                        </span>
-                      );
-                    })()}
-                  </td>
-                </tr>
+                <TransactionRow key={tx._id} tx={tx} />
               ))}
             </tbody>
           </table>
-
         </div>
 
         {totalPages > 0 && (
@@ -158,7 +252,7 @@ console.log(transactions)
             setLimit={setLimit}
           />
         )}
-      </div >
+      </div>
     </>
   );
 };
