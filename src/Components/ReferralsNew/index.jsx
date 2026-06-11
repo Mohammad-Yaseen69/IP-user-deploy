@@ -24,7 +24,6 @@ import { usePermission } from "../../hooks/GeneralUse/usePermission";
 
 const ReferralsNew = () => {
     const { referralLink, userDetails, authHeader, getInvitationLink, getReferralCommission, totalReferralAmount, userWallets, validateReceivingLimits, verifyToken } = useContext(UserContext)
-
     const isLimitReached = useMemo(() => validateReceivingLimits(), [])
     const can = usePermission()
     useEffect(() => {
