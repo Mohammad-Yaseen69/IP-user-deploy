@@ -1,13 +1,15 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { ArrowUp, Filter, Search } from "react-feather";
 import styles from "../styles/RecentTransactions.module.css";
 import { useTranslation } from 'react-i18next';
 import Paginations from '../../../Common/Component/Paginations';
-import { Button, Menu, MenuItem, Typography, Divider, ListItemText } from '@mui/material'
+import { Button, Menu, MenuItem, Divider, ListItemText } from '@mui/material'
 
 const statusColors = {
   COMPLETED: { bg: "rgba(34,197,94,0.1)", color: "#22c55e" },
+  COMMPLETED: { bg: "rgba(34,197,94,0.1)", color: "#22c55e" },
   INITIATED: { bg: "rgba(245,158,11,0.1)", color: "#f59e0b" },
+  PROCESSING: { bg: "rgba(245,158,11,0.1)", color: "#f59e0b" },
   PENDING: { bg: "rgba(245,158,11,0.1)", color: "#f59e0b" },
   FAILED: { bg: "rgba(239,68,68,0.1)", color: "#ef4444" },
   active: { bg: "rgba(34,197,94,0.1)", color: "#22c55e" },
@@ -15,40 +17,26 @@ const statusColors = {
   failed: { bg: "rgba(239,68,68,0.1)", color: "#ef4444" },
 };
 
-const RecentTransactions = ({ setActiveTab, transactions, page, setPage, limit, setLimit, totalPages, setStatusFilter }) => {
+const RecentTransactions = ({ setActiveTab, transactions, page, setPage, limit, setLimit, totalPages, setStatusFilter, setQ, setOrder }) => {
   const { t } = useTranslation();
   const [search, setSearch] = useState("");
   const [anchorFilter, setAnchorFilter] = useState(null);
   const [anchorSort, setAnchorSort] = useState(null);
-  const [sortField, setSortField] = useState('date');
-  const [sortOrder, setSortOrder] = useState('desc');
-  const [localIbanFilter, setLocalIbanFilter] = useState('');
-
+  const searchDebounce = useRef(null);
+console.log(transactions)
   const openFilter = Boolean(anchorFilter);
   const openSort = Boolean(anchorSort);
 
-  const filtered = transactions.filter((tx) => {
-    const matchesSearch = (
-      tx.virtual_iban?.account_holder_name?.toLowerCase()?.includes(search.toLowerCase()) ||
-      tx._id?.toLowerCase()?.includes(search.toLowerCase()) ||
-      tx.reference_id?.toLowerCase()?.includes(search.toLowerCase()) ||
-      tx.type?.toLowerCase()?.includes(search.toLowerCase())
-    );
+  useEffect(() => {
+    if (!setQ) return;
+    if (searchDebounce.current) clearTimeout(searchDebounce.current);
+    searchDebounce.current = setTimeout(() => {
+      setQ(search || '');
+      setPage(1);
+    }, 400);
 
-    const matchesLocalIban = localIbanFilter ? (tx.virtual_iban?.iban === localIbanFilter || tx.virtual_iban?._id === localIbanFilter) : true;
-
-    return matchesSearch && matchesLocalIban;
-  });
-
-  // client-side sort
-  const sorted = [...filtered].sort((a, b) => {
-    if (sortField === 'amount') {
-      return (Number(a.amount) || 0) - (Number(b.amount) || 0);
-    }
-    // date
-    return new Date(a.createdAt) - new Date(b.createdAt);
-  });
-  if (sortOrder === 'desc') sorted.reverse();
+    return () => clearTimeout(searchDebounce.current);
+  }, [search, setQ, setPage]);
 
   return (
     <>
@@ -78,18 +66,12 @@ const RecentTransactions = ({ setActiveTab, transactions, page, setPage, limit, 
                 <span>{t('Filter')}</span>
               </Button>
               <Menu anchorEl={anchorFilter} open={openFilter} onClose={() => setAnchorFilter(null)} anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }} transformOrigin={{ vertical: 'top', horizontal: 'right' }}>
-                <MenuItem onClick={() => { setStatusFilter(''); setPage(1); setLocalIbanFilter(''); setAnchorFilter(null); }}>
+                <MenuItem onClick={() => { setStatusFilter(''); setPage(1); setAnchorFilter(null); }}>
                   <ListItemText primary={t('All statuses')} />
                 </MenuItem>
                 <Divider />
-                {Array.from(new Set(transactions.map(tx => tx.bvnk_status || tx.status).filter(Boolean))).map((s) => (
+                {['INITIATED', 'PROCESSING', 'COMPLETED', 'FAILED'].map((s) => (
                   <MenuItem key={s} onClick={() => { setStatusFilter(s); setPage(1); setAnchorFilter(null); }}>{s}</MenuItem>
-                ))}
-                <Divider />
-                <Typography variant="subtitle2" sx={{ padding: '8px 16px' }}>{t('IBAN')}</Typography>
-                <MenuItem onClick={() => { setLocalIbanFilter(''); setPage(1); setAnchorFilter(null); }}>{t('All')}</MenuItem>
-                {Array.from(new Set(transactions.map(tx => tx.virtual_iban?.iban || tx.virtual_iban?._id).filter(Boolean))).map((ib) => (
-                  <MenuItem key={ib} onClick={() => { setLocalIbanFilter(ib); setPage(1); setAnchorFilter(null); }}>{ib}</MenuItem>
                 ))}
               </Menu>
             </div>
@@ -99,10 +81,8 @@ const RecentTransactions = ({ setActiveTab, transactions, page, setPage, limit, 
                 <span>{t("Sort By")}</span>
               </Button>
               <Menu anchorEl={anchorSort} open={openSort} onClose={() => setAnchorSort(null)} anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }} transformOrigin={{ vertical: 'top', horizontal: 'right' }}>
-                <MenuItem onClick={() => { setSortField('date'); setSortOrder('desc'); setAnchorSort(null); }}>{t('Date (newest)')}</MenuItem>
-                <MenuItem onClick={() => { setSortField('date'); setSortOrder('asc'); setAnchorSort(null); }}>{t('Date (oldest)')}</MenuItem>
-                <MenuItem onClick={() => { setSortField('amount'); setSortOrder('desc'); setAnchorSort(null); }}>{t('Amount (high)')}</MenuItem>
-                <MenuItem onClick={() => { setSortField('amount'); setSortOrder('asc'); setAnchorSort(null); }}>{t('Amount (low)')}</MenuItem>
+                <MenuItem onClick={() => { setOrder('desc'); setPage(1); setAnchorSort(null); }}>{t('Date (newest)')}</MenuItem>
+                <MenuItem onClick={() => { setOrder('asc'); setPage(1); setAnchorSort(null); }}>{t('Date (oldest)')}</MenuItem>
               </Menu>
             </div>
           </div>
@@ -122,7 +102,7 @@ const RecentTransactions = ({ setActiveTab, transactions, page, setPage, limit, 
               </tr>
             </thead>
             <tbody>
-              {sorted.map((tx) => (
+              {transactions.map((tx) => (
                 <tr key={tx._id} className={styles.row}>
                   <td className={styles.dateCell}>
                     {new Date(tx.createdAt).toLocaleDateString('en-US', {
@@ -142,15 +122,25 @@ const RecentTransactions = ({ setActiveTab, transactions, page, setPage, limit, 
                   <td>{tx.virtual_iban?.account_holder_name || 'N/A'}</td>
                   <td className={styles.amount}>{tx.currency} {tx.amount?.toFixed(2)}</td>
                   <td>
-                    <span
-                      className={styles.badge}
-                      style={{
-                        background: statusColors[tx.bvnk_status]?.bg || statusColors[tx.status]?.bg || statusColors.PENDING.bg,
-                        color: statusColors[tx.bvnk_status]?.color || statusColors[tx.status]?.color || statusColors.PENDING.color,
-                      }}
-                    >
-                      {t(tx.bvnk_status || tx.status || 'PENDING')}
-                    </span>
+                    {(() => {
+                      const rawStatus =
+                        tx.status ||
+                        tx.bvnk_status ||
+                        tx.ledger_transaction?.status ||
+                        "PENDING";
+
+                      const txStatus =
+                        rawStatus === "COMMPLETED"
+                          ? "COMPLETED"
+                          : rawStatus;
+                      const statusColor =
+                        statusColors[txStatus] || statusColors.PENDING;
+                      return (
+                        <span className={styles.badge} style={{ background: statusColor.bg, color: statusColor.color }}>
+                          {t(txStatus)}
+                        </span>
+                      );
+                    })()}
                   </td>
                 </tr>
               ))}

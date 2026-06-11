@@ -51,6 +51,8 @@ const VirtualBank = () => {
     const [limit, setLimit] = useState(10);
     const [statusFilter, setStatusFilter] = useState('');
     const [typeFilter, setTypeFilter] = useState('');
+    const [q, setQ] = useState('');
+    const [order, setOrder] = useState('desc');
 
     const skip = (page - 1) * limit;
 
@@ -62,6 +64,8 @@ const VirtualBank = () => {
             limit,
             statusFilter,
             typeFilter,
+            q,
+            order,
         ],
         queryFn: async () => {
             const id = selectedIban?._id || selectedIban?.id;
@@ -71,6 +75,8 @@ const VirtualBank = () => {
             params.append('iban_id', id);
             if (statusFilter) params.append('status', statusFilter);
             if (typeFilter) params.append('type', typeFilter);
+            if (q) params.append('q', q);
+            if (order) params.append('order', order);
             params.append('page', String(page));
             params.append('limit', String(limit));
             params.append('skip', String(skip));
@@ -202,6 +208,8 @@ const VirtualBank = () => {
                                                         totalPages={transactions?.totalPages ?? 1}
                                                         setStatusFilter={setStatusFilter}
                                                         setTypeFilter={setTypeFilter}
+                                                        setQ={setQ}
+                                                        setOrder={setOrder}
                                                     />
                                                 </div>
                                             </>
@@ -229,6 +237,8 @@ const VirtualBank = () => {
                                                 totalPages={transactions?.totalPages ?? 1}
                                                 setStatusFilter={setStatusFilter}
                                                 setTypeFilter={setTypeFilter}
+                                                setQ={setQ}
+                                                setOrder={setOrder}
                                             />
                                         )}
                                     </div>
