@@ -3,7 +3,7 @@ import styles from "./styles/item.module.css"
 import { useNavigate } from "react-router"
 
 
-const RefItem = ({ item }) => {
+const RefItem = ({ item, onViewCommissions }) => {
     const navigate = useNavigate()
     const {t} = useTranslation()
     return (
@@ -40,6 +40,11 @@ const RefItem = ({ item }) => {
                 <div className={styles.badge}>
                     ${item?.amount}
                 </div>
+            </div>
+            <div className={styles.visit}>
+                <button className={styles.action_btn} onClick={() => onViewCommissions(item)}>
+                    {t("View Commissions")}
+                </button>
             </div>
         </>
     )

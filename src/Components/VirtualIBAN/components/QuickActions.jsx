@@ -13,6 +13,7 @@ import { useNavigate } from "react-router";
 import { Tooltip } from "@mui/material";
 import { toast } from "react-toastify";
 import { useSyncVirtualIbanBalance, useUpdateVirtualIbanStatus } from "../hooks/useVirtualIban.jsx";
+import { usePermission } from "../../../hooks/GeneralUse/usePermission";
 
 const MODAL_MAP = {
     1: "deposit",
@@ -26,6 +27,7 @@ const BLOCKED_DISABLED_ACTIONS = new Set([1, 2, 3])
 const BLOCKED_ACTION_TOOLTIP = "This virtual IBAN is paused. Reactivate it to deposit, move, convert, or withdraw funds."
 
 const QuickActions = ({ selectedIban }) => {
+    const can = usePermission()
     const ibanId = selectedIban?._id || selectedIban?.id
     const { data: syncedBalance } = useSyncVirtualIbanBalance(ibanId)
     const currentBalance = syncedBalance?.balance ?? selectedIban?.balance ?? 0
@@ -44,8 +46,20 @@ const QuickActions = ({ selectedIban }) => {
     const { t } = useTranslation()
     const openModal = (key) => setModals((prev) => ({ ...prev, [key]: true }))
     const closeModal = (key) => setModals((prev) => ({ ...prev, [key]: false }))
+    const permissionByAction = {
+        1: "virtual-iban.details.view",
+        2: "virtual-iban.funds.convert",
+        3: "virtual-iban.funds.withdraw",
+        4: "virtual-iban.statement.download",
+        5: "payments.money.request",
+        6: "beneficiaries.view",
+        8: "virtual-iban.status.update",
+    }
 
     const handleActionClick = (actionId) => {
+        const permission = permissionByAction[actionId]
+        if (permission && !can(permission)) return
+
         if (isBlocked && BLOCKED_DISABLED_ACTIONS.has(actionId)) {
             return
         }
@@ -76,6 +90,8 @@ const QuickActions = ({ selectedIban }) => {
     }
 
     const handleToggleIbanStatus = async ({ action }) => {
+        if (!can("virtual-iban.status.update")) return false
+
         if (!ibanId) {
             toast.error("Please select a virtual IBAN first")
             return false
@@ -93,7 +109,10 @@ const QuickActions = ({ selectedIban }) => {
 
     return (
         <div className={styles.grid}>
-            {actions.map((action) => {
+            {actions.filter((action) => {
+                const permission = permissionByAction[action.id]
+                return !permission || can(permission)
+            }).map((action) => {
                 const disabledByBlockedIban = isBlocked && BLOCKED_DISABLED_ACTIONS.has(action.id)
                 const actionLabel = action.id === 8 && isBlocked ? "Reactivate" : action.label
                 const actionSub = action.id === 8 && isBlocked ? "Resume virtual account" : action.sub
@@ -150,7 +169,7 @@ const QuickActions = ({ selectedIban }) => {
 
                 return card;
             })}
-            {modals.deposit && (
+            {can("virtual-iban.details.view") && modals.deposit && (
                 <div
                     className={styles.modalOverlay}
                     onClick={() => closeModal("deposit")}
@@ -170,35 +189,43 @@ const QuickActions = ({ selectedIban }) => {
                     </div>
                 </div>
             )}
-            <WithdrawBalanceModal
-                isOpen={modals.withdrawal}
-                toggle={() => closeModal("withdrawal")}
-                selectedIban={selectedIban}
-                availableBalance={currentBalance}
-            />
+            {can("virtual-iban.funds.withdraw") && (
+                <WithdrawBalanceModal
+                    isOpen={modals.withdrawal}
+                    toggle={() => closeModal("withdrawal")}
+                    selectedIban={selectedIban}
+                    availableBalance={currentBalance}
+                />
+            )}
             {/* <AddFundsModal
                 isOpen={modals.addFunds}
                 toggle={() => closeModal("addFunds")}
             /> */}
-            <ConvertFundsModal
-                isOpen={modals.convertFunds}
-                toggle={() => closeModal("convertFunds")}
-                selectedIban={selectedIban}
-                availableBalance={currentBalance}
-            />
-            <UnsubscribeModal
-                isOpen={modals.unsubscribe}
-                toggle={() => closeModal("unsubscribe")}
-                hasBalance={currentBalance > 0}
-                onWithdraw={handleUnsubscribeWithdraw}
-                isBlocked={isBlocked}
-                isProcessing={updateIbanStatus.isPending}
-                onToggleStatus={handleToggleIbanStatus}
-            />
-            <StatementModal
-                isOpen={modals.statement}
-                toggle={() => closeModal("statement")}
-            />
+            {can("virtual-iban.funds.convert") && (
+                <ConvertFundsModal
+                    isOpen={modals.convertFunds}
+                    toggle={() => closeModal("convertFunds")}
+                    selectedIban={selectedIban}
+                    availableBalance={currentBalance}
+                />
+            )}
+            {can("virtual-iban.status.update") && (
+                <UnsubscribeModal
+                    isOpen={modals.unsubscribe}
+                    toggle={() => closeModal("unsubscribe")}
+                    hasBalance={currentBalance > 0}
+                    onWithdraw={handleUnsubscribeWithdraw}
+                    isBlocked={isBlocked}
+                    isProcessing={updateIbanStatus.isPending}
+                    onToggleStatus={handleToggleIbanStatus}
+                />
+            )}
+            {can("virtual-iban.statement.download") && (
+                <StatementModal
+                    isOpen={modals.statement}
+                    toggle={() => closeModal("statement")}
+                />
+            )}
         </div>
     );
 };

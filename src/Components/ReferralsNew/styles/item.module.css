@@ -73,3 +73,24 @@
     line-height: 150%;
     letter-spacing: -0.4px;
 }
+
+.action_btn {
+    border-radius: 4px;
+    background: #111827;
+    padding: .25rem .65rem;
+    color: #FFF;
+    leading-trim: both;
+    text-edge: cap;
+    font-family: Manrope;
+    font-size: .6rem;
+    font-style: normal;
+    font-weight: 800;
+    line-height: 150%;
+    letter-spacing: -0.4px;
+    border: none;
+    outline: none;
+}
+
+.action_btn:hover {
+    background: #5926F0;
+}

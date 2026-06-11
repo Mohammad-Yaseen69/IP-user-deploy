@@ -5,8 +5,10 @@ import IBANDetails from '../IBAN/IBANDetails';
 import styles from "../styles/RecentTransactions.module.css";
 import { toast } from 'react-toastify';
 import { Tooltip } from '@mui/material';
+import { usePermission } from '../../../hooks/GeneralUse/usePermission';
 
 const Empty = ({ selectedIban }) => {
+    const can = usePermission()
     const [openModal, setOpenModal] = useState(false)
     const isBlocked = String(selectedIban?.status || "").toUpperCase() === "BLOCKED" ||String(selectedIban?.status || "").toUpperCase() === "INACTIVE"
     const handleCopyIBAN = () => {
@@ -16,6 +18,8 @@ const Empty = ({ selectedIban }) => {
     };
     const closeModal = () => setOpenModal(false)
     const ibanId = selectedIban?._id || selectedIban?.id
+    const canViewDetails = can("virtual-iban.details.view")
+    const canCopyDetails = can("virtual-iban.details.copy")
 
     const { t } = useTranslation()
     return (
@@ -32,12 +36,14 @@ const Empty = ({ selectedIban }) => {
             </div>
 
             <div className={styles.buttonGroup}>
-                <button className={styles.secondaryButton} onClick={handleCopyIBAN}>
-                    <Copy size={20} />
-                    <span>{t("Copy IBAN to receive")}</span>
-                </button>
+                {canCopyDetails && (
+                    <button className={styles.secondaryButton} onClick={handleCopyIBAN}>
+                        <Copy size={20} />
+                        <span>{t("Copy IBAN to receive")}</span>
+                    </button>
+                )}
 
-                <Tooltip
+                {canViewDetails && <Tooltip
                     title={isBlocked ? t("This virtual IBAN is paused. Reactivate it to view deposit details.") : ""}
                     arrow
                     placement="top"
@@ -54,9 +60,9 @@ const Empty = ({ selectedIban }) => {
                             <span>{t("Deposit")}</span>
                         </button>
                     </span>
-                </Tooltip>
+                </Tooltip>}
             </div>
-            {openModal && (
+            {canViewDetails && openModal && (
                 <div
                     className={styles.modalOverlay}
                     onClick={() => closeModal("deposit")}
