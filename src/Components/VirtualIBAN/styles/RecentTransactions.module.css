@@ -95,21 +95,21 @@
 }
 
 .toolBtn {
-    display: flex;
-    height: 36px;
-    padding: var(--sm, 8px) var(--md, 16px);
-    justify-content: center;
-    align-items: center;
-    gap: 8px;
-    border-radius: var(--sm, 6px);
-    background: var(--Greyscale-15, #F3F3F4);
-    border: none;
+    display: flex !important;
+    height: 36px !important;
+    padding: var(--sm, 8px) var(--md, 16px) !important;
+    justify-content: center !important;
+    align-items: center !important;
+    gap: 8px !important;
+    border-radius: var(--sm, 6px) !important;
+    background: var(--Greyscale-15, #F3F3F4) !important;
+    border: none !important;
+    color: #151514 !important;
+    font-weight: 600 !important;
+
 }
 
-.toolBtn:hover {
-    background: var(--hover-bg);
-    color: var(--text-primary);
-}
+
 
 .tableWrapper {
     overflow-x: auto;
