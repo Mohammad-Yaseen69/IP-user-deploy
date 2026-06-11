@@ -22,7 +22,6 @@ const ReviewStep = ({ amount, fundingMethod, selectedWallet }) => {
         <div>
             <div className={styles.reviewLabel}>{t("Review & Confirm")}</div>
             <div className={styles.reviewTable}>
-                {/* Amount */}
                 <div className={styles.reviewRow}>
                     <span className={styles.reviewRowLabel}>{t("Amount")}</span>
                     <span className={styles.reviewRowValue}>
@@ -30,7 +29,6 @@ const ReviewStep = ({ amount, fundingMethod, selectedWallet }) => {
                     </span>
                 </div>
 
-                {/* Method */}
                 <div className={styles.reviewRow}>
                     <span className={styles.reviewRowLabel}>{t("Method")}</span>
                     <div className={styles.reviewRowMain}>
@@ -48,7 +46,6 @@ const ReviewStep = ({ amount, fundingMethod, selectedWallet }) => {
                     </div>
                 </div>
 
-                {/* Wallet (only if instapay_wallet) */}
                 {fundingMethod === "instapay_wallet" && (
                     <div className={styles.reviewRow}>
                         <span className={styles.reviewRowLabel}>{t("Wallet")}</span>

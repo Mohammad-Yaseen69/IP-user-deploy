@@ -89,12 +89,12 @@ export const MENU = [
                 url: "/virtual-IBAN",
 
                 icon: <img loading="lazy" src={v_bank} style={{
-                    width: "18px",
+                    width: "17px",
                     height: "18px",
                     marginRight: "12px",
                 }} />,
                 activeIcon: <img loading="lazy" src={v_bank_a} style={{
-                    width: "18px",
+                    width: "17px",
                     height: "18px",
                     marginRight: "12px",
                 }} />,
