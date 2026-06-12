@@ -42,8 +42,37 @@ const InvoiceItem = ({ sn, inv, badgeClass, setEditModal, setMenuOpenFor, menuOp
   };
   const isPhone = width <= 700;
 
+  const downloadQrCode = async () => {
+    if (!inv.qrCode?.url) return;
+
+    const fileName = `${inv.invoiceId || "invoice"}-qr-code.png`;
+
+    try {
+      const response = await fetch(inv.qrCode.url);
+      const blob = await response.blob();
+      const blobUrl = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = blobUrl;
+      link.download = fileName;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(blobUrl);
+    } catch (_) {
+      const link = document.createElement("a");
+      link.href = inv.qrCode.url;
+      link.download = fileName;
+      link.target = "_blank";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } finally {
+      setMenuOpenFor(null);
+    }
+  };
 
 
+  console.log(inv, "inv")
   return (
     <React.Fragment key={inv.invoiceId}>
       <div
@@ -144,7 +173,7 @@ const InvoiceItem = ({ sn, inv, badgeClass, setEditModal, setMenuOpenFor, menuOp
 
               {/* Permission: invoices.download */}
               {can("invoices.download") && (
-                <div className={styles.menuItem} onClick={() => { }}>
+                <div className={styles.menuItem} onClick={downloadQrCode}>
                   {t("Download")}
                 </div>
               )}
