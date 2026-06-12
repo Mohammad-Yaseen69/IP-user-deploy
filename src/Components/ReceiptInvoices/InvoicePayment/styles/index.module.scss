@@ -783,10 +783,10 @@
 
 .directCardLeft {
     min-height: 608px;
-    padding: 24px;
-    border: 1px solid #e2dff0;
-    border-radius: 10px;
-    background: #f0ecfb;
+    padding: 28px 24px;
+    border-radius: var(--lg, 14px);
+    border: 1px solid #E5E7EB;
+    background: linear-gradient(180deg, #F2EEFF 0%, rgba(242, 238, 255, 0.00) 100%);
 }
 
 .directCardLogoRow {
@@ -814,9 +814,12 @@
     margin-top: 2px;
 
     span {
-        color: #7f8290;
-        font-size: 12px;
-        font-weight: 600;
+        color: #6E7687;
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 150%;
+        letter-spacing: -0.42px;
     }
 
     strong {
@@ -827,7 +830,13 @@
     }
 
     .invoiceId {
-        color: #4f2ce8;
+        color: #5926F0;
+
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 600;
+        line-height: 150%;
+        letter-spacing: -0.42px;
         text-decoration: none;
     }
 }
@@ -838,9 +847,9 @@
 
 .feeBox {
     padding: 16px;
-    border: 1px solid #ddd7ee;
-    border-radius: 8px;
-    background: rgba(255, 255, 255, .48);
+    border-radius: var(--md, 10px);
+    border: 1px solid #E8E8F0;
+    background: #F4F5F8;
 
     >div {
         margin-bottom: 10px;
@@ -852,8 +861,11 @@
     }
 
     span {
-        color: #7e8494;
-        font-weight: 600;
+        color: #6B6B80;
+        font-size: 12px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: normal;
     }
 
     strong {
@@ -862,17 +874,22 @@
     }
 
     .totalRow {
-        margin: 14px 0 0;
-        padding: 10px 12px;
-        border: 1px solid #c7b8ff;
-        border-radius: 5px;
-        background: #e9ddff;
+        display: flex;
+        padding: 8px 11px;
+        justify-content: space-between;
+        align-items: center;
+        align-self: stretch;
+        border-radius: 8px;
+        border: 1px solid #D4C5FC;
+        background: #F0EBFF;
 
         span,
         strong {
-            color: #5528e7;
             font-size: 11px;
+            color: #5926F0;
+            font-style: normal;
             font-weight: 900;
+            line-height: normal;
         }
     }
 }
@@ -916,9 +933,13 @@
 }
 
 .directCardHeader {
-    height: 89px;
-    padding: 18px 20px;
-    border-bottom: none;
+    display: flex;
+    height: 99px;
+    padding: var(--md, 16px) var(--lg, 24px);
+    justify-content: space-between;
+    align-items: center;
+    align-self: stretch;
+    background: var(--bg-elevated, #F8F9FC);
 }
 
 .merchant {
@@ -926,9 +947,10 @@
 }
 
 .avatar {
-    width: 42px;
-    height: 42px;
-    border-radius: 9px;
+    width: var(--xxl, 48px);
+    height: 48px;
+    aspect-ratio: 1/1;
+    border-radius: var(--md, 10px);
     background: linear-gradient(135deg, #ed1c24, #d30018);
     color: #fff;
 }
@@ -936,9 +958,12 @@
 .merchantName {
     h3 {
         max-width: 230px;
-        color: #111827;
-        font-size: 15px;
-        font-weight: 900;
+        color: #000;
+
+        font-size: 18px;
+        font-style: normal;
+        font-weight: 600;
+        line-height: 150%;
     }
 
     svg {
@@ -953,9 +978,12 @@
     gap: 7px;
 
     span {
-        color: #8b90a0;
-        font-size: 10px;
-        font-weight: 700;
+        color: #6E7687;
+        font-size: 12px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: normal;
+        letter-spacing: -0.36px;
     }
 
     img {
@@ -965,12 +993,19 @@
     }
 
     .badge {
-        height: 16px;
-        padding: 0 6px;
-        border-radius: 3px;
-        background: #fff3d8;
-        color: #9c6500;
-        font-size: 9px;
+        color: #976600;
+        font-size: 11px;
+        font-style: normal;
+        font-weight: var(--font-weight-medium, 500);
+        line-height: var(--line-height-body-sm, 20px);
+        letter-spacing: -0.33px;
+        display: flex;
+        height: 20px;
+        padding: 8px;
+        align-items: center;
+        gap: 6px;
+        border-radius: 100px;
+        background: var(--Alert-Warning-0, #FFF7EA);
     }
 }
 
@@ -981,13 +1016,23 @@
     width: 88px;
 
     button {
-        height: 24px;
-        border: 0;
-        border-radius: 4px;
-        background: #5926f0;
-        color: #fff;
-        font-size: 9px;
-        font-weight: 800;
+        display: flex;
+        width: 96px;
+        height: var(--lg, 24px);
+        padding: var(--sm, 8px) var(--md, 16px);
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+        border-radius: var(--sm, 6px);
+        background: var(--Primary-600---Base, #4A32E3);
+        color: var(--Greyscale-0, #FFF);
+        text-align: center;
+        border: none;
+        font-size: 11px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: normal;
+        letter-spacing: -0.33px;
         cursor: pointer;
 
         &:nth-child(2) {
@@ -1091,15 +1136,23 @@
     span {
         display: block;
         margin-bottom: 4px;
-        color: #7a8190;
-        font-size: 10px;
-        font-weight: 600;
+        color: var(--text-secondary, #6E7687);
+        font-family: Inter;
+        font-size: 12px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: normal;
+        letter-spacing: -0.36px;
     }
 
     strong {
-        color: #111827;
-        font-size: 12px;
-        font-weight: 800;
+        color: #3D3D4E;
+        font-family: Inter;
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 600;
+        line-height: 150%;
+        letter-spacing: -0.42px;
     }
 }
 
@@ -1174,5 +1227,68 @@
 
     .directCardRight {
         min-height: auto;
+    }
+}
+
+@media (max-width: 700px) {
+    .directCard {
+        flex-direction: column;
+        gap: 0px;
+    }
+
+    .directCardLeft {
+        border-top-left-radius: 10px !important;
+        border-top-right-radius: 10px !important;
+
+    }
+
+    .directCardLeft,
+    .directCardRight {
+        width: 100%;
+        border-radius: 0px;
+
+    }
+
+    .directCardRight {
+        gap: 0px;
+    }
+
+    .cardPanel {
+        border-bottom-left-radius: 10px !important;
+        border-bottom-right-radius: 10px !important;
+    }
+
+    .payerPanel,
+    .cardPanel {
+        width: 100%;
+        border-radius: 0px;
+    }
+
+    .directCardHeader {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+        height: auto;
+    }
+
+    .merchantActions {
+        width: 100%;
+        flex-direction: column;
+    }
+
+    .merchantActions button {
+        width: 100%;
+    }
+
+    .payerGrid {
+        grid-template-columns: 1fr;
+    }
+
+    .directCardFooter {
+        flex-direction: column;
+    }
+
+    .directCardFooter button {
+        width: 100%;
     }
 }
