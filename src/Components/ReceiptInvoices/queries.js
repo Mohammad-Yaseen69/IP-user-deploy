@@ -61,6 +61,14 @@ const editInvoice = async (invoiceId, payload) => {
     return decryptData(response.data.data)
 }
 
+const editDirectCardInvoice = async (invoiceId, payload) => {
+    const enc = encryptData(payload)
+    const response = await axios.put(`${path}/edit-dc-invoice/${invoiceId}`, { data: enc }, {
+        headers: getAuthHeader()
+    })
+    return decryptData(response.data.data)
+}
+
 const deleteInvoice = async (invoiceId) => {
     const response = await axios.delete(`${path}/delete-invoice/${invoiceId}`, {
         headers: getAuthHeader()
@@ -75,5 +83,6 @@ export {
     getInvoiceList,
     getInvoiceUsingId,
     editInvoice,
+    editDirectCardInvoice,
     deleteInvoice
 }

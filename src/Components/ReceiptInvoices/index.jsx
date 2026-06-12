@@ -43,12 +43,12 @@ const ReceiptInvoice = () => {
         keepPreviousData: false
     })
     const invoices = data?.data || []
+    const isDirectCardInvoice = (inv) => {
+        const invoiceType = inv?.invoiceType?.toLowerCase()
+        const paymentMethod = inv?.guestDetails?.paymentMethod?.toLowerCase()
+        return invoiceType === "direct-card" || invoiceType === "direct_card" || paymentMethod === "card"
+    }
     const visibleInvoices = useMemo(() => {
-        const isDirectCardInvoice = (inv) => {
-            const invoiceType = inv?.invoiceType?.toLowerCase()
-            const paymentMethod = inv?.guestDetails?.paymentMethod?.toLowerCase()
-            return invoiceType === "direct-card" || invoiceType === "direct_card" || paymentMethod === "card"
-        }
 
         if (activeTab === "direct_card") {
             return invoices.filter(isDirectCardInvoice)
@@ -181,6 +181,7 @@ const ReceiptInvoice = () => {
                     }}
                     inv={editModal.invoice}
                     isEdit={true}
+                    directCard={isDirectCardInvoice(editModal.invoice)}
                 />
             )}
         </div >
