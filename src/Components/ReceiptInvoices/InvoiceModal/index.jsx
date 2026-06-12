@@ -6,7 +6,7 @@ import ContactBox from '../../MyMasterCard/PaymentModal/ContactBox'
 import Preview from './Preview'
 import Form from './Form'
 import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { addDirectCardInvoice, addInvoice, editInvoice, uploadQR } from '../queries'
+import { addDirectCardInvoice, addInvoice, editDirectCardInvoice, editInvoice, uploadQR } from '../queries'
 import { UserContext } from '../../../Context/UserContext'
 import { decryptData } from '../../../Helper/EssentilaMethods/Decryption'
 import { toast } from 'react-toastify'
@@ -86,6 +86,8 @@ const InvoiceModal = ({ isOpen, toggle, isEdit, inv, directCard = false }) => {
 
     useEffect(() => {
         if (isEdit && inv) {
+            const guestDetails = inv.guestDetails || {}
+
             dataHandler("amount", formatCurrency(inv.amount, true))
             dataHandler("description", inv.description)
             dataHandler("title", inv.title)
@@ -93,8 +95,16 @@ const InvoiceModal = ({ isOpen, toggle, isEdit, inv, directCard = false }) => {
             dataHandler("invoiceId", inv.invoiceId)
             dataHandler("allowMultiple", inv.recurring)
             dataHandler("allowShipping", inv.shippingAddress)
-            dataHandler("countryIsoCode", inv.countryIsoCode)
-            if (inv.countryIsoCode) {
+            dataHandler("countryIsoCode", guestDetails.country_iso_code || inv.countryIsoCode)
+            dataHandler("fullName", guestDetails.name || "")
+            dataHandler("email", guestDetails.email || "")
+            dataHandler("phone", guestDetails.phone || "")
+            dataHandler("dob", guestDetails.dob || "")
+            dataHandler("paymentRef", guestDetails.payment_reference || "")
+            dataHandler("customerStreet", guestDetails.customer_street || "")
+            dataHandler("customer_county", guestDetails.customer_county || "")
+            dataHandler("customerTown", guestDetails.customer_town || "")
+            if (guestDetails.country_iso_code || inv.countryIsoCode) {
                 dataHandler("specifyCountry", true)
             }
         }
@@ -165,7 +175,7 @@ const InvoiceModal = ({ isOpen, toggle, isEdit, inv, directCard = false }) => {
         }
     })
     const { mutateAsync: editMutate, isPending: isEditing } = useMutation({
-        mutationFn: ({ invoiceId, payload }) => editInvoice(invoiceId, payload),
+        mutationFn: ({ invoiceId, payload }) => directCard ? editDirectCardInvoice(invoiceId, payload) : editInvoice(invoiceId, payload),
         onError: (error) => {
             const dec = error?.response?.data?.data ? decryptData(error?.response?.data?.data) : error.response.data
             toast.error(dec.message || t("We can't process your request at this moment please try again later."))
@@ -202,7 +212,7 @@ const InvoiceModal = ({ isOpen, toggle, isEdit, inv, directCard = false }) => {
             "active": true,
             "countryIsoCode": data.countryIsoCode,
             ...(directCard ? {
-                invoiceType: "direct-card",
+                ...(!isEdit ? { invoiceType: "direct-card" } : {}),
                 guestDetails: {
                     name: data.fullName,
                     email: data.email,
@@ -213,7 +223,7 @@ const InvoiceModal = ({ isOpen, toggle, isEdit, inv, directCard = false }) => {
                     customer_street: data.customerStreet,
                     customer_county: data.customer_county,
                     customer_town: data.customerTown,
-                    paymentMethod: "card"
+                    ...(!isEdit ? { paymentMethod: "card" } : {})
                 }
             } : {})
         }
@@ -231,6 +241,11 @@ const InvoiceModal = ({ isOpen, toggle, isEdit, inv, directCard = false }) => {
     }
 
     const handleEditInvoice = async () => {
+        if (directCard && data.mode === "form") {
+            dataHandler("mode", "recipient")
+            return
+        }
+
         const payload = getPayload()
         editMutate({ invoiceId: data.invoiceId, payload })
     }
@@ -284,12 +299,34 @@ const InvoiceModal = ({ isOpen, toggle, isEdit, inv, directCard = false }) => {
                         </ButtonForRequests>
                     ) : isEdit ? (
                         canEditInvoice ? (
-                            <ButtonForRequests
-                                isLoading={isInvalid || isPending || uploadPending || isEditing || false}
-                                onClick={handleEditInvoice}
-                            >
-                                {t('Save')}
-                            </ButtonForRequests>
+                            <div style={{ display: "flex", gap: "10px", justifyContent: "flex-end", flexWrap: "wrap" }}>
+                                {directCard && data.mode === "recipient" && (
+                                    <button
+                                        type="button"
+                                        disabled={isEditing}
+                                        onClick={() => dataHandler("mode", "form")}
+                                        style={{
+                                            border: 'none',
+                                            outline: 'none',
+                                            padding: '10px 16px',
+                                            borderRadius: 8,
+                                            fontWeight: 700,
+                                            background: '#EEEEEE',
+                                            color: '#111',
+                                            cursor: isEditing ? 'not-allowed' : 'pointer',
+                                            opacity: isEditing && .5,
+                                        }}
+                                    >
+                                        {t('Back')}
+                                    </button>
+                                )}
+                                <ButtonForRequests
+                                    isLoading={isInvalid || isPending || uploadPending || isEditing || false}
+                                    onClick={handleEditInvoice}
+                                >
+                                    {t(directCard && data.mode === "form" ? 'Next' : 'Save')}
+                                </ButtonForRequests>
+                            </div>
                         ) : (
                             <ButtonForRequests isLoading={false} onClick={onClose}>
                                 {t('Close')}
