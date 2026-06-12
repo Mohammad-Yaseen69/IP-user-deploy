@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
-import { useContext, useState } from 'react'
-import { ChevronLeft, ChevronRight, Search } from 'react-feather'
+import { useContext, useMemo, useState } from 'react'
+import { Search } from 'react-feather'
 import { useTranslation } from 'react-i18next'
 import { UserContext } from '../../Context/UserContext'
 import useWindowWidth from '../../utils/useWindowWidth'
@@ -21,6 +21,7 @@ const ReceiptInvoice = () => {
     const can = usePermission();
 
     const [showModal, setShowModal] = useState(false)
+    const [showDirectCardModal, setShowDirectCardModal] = useState(false)
     const [search, setSearch] = useState("")
     const [page, setPage] = useState(1)
     const [limit, setLimit] = useState(10)
@@ -42,7 +43,23 @@ const ReceiptInvoice = () => {
         keepPreviousData: false
     })
     const invoices = data?.data || []
-    const total = data?.pagination?.totalRecords || 0
+    const isDirectCardInvoice = (inv) => {
+        const invoiceType = inv?.invoiceType?.toLowerCase()
+        const paymentMethod = inv?.guestDetails?.paymentMethod?.toLowerCase()
+        return invoiceType === "direct-card" || invoiceType === "direct_card" || paymentMethod === "card"
+    }
+    const visibleInvoices = useMemo(() => {
+
+        if (activeTab === "direct_card") {
+            return invoices.filter(isDirectCardInvoice)
+        }
+
+        if (activeTab === "invoice") {
+            return invoices.filter(inv => !isDirectCardInvoice(inv))
+        }
+
+        return invoices
+    }, [activeTab, invoices])
     const totalPages = data?.pagination?.totalPages || 1
 
     console.log("data", data)
@@ -83,20 +100,33 @@ const ReceiptInvoice = () => {
                 >
                     {t("Plans")}
                 </div>
+                <div
+                    onClick={() => setActiveTab("direct_card")}
+                    style={{
+                        cursor: 'pointer',
+                        padding: '10px 20px',
+                        background: activeTab === 'direct_card' ? '#5926F0' : 'rgb(221 218 218)',
+                        fontWeight: 600,
+                        color: activeTab === 'direct_card' ? 'white' : 'black',
+                        borderRadius: "6px"
+                    }}
+                >
+                    {t("Direct Card Invoice")}
+                </div>
             </div>
 
-            {activeTab === 'invoice' ? (<div className={styles.receiptsCont}>
+            {activeTab === 'invoice' || activeTab === 'direct_card' ? (<div className={styles.receiptsCont}>
                 <div className={styles.head}>
                     <h5>
-                        {t("My recent Invoices:")}
+                        {activeTab === 'direct_card' ? t("My recent Direct Card Invoices:") : t("My recent Invoices:")}
                     </h5>
                     {/* Permission: invoices.create */}
                     {can("invoices.create") && (
-                        <button style={width < 500 ? { justifyContent: "center", alignItems: "center", display: "flex", width: "40px", height: "40px" } : {}} onClick={() => setShowModal(true)}>
+                        <button style={width < 500 ? { justifyContent: "center", alignItems: "center", display: "flex", width: "40px", height: "40px" } : {}} onClick={() => activeTab === 'direct_card' ? setShowDirectCardModal(true) : setShowModal(true)}>
                             <span style={{ fontSize: width < 500 ? "24px" : '14px', marginLeft: width < 500 && "5px" }}>
                                 +
                             </span>
-                            {width > 500 && t("Create New Invoice")}
+                            {width > 500 && t(activeTab === 'direct_card' ? "Create Direct Card Invoice" : "Create New Invoice")}
                         </button>
                     )}
                 </div>
@@ -108,7 +138,7 @@ const ReceiptInvoice = () => {
                             type="text"
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
-                            placeholder={t('Search for Invoice')}
+                            placeholder={t(activeTab === 'direct_card' ? 'Search for Direct Card Invoice' : 'Search for Invoice')}
                         />
                     </div>
                 </div>
@@ -116,13 +146,13 @@ const ReceiptInvoice = () => {
 
                 {isLoading && !isRefetching ? (
                     <InstaPayLoader />
-                ) : invoices.length < 1 ? (
-                    <NoInvoiceScreen setShowModal={setShowModal} />
+                ) : visibleInvoices.length < 1 ? (
+                    <NoInvoiceScreen setShowModal={activeTab === 'direct_card' ? setShowDirectCardModal : setShowModal} />
                 ) : (
                     <>
                         <InvoiceTable
                             setEditModal={setEditModal}
-                            filteredInvoices={invoices}
+                            filteredInvoices={visibleInvoices}
                         />
 
                         <Paginations page={page} totalPages={totalPages} setPage={setPage} limit={limit} setLimit={setLimit} /></>)}
@@ -138,6 +168,7 @@ const ReceiptInvoice = () => {
 
             {/* Permission: invoices.create */}
             {can("invoices.create") && <InvoiceModal isOpen={showModal} toggle={() => setShowModal(false)} />}
+            {can("invoices.create") && <InvoiceModal isOpen={showDirectCardModal} toggle={() => setShowDirectCardModal(false)} directCard={true} />}
             {/* Permission: invoices.edit */}
             {can("invoices.edit") && (
                 <InvoiceModal
@@ -150,6 +181,7 @@ const ReceiptInvoice = () => {
                     }}
                     inv={editModal.invoice}
                     isEdit={true}
+                    directCard={isDirectCardInvoice(editModal.invoice)}
                 />
             )}
         </div >

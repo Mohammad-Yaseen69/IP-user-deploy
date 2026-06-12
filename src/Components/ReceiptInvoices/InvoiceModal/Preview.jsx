@@ -11,7 +11,7 @@ import useWindowWidth from "../../../utils/useWindowWidth"
 import { formatCurrency } from "../../../Helper/AmountFormat"
 import { usePermission } from "../../../hooks/GeneralUse/usePermission";
 
-const Preview = ({ invoiceId, data, isPending, uploadData, mutate }) => {
+const Preview = ({ invoiceId, data, isPending, uploadData, mutate, onQrGenerateError }) => {
     const { t } = useTranslation()
     const { userDetails } = useContext(UserContext)
     const can = usePermission();
@@ -75,6 +75,7 @@ const Preview = ({ invoiceId, data, isPending, uploadData, mutate }) => {
                 invoiceId={invoiceId}
                 isInvoice={true}
                 invoiceUrl={qrCodeUrl}
+                onInvoiceQrError={onQrGenerateError}
             />
         </>
     )

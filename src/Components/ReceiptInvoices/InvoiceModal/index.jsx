@@ -6,7 +6,7 @@ import ContactBox from '../../MyMasterCard/PaymentModal/ContactBox'
 import Preview from './Preview'
 import Form from './Form'
 import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { addInvoice, editInvoice, uploadQR } from '../queries'
+import { addDirectCardInvoice, addInvoice, editDirectCardInvoice, editInvoice, uploadQR } from '../queries'
 import { UserContext } from '../../../Context/UserContext'
 import { decryptData } from '../../../Helper/EssentilaMethods/Decryption'
 import { toast } from 'react-toastify'
@@ -14,6 +14,9 @@ import { ButtonForRequests } from '../UI/FormElements'
 import { formatCurrency } from '../../../Helper/AmountFormat'
 import useWindowWidth from '../../../utils/useWindowWidth'
 import { usePermission } from '../../../hooks/GeneralUse/usePermission'
+import RecipientDetails from '../../PaymentAddressPublic/PayAsGuest/RecipientDetails'
+import countriesData from '../../PaymentsNewer/CountriesData.json'
+import { isEmailValid } from '../../../utils/Functions/validations'
 
 const initialData = {
     amount: "",
@@ -26,7 +29,20 @@ const initialData = {
     invoiceId: "",
     generatingQr: true,
     countryIsoCode: null,
-    specifyCountry: false
+    specifyCountry: false,
+    payment_type: {
+        value: "card"
+    },
+    country: {},
+    countryData: {},
+    fullName: "",
+    phone: "",
+    email: "",
+    dob: "",
+    paymentRef: "",
+    customerStreet: "",
+    customer_county: "",
+    customerTown: "",
 }
 
 function reducer(state, action) {
@@ -43,10 +59,10 @@ function reducer(state, action) {
     }
 }
 
-const InvoiceModal = ({ isOpen, toggle, isEdit, inv }) => {
+const InvoiceModal = ({ isOpen, toggle, isEdit, inv, directCard = false }) => {
     const { t } = useTranslation()
     const [data, dispatch] = useReducer(reducer, initialData)
-    const { userDetails } = useContext(UserContext)
+    const { userDetails, allowedCountries, getAllActiveCountries } = useContext(UserContext)
     const queryClient = useQueryClient()
     const width = useWindowWidth()
     const { userWallets } = useContext(UserContext)
@@ -70,6 +86,8 @@ const InvoiceModal = ({ isOpen, toggle, isEdit, inv }) => {
 
     useEffect(() => {
         if (isEdit && inv) {
+            const guestDetails = inv.guestDetails || {}
+
             dataHandler("amount", formatCurrency(inv.amount, true))
             dataHandler("description", inv.description)
             dataHandler("title", inv.title)
@@ -77,20 +95,67 @@ const InvoiceModal = ({ isOpen, toggle, isEdit, inv }) => {
             dataHandler("invoiceId", inv.invoiceId)
             dataHandler("allowMultiple", inv.recurring)
             dataHandler("allowShipping", inv.shippingAddress)
-            dataHandler("countryIsoCode", inv.countryIsoCode)
-            if (inv.countryIsoCode) {
+            dataHandler("countryIsoCode", guestDetails.country_iso_code || inv.countryIsoCode)
+            dataHandler("fullName", guestDetails.name || "")
+            dataHandler("email", guestDetails.email || "")
+            dataHandler("phone", guestDetails.phone || "")
+            dataHandler("dob", guestDetails.dob || "")
+            dataHandler("paymentRef", guestDetails.payment_reference || "")
+            dataHandler("customerStreet", guestDetails.customer_street || "")
+            dataHandler("customer_county", guestDetails.customer_county || "")
+            dataHandler("customerTown", guestDetails.customer_town || "")
+            if (guestDetails.country_iso_code || inv.countryIsoCode) {
                 dataHandler("specifyCountry", true)
             }
         }
     }, [isEdit, inv])
 
+    useEffect(() => {
+        if (directCard && isOpen) {
+            getAllActiveCountries()
+        }
+    }, [directCard, isOpen])
+
+    useEffect(() => {
+        if (!directCard || !data.countryIsoCode) return
+
+        const country = countriesData.find(c => c.alpha3 === data.countryIsoCode)
+        const countryData = allowedCountries.find(c => c.country_iso_code?.toUpperCase() === data.countryIsoCode)
+
+        if (country) {
+            dataHandler("country", country)
+        }
+        if (countryData) {
+            dataHandler("countryData", countryData)
+        }
+    }, [directCard, data.countryIsoCode, allowedCountries])
+
+    const isGuestDetailsInvalid = useMemo(() => {
+        if (!directCard) return false
+
+        const requiredFields = data.countryData?.card_payment_required_fields || {}
+
+        return !(
+            data.fullName?.trim()?.length >= 3 &&
+            data.phone?.length >= 9 &&
+            data.dob &&
+            isEmailValid(data.email) &&
+            (!requiredFields.customer_town || data.customerTown?.trim()) &&
+            (!requiredFields.customer_street || data.customerStreet?.trim()) &&
+            (!requiredFields.customer_county || data.customer_county?.trim())
+        )
+    }, [data, directCard])
+
     const isInvalid = useMemo(() => {
         const baseInvalid = !data.title?.trim() || !data.description?.trim() || !data.amount || Number(String(data.amount).replace(/,/g, "")) <= 0 || !data.wallet
+        if (directCard) {
+            return baseInvalid || !data.countryIsoCode || (data.mode === "recipient" && isGuestDetailsInvalid)
+        }
         if (data.specifyCountry) {
             return baseInvalid || !data.countryIsoCode
         }
         return baseInvalid
-    }, [data])
+    }, [data, directCard, isGuestDetailsInvalid])
 
 
 
@@ -100,7 +165,7 @@ const InvoiceModal = ({ isOpen, toggle, isEdit, inv }) => {
     }
 
     const { mutateAsync, isPending, data: addedData } = useMutation({
-        mutationFn: (payload) => addInvoice(payload),
+        mutationFn: (payload) => directCard ? addDirectCardInvoice(payload) : addInvoice(payload),
         onError: (error) => {
             const dec = decryptData(error?.response?.data?.data)
             toast.error(dec.message || t("We can't process your request at this moment please try again later."))
@@ -110,7 +175,7 @@ const InvoiceModal = ({ isOpen, toggle, isEdit, inv }) => {
         }
     })
     const { mutateAsync: editMutate, isPending: isEditing } = useMutation({
-        mutationFn: ({ invoiceId, payload }) => editInvoice(invoiceId, payload),
+        mutationFn: ({ invoiceId, payload }) => directCard ? editDirectCardInvoice(invoiceId, payload) : editInvoice(invoiceId, payload),
         onError: (error) => {
             const dec = error?.response?.data?.data ? decryptData(error?.response?.data?.data) : error.response.data
             toast.error(dec.message || t("We can't process your request at this moment please try again later."))
@@ -127,6 +192,10 @@ const InvoiceModal = ({ isOpen, toggle, isEdit, inv }) => {
         onSuccess: () => {
             dataHandler("generatingQr", false)
             queryClient.invalidateQueries({ queryKey: ["GetInvoicesList"] })
+        },
+        onError: () => {
+            dataHandler("generatingQr", false)
+            queryClient.invalidateQueries({ queryKey: ["GetInvoicesList"] })
         }
     })
 
@@ -137,21 +206,46 @@ const InvoiceModal = ({ isOpen, toggle, isEdit, inv }) => {
             "description": data.description,
             "receivingWallet": data.wallet,
             "recurring": data.allowMultiple,
-            "shippingAddress": data.allowShipping,
+            "shippingAddress": directCard ? false : data.allowShipping,
             "amount": Number(data.amount.replaceAll(",", "")),
             "currency": userWallets?.find(w => w._id === data.wallet)?.currency?.code,
             "active": true,
-            "countryIsoCode": data.countryIsoCode
+            "countryIsoCode": data.countryIsoCode,
+            ...(directCard ? {
+                ...(!isEdit ? { invoiceType: "direct-card" } : {}),
+                guestDetails: {
+                    name: data.fullName,
+                    email: data.email,
+                    phone: data.phone,
+                    dob: data.dob,
+                    country_iso_code: data.countryIsoCode,
+                    payment_reference: data.paymentRef,
+                    customer_street: data.customerStreet,
+                    customer_county: data.customer_county,
+                    customer_town: data.customerTown,
+                    ...(!isEdit ? { paymentMethod: "card" } : {})
+                }
+            } : {})
         }
     }
 
 
     const handleAddInvoice = async () => {
+        if (directCard && data.mode === "form") {
+            dataHandler("mode", "recipient")
+            return
+        }
+
         const payload = getPayload()
         mutateAsync(payload)
     }
 
     const handleEditInvoice = async () => {
+        if (directCard && data.mode === "form") {
+            dataHandler("mode", "recipient")
+            return
+        }
+
         const payload = getPayload()
         editMutate({ invoiceId: data.invoiceId, payload })
     }
@@ -163,13 +257,22 @@ const InvoiceModal = ({ isOpen, toggle, isEdit, inv }) => {
                 <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
                     <img src={icon} alt="" />
                     <span style={{ fontWeight: 600, fontSize: 18 }}>
-                        {t("Generate Your Invoice")}
+                        {directCard ? t("Generate Direct Card Invoice") : t("Generate Your Invoice")}
                     </span>
                 </div>
             </ModalHeader>
             <ModalBody style={{ paddingTop: "0px" }}>
                 {data.mode === 'form' && (
-                    <Form data={data} dataHandler={dataHandler} inputFieldChange={inputFieldChange} />
+                    <Form data={data} dataHandler={dataHandler} inputFieldChange={inputFieldChange} directCard={directCard} />
+                )}
+
+                {data.mode === 'recipient' && directCard && (
+                    <RecipientDetails
+                        data={data}
+                        dataHandler={dataHandler}
+                        isShipping={false}
+                        isReferenceRequired={false}
+                    />
                 )}
 
                 {data.mode === 'preview' && addedData && (
@@ -179,6 +282,7 @@ const InvoiceModal = ({ isOpen, toggle, isEdit, inv }) => {
                         uploadData={uploadData}
                         mutate={mutate}
                         isPending={data.generatingQr}
+                        onQrGenerateError={() => dataHandler("generatingQr", false)}
                     />
                 )}
 
@@ -188,19 +292,41 @@ const InvoiceModal = ({ isOpen, toggle, isEdit, inv }) => {
 
                     {data.mode === "preview" ? (
                         <ButtonForRequests
-                            isLoading={isInvalid || isPending || uploadPending || isEditing || !uploadData}
+                            isLoading={isInvalid || isPending || uploadPending || isEditing || (data.generatingQr && !uploadData)}
                             onClick={onClose}
                         >
                             {t('Close')}
                         </ButtonForRequests>
                     ) : isEdit ? (
                         canEditInvoice ? (
-                            <ButtonForRequests
-                                isLoading={isInvalid || isPending || uploadPending || isEditing || false}
-                                onClick={handleEditInvoice}
-                            >
-                                {t('Save')}
-                            </ButtonForRequests>
+                            <div style={{ display: "flex", gap: "10px", justifyContent: "flex-end", flexWrap: "wrap" }}>
+                                {directCard && data.mode === "recipient" && (
+                                    <button
+                                        type="button"
+                                        disabled={isEditing}
+                                        onClick={() => dataHandler("mode", "form")}
+                                        style={{
+                                            border: 'none',
+                                            outline: 'none',
+                                            padding: '10px 16px',
+                                            borderRadius: 8,
+                                            fontWeight: 700,
+                                            background: '#EEEEEE',
+                                            color: '#111',
+                                            cursor: isEditing ? 'not-allowed' : 'pointer',
+                                            opacity: isEditing && .5,
+                                        }}
+                                    >
+                                        {t('Back')}
+                                    </button>
+                                )}
+                                <ButtonForRequests
+                                    isLoading={isInvalid || isPending || uploadPending || isEditing || false}
+                                    onClick={handleEditInvoice}
+                                >
+                                    {t(directCard && data.mode === "form" ? 'Next' : 'Save')}
+                                </ButtonForRequests>
+                            </div>
                         ) : (
                             <ButtonForRequests isLoading={false} onClick={onClose}>
                                 {t('Close')}
@@ -208,12 +334,34 @@ const InvoiceModal = ({ isOpen, toggle, isEdit, inv }) => {
                         )
                     ) : (
                         canCreateInvoice ? (
-                            <ButtonForRequests
-                                isLoading={isInvalid || isPending || uploadPending || isEditing || false}
-                                onClick={handleAddInvoice}
-                            >
-                                {t('Generate New Invoice')}
-                            </ButtonForRequests>
+                            <div style={{ display: "flex", gap: "10px", justifyContent: "flex-end", flexWrap: "wrap" }}>
+                                {directCard && data.mode === "recipient" && (
+                                    <button
+                                        type="button"
+                                        disabled={isPending}
+                                        onClick={() => dataHandler("mode", "form")}
+                                        style={{
+                                            border: 'none',
+                                            outline: 'none',
+                                            padding: '10px 16px',
+                                            borderRadius: 8,
+                                            fontWeight: 700,
+                                            background: '#EEEEEE',
+                                            color: '#111',
+                                            cursor: isPending ? 'not-allowed' : 'pointer',
+                                            opacity: isPending && .5,
+                                        }}
+                                    >
+                                        {t('Back')}
+                                    </button>
+                                )}
+                                <ButtonForRequests
+                                    isLoading={isInvalid || isPending || uploadPending || isEditing || false}
+                                    onClick={handleAddInvoice}
+                                >
+                                    {t(directCard && data.mode === "form" ? 'Next' : directCard ? 'Generate Direct Card Invoice' : 'Generate New Invoice')}
+                                </ButtonForRequests>
+                            </div>
                         ) : (
                             <ButtonForRequests isLoading={false} onClick={onClose}>
                                 {t('Close')}
