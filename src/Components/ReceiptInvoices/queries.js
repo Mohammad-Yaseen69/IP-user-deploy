@@ -18,6 +18,15 @@ const addInvoice = async (payload) => {
     return decryptData(response.data.data)?.data
 }
 
+const addDirectCardInvoice = async (payload) => {
+    const enc = encryptData(payload)
+    const response = await axios.post(`${path}/create-dc-invoice`, { data: enc }, {
+        headers: getAuthHeader()
+    })
+    const decrypted = decryptData(response.data.data)
+    return decrypted?.data || decrypted?.invoice || decrypted
+}
+
 const uploadQR = async (formData) => {
     const response = await axios.post(`${path}/upload-qr`, formData, {
         headers: {
@@ -61,6 +70,7 @@ const deleteInvoice = async (invoiceId) => {
 
 export {
     addInvoice,
+    addDirectCardInvoice,
     uploadQR,
     getInvoiceList,
     getInvoiceUsingId,

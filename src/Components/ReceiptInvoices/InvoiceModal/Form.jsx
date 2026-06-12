@@ -5,7 +5,7 @@ import { formatCurrency } from '../../../Helper/AmountFormat'
 import { UserContext } from '../../../Context/UserContext'
 import CountryDropDown from '../../AddBeneficiary/CountryDropDown'
 
-const Form = ({ data, inputFieldChange, dataHandler }) => {
+const Form = ({ data, inputFieldChange, dataHandler, directCard = false }) => {
     const { t } = useTranslation()
     const { userWallets } = useContext(UserContext)
 
@@ -78,20 +78,23 @@ const Form = ({ data, inputFieldChange, dataHandler }) => {
                 <Toggle checked={data.allowShipping} onChange={() => dataHandler('allowShipping', !data.allowShipping)} />
             </Field>
 
-            <Field toggle={true} label={t("Specify country")}>
-                <Toggle
-                    checked={data.specifyCountry}
-                    onChange={() => {
-                        const nextVal = !data.specifyCountry
-                        dataHandler('specifyCountry', nextVal)
-                        if (!nextVal) {
-                            dataHandler('countryIsoCode', null)
-                        }
-                    }}
-                />
-            </Field>
 
-            {data.specifyCountry && (
+            {!directCard && (
+                <Field toggle={true} label={t("Specify country")}>
+                    <Toggle
+                        checked={data.specifyCountry}
+                        onChange={() => {
+                            const nextVal = !data.specifyCountry
+                            dataHandler('specifyCountry', nextVal)
+                            if (!nextVal) {
+                                dataHandler('countryIsoCode', null)
+                            }
+                        }}
+                    />
+                </Field>
+            )}
+
+            {(data.specifyCountry || directCard) && (
                 <Field label={t('Country')} required={!data.countryIsoCode}>
                     <CountryDropDown
                         country={data.countryIsoCode}
@@ -105,4 +108,3 @@ const Form = ({ data, inputFieldChange, dataHandler }) => {
 }
 
 export default Form
-    
