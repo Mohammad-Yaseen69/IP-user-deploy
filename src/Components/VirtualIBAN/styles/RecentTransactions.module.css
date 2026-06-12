@@ -95,21 +95,21 @@
 }
 
 .toolBtn {
-    display: flex;
-    height: 36px;
-    padding: var(--sm, 8px) var(--md, 16px);
-    justify-content: center;
-    align-items: center;
-    gap: 8px;
-    border-radius: var(--sm, 6px);
-    background: var(--Greyscale-15, #F3F3F4);
-    border: none;
+    display: flex !important;
+    height: 36px !important;
+    padding: var(--sm, 8px) var(--md, 16px) !important;
+    justify-content: center !important;
+    align-items: center !important;
+    gap: 8px !important;
+    border-radius: var(--sm, 6px) !important;
+    background: var(--Greyscale-15, #F3F3F4) !important;
+    border: none !important;
+    color: #151514 !important;
+    font-weight: 600 !important;
+
 }
 
-.toolBtn:hover {
-    background: var(--hover-bg);
-    color: var(--text-primary);
-}
+
 
 .tableWrapper {
     overflow-x: auto;
@@ -350,6 +350,87 @@
 
 .closeBtn:hover {
     background: #e5e7eb;
+}
+
+.statusCell {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.chevronBtn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: none;
+
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: transform 0.22s ease, background 0.15s ease, border-color 0.15s ease;
+    padding: 0;
+}
+
+.chevronBtn:hover {
+    background: rgba(0, 0, 0, 0.05);
+    border-color: rgba(0, 0, 0, 0.2);
+}
+
+.chevronOpen {
+    transform: rotate(180deg);
+    background: rgba(0, 0, 0, 0.06);
+}
+
+.accordionRow td {
+    padding: 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.accordionInner {
+    padding: 14px 16px;
+    background: rgba(0, 0, 0, 0.02);
+    border-top: 1px solid rgba(0, 0, 0, 0.06);
+    animation: slideDown 0.2s ease;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-6px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.detailGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 10px 20px;
+}
+
+.detailItem {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.detailLabel {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #9ca3af;
+}
+
+.detailValue {
+    font-size: 13px;
+    font-weight: 500;
+    color: #111827;
 }
 
 @media (max-width: 768px) {
