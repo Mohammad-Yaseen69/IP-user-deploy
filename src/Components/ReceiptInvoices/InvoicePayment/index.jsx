@@ -6,6 +6,7 @@ import { useQuery } from '@tanstack/react-query'
 import { getInvoiceUsingId } from '../queries'
 import InstaPayLoader from '../../Loader'
 import PaymentUI from './PaymentUI'
+import DirectCardInvoicePayment from './DirectCardInvoicePayment'
 import { Card } from 'reactstrap'
 import axios from 'axios'
 import { decryptData } from '../../../Helper/EssentilaMethods/Decryption'
@@ -48,10 +49,14 @@ function reducer(state, action) {
 }
 
 
-const Wrapper = ({ children }) => (
-  <div style={{ background: `url(${background})`, borderRadius: "none", minHeight: "100vh" }} className={styles.container}>
-    <div className={styles.overlay} />
-    <Card style={{ marginBottom: "0px" }} className={styles.sub_container}>
+const Wrapper = ({ children, directCard = false }) => (
+  <div
+    style={{ background: directCard ? "#f5f6f8" : `url(${background})`, borderRadius: "none", minHeight: "100vh" }}
+    className={`${styles.container} ${directCard ? styles.directCardPage : ""}`}
+  >
+    {!directCard && <div className={styles.overlay} />}
+    {directCard && <div className={styles.directCardWatermark}>InstaPay</div>}
+    <Card style={{ marginBottom: "0px" }} className={`${styles.sub_container} ${directCard ? styles.directCardShell : ""}`}>
       {children}
     </Card>
   </div >
@@ -141,18 +146,28 @@ const InvoicePayment = () => {
   }
 
   const url = data ? `/payments?payment_action=send_money&send_type=wallet&wallet_id=${data.receivingWallet?.wallet_id}&currency=${data.currency}&amount=${data.amount}&invoiceId=${invoiceId}&isShipping=${data.shippingAddress}&payment_type=invoice` : "/"
+  const invoiceType = data?.invoiceType?.toLowerCase()
+  const guestPaymentMethod = data?.guestDetails?.paymentMethod?.toLowerCase()
+  const isDirectCardInvoice = invoiceType === "direct-card" || invoiceType === "direct_card" || guestPaymentMethod === "card"
 
   return (
-    <Wrapper>
-      <PaymentUI
-        data={data}
-        dataHandler={dataHandler}
-        state={state}
-        invoiceId={invoiceId}
-        url={url}
-        toggleCreditModal={toggleCreditModal}
-        user_name={user_name}
-      />
+    <Wrapper directCard={isDirectCardInvoice}>
+      {isDirectCardInvoice ? (
+        <DirectCardInvoicePayment
+          invoice={data}
+          username={user_name}
+        />
+      ) : (
+        <PaymentUI
+          data={data}
+          dataHandler={dataHandler}
+          state={state}
+          invoiceId={invoiceId}
+          url={url}
+          toggleCreditModal={toggleCreditModal}
+          user_name={user_name}
+        />
+      )}
     </Wrapper>
   )
 }
