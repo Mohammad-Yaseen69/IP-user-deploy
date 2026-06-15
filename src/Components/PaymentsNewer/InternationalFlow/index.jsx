@@ -46,7 +46,7 @@ import SelectSender from "./SelectSender"
 import { usePermission } from "../../../hooks/GeneralUse/usePermission"
 
 const leftSideContent = [
-    "Enter The Amount",
+    "Select Transaction Type",
     "Choose the beneficiary!",
     "Add Payment Purpose and Reference",
     "Select Payment Type",
