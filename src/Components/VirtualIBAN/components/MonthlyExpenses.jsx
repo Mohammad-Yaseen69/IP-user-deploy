@@ -156,7 +156,7 @@ const ChartCard = ({
   return (
     <div className={styles.card}>
       <div className={styles.cardHeader}>
-        <span className={styles.cardLabel}>{title}</span>
+        <span className={styles.cardLabel}>{t(title)}</span>
         <FormControl>
           <Select
             className={styles.yearSelect}

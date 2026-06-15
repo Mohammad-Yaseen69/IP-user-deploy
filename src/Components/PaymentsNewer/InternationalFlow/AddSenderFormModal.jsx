@@ -527,7 +527,7 @@ const AddSenderFormModal = ({ isOpen, toggle, data, senderAccountType, onSubmit,
                     }}
                     iso_3={selectedCountryIsoCode}
                     isState
-                    title="Select Province"
+                    title={t("Select Province")}
                     stateData={stateData}
                 />
                 {renderNestedError("province_state")}

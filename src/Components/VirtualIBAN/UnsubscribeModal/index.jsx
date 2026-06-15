@@ -119,7 +119,7 @@ const UnsubscribeModal = ({
             </div>
 
             <h3 className={styles.subtitle}>
-                {isBlocked ? t("This will resume account activity") : t("This will pause all activity")}
+                {isBlocked ? t("This will resume account activity") : t("This will pause all activity.")}
             </h3>
             <p className={styles.description}>
                 {isBlocked
