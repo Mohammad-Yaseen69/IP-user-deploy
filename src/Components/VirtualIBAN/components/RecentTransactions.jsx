@@ -149,7 +149,7 @@ const RecentTransactions = ({
   return (
     <>
       <div className={styles.header}>
-        <h3 className={styles.title}>{t("Recent Transactions")}</h3>
+        <h3 className={styles.title}>{t("Recent Transactions ")}</h3>
         <button className={styles.viewAll} onClick={() => setActiveTab("transaction-history")}>
           {t("View All")}
         </button>
