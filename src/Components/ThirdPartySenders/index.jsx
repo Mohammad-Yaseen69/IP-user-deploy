@@ -237,7 +237,7 @@ const ThirdPartySenders = () => {
                 <div style={{ border: "1px dashed #D9D9D9", borderRadius: "12px", padding: "24px", background: "#FCFCFC", display: "flex", flexDirection: "column", gap: "12px" }}>
                     <div style={{ color: "#202020", fontWeight: 800 }}>{t("No saved senders yet")}</div>
                     <div style={{ color: "#777", fontSize: "13px", fontWeight: 600 }}>
-                        {searchQuery ? t("No senders match your search.") : t("Add a third-party sender to save their details for the next transfer.")}
+                        {searchQuery ? t("No senders match your search.") : t("Add a third-party sender and save their details for your next transfer.")}
                     </div>
                 </div>
             );
@@ -284,7 +284,7 @@ const ThirdPartySenders = () => {
                 <Button color="transparent" className={styles.btn} style={{ padding: ".5rem 1rem" }} onClick={handleAddClick}>
                     <span style={{ display: "inline-flex", alignItems: "center", gap: "8px" }}>
                         <Plus size={16} />
-                        {t("Add Sender")}
+                        {t("Add sender")}
                     </span>
                 </Button>
             )}
@@ -295,7 +295,7 @@ const ThirdPartySenders = () => {
         <>
             <div className={styles.container}>
                 <div className={styles.top}>
-                    <h4>{t("Third-Party Senders")}</h4>
+                    <h4>{t("Third-party sender")}</h4>
                     <p style={{ color: "#777", fontWeight: 600 }}>{t("Manage saved senders for third-party international transfers.")}</p>
                     <TopRight />
                 </div>
@@ -318,7 +318,7 @@ const ThirdPartySenders = () => {
 
             <div className={styles.mobile}>
                 <div className={styles.top}>
-                    <h4>{t("Third-Party Senders")}</h4>
+                    <h4>{t("Third-party sender")}</h4>
                 </div>
                 <div className={styles.bottom}>
                     {renderToolbar(true)}
