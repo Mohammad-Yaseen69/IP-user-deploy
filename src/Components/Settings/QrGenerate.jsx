@@ -5,7 +5,7 @@ import logo from "../../assets/images/logo/logo.webp"
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 
 
-const QrGenerate = ({ wallets = [], setMessage = () => { }, chatbot = false, platform, isInvoice, invoiceQrGenerateFn, invoiceUrl, invoiceId, downloadFileSetter, qrUrl }) => {
+const QrGenerate = ({ wallets = [], setMessage = () => { }, chatbot = false, platform, isInvoice, invoiceQrGenerateFn, invoiceUrl, invoiceId, downloadFileSetter, qrUrl, onInvoiceQrError = () => { } }) => {
     const ref = useRef(null);
     const qrRef = useRef(null);
     const [isReady, setIsReady] = useState(false);
@@ -160,9 +160,14 @@ const QrGenerate = ({ wallets = [], setMessage = () => { }, chatbot = false, pla
 
     useEffect(() => {
         const generateQr = async () => {
-            const formData = await preparingFormData(invoiceUrl)
-            formData.append("invoiceId", invoiceId)
-            invoiceQrGenerateFn(formData)
+            try {
+                const formData = await preparingFormData(invoiceUrl)
+                formData.append("invoiceId", invoiceId)
+                invoiceQrGenerateFn(formData)
+            } catch (error) {
+                console.error("Invoice QR generation failed:", error)
+                onInvoiceQrError(error)
+            }
         }
         if (isInvoice && invoiceQrGenerateFn) {
             generateQr()

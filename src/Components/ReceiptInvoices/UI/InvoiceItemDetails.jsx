@@ -26,6 +26,8 @@ const InvoiceItemDetails = ({ inv }) => {
   const can = usePermission();
 
   const country = inv?.countryIsoCode ? countriesInDiffLangs[i18n.language]?.find(c => c.alpha3 === inv.countryIsoCode) : null
+  const guestCountry = inv?.guestDetails?.country_iso_code ? countriesInDiffLangs[i18n.language]?.find(c => c.alpha3 === inv.guestDetails.country_iso_code) : null
+  const guestDetails = inv?.guestDetails
   const { mutateAsync, isPending } = useMutation({
     mutationFn: () => apiWrapper({
       endpoint: `/api/invoice/toggle-active/${inv._id}`,
@@ -258,12 +260,171 @@ const InvoiceItemDetails = ({ inv }) => {
                 : "This Invoice is payable.")}
             </h5>
           </InfoItem>
+
+          {guestDetails && (
+            <InfoItem label="Guest Details">
+              <div>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "10px",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <span style={{ fontSize: "14px" }} className={styles.label}>
+                    {t("Payment Method")}:
+                  </span>
+                  <h5 style={{ textAlign: "right" }}>
+                    {guestDetails.paymentMethod || "card"}
+                  </h5>
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "10px",
+                    justifyContent: "space-between",
+                    marginTop: "10px",
+                  }}
+                >
+                  <span style={{ fontSize: "14px" }} className={styles.label}>
+                    {t("Name")}:
+                  </span>
+                  <h5 style={{ textAlign: "right" }}>{guestDetails.name || "-"}</h5>
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "10px",
+                    justifyContent: "space-between",
+                    marginTop: "10px",
+                  }}
+                >
+                  <span style={{ fontSize: "14px" }} className={styles.label}>
+                    {t("Phone")}:
+                  </span>
+                  <h5 style={{ textAlign: "right" }}>{guestDetails.phone || "-"}</h5>
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "10px",
+                    justifyContent: "space-between",
+                    marginTop: "10px",
+                  }}
+                >
+                  <span style={{ fontSize: "14px" }} className={styles.label}>
+                    {t("Email")}:
+                  </span>
+                  <h5 style={{ textAlign: "right" }}>{guestDetails.email || "-"}</h5>
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "10px",
+                    justifyContent: "space-between",
+                    marginTop: "10px",
+                  }}
+                >
+                  <span style={{ fontSize: "14px" }} className={styles.label}>
+                    {t("Date of Birth")}:
+                  </span>
+                  <h5 style={{ textAlign: "right" }}>{guestDetails.dob || "-"}</h5>
+                </div>
+                {guestCountry && (
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "10px",
+                      justifyContent: "space-between",
+                      marginTop: "10px",
+                    }}
+                  >
+                    <span style={{ fontSize: "14px" }} className={styles.label}>
+                      {t("Country")}:
+                    </span>
+                    <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
+                      <img
+                        src={guestCountry.file_url}
+                        alt={guestCountry.alpha3}
+                        width="20"
+                        height="14"
+                        style={{ borderRadius: "2px" }}
+                      />
+                      <h5 style={{ textAlign: "right" }}>{t(guestCountry.name)}</h5>
+                    </div>
+                  </div>
+                )}
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "10px",
+                    justifyContent: "space-between",
+                    marginTop: "10px",
+                  }}
+                >
+                  <span style={{ fontSize: "14px" }} className={styles.label}>
+                    {t("Payment Reference")}:
+                  </span>
+                  <h5 style={{ textAlign: "right" }}>{guestDetails.payment_reference || "-"}</h5>
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "10px",
+                    justifyContent: "space-between",
+                    marginTop: "10px",
+                  }}
+                >
+                  <span style={{ fontSize: "14px" }} className={styles.label}>
+                    {t("Customer Street")}:
+                  </span>
+                  <h5 style={{ textAlign: "right" }}>{guestDetails.customer_street || "-"}</h5>
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "10px",
+                    justifyContent: "space-between",
+                    marginTop: "10px",
+                  }}
+                >
+                  <span style={{ fontSize: "14px" }} className={styles.label}>
+                    {t("Customer Town")}:
+                  </span>
+                  <h5 style={{ textAlign: "right" }}>{guestDetails.customer_town || "-"}</h5>
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "10px",
+                    justifyContent: "space-between",
+                    marginTop: "10px",
+                  }}
+                >
+                  <span style={{ fontSize: "14px" }} className={styles.label}>
+                    {t("Customer County")}:
+                  </span>
+                  <h5 style={{ textAlign: "right" }}>{guestDetails.customer_county || "-"}</h5>
+                </div>
+              </div>
+            </InfoItem>
+          )}
         </div>
       </div>
 
       <div className={styles.expandContent}>
         <h3 style={{ marginTop: "15px" }}>{t("Recipients")}:</h3>
-        {inv.recipients.length === 0 && <h5>{t("No Recipients!")}</h5>}
+        {(inv.recipients || []).length === 0 && <h5>{t("No Recipients!")}</h5>}
         {inv.recipients?.map((r) => {
           const id = r?._id || r?.userInfo?._id || r?.userInfo?.phone;
           const isOpen = id ? openRecipientIds.has(id) : false;
