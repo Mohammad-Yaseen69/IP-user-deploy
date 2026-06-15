@@ -4367,5 +4367,9 @@
   "City is required": "Місто обов'язкове",
   "Representative first name is required": "Ім'я представника обов'язкове",
   "Representative last name is required": "Прізвище представника обов'язкове",
-  "Select Third-Party Type": "Виберіть тип стороннього виробника"
+  "Select Third-Party Type": "Виберіть тип стороннього виробника",
+  "Identity Details": "Ідентифікаційні дані",
+  "Select Province": "Виберіть провінцію",
+  "Third-Party senders": "Сторонні відправники",
+  "Transaction History": "Історія транзакцій"
 }

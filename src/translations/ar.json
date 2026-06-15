@@ -4394,5 +4394,9 @@
   "City is required": "المدينة مطلوبة",
   "Representative first name is required": "الاسم الأول للممثل مطلوب",
   "Representative last name is required": "اسم العائلة الممثل مطلوب",
-  "Select Third-Party Type": "حدد نوع الطرف الثالث"
+  "Select Third-Party Type": "حدد نوع الطرف الثالث",
+  "Identity Details": "تفاصيل الهوية",
+  "Select Province": "اختر المقاطعة",
+  "Third-Party senders": "جهات إرسال خارجية",
+  "Transaction History": "سجل المعاملات"
 }

@@ -3996,5 +3996,9 @@
   "City is required": "Η πόλη είναι υποχρεωτική",
   "Representative first name is required": "Απαιτείται το μικρό όνομα του εκπροσώπου",
   "Representative last name is required": "Απαιτείται το επώνυμο του εκπροσώπου",
-  "Select Third-Party Type": "Επιλέξτε τύπο τρίτου μέρους"
+  "Select Third-Party Type": "Επιλέξτε τύπο τρίτου μέρους",
+  "Identity Details": "Στοιχεία Ταυτότητας",
+  "Select Province": "Επιλέξτε Επαρχία",
+  "Third-Party senders": "Αποστολείς τρίτων",
+  "Transaction History": "Ιστορικό Συναλλαγών"
 }

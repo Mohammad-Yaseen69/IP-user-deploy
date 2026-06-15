@@ -4393,5 +4393,9 @@
   "City is required": "Şehir gereklidir.",
   "Representative first name is required": "Temsilcinin adının belirtilmesi zorunludur.",
   "Representative last name is required": "Temsilcinin soyadı zorunludur.",
-  "Select Third-Party Type": "Üçüncü Taraf Türünü Seçin"
+  "Select Third-Party Type": "Üçüncü Taraf Türünü Seçin",
+  "Identity Details": "Kimlik Bilgileri",
+  "Select Province": "İl Seçin",
+  "Third-Party senders": "Üçüncü taraf göndericiler",
+  "Transaction History": "İşlem Geçmişi"
 }

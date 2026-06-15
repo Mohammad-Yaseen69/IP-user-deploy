@@ -4398,5 +4398,9 @@
   "City is required": "Kota diperlukan",
   "Representative first name is required": "Nama depan perwakilan wajib diisi.",
   "Representative last name is required": "Nama belakang perwakilan wajib diisi.",
-  "Select Third-Party Type": "Pilih Jenis Pihak Ketiga"
+  "Select Third-Party Type": "Pilih Jenis Pihak Ketiga",
+  "Identity Details": "Rincian Identitas",
+  "Select Province": "Pilih Provinsi",
+  "Third-Party senders": "Pengirim pihak ketiga",
+  "Transaction History": "Riwayat Transaksi"
 }

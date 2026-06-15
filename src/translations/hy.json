@@ -3996,5 +3996,9 @@
   "City is required": "Քաղաքը պարտադիր է",
   "Representative first name is required": "Ներկայացուցչի անունը պարտադիր է",
   "Representative last name is required": "Ներկայացուցչի ազգանունը պարտադիր է",
-  "Select Third-Party Type": "Ընտրեք երրորդ կողմի տեսակը"
+  "Select Third-Party Type": "Ընտրեք երրորդ կողմի տեսակը",
+  "Identity Details": "Անձնագրային տվյալներ",
+  "Select Province": "Ընտրեք մարզ",
+  "Third-Party senders": "Երրորդ կողմի ուղարկողներ",
+  "Transaction History": "Գործարքների պատմություն"
 }

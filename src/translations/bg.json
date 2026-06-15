@@ -3996,5 +3996,9 @@
   "City is required": "Градът е задължителен",
   "Representative first name is required": "Изисква се собствено име на представител",
   "Representative last name is required": "Фамилното име на представителя е задължително",
-  "Select Third-Party Type": "Изберете тип трета страна"
+  "Select Third-Party Type": "Изберете тип трета страна",
+  "Identity Details": "Данни за самоличност",
+  "Select Province": "Изберете провинция",
+  "Third-Party senders": "Податели от трети страни",
+  "Transaction History": "История на транзакциите"
 }

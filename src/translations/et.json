@@ -3996,5 +3996,9 @@
   "City is required": "Linn on kohustuslik",
   "Representative first name is required": "Esindaja eesnimi on kohustuslik",
   "Representative last name is required": "Esindaja perekonnanimi on kohustuslik",
-  "Select Third-Party Type": "Valige kolmanda osapoole tüüp"
+  "Select Third-Party Type": "Valige kolmanda osapoole tüüp",
+  "Identity Details": "Identiteediandmed",
+  "Select Province": "Valige provints",
+  "Third-Party senders": "Kolmandate osapoolte saatjad",
+  "Transaction History": "Tehingute ajalugu"
 }

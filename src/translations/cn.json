@@ -4039,5 +4039,9 @@
   "City is required": "需要填写城市名称",
   "Representative first name is required": "代表姓名（名）必填",
   "Representative last name is required": "代表姓氏为必填项",
-  "Select Third-Party Type": "选择第三方类型"
+  "Select Third-Party Type": "选择第三方类型",
+  "Identity Details": "身份详情",
+  "Select Province": "选择省份",
+  "Third-Party senders": "第三方发件人",
+  "Transaction History": "交易历史记录"
 }

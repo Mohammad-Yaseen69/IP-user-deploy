@@ -4000,5 +4000,9 @@
   "City is required": "Shahar ko'rsatilishi shart",
   "Representative first name is required": "Vakilning ismi talab qilinadi",
   "Representative last name is required": "Vakilning familiyasi talab qilinadi",
-  "Select Third-Party Type": "Uchinchi tomon turini tanlang"
+  "Select Third-Party Type": "Uchinchi tomon turini tanlang",
+  "Identity Details": "Shaxsni tasdiqlovchi ma'lumotlar",
+  "Select Province": "Viloyatni tanlang",
+  "Third-Party senders": "Uchinchi tomon jo'natuvchilari",
+  "Transaction History": "Tranzaksiya tarixi"
 }

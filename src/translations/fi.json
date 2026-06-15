@@ -3996,5 +3996,9 @@
   "City is required": "Kaupunki on pakollinen",
   "Representative first name is required": "Edustajan etunimi vaaditaan",
   "Representative last name is required": "Edustajan sukunimi on pakollinen",
-  "Select Third-Party Type": "Valitse kolmannen osapuolen tyyppi"
+  "Select Third-Party Type": "Valitse kolmannen osapuolen tyyppi",
+  "Identity Details": "Henkilöllisyystiedot",
+  "Select Province": "Valitse maakunta",
+  "Third-Party senders": "Kolmannen osapuolen lähettäjät",
+  "Transaction History": "Tapahtumahistoria"
 }

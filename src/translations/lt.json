@@ -3991,5 +3991,9 @@
   "City is required": "Būtina nurodyti miestą",
   "Representative first name is required": "Būtina nurodyti atstovo vardą",
   "Representative last name is required": "Būtina nurodyti atstovo pavardę",
-  "Select Third-Party Type": "Pasirinkite trečiosios šalies tipą"
+  "Select Third-Party Type": "Pasirinkite trečiosios šalies tipą",
+  "Identity Details": "Tapatybės duomenys",
+  "Select Province": "Pasirinkite provinciją",
+  "Third-Party senders": "Trečiųjų šalių siuntėjai",
+  "Transaction History": "Operacijų istorija"
 }

@@ -4372,5 +4372,9 @@
   "City is required": "City is required",
   "Representative first name is required": "Representative first name is required",
   "Representative last name is required": "Representative last name is required",
-  "Select Third-Party Type": "Select Third-Party Type"
+  "Select Third-Party Type": "Select Third-Party Type",
+  "Identity Details": "Identity Details",
+  "Select Province": "Select Province",
+  "Third-Party senders": "Third-Party senders",
+  "Transaction History": "Transaction History"
 }

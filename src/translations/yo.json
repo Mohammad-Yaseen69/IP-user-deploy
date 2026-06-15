@@ -4393,5 +4393,9 @@
   "City is required": "A nilo ilu",
   "Representative first name is required": "Orúkọ àkọ́kọ́ aṣojú ni a nílò",
   "Representative last name is required": "Orúkọ ìdílé aṣojú ni a nílò",
-  "Select Third-Party Type": "Yan Iru Ẹni-kẹta"
+  "Select Third-Party Type": "Yan Iru Ẹni-kẹta",
+  "Identity Details": "Àwọn Àlàyé Ìdámọ̀",
+  "Select Province": "Yan Agbègbè",
+  "Third-Party senders": "Àwọn olùránṣẹ́ ẹgbẹ́ kẹta",
+  "Transaction History": "Ìtàn Ìṣòwò"
 }

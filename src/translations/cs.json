@@ -3996,5 +3996,9 @@
   "City is required": "Město je povinné",
   "Representative first name is required": "Je vyžadováno křestní jméno zástupce",
   "Representative last name is required": "Příjmení zástupce je povinné",
-  "Select Third-Party Type": "Vyberte typ třetí strany"
+  "Select Third-Party Type": "Vyberte typ třetí strany",
+  "Identity Details": "Údaje o totožnosti",
+  "Select Province": "Vyberte provincii",
+  "Third-Party senders": "Odesílatelé třetích stran",
+  "Transaction History": "Historie transakcí"
 }

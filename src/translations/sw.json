@@ -4394,5 +4394,9 @@
   "City is required": "Jiji linahitajika",
   "Representative first name is required": "Jina la kwanza la mwakilishi linahitajika",
   "Representative last name is required": "Jina la ukoo la mwakilishi linahitajika",
-  "Select Third-Party Type": "Chagua Aina ya Mhusika Mwingine"
+  "Select Third-Party Type": "Chagua Aina ya Mhusika Mwingine",
+  "Identity Details": "Maelezo ya Utambulisho",
+  "Select Province": "Chagua Mkoa",
+  "Third-Party senders": "Watumaji wa Watu Wengine",
+  "Transaction History": "Historia ya Muamala"
 }

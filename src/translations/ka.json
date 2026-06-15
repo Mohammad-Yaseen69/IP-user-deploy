@@ -3996,5 +3996,9 @@
   "City is required": "ქალაქი სავალდებულოა",
   "Representative first name is required": "წარმომადგენლის სახელი სავალდებულოა",
   "Representative last name is required": "წარმომადგენლის გვარი სავალდებულოა",
-  "Select Third-Party Type": "მესამე მხარის ტიპის არჩევა"
+  "Select Third-Party Type": "მესამე მხარის ტიპის არჩევა",
+  "Identity Details": "პირადობის დეტალები",
+  "Select Province": "აირჩიეთ პროვინცია",
+  "Third-Party senders": "მესამე მხარის გამგზავნები",
+  "Transaction History": "ტრანზაქციების ისტორია"
 }

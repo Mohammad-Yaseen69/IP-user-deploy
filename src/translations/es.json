@@ -3996,5 +3996,9 @@
   "City is required": "Se requiere la ciudad",
   "Representative first name is required": "Se requiere el nombre del representante.",
   "Representative last name is required": "Se requiere el apellido del representante.",
-  "Select Third-Party Type": "Seleccione el tipo de tercero"
+  "Select Third-Party Type": "Seleccione el tipo de tercero",
+  "Identity Details": "Datos de identidad",
+  "Select Province": "Seleccione una provincia",
+  "Third-Party senders": "Remitentes de terceros",
+  "Transaction History": "Historial de transacciones"
 }

@@ -4393,5 +4393,9 @@
   "City is required": "Miasto jest wymagane",
   "Representative first name is required": "Wymagane jest imię przedstawiciela",
   "Representative last name is required": "Nazwisko przedstawiciela jest wymagane",
-  "Select Third-Party Type": "Wybierz typ strony trzeciej"
+  "Select Third-Party Type": "Wybierz typ strony trzeciej",
+  "Identity Details": "Szczegóły tożsamości",
+  "Select Province": "Wybierz prowincję",
+  "Third-Party senders": "Nadawcy zewnętrzni",
+  "Transaction History": "Historia transakcji"
 }

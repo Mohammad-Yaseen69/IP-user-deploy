@@ -3996,5 +3996,9 @@
   "City is required": "Grad je obavezan",
   "Representative first name is required": "Ime predstavnika je obavezno",
   "Representative last name is required": "Prezime predstavnika je obavezno",
-  "Select Third-Party Type": "Odaberite vrstu treće strane"
+  "Select Third-Party Type": "Odaberite vrstu treće strane",
+  "Identity Details": "Podaci o identitetu",
+  "Select Province": "Odaberite pokrajinu",
+  "Third-Party senders": "Pošiljatelji trećih strana",
+  "Transaction History": "Povijest transakcija"
 }

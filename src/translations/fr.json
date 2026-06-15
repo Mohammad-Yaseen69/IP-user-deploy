@@ -4367,5 +4367,9 @@
   "City is required": "La ville est requise",
   "Representative first name is required": "Le prénom du représentant est requis.",
   "Representative last name is required": "Le nom de famille du représentant est requis.",
-  "Select Third-Party Type": "Sélectionner le type de tiers"
+  "Select Third-Party Type": "Sélectionner le type de tiers",
+  "Identity Details": "Informations d'identité",
+  "Select Province": "Sélectionner la province",
+  "Third-Party senders": "Expéditeurs tiers",
+  "Transaction History": "Historique des transactions"
 }

@@ -3996,5 +3996,9 @@
   "City is required": "Orașul este obligatoriu",
   "Representative first name is required": "Prenumele reprezentantului este obligatoriu",
   "Representative last name is required": "Numele de familie al reprezentantului este obligatoriu",
-  "Select Third-Party Type": "Selectați tipul de terță parte"
+  "Select Third-Party Type": "Selectați tipul de terță parte",
+  "Identity Details": "Detalii de identitate",
+  "Select Province": "Selectați provincia",
+  "Third-Party senders": "Expeditori terți",
+  "Transaction History": "Istoricul tranzacțiilor"
 }

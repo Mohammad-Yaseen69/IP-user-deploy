@@ -3996,5 +3996,9 @@
   "City is required": "Pilsēta ir obligāta",
   "Representative first name is required": "Obligāti jānorāda pārstāvja vārds",
   "Representative last name is required": "Obligāti jānorāda pārstāvja uzvārds",
-  "Select Third-Party Type": "Atlasiet trešās puses veidu"
+  "Select Third-Party Type": "Atlasiet trešās puses veidu",
+  "Identity Details": "Identitātes dati",
+  "Select Province": "Izvēlieties provinci",
+  "Third-Party senders": "Trešo pušu sūtītāji",
+  "Transaction History": "Darījumu vēsture"
 }

@@ -4065,5 +4065,9 @@
   "City is required": "Ana buƙatar birni",
   "Representative first name is required": "Ana buƙatar sunan farko na wakili",
   "Representative last name is required": "Ana buƙatar sunan ƙarshe na wakili",
-  "Select Third-Party Type": "Zaɓi Nau'in Wasu"
+  "Select Third-Party Type": "Zaɓi Nau'in Wasu",
+  "Identity Details": "Cikakkun Bayanan Asali",
+  "Select Province": "Zaɓi Lardi",
+  "Third-Party senders": "Masu aikawa na ɓangare na uku",
+  "Transaction History": "Tarihin Ma'amala"
 }

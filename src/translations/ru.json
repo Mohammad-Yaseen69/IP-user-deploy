@@ -4367,5 +4367,9 @@
   "City is required": "Город необходим",
   "Representative first name is required": "Имя представителя обязательно",
   "Representative last name is required": "Требуется указать фамилию представителя.",
-  "Select Third-Party Type": "Выберите тип третьей стороны"
+  "Select Third-Party Type": "Выберите тип третьей стороны",
+  "Identity Details": "Данные, позволяющие идентифицировать личность",
+  "Select Province": "Выберите провинцию",
+  "Third-Party senders": "Отправители от третьих лиц",
+  "Transaction History": "История транзакций"
 }

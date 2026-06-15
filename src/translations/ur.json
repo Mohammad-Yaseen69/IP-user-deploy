@@ -4396,5 +4396,9 @@
   "City is required": "شہر کی ضرورت ہے۔",
   "Representative first name is required": "نمائندہ پہلا نام درکار ہے۔",
   "Representative last name is required": "نمائندہ آخری نام درکار ہے۔",
-  "Select Third-Party Type": "تیسری پارٹی کی قسم منتخب کریں۔"
+  "Select Third-Party Type": "تیسری پارٹی کی قسم منتخب کریں۔",
+  "Identity Details": "شناختی تفصیلات",
+  "Select Province": "صوبہ منتخب کریں۔",
+  "Third-Party senders": "تیسرے فریق بھیجنے والے",
+  "Transaction History": "لین دین کی تاریخ"
 }

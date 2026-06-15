@@ -3996,5 +3996,9 @@
   "City is required": "By er obligatorisk",
   "Representative first name is required": "Representantens fornavn er obligatorisk",
   "Representative last name is required": "Representativt etternavn er obligatorisk",
-  "Select Third-Party Type": "Velg tredjepartstype"
+  "Select Third-Party Type": "Velg tredjepartstype",
+  "Identity Details": "Identitetsdetaljer",
+  "Select Province": "Velg provins",
+  "Third-Party senders": "Tredjeparts avsendere",
+  "Transaction History": "Transaksjonshistorikk"
 }

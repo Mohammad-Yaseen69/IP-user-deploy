@@ -3991,5 +3991,9 @@
   "City is required": "Şəhər tələb olunur",
   "Representative first name is required": "Nümayəndənin adı tələb olunur",
   "Representative last name is required": "Nümayəndə soyadı tələb olunur",
-  "Select Third-Party Type": "Üçüncü Tərəf Növünü Seçin"
+  "Select Third-Party Type": "Üçüncü Tərəf Növünü Seçin",
+  "Identity Details": "Şəxsiyyət Məlumatları",
+  "Select Province": "Vilayət seçin",
+  "Third-Party senders": "Üçüncü Tərəf Göndərənlər",
+  "Transaction History": "Əməliyyat Tarixçəsi"
 }

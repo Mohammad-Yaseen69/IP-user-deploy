@@ -3996,5 +3996,9 @@
   "City is required": "Plaats is vereist",
   "Representative first name is required": "De voornaam van de vertegenwoordiger is verplicht.",
   "Representative last name is required": "De achternaam van de vertegenwoordiger is verplicht.",
-  "Select Third-Party Type": "Selecteer het type derde partij"
+  "Select Third-Party Type": "Selecteer het type derde partij",
+  "Identity Details": "Identiteitsgegevens",
+  "Select Province": "Selecteer een provincie",
+  "Third-Party senders": "Verzenders van derden",
+  "Transaction History": "Transactiegeschiedenis"
 }

@@ -3996,5 +3996,9 @@
   "City is required": "Város megadása kötelező",
   "Representative first name is required": "Képviselő keresztnevének megadása kötelező",
   "Representative last name is required": "Képviselő vezetéknevének megadása kötelező",
-  "Select Third-Party Type": "Harmadik fél típusának kiválasztása"
+  "Select Third-Party Type": "Harmadik fél típusának kiválasztása",
+  "Identity Details": "Személyazonosító adatok",
+  "Select Province": "Válasszon tartományt",
+  "Third-Party senders": "Harmadik féltől származó feladók",
+  "Transaction History": "Tranzakcióelőzmények"
 }
