@@ -42,7 +42,7 @@ const CardtoWallet = ({ isOpen, setOpen, card, setCurrentCardDetails, currentCar
     const location = useLocation()
     const queryParams = new URLSearchParams(location.search)
     const ctwMobile = queryParams.get("ctwMobile")
-    const {t} = useTranslation()
+    const { t } = useTranslation()
 
     const handleClose = () => {
         setOpen(prev => ({ ...prev, ctw: false }));
@@ -65,14 +65,14 @@ const CardtoWallet = ({ isOpen, setOpen, card, setCurrentCardDetails, currentCar
     }
 
     useEffect(() => {
-        if(userDetails){
-            if(userDetails?.tfa){
+        if (userDetails) {
+            if (userDetails?.tfa) {
                 setCodeType("authenticator")
-            }else{
+            } else {
                 setCodeType("sms")
             }
         }
-    },[userDetails])
+    }, [userDetails])
 
     const filteredWallets = useMemo(() => {
         return userWallets
@@ -310,7 +310,7 @@ const CardtoWallet = ({ isOpen, setOpen, card, setCurrentCardDetails, currentCar
                                 {t("Transaction Summary")}
                             </h3>
                         </div>
-                        {paymentInfoJSX({ currency: `${feeDets?.currency} `, fee: feeDets?.recipientAmount }, false, t("Funds added to Wallet"))}
+                        {paymentInfoJSX({ currency: `${feeDets?.currency} `, fee: feeDets?.recipientAmount }, false, t("Amount to be added in wallet"))}
                         <div style={{ marginTop: '1.5rem', display: "flex", alignSelf: 'stretch', justifyContent: "space-between", alignItems: "flex-start", padding: '18px', borderRadius: "6px", background: "rgba(109, 41, 220, 0.04)" }}>
                             <span style={{ fontWeight: 600, color: '#8A8A8A', fontSize: "12px" }}>
                                 {t("You used")}

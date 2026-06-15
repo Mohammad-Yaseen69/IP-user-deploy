@@ -213,12 +213,7 @@ const CardtoCard = ({ setOpen, isOpen, card, currentCardDetails, setCurrentCardD
 
   const handleClose = () => {
     // navigate("/my-mastercard")
-    if ((data.step === 5 || data.step === 6) && data.feeDetails?.total_amount) {
-      setCurrentCardDetails(prev => ({
-        ...prev,
-        balance: (prev.balance - data.feeDetails?.total_amount?.replace(/,/g, "")).toFixed(2)
-      }))
-    }
+    // Do not mutate balance here — balance is updated on successful transfer
     // dispatch({ type: "RESET" })
     setOpen(prev => ({ ...prev, ctc: false }));
   }
@@ -334,12 +329,24 @@ const CardtoCard = ({ setOpen, isOpen, card, currentCardDetails, setCurrentCardD
         headers: authHeader
       })
 
-      // const dec = decryptData(res.data.data)
-
       updateHandler("showOtpModal", false)
       updateHandler("token", "")
       updateHandler("otpError", "")
       updateHandler("step", 6)
+
+      try {
+        const totalStr = data.feeDetails?.total_amount?.replace(/,/g, "") || "0";
+        const total = parseFloat(totalStr) || 0;
+        setCurrentCardDetails(prev => {
+          const prevBal = parseFloat(prev?.balance) || 0;
+          return {
+            ...prev,
+            balance: (prevBal - total).toFixed(2)
+          }
+        })
+      } catch (err) {
+        console.log('Failed to update local balance after ctc success', err)
+      }
 
     } catch (error) {
       const dec = decryptData(error?.response?.data?.data)
@@ -355,9 +362,12 @@ const CardtoCard = ({ setOpen, isOpen, card, currentCardDetails, setCurrentCardD
   }
   const buttons = () => (
     <div className={styles.btns}>
-      <button onClick={handleBack} className={styles.back}>
-        {t("Back")}
-      </button>
+      {
+        data.step !== 1 &&
+        <button onClick={handleBack} className={styles.back}>
+          {t("Back")}
+        </button>
+      }
       <button style={{ opacity: data.disabled && .5 }} disabled={data.disabled} onClick={handleNext} className={styles.continue}>
         {data.step === 4 ? t("Proceed To Payment") : data.step === 5 ? t("I Agree") : t("Verify & Continue")}
       </button>

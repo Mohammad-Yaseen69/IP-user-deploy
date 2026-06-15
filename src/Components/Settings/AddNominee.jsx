@@ -61,6 +61,7 @@ const AddNominee = ({ setNominee, setAddNominee }) => {
 
 
     const handleImageSelect = (e) => {
+        
         const file = e.target.files[0]
         setFile(file)
         const reader = new FileReader();
@@ -188,7 +189,9 @@ const AddNominee = ({ setNominee, setAddNominee }) => {
                                 <label htmlFor='file' className={styles.upload}>
                                     <Camera size={30} />
                                     <span>{t("Upload Photo")}</span>
-                                    <input type="file" name="file" id="file" value={image} onChange={handleImageSelect} hidden />
+                                    <input type="file" name="file" id="file"
+                                        accept="image/*"
+                                        value={image} onChange={handleImageSelect} hidden />
                                 </label>
                         }
                     </div>

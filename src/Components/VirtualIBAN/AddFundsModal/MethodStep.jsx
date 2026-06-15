@@ -63,14 +63,12 @@ const MethodStep = ({
 }) => {
     const { t } = useTranslation()
 
-    // Show wallet selection when instapay_wallet is selected
     const showWalletSelection = fundingMethod === "instapay_wallet"
 
     return (
         <div>
             <div className={styles.sectionLabel}>{t("Amount to add")}</div>
 
-            {/* Funding method list */}
             <div className={styles.methodList}>
                 {FUNDING_METHODS.map((method) => {
                     const IconComponent = METHOD_ICONS[method.icon]
@@ -93,7 +91,6 @@ const MethodStep = ({
                 })}
             </div>
 
-            {/* Wallet sub-selection */}
             {showWalletSelection && (
                 <div className={styles.walletList}>
                     {MOCK_WALLETS.map((wallet) => {
