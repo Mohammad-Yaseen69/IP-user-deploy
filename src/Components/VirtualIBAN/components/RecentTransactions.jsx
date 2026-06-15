@@ -14,14 +14,12 @@ const statusColors = {
   FAILED: { bg: "rgba(239,68,68,0.1)", color: "#dc2626" },
 };
 
-/** "iban_to_wallet"  →  "Iban To Wallet" */
 const formatType = (type = "") =>
   type
     .split("_")
     .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
     .join(" ");
 
-/** Normalise the typo "COMMPLETED" → "COMPLETED" */
 const normalizeStatus = (raw) => {
   if (!raw) return "PENDING";
   return raw === "COMMPLETED" ? "COMPLETED" : raw;
@@ -151,7 +149,7 @@ const RecentTransactions = ({
   return (
     <>
       <div className={styles.header}>
-        <h3 className={styles.title}>{t("Recent Transactions")}</h3>
+        <h3 className={styles.title}>{t("Recent Transactions ")}</h3>
         <button className={styles.viewAll} onClick={() => setActiveTab("transaction-history")}>
           {t("View All")}
         </button>

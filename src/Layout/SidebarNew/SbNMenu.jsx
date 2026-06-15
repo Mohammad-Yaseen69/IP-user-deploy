@@ -143,7 +143,7 @@ export const MENU = [
             },
             {
 
-                title: "Third-Party Senders",
+                title: "Third-Party senders",
                 icon: <img loading="lazy" src={paym} style={{ marginRight: "12px" }} />,
                 activeIcon: <img loading="lazy" src={paym_a} style={{ marginRight: "12px" }} />,
                 type: "link",

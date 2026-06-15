@@ -540,9 +540,10 @@ const VerificationPayment = ({ isOpen, toggle, verify, desc, occupation, loading
                                         display: "flex",
                                         alignItems: "center",
                                     }}
-                                    onClick={() =>
-                                        reset(),
-                                        setStep(prev => prev - 1)}
+                                    onClick={() => {
+                                        reset();
+                                        setStep(prev => prev - 1);
+                                    }}
                                 >{t("Back")}</Button>
                             }
                             <Button
@@ -557,21 +558,19 @@ const VerificationPayment = ({ isOpen, toggle, verify, desc, occupation, loading
                                     alignItems: "center",
                                 }}
                                 disabled={
-                                    (
-                                        step === 1
-                                            ?
-                                            !payoutChannel?.value
-                                            :
-                                            step === 2
-                                                &&
-                                                payoutChannel?.value === "wallet" ? !wallet
-                                                :
-                                                payoutChannel?.value === "card" ? currentCard?._id ? false : (!isValid || !cardHolderName || cardError) : false
-                                    )
-                                    ||
-                                    saving
-                                    ||
-                                    isGettingFee
+                                    (() => {
+                                        if (step === 1) return !payoutChannel?.value;
+                                        if (step === 2) {
+                                            if (payoutChannel?.value === "wallet") return !wallet;
+                                            if (payoutChannel?.value === "card") {
+                                                if (currentCard?._id) return false;
+                                                return !isValid || !cardHolderName || !!cardError;
+                                            }
+                                        }
+                                        return false;
+                                    })()
+                                    || saving
+                                    || isGettingFee
                                 }
                                 onClick={handleClick}
                             >{t("Next")}</Button>
