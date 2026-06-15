@@ -159,7 +159,7 @@ const DirectCardInvoicePayment = ({ invoice, username }) => {
         return getGuestRequiredFields(guestDetails, state.countryData)
             .filter(field => !field.value?.toString()?.trim())
     }, [guestDetails, state.countryData])
-
+ 
     const getFeesCard = async () => {
         dataHandler("loading", true)
         dataHandler("exchange_rate_error", "")
