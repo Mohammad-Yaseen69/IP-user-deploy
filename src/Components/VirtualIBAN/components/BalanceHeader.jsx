@@ -54,7 +54,7 @@ const BalanceHeader = ({ iban, isLoading, setActiveTab, onShowDetails }) => {
       <div className={styles.topBar}>
         <div className={styles.leftInfo}>
           <span className={styles.accountTag}><img src={flag} alt="" /> {t("IBAN")}</span>
-          <span className={styles.activeBadge}>{status}</span>
+          <span className={styles.activeBadge}>{t(status)}</span>
         </div>
 
         <div className={styles.rightActions}>
