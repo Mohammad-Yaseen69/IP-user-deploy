@@ -200,21 +200,23 @@ const AgentsModal = ({ isRole, isOpen, onClose, t, width, roles, isEdit, editDat
             return
         }
 
-        const payload = isEdit ? {
-            first_name: form.first_name,
-            last_name: form.last_name,
-            role: form.role,
-            permissions: selectedPermissions,
-            deniedPermissions,
-        } : {
-            phone,
-            email: form.email,
-            first_name: form.first_name,
-            last_name: form.last_name,
-            role: form.role,
-            permissions: selectedPermissions,
-            deniedPermissions,
-        }
+        const payload = isEdit
+            ? {
+                first_name: form.first_name,
+                last_name: form.last_name,
+                permissions: selectedPermissions,
+                deniedPermissions,
+                ...(form.role ? { role: form.role } : {}),
+            }
+            : {
+                phone,
+                email: form.email,
+                first_name: form.first_name,
+                last_name: form.last_name,
+                permissions: selectedPermissions,
+                deniedPermissions,
+                ...(form.role ? { role: form.role } : {}),
+            };
 
         if (isEdit) {
             updateAgent(payload)
@@ -242,7 +244,7 @@ const AgentsModal = ({ isRole, isOpen, onClose, t, width, roles, isEdit, editDat
         !form.email
 
     const isStepTwoInvalid =
-         selectedPermissions.length === 0
+        selectedPermissions.length === 0
 
     const isNextDisabled =
         (step === 1 && isStepOneInvalid) ||
