@@ -125,6 +125,7 @@ const DirectCardInvoicePayment = ({ invoice, username }) => {
         [countryIsoCode]
     )
     const accountCountry = CountriesData.find(c => c.alpha3 === invoice?.account?.country?.country_iso_code)
+    const isDirectCardVerificationRequired = invoice?.account?.isDirectCardVerificationRequired
     const merchantName = invoice?.account?.company_name || `${invoice?.account?.first_name || ""} ${invoice?.account?.last_name || ""}`.trim()
     const payerCountry = selectedCountry?.name || countryIsoCode || "-"
     const payerInitials = (guestDetails.name || "Payer")
@@ -389,33 +390,37 @@ const DirectCardInvoicePayment = ({ invoice, username }) => {
                         </div>
                     </header>
 
-                    <div className={styles.payerTitle}>{t("Payer details")}</div>
-                    <div className={styles.payerIdentity}>
-                        <div className={styles.payerAvatar}>{payerInitials}</div>
-                        <div>
-                            <strong>{guestDetails.name || "-"}</strong>
-                            <span>{guestDetails.email || "-"}</span>
-                        </div>
-                        <span className={styles.verifiedBadge}>{t("Verified")}</span>
-                    </div>
-                    <div className={styles.payerGrid}>
-                        <div>
-                            <span>{t("Phone")}</span>
-                            <strong>{guestDetails.phone || "-"}</strong>
-                        </div>
-                        <div>
-                            <span>{t("Country")}</span>
-                            <strong>{t(payerCountry)}</strong>
-                        </div>
-                        <div>
-                            <span>{t("Date of birth")}</span>
-                            <strong>{formatDisplayDate(guestDetails.dob)}</strong>
-                        </div>
-                        <div>
-                            <span>{t("Reference")}</span>
-                            <strong>{guestDetails.payment_reference || "-"}</strong>
-                        </div>
-                    </div>
+                    {isDirectCardVerificationRequired !== false &&
+                        <>
+                            <div className={styles.payerTitle}>{t("Payer details")}</div>
+                            <div className={styles.payerIdentity}>
+                                <div className={styles.payerAvatar}>{payerInitials}</div>
+                                <div>
+                                    <strong>{guestDetails.name || "-"}</strong>
+                                    <span>{guestDetails.email || "-"}</span>
+                                </div>
+                                <span className={styles.verifiedBadge}>{t("Verified")}</span>
+                            </div>
+                            <div className={styles.payerGrid}>
+                                <div>
+                                    <span>{t("Phone")}</span>
+                                    <strong>{guestDetails.phone || "-"}</strong>
+                                </div>
+                                <div>
+                                    <span>{t("Country")}</span>
+                                    <strong>{t(payerCountry)}</strong>
+                                </div>
+                                <div>
+                                    <span>{t("Date of birth")}</span>
+                                    <strong>{formatDisplayDate(guestDetails.dob)}</strong>
+                                </div>
+                                <div>
+                                    <span>{t("Reference")}</span>
+                                    <strong>{guestDetails.payment_reference || "-"}</strong>
+                                </div>
+                            </div>
+                        </>
+                    }
                 </div>
 
                 <main className={styles.cardPanel}>
