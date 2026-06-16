@@ -12,8 +12,8 @@ import { X } from "react-feather";
 import { useNavigate } from "react-router";
 import { Tooltip } from "@mui/material";
 import { toast } from "react-toastify";
-import { useSyncVirtualIbanBalance, useUpdateVirtualIbanStatus } from "../hooks/useVirtualIban.jsx";
 import { usePermission } from "../../../hooks/GeneralUse/usePermission";
+import { useSyncVirtualIbanBalance, useUpdateVirtualIbanStatus } from "../../../hooks/useVirtualIban.jsx";
 
 const MODAL_MAP = {
     1: "deposit",

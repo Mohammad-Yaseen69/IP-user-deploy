@@ -52,15 +52,12 @@ import styles from "./virtualIbanModal.module.scss"
 import VerificationStep from "./VerificationStep"
 import useSendOtp from "../../../hooks/GeneralUse/useSendOtp"
 import OTPConfirmation from "../../UserSettingsNew/OTPConfirmation"
-import {
-    useCreateVirtualIban,
-    useVirtualIbans,
-    virtualIbanQueryKeys,
-} from "../hooks/useVirtualIban"
+
 import { getVirtualIbanCountry, normalizeVirtualIban } from "../utils/virtualIban"
 import SocketsService from "../../../Services/Socket"
 import usePlainFx from "../../../hooks/Payments/usePlainFx"
 import InstaPayLoader from "../../Loader"
+import { useCreateVirtualIban, useVirtualIbans, virtualIbanQueryKeys } from "../../../hooks/useVirtualIban"
 
 const SIDEBAR_ICONS = {
     [STEPS.JURISDICTION]: JurisIcon,
