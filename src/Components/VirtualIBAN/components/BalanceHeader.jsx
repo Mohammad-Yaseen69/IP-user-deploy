@@ -1,12 +1,12 @@
 import { Copy, ArrowUpRight, Eye } from "react-feather"
 import styles from "../styles/Balanceheader.module.css"
-import { useSyncVirtualIbanBalance } from "../hooks/useVirtualIban"
 import { Tooltip } from "@mui/material"
 import UK_Image from "../files/images/UK.svg"
 import Malta_Image from "../files/images/Malta.svg"
 import { getVirtualIbanCountry, normalizeVirtualIban } from "../utils/virtualIban"
 import { useTranslation } from "react-i18next"
 import { usePermission } from "../../../hooks/GeneralUse/usePermission"
+import { useSyncVirtualIbanBalance } from "../../../hooks/useVirtualIban"
 
 
 const formatAmount = (amount, currency) => {

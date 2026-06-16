@@ -22,8 +22,8 @@ import DoneStep from "./DoneStep"
 import styles from "./convertFunds.module.scss"
 import SidebarProgress from "../VirtualIbanModal/SidebarProgress"
 import PaymentStep from "../../MyMasterCard/PaymentModal/PaymentStep"
-import { useExecuteVirtualIbanTransfer, useVirtualIbanTransferFee } from "../hooks/useVirtualIban"
 import { getAmountNumber } from "../utils/amount"
+import { useExecuteVirtualIbanTransfer, useVirtualIbanTransferFee } from "../../../hooks/useVirtualIban"
 
 const CoinsIcon = () => (
     <svg width="18" height="18" viewBox="0 0 18 18" fill="none">

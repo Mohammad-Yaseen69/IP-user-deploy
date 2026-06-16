@@ -1,10 +1,10 @@
 import { useMemo, useState } from 'react'
 import { MoreHorizontal, Copy, Check, AlertCircle } from 'react-feather'
 import styles from '../styles/IBANDetails.module.css'
-import { useVirtualIbanDetails } from '../hooks/useVirtualIban'
 import { normalizeVirtualIban } from '../utils/virtualIban'
 import { useTranslation } from 'react-i18next'
 import { usePermission } from '../../../hooks/GeneralUse/usePermission'
+import { useVirtualIbanDetails } from '../../../hooks/useVirtualIban'
 
 const INTL_DATA = {
     usd: {
