@@ -248,7 +248,7 @@
     left: 100%;
     border: 1px dashed #3e3e3e;
     transform: translateY(-50%);
-    width: var(--width, 150px);
+    width: var(--width, 175px);
 }
 
 .status_item:last-child::before {
@@ -314,7 +314,7 @@
         flex-direction: column;
     }
 
-    .actions {
+    .actions button:first-child {
         display: none;
     }
 

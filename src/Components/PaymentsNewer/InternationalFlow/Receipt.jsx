@@ -17,12 +17,13 @@ const Receipt = ({ data, showTrxBtn = true, transactionStatus, isFullWidth = fal
     const [showShare, setShowShare] = useState(false)
     const navigate = useNavigate()
 
-    console.log(data?.transaction_details)
+    console.log("transections ID", data)
     const [countdown, setCountdown] = useState(10)
     const location = useLocation()
     const queryParams = new URLSearchParams(location.search)
     const title = queryParams.get("title")
-    const base_url = window.location.origin || 'https://my.insta-pay.ch';
+    const shareUrl = `${window.location.origin}${window.location.pathname}${window.location.search}`;
+    const base_url = shareUrl
 
     useEffect(() => {
         if (data.payment_type?.value === "mobile_wallet" && !isGuest) return;
@@ -125,6 +126,13 @@ const Receipt = ({ data, showTrxBtn = true, transactionStatus, isFullWidth = fal
                         <div className={styles.trx_details}>
                             <div className={styles.td_top}>
                                 <h4>{t("Status")}</h4>
+                                {/* <div style={{ marginBottom: "1rem" }}>
+                                    <strong>{t("Transaction ID")}:</strong>{" "}
+                                    {data?.transaction_details?.transaction_id ||
+                                        data?.transaction_details?.transactionId ||
+                                        data?.transaction_details?.data?.transaction_id ||
+                                        data?.transaction_details?.data?.transactionId}
+                                </div> */}
                                 <div className={styles.actions}>
                                     <button onClick={() => window.open("https://guide.insta-pay.ch", "_blank")}>
                                         <img src={help} alt="" />

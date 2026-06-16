@@ -19,6 +19,7 @@ import { createShambeToken } from "../../../Helper/CreateToken"
 import { LimitsErrorMessage } from "../../PaymentsNewer/OTPConfirmation"
 import { isCardValid } from "../../../utils/Functions/validations"
 import { useIdempotency } from "../../../hooks/Payments/useIdempotency"
+import { flagCheck } from "../../../utils/Functions"
 
 const initialState = {
     step: 3,
@@ -111,6 +112,7 @@ const DirectCardInvoicePayment = ({ invoice, username }) => {
     const { allowedCountries, getAllActiveCountries } = useContext(UserContext)
     const [state, dispatch] = useReducer(reducer, initialState)
     const { getKey } = useIdempotency()
+    const userDetails = invoice?.account
 
     const dataHandler = (field, value) => {
         dispatch({ type: "UPDATE_FIELD", field, value })
@@ -159,7 +161,7 @@ const DirectCardInvoicePayment = ({ invoice, username }) => {
         return getGuestRequiredFields(guestDetails, state.countryData)
             .filter(field => !field.value?.toString()?.trim())
     }, [guestDetails, state.countryData])
- 
+
     const getFeesCard = async () => {
         dataHandler("loading", true)
         dataHandler("exchange_rate_error", "")
@@ -268,7 +270,14 @@ const DirectCardInvoicePayment = ({ invoice, username }) => {
             </div>
         )
     }
-
+    // if (flagCheck("allowViewProfile", userDetails, invoice ? "invoice" : "paymentAddress")) {
+    //     buttons.push({
+    //         label: "View Profile",
+    //         onClick: () => navigate(`/profile/${user_name}`),
+    //         disable: false,
+    //         purple: true,
+    //     });
+    // }
     return (
         <div className={styles.directCard}>
             {state.cardTransactionDetails?.transaction_ref && (
@@ -372,13 +381,17 @@ const DirectCardInvoicePayment = ({ invoice, username }) => {
                             </div>
                             <div>
                                 <div className={styles.merchantName}>
-                                    <h3>{merchantName}</h3>
+                                    {flagCheck("allowProfileName", userDetails, "invoice") && (
+                                        <h3>{merchantName}</h3>
+                                    )}
                                     {(invoice?.account?.user?.kyc_status === "approved" || invoice?.account?.kyb_status === "approved") && (
                                         <CheckCircle size={18} />
                                     )}
                                 </div>
                                 <div className={styles.merchantMeta}>
-                                    <span>@{username}</span>
+                                    {flagCheck("allowUsername", userDetails, "invoice") && (
+                                        <span>@{username}</span>
+                                    )}
                                     {accountCountry?.file_url && <img src={accountCountry.file_url} alt={accountCountry.alpha3} />}
                                     <span className={styles.badge}>{invoice?.account?.account_type === "individual" ? t("Personal") : t("Business")}</span>
                                 </div>

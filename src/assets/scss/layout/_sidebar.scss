@@ -1027,6 +1027,7 @@
 
   .page-body-wrapper {
     background-color: $body-color;
+    display: flex;
 
     .logo-icon-wrapper {
       .icon-box-sidebar {
@@ -1698,12 +1699,23 @@
     }
 
     .page-body-wrapper {
+      .newcont {
+        position: fixed;
+        top: 18px;
+        z-index: 9;
+        // height: 100%;
+        left: 3px;
+        height: auto;
+   
+      }
+
       div {
         &.sidebar-wrapper {
           position: fixed;
           top: 0;
           z-index: 9;
           // height: 100%;
+          left: 35px;
           line-height: inherit;
           background-color: $sidebar-color;
           width: 280px;
