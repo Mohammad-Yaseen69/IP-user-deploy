@@ -148,7 +148,7 @@ const InvoicePayment = () => {
   const url = data ? `/payments?payment_action=send_money&send_type=wallet&wallet_id=${data.receivingWallet?.wallet_id}&currency=${data.currency}&amount=${data.amount}&invoiceId=${invoiceId}&isShipping=${data.shippingAddress}&payment_type=invoice` : "/"
   const invoiceType = data?.invoiceType?.toLowerCase()
   const guestPaymentMethod = data?.guestDetails?.paymentMethod?.toLowerCase()
-  const isDirectCardInvoice = invoiceType === "direct-card" || invoiceType === "direct_card" || guestPaymentMethod === "card"
+  const isDirectCardInvoice = invoiceType === "direct-card" || invoiceType === "direct_card" 
 
   return (
     <Wrapper directCard={isDirectCardInvoice}>
