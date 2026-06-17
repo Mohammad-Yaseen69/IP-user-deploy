@@ -1,8 +1,7 @@
 .container {
-    padding: 3rem 3.5rem 0;
+    padding: 1.5rem 2rem 1rem;
     min-height: 100vh;
     font-family: "Manrope";
-
     .top {
         margin-bottom: 4rem;
         position: relative;
@@ -1186,12 +1185,13 @@
         height: 0;
     }
 
-    img{
+    img {
         position: relative;
         z-index: 2;
         left: 5px;
         bottom: 1.6px;
     }
+
     .slider {
         position: absolute;
         cursor: pointer;
