@@ -358,7 +358,10 @@ const Layout = ({ children, classNames, ...rest }) => {
                 {/* <Header /> */}
                 <div className="page-body-wrapper">
                   {/* <SideBar /> */}
-                
+                  <div className="newcont">
+                    <NewMenu />
+
+                  </div>
                   <SidebarNew
                     setShowModal={setShowModal}
                     showModal={showModal}
