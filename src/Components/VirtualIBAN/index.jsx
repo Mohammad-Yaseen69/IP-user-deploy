@@ -12,14 +12,14 @@ import IBAN from './IBAN/IBAN'
 import styles from "./styles/index.module.css"
 import IBANDetails from './IBAN/IBANDetails'
 import Manage from './Manage/Manage'
-import { useVirtualIbanProcessingStatus, useVirtualIbans } from './hooks/useVirtualIban'
 import { useQuery } from '@tanstack/react-query'
 import { apiWrapper } from '../../utils/Functions/apiWrapper'
 import Empty from './components/Empty'
-import { asVirtualIbanArray } from './utils/virtualIban'
 import VirtualIbanModal from './VirtualIbanModal'
 import InstaPayLoader from '../Loader'
 import { usePermission } from '../../hooks/GeneralUse/usePermission'
+import { asVirtualIbanArray } from './utils/virtualIban'
+import { useVirtualIbanProcessingStatus, useVirtualIbans } from '../../hooks/useVirtualIban'
 
 const VirtualBank = () => {
     const { t } = useTranslation();

@@ -1,10 +1,10 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import { apiWrapper } from "../../../utils/Functions/apiWrapper"
+import { apiWrapper } from "../utils/Functions/apiWrapper"
 import {
     asVirtualIban,
     asVirtualIbanArray,
     unwrapVirtualIbanResponse,
-} from "../utils/virtualIban"
+} from "../Components/VirtualIBAN/utils/virtualIban"
 
 export const virtualIbanQueryKeys = {
     all: ["virtual-iban"],
@@ -158,3 +158,21 @@ export const useExecuteVirtualIbanTransfer = () => {
         },
     })
 }
+
+
+const useVirtualIbanGraphData = (filter = "this_year") =>
+    useQuery({
+        queryKey: [...virtualIbanQueryKeys.all, "graph-data", filter],
+        queryFn: async () => {
+            const res = await apiWrapper({
+                endpoint: `/api/virtual-iban/graph-data?filter=${filter}`,
+                method: "GET",
+                isDecrypted: true,
+            })
+
+            return res?.data?.data || res?.data || null
+        },
+        gcTime: 0,
+        staleTime: 0,
+    })
+export default useVirtualIbanGraphData
