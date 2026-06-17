@@ -138,7 +138,9 @@
       .sidebar-links {
         .simplebar-mask {
           .simplebar-content {
-            padding: 24px 18px !important;
+            padding: 17px 0px !important;
+            width: 86%;
+
           }
         }
       }
@@ -1722,7 +1724,7 @@
           }
 
           &.close_icon {
-            width: 90px;
+            width: 130px;
             transition: all 0.2s ease-in;
 
             .badge {
