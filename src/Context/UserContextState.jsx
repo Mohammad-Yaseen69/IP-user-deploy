@@ -461,10 +461,8 @@ const UserState = ({ children }) => {
             headers: authHeader
         })
             .then(res => {
-                const decrypted = decryptData(res.data.data)
-                // console.log(decrypted, "decrypted")
-                const referralId = decrypted.url.split(".vercel.")[1];
-                const formattedUrl = `${base_url}/signup/${referralId}`;
+                const decrypted = decryptData(res.data.data)               
+                const formattedUrl = `${base_url}/signup/`;
                 setReferralLink(formattedUrl)
             })
     }
