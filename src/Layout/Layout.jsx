@@ -27,7 +27,6 @@ import AnotherLoginModal from "../Components/AnotherLoginModal";
 import { useTranslation } from "react-i18next";
 import { useQueryClient } from "@tanstack/react-query";
 import AdditionalDocumentModal from "./AdditionalDocumentModal";
-import NewMenu from "../Common/NewMenu";
 
 
 
@@ -358,7 +357,6 @@ const Layout = ({ children, classNames, ...rest }) => {
                 {/* <Header /> */}
                 <div className="page-body-wrapper">
                   {/* <SideBar /> */}
-                
                   <SidebarNew
                     setShowModal={setShowModal}
                     showModal={showModal}
