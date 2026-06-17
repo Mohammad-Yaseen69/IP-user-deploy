@@ -285,11 +285,11 @@
 
                     li {
                       a {
-                        color: $theme-body-font-color  !important;
+                        color: $theme-body-font-color !important;
 
                         &:hover {
                           &::before {
-                            background-color: $theme-body-font-color  !important;
+                            background-color: $theme-body-font-color !important;
                           }
                         }
                       }
@@ -1209,7 +1209,7 @@
               .sidebar-links {
                 .simplebar-mask {
                   .simplebar-content {
-                    padding: 20px 18px !important;
+                    padding: 20px 0px !important;
                   }
                 }
 
