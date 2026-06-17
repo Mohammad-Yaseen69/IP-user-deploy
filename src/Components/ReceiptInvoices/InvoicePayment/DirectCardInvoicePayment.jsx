@@ -372,13 +372,15 @@ const DirectCardInvoicePayment = ({ invoice, username }) => {
                 <div className={styles.payerPanel}>
                     <header className={styles.directCardHeader}>
                         <div className={styles.merchant}>
-                            <div className={styles.avatar}>
-                                {invoice?.account?.profileImage?.url ? (
-                                    <img src={invoice.account.profileImage.url} alt="" />
-                                ) : (
-                                    <span>{merchantName?.[0] || "I"}</span>
-                                )}
-                            </div>
+                            {flagCheck("allowUsername", userDetails, "invoice") && (
+
+                                <div className={styles.avatar}>
+                                    {invoice?.account?.profileImage?.url ? (
+                                        <img src={invoice.account.profileImage.url} alt="" />
+                                    ) : (
+                                        <span>{merchantName?.[0] || "I"}</span>
+                                    )}
+                                </div>)}
                             <div>
                                 <div className={styles.merchantName}>
                                     {flagCheck("allowProfileName", userDetails, "invoice") && (
