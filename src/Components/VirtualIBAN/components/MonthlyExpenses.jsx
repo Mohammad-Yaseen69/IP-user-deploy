@@ -87,7 +87,14 @@ const getChartOptions = (type, categories) => {
     },
   };
 };
-
+const ChartSkeleton = () => {
+  return (
+    <div style={{ height: 160, width: "100%" }}>
+      <div className={styles.skeletonTitle}></div>
+      <div className={styles.skeletonChart}></div>
+    </div>
+  );
+};
 const ChartCard = ({ title, amount, type, chartData, filter, onFilterChange, isLoading }) => {
   const { t } = useTranslation();
 
@@ -126,7 +133,7 @@ const ChartCard = ({ title, amount, type, chartData, filter, onFilterChange, isL
       <div className={styles.chartWrap}>
         {isLoading ? (
           <div style={{ height: 160, display: "flex", alignItems: "center", justifyContent: "center" }}>
-            {t("Loading...")}
+            <ChartSkeleton />
           </div>
         ) : (
           <ReactApexChart

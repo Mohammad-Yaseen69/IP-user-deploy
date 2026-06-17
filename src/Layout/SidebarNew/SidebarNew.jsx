@@ -12,6 +12,7 @@ import { MENU } from "./SbNMenu";
 import SidebarSubMenu from "./SbNSubMenu";
 import "./sm.css";
 import { usePermission } from "../../hooks/GeneralUse/usePermission";
+import NewMenu from "../../Common/NewMenu";
 
 const SidebarNew = ({ setShowModal, showModal }) => {
     const { t } = useTranslation()
@@ -103,8 +104,19 @@ const SidebarNew = ({ setShowModal, showModal }) => {
         return true
     })
     return (
-        <div className={`sidebar-wrapper ${togglSidebar ? "close_icon" : ""} `} id="sidebar-wrapper" ref={sidebarRef} style={{ background: "white", margin: "1rem", borderRadius: "16px", height: "calc(100vh - 2rem)", boxShadow: "15.1463px 4.32752px 242.341px rgba(0, 0, 0, 0.07)", display: (location.pathname === "/create-pin" || location.pathname === "/update-pin") && "none" }} onMouseEnter={() => setInheritSize(true)} onMouseLeave={() => setInheritSize(false)}>
-            <div>
+
+        <div className={`sidebar-wrapper ${togglSidebar ? "close_icon" : ""} `} id="sidebar-wrapper" ref={sidebarRef} style={{
+            background: "white", margin: "1rem", borderRadius: "16px", height: "calc(100vh - 2rem)",
+            boxShadow: "15.1463px 4.32752px 242.341px rgba(0, 0, 0, 0.07)", padding: "10px",
+            display: (location.pathname === "/create-pin" || location.pathname === "/update-pin") ? "none" : "flex"
+        }} onMouseEnter={() => setInheritSize(true)} onMouseLeave={() => setInheritSize(false)}>
+            <div className="newcont">
+                <NewMenu />
+
+            </div>
+            <div style={{
+                width: "100%"
+            }}>
                 <SidebarIcon /> {
                     (!togglSidebar && userDetails?._id) || inheritSize
                         ?
@@ -112,7 +124,9 @@ const SidebarNew = ({ setShowModal, showModal }) => {
                         : ""
                 }
                 <nav className="sidebar-main">
+
                     <div className={`left-arrow ${leftArrow ? "d-none" : ""}`} id="left-arrow" onClick={scrollToLeft}><ArrowLeft /></div>
+
                     <div
                         id="sidebar-menu"
                         style={wrapper.split(" ").includes("horizontal-wrapper") ? { marginLeft: margin + "px", transform: "translateY(-90px)" } : { margin: "0px", transform: "translateY(-90px)" }}>
