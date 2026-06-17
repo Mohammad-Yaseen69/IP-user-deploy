@@ -278,6 +278,15 @@ const DirectCardInvoicePayment = ({ invoice, username }) => {
     //         purple: true,
     //     });
     // }
+    const senderFee = state.exchange_rate?.fee?.amount || 0;
+    const amountDue = amount + senderFee;
+    const showHeader =
+        flagCheck("allowUsername", userDetails, "invoice") ||
+        flagCheck("allowProfileName", userDetails, "invoice") ||
+        flagCheck("allowCountry", userDetails, "invoice") ||
+        flagCheck("allowAccountType", userDetails, "invoice") ||
+        flagCheck("allowViewProfile", userDetails, "invoice") ||
+        flagCheck("allowEcommerce", userDetails, "invoice");
     return (
         <div className={styles.directCard}>
             {state.cardTransactionDetails?.transaction_ref && (
@@ -353,16 +362,19 @@ const DirectCardInvoicePayment = ({ invoice, username }) => {
                             <strong>{invoice.currency} {formatCurrency(state.exchange_rate?.fee?.paymentAddressFee || 0, true)}</strong>
                         </div>
                         <div className={styles.totalRow}>
-                            <span>{t("Total to pay")}</span>
-                            <strong>{invoice.currency} {formatCurrency(state.exchange_rate?.total || amount, true)}</strong>
+                            <span>{t("Receiver Gets ")}</span>
+                            <strong>
+                                <small>{invoice.currency}</small>
+                                {formatCurrency(state.exchange_rate?.receiver?.amount || amount, true)}
+                            </strong>
+                            {/* <strong>{invoice.currency} {formatCurrency(state.exchange_rate?.total || amount, true)}</strong> */}
                         </div>
                     </div>
-
                     <div className={styles.amountDue}>
-                        <span>{t("Receiving Amount")}</span>
+                        <span>{t("Amount Due")}</span>
                         <strong>
                             <small>{invoice.currency}</small>
-                            {formatCurrency(state.exchange_rate?.receiver?.amount || amount, true)}
+                            {formatCurrency(amountDue, true)}
                         </strong>
                     </div>
                 </div>
@@ -370,7 +382,8 @@ const DirectCardInvoicePayment = ({ invoice, username }) => {
 
             <section className={styles.directCardRight}>
                 <div className={styles.payerPanel}>
-                    <header className={styles.directCardHeader}>
+                 {showHeader &&
+                       <header className={styles.directCardHeader}>
                         <div className={styles.merchant}>
                             {flagCheck("allowUsername", userDetails, "invoice") && (
 
@@ -413,6 +426,7 @@ const DirectCardInvoicePayment = ({ invoice, username }) => {
                             )}
                         </div>
                     </header>
+                 }
 
                     {isDirectCardVerificationRequired !== false &&
                         <>
