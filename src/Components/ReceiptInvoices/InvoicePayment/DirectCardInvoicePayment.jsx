@@ -394,14 +394,23 @@ const DirectCardInvoicePayment = ({ invoice, username }) => {
                                     {flagCheck("allowUsername", userDetails, "invoice") && (
                                         <span>@{username}</span>
                                     )}
-                                    {accountCountry?.file_url && <img src={accountCountry.file_url} alt={accountCountry.alpha3} />}
-                                    <span className={styles.badge}>{invoice?.account?.account_type === "individual" ? t("Personal") : t("Business")}</span>
+
+                                    {flagCheck("allowCountry", userDetails, "invoice") && accountCountry?.file_url &&
+                                        <img src={accountCountry.file_url} alt={accountCountry.alpha3} />}
+                                    {flagCheck("allowAccountType", userDetails, "invoice") && (
+                                        <span className={styles.badge}>{invoice?.account?.account_type === "individual" ? t("Personal") : t("Business")}</span>
+                                    )}
+
                                 </div>
                             </div>
                         </div>
                         <div className={styles.merchantActions}>
-                            <button type="button">{t("View profile")}</button>
-                            <button type="button">{t("E-shop")}</button>
+                            {flagCheck("allowViewProfile", userDetails, "invoice") && (
+                                <button type="button">{t("View profile")}</button>
+                            )}
+                            {flagCheck("allowEcommerce", userDetails, "invoice") && (
+                                <button type="button">{t("E-shop")}</button>
+                            )}
                         </div>
                     </header>
 
@@ -502,8 +511,8 @@ const DirectCardInvoicePayment = ({ invoice, username }) => {
                         </button>
                     </footer>
                 </main>
-            </section>
-        </div>
+            </section >
+        </div >
     )
 }
 
