@@ -922,7 +922,7 @@
                   .simplebar-mask {
                     .simplebar-content-wrapper {
                       .simplebar-content {
-                        padding: 24px 0px !important;
+                        padding: 24px 12px !important;
                       }
                     }
                   }
@@ -954,7 +954,7 @@
                             }
 
                             a {
-                              padding: 12px 14px;
+                              padding: 12px 18px;
 
                               img {
                                 height: 13px;
@@ -973,7 +973,7 @@
 
         .page-body {
           margin-top: 81px;
-          margin-left: 220px;
+          margin-left: 280px;
 
           ~.footer {
             margin-left: 255px;
@@ -7980,7 +7980,7 @@
                       >ul {
                         >li {
                           .sidebar-link:before {
-                            left: 18px;
+                            left: 8px;
                             width: 30px;
                             height: 30px;
                             top: 7px;
