@@ -1704,6 +1704,7 @@
           top: 0;
           z-index: 9;
           // height: 100%;
+          left: 58px;
           line-height: inherit;
           background-color: $sidebar-color;
           width: 280px;
@@ -1865,7 +1866,7 @@
 
             ~.page-body,
             ~footer {
-              margin-left: 90px;
+              margin-left: 140px;
               transition: 0.5s;
             }
 
