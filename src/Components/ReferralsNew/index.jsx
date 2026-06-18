@@ -381,7 +381,7 @@ const ReferralsNew = () => {
                                     {t("Your Referral ID")}:
                                 </span>
                                 <h4>
-                                    {referralLink.split("/signup/")[1]}
+                                    {referralLink.split("/signup/")[1] + userDetails?.username}
                                 </h4>
                             </div>
                             <div className={`${styles.ref_dets_sub} ${styles.right}`}>
@@ -389,7 +389,7 @@ const ReferralsNew = () => {
                                 <div style={{ gap: window.innerWidth < 500 && "0.5rem" }} className={styles.bot}>
                                     <div>
                                         <span>
-                                            {referralLink}
+                                            {referralLink + userDetails?.username}
                                         </span>
                                         {
                                             copied
