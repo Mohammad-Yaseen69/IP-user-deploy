@@ -14,7 +14,10 @@ export const verifyPhoneNumber = async (number) => {
         return "Verified";
 
     } catch (error) {
-        const decrypt = decryptData(error.response?.data?.data)
-        return decrypt || "phone not verified"
+        try {
+            return decryptData(error.response?.data?.data) || "phone not verified"
+        } catch {
+            return "phone not verified"
+        }
     }
 }

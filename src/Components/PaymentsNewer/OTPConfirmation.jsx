@@ -402,7 +402,10 @@ const OTPConfirmation = ({
             const body = { data: enc }
             const vendorSpecificBody = vendor === "neema" || isExternalWithdrawal ? body : data
             axios.post(url, vendorSpecificBody, {
-                headers: authHeader
+                headers: {
+                    ...authHeader,
+                    "Idempotency-Key": getKey()
+                }
             })
                 .then(async res => {
                     const decrypted = decryptData(res.data.data)

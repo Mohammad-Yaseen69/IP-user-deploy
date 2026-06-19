@@ -1,4 +1,5 @@
 import { useTranslation } from "react-i18next";
+import { useEffect } from "react";
 import DateMomentUtils from '@date-io/moment';
 import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import ShippingDetails from "../../ReceiptInvoices/InvoicePaymentQr/ShippingDetails";
@@ -8,6 +9,7 @@ import { toast } from "react-toastify";
 import CitiesDropDown from "../../CitiesDropDown";
 import USCounties from "./USCounties.json";
 import CANCounties from "./CANCounties.json";
+import { verifyPhoneNumber } from "../../../utils/Functions/phoneVerification";
 
 const RecipientDetails = ({ data, dataHandler, isShipping, isReferenceRequired }) => {
     const { t } = useTranslation();
@@ -16,6 +18,38 @@ const RecipientDetails = ({ data, dataHandler, isShipping, isReferenceRequired }
         data.payment_type?.value === "card" &&
         Object.values(cardPaymentRequiredFields).some(Boolean);
     const countyOptions = data?.country?.alpha3 === "USA" ? USCounties : data?.country?.alpha3 === "CAN" ? CANCounties : null;
+
+    useEffect(() => {
+        const phone = data.phone;
+
+        if (!phone || phone.length < 9) {
+            dataHandler("phone_error", "");
+            dataHandler("phone_verifying", false);
+            return;
+        }
+
+        let cancelled = false;
+
+        dataHandler("phone_error", "");
+        dataHandler("phone_verifying", true);
+
+        const timer = setTimeout(async () => {
+            const result = await verifyPhoneNumber(phone);
+
+            if (cancelled) return;
+
+            dataHandler("phone_verifying", false);
+            dataHandler(
+                "phone_error",
+                result === "Verified" ? "" : "Incorrect phone number, please enter a valid number."
+            );
+        }, 700);
+
+        return () => {
+            cancelled = true;
+            clearTimeout(timer);
+        };
+    }, [data.phone]);
 
 
 
@@ -78,7 +112,7 @@ const RecipientDetails = ({ data, dataHandler, isShipping, isReferenceRequired }
                         <DatePicker
                             required={true}
                             format="YYYY-MM-DD"
-                            className="form-control custom-datepicker"
+                            className="form-control "
                             style={{ width: '100%' }}
                             value={data.dob || null}
                             onChange={handleDateChange}

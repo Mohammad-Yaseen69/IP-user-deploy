@@ -148,7 +148,17 @@ const BusinessAccount = ({ isInternational, toggleHandler }) => {
     const [clicked, setClicked] = useState(false)
     const [missingFields, setMissingFields] = useState([])
     const { allowedCountries, authHeader, beneficiaries, userDetails } = useContext(UserContext)
-    const { getBankDetails, bankCountry, bankCountryCode, bankDetailsError, isValidIban, ibanSwift, } = useBankDetails({ accNumType, setFormData, handleBankExtraChange, bankExtras })
+    const {
+        getBankDetails,
+        bankCountry,
+        bankCountryCode,
+        bankDetailsError,
+        isValidIban,
+        ibanSwift,
+        setIbanSwift,
+        setBankCountry,
+        setBankCountryCode,
+    } = useBankDetails({ accNumType, setFormData, handleBankExtraChange, bankExtras })
     const { fieldsInfo, services, mobileProviders, selectedCountryDetails, getCountryFields } = useChannels({ setLoading, setActive, countryIsoCode, countryId, isBusiness: true })
 
     const mobileExtras = {
@@ -223,12 +233,20 @@ const BusinessAccount = ({ isInternational, toggleHandler }) => {
             setCashPickupType(user?.cash_pickup?.[0]?.document_type || "")
             setCashPickupNumber(user?.cash_pickup?.[0]?.document_number || "")
 
-            setAccNumType(user?.bank_details?.[0]?.iban ? "IBAN" : "Swift")
+            const bankDetail = user?.bank_details?.[0]
+            const bankCodeValue = bankDetail?.iban || bankDetail?.swift_code || ""
+            const savedBankCountryCode = bankDetail?.extras?.country_iso_code || user?.country_iso_code || ""
+            const savedBankCountryName = bankDetail?.country_name || citiesData.find(item => item.iso3 === savedBankCountryCode)?.name || user?.country_name || ""
 
-            if (user?.bank_details?.[0]?.extras) {
+            setAccNumType(bankDetail?.iban ? "IBAN" : "Swift")
+            setIbanSwift(bankCodeValue)
+            setBankCountryCode(savedBankCountryCode)
+            setBankCountry(savedBankCountryName)
+
+            if (bankDetail?.extras) {
                 setBankExtras(prev => ({
                     ...prev,
-                    ...user.bank_details[0].extras
+                    ...bankDetail.extras
                 }))
             }
 
@@ -247,7 +265,7 @@ const BusinessAccount = ({ isInternational, toggleHandler }) => {
             const wallets = user?.wallet || []
             setWalletIds(wallets.map(w => (typeof w === "string" ? w : w?._id)).filter(Boolean))
         }
-    }, [user])
+    }, [user, accNumType, setBankCountry, setBankCountryCode, setIbanSwift])
 
 
 
@@ -375,6 +393,15 @@ const BusinessAccount = ({ isInternational, toggleHandler }) => {
             }
         })
     }
+
+    useEffect(() => {
+        if (bankCountryCode) {
+            setBankExtras(prev => ({
+                ...prev,
+                country_iso_code: bankCountryCode
+            }))
+        }
+    }, [bankCountryCode])
 
     const changeUserDetailsAsPerBankDetails = () => {
         setFormData((prev) => {
