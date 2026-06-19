@@ -23,7 +23,7 @@ function formatTime(createdAt) {
 const RecentTransItem = ({ transaction, transactions, i, windowWidth }) => {
     const { beneficiaries } = useContext(UserContext)
     const { t } = useTranslation()
-    console.log("sender", transaction)
+    // console.log("sender", transaction)
 
     const badgeColor = useMemo(() => {
         switch (transaction?.status?.toLowerCase()) {

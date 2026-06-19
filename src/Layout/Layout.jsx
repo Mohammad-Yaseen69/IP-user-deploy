@@ -370,9 +370,9 @@ const Layout = ({ children, classNames, ...rest }) => {
                         classNames={animationTheme}
                         unmountOnExit
                       >
-                        <div>
+                        {/* <div> */}
                           <Outlet />
-                        </div>
+                        {/* </div> */}
                       </CSSTransition>
                     </TransitionGroup>
                   </div>
