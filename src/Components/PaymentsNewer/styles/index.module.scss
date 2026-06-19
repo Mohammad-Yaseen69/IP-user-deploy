@@ -1,6 +1,6 @@
 .container {
     padding: 3rem;
-    background: linear-gradient(to right, transparent, white);
+    // background: linear-gradient(to right, transparent, white);
     min-height: 100vh;
     height: 100%;
 
@@ -31,7 +31,7 @@
 
 @media screen and (max-width: 1500px) {
     .container {
-        padding: 1rem 2rem 0;
+        padding: 1rem 1rem 0;
 
         .top {
             margin-bottom: 2rem;
