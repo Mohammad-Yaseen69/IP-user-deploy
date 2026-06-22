@@ -52,7 +52,7 @@ const AuthStepOne = ({ isEmail,
                     {t("to access your account")}</p>
             </div>
             <form onSubmit={onFormSubmit}>
-                <div>
+                <div className={styles.inputcon}>
 
                     {
                         loginMethod === "email" ? (
@@ -162,10 +162,7 @@ const AuthStepOne = ({ isEmail,
                         {t("Forgot Password?")}
 
                     </Link>
-                    <Link to={"/forgot-password/agent"} className={styles.forgot_passmobile}>
-                        {t(" If you don't have an account Create an Account")}
-                        <span>{t("Forgot Password?")}</span>
-                    </Link>
+                    
                 </div>
             </form>
         </div >

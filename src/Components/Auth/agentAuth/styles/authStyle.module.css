@@ -300,9 +300,6 @@
     }
 }
 
-.forgot_passmobile {
-    display: none;
-}
 
 @media (max-width: 700px) {
     .container {
@@ -341,13 +338,15 @@
             form {
 
                 width: 100% !important;
+                gap: 15px;
 
+                label {
+                    margin-bottom: 10px;
+                }
 
-                div {
+                .inputcon {
                     width: 100%;
-                    display: flex !important;
-                    flex-direction: column;
-                    gap: 10px;
+
                 }
 
                 button {
@@ -364,25 +363,9 @@
                     }
 
                     .forgot_pass {
-                        display: none;
+                        text-decoration: none !important;
                     }
 
-                    .forgot_passmobile {
-                        display: block;
-                        color: var(--COLORS-Neutral-500, #A4A4A4);
-                        text-align: center;
-                        font-family: Manrope;
-                        font-size: 12px;
-                        font-style: normal;
-                        font-weight: 600;
-                        line-height: 25.5px;
-                        letter-spacing: -0.12px;
-
-                        span {
-                            color: #5926F0;
-                            text-decoration: underline;
-                        }
-                    }
                 }
             }
         }
