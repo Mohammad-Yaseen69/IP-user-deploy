@@ -530,7 +530,10 @@ const AgentsModal = ({ isRole, isOpen, onClose, t, width, roles, isEdit, editDat
                             </div>
 
                             <div className={s.modalFooter}>
-                                <div className={s.footerLeft}>
+                                <div className={s.footerLeft}
+                                    onClick={() => {
+                                        window.open("https://www.insta-pay.ch/contact-us", "_blank");
+                                    }}>
                                     <span><HelpCircle /></span>
                                     <div>
                                         <p>{t("Having Troubles?")}</p>

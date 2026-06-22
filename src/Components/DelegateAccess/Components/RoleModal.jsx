@@ -497,7 +497,11 @@ const RoleModal = ({ isRole, isOpen, onClose, t, width, isEdit, editData }) => {
                         </div>
 
                         <div className={styles.modalFooter}>
-                            <div className={styles.footerLeft}>
+                            <div className={styles.footerLeft}
+                                onClick={() => {
+                                    window.open("https://www.insta-pay.ch/contact-us", "_blank");
+                                }}
+                            >
                                 <span><HelpCircle /></span>
                                 <div>
                                     <p>{t("Having Troubles?")}</p>
