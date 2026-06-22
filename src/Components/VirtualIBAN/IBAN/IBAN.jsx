@@ -1,18 +1,26 @@
 import { ArrowRight, Clock, EyeOff, Globe, Shield } from 'react-feather'
 import styles from "../styles/IBAN.module.css"
 import VirtualIbanModal from '../VirtualIbanModal'
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 import imageCard from "../files/images/Frame_2147236087.png"
 import { useTranslation } from 'react-i18next'
 import { usePermission } from '../../../hooks/GeneralUse/usePermission'
+import { UserContext } from '../../../Context/UserContext'
+import { useNavigate } from 'react-router'
 const IBAN = ({ onCreated }) => {
     const { t } = useTranslation()
     const can = usePermission()
     const [showModal, setShowModal] = useState(false)
+    const navigate = useNavigate()
     const canCreateIban = can("virtual-iban.account.create")
-
+    const { userDetails,  } = useContext(UserContext)
     const handleOpenModal = () => {
-        setShowModal(true)
+        if (userDetails?.account_type === "individual" ? userDetails?.user?.kyc_status === "approved" : userDetails.company?.kyb_status === "approved") {
+            setShowModal(true)
+        }
+        else {
+            navigate("/settings?tab=verification")
+        }
     }
 
     const handleCloseModal = () => {
