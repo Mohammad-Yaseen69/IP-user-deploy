@@ -51,13 +51,15 @@ import SidebarProgress from "./SidebarProgress"
 import styles from "./virtualIbanModal.module.scss"
 import VerificationStep from "./VerificationStep"
 import useSendOtp from "../../../hooks/GeneralUse/useSendOtp"
-import OTPConfirmation from "../../UserSettingsNew/OTPConfirmation"
 
 import { getVirtualIbanCountry, normalizeVirtualIban } from "../utils/virtualIban"
 import SocketsService from "../../../Services/Socket"
 import usePlainFx from "../../../hooks/Payments/usePlainFx"
 import InstaPayLoader from "../../Loader"
 import { useCreateVirtualIban, useVirtualIbans, virtualIbanQueryKeys } from "../../../hooks/useVirtualIban"
+import { handlePaymentApiError } from "../../../utils/Functions/handlePaymentApiError"
+import { useNavigate } from "react-router"
+import OTPConfirmation from "../../UserSettingsNew/OTPConfirmation"
 
 const SIDEBAR_ICONS = {
     [STEPS.JURISDICTION]: JurisIcon,
@@ -119,7 +121,7 @@ const VirtualIbanModal = ({
     const width = useWindowWidth()
     const queryClient = useQueryClient()
 
-    const { userWallets, getUserWallets, userDetails, authHeader } = useContext(UserContext)
+    const { userWallets, getUserWallets, userDetails, authHeader, setProfileLockTime } = useContext(UserContext)
 
     const [currentStep, setCurrentStep] = useState(STEPS.JURISDICTION)
     const [jurisdiction, setJurisdiction] = useState("")
@@ -133,6 +135,7 @@ const VirtualIbanModal = ({
     const [pendingTransactionId, setPendingTransactionId] = useState("")
     const [pendingTransactionRef, setPendingTransactionRef] = useState("")
     const [isResumedPending, setIsResumedPending] = useState(false)
+    const navigate = useNavigate()
 
     const [saveCard, setSaveCard] = useState(false)
     const [cards, setCards] = useState([])
@@ -535,6 +538,7 @@ const VirtualIbanModal = ({
     })
 
     const handleSendOtp = async (otpCodeType = codeType) => {
+
         if (!walletState?.wallet_id) {
             toast.error(t("Please select an InstaPay wallet to pay the activation fee"))
             return
@@ -554,9 +558,12 @@ const VirtualIbanModal = ({
             setCodeType(otpCodeType || codeType)
             await sendOtp(getCreatePayload(), otpCodeType || codeType)
         } catch (error) {
-            const dec = decryptData(error?.response?.data?.data)
-            const message = dec?.message || error?.message || t("We are unable to process your request at the moment. Please try again later.")
-            toast.error(message)
+            handlePaymentApiError({
+                error,
+                navigate,
+                setError: (e) => toast.error(e),
+                setProfileLockTime: setProfileLockTime
+            })
         }
     }
 
@@ -576,10 +583,15 @@ const VirtualIbanModal = ({
             setShowOtp(false)
             setCurrentStep(STEPS.PENDING)
         } catch (error) {
-            const dec = decryptData(error?.response?.data?.data)
-            const message = dec?.message || error?.message || t("We are unable to process your request at the moment. Please try again later.")
-            setOtpError?.(message)
-            toast.error(message)
+            handlePaymentApiError({
+                error,
+                navigate,
+                setError: (e) => {
+                    setOtpError?.(e)
+                    toast.error(e)
+                },
+                setProfileLockTime: setProfileLockTime
+            })
         }
     }
 

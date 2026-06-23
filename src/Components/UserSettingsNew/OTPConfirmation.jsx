@@ -283,9 +283,9 @@ const OTPConfirmation = ({ setter, callback, setterValue, hideOtp, type = "", pr
                                             } else {
                                                 setResendTimer(120)
                                             }
-                                            if (resendTimer == "0") {
-                                                resendHandler("sms")
-                                            }
+                                            console.log(resendTimer)
+
+                                            resendHandler("sms")
                                         }
                                         setAuthType(authType === "sms" ? "authenticator" : "sms")
                                     }}>
