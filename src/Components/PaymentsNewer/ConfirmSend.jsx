@@ -56,8 +56,17 @@ const ConfirmSend = ({ beneficiary, amount, currency, country, payoutChannel, se
 
     useEffect(() => {
         if (profileCompleted) {
-            if (userDetails?.user?.kyc_status) {
-                if (userDetails?.user?.kyc_status === "approved" || userDetails?.level?.level_no !== 1) {
+            if (
+                userDetails?.account_type === "individual"
+                    ? userDetails?.user?.kyc_status === "approved"
+                    : userDetails?.company?.kyb_status === "approved"
+            ) {
+                if (userDetails?.account_type === "individual"
+                    ? userDetails?.user?.kyc_status === "approved"
+                    : userDetails?.company?.kyb_status === "approved"
+                    ||
+                    userDetails?.level?.level_no !== 1
+                ) {
                     setShowVerificationModal(false)
                 } else {
                     setShowVerificationModal(true)
@@ -79,7 +88,7 @@ const ConfirmSend = ({ beneficiary, amount, currency, country, payoutChannel, se
                 "account_id": item?._id,
                 "service_id": payoutChannel?.id,
                 "payer_id": userWithdrawals?.[payoutChannel?.sub_value]?.[0]?.payer_id,
-                "transaction_type": item?.account_type === "individual" ? "C2C" : "C2B",
+                "transaction_type": item?.account_type === "individual" ? "C2C" : "B2B",
                 wallet_id: userWallets?.filter(it => it?.currency?.code?.toLowerCase() === currency?.toLowerCase())[0]?._id,
                 "token": quotationDetails.token,
                 type: userDetails?.tfa ? "authenticator" : "sms",
