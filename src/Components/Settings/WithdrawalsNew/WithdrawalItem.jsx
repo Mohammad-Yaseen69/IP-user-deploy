@@ -39,7 +39,12 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
     const [current, setCurrent] = useState(null)
     const [configured, setConfigured] = useState([])
     const [serviceLoading, setServiceLoading] = useState(false)
-    const { fieldsInfo, services } = useChannels({ setLoading: setServiceLoading, countryIsoCode: country?.alpha3, setCurrent })
+    const { fieldsInfo, services } = useChannels({
+        setLoading: setServiceLoading,
+        countryIsoCode: country?.alpha3,
+        setCurrent,
+        isBusiness: userDetails?.account_type === "business"
+    })
     const serviceFieldInfoValidate = (service, field_name, sub_field_name) => {
         if (fieldsInfo === null) return false;
         let isInThere = false;

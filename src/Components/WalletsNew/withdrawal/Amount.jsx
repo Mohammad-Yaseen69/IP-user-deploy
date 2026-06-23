@@ -56,7 +56,7 @@ const AmountAndCurrency = ({ amount, setAmount, currency, subService = "", setQu
                     setIsLoading(true)
                     const data = {
                         wallet_id: userWallets?.filter(item => item?.currency?.code?.toLowerCase() === currency?.toLowerCase())[0]?._id,
-                        transaction_type: "C2C",
+                        transaction_type: userDetails?.account_type === "business" ? "B2B" : "C2C",
                         amount: +amount,
                         service_name: payoutChannel?.value === "bank" ? "withdrawal_bank_transfer" : payoutChannel?.value === "mobile" ? "withdrawal_mobile_wallet" : payoutChannel?.value === "card" ? "withdrawal_card_payment" : payoutChannel?.value === "cash" ? "withdrawal_cash_pickup" : "",
                         service_id: payoutChannel?.id,
