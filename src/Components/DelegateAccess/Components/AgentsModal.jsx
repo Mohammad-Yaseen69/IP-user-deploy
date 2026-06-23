@@ -24,6 +24,8 @@ const AgentsModal = ({ isRole, isOpen, onClose, t, width, roles, isEdit, editDat
     const [selectedPermissions, setSelectedPermissions] = useState(isEdit && editData ? editData.permissions || [] : [])
     const [phone, setPhone] = useState(isEdit && editData ? editData.phone || "" : "")
     const [phoneError, setPhoneError] = useState("")
+    const [isCheckingPhone, setIsCheckingPhone] = useState(false)
+    const [verifiedPhone, setVerifiedPhone] = useState("")
     const [deniedPermissions, setDeniedPermissions] = useState(isEdit && editData ? editData.deniedPermissions || [] : [])
     const [status, setStatus] = useState({ type: null, message: "" })
     const isWildcardParent = (pk) => pk && selectedPermissions.includes(`${pk}.*`)
@@ -50,6 +52,52 @@ const AgentsModal = ({ isRole, isOpen, onClose, t, width, roles, isEdit, editDat
         if (name === "role" && !value) {
             setSelectedPermissions([])
             setDeniedPermissions([])
+        }
+    }
+
+    const handlePhoneChange = (value) => {
+        setPhone(value)
+        setVerifiedPhone("")
+        if (phoneError) setPhoneError("")
+    }
+
+    const checkIfPhoneIsValid = async () => {
+        if (isEdit) return true
+        if (!phone) {
+            setPhoneError("Phone is required")
+            return false
+        }
+        if (verifiedPhone === phone) return true
+
+        setIsCheckingPhone(true)
+        try {
+            await apiWrapper({
+                endpoint: "/api/dt/check-number-public",
+                payload: { number: `+${phone}` },
+                isEncrypted: true,
+                method: "POST",
+                isPublic: true,
+            })
+            setPhoneError("")
+            setVerifiedPhone(phone)
+            return true
+        }
+        catch (error) {
+            let errorMessage = "Incorrect phone number, please enter a valid number."
+            if (error?.response?.data?.data) {
+                try {
+                    const decrypted = decryptData(error.response.data.data)
+                    errorMessage = typeof decrypted === "string" ? decrypted : decrypted?.message || errorMessage
+                }
+                catch (e) {
+                    console.error("Phone validation error decryption failed", e)
+                }
+            }
+            setPhoneError(errorMessage)
+            return false
+        }
+        finally {
+            setIsCheckingPhone(false)
         }
     }
 
@@ -193,11 +241,15 @@ const AgentsModal = ({ isRole, isOpen, onClose, t, width, roles, isEdit, editDat
         }
     })
 
-    const onSubmit = (e) => {
+    const onSubmit = async (e) => {
         e?.preventDefault()
         if (!isEdit && !phone) {
             setPhoneError("Phone is required")
             return
+        }
+        if (!isEdit) {
+            const isPhoneValid = await checkIfPhoneIsValid()
+            if (!isPhoneValid) return
         }
 
         const payload = isEdit
@@ -225,10 +277,12 @@ const AgentsModal = ({ isRole, isOpen, onClose, t, width, roles, isEdit, editDat
         }
     }
 
-    const handleNext = () => {
+    const handleNext = async () => {
         if (step === 1) {
             if (!form.first_name || !form.last_name) return
             if (!isEdit && !phone) { setPhoneError("Phone is required"); return }
+            const isPhoneValid = await checkIfPhoneIsValid()
+            if (!isPhoneValid) return
         }
         if (step < 3) setStep(s => s + 1)
         else onSubmit()
@@ -249,6 +303,7 @@ const AgentsModal = ({ isRole, isOpen, onClose, t, width, roles, isEdit, editDat
     const isNextDisabled =
         (step === 1 && isStepOneInvalid) ||
         (step === 2 && isStepTwoInvalid) ||
+        isCheckingPhone ||
         isCreating ||
         isUpdating
     const renderStatusContent = () => {
@@ -437,10 +492,11 @@ const AgentsModal = ({ isRole, isOpen, onClose, t, width, roles, isEdit, editDat
                                                     <PhoneInput
                                                         country={isEdit && editData?.country ? editData.country : country}
                                                         phone={phone}
-                                                        setPhone={setPhone}
+                                                        setPhone={handlePhoneChange}
                                                         error={phoneError}
                                                         setError={setPhoneError}
                                                         disabled={isEdit}
+                                                        onBlur={checkIfPhoneIsValid}
                                                         customStyles={{
                                                             width: '100%',
                                                             padding: '13px 14px',
@@ -530,7 +586,10 @@ const AgentsModal = ({ isRole, isOpen, onClose, t, width, roles, isEdit, editDat
                             </div>
 
                             <div className={s.modalFooter}>
-                                <div className={s.footerLeft}>
+                                <div className={s.footerLeft}
+                                    onClick={() => {
+                                        window.open("https://www.insta-pay.ch/contact-us", "_blank");
+                                    }}>
                                     <span><HelpCircle /></span>
                                     <div>
                                         <p>{t("Having Troubles?")}</p>
@@ -553,7 +612,7 @@ const AgentsModal = ({ isRole, isOpen, onClose, t, width, roles, isEdit, editDat
                                                 ? (isCreating || isUpdating ?
                                                     <><Spinner size="sm" /> {t("Saving...")}</>
                                                     : (isEdit ? t("Update") : t("Create & Send Invite")))
-                                                : t("Next")} {step < 3 ? <ChevronRight /> : <Plus size={20} />}
+                                                : (isCheckingPhone ? <><Spinner size="sm" /> {t("Checking...")}</> : t("Next"))} {step < 3 ? <ChevronRight /> : <Plus size={20} />}
                                         </button>
                                     </div>
                                 </div>
