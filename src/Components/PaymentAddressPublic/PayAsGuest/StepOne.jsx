@@ -1,7 +1,9 @@
 import styles from "./styles/stepone.module.css"
 import { pagSvgs } from "./Svgs"
 import { t } from "i18next"
+import { useState } from "react"
 import { Info } from "react-feather"
+import { Modal, ModalBody } from "reactstrap"
 import PaypalCurrencies from "../../AddFunds/PaypalCurrencies.json"
 import FeesComponent from "../../PaymentsNewer/InternationalFlow/FeesComponent"
 import InstaPayLoader from "../../Loader"
@@ -9,6 +11,7 @@ import { PlaidCurrencies } from "../../AddFunds/WalletFundsFlow"
 
 
 const StepOne = ({ data, dataHandler, allowed, wallet }) => {
+    const [showCardMaintenanceModal, setShowCardMaintenanceModal] = useState(false)
     const payouts = [
         {
             name: "Payment Card",
@@ -56,6 +59,111 @@ const StepOne = ({ data, dataHandler, allowed, wallet }) => {
     ].filter(item => allowed.some(it => it === item.api_val))
     return (
         <div className={styles.container}>
+            <Modal
+                isOpen={showCardMaintenanceModal}
+                toggle={() => setShowCardMaintenanceModal(false)}
+                centered
+            >
+                <ModalBody
+                    style={{
+                        padding: 0,
+                        borderRadius: "12px",
+                        overflow: "hidden",
+                    }}
+                >
+                    <div
+                        style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "12px",
+                            padding: "18px 22px",
+                            background: "rgba(141, 64, 255, 0.08)",
+                            borderBottom: "1px solid rgba(141, 64, 255, 0.14)",
+                        }}
+                    >
+                        <div
+                            style={{
+                                width: "42px",
+                                height: "42px",
+                                borderRadius: "50%",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                background: "#fff",
+                                boxShadow: "0 8px 18px rgba(141, 64, 255, 0.16)",
+                                flexShrink: 0,
+                            }}
+                        >
+                            <Info color="#8D40FF" size={22} />
+                        </div>
+                        <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
+                            <span
+                                style={{
+                                    color: "#8D40FF",
+                                    fontSize: "0.72rem",
+                                    fontWeight: 800,
+                                    textTransform: "uppercase",
+                                    letterSpacing: "0.08em",
+                                }}
+                            >
+                                {t("Notice")}
+                            </span>
+                            <h4
+                                style={{
+                                    margin: 0,
+                                    color: "#1F1F1F",
+                                    fontSize: "1.15rem",
+                                    fontWeight: 800,
+                                    lineHeight: 1.25,
+                                }}
+                            >
+                                {t("Card payment unavailable")}
+                            </h4>
+                        </div>
+                    </div>
+                    <div
+                        style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            gap: "14px",
+                            padding: "22px",
+                            textAlign: "left",
+                        }}
+                    >
+                        <p
+                            style={{
+                                margin: 0,
+                                color: "#4A4A4A",
+                                fontSize: "0.95rem",
+                                fontWeight: 600,
+                                lineHeight: 1.55,
+                            }}
+                        >
+                            {t("Card processing is under maintenance at the moment, please use a different payment method.")}
+                        </p>
+                        <p style={{ margin: 0, color: "#6B6B6B", fontSize: "0.9rem" }}>
+                            {t("Thank you")}
+                        </p>
+                        <button
+                            type="button"
+                            onClick={() => setShowCardMaintenanceModal(false)}
+                            style={{
+                                border: "none",
+                                borderRadius: "8px",
+                                background: "#8D40FF",
+                                color: "#fff",
+                                fontWeight: 800,
+                                padding: "12px 20px",
+                                marginTop: "4px",
+                                width: "100%",
+                                boxShadow: "0 10px 18px rgba(141, 64, 255, 0.22)",
+                            }}
+                        >
+                            {t("Choose another method")}
+                        </button>
+                    </div>
+                </ModalBody>
+            </Modal>
             {
                 !data?.payment_type?.value ?
                     payouts.map(item => (
@@ -63,7 +171,14 @@ const StepOne = ({ data, dataHandler, allowed, wallet }) => {
                             key={item?.id}
                             className={`${styles.item} ${data?.payment_type?.id === item?.id ? styles.active : ''}`}
                             style={{ cursor: item.coming_soon ? "not-allowed" : "pointer", opacity: item.coming_soon ? .8 : 1 }}
-                            onClick={() => item.coming_soon ? console.log("") : dataHandler("payment_type", item)}
+                            onClick={() => {
+                                if (item.coming_soon) return console.log("")
+                                if (item.value === "card") {
+                                    setShowCardMaintenanceModal(true)
+                                    return
+                                }
+                                dataHandler("payment_type", item)
+                            }}
                         >
                             {/* <img src={data?.payment_type?.id === item?.id ? item.active_icon : item.icon} alt="" /> */}
                             {data?.payment_type?.id === item?.id ? item.active_icon : item.icon}
