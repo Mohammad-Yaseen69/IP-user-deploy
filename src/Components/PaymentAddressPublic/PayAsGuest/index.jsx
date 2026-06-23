@@ -31,6 +31,7 @@ import { isCardValid, isPersonalInfoValid, isShippingValid } from "../../../util
 import allCountries from "../../PaymentsNewer/CountriesData.json";
 import { useIdempotency } from "../../../hooks/Payments/useIdempotency";
 import { UserContext } from "../../../Context/UserContext";
+import { verifyPhoneNumber } from "../../../utils/Functions/phoneVerification";
 
 const initialState = {
   loading: false,
@@ -52,6 +53,7 @@ const initialState = {
   paypal_fx: {},
   error: "",
   phone_error: "",
+  phone_verifying: false,
   dob: "",
   paymentRef: "",
   shippingDetails: {
@@ -406,25 +408,18 @@ const PayAsGuest = ({
     dataHandler("loading", true);
     dataHandler("phone_error", "");
     try {
-      const payload = { number: `+${data.phone}` };
-      const enc = encryptData(payload);
+      const result = await verifyPhoneNumber(data.phone);
 
-      const res = await axios.post(
-        `${import.meta.env.VITE_IP_DEV_API}/api/dt/check-number-public`,
-        {
-          data: enc,
-        }
-      );
-      const decrypted = decryptData(res.data.data);
-      console.log(decrypted);
-      callback();
-    } catch (error) {
-      const dec = decryptData(error?.response?.data?.data);
-      console.log(dec);
-      dataHandler(
-        "phone_error",
-        "Incorrect phone number, please enter a valid number."
-      );
+      if (result === "Verified") {
+        callback();
+      } else {
+        dataHandler(
+          "phone_error",
+          "Incorrect phone number, please enter a valid number."
+        );
+      }
+    } catch {
+      dataHandler("phone_error", "Incorrect phone number, please enter a valid number.");
     } finally {
       dataHandler("loading", false);
     }
@@ -520,7 +515,11 @@ const PayAsGuest = ({
 
     if (data.step === 3) {
       if (data.payment_type?.value !== "card") {
-        disabled = !isPersonalInfoValid(data, isReferenceRequired) || (isShipping ? !isShippingValid(data.shippingDetails) : false);
+        disabled =
+          !isPersonalInfoValid(data, isReferenceRequired) ||
+          data.phone_error ||
+          data.phone_verifying ||
+          (isShipping ? !isShippingValid(data.shippingDetails) : false);
       } else {
         return !isCardValid(data);
       }
@@ -530,6 +529,8 @@ const PayAsGuest = ({
       if (data.payment_type?.value === "card") {
         disabled =
           !isPersonalInfoValid(data, false) ||
+          data.phone_error ||
+          data.phone_verifying ||
           (isShipping ? !isShippingValid(data.shippingDetails) : false) ||
           !isCardPaymentAddressValid(data)
       }

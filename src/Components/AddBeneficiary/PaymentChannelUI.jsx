@@ -10,15 +10,11 @@ import { useTranslation } from 'react-i18next'
 import PhoneInput from '../PhoneInput'
 
 const PaymentChannelUI = ({
-    // Translation function
-
-    // Services and country data
     services,
     selectedCountryDetails,
     country,
     countryIsoCode,
 
-    // Active state and completion states
     active,
     setActive,
     completedBank,
@@ -26,10 +22,8 @@ const PaymentChannelUI = ({
     completedCard,
     cashPickupCompleted,
 
-    // Mobile view
     mobileView,
 
-    // Bank related props
     accNumType,
     setAccNumType,
     ibanSwift,
@@ -43,18 +37,15 @@ const PaymentChannelUI = ({
     handleBankExtraChange,
     fieldsInfo,
 
-    // Mobile wallet props
     mobileProviders,
     walletMobileError,
 
-    // Card related props
     totalCards,
     setTotalCards,
     handleChangeNumber,
     cardExtras,
     handleCardExtraChange,
 
-    // InstaPay wallet props
     instapayWallets,
     setInstapayWallets,
     walletError,
@@ -68,7 +59,6 @@ const PaymentChannelUI = ({
     authHeader,
     walletIds,
     setWalletIds,
-    // Cash pickup props
     mobileNumber,
     cashPickupType,
     setCashPickupType,
@@ -77,7 +67,6 @@ const PaymentChannelUI = ({
     cashExtras,
     handleCashxtraChange,
 
-    // New prop to distinguish edit mode
     isEdit = false,
     walletNumberError,
     isEditMode = true,
@@ -98,7 +87,7 @@ const PaymentChannelUI = ({
         }
         return item.length === 8;
     };
-
+    console.log(getBankDetails, "getBankDetails")
 
     return (
         <FormGroup className="mb-3">

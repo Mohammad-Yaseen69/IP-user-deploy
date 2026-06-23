@@ -117,25 +117,30 @@ const useBankDetails = ({ accNumType, setFormData, handleBankExtraChange, bankEx
             setError ? setError("") : setBankDetailsError("")
 
             setFormData(prev => {
+                const valueOrPrevious = (value, key) => (
+                    queryMetadata.isForEdit && (value === "" || value === undefined || value === null)
+                        ? prev[key]
+                        : value
+                )
                 const update = {
                     ...prev,
-                    [bankNameKey]: decrypted?.name ?? decrypted?.bicDetails?.name ?? "",
+                    [bankNameKey]: valueOrPrevious(decrypted?.name ?? decrypted?.bicDetails?.name ?? "", bankNameKey),
                 }
 
                 if (accNumType === "IBAN") {
-                    update[branchNameKey] = `${(decrypted?.ibanDetails?.branch_id ?? decrypted?.bicDetails?.structured_address?.building_number ?? decrypted?.bicDetails?.structured_address?.building_name) || "Main Branch"}`
-                    update[bankBranchStreetKey] = decrypted?.bicDetails?.structured_address?.street_name ?? ""
-                    update[bankCityKey] = decrypted?.bicDetails?.structured_address?.town_name ?? ""
-                    update[bankProvinceKey] = decrypted?.bicDetails?.structured_address?.country_subdivision_name ?? ""
-                    update[bankPostalCodeKey] = decrypted?.bicDetails?.structured_address?.post_code ?? ""
-                    update[bankAccountNumberKey] = decrypted?.ibanDetails?.account_number ?? queryMetadata.account_number ?? ''
+                    update[branchNameKey] = valueOrPrevious(`${(decrypted?.ibanDetails?.branch_id ?? decrypted?.bicDetails?.structured_address?.building_number ?? decrypted?.bicDetails?.structured_address?.building_name) || "Main Branch"}`, branchNameKey)
+                    update[bankBranchStreetKey] = valueOrPrevious(decrypted?.bicDetails?.structured_address?.street_name ?? "", bankBranchStreetKey)
+                    update[bankCityKey] = valueOrPrevious(decrypted?.bicDetails?.structured_address?.town_name ?? "", bankCityKey)
+                    update[bankProvinceKey] = valueOrPrevious(decrypted?.bicDetails?.structured_address?.country_subdivision_name ?? "", bankProvinceKey)
+                    update[bankPostalCodeKey] = valueOrPrevious(decrypted?.bicDetails?.structured_address?.post_code ?? "", bankPostalCodeKey)
+                    update[bankAccountNumberKey] = valueOrPrevious(decrypted?.ibanDetails?.account_number ?? queryMetadata.account_number ?? '', bankAccountNumberKey)
                 } else {
-                    update[branchNameKey] = decrypted?.structured_address?.country_subdivision_name || "Main Branch"
-                    update[bankBranchStreetKey] = decrypted?.structured_address?.street_name ?? ""
-                    update[bankCityKey] = decrypted?.structured_address?.town_name ?? ""
-                    update[bankProvinceKey] = decrypted?.structured_address?.town_name ?? ""
-                    update[bankPostalCodeKey] = decrypted?.structured_address?.post_code ?? ""
-                    update[bankAccountNumberKey] = queryMetadata.account_number ?? ""
+                    update[branchNameKey] = valueOrPrevious(decrypted?.structured_address?.country_subdivision_name || "Main Branch", branchNameKey)
+                    update[bankBranchStreetKey] = valueOrPrevious(decrypted?.structured_address?.street_name ?? "", bankBranchStreetKey)
+                    update[bankCityKey] = valueOrPrevious(decrypted?.structured_address?.town_name ?? "", bankCityKey)
+                    update[bankProvinceKey] = valueOrPrevious(decrypted?.structured_address?.town_name ?? "", bankProvinceKey)
+                    update[bankPostalCodeKey] = valueOrPrevious(decrypted?.structured_address?.post_code ?? "", bankPostalCodeKey)
+                    update[bankAccountNumberKey] = valueOrPrevious(queryMetadata.account_number ?? "", bankAccountNumberKey)
                 }
                 return update
             })
@@ -169,6 +174,11 @@ const useBankDetails = ({ accNumType, setFormData, handleBankExtraChange, bankEx
             }
 
             setError ? setError("Invalid Details") : setBankDetailsError("Invalid Details")
+            if (queryMetadata.isForEdit) {
+                setIsValidIban(true)
+                return
+            }
+
             setFormData(prev => ({
                 ...prev,
                 [bankNameKey]: "",

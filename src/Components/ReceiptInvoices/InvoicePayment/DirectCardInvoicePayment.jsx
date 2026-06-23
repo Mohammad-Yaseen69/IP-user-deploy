@@ -20,6 +20,8 @@ import { LimitsErrorMessage } from "../../PaymentsNewer/OTPConfirmation"
 import { isCardValid } from "../../../utils/Functions/validations"
 import { useIdempotency } from "../../../hooks/Payments/useIdempotency"
 import { flagCheck } from "../../../utils/Functions"
+import { apiWrapper } from "../../../utils/Functions/apiWrapper"
+import { useQuery } from "@tanstack/react-query"
 
 const initialState = {
     step: 3,
@@ -113,10 +115,21 @@ const DirectCardInvoicePayment = ({ invoice, username }) => {
     const [state, dispatch] = useReducer(reducer, initialState)
     const { getKey } = useIdempotency()
     const userDetails = invoice?.account
+    const accountId = userDetails?._id || userDetails?.id || (typeof userDetails === "string" ? userDetails : "")
 
     const dataHandler = (field, value) => {
         dispatch({ type: "UPDATE_FIELD", field, value })
     }
+
+    const { data: storeData } = useQuery({
+        queryKey: ['UserStore', accountId],
+        enabled: !!accountId,
+        queryFn: () => apiWrapper({
+            server: "ecommerce",
+            endpoint: `/api/store/get-account-store/${accountId}`
+        }),
+        retry: 1
+    })
 
     const guestDetails = useMemo(() => invoice?.guestDetails || {}, [invoice?.guestDetails])
     const amount = Number(invoice?.amount || invoice?.price || 0)
@@ -386,7 +399,7 @@ const DirectCardInvoicePayment = ({ invoice, username }) => {
                                     {flagCheck("allowProfileName", userDetails, "invoice") && (
                                         <h3>{merchantName}</h3>
                                     )}
-                                    {(invoice?.account?.user?.kyc_status === "approved" || invoice?.account?.kyb_status === "approved") && (
+                                    {flagCheck("allowVerificationBadge", userDetails, "invoice") && (invoice?.account?.user?.kyc_status === "approved" || invoice?.account?.kyb_status === "approved") && (
                                         <CheckCircle size={18} />
                                     )}
                                 </div>
@@ -408,8 +421,14 @@ const DirectCardInvoicePayment = ({ invoice, username }) => {
                             {flagCheck("allowViewProfile", userDetails, "invoice") && (
                                 <button type="button">{t("View profile")}</button>
                             )}
-                            {flagCheck("allowEcommerce", userDetails, "invoice") && (
-                                <button type="button">{t("E-shop")}</button>
+                            {flagCheck("allowEcommerce", userDetails, "invoice") && storeData?.data?.storeId && (
+                                <button type="button"
+                                    onClick={
+                                        () => {
+                                            window.open(`https://eshopinsta-pay.vercel.app/store/${storeData?.data?.storeId}`);
+                                        }
+                                    }
+                                >{t("E-shop")}</button>
                             )}
                         </div>
                     </header>
