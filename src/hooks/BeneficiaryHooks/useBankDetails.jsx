@@ -12,6 +12,7 @@ const useBankDetails = ({ accNumType, setFormData, handleBankExtraChange, bankEx
     const [isValidIban, setIsValidIban] = useState(true)
     const [ibanSwift, setIbanSwift] = useState("")
     const [debouncedValue, setDebouncedValue] = useState("")
+    const [hasInputInteraction, setHasInputInteraction] = useState(false)
 
     const [queryMetadata, setQueryMetadata] = useState({ isForEdit: false, account_number: "" })
 
@@ -31,7 +32,7 @@ const useBankDetails = ({ accNumType, setFormData, handleBankExtraChange, bankEx
             return apiWrapper({ endpoint })
         },
         enabled: !!debouncedValue && (accNumType === "IBAN" ? debouncedValue.length > 13 : debouncedValue.length >= 7),
-        retry: 2,
+        retry: 0,
     })
 
     const bankNameKey = fieldKeyOverrides.bank_name || 'bank_name'
@@ -45,7 +46,7 @@ const useBankDetails = ({ accNumType, setFormData, handleBankExtraChange, bankEx
     useEffect(() => {
         const minLength = accNumType === "IBAN" ? 14 : 7
         if (debouncedValue.length < minLength) {
-            if (queryMetadata.isForEdit) return
+            if (queryMetadata.isForEdit || !hasInputInteraction) return
 
             setFormData(prev => ({
                 ...prev,
@@ -69,7 +70,7 @@ const useBankDetails = ({ accNumType, setFormData, handleBankExtraChange, bankEx
             setIsValidIban(true)
             setError ? setError("") : setBankDetailsError("")
         }
-    }, [debouncedValue, accNumType, bankNameKey, branchNameKey, bankBranchStreetKey, bankCityKey, bankProvinceKey, bankPostalCodeKey, queryMetadata.isForEdit, setError])
+    }, [debouncedValue, accNumType, bankNameKey, branchNameKey, bankBranchStreetKey, bankCityKey, bankProvinceKey, bankPostalCodeKey, queryMetadata.isForEdit, hasInputInteraction, setError])
 
     useEffect(() => {
         setIbanSwift("")
@@ -206,6 +207,7 @@ const useBankDetails = ({ accNumType, setFormData, handleBankExtraChange, bankEx
     const getBankDetails = useCallback((e, isForEdit = false, account_number = "") => {
         const value = e.target.value?.replace(/[^a-zA-Z0-9]/g, '')
 
+        setHasInputInteraction(true)
         setFormData(prev => ({
             ...prev,
             [e.target.name]: value

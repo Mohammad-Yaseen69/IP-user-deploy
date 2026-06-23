@@ -700,6 +700,20 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
         setCountry(country)
     }
 
+    const handleChannelSelect = (item) => {
+        const isDifferentChannel = current?.name !== item?.name
+        const isConfiguredChannel = userWithdrawals?.account_type?.includes(item?.value)
+        setCurrent(item)
+
+        if (!userWithdrawals?._id || !isConfiguredChannel) {
+            setIsEditMode(true)
+            return
+        }
+
+        if (isDifferentChannel) {
+            setIsEditMode(false)
+        }
+    }
     const deleteChannel = async () => {
         setIsSaving(true)
         try {
@@ -737,6 +751,11 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
         console.log(userWithdrawals)
         setCurrentDefault(userWithdrawals?.[cur]?.[0]?.default ? true : false)
     }, [current])
+    useEffect(() => {
+        if (userWithdrawals?._id && current?.value && !userWithdrawals?.account_type?.includes(current?.value)) {
+            setIsEditMode(true)
+        }
+    }, [current, userWithdrawals])
 
 
     const updateDefault = async () => {
@@ -852,10 +871,7 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
                                             {
                                                 channels?.map((item, idx) => (
                                                     <div key={idx} className={`${styles.channel} ${current?.name === item?.name ? styles.active : ""}`}
-                                                        onClick={() => {
-                                                            setCurrent(item)
-                                                            setIsEditMode(true)
-                                                        }}
+                                                        onClick={() => handleChannelSelect(item)}
                                                     >
                                                         <img src={current?.name === item?.name ? item?.active_icon : item?.icon} alt="" />
                                                         <span>{t(item?.name)}</span>
