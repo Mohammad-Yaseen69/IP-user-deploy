@@ -117,7 +117,7 @@ const StepOne = ({ data, dataHandler, allowed, wallet }) => {
                                     lineHeight: 1.25,
                                 }}
                             >
-                                {t("Card payment unavailable")}
+                                {t("Card payment under maintenance")}
                             </h4>
                         </div>
                     </div>
