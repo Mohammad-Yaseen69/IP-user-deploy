@@ -67,7 +67,6 @@
         background: linear-gradient(180deg, rgba(89, 38, 240, 0.06) 0%, rgba(89, 38, 240, 0.00) 100%);
         border-radius: var(--Corner-Radius-Medium-Roundness, 12px);
         padding: 0px 12px;
-        position: relative;
 
         .authForm {
             display: flex;
@@ -83,7 +82,7 @@
             .logo {
                 margin-top: 30px;
                 display: flex;
-                justify-content: space-between;
+                justify-content: center;
                 align-items: center;
                 margin-bottom: 30px;
 
@@ -120,6 +119,7 @@
                     font-weight: 500;
                     line-height: 150%;
                     letter-spacing: -0.42px;
+                    padding: 0px 150px;
                 }
 
             }
@@ -266,8 +266,6 @@
             justify-content: flex-start;
             color: var(--primary, #000);
             cursor: pointer;
-            position: absolute;
-            left: 4%;
 
             span {
                 display: flex;
@@ -313,13 +311,12 @@
             width: 100%;
             padding: 10px;
             background: transparent;
-            justify-content: space-between !important;
+            justify-content: start !important;
             gap: 20px;
         }
 
         .authForm {
-            /* gap: 15% !important; */
-            height: 60vh;
+            gap: 0px;
 
             .logo {
                 margin-top: 20px !important;
@@ -340,8 +337,8 @@
 
             form {
 
-                width: 90% !important;
-                gap: 10% !important;
+                width: 100% !important;
+                gap: 15px;
 
                 label {
                     margin-bottom: 10px;
@@ -349,9 +346,7 @@
 
                 .inputcon {
                     width: 100%;
-                    display: flex;
-                    flex-direction: column;
-                    gap: 5%;
+
                 }
 
                 button {
@@ -361,7 +356,7 @@
 
 
                 .footerBtn {
-                    gap: 5px !important;
+                    gap: 0px !important;
 
                     .loginWith {
                         text-decoration: none !important;
