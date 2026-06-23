@@ -1,6 +1,6 @@
 import React from 'react';
 
-const PhoneNumber = ({ number, setNumber, selectedCountry, setError, styles }) => {
+const PhoneNumber = ({ number, setNumber, selectedCountry, setError, styles, onBlur }) => {
     const handleChange = (e) => {
         let input = e.target.value;
 
@@ -26,6 +26,7 @@ const PhoneNumber = ({ number, setNumber, selectedCountry, setError, styles }) =
             placeholder="eg: 795396600"
             value={number}
             onChange={handleChange}
+            onBlur={onBlur}
         />
     );
 };
