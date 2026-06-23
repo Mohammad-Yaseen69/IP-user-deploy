@@ -127,13 +127,6 @@ export const MENU = [
                 permission: "invoices.view"
             },
             {
-                title: "My eShop",
-                icon: <img loading="lazy" src={paym} style={{ marginRight: "12px" }} />,
-                activeIcon: <img loading="lazy" src={paym_a} style={{ marginRight: "12px" }} />,
-                type: "external_eshop",
-                permission: "eshop.view"
-            },
-            {
                 title: "Payments",
                 icon: <img loading="lazy" src={paym} style={{ marginRight: "12px" }} />,
                 activeIcon: <img loading="lazy" src={paym_a} style={{ marginRight: "12px" }} />,
