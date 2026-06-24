@@ -268,7 +268,7 @@ const StepFour = ({
                     <strong>
                       {data?.exchange_rate?.paypal?.fee?.currency}
                     </strong>{" "}
-                    {t("is not supported by Paypal,")} <strong>USD</strong> 
+                    {t("is not supported by Paypal,")} <strong>USD</strong>
                     {t("will be used as the default currency.")}
                   </span>
                 </div>
@@ -402,7 +402,7 @@ const StepFour = ({
                 className={`${styles.item} ${item.status !== "Active" ? styles.disabled : ""}`}
                 key={item.name}
                 onClick={() => {
-                  if (item.value === "card") {
+                  if (item.value === "card" && userDetails?.username !== "ahmed") {
                     setShowCardMaintenanceModal(true);
                     return;
                   }
