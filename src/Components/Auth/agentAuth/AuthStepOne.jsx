@@ -67,7 +67,7 @@ const AuthStepOne = ({ isEmail,
                             <label >
                                 <input
                                     type="email"
-                                    placeholder={t("@  user@email.com")}
+                                    placeholder={t("Enter Your Email")}
                                     value={email}
                                     onChange={e => setEmail(e.target.value?.toLowerCase())}
                                     autoComplete="off" name="email"

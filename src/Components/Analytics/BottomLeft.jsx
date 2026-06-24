@@ -9,30 +9,30 @@ import { useTranslation } from 'react-i18next'
 
 const BottomLeft = ({ data, reports, currentWallet }) => {
     const { t } = useTranslation()
-    const [totalRequested, setTotalRequested] = useState(0)
-    useEffect(() => {
-        if (reports) {
-            for (const type in reports) {
-                const totalAmount = reports?.[type]?.[currentWallet?.currency?.code]?.reduce((acc, item) => {
-                    if (item?.type?.toLowerCase()?.includes("request")) {
-                        return acc += item?.amount ?? 0
-                    }
-                    return acc ?? 0
-                }, 0)
-                if (typeof totalAmount === "number") {
-                    // console.log(totalAmount)
-                    setTotalRequested(prev => prev + totalAmount ?? 0)
-                }
-            }
-        }
-    }, [reports])
+    // const [totalRequested, setTotalRequested] = useState(0)
+    // useEffect(() => {
+    //     if (reports) {
+    //         for (const type in reports) {
+    //             const totalAmount = reports?.[type]?.[currentWallet?.currency?.code]?.reduce((acc, item) => {
+    //                 if (item?.type?.toLowerCase()?.includes("request")) {
+    //                     return acc += item?.amount ?? 0
+    //                 }
+    //                 return acc ?? 0
+    //             }, 0)
+    //             if (typeof totalAmount === "number") {
+    //                 // console.log(totalAmount)
+    //                 setTotalRequested(prev => prev + totalAmount ?? 0)
+    //             }
+    //         }
+    //     }
+    // }, [reports])
 
     const currenciesData = [
         {
             name: "Requested Amount",
             color: "#f39900",
-            graph_values: [0.00, totalRequested],
-            amount: totalRequested
+            graph_values: [0.00, data?.payment_request?.totalAmounts ?? 0],
+            amount: data?.payment_request?.totalAmounts ?? 0
         },
         {
             name: "Quoted Amount",
@@ -41,6 +41,7 @@ const BottomLeft = ({ data, reports, currentWallet }) => {
             amount: data?.quotation?.totalAmounts ?? 0
         },
     ]
+    // console.log(data)
     return (
         <div className={styles.container}>
             {currenciesData.map(item => {
