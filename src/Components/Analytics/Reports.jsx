@@ -10,7 +10,7 @@ import { encryptData } from '../../Helper/EssentilaMethods/Encryption'
 import styles from "./styles/Reports.module.css"
 
 const Reports = () => {
-    const { userDetails, authHeader } = useContext(UserContext)
+    const { userDetails, authHeader, userWallets } = useContext(UserContext)
     const [reports, setReports] = useState({})
     const [additionalData, setAdditionalData] = useState({})
     const [requestedAmount, setRequestedAmount] = useState({})
@@ -67,7 +67,8 @@ const Reports = () => {
                 const encrypted = encryptData({
                     // ...apiAdditionalDates,
                     ...apiDates,
-                    account_id: userDetails?._id
+                    account_id: userDetails?._id,
+                    wallet_id: currentWallet?.wallet_id
                 })
                 const response = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/transaction/get-transactions-report-user/0/0`, {
                     data: encrypted
@@ -93,7 +94,7 @@ const Reports = () => {
         }
     }, [apiDates, userDetails])
 
-
+console.log(currentWallet?.wallet_id)
     // additional data formatting
     const [creditPayments, setCreditPayments] = useState([])
     const [debitPayments, setDebitPayments] = useState([])
@@ -121,7 +122,7 @@ const Reports = () => {
         categorizedPayments()
 
     }, [reports, currentWallet])
-console.log(additionalData,"additionalData")
+    // console.log(additionalData, "additionalData")
     return (
         <div className={styles.container}>
             <div className={styles.top}>
