@@ -13,6 +13,8 @@ const Reports = () => {
     const { userDetails, authHeader } = useContext(UserContext)
     const [reports, setReports] = useState({})
     const [additionalData, setAdditionalData] = useState({})
+    const [requestedAmount, setRequestedAmount] = useState({})
+    const [quotedAmount, setQuotedAmount] = useState({})
     const [currentWallet, setCurrentWallet] = useState({})
     const [isLoading, setIsLoading] = useState(true)
     const [apiDates, setApiDates] = useState({
@@ -77,6 +79,8 @@ const Reports = () => {
                 // console.log("ab", decrypted)
                 setIsLoading(false)
                 setAdditionalData(decrypted?.transactionSummary)
+                setRequestedAmount(decrypted?.totalRequestedAmount)
+                setQuotedAmount(decrypted?.totalQuotedAmount)
             } catch (error) {
                 setIsLoading(false)
                 // console.log(decryptData(error?.response?.data?.data))
@@ -115,8 +119,9 @@ const Reports = () => {
         }
 
         categorizedPayments()
-    }, [reports, currentWallet])
 
+    }, [reports, currentWallet])
+console.log(additionalData,"additionalData")
     return (
         <div className={styles.container}>
             <div className={styles.top}>
@@ -143,6 +148,8 @@ const Reports = () => {
                     data={additionalData?.[currentWallet?.currency?.code]}
                     reports={reports}
                     currentWallet={currentWallet}
+                    requestedAmount={requestedAmount}
+                    quotedAmount={quotedAmount}
                 />
                 {/* <BottomRight /> */}
             </div>
