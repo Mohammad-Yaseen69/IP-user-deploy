@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useMemo, useState } from 'react'
 import TopLeft from './TopLeft'
 import TopRight from './TopRight'
 import BottomLeft from './BottomLeft'
@@ -21,6 +21,16 @@ const Reports = () => {
         from: "2023-12-01",
         to: "2023-12-31",
     })
+
+    const selectedSummary = useMemo(() => {
+        const selectedCurrency = currentWallet?.currency?.code
+
+        if (selectedCurrency && additionalData?.[selectedCurrency]) {
+            return additionalData[selectedCurrency]
+        }
+
+        return Object.values(additionalData ?? {})?.[0] ?? {}
+    }, [additionalData, currentWallet])
 
     useEffect(() => {
         const currentDate = new Date();
@@ -63,6 +73,7 @@ const Reports = () => {
 
         const getAdditionalReports = async () => {
             setIsLoading(true)
+            setAdditionalData({})
             try {
                 const encrypted = encryptData({
                     // ...apiAdditionalDates,
@@ -88,13 +99,12 @@ const Reports = () => {
             }
         }
 
-        if (userDetails) {
+        if (userDetails && currentWallet?.wallet_id) {
             getAdditionalReports()
             getReports()
         }
-    }, [apiDates, userDetails])
+    }, [apiDates, userDetails, currentWallet?.wallet_id])
 
-console.log(currentWallet?.wallet_id)
     // additional data formatting
     const [creditPayments, setCreditPayments] = useState([])
     const [debitPayments, setDebitPayments] = useState([])
@@ -137,7 +147,7 @@ console.log(currentWallet?.wallet_id)
                 />
                 <TopRight
                     isLoading={isLoading}
-                    data={additionalData?.[currentWallet?.currency?.code]}
+                    data={selectedSummary}
                     reports={reports}
                     currentWallet={currentWallet}
                     // setApiDates={setApiAdditionalDates}
@@ -146,7 +156,7 @@ console.log(currentWallet?.wallet_id)
             </div>
             <div className={styles.bottom}>
                 <BottomLeft
-                    data={additionalData?.[currentWallet?.currency?.code]}
+                    data={selectedSummary}
                     reports={reports}
                     currentWallet={currentWallet}
                     requestedAmount={requestedAmount}
