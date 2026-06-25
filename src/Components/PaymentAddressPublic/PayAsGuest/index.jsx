@@ -32,6 +32,7 @@ import allCountries from "../../PaymentsNewer/CountriesData.json";
 import { useIdempotency } from "../../../hooks/Payments/useIdempotency";
 import { UserContext } from "../../../Context/UserContext";
 import { verifyPhoneNumber } from "../../../utils/Functions/phoneVerification";
+import MobileWalletExternalAmount from "../../PaymentsNewer/InternationalFlow/MobileWalletExternalAmount";
 
 const initialState = {
   loading: false,
@@ -849,11 +850,15 @@ const PayAsGuest = ({
                   {data.step === 4 &&
                     (
                       data.payment_type?.value === "paypal" || data.payment_type?.value === "mobile_wallet" ?
-                        <PaymentDetails
-                          dataHandler={dataHandler}
-                          data={data}
-                          amount={amount}
-                        />
+                        <>
+                          <PaymentDetails
+                            dataHandler={dataHandler}
+                            data={data}
+                            amount={amount}
+                          />
+
+                          {data.payment_type?.value === "mobile_wallet" && <MobileWalletExternalAmount data={data} />}
+                        </>
                         :
                         data.payment_type?.value === "card" ?
                           <RecipientDetails
@@ -1069,7 +1074,8 @@ const PayAsGuest = ({
                               amount={amount}
                             />
 
-                            <PaypalDetails data={data} wallet={wallet} />
+                            {data.payment_type?.value === "paypal" && <PaypalDetails data={data} wallet={wallet} />}
+                            {data.payment_type?.value === "mobile_wallet" && <MobileWalletExternalAmount data={data} />}
                           </>
                         ) :
 

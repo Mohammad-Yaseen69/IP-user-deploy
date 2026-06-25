@@ -3,6 +3,7 @@ import styles from "./styles/feescomp.module.css"
 import { Info } from "react-feather"
 import { cleanString } from "../../../Helper/cleanString"
 import { PlaidCurrencies } from "../../AddFunds/WalletFundsFlow"
+import MobileWalletExternalAmount from "./MobileWalletExternalAmount"
 
 const FeesComponent = ({ data, sendingLabel = "Sending", exchangeRateLabel = "Exchange Rate", feesLabel = "Transfer Fees", totalLabel = "Total Amount", error = "", receiverLabel = "They Receive", bright = false, extraContent, guest, receiverFee, isInvoice, paypalValues = false, plaidValues = false }) => {
     const { t } = useTranslation()
@@ -11,8 +12,6 @@ const FeesComponent = ({ data, sendingLabel = "Sending", exchangeRateLabel = "Ex
     const exchangeRateValue = _exObj && typeof _exObj === "object" ? _exObj.exchange_rate : _exObj ?? data?.exchange_rate
     const exchangeRateSendingCurrency = data?.exchange_rate?.exchange_rate?.exchange_rate_sending_currency || data?.exchange_rate?.sending?.currency
     const exchangeRateCurrency = data?.exchange_rate?.exchange_rate?.exchange_rate_currency || data?.exchange_rate?.receiver?.currency
-    const externalData = data?.exchange_rate?.external_transaction_data || data?.exchange_rate?.external_amount
-
     return (
         error
             ?
@@ -169,78 +168,7 @@ const FeesComponent = ({ data, sendingLabel = "Sending", exchangeRateLabel = "Ex
                         ""
                 }
 
-                {
-                    data.payment_type?.value === "mobile_wallet" && externalData
-                        ?
-                        <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-                            <div
-                                style={{
-                                    display: "flex",
-                                    alignItems: "flex-start",
-                                    gap: ".3rem",
-                                    padding: "12px",
-                                    borderRadius: "6px",
-                                    background: "rgba(255, 218, 68, 0.24)",
-                                    marginTop: "1rem"
-                                }}
-                            >
-                                <Info
-                                    color="#BE9A08"
-                                    size={20}
-                                />
-                                <span style={{
-                                    color: '#BE9A08',
-                                    fontFamily: 'Manrope',
-                                    fontSize: ".7rem",
-                                    fontStyle: 'normal',
-                                    fontWeight: 700,
-                                    lineHeight: 1.3,
-                                    letterSpacing: '-0.28px'
-                                }}>
-                                    <strong>
-                                        {t("You'll pay the following amout through your mobile wallet.")}
-                                    </strong>
-                                </span>
-                            </div>
-                            <div style={{
-                                display: "flex",
-                                flexDirection: "column",
-                                gap: ".9rem",
-                                padding: ".8rem",
-                                background: "#fff",
-                                borderRadius: "6px",
-                                boxShadow: "0px 1.5px 10.8px 0px rgba(0, 0, 0, 0.11)"
-                            }}>
-                                <div style={{
-                                    display: "flex",
-                                    alignItems: "center",
-                                    gap: "1rem",
-                                    justifyContent: "space-between"
-                                }}>
-                                    <span style={{
-                                        color: '#8A8A8A',
-                                        fontFamily: 'Manrope',
-                                        fontSize: ".7rem",
-                                        fontStyle: 'normal',
-                                        fontWeight: 600,
-                                        lineHeight: 1.5,
-                                        letterSpacing: '-0.14px'
-                                    }}>{t(`Amount in ${externalData?.total?.currency || externalData?.currency}`)}</span>
-                                    <strong style={{
-                                        color: '#000',
-                                        fontFamily: 'Manrope',
-                                        fontSize: "1.2rem",
-                                        fontStyle: 'normal',
-                                        fontWeight: 700,
-                                        lineHeight: 1.7,
-                                        letterSpacing: '-0.8px'
-                                    }}>{Number(externalData?.total?.value || externalData?.value)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} {externalData?.total?.currency || externalData?.currency}</strong>
-                                </div>
-                            </div>
-                        </div>
-                        :
-                        ""
-                }
+                <MobileWalletExternalAmount data={data} />
 
                 {
                     data.payment_type?.value === "bank_transfer" && !PlaidCurrencies.includes(data.exchange_rate?.sending?.currency) && plaidValues && data.exchange_rate?.plaid_amount ?
