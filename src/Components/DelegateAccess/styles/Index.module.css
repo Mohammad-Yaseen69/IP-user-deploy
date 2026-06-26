@@ -196,7 +196,6 @@
 
         .addBtn {
             width: 100%;
-
         }
     }
 
@@ -235,8 +234,12 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
+        width: 100%;
 
         .addBtn {
+            width: 40%;
+            padding: var(--sm, 12px) var(--lg, 17px);
+
             border-radius: var(--sm, 6px);
             background: linear-gradient(277deg, #E64067 -9.52%, #5926F0 62.22%, #4828A0 119.38%), #4A32E3;
         }
@@ -244,7 +247,9 @@
         .addBtn2 {
             display: flex;
             height: 40px;
-            padding: var(--sm, 8px) var(--md, 16px);
+            width: 40%;
+
+            padding: var(--sm, 12px) var(--lg, 17px);
             justify-content: center;
             align-items: center;
             gap: 8px;

@@ -117,6 +117,26 @@ const DelegateAccess = () => {
                             </button>
                         )
                     ))}
+                    <div className={styles.mobileAddBtn}>
+                        {
+                            width < 700 && <button className={styles.addBtn2} onClick={() => naviagte("/activity")}>
+                                <FaHistory size={20} /> {t("Activity Feed")}
+                            </button>
+                        }
+                        {width < 700 && (isRole ? (
+                            hasPermission("delegate-access.roles.add") && (
+                                <button className={styles.addBtn} onClick={handleModalOpen}>
+                                    {t("Add Role")}<Plus size={20} />
+                                </button>
+                            )
+                        ) : (
+                            hasPermission("delegate-access.agents.add") && (
+                                <button className={styles.addBtn} onClick={handleModalOpen}>
+                                    {t("Add Agent")}  <Plus size={20} />
+                                </button>
+                            )
+                        ))}
+                    </div>
                 </div>
                 <div className={styles.searchCont}>
                     <div className={styles.searchBox}>
@@ -170,26 +190,7 @@ const DelegateAccess = () => {
                     )
                 )}
 
-                <div className={styles.mobileAddBtn}>
-                    {
-                        width < 700 && <button className={styles.addBtn2} onClick={() => naviagte("/activity")}>
-                            <FaHistory size={20} /> {t("Activity Feed")}
-                        </button>
-                    }
-                    {width < 700 && (isRole ? (
-                        hasPermission("delegate-access.roles.add") && (
-                            <button className={styles.addBtn} onClick={handleModalOpen}>
-                                {t("Add Role")}<Plus size={20} />
-                            </button>
-                        )
-                    ) : (
-                        hasPermission("delegate-access.agents.add") && (
-                            <button className={styles.addBtn} onClick={handleModalOpen}>
-                                {t("Add Agent")}  <Plus size={20} />
-                            </button>
-                        )
-                    ))}
-                </div>
+
                 <Paginations page={page} totalPages={totalPages} setPage={setPage}
                     limit={limit} setLimit={setLimit} />
 
