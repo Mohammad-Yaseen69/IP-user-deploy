@@ -1,5 +1,6 @@
 import styles from "./styles/stepfour.module.css";
 import card from "./files/card.svg";
+import CardMaintenanceModal from "../../CardMaintenanceModal";
 // import bank from "../files/bd.png"
 import bank from "./files/bank.svg";
 import mobile_wallet from "./files/mobile_wallet.svg";
@@ -9,7 +10,7 @@ import paypal from "./files/paypal.svg";
 import i from "../files/i.svg";
 import { useTranslation } from "react-i18next";
 import { Check, Info } from "react-feather";
-import { useContext, useEffect, useMemo } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import FeesComponent from "./FeesComponent";
 import InstaPayLoader from "../../Loader";
 import TypingSpan from "../../TypingSpan";
@@ -71,6 +72,7 @@ const StepFour = ({
 }) => {
   const { t } = useTranslation();
   const { userDetails } = useContext(UserContext);
+  const [showCardMaintenanceModal, setShowCardMaintenanceModal] = useState(false);
   const { data: methods, isLoading } = useQuery({
     queryKey: ["AvailableMethods"],
     queryFn: () =>
@@ -105,7 +107,8 @@ const StepFour = ({
   console.log(types, 'dsafsadffsad')
   useEffect(() => {
     if (types.length > 0) {
-      dataHandler("payment_type", types?.[0]);
+      const defaultPaymentType = types.find((item) => item.value !== "card") ?? types?.[0];
+      dataHandler("payment_type", defaultPaymentType);
       const timeout = setTimeout(() => {
         callback();
       }, 100);
@@ -123,6 +126,10 @@ const StepFour = ({
 
   return (
     <>
+      <CardMaintenanceModal
+        isOpen={showCardMaintenanceModal}
+        toggle={() => setShowCardMaintenanceModal(false)}
+      />
       {window.innerWidth < 1000 && !isAirtime ? (
         loading ? (
           <div style={{ height: "100px", width: "100px", margin: "0 auto" }}>
@@ -160,7 +167,7 @@ const StepFour = ({
                     <strong>
                       {data?.exchange_rate?.paypal?.fee?.currency}
                     </strong>{" "}
-                    {t("is not supported by Paypal,")} <strong>USD</strong> 
+                    {t("is not supported by Paypal,")} <strong>USD</strong>
                     {t("will be used as the default currency.")}
                   </span>
                 </div>
@@ -294,6 +301,10 @@ const StepFour = ({
                 className={`${styles.item} ${item.status !== "Active" ? styles.disabled : ""}`}
                 key={item.name}
                 onClick={() => {
+                  if (item.value === "card" && userDetails?.username !== "ahmed") {
+                    setShowCardMaintenanceModal(true);
+                    return;
+                  }
                   if (item.value !== "wallet") {
                     dataHandler("wallet", {});
                   }

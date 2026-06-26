@@ -1,4 +1,4 @@
-import React, { useContext, useMemo } from "react";
+import React, { useContext, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { UserContext } from "../../../Context/UserContext";
 import bd from "../../PaymentsNewer/files/bd.png";
@@ -11,6 +11,7 @@ import { Check } from "react-feather";
 import { useQuery } from "@tanstack/react-query";
 import { apiWrapper } from "../../../utils/Functions/apiWrapper";
 import InstaPayLoader from "../../Loader";
+import CardMaintenanceModal from "../../CardMaintenanceModal";
 
 const Channels = ({
   setChannel,
@@ -20,6 +21,7 @@ const Channels = ({
 }) => {
   const { t } = useTranslation();
   const { userDetails } = useContext(UserContext);
+  const [showCardMaintenanceModal, setShowCardMaintenanceModal] = useState(false);
   console.log("user detail(18)", userDetails);
   const { data: methods, isLoading } = useQuery({
     queryKey: ["AvailableMethods"],
@@ -107,7 +109,12 @@ const Channels = ({
     );
   }, [payoutChannelData, thunesAllowed, methods, isLoading]);
   return (
-    <div
+    <>
+      <CardMaintenanceModal
+        isOpen={showCardMaintenanceModal}
+        toggle={() => setShowCardMaintenanceModal(false)}
+      />
+      <div
       style={{
         display: "flex",
         flexDirection: "column",
@@ -123,6 +130,10 @@ const Channels = ({
             style={{ marginBottom: 0, borderRadius: "12px" }}
             onClick={() => {
               if (item?.coming_soon) return;
+              if (item?.value === "card") {
+                setShowCardMaintenanceModal(true);
+                return;
+              }
               setChannel(item);
             }}
           >
@@ -211,7 +222,8 @@ const Channels = ({
           <InstaPayLoader />
         </>
       }
-    </div>
+      </div>
+    </>
   );
 };
 

@@ -22,6 +22,7 @@ import { useIdempotency } from "../../../hooks/Payments/useIdempotency"
 import { flagCheck } from "../../../utils/Functions"
 import { apiWrapper } from "../../../utils/Functions/apiWrapper"
 import { useQuery } from "@tanstack/react-query"
+import CardMaintenanceModal from "../../CardMaintenanceModal"
 
 const initialState = {
     step: 3,
@@ -49,7 +50,8 @@ const initialState = {
     exchange_rate: {},
     exchange_rate_error: "",
     error: "",
-    showCardModal: false
+    showCardModal: false,
+    showCardMaintenanceModal: true
 }
 
 function reducer(state, action) {
@@ -269,11 +271,8 @@ const DirectCardInvoicePayment = ({ invoice, username }) => {
         : `${t("Pay")} ${state.exchange_rate?.sending?.currency || invoice?.currency || ""} ${formatCurrency(state.exchange_rate?.total || amount, true)}`
 
     const goNext = () => {
-        if (state.step === 3) {
-            dataHandler("step", 5)
-        } else {
-            initiateCardPayment()
-        }
+        dataHandler("showCardMaintenanceModal", true)
+        // initiateCardPayment()
     }
 
     if (invoice?.paid) {
@@ -302,6 +301,10 @@ const DirectCardInvoicePayment = ({ invoice, username }) => {
         flagCheck("allowEcommerce", userDetails, "invoice");
     return (
         <div className={styles.directCard}>
+            <CardMaintenanceModal
+                isOpen={state.showCardMaintenanceModal}
+                toggle={() => dataHandler("showCardMaintenanceModal", false)}
+            />
             {state.cardTransactionDetails?.transaction_ref && (
                 <TrustpaymentPage
                     transaction={state.cardTransactionDetails}
@@ -395,57 +398,57 @@ const DirectCardInvoicePayment = ({ invoice, username }) => {
 
             <section className={styles.directCardRight}>
                 <div className={styles.payerPanel}>
-                 {showHeader &&
-                       <header className={styles.directCardHeader}>
-                        <div className={styles.merchant}>
-                            {flagCheck("allowUsername", userDetails, "invoice") && (
+                    {showHeader &&
+                        <header className={styles.directCardHeader}>
+                            <div className={styles.merchant}>
+                                {flagCheck("allowUsername", userDetails, "invoice") && (
 
-                                <div className={styles.avatar}>
-                                    {invoice?.account?.profileImage?.url ? (
-                                        <img src={invoice.account.profileImage.url} alt="" />
-                                    ) : (
-                                        <span>{merchantName?.[0] || "I"}</span>
-                                    )}
-                                </div>)}
-                            <div>
-                                <div className={styles.merchantName}>
-                                    {flagCheck("allowProfileName", userDetails, "invoice") && (
-                                        <h3>{merchantName}</h3>
-                                    )}
-                                    {flagCheck("allowVerificationBadge", userDetails, "invoice") && (invoice?.account?.user?.kyc_status === "approved" || invoice?.account?.kyb_status === "approved") && (
-                                        <CheckCircle size={18} />
-                                    )}
-                                </div>
-                                <div className={styles.merchantMeta}>
-                                    {flagCheck("allowUsername", userDetails, "invoice") && (
-                                        <span>@{username}</span>
-                                    )}
+                                    <div className={styles.avatar}>
+                                        {invoice?.account?.profileImage?.url ? (
+                                            <img src={invoice.account.profileImage.url} alt="" />
+                                        ) : (
+                                            <span>{merchantName?.[0] || "I"}</span>
+                                        )}
+                                    </div>)}
+                                <div>
+                                    <div className={styles.merchantName}>
+                                        {flagCheck("allowProfileName", userDetails, "invoice") && (
+                                            <h3>{merchantName}</h3>
+                                        )}
+                                        {flagCheck("allowVerificationBadge", userDetails, "invoice") && (invoice?.account?.user?.kyc_status === "approved" || invoice?.account?.kyb_status === "approved") && (
+                                            <CheckCircle size={18} />
+                                        )}
+                                    </div>
+                                    <div className={styles.merchantMeta}>
+                                        {flagCheck("allowUsername", userDetails, "invoice") && (
+                                            <span>@{username}</span>
+                                        )}
 
-                                    {flagCheck("allowCountry", userDetails, "invoice") && accountCountry?.file_url &&
-                                        <img src={accountCountry.file_url} alt={accountCountry.alpha3} />}
-                                    {flagCheck("allowAccountType", userDetails, "invoice") && (
-                                        <span className={styles.badge}>{invoice?.account?.account_type === "individual" ? t("Personal") : t("Business")}</span>
-                                    )}
+                                        {flagCheck("allowCountry", userDetails, "invoice") && accountCountry?.file_url &&
+                                            <img src={accountCountry.file_url} alt={accountCountry.alpha3} />}
+                                        {flagCheck("allowAccountType", userDetails, "invoice") && (
+                                            <span className={styles.badge}>{invoice?.account?.account_type === "individual" ? t("Personal") : t("Business")}</span>
+                                        )}
 
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div className={styles.merchantActions}>
-                            {flagCheck("allowViewProfile", userDetails, "invoice") && (
-                                <button type="button">{t("View profile")}</button>
-                            )}
-                            {flagCheck("allowEcommerce", userDetails, "invoice") && storeData?.data?.storeId && (
-                                <button type="button"
-                                    onClick={
-                                        () => {
-                                            window.open(`https://eshopinsta-pay.vercel.app/store/${storeData?.data?.storeId}`);
+                            <div className={styles.merchantActions}>
+                                {flagCheck("allowViewProfile", userDetails, "invoice") && (
+                                    <button type="button">{t("View profile")}</button>
+                                )}
+                                {flagCheck("allowEcommerce", userDetails, "invoice") && storeData?.data?.storeId && (
+                                    <button type="button"
+                                        onClick={
+                                            () => {
+                                                window.open(`https://eshopinsta-pay.vercel.app/store/${storeData?.data?.storeId}`);
+                                            }
                                         }
-                                    }
-                                >{t("E-shop")}</button>
-                            )}
-                        </div>
-                    </header>
-                 }
+                                    >{t("E-shop")}</button>
+                                )}
+                            </div>
+                        </header>
+                    }
 
                     {isDirectCardVerificationRequired !== false &&
                         <>

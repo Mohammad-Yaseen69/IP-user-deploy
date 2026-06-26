@@ -1,14 +1,17 @@
 import styles from "./styles/stepone.module.css"
 import { pagSvgs } from "./Svgs"
 import { t } from "i18next"
+import { useState } from "react"
 import { Info } from "react-feather"
 import PaypalCurrencies from "../../AddFunds/PaypalCurrencies.json"
 import FeesComponent from "../../PaymentsNewer/InternationalFlow/FeesComponent"
 import InstaPayLoader from "../../Loader"
 import { PlaidCurrencies } from "../../AddFunds/WalletFundsFlow"
+import CardMaintenanceModal from "../../CardMaintenanceModal"
 
 
 const StepOne = ({ data, dataHandler, allowed, wallet }) => {
+    const [showCardMaintenanceModal, setShowCardMaintenanceModal] = useState(false)
     const payouts = [
         {
             name: "Payment Card",
@@ -56,6 +59,10 @@ const StepOne = ({ data, dataHandler, allowed, wallet }) => {
     ].filter(item => allowed.some(it => it === item.api_val))
     return (
         <div className={styles.container}>
+            <CardMaintenanceModal
+                isOpen={showCardMaintenanceModal}
+                toggle={() => setShowCardMaintenanceModal(false)}
+            />
             {
                 !data?.payment_type?.value ?
                     payouts.map(item => (
@@ -63,7 +70,14 @@ const StepOne = ({ data, dataHandler, allowed, wallet }) => {
                             key={item?.id}
                             className={`${styles.item} ${data?.payment_type?.id === item?.id ? styles.active : ''}`}
                             style={{ cursor: item.coming_soon ? "not-allowed" : "pointer", opacity: item.coming_soon ? .8 : 1 }}
-                            onClick={() => item.coming_soon ? console.log("") : dataHandler("payment_type", item)}
+                            onClick={() => {
+                                if (item.coming_soon) return console.log("")
+                                if (item.value === "card") {
+                                    setShowCardMaintenanceModal(true)
+                                    return
+                                }
+                                dataHandler("payment_type", item)
+                            }}
                         >
                             {/* <img src={data?.payment_type?.id === item?.id ? item.active_icon : item.icon} alt="" /> */}
                             {data?.payment_type?.id === item?.id ? item.active_icon : item.icon}

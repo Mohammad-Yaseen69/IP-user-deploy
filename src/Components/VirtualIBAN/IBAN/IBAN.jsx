@@ -7,19 +7,44 @@ import { useTranslation } from 'react-i18next'
 import { usePermission } from '../../../hooks/GeneralUse/usePermission'
 import { UserContext } from '../../../Context/UserContext'
 import { useNavigate } from 'react-router'
+import { toast } from 'react-toastify'
+import usePlainFx from '../../../hooks/Payments/usePlainFx'
+import { getVirtualIbanPreflight } from '../utils/virtualIbanPreflight'
+
 const IBAN = ({ onCreated }) => {
     const { t } = useTranslation()
     const can = usePermission()
     const [showModal, setShowModal] = useState(false)
+    const [openingModal, setOpeningModal] = useState(false)
+    const [modalPreflight, setModalPreflight] = useState({})
     const navigate = useNavigate()
     const canCreateIban = can("virtual-iban.account.create")
-    const { userDetails,  } = useContext(UserContext)
-    const handleOpenModal = () => {
-        if (userDetails?.account_type === "individual" ? userDetails?.user?.kyc_status === "approved" : userDetails.company?.kyb_status === "approved") {
-            setShowModal(true)
-        }
-        else {
+    const { userDetails, userWallets } = useContext(UserContext)
+    const { getExchangeRate: getPlainExchangeRate } = usePlainFx()
+
+    const handleOpenModal = async () => {
+        const isVerified = userDetails?.account_type === "individual"
+            ? userDetails?.user?.kyc_status === "approved"
+            : userDetails?.company?.kyb_status === "approved"
+
+        if (!isVerified) {
             navigate("/settings?tab=verification")
+            return
+        }
+
+        setOpeningModal(true)
+        try {
+            const preflight = await getVirtualIbanPreflight({
+                userWallets,
+                userDetails,
+                getPlainExchangeRate,
+            })
+            setModalPreflight(preflight)
+            setShowModal(true)
+        } catch (error) {
+            toast.error(error?.message || t("Unable to prepare your virtual IBAN setup"))
+        } finally {
+            setOpeningModal(false)
         }
     }
 
@@ -47,8 +72,8 @@ const IBAN = ({ onCreated }) => {
                         </p>
                     </div>
                     {canCreateIban && (
-                        <button onClick={handleOpenModal} className={styles.buttonGroup1} >
-                            {t("Open your virtual bank account")} <ArrowRight />
+                        <button onClick={handleOpenModal} className={styles.buttonGroup1} disabled={openingModal}>
+                            {openingModal ? t("Preparing...") : t("Open your virtual bank account")} <ArrowRight />
                         </button>
                     )}
                 </div>
@@ -97,6 +122,9 @@ const IBAN = ({ onCreated }) => {
                     isOpen={showModal}
                     toggle={handleCloseModal}
                     onCreated={onCreated}
+                    activationFeeConfig={modalPreflight.activationFeeConfig}
+                    skipPaymentStep={modalPreflight.skipPaymentStep}
+                    preselectedWallet={modalPreflight.preselectedWallet}
                 />
             )}
         </div>

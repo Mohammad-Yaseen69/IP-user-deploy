@@ -9,11 +9,12 @@ import { CheckCircle } from "react-feather"
 
 const FLAGS = { MT, GB }
 
-const FeesStep = ({ jurisdiction, feesAccepted, setFeesAccepted }) => {
+const FeesStep = ({ jurisdiction, feesAccepted, setFeesAccepted, activationFeeAmount, activationFeeCurrency }) => {
     const { t } = useTranslation()
     const info = getJurisdiction(jurisdiction)
-    const activationFeeCurrency = info.activationFeeCurrency || "USD"
-    const monthlyFeeCurrency = info.monthlyFeeCurrency || activationFeeCurrency
+    const displayedActivationFee = activationFeeAmount ?? info.activationFee
+    const displayedActivationFeeCurrency = activationFeeCurrency || info.activationFeeCurrency || "USD"
+    const monthlyFeeCurrency = info.monthlyFeeCurrency || displayedActivationFeeCurrency
 
     return (
         <div>
@@ -36,7 +37,7 @@ const FeesStep = ({ jurisdiction, feesAccepted, setFeesAccepted }) => {
 
                     <div>
                         <span className={styles.feeLabel}>{t("ONE TIME")}</span>
-                        <div className={styles.feeAmount}>{activationFeeCurrency} {info.activationFee}</div>
+                        <div className={styles.feeAmount}>{displayedActivationFeeCurrency} {displayedActivationFee}</div>
                         <div className={styles.feeDesc}>{t("Activation fee")}</div>
                     </div>
                 </div>
@@ -79,8 +80,8 @@ const FeesStep = ({ jurisdiction, feesAccepted, setFeesAccepted }) => {
                     {t(
                         "I understand and agree to the fees above. I authorise InstaPay to charge the activation fee of {{activationFeeCurrency}} {{activationFee}} and monthly fee of {{monthlyFeeCurrency}} {{monthlyFee}} from my selected wallet.",
                         {
-                            activationFeeCurrency,
-                            activationFee: info.activationFee,
+                            activationFeeCurrency: displayedActivationFeeCurrency,
+                            activationFee: displayedActivationFee,
                             monthlyFeeCurrency,
                             monthlyFee: info.monthlyFee,
                         }
