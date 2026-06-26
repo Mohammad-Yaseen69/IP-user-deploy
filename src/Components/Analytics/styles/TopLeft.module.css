@@ -36,7 +36,7 @@
 }
 
 .cdi_icon {
-    width: 23.268px;
+    width: auto;
     height: 23.268px;
     flex-shrink: 0;
     border-radius: 6.323px;
@@ -48,6 +48,7 @@
     color: white;
     font-size: 15px;
     font-weight: 800;
+    padding: 5px;
 }
 
 .cdi_currency {

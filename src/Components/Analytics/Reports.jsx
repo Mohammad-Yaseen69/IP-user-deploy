@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useMemo, useState } from 'react'
 import TopLeft from './TopLeft'
 import TopRight from './TopRight'
 import BottomLeft from './BottomLeft'
@@ -10,15 +10,27 @@ import { encryptData } from '../../Helper/EssentilaMethods/Encryption'
 import styles from "./styles/Reports.module.css"
 
 const Reports = () => {
-    const { userDetails, authHeader } = useContext(UserContext)
+    const { userDetails, authHeader, userWallets } = useContext(UserContext)
     const [reports, setReports] = useState({})
     const [additionalData, setAdditionalData] = useState({})
+    const [requestedAmount, setRequestedAmount] = useState({})
+    const [quotedAmount, setQuotedAmount] = useState({})
     const [currentWallet, setCurrentWallet] = useState({})
     const [isLoading, setIsLoading] = useState(true)
     const [apiDates, setApiDates] = useState({
         from: "2023-12-01",
         to: "2023-12-31",
     })
+
+    const selectedSummary = useMemo(() => {
+        const selectedCurrency = currentWallet?.currency?.code
+
+        if (selectedCurrency && additionalData?.[selectedCurrency]) {
+            return additionalData[selectedCurrency]
+        }
+
+        return Object.values(additionalData ?? {})?.[0] ?? {}
+    }, [additionalData, currentWallet])
 
     useEffect(() => {
         const currentDate = new Date();
@@ -61,11 +73,13 @@ const Reports = () => {
 
         const getAdditionalReports = async () => {
             setIsLoading(true)
+            setAdditionalData({})
             try {
                 const encrypted = encryptData({
                     // ...apiAdditionalDates,
                     ...apiDates,
-                    account_id: userDetails?._id
+                    account_id: userDetails?._id,
+                    wallet_id: currentWallet?.wallet_id
                 })
                 const response = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/transaction/get-transactions-report-user/0/0`, {
                     data: encrypted
@@ -77,18 +91,19 @@ const Reports = () => {
                 // console.log("ab", decrypted)
                 setIsLoading(false)
                 setAdditionalData(decrypted?.transactionSummary)
+                setRequestedAmount(decrypted?.totalRequestedAmount)
+                setQuotedAmount(decrypted?.totalQuotedAmount)
             } catch (error) {
                 setIsLoading(false)
                 // console.log(decryptData(error?.response?.data?.data))
             }
         }
 
-        if (userDetails) {
+        if (userDetails && currentWallet?.wallet_id) {
             getAdditionalReports()
             getReports()
         }
-    }, [apiDates, userDetails])
-
+    }, [apiDates, userDetails, currentWallet?.wallet_id])
 
     // additional data formatting
     const [creditPayments, setCreditPayments] = useState([])
@@ -115,8 +130,9 @@ const Reports = () => {
         }
 
         categorizedPayments()
-    }, [reports, currentWallet])
 
+    }, [reports, currentWallet])
+    // console.log(additionalData, "additionalData")
     return (
         <div className={styles.container}>
             <div className={styles.top}>
@@ -131,7 +147,7 @@ const Reports = () => {
                 />
                 <TopRight
                     isLoading={isLoading}
-                    data={additionalData?.[currentWallet?.currency?.code]}
+                    data={selectedSummary}
                     reports={reports}
                     currentWallet={currentWallet}
                     // setApiDates={setApiAdditionalDates}
@@ -140,9 +156,11 @@ const Reports = () => {
             </div>
             <div className={styles.bottom}>
                 <BottomLeft
-                    data={additionalData?.[currentWallet?.currency?.code]}
+                    data={selectedSummary}
                     reports={reports}
                     currentWallet={currentWallet}
+                    requestedAmount={requestedAmount}
+                    quotedAmount={quotedAmount}
                 />
                 {/* <BottomRight /> */}
             </div>

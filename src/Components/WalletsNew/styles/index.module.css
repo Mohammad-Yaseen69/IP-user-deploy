@@ -1,6 +1,6 @@
 .container {
     padding: 3rem 3rem 1rem;
-    background: linear-gradient(to right, transparent, white);
+    /* background: linear-gradient(to right, transparent, white); */
     min-height: 100vh;
     font-family: "Manrope";
 }
