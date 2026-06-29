@@ -669,6 +669,7 @@ const VirtualIbanModal = ({
                     <FeesStep
                         jurisdiction={jurisdiction}
                         feesAccepted={feesAccepted}
+                        monthlyFeeCurr={"USD"}
                         setFeesAccepted={setFeesAccepted}
                         activationFeeAmount={activationFee.amount}
                         activationFeeCurrency={activationFee.currency}
