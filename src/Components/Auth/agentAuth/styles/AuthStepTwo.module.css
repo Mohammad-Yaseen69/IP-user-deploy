@@ -282,8 +282,78 @@
         display: none;
     }
 
+    .authForm {
+        width: 100% !important;
+        gap: 55px !important;
+        height: auto !important;
+        border-radius: 20px;
+        padding: 10px 4px 0px !important;
+        margin-top: 0px;
+
+        .logo {
+            margin-top: 28px !important;
+            margin-bottom: 0px !important;
+        }
+
+        div {
+            h1 {
+                width: 100%;
+            }
+
+            p {
+                width: 100%;
+                padding: 0px !important;
+            }
+        }
+
+        .centerText {
+            gap: 15px;
+        }
+
+        .otp_inputs {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        form {
+            display: flex;
+            gap: 25px !important;
+            width: 100% !important;
+            flex-direction: column;
+
+            label {
+                margin-bottom: 4px;
+            }
+
+            .inputcon {
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                gap: 20px;
+            }
+
+
+
+            .footerBtn {
+                margin-top: 12px;
+                gap: 8px !important;
+
+                .loginWith {
+                    text-decoration: none !important;
+                }
+
+                .forgot_pass {
+                    text-decoration: none !important;
+                }
+            }
+        }
+    }
+
     .otpContainer {
-        margin: 5px 0px;
+        margin: 10px 0;
     }
 
     .centerText {
@@ -295,6 +365,7 @@
     .verifyBtn {
         border-radius: var(--sm, 6px);
         background: linear-gradient(277deg, #E64067 -9.52%, #5926F0 62.22%, #4828A0 119.38%), #4A32E3;
+        margin-top: 16px;
     }
 
     .toggle_sms {
@@ -304,7 +375,9 @@
     }
 
     .otpInput {
-        width: 35px;
-        height: 35px;
+        width: 45px;
+        height: 46px;
+        font-size: 16px;
+        margin: 2px;
     }
 }
