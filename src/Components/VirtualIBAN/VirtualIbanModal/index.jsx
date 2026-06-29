@@ -17,7 +17,7 @@ import ConfirmationStep from "../../MyMasterCard/PaymentModal/ConfirmationStep"
 import ContactBox from "../../MyMasterCard/PaymentModal/ContactBox"
 import PaymentSelect from "../../MyMasterCard/PaymentModal/PaymentSelectStep"
 import PaymentStep from "../../MyMasterCard/PaymentModal/PaymentStep"
-import addFundsStyles from "../../MyMasterCard/styles/addFunds.module.scss"
+import addFundsStyles from "../WithdrawBalanceModal/withdrawBalance.module.scss"
 import { UserContext } from "../../../Context/UserContext"
 import { decryptData } from "../../../Helper/EssentilaMethods/Decryption"
 import { CARD_TYPES } from "../../CreditInput/CreditCardTypes"
@@ -765,59 +765,61 @@ const VirtualIbanModal = ({
         }
     }
 
-    const showFooter = ![STEPS.PENDING, STEPS.DONE].includes(currentStep) && (width > 1000)
+    const showFooter = ![STEPS.PENDING, STEPS.DONE].includes(currentStep)
 
     const renderBody = () => (
         <div
             className={styles.modalLayout}
             style={{ flexDirection: width < 1000 ? "column" : "row" }}
         >
-            {width >= 1000 && (
-                <div className={addFundsStyles.left}>
-                    <div>
-                        <div className={styles.bankHeader}>
-                            <div className={styles.bankIcon}>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
-                                    <path d="M1.6875 6.75H16.3125L9 2.25L1.6875 6.75Z" stroke="#F2EEFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                                    <path d="M3.9375 6.75V12.375" stroke="#F2EEFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                                    <path d="M7.3125 6.75V12.375" stroke="#F2EEFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                                    <path d="M10.6875 6.75V12.375" stroke="#F2EEFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                                    <path d="M14.0625 6.75V12.375" stroke="#F2EEFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                                    <path d="M2.25 12.375H15.75" stroke="#F2EEFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                                    <path d="M1.125 14.625H16.875" stroke="#F2EEFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                                </svg>
-                            </div>
-                            <h2>{t("Open a new IBAN account")}</h2>
+            {/* {width >= 1000 && ( */}
+            <div className={addFundsStyles.left}>
+                <div>
+                    <div className={styles.bankHeader}>
+                        <div className={styles.bankIcon}>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
+                                <path d="M1.6875 6.75H16.3125L9 2.25L1.6875 6.75Z" stroke="#F2EEFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                                <path d="M3.9375 6.75V12.375" stroke="#F2EEFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                                <path d="M7.3125 6.75V12.375" stroke="#F2EEFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                                <path d="M10.6875 6.75V12.375" stroke="#F2EEFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                                <path d="M14.0625 6.75V12.375" stroke="#F2EEFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                                <path d="M2.25 12.375H15.75" stroke="#F2EEFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                                <path d="M1.125 14.625H16.875" stroke="#F2EEFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                            </svg>
                         </div>
-                        <div
-                            className={addFundsStyles.progressEffect}
-                            style={{ marginTop: "2rem" }}
-                        >
-                            {sidebarSteps.map((item, index) => (
-                                <SidebarProgress
-                                    key={item.stepName}
-                                    stepLabel={item.stepLabel}
-                                    label={item.label}
-                                    Icon={SIDEBAR_ICONS[item.stepName]}
-                                    isActive={isSidebarStepActive(
-                                        item,
-                                        currentStep
-                                    )}
-                                    isCompleted={isSidebarStepCompleted(
-                                        item,
-                                        currentStep,
-                                        machineData
-                                    )}
-                                    showBar={index < sidebarSteps.length - 1}
-                                />
-                            ))}
-                        </div>
+                        <h2>{t("Open a new IBAN account")}</h2>
                     </div>
-                    <div className={addFundsStyles.contactBox}>
-                        <ContactBox />
+                    <div
+                        className={addFundsStyles.progressEffect}
+                        style={{ marginTop: "2rem" }}
+                    >
+                        {sidebarSteps.map((item, index) => (
+                            <SidebarProgress
+                                key={item.stepName}
+                                stepLabel={item.stepLabel}
+                                label={item.label}
+                                Icon={SIDEBAR_ICONS[item.stepName]}
+                                isActive={isSidebarStepActive(
+                                    item,
+                                    currentStep
+                                )}
+                                isCompleted={isSidebarStepCompleted(
+                                    item,
+                                    currentStep,
+                                    machineData
+                                )}
+                                showBar={index < sidebarSteps.length - 1}
+                            />
+                        ))}
                     </div>
                 </div>
-            )}
+                {
+                    width > 700 && <div className={addFundsStyles.contactBox}>
+                        <ContactBox />
+                    </div>
+                }
+            </div>
+            {/* )} */}
 
             <div
                 className={styles.rightPanel}
@@ -846,7 +848,7 @@ const VirtualIbanModal = ({
                             <button
                                 type="button"
                                 className={styles.nextBtn}
-                                disabled={disabled}
+                                // disabled={disabled}
                                 onClick={handleContinue}
                             >
                                 {isActivationFxPending && isActivationFxBlocked
@@ -866,18 +868,19 @@ const VirtualIbanModal = ({
     return (
         <>
             <Modal
-                isOpen={isOpen && width > 1000}
-                style={{ minWidth: "900px" }}
-                toggle={handleClose}
+                isOpen={isOpen}
+                style={{
+                    minWidth: width > 1000 ? "900px" : "0px",
+                }} toggle={handleClose}
                 backdrop={currentStep === STEPS.PENDING ? "static" : true}
                 keyboard={currentStep !== STEPS.PENDING}
             >
                 <ModalBody style={{ padding: "20px" }}>{renderBody()}</ModalBody>
             </Modal>
 
-            {isOpen && width < 1000 && (
+            {/* {isOpen && width < 1000 && (
                 <div style={{ padding: "16px" }}>{renderBody()}</div>
-            )}
+            )} */}
 
             <Modal isOpen={showOtp} toggle={() => setShowOtp(false)} centered>
                 <ModalBody>

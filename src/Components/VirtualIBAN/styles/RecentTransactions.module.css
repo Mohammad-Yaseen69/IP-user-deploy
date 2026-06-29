@@ -439,4 +439,35 @@
         padding: 16px;
         border-radius: 16px;
     }
+
+    .buttonGroup {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .title {
+        font-size: 20px;
+    }
+
+    .toolbar {
+        flex-direction: column;
+        width: 100%;
+
+        .searchBox {
+            width: 100%;
+        }
+
+        .toolbarRight {
+            width: 100%;
+
+            div {
+                width: 100%;
+
+            }
+
+            .toolBtn {
+                width: 100%;
+            }
+        }
+    }
 }

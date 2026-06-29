@@ -23,7 +23,8 @@
     width: 100%;
     border-bottom: 1px dotted #E1E5EE;
     padding-bottom: 10px;
-    span{
+
+    span {
         color: #5926F0;
     }
 }
@@ -136,4 +137,12 @@
     justify-content: center;
     color: var(--accent-color);
     flex-shrink: 0;
+}
+
+@media (max-width: 600px) {
+    .sidebar {
+        width: 100%
+    }
+
+
 }

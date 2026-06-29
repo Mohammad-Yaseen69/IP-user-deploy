@@ -5,7 +5,7 @@ import { toast } from "react-toastify"
 import useWindowWidth from "../../../utils/useWindowWidth"
 import { UserContext } from "../../../Context/UserContext"
 import ContactBox from "../../MyMasterCard/PaymentModal/ContactBox"
-import addFundsStyles from "../../MyMasterCard/styles/addFunds.module.scss"
+import addFundsStyles from "../WithdrawBalanceModal/withdrawBalance.module.scss"
 import {
     getContinueLabel,
     getDisabledState,
@@ -259,7 +259,6 @@ const ConvertFundsModal = ({ isOpen, toggle, selectedIban, availableBalance }) =
         }
     }
 
-    const showFooter = width > 1000
     const isDone = currentStep === STEPS.DONE
     const isProcessing = feePreview.isPending || executeTransfer.isPending
     const footerDisabled = disabled || isProcessing || !selectedIban
@@ -269,43 +268,54 @@ const ConvertFundsModal = ({ isOpen, toggle, selectedIban, availableBalance }) =
             className={styles.modalLayout}
             style={{ flexDirection: width < 1000 ? "column" : "row" }}
         >
-            {width >= 1000 && (
-                <div className={addFundsStyles.left}>
-                    <div>
-                        <div className={styles.bankHeader}>
-                            <div className={styles.bankIcon}>
-                                <ConvertIcon />
-                            </div>
-                            <h2>{t("Move funds to")}
+            {/* {width >= 1000 && ( */}
+            <div className={addFundsStyles.left}>
+                <div
+                    style={
+                        {
+                            width: width > 1000 ? "0%" : "100%",
+
+                        }
+                    }>
+                    <div className={styles.bankHeader}>
+                        <div className={styles.bankIcon}>
+                            <ConvertIcon />
+                        </div>
+                        {
+                            width > 700 ? <h2>{t("Move funds to")}
                                 <br />
                                 {t("InstaPay wallet")}
-                            </h2>
-                        </div>
-                        <div
-                            className={addFundsStyles.progressEffect}
-                            style={{ marginTop: "2rem" }}
-                        >
-                            {SIDEBAR_STEPS.map((item, index) => {
-                                const IconComponent = SIDEBAR_ICONS[item.stepName]
-                                return (
-                                    <SidebarProgress
-                                        key={item.stepName}
-                                        stepLabel={item.stepLabel}
-                                        label={item.label}
-                                        Icon={IconComponent}
-                                        isActive={isSidebarStepActive(item, currentStep)}
-                                        isCompleted={isSidebarStepCompleted(item, currentStep)}
-                                        showBar={index < SIDEBAR_STEPS.length - 1}
-                                    />
-                                )
-                            })}
-                        </div>
+                            </h2> :
+                                <h2>{t("Move funds to InstaPay wallet")}
+                                </h2>
+                        }
                     </div>
-                    <div className={addFundsStyles.contactBox}>
-                        <ContactBox />
+                    <div
+                        className={addFundsStyles.progressEffect}
+                        style={{ marginTop: "2rem" }}
+                    >
+                        {SIDEBAR_STEPS.map((item, index) => {
+                            const IconComponent = SIDEBAR_ICONS[item.stepName]
+                            return (
+                                <SidebarProgress
+                                    key={item.stepName}
+                                    stepLabel={item.stepLabel}
+                                    label={item.label}
+                                    Icon={IconComponent}
+                                    isActive={isSidebarStepActive(item, currentStep)}
+                                    isCompleted={isSidebarStepCompleted(item, currentStep)}
+                                    showBar={index < SIDEBAR_STEPS.length - 1}
+                                />
+                            )
+                        })}
                     </div>
                 </div>
-            )}
+                {width > 700 &&
+                    <div className={addFundsStyles.contactBox}>
+                        <ContactBox />
+                    </div>}
+            </div>
+            {/* )} */}
 
             <div
                 className={styles.rightPanel}
@@ -313,39 +323,37 @@ const ConvertFundsModal = ({ isOpen, toggle, selectedIban, availableBalance }) =
             >
                 <div className={styles.content}>{renderStepContent()}</div>
 
-                {showFooter && (
-                    <div className={styles.footer}>
-                        <button
-                            type="button"
-                            className={styles.cancelBtn}
-                            onClick={handleClose}
-                        >
-                            {t("Cancel")}
-                        </button>
-                        <div className={styles.footerNav}>
-                            {!isDone && (
-                                <button
-                                    type="button"
-                                    className={styles.backBtn}
-                                    disabled={isProcessing}
-                                    onClick={handleBack}
-                                >
-                                    <ChevronLeft />
-                                    {t("Back")}
-                                </button>
-                            )}
+                <div className={styles.footer}>
+                    <button
+                        type="button"
+                        className={styles.cancelBtn}
+                        onClick={handleClose}
+                    >
+                        {t("Cancel")}
+                    </button>
+                    <div className={styles.footerNav}>
+                        {!isDone && (
                             <button
                                 type="button"
-                                className={styles.nextBtn}
-                                // disabled={footerDisabled}
-                                onClick={handleContinue}
+                                className={styles.backBtn}
+                                disabled={isProcessing}
+                                onClick={handleBack}
                             >
-                                {isProcessing ? t("Processing...") : isDone ? t("Convert more") : continueLabel}
-                                <ChevronRight />
+                                <ChevronLeft />
+                                {t("Back")}
                             </button>
-                        </div>
+                        )}
+                        <button
+                            type="button"
+                            className={styles.nextBtn}
+                            // disabled={footerDisabled}
+                            onClick={handleContinue}
+                        >
+                            {isProcessing ? t("Processing...") : isDone ? t("Convert more") : continueLabel}
+                            <ChevronRight />
+                        </button>
                     </div>
-                )}
+                </div>
             </div>
         </div>
     )
@@ -353,16 +361,19 @@ const ConvertFundsModal = ({ isOpen, toggle, selectedIban, availableBalance }) =
     return (
         <>
             <Modal
-                isOpen={isOpen && width > 1000}
-                style={{ minWidth: "900px" }}
+                isOpen={isOpen}
+                style={{
+                    minWidth: width > 1000 ? "900px" : "0px",
+                }}
                 toggle={handleClose}
             >
                 <ModalBody style={{ padding: "20px" }}>{renderBody()}</ModalBody>
-            </Modal>
-
+            </Modal >
+            {/* 
             {isOpen && width < 1000 && (
                 <div style={{ padding: "16px" }}>{renderBody()}</div>
-            )}
+            )
+            } */}
         </>
     )
 }

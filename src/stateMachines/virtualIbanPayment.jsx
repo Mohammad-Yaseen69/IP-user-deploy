@@ -186,10 +186,10 @@ export const isSidebarStepCompleted = (sidebarItem, currentStep, data = {}) => {
         currentStep === STEPS.SUMMARY && data?.skipPaymentStep
             ? order.indexOf(STEPS.DONE)
             : currentStep === STEPS.SUMMARY || currentStep === STEPS.PAYMENT_DETAILS
-            ? order.indexOf(STEPS.PAYMENT_METHOD)
-            : currentStep === STEPS.PENDING
-                ? order.indexOf(STEPS.DONE)
-            : order.indexOf(currentStep)
+                ? order.indexOf(STEPS.PAYMENT_METHOD)
+                : currentStep === STEPS.PENDING
+                    ? order.indexOf(STEPS.DONE)
+                    : order.indexOf(currentStep)
     const itemRank = order.indexOf(sidebarItem.stepName)
     return itemRank >= 0 && itemRank < currentRank
 }
