@@ -71,9 +71,16 @@
   opacity: 1;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 700px) {
   .tab {
     padding: 10px 12px;
     font-size: 12px;
   }
+
+  .tabsWrapper {
+    width: 100%;
+    overflow-x: scroll;
+    scrollbar-width: none;
+  }
+  
 }

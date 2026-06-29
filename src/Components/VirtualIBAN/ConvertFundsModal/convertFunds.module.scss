@@ -490,3 +490,29 @@
         cursor: not-allowed;
     }
 }
+
+@media (max-width:700px) {
+    .rightPanel {
+        min-height: auto;
+    }
+
+    .footer {
+        flex-direction: column-reverse;
+
+        .cancelBtn {
+            width: 100%;
+        }
+
+        .footerNav {
+            flex-direction: column-reverse;
+            width: 100%;
+
+            .backBtn,
+            .nextBtn {
+                align-items: center;
+                justify-content: center;
+                text-align: center;
+            }
+        }
+    }
+}

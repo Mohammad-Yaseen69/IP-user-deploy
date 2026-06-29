@@ -102,4 +102,12 @@
     .headerTitle h1 {
         font-size: 17px;
     }
+
+    .top {
+        padding: 16px;
+    }
+
+    .topright {
+        margin-top: 0px;
+    }
 }
