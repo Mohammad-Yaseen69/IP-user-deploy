@@ -200,7 +200,6 @@
     gap: 6px;
     border-radius: 6px;
     background: #F2F4F7;
-    /* Light grey badge backdrop if visible */
 }
 
 .flagIcon {
@@ -214,4 +213,33 @@
     /* gray-700 */
     font-size: 13px;
     font-weight: 500;
+}
+
+@media (max-width: 600px) {
+    .rightActions {
+        width: 100%;
+
+    }
+
+    .leftInfo {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .iconBtn {
+        width: 100%;
+        justify-content: space-between;
+        padding: 16px;
+    }
+
+    .infoBox {
+        flex-direction: column;
+        width: 100%;
+        align-items: start;
+
+        .items {
+            width: 100%
+        }
+    }
+
 }

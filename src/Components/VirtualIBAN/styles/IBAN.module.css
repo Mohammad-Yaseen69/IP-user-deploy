@@ -212,16 +212,87 @@
         flex-direction: column;
         gap: 16px;
     }
+
+
 }
 
-@media (max-width: 960px) {
+
+
+@media (max-width: 768px) {
+    .container {
+        padding: 16px;
+        height: auto;
+        min-height: 100vh;
+    }
+
     .mainContent {
-        flex-direction: column-reverse;
-        text-align: center;
-        gap: 40px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 24px;
+    }
+
+    .leftSection {
+        max-width: 100%;
+        width: 100%;
+    }
+
+    .rightSection {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .rightSection img {
+        width: 100%;
+        /* max-width: 320px; */
+        height: auto;
+        border-radius: 12px;
+    }
+
+    .subHeading {
+        font-size: 11px;
+        margin-bottom: 10px;
+    }
+
+    .heading {
+        font-size: 30px;
+        line-height: 1.25;
+        margin-bottom: 18px;
     }
 
     .buttonGroup {
-        justify-content: center;
+        margin-top: 20px;
+        width: 100%;
+    }
+
+    .buttonGroup h5 {
+        font-size: 16px;
+        font-weight: 600;
+    }
+
+    .buttonGroup p {
+        font-size: 12px;
+    }
+
+    .buttonGroup1 {
+        width: 100%;
+        margin-top: 16px;
+    }
+
+    .featuresGrid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+        margin-top: 32px;
+    }
+
+    .featureCard {
+        padding: 16px;
+    }
+
+    .cardTitle {
+        font-size: 16px;
+    }
+
+    .cardDescription {
+        font-size: 13px;
     }
 }

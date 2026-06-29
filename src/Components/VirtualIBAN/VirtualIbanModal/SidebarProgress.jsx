@@ -1,4 +1,5 @@
-import styles from "../../MyMasterCard/styles/addFunds.module.scss"
+import useWindowWidth from "../../../utils/useWindowWidth"
+import styles from "../WithdrawBalanceModal/withdrawBalance.module.scss"
 import { useTranslation } from "react-i18next"
 
 const SidebarProgress = ({
@@ -10,7 +11,7 @@ const SidebarProgress = ({
     showBar,
 }) => {
     const { t } = useTranslation()
-
+    const width = useWindowWidth()
     return (
         <>
             <div className={styles.progress}>
@@ -20,8 +21,8 @@ const SidebarProgress = ({
                         backgroundColor: isActive
                             ? "#5926F0"
                             : isCompleted
-                              ? "#1FC16B"
-                              : "#D2D2D2",
+                                ? "#1FC16B"
+                                : "#D2D2D2",
                     }}
                     className={styles.circle}
                 >
@@ -49,10 +50,13 @@ const SidebarProgress = ({
                         ) : null
                     )}
                 </div>
-                <div className={styles.textCont}>
-                    <span>{t(stepLabel)}</span>
-                    <p>{t(label)}</p>
-                </div>
+                {
+                    width > 700 &&
+                    <div className={styles.textCont}>
+                        <span>{t(stepLabel)}</span>
+                        <p>{t(label)}</p>
+                    </div>
+                }
             </div>
             {showBar && (
                 <div className={styles.bar}>
