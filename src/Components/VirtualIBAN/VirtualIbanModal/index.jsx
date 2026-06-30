@@ -181,6 +181,7 @@ const VirtualIbanModal = ({
 
         return userDetails?.company?.kyb_status === "approved"
     }, [userDetails])
+    const isBusinessAccount = userDetails?.account_type !== "individual"
 
     const socketConfig = useMemo(() => ({
         url: import.meta.env.VITE_IP_DEV_API,
@@ -616,6 +617,13 @@ const VirtualIbanModal = ({
             return
         }
 
+        if (currentStep === STEPS.JURISDICTION && isBusinessAccount && !isKycApproved) {
+            resetState()
+            toggle?.()
+            navigate("/settings?tab=verification")
+            return
+        }
+
         if (currentStep === STEPS.SUMMARY) {
             await handleSendOtp()
             return
@@ -669,6 +677,7 @@ const VirtualIbanModal = ({
                     <FeesStep
                         jurisdiction={jurisdiction}
                         feesAccepted={feesAccepted}
+                        monthlyFeeCurr={"USD"}
                         setFeesAccepted={setFeesAccepted}
                         activationFeeAmount={activationFee.amount}
                         activationFeeCurrency={activationFee.currency}
