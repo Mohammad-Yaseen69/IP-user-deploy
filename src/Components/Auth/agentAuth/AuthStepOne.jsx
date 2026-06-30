@@ -66,6 +66,7 @@ const AuthStepOne = ({ isEmail,
 
                             <label >
                                 <input
+                                    className={styles.inputS}
                                     type="email"
                                     placeholder={t("Enter Your Email")}
                                     value={email}
@@ -83,7 +84,7 @@ const AuthStepOne = ({ isEmail,
                                 customStyles={{
                                     display: "flex",
                                     height: "100%",
-                                    padding: "12px 12px",
+                                    padding: width < 700 ? "18px 12px" : "12px 12px",
                                     alignItems: "center",
                                     gap: "12px",
                                     alignSelf: "stretch",
@@ -100,6 +101,8 @@ const AuthStepOne = ({ isEmail,
                         position: "relative",
                     }}>
                         <input
+                            className={styles.inputS}
+
                             type={showPassword ? "text" : "password"}
                             placeholder={t(" Password")}
                             value={password} onChange={e => setPassword(e.target.value)} autoComplete="off"
