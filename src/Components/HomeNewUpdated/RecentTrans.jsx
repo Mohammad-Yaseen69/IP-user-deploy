@@ -44,28 +44,36 @@ const RecentTrans = ({ currentWallet }) => {
 
 
                     const today = new Date();
-                    const todayDate = today.toDateString();
-                    const lastWeekDate = new Date(today.setDate(today.getDate() - 7)).toDateString();
-                    const transactionDates = decrypted.transactionList.map(transaction => new Date(transaction.createdAt).toDateString());
+                    today.setHours(0, 0, 0, 0);
 
+                    console.log(decrypted);
 
-                    console.log(decrypted)
-                    decrypted.transactionList = decrypted.transactionList.map((item, i) => {
+                    decrypted.transactionList = decrypted.transactionList.map((item) => {
+                        const transactionDate = new Date(item.createdAt);
+                        transactionDate.setHours(0, 0, 0, 0);
+
+                        const diffInDays = Math.floor(
+                            (today.getTime() - transactionDate.getTime()) /
+                            (1000 * 60 * 60 * 24)
+                        );
+
                         let headerText;
 
-                        if (transactionDates[i] === (todayDate)) {
-                            headerText = "Today"
-                        } else if (transactionDates[i] > lastWeekDate) {
-                            headerText = "Last Week"
+                        if (diffInDays === 0) {
+                            headerText = "Today";
+                        } else if (diffInDays > 0 && diffInDays <= 7) {
+                            headerText = "Last Week";
+                        } else if (diffInDays > 7) {
+                            headerText = "Older Transaction";
                         } else {
-                            headerText = "Older Transaction"
+                            headerText = "Today";
                         }
-
                         return {
                             ...item,
-                            headerText
-                        }
-                    })
+                            headerText,
+                        };
+                    });
+
                     setTransactions(decrypted.transactionList);
                 }
             } catch (err) {
@@ -77,7 +85,6 @@ const RecentTrans = ({ currentWallet }) => {
 
         fetchData();
     }, [currentWallet]);
-
     return (
         <Card style={{ marginBottom: 0, flex: 1, scrollbarWidth: "none", borderRadius: "30px", minWidth: "265px" }}>
             <CardHeader className="d-flex justify-content-between align-items-center c_h_pb">
