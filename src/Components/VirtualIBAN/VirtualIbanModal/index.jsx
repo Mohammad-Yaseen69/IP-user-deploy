@@ -181,6 +181,7 @@ const VirtualIbanModal = ({
 
         return userDetails?.company?.kyb_status === "approved"
     }, [userDetails])
+    const isBusinessAccount = userDetails?.account_type !== "individual"
 
     const socketConfig = useMemo(() => ({
         url: import.meta.env.VITE_IP_DEV_API,
@@ -613,6 +614,13 @@ const VirtualIbanModal = ({
         if (currentStep === STEPS.JURISDICTION && jurisdictionAvailability?.[jurisdiction]?.disabledReason) {
             toast.error(t(jurisdictionAvailability[jurisdiction].disabledReason))
             setJurisdiction("")
+            return
+        }
+
+        if (currentStep === STEPS.JURISDICTION && isBusinessAccount && !isKycApproved) {
+            resetState()
+            toggle?.()
+            navigate("/settings?tab=verification")
             return
         }
 
