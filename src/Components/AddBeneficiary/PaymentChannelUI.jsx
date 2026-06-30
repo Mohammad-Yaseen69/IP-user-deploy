@@ -341,7 +341,6 @@ const PaymentChannelUI = ({
                         <Label className="col-form-label" >{t("IBAN / SWIFT Code")} <span className="req_star">*</span></Label>
                         <Input disabled={isEdit ? !isEditMode : false} className="form-control" style={{ minWidth: "150px" }} type="select" value={accNumType} onChange={e => {
                             setAccNumType(e.target.value)
-                            getBankDetails({ target: { value: "" } })
                         }}>
                             <option value="IBAN">IBAN</option>
                             <option value="Swift">{t("Swift/BIC Code")}</option>

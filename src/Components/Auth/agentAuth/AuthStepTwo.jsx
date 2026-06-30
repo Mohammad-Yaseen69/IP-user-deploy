@@ -3,6 +3,7 @@ import styles from "./styles/AuthStepTwo.module.css"
 import lockIcon from "./files/Logo_Container.png"
 import BiometricSvg from "../../../assets/icons/fingerprint.png"
 import InstaPayLoader from "../../Loader"
+import useWindowWidth from "../../../utils/useWindowWidth"
 
 const AuthStepTwo = ({
     t,
@@ -41,7 +42,7 @@ const AuthStepTwo = ({
     const availableMethods = methods.filter(
         m => m.avail && m.attr !== currentOtpMethod
     )
-
+    const width = useWindowWidth()
     return (
         <div className={styles.authForm}>
 
@@ -195,7 +196,7 @@ const AuthStepTwo = ({
                         </p>
                         <div className={styles.otp_methods} style={{
                             gridTemplateColumns:
-                                availableMethods.length === 1
+                                availableMethods.length === 1 || width < 700
                                     ? "1fr"
                                     : "repeat(2, minmax(0, 1fr))"
                         }}>

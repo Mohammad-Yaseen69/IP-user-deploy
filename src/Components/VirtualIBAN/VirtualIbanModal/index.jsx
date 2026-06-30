@@ -848,7 +848,7 @@ const VirtualIbanModal = ({
                             <button
                                 type="button"
                                 className={styles.nextBtn}
-                                // disabled={disabled}
+                                disabled={disabled}
                                 onClick={handleContinue}
                             >
                                 {isActivationFxPending && isActivationFxBlocked
