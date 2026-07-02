@@ -6,15 +6,18 @@ import styles from "./virtualIbanModal.module.scss"
 import MT from "./icons/mt.svg"
 import GB from "./icons/uk.svg"
 import { CheckCircle } from "react-feather"
+import { useContext } from "react"
+import { UserContext } from "../../../Context/UserContext"
 
 const FLAGS = { MT, GB }
 
-const FeesStep = ({ jurisdiction, feesAccepted, setFeesAccepted, activationFeeAmount, activationFeeCurrency }) => {
+const FeesStep = ({ jurisdiction, feesAccepted, setFeesAccepted, activationFeeAmount, activationFeeCurrency, monthlyFeeCurr }) => {
     const { t } = useTranslation()
+    const { userDetails } = useContext(UserContext)
     const info = getJurisdiction(jurisdiction)
     const displayedActivationFee = activationFeeAmount ?? info.activationFee
     const displayedActivationFeeCurrency = activationFeeCurrency || info.activationFeeCurrency || "USD"
-    const monthlyFeeCurrency = info.monthlyFeeCurrency || displayedActivationFeeCurrency
+    const monthlyFeeCurrency = monthlyFeeCurr || info.monthlyFeeCurrency || displayedActivationFeeCurrency
 
     return (
         <div>
@@ -48,7 +51,7 @@ const FeesStep = ({ jurisdiction, feesAccepted, setFeesAccepted, activationFeeAm
 
                     <div>
                         <span className={styles.feeLabel}>{t("MONTHLY")}</span>
-                        <div className={styles.feeAmount}>{monthlyFeeCurrency} {info.monthlyFee}</div>
+                        <div className={styles.feeAmount}>{monthlyFeeCurrency} {userDetails?.country_iso_code === "CYP" ? "45" : info.monthlyFee}</div>
                         <div className={styles.feeDesc}>{t("Maintenance fee")}</div>
                     </div>
                 </div>
