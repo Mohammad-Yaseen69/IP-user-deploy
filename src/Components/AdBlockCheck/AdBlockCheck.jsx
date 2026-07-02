@@ -67,7 +67,7 @@ const AdBlockCheck = () => {
       <ModalHeader className={style["modal-header"]}>
         <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
           <div className={style["alert-circle"]}>
-            <IoWarning color="#fff" size={24} />
+            <IoWarning color="#fff" size={30} />
           </div>
           <span className={style["modal-title"]}>
             {t("Ad Blocker Detected")}
