@@ -14,7 +14,11 @@ import { toast } from "react-toastify"
 import { useMutation } from "@tanstack/react-query"
 import { apiWrapper } from "../../utils/Functions/apiWrapper"
 
-const KYBPartner = ({ partner, partners, setPartners, index, setModalOpen, setPartnerVerification }) => {
+const KYB_ACTION_BLOCKED_STATUSES = ["verified", "approved", "needs-review", "needs_review"]
+
+const isKybActionBlocked = (status) => KYB_ACTION_BLOCKED_STATUSES.includes(status)
+
+const KYBPartner = ({ partner, partners, setPartners, refreshPartners, index, setModalOpen, setPartnerVerification }) => {
 
     const [showEditModal, setShowEditModal] = useState(false)
     const [showDeleteModal, setShowDeleteModal] = useState(false)
@@ -37,9 +41,11 @@ const KYBPartner = ({ partner, partners, setPartners, index, setModalOpen, setPa
         }
     })
 
+
+
     const updatePartnerHandler = async () => {
-        if (userDetails?.company?.kyb_status === "verified" || userDetails?.company?.kyb_status === "approved") {
-            toast.error(t("All actions are blocked as the business is verified."));
+        if (isKybActionBlocked(userDetails?.company?.kyb_status)) {
+            toast.error(t("No action is allowed for the current business verification status."));
             return;
         }
 
@@ -90,6 +96,11 @@ const KYBPartner = ({ partner, partners, setPartners, index, setModalOpen, setPa
 
 
     const deletePartnerHandler = async () => {
+        if (isKybActionBlocked(userDetails?.company?.kyb_status)) {
+            toast.error(t("No action is allowed for the current business verification status."));
+            return;
+        }
+
         setUpdating(true)
         try {
             const response = await axios.delete(`${import.meta.env.VITE_IP_DEV_API}/api/company/delete-partner/${userDetails?._id}/${partner?._id}`, {
@@ -110,8 +121,8 @@ const KYBPartner = ({ partner, partners, setPartners, index, setModalOpen, setPa
     }
 
     const sendEmailVerification = async () => {
-        if (userDetails?.company?.kyb_status === "verified" || userDetails?.company?.kyb_status === "approved") {
-            toast.error("All actions are blocked as the business is verified.");
+        if (isKybActionBlocked(userDetails?.company?.kyb_status)) {
+            toast.error("No action is allowed for the current business verification status.");
             return;
         }
         setUpdating(true)
@@ -136,10 +147,12 @@ const KYBPartner = ({ partner, partners, setPartners, index, setModalOpen, setPa
             setTimeout(() => {
                 setEmailSent(false)
             }, 3000)
+            return data
         } catch (error) {
             // console.log(error)
             // console.log(decryptData(error?.response?.data?.data))
             setUpdating(false)
+            return null
         }
     }
 
@@ -151,16 +164,28 @@ const KYBPartner = ({ partner, partners, setPartners, index, setModalOpen, setPa
     }, [partners, partner])
 
     const handleRepayment = async () => {
+        if (isKybActionBlocked(userDetails?.company?.kyb_status)) {
+            toast.error("No action is allowed for the current business verification status.");
+            return;
+        }
+
         const response = await getPartnerStatus(partner?._id)
         console.log(response)
 
-        if (response.isPaymentRequired) {
+        if (response?.isPaymentRequired) {
             setModalOpen(true)
             setPartnerVerification(partner)
         } else {
-            sendEmailVerification()
+            await sendEmailVerification()
+            await refreshPartners?.()
         }
     }
+
+    const isCompanyActionBlocked = isKybActionBlocked(userDetails?.company?.kyb_status)
+    const isIndividualPartnerPaymentPending = partner?.addedIndividually === true && !partner?.kyc_verification_paid
+    const canSendVerificationEmail = userDetails?.kyb_verification_paid && !isCompanyActionBlocked && !isIndividualPartnerPaymentPending && (!partner?.kyc_status || partner?.kyc_status === "initiated")
+    const canRepayPartner = !isCompanyActionBlocked && (partner?.kyc_status === "declined" || isIndividualPartnerPaymentPending)
+    const shouldShowNoAction = isCompanyActionBlocked || (userDetails?.kyb_verification_paid && (partner?.kyc_status && partner?.kyc_status !== "initiated" && partner?.kyc_status !== "declined"))
 
     return (
         <tr>
@@ -168,7 +193,7 @@ const KYBPartner = ({ partner, partners, setPartners, index, setModalOpen, setPa
             <td>{partner?.email}</td>
             <td>{partner?.designation}</td>
             <td style={{ display: "flex", gap: ".75rem" }}>
-                {!userDetails?.kyb_verification_paid && (userDetails?.company?.kyb_status !== "verified" && userDetails?.company?.kyb_status !== "approved") && <>
+                {(!isKybActionBlocked(userDetails?.company?.kyb_status) && !shouldShowNoAction) && !isCompanyActionBlocked && <>
                     <Button color="primary" style={{
                         background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
                         border: "none",
@@ -197,7 +222,7 @@ const KYBPartner = ({ partner, partners, setPartners, index, setModalOpen, setPa
                     </Button>
                 </>}
                 {
-                    (userDetails?.kyb_verification_paid && (userDetails?.company?.kyb_status !== "verified" && userDetails?.company?.kyb_status !== "approved") && (!partner?.kyc_status || partner?.kyc_status === "initiated")) &&
+                    canSendVerificationEmail &&
                     <>
                         {
                             emailSent
@@ -223,7 +248,7 @@ const KYBPartner = ({ partner, partners, setPartners, index, setModalOpen, setPa
                     </>
                 }
                 {
-                    partner?.kyc_status === "declined" &&
+                    canRepayPartner &&
                     <Button color="primary" style={{
                         background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
                         border: "none",
@@ -241,10 +266,10 @@ const KYBPartner = ({ partner, partners, setPartners, index, setModalOpen, setPa
                     </Button>
                 }
                 {
-                    ((userDetails?.company?.kyb_status === "verified" || userDetails?.company?.kyb_status === "approved") || (userDetails?.kyb_verification_paid && (partner?.kyc_status && partner?.kyc_status !== "initiated" && partner?.kyc_status !== "declined"))) && <span style={{ fontWeight: 600, color: "darkgray" }}>{t("No Action Allowed")} </span>
+                    shouldShowNoAction && <span style={{ fontWeight: 600, color: "darkgray" }}>{t("No Action Allowed")} </span>
                 }
                 {
-                    (userDetails?.company?.kyb_status !== "verified" && userDetails?.company?.kyb_status !== "approved") && partnerFiles?.length > 0 && partnerFiles?.some(item => item?.status === "requested")
+                    !isCompanyActionBlocked && partnerFiles?.length > 0 && partnerFiles?.some(item => item?.status === "requested")
                     &&
                     <Button color="primary" style={{
                         background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
@@ -358,3 +383,7 @@ const KYBPartner = ({ partner, partners, setPartners, index, setModalOpen, setPa
 }
 
 export default KYBPartner
+
+
+
+

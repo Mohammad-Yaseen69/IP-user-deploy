@@ -2,7 +2,7 @@ import { DatePicker } from '@material-ui/pickers'
 import { useMutation } from '@tanstack/react-query'
 import axios from 'axios'
 import { format } from 'date-fns'
-import { useContext, useEffect, useMemo, useState } from 'react'
+import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { CheckCircle, XCircle } from 'react-feather'
 import { useTranslation } from 'react-i18next'
 import { AiOutlineClockCircle } from 'react-icons/ai'
@@ -40,6 +40,9 @@ function getFirstLargeFileName(files) {
 }
 
 
+const KYB_ACTION_BLOCKED_STATUSES = ["verified", "approved", "needs-review", "needs_review"]
+
+const isKybActionBlocked = (status) => KYB_ACTION_BLOCKED_STATUSES.includes(status)
 
 const getFeeAmount = async ({ payload, authHeader }) => {
     const enc = encryptData(payload)
@@ -116,43 +119,24 @@ const KYB = () => {
         }
     })
 
-    useEffect(() => {
-        let isMounted = true;
+    const refreshPartners = useCallback(async ({ showLoader = false } = {}) => {
+        if (!userDetails?._id || userDetails?.account_type !== 'business') return
 
-        const getCompanyPartners = async () => {
-            setIsLoading(true);
-            try {
-                const response = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/company/get-partners/${userDetails?._id}`, {
-                    cancelToken: new axios.CancelToken((c) => (cancelRequest = c)),
-                });
-
-                const data = await decryptData(response.data.data);
-                if (isMounted) {
-                    // console.log(data);
-                    setPartners(data?.partners)
-                    setIsLoading(false);
-                }
-            } catch (error) {
-                if (isMounted) {
-                    console.error('Error fetching company partners:', decryptData(error.response?.data?.data) || error.message);
-                    setIsLoading(false);
-                }
-            }
-        };
-
-        let cancelRequest;
-
-        if (userDetails?._id && userDetails?.account_type === 'business') {
-            getCompanyPartners();
+        if (showLoader) setIsLoading(true)
+        try {
+            const response = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/company/get-partners/${userDetails?._id}`)
+            const data = await decryptData(response.data.data)
+            setPartners(data?.partners || [])
+        } catch (error) {
+            console.error('Error fetching company partners:', decryptData(error.response?.data?.data) || error.message)
+        } finally {
+            if (showLoader) setIsLoading(false)
         }
+    }, [userDetails?._id, userDetails?.account_type])
 
-        return () => {
-            isMounted = false;
-            if (cancelRequest) {
-                cancelRequest('Request canceled due to component unmount');
-            }
-        };
-    }, [userDetails]);
+    useEffect(() => {
+        refreshPartners({ showLoader: true })
+    }, [refreshPartners])
 
     useEffect(() => {
         if (userDetails?.company) {
@@ -180,8 +164,8 @@ const KYB = () => {
     }, [userDetails])
 
     const addPartnerHandler = async () => {
-        if (userDetails?.company?.kyb_status === "verified" || userDetails?.company?.kyb_status === "approved") {
-            toast.error("All actions are blocked as the business is verified.");
+        if (isKybActionBlocked(userDetails?.company?.kyb_status)) {
+            toast.error("No action is allowed for the current business verification status.");
             return;
         }
 
@@ -209,11 +193,17 @@ const KYB = () => {
                 setAdding(false)
                 setShowAddModal(false)
             } else {
+                const paymentAllowed = !userDetails?.kyb_verification_paid || userDetails?.company?.kyb_status === "declined"
+
                 const payload = {
                     name: partnerName,
                     email: partnerEmail,
                     designation: partnerDesignation,
-                    account_id: userDetails?._id
+                    account_id: userDetails?._id,
+                }
+
+                if (!paymentAllowed) {
+                    payload.addedIndividually = true
                 }
                 const encrypted = encryptData(payload)
                 const response = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/company/add-partner`, {
@@ -245,6 +235,13 @@ const KYB = () => {
     }, [userDetails])
 
     const uploadKybFiles = async () => {
+        if (isKybActionBlocked(userDetails?.company?.kyb_status)) {
+            toast.error("No action is allowed for the current business verification status.");
+            return;
+        }
+
+        const allowPayment = !userDetails?.kyb_verification_paid || userDetails?.company?.kyb_status === "declined"
+
         console.log(compnanyFiles
             .map((file, idx) => ({ file, name: compnanyFileNames[idx] })), compnanyFiles, compnanyFileNames)
 
@@ -252,7 +249,7 @@ const KYB = () => {
             .map((file, idx) => ({ file, name: compnanyFileNames[idx] }))
             .filter(({ file }) => file && (file instanceof File || !('status' in file)))?.filter(entry => entry.name !== undefined);
 
-        if (editedEntries?.length === 0) {
+        if (editedEntries?.length === 0 && allowPayment) {
             const data = await mutateAsync({
                 payment_type: "card"
             })
@@ -304,15 +301,20 @@ const KYB = () => {
 
             const decrypted = decryptData(res.data.data)
             setUserDetails(prev => ({ ...prev, company: decrypted?.results?.company }))
-            const data = await mutateAsync({
-                payment_type: "card"
-            })
-            if (data?.isPaymentRequired) {
-                setFeeAmount(data?.base_fee_breakdown?.base_fee_usd)
-                setShowPaymentModal(true);
-            } else {
-                await processWithoutCharge()
+
+
+            if (allowPayment) {
+                const data = await mutateAsync({
+                    payment_type: "card"
+                })
+                if (data?.isPaymentRequired) {
+                    setFeeAmount(data?.base_fee_breakdown?.base_fee_usd)
+                    setShowPaymentModal(true);
+                } else {
+                    await processWithoutCharge()
+                }
             }
+
             console.log(decrypted)
         } catch (error) {
             console.log(error)
@@ -348,7 +350,7 @@ const KYB = () => {
     }, [companyType])
 
     const isReadOnly = useMemo(() => {
-        return userDetails?.company?.kyb_status === "approved"
+        return isKybActionBlocked(userDetails?.company?.kyb_status)
     }, [userDetails])
     const error_message = () => {
         return errors.find(item => item?.code == code)?.message ?? "We cannot process your request at the moment, please try again later."
@@ -476,8 +478,7 @@ const KYB = () => {
                                 outline: "none"
                             }}
                                 disabled={
-                                    userDetails?.company?.kyb_status === "verified" ||
-                                    userDetails?.company?.kyb_status === "approved" ||
+                                    isReadOnly ||
                                     !taxId ||
                                     !registrationNum ||
                                     !dateOfI ||
@@ -543,7 +544,7 @@ const KYB = () => {
                                         <tbody>
                                             {
                                                 partners?.map((item, index) => (
-                                                    <KYBPartner setPartnerVerification={setPartnerVerification} setModalOpen={setShowPaymentModal} key={item?._id} partner={item} partners={partners} setPartners={setPartners} index={index} />
+                                                    <KYBPartner setPartnerVerification={setPartnerVerification} setModalOpen={setShowPaymentModal} key={item?._id} partner={item} partners={partners} setPartners={setPartners} refreshPartners={refreshPartners} index={index} />
                                                 ))
                                             }
                                         </tbody>
@@ -553,7 +554,7 @@ const KYB = () => {
                     </Card>
                 }
                 {
-                    companyType && (!userDetails?.kyb_verification_paid || userDetails?.company?.kyb_status === "declined") &&
+                    companyType && !isReadOnly &&
                     <Button
                         style={{
                             background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
@@ -572,6 +573,7 @@ const KYB = () => {
                         toggle={() => {
                             setShowPaymentModal(false)
                             setPartnerVerification(null)
+                            refreshPartners()
                         }}
                         isKYB={true}
                         amount={feeAmount}
@@ -636,3 +638,4 @@ const KYB = () => {
 }
 
 export default KYB
+
