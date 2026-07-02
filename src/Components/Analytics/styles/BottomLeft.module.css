@@ -84,6 +84,7 @@
 @media screen and (max-width: 1000px) {
     .container {
         gap: 20px;
+        flex-direction: column;
     }
 
     .c_top div h5 {
