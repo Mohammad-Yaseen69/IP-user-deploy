@@ -1,41 +1,25 @@
 import { useState } from 'react';
 import {
-    ArrowRight,
-    Check,
     CheckCircle,
+    DollarSign,
     Facebook,
     Instagram,
-    Layers,
     Linkedin,
     MessageSquare,
     Minus,
     Plus,
-    Radio,
     Twitter,
-    Users,
-    Video,
+    UserPlus,
     XCircle,
-    Youtube,
-    Zap
+    Youtube
 } from 'react-feather';
 import InstaMedia from "../../assets/images/logo/InstaMedia.png";
-import cardoneImg from "./files/Group 2128.png"
-import card3Img from "./files/Group 2132.png"
+import cardoneImg from "./files/Group 2128.png";
+import card3Img from "./files/Group 2132.png";
+import avtar from "./files/Frame 2095585495.png";
+import Icon from "./files/Icon.png";
 import style from './InstaMedia.module.css';
-const whatWeDo = [
-
-    "Handle payments, payouts & taxes",
-    "Host your content, live & on-demand",
-    "Verify every fan before they can pay",
-    "Keep chargebacks & fraud off your plate",
-];
-
-const whatYouGet = [
-    "One dashboard for every app you run",
-    "Money in your account the same day",
-    "Real analytics on what fans actually watch",
-    "A team that answers when something breaks",
-];
+import { Global } from '@emotion/react';
 
 const keepMore = [
     "Instant payouts direct to your InstaPay wallet - no 30-day wait",
@@ -130,7 +114,12 @@ const Index = () => {
                                 No spam — one notification when we go live.
                             </p>
                             <p className={style.formNote}>
-                                12,480+ creators already on the waitlist                            </p>
+                                <div className={style.avatarCont}>
+                                    <img src={avtar} alt="" />
+                                    <img src={avtar} alt="" />
+                                    <img src={avtar} alt="" />
+                                    <img src={avtar} alt="" />
+                                </div>  12,480+ creators already on the waitlist                            </p>
                         </div>
                     </div>
 
@@ -185,6 +174,25 @@ const Index = () => {
                                 <button className={style.liveButton}>
                                     LIVE NOW <strong>4,218 watching</strong>
                                 </button>
+                                <div className={style.subCard}>
+                                    <span>
+                                        CHOOSE A PLAN
+                                    </span>
+                                    <div className={style.planRowCont}>
+                                        <div className={style.planRow}>
+                                            < span className={style.planmonth}>2 Months</span>
+                                            < span className={style.planPrice}>$ 15.99</span>
+                                        </div>
+                                        <div className={style.planRow}>
+                                            < span className={style.planmonth}>2 Months</span>
+                                            < span className={style.planPrice}>$ 15.99</span>
+                                        </div>
+                                        <div className={style.planRow}>
+                                            < span className={style.planmonth}>2 Months</span>
+                                            < span className={style.planPrice}>$ 15.99</span>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
 
                             <div className={`${style.card} ${style.cardMint}`}>
@@ -199,7 +207,7 @@ const Index = () => {
                                     <div className={style.instaIcon}>
                                         <h6>
                                             <div className={style.instaIcon}>
-                                                <MessageSquare size={16} />
+                                                <img src={Icon} alt="" />
                                             </div>
                                             InstaMedia</h6> <span>14:32:07</span>
                                     </div>
@@ -207,6 +215,9 @@ const Index = () => {
                                         CHF 2,841 landed instantly
                                     </div>
                                 </div>
+                                <div className={style.instaBadge1}></div>
+                                <div className={style.instaBadg2}></div>
+
                             </div>
                         </div>
 
@@ -220,16 +231,49 @@ const Index = () => {
                                 <img src={cardoneImg} alt="Card 3" />
 
                             </div>
-                            <div className={`${style.card} ${style.cardWhite}`}>
+                            <div className={`${style.card} ${style.cardWhite2}`}>
                                 <span className={style.cardEyebrow}>Memberships</span>
-                                <h3 className={style.cardTitle}>Monthly tiers
 
+                                <h3 className={style.cardTitle}>
+                                    Monthly tiers
                                     <br />
-                                    fans love
+                                    fans love.
                                 </h3>
-                                <img src={cardoneImg} alt="Card 3" />
 
+                                <div className={style.membershipCards}>
+                                    <div className={`${style.membershipItem} ${style.subscribersCard}`}>
+                                        <div className={`${style.iconBox} ${style.blue}`}>
+                                            <UserPlus />
+                                        </div>
 
+                                        <div>
+                                            <h4>Subscribers Only</h4>
+                                            <p>Only your paid subscribers can view.</p>
+                                        </div>
+                                    </div>
+
+                                    <div className={`${style.membershipItem} ${style.premiumCard}`}>
+                                        <div className={`${style.iconBox} ${style.yellow}`}>
+                                            <DollarSign />
+                                        </div>
+
+                                        <div>
+                                            <h4>Premium · PPV</h4>
+                                            <p>Viewers pay a one-time price to unlock.</p>
+                                        </div>
+                                    </div>
+
+                                    <div className={`${style.membershipItem} ${style.freeCard}`}>
+                                        <div className={style.iconBox}>
+                                            <Global />
+                                        </div>
+
+                                        <div>
+                                            <h4>Free</h4>
+                                            <p>Anyone can view — maximum reach.</p>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             <div className={`${style.card} ${style.cardWhite} ${style.cardWhite3}`}>
                                 <span className={style.cardEyebrow}>Posts & Discover</span>
@@ -335,7 +379,7 @@ const Index = () => {
                             <ul className={style.calloutList}>
                                 {keepMore.map((item) => (
                                     <li key={item}>
-                                        <Check size={13} className={style.checkIcon} />
+                                        <CheckCircle size={13} className={style.checkIcon} />
                                         {item}
                                     </li>
                                 ))}
@@ -354,7 +398,7 @@ const Index = () => {
                             <ul className={style.calloutList}>
                                 {everyoneYouLove.map((item) => (
                                     <li key={item}>
-                                        <Check size={13} className={style.checkIcon} />
+                                        <CheckCircle size={13} className={style.checkIcon} />
                                         {item}
                                     </li>
                                 ))}
@@ -462,7 +506,7 @@ const Index = () => {
                         })}
                     </div>
                 </div>
-                
+
                 <footer className={style.footer}>
                     <div className={style.footerLogo}>
                         <img src={InstaMedia} className={style.logoMark} alt="" />
