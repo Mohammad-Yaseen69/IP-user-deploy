@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import {
     CheckCircle,
-    DollarSign,
     Facebook,
     Instagram,
     Linkedin,
@@ -9,7 +8,6 @@ import {
     Minus,
     Plus,
     Twitter,
-    UserPlus,
     XCircle,
     Youtube
 } from 'react-feather';
@@ -18,8 +16,8 @@ import cardoneImg from "./files/Group 2128.png";
 import card3Img from "./files/Group 2132.png";
 import avtar from "./files/Frame 2095585495.png";
 import Icon from "./files/Icon.png";
+import screenShot from "./files/Screenshot 2026-07-03 214237.png";
 import style from './InstaMedia.module.css';
-import { Global } from '@emotion/react';
 
 const keepMore = [
     "Instant payouts direct to your InstaPay wallet - no 30-day wait",
@@ -192,6 +190,14 @@ const Index = () => {
                                             < span className={style.planPrice}>$ 15.99</span>
                                         </div>
                                     </div>
+                                    <div className={style.planRowBtn}>
+                                        <button className={style.cancelButton}>
+                                            Cancel
+                                        </button>
+                                        <button className={style.notifyButton}>
+                                            Continue
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
 
@@ -222,7 +228,7 @@ const Index = () => {
                         </div>
 
                         <div className={style.rowtowCon}>
-                            <div className={`${style.card} ${style.cardWhite}`}>
+                            <div className={`${style.card} ${style.cardWhiteone}`}>
                                 <span className={style.cardEyebrow}>Video & Reels</span>
                                 <h3 className={style.cardTitle}>Long, short
                                     <br />
@@ -233,47 +239,14 @@ const Index = () => {
                             </div>
                             <div className={`${style.card} ${style.cardWhite2}`}>
                                 <span className={style.cardEyebrow}>Memberships</span>
+                                <h3 className={style.cardTitle}>Monthly tiers
 
-                                <h3 className={style.cardTitle}>
-                                    Monthly tiers
                                     <br />
-                                    fans love.
+                                    fans love
                                 </h3>
+                                <img src={screenShot} alt="Card 3" />
 
-                                <div className={style.membershipCards}>
-                                    <div className={`${style.membershipItem} ${style.subscribersCard}`}>
-                                        <div className={`${style.iconBox} ${style.blue}`}>
-                                            <UserPlus />
-                                        </div>
 
-                                        <div>
-                                            <h4>Subscribers Only</h4>
-                                            <p>Only your paid subscribers can view.</p>
-                                        </div>
-                                    </div>
-
-                                    <div className={`${style.membershipItem} ${style.premiumCard}`}>
-                                        <div className={`${style.iconBox} ${style.yellow}`}>
-                                            <DollarSign />
-                                        </div>
-
-                                        <div>
-                                            <h4>Premium · PPV</h4>
-                                            <p>Viewers pay a one-time price to unlock.</p>
-                                        </div>
-                                    </div>
-
-                                    <div className={`${style.membershipItem} ${style.freeCard}`}>
-                                        <div className={style.iconBox}>
-                                            <Global />
-                                        </div>
-
-                                        <div>
-                                            <h4>Free</h4>
-                                            <p>Anyone can view — maximum reach.</p>
-                                        </div>
-                                    </div>
-                                </div>
                             </div>
                             <div className={`${style.card} ${style.cardWhite} ${style.cardWhite3}`}>
                                 <span className={style.cardEyebrow}>Posts & Discover</span>

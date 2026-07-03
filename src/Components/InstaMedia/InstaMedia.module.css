@@ -146,7 +146,7 @@
 
 .formLabel {
     color: #000;
-
+    margin-bottom: 10px;
     font-family: Inter;
     font-size: 18px;
     font-style: normal;
@@ -410,6 +410,14 @@
     border-radius: var(--lg, 14px);
     background: var(--bg-elevated, #F8F9FC);
     position: relative;
+    width: 75%;
+
+}
+
+.cardWhiteone {
+    border-radius: var(--lg, 14px);
+    background: var(--bg-elevated, #F8F9FC);
+    position: relative;
     width: 32%;
 }
 
@@ -624,86 +632,16 @@
     background: #F3FAFF;
     position: relative;
     width: 32%;
+    height: 100%;
 
-    .cardWhite2 {
-        position: relative;
-        width: 32%;
-        border-radius: 14px;
-        background: #f3faff;
-        overflow: hidden;
-        padding: 28px;
-    }
-
-    .membershipCards {
-        position: relative;
-        height: 220px;
-        margin-top: 30px;
-    }
-
-    .membershipItem {
+    img {
         position: absolute;
-        display: flex;
-        align-items: center;
-        gap: 14px;
-        background: #fff;
-        border-radius: 16px;
-        padding: 14px 16px;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-    }
-
-    .membershipItem h4 {
-        margin: 0;
-        font-size: 15px;
-        font-weight: 600;
-        color: #111;
-    }
-
-    .membershipItem p {
-        margin: 4px 0 0;
-        font-size: 12px;
-        color: #8a8a8a;
-    }
-
-    .iconBox {
-        width: 42px;
-        height: 42px;
-        border-radius: 12px;
-        background: #f2f2f2;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 18px;
-    }
-
-    .blue {
-        background: #edf3ff;
-    }
-
-    .yellow {
-        background: #ffe867;
-    }
-
-
-    .subscribersCard {
-        top: 0;
+        bottom: 21px;
         right: 0;
-        width: 240px;
-        z-index: 3;
+        width: 308px;
+
     }
 
-    .premiumCard {
-        top: 70px;
-        left: 70px;
-        width: 260px;
-        z-index: 2;
-    }
-
-    .freeCard {
-        bottom: 0;
-        left: 0;
-        width: 260px;
-        z-index: 1;
-    }
 }
 
 .cardWhite3 {
@@ -769,10 +707,30 @@
             font-family: Inter;
             font-size: 11.004px;
             font-style: normal;
-            font-weight: 600;
+            font-weight: 800;
             line-height: normal;
             letter-spacing: -0.33px;
+            margin: 0;
+            padding: 0;
         }
+    }
+}
+
+.planRowBtn {
+    display: flex;
+    gap: 10px;
+
+    .cancelButton {
+        display: flex;
+        width: 106.98px;
+        padding: 9.781px 14.672px;
+        justify-content: center;
+        align-items: center;
+        gap: 3.668px;
+        flex-shrink: 0;
+        border-radius: 610.704px;
+        background: var(--Neutral-150, #F2F2F2);
+        border:none;
     }
 }
 
