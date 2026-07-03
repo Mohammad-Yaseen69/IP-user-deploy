@@ -77,11 +77,12 @@
 }
 
 .heroTitle {
-    font-size: 34px;
-    font-weight: 800;
-    color: #111;
-    margin: 14px auto 12px;
-    line-height: 1.25;
+    color: #000;
+    font-size: 48px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 50px;
+    letter-spacing: -2.88px;
     margin-bottom: 12px;
 }
 
@@ -978,9 +979,9 @@
 
 .ctaSection {
     position: relative;
-    margin-top: 64px;
-    display: flex;
-    justify-content: center;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--xl, 32px);
 }
 
 .ctaBox {
@@ -988,7 +989,6 @@
     padding: var(--xxl, 30px);
     flex-direction: column;
     align-items: center;
-    gap: 16px;
     border-radius: var(--md, 10px);
     background: #FAFAFA;
 }
@@ -1013,23 +1013,34 @@
 }
 
 .ctaSub {
-    font-size: 13px;
-    line-height: 1.5;
-    color: var(--muted);
-    margin: 0 0 24px;
+    color: rgba(0, 0, 0, 0.50);
+    text-align: center;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 150%;
+    letter-spacing: -0.36px;
 }
 
 .ctaForm {
     display: flex;
-    gap: 8px;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 10px;
+    width: 100%;
 }
 
 .ctaInput {
-    flex: 1;
-    border: 1px solid var(--line);
-    border-radius: 999px;
-    padding: 12px 16px;
-    font-size: 13px;
+    display: flex;
+    width: 70%;
+    padding: var(--md, 10px);
+    align-items: center;
+    gap: 12px;
+    flex: 1 0 0;
+    align-self: stretch;
+    border-radius: var(--fulll, 999px);
+    border: 1px solid var(--gray-gray-300, #D1D6E0);
+    background: var(--Neutral-50, #FFF);
     outline: none;
 }
 
@@ -1038,15 +1049,21 @@
 }
 
 .ctaButton {
-    background: var(--ink);
-    color: #fff;
-    border: none;
-    border-radius: 999px;
-    padding: 12px 20px;
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    white-space: nowrap;
+    display: flex;
+    width: 30%;
+    padding: 11px 20px;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    border-radius: var(--fulll, 999px);
+    background: var(--Neutral-1000, #090909);
+    color: var(--Neutral-50, #FFF);
+    text-align: center;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    letter-spacing: -0.48px;
 }
 
 .pattern {
@@ -1070,9 +1087,9 @@
     border-radius: 1px;
 }
 
-/* ---------- FAQ ---------- */
 .faqSection {
     margin-top: 96px;
+    margin-bottom: 96px;
     text-align: center;
 }
 
@@ -1108,17 +1125,29 @@
     color: var(--ink);
     cursor: pointer;
     text-align: left;
+    color: #000;
+
+    font-family: Inter;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 150%;
+    letter-spacing: -0.48px;
 }
 
 .faqAnswer {
     margin: 0 4px 18px;
     font-size: 13px;
     line-height: 1.6;
-    color: var(--muted);
-    max-width: 48ch;
+    color: var(--text-secondary, #6E7687);
+
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 150%;
+    letter-spacing: -0.42px;
 }
 
-/* ---------- Responsive ---------- */
 @media (max-width: 720px) {
     .featuresSection {
         padding: 56px 20px;

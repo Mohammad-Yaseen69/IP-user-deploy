@@ -361,109 +361,108 @@ const Index = () => {
                             </ul>
                         </div>
                     </div>
-
-                    <div className={style.ctaSection}>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="382" height="253" viewBox="0 0 382 253" fill="none">
-                            <g opacity="0.21">
-                                <path fill-rule="evenodd" clip-rule="evenodd" d="M171.972 133.215H199.397V192.656C199.397 225.486 177.105 252.097 149.604 252.097H0.146814V192.656C0.146814 159.827 22.4389 133.215 49.9402 133.215H99.7336V192.656C110.841 157.906 138.956 133.215 171.972 133.215Z" fill="url(#paint0_linear_25_1063)" />
-                                <path fill-rule="evenodd" clip-rule="evenodd" d="M27.4248 118.882H0V59.4408C0 26.6112 22.2921 0 49.7934 0H199.25V59.4408C199.25 92.2704 176.958 118.882 149.457 118.882H99.6634V59.4408C88.5557 94.1908 60.4416 118.882 27.4248 118.882Z" fill="url(#paint1_linear_25_1063)" />
-                                <path fill-rule="evenodd" clip-rule="evenodd" d="M386.369 133.215H413.794V192.656C413.794 225.486 391.502 252.097 364.001 252.097H214.544V192.656C214.544 159.827 236.836 133.215 264.337 133.215H314.131V192.656C325.238 157.906 353.353 133.215 386.369 133.215Z" fill="url(#paint2_linear_25_1063)" />
-                                <path fill-rule="evenodd" clip-rule="evenodd" d="M241.822 118.882H214.397V59.4408C214.397 26.6112 236.689 0 264.19 0H413.647V59.4408C413.647 92.2704 391.355 118.882 363.854 118.882H314.06V59.4408C302.953 94.1908 274.839 118.882 241.822 118.882Z" fill="url(#paint3_linear_25_1063)" />
-                            </g>
-                            <defs>
-                                <linearGradient id="paint0_linear_25_1063" x1="0" y1="126.048" x2="384.961" y2="126.048" gradientUnits="userSpaceOnUse">
-                                    <stop stop-color="#D1C1FF" />
-                                    <stop offset="0.735577" stop-color="#F2EEFF" />
-                                </linearGradient>
-                                <linearGradient id="paint1_linear_25_1063" x1="0" y1="126.048" x2="384.961" y2="126.048" gradientUnits="userSpaceOnUse">
-                                    <stop stop-color="#D1C1FF" />
-                                    <stop offset="0.735577" stop-color="#F2EEFF" />
-                                </linearGradient>
-                                <linearGradient id="paint2_linear_25_1063" x1="0" y1="126.048" x2="384.961" y2="126.048" gradientUnits="userSpaceOnUse">
-                                    <stop stop-color="#D1C1FF" />
-                                    <stop offset="0.735577" stop-color="#F2EEFF" />
-                                </linearGradient>
-                                <linearGradient id="paint3_linear_25_1063" x1="0" y1="126.048" x2="384.961" y2="126.048" gradientUnits="userSpaceOnUse">
-                                    <stop stop-color="#D1C1FF" />
-                                    <stop offset="0.735577" stop-color="#F2EEFF" />
-                                </linearGradient>
-                            </defs>
-                        </svg>
-                        <div className={style.ctaBox}>
-                            <h3 className={style.ctaTitle}>Be first through the door.</h3>
-                            <p className={style.ctaSub}>
-                                Join the waitlist. We'll open your account the
-                                <br /> moment we go live. No spam, ever.
-                            </p>
-                            <form
-                                className={style.ctaForm}
-                                onSubmit={(e) => e.preventDefault()}
-                            >
-                                <input
-                                    type="email"
-                                    placeholder="you@email.com"
-                                    className={style.ctaInput}
-                                    required
-                                />
-                                <button type="submit" className={style.ctaButton}>
-                                    Continue                                </button>
-                            </form>
-                            <p>
-                                No spam — one notification when we go live.
-                            </p>
-                        </div>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="382" height="253" viewBox="0 0 382 253" fill="none">
-                            <g opacity="0.21">
-                                <path fill-rule="evenodd" clip-rule="evenodd" d="M171.972 133.215H199.397V192.656C199.397 225.486 177.105 252.097 149.604 252.097H0.146814V192.656C0.146814 159.827 22.4389 133.215 49.9402 133.215H99.7336V192.656C110.841 157.906 138.956 133.215 171.972 133.215Z" fill="url(#paint0_linear_25_1063)" />
-                                <path fill-rule="evenodd" clip-rule="evenodd" d="M27.4248 118.882H0V59.4408C0 26.6112 22.2921 0 49.7934 0H199.25V59.4408C199.25 92.2704 176.958 118.882 149.457 118.882H99.6634V59.4408C88.5557 94.1908 60.4416 118.882 27.4248 118.882Z" fill="url(#paint1_linear_25_1063)" />
-                                <path fill-rule="evenodd" clip-rule="evenodd" d="M386.369 133.215H413.794V192.656C413.794 225.486 391.502 252.097 364.001 252.097H214.544V192.656C214.544 159.827 236.836 133.215 264.337 133.215H314.131V192.656C325.238 157.906 353.353 133.215 386.369 133.215Z" fill="url(#paint2_linear_25_1063)" />
-                                <path fill-rule="evenodd" clip-rule="evenodd" d="M241.822 118.882H214.397V59.4408C214.397 26.6112 236.689 0 264.19 0H413.647V59.4408C413.647 92.2704 391.355 118.882 363.854 118.882H314.06V59.4408C302.953 94.1908 274.839 118.882 241.822 118.882Z" fill="url(#paint3_linear_25_1063)" />
-                            </g>
-                            <defs>
-                                <linearGradient id="paint0_linear_25_1063" x1="0" y1="126.048" x2="384.961" y2="126.048" gradientUnits="userSpaceOnUse">
-                                    <stop stop-color="#D1C1FF" />
-                                    <stop offset="0.735577" stop-color="#F2EEFF" />
-                                </linearGradient>
-                                <linearGradient id="paint1_linear_25_1063" x1="0" y1="126.048" x2="384.961" y2="126.048" gradientUnits="userSpaceOnUse">
-                                    <stop stop-color="#D1C1FF" />
-                                    <stop offset="0.735577" stop-color="#F2EEFF" />
-                                </linearGradient>
-                                <linearGradient id="paint2_linear_25_1063" x1="0" y1="126.048" x2="384.961" y2="126.048" gradientUnits="userSpaceOnUse">
-                                    <stop stop-color="#D1C1FF" />
-                                    <stop offset="0.735577" stop-color="#F2EEFF" />
-                                </linearGradient>
-                                <linearGradient id="paint3_linear_25_1063" x1="0" y1="126.048" x2="384.961" y2="126.048" gradientUnits="userSpaceOnUse">
-                                    <stop stop-color="#D1C1FF" />
-                                    <stop offset="0.735577" stop-color="#F2EEFF" />
-                                </linearGradient>
-                            </defs>
-                        </svg>
+                </div>
+                <div className={style.ctaSection}>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="382" height="253" viewBox="0 0 382 253" fill="none">
+                        <g opacity="0.21">
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M140.178 133.215H167.603V192.656C167.603 225.486 145.311 252.097 117.81 252.097H-31.6471V192.656C-31.6471 159.827 -9.35502 133.215 18.1462 133.215H67.9396V192.656C79.0474 157.906 107.162 133.215 140.178 133.215Z" fill="url(#paint0_linear_25_1065)" />
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M-4.36916 118.882H-31.7939L-31.7939 59.4408C-31.7939 26.6112 -9.50183 0 17.9994 0H167.456V59.4408C167.456 92.2704 145.164 118.882 117.663 118.882H67.8695V59.4408C56.7617 94.1908 28.6477 118.882 -4.36916 118.882Z" fill="url(#paint1_linear_25_1065)" />
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M354.576 133.215H382V192.656C382 225.486 359.708 252.097 332.207 252.097H182.75V192.656C182.75 159.827 205.042 133.215 232.543 133.215H282.337V192.656C293.444 157.906 321.559 133.215 354.576 133.215Z" fill="url(#paint2_linear_25_1065)" />
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M210.028 118.882H182.603V59.4408C182.603 26.6112 204.895 0 232.396 0H381.853V59.4408C381.853 92.2704 359.561 118.882 332.06 118.882H282.266V59.4408C271.159 94.1908 243.045 118.882 210.028 118.882Z" fill="url(#paint3_linear_25_1065)" />
+                        </g>
+                        <defs>
+                            <linearGradient id="paint0_linear_25_1065" x1="-31.7939" y1="126.048" x2="353.167" y2="126.048" gradientUnits="userSpaceOnUse">
+                                <stop offset="0.264423" stop-color="#F2EEFF" />
+                                <stop offset="1" stop-color="#D1C1FF" />
+                            </linearGradient>
+                            <linearGradient id="paint1_linear_25_1065" x1="-31.7939" y1="126.048" x2="353.167" y2="126.048" gradientUnits="userSpaceOnUse">
+                                <stop offset="0.264423" stop-color="#F2EEFF" />
+                                <stop offset="1" stop-color="#D1C1FF" />
+                            </linearGradient>
+                            <linearGradient id="paint2_linear_25_1065" x1="-31.7939" y1="126.048" x2="353.167" y2="126.048" gradientUnits="userSpaceOnUse">
+                                <stop offset="0.264423" stop-color="#F2EEFF" />
+                                <stop offset="1" stop-color="#D1C1FF" />
+                            </linearGradient>
+                            <linearGradient id="paint3_linear_25_1065" x1="-31.7939" y1="126.048" x2="353.167" y2="126.048" gradientUnits="userSpaceOnUse">
+                                <stop offset="0.264423" stop-color="#F2EEFF" />
+                                <stop offset="1" stop-color="#D1C1FF" />
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                    <div className={style.ctaBox}>
+                        <h3 className={style.ctaTitle}>Be first through the door.</h3>
+                        <p className={style.ctaSub}>
+                            Join the waitlist. We'll open your account the
+                            <br /> moment we go live. No spam, ever.
+                        </p>
+                        <form
+                            className={style.ctaForm}
+                            onSubmit={(e) => e.preventDefault()}
+                        >
+                            <input
+                                type="email"
+                                placeholder="you@email.com"
+                                className={style.ctaInput}
+                                required
+                            />
+                            <button type="submit" className={style.ctaButton}>
+                                Continue                                </button>
+                        </form>
+                        <p>
+                            No spam — one notification when we go live.
+                        </p>
                     </div>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="382" height="253" viewBox="0 0 382 253" fill="none">
+                        <g opacity="0.21">
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M171.972 133.215H199.397V192.656C199.397 225.486 177.105 252.097 149.604 252.097H0.146814V192.656C0.146814 159.827 22.4389 133.215 49.9402 133.215H99.7336V192.656C110.841 157.906 138.956 133.215 171.972 133.215Z" fill="url(#paint0_linear_25_1063)" />
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M27.4248 118.882H0V59.4408C0 26.6112 22.2921 0 49.7934 0H199.25V59.4408C199.25 92.2704 176.958 118.882 149.457 118.882H99.6634V59.4408C88.5557 94.1908 60.4416 118.882 27.4248 118.882Z" fill="url(#paint1_linear_25_1063)" />
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M386.369 133.215H413.794V192.656C413.794 225.486 391.502 252.097 364.001 252.097H214.544V192.656C214.544 159.827 236.836 133.215 264.337 133.215H314.131V192.656C325.238 157.906 353.353 133.215 386.369 133.215Z" fill="url(#paint2_linear_25_1063)" />
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M241.822 118.882H214.397V59.4408C214.397 26.6112 236.689 0 264.19 0H413.647V59.4408C413.647 92.2704 391.355 118.882 363.854 118.882H314.06V59.4408C302.953 94.1908 274.839 118.882 241.822 118.882Z" fill="url(#paint3_linear_25_1063)" />
+                        </g>
+                        <defs>
+                            <linearGradient id="paint0_linear_25_1063" x1="0" y1="126.048" x2="384.961" y2="126.048" gradientUnits="userSpaceOnUse">
+                                <stop stop-color="#D1C1FF" />
+                                <stop offset="0.735577" stop-color="#F2EEFF" />
+                            </linearGradient>
+                            <linearGradient id="paint1_linear_25_1063" x1="0" y1="126.048" x2="384.961" y2="126.048" gradientUnits="userSpaceOnUse">
+                                <stop stop-color="#D1C1FF" />
+                                <stop offset="0.735577" stop-color="#F2EEFF" />
+                            </linearGradient>
+                            <linearGradient id="paint2_linear_25_1063" x1="0" y1="126.048" x2="384.961" y2="126.048" gradientUnits="userSpaceOnUse">
+                                <stop stop-color="#D1C1FF" />
+                                <stop offset="0.735577" stop-color="#F2EEFF" />
+                            </linearGradient>
+                            <linearGradient id="paint3_linear_25_1063" x1="0" y1="126.048" x2="384.961" y2="126.048" gradientUnits="userSpaceOnUse">
+                                <stop stop-color="#D1C1FF" />
+                                <stop offset="0.735577" stop-color="#F2EEFF" />
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </div>
+                <div className={style.faqSection}>
+                    <span className={style.eyebrow}>FAQ</span>
+                    <h2 className={style.faqHeading}>Questions.</h2>
 
-                    <div className={style.faqSection}>
-                        <span className={style.eyebrow}>FAQ</span>
-                        <h2 className={style.faqHeading}>Questions.</h2>
-
-                        <div className={style.faqList}>
-                            {faqItems.map((item, i) => {
-                                const isOpen = openIndex === i;
-                                return (
-                                    <div key={item.q} className={style.faqItem}>
-                                        <button
-                                            className={style.faqQuestion}
-                                            onClick={() => toggleFaq(i)}
-                                            aria-expanded={isOpen}
-                                        >
-                                            <span>{item.q}</span>
-                                            {isOpen ? <Minus size={16} /> : <Plus size={16} />}
-                                        </button>
-                                        {isOpen && <p className={style.faqAnswer}>{item.a}</p>}
-                                    </div>
-                                );
-                            })}
-                        </div>
+                    <div className={style.faqList}>
+                        {faqItems.map((item, i) => {
+                            const isOpen = openIndex === i;
+                            return (
+                                <div key={item.q} className={style.faqItem}>
+                                    <button
+                                        className={style.faqQuestion}
+                                        onClick={() => toggleFaq(i)}
+                                        aria-expanded={isOpen}
+                                    >
+                                        <span>{item.q}</span>
+                                        {isOpen ? <Minus size={16} /> : <Plus size={16} />}
+                                    </button>
+                                    {isOpen && <p className={style.faqAnswer}>{item.a}</p>}
+                                </div>
+                            );
+                        })}
                     </div>
                 </div>
+                
                 <footer className={style.footer}>
                     <div className={style.footerLogo}>
                         <img src={InstaMedia} className={style.logoMark} alt="" />
