@@ -41,7 +41,7 @@ const FileUploadWithPreview = ({
         }
     };
 
-    if (userDetails?.kyb_verification_paid || isReadOnly) {
+    if (isReadOnly) {
         return (
             <div style={{ display: "flex", alignItems: "center", gap: ".7rem", fontSize: "1rem", fontWeight: 500 }}>
                 <CheckCircle color='green' />
