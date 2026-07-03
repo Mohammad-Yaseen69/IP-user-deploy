@@ -45,22 +45,30 @@ const AuthStepOne = ({ isEmail,
     return (
         <div className={styles.authForm}>
             <div className={styles.logo}>
+                <div className={styles.back_link} onClick={() => naviagte("/login")}>
+                    <ChevronLeft />
+                </div>
                 <img src={InstapayLogo} loading="lazy" alt="logo" />
-            </div>       <div>
-                <h1>{t("Welcome Back Agent")}👋</h1>
-                <p>{t("Enter your phone and password ")} <br />
-                    {t("to access your account")}</p>
             </div>
             <form onSubmit={onFormSubmit}>
-                <div>
+                <div >
+
+                    <h1>{t("Welcome Back Agent")}👋</h1>
+                    <p style={{
+                        width: "100%"
+                    }}>{t("Enter your phone and password ")} <br />
+                        {t("to access your account")}</p>
+                </div>
+                <div className={styles.inputcon}>
 
                     {
                         loginMethod === "email" ? (
 
                             <label >
                                 <input
+                                    className={styles.inputS}
                                     type="email"
-                                    placeholder={t("@  user@email.com")}
+                                    placeholder={t("Enter Your Email")}
                                     value={email}
                                     onChange={e => setEmail(e.target.value?.toLowerCase())}
                                     autoComplete="off" name="email"
@@ -76,7 +84,7 @@ const AuthStepOne = ({ isEmail,
                                 customStyles={{
                                     display: "flex",
                                     height: "100%",
-                                    padding: "12px 12px",
+                                    padding: width < 700 ? "18px 12px" : "12px 12px",
                                     alignItems: "center",
                                     gap: "12px",
                                     alignSelf: "stretch",
@@ -93,6 +101,8 @@ const AuthStepOne = ({ isEmail,
                         position: "relative",
                     }}>
                         <input
+                            className={styles.inputS}
+
                             type={showPassword ? "text" : "password"}
                             placeholder={t(" Password")}
                             value={password} onChange={e => setPassword(e.target.value)} autoComplete="off"
@@ -139,9 +149,7 @@ const AuthStepOne = ({ isEmail,
                         <span>{profileLockTIme > 0 ? isLoginError : t(isLoginError)}</span>
                     </div>
                 )}
-                <div className={styles.back_link} onClick={() => naviagte("/login")}>
-                    <span>  <ChevronLeft />   {t("Back")}</span>
-                </div>
+
                 {locationLoading && (
                     <div className={styles.location_status}>
                         <span>{t("Reading Location...")}</span>
@@ -162,10 +170,7 @@ const AuthStepOne = ({ isEmail,
                         {t("Forgot Password?")}
 
                     </Link>
-                    <Link to={"/forgot-password/agent"} className={styles.forgot_passmobile}>
-                        {t(" If you don't have an account Create an Account")}
-                        <span>{t("Forgot Password?")}</span>
-                    </Link>
+
                 </div>
             </form>
         </div >

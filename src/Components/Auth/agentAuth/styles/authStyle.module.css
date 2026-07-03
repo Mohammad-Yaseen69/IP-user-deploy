@@ -67,6 +67,7 @@
         background: linear-gradient(180deg, rgba(89, 38, 240, 0.06) 0%, rgba(89, 38, 240, 0.00) 100%);
         border-radius: var(--Corner-Radius-Medium-Roundness, 12px);
         padding: 0px 12px;
+        position: relative;
 
         .authForm {
             display: flex;
@@ -82,7 +83,7 @@
             .logo {
                 margin-top: 30px;
                 display: flex;
-                justify-content: center;
+                justify-content: space-between;
                 align-items: center;
                 margin-bottom: 30px;
 
@@ -119,7 +120,6 @@
                     font-weight: 500;
                     line-height: 150%;
                     letter-spacing: -0.42px;
-                    padding: 0px 150px;
                 }
 
             }
@@ -266,7 +266,10 @@
             justify-content: flex-start;
             color: var(--primary, #000);
             cursor: pointer;
-            span{
+            position: absolute;
+            left: 4%;
+
+            span {
                 display: flex;
                 align-items: center;
                 gap: 5px;
@@ -299,81 +302,110 @@
     }
 }
 
-.forgot_passmobile {
-    display: none;
-}
 
 @media (max-width: 700px) {
     .container {
-        align-items: center;
+        min-height: 100dvh;
+        height: auto;
+        align-items: flex-start;
         justify-content: center;
         padding: 0px;
 
+        .child1 {
+            display: none;
+            visibility: hidden;
+        }
+
         .child2 {
-            width: 100%;
-            padding: 10px;
-            background: transparent;
+            width: 100% !important;
+
+            min-height: 100dvh;
+            height: auto !important;
+
+            border-radius: 0 !important;
+            padding: 0px 16px 0px !important;
+
+
+            justify-content: flex-start !important;
+            gap: 0 !important;
+
+
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
         }
 
         .authForm {
-            gap: 0px;
+            width: 100% !important;
+            gap: 55px !important;
+            height: auto !important;
+            border-radius: 20px;
+            padding: 10px 4px 0px !important;
+            margin-top: 0px;
 
             .logo {
-                margin-top: 20px !important;
+                margin-top: 28px !important;
                 margin-bottom: 0px !important;
             }
 
             div {
                 h1 {
                     width: 100%;
+                    font-size: 25px !important;
                 }
 
                 p {
                     width: 100%;
+                    font-size: 16px !important;
                     padding: 0px !important;
                 }
-
             }
 
             form {
-
                 width: 100% !important;
 
-                div {
+
+                gap: 25px !important;
+
+                .para {
+                    font-size: 16px !important;
+
+                }
+
+                label {
+                    margin-bottom: 4px;
+
+                    .inputS {
+                        padding: 18px 12px !important;
+                    }
+                }
+
+
+                .inputcon {
                     width: 100%;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 20px;
                 }
 
                 button {
                     border-radius: 8px;
+                    padding: 18px 12px !important;
                     background: linear-gradient(277deg, #E64067 -9.52%, #5926F0 62.22%, #4828A0 119.38%), #5926F0 !important;
                 }
 
                 .footerBtn {
-                    gap: 0px !important;
+                    margin-top: 12px;
+                    gap: 8px !important;
+
 
                     .loginWith {
                         text-decoration: none !important;
                     }
 
-                    .forgot_pass {
-                        display: none;
-                    }
-
-                    .forgot_passmobile {
-                        display: block;
-                        color: var(--COLORS-Neutral-500, #A4A4A4);
-                        text-align: center;
-                        font-family: Manrope;
-                        font-size: 12px;
-                        font-style: normal;
-                        font-weight: 600;
-                        line-height: 25.5px;
-                        letter-spacing: -0.12px;
-
-                        span {
-                            color: #5926F0;
-                            text-decoration: underline;
-                        }
+                    .forgot_pass,
+                    .loginWith {
+                        font-size: 16px !important;
+                        text-decoration: none !important;
                     }
                 }
             }
@@ -386,23 +418,23 @@
             flex-direction: column !important;
         }
 
+
         .footer {
             display: flex;
-            flex-direction: column;
-            justify-content: flex-end;
+            flex-direction: column !important;
+            justify-content: center !important;
             align-items: center;
-            gap: 30px !important;
+            gap: 12px !important;
             align-self: stretch;
-            margin-top: 20px;
-        }
+            margin-top: auto;
+            padding: 0px 0 35px;
+            height: 30dvh;
 
-        .footer {
-            margin-bottom: 10px;
-        }
+            span {
 
+                font-size: 16px !important;
+            }
 
-        .child1 {
-            display: none;
         }
     }
 }

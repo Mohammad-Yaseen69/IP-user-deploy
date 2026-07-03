@@ -1,8 +1,9 @@
 import { lazy } from 'react';
-import { usePermission } from "../hooks/GeneralUse/usePermission";
+import { Navigate } from 'react-router';
 import BusinessAccount from '../Components/AddBeneficiary/BusinessAccount';
-import { useNavigate, Navigate } from 'react-router';
+import { usePermission } from "../hooks/GeneralUse/usePermission";
 import { MENU } from '../Layout/SidebarNew/SbNMenu';
+import { BusinessRoute } from '../hooks/GeneralUse/useBusiness';
 const QrCode = lazy(() => import("../Components/QrCode"));
 const QRScan = lazy(() => import("../Components/QrScan"));
 const ChatbotQrCode = lazy(() => import("../Components/ChatbotQrCode"));
@@ -78,7 +79,6 @@ const ThirdPartySenders = lazy(() => import("../Components/ThirdPartySenders"))
 
 const PermissionRoute = ({ permission, children }) => {
     const can = usePermission();
-
     if (!can(permission)) {
         let fallbackPath = null;
         for (const section of MENU) {
@@ -154,8 +154,21 @@ export const routes = [
     { path: "/update-pin", component: <UpdatePin /> },
     { path: "/invoices", component: <PermissionRoute permission="invoices.view"><ReceiptInvoice /></PermissionRoute> },
     { path: "/store-create", component: <StoreCreate /> },
-    { path: "/delegate-access", component: <PermissionRoute permission="delegate-access.view"><DelegateAccess /></PermissionRoute> },
-    { path: "/activity", component: <PermissionRoute permission="activity-logs.view"><LogActivity /></PermissionRoute> },
+    {
+        path: "/delegate-access", component:
+            <BusinessRoute>
+                <PermissionRoute permission="delegate-access.view">
+                    <DelegateAccess /></PermissionRoute>
+            </BusinessRoute>
+    },
+    {
+        path: "/activity", component:
+            <BusinessRoute>
+                <PermissionRoute permission="activity-logs.view">
+                    <LogActivity />
+                </PermissionRoute>
+            </BusinessRoute>
+    },
     { path: "/virtual-IBAN", component: <PermissionRoute permission="virtual-iban.view"><VirtyalBank /></PermissionRoute> },
     { path: "/third-party-senders", component: <PermissionRoute permission="payments.send-as-third-party.view"><ThirdPartySenders /></PermissionRoute> },
     { path: "*", component: <NotFound type='Page' /> }
@@ -163,10 +176,10 @@ export const routes = [
 export const publicRoutes = [
     { path: "/qr-test", component: <QrCode /> },
     { path: "/q/:wallet_id", component: <QRScan /> },
-    // { path: "/tcbf", component: <TempCountriesBankFields /> },
+    // {path: "/tcbf", component: <TempCountriesBankFields /> },
     { path: "/pay/:user_name", component: <PaymentAddressPublic /> },
     { path: "/pay/:user_name/:status", component: <PaymentAddressPublic /> },
-    // { path: "/profile/:user_name", component: <UserProfilePublic /> },
+    // {path: "/profile/:user_name", component: <UserProfilePublic /> },
     { path: "/partners/verification/:token", component: <PartnerVerificationPage /> },
     { path: "/onboarding/user-verification/:token", component: <BroadcastVerify /> },
     { path: "/download-qr-poster/:wallet_id", component: <DownloadQrPage /> },
@@ -198,7 +211,7 @@ export const publicRoutes = [
 ]
 export const authRoutes = [
     { path: `/login`, component: <Auth /> },
-    // { path: `/agent-login`, component: <Auth /> },
+    // {path: `/agent-login`, component: <Auth /> },
     { path: `/agent-login`, component: <AgentLogin /> },
     { path: `/forgot-password`, component: <AuthNew /> },
     { path: `/forgot-password/agent`, component: <AuthNew /> },

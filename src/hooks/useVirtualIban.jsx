@@ -5,6 +5,8 @@ import {
     asVirtualIbanArray,
     unwrapVirtualIbanResponse,
 } from "../Components/VirtualIBAN/utils/virtualIban"
+import { useContext } from "react"
+import { UserContext } from "../Context/UserContext"
 
 export const virtualIbanQueryKeys = {
     all: ["virtual-iban"],
@@ -32,6 +34,29 @@ export const useVirtualIbans = () =>
         refetchOnMount: "always",
         refetchOnWindowFocus: false,
     })
+
+export const useIbanFee = () => {
+    const { userDetails } = useContext(UserContext)
+
+    return useQuery({
+        queryKey: ['IbanFee', userDetails?.level?._id],
+        queryFn: async () => {
+            const res = await apiWrapper({
+                endpoint: `/api/account-settings/fee-details?service_name=iban_activation&account_level=${userDetails?.level?._id}`,
+                method: "GET",
+                isDecrypted: true,
+            })
+
+            return res.data
+        },
+        gcTime: 0,
+        cacheTime: 0,
+        staleTime: 0,
+        refetchOnMount: "always",
+        refetchOnWindowFocus: false,
+        enabled: !!userDetails?.level?._id,
+    })
+}
 
 export const usePendingStatus = (enabled = true) =>
     useQuery({

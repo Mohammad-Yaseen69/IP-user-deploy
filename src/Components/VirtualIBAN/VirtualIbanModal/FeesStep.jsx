@@ -6,14 +6,18 @@ import styles from "./virtualIbanModal.module.scss"
 import MT from "./icons/mt.svg"
 import GB from "./icons/uk.svg"
 import { CheckCircle } from "react-feather"
+import { useContext } from "react"
+import { UserContext } from "../../../Context/UserContext"
 
 const FLAGS = { MT, GB }
 
-const FeesStep = ({ jurisdiction, feesAccepted, setFeesAccepted }) => {
+const FeesStep = ({ jurisdiction, feesAccepted, setFeesAccepted, activationFeeAmount, activationFeeCurrency, monthlyFeeCurr }) => {
     const { t } = useTranslation()
+    const { userDetails } = useContext(UserContext)
     const info = getJurisdiction(jurisdiction)
-    const activationFeeCurrency = info.activationFeeCurrency || "USD"
-    const monthlyFeeCurrency = info.monthlyFeeCurrency || activationFeeCurrency
+    const displayedActivationFee = activationFeeAmount ?? info.activationFee
+    const displayedActivationFeeCurrency = activationFeeCurrency || info.activationFeeCurrency || "USD"
+    const monthlyFeeCurrency = monthlyFeeCurr || info.monthlyFeeCurrency || displayedActivationFeeCurrency
 
     return (
         <div>
@@ -36,7 +40,7 @@ const FeesStep = ({ jurisdiction, feesAccepted, setFeesAccepted }) => {
 
                     <div>
                         <span className={styles.feeLabel}>{t("ONE TIME")}</span>
-                        <div className={styles.feeAmount}>{activationFeeCurrency} {info.activationFee}</div>
+                        <div className={styles.feeAmount}>{displayedActivationFeeCurrency} {displayedActivationFee}</div>
                         <div className={styles.feeDesc}>{t("Activation fee")}</div>
                     </div>
                 </div>
@@ -47,7 +51,7 @@ const FeesStep = ({ jurisdiction, feesAccepted, setFeesAccepted }) => {
 
                     <div>
                         <span className={styles.feeLabel}>{t("MONTHLY")}</span>
-                        <div className={styles.feeAmount}>{monthlyFeeCurrency} {info.monthlyFee}</div>
+                        <div className={styles.feeAmount}>{monthlyFeeCurrency} {userDetails?.country_iso_code === "CYP" ? "45" : info.monthlyFee}</div>
                         <div className={styles.feeDesc}>{t("Maintenance fee")}</div>
                     </div>
                 </div>
@@ -79,8 +83,8 @@ const FeesStep = ({ jurisdiction, feesAccepted, setFeesAccepted }) => {
                     {t(
                         "I understand and agree to the fees above. I authorise InstaPay to charge the activation fee of {{activationFeeCurrency}} {{activationFee}} and monthly fee of {{monthlyFeeCurrency}} {{monthlyFee}} from my selected wallet.",
                         {
-                            activationFeeCurrency,
-                            activationFee: info.activationFee,
+                            activationFeeCurrency: displayedActivationFeeCurrency,
+                            activationFee: displayedActivationFee,
                             monthlyFeeCurrency,
                             monthlyFee: info.monthlyFee,
                         }

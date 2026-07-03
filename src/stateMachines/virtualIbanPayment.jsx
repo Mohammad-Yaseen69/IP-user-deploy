@@ -71,7 +71,10 @@ export const SIDEBAR_STEPS = [
 ]
 
 export const getSidebarSteps = (data = {}) => {
-    const hiddenSteps = data?.kycApproved ? [STEPS.VERIFICATION] : []
+    const hiddenSteps = [
+        ...(data?.kycApproved ? [STEPS.VERIFICATION] : []),
+        ...(data?.skipPaymentStep ? [STEPS.PAYMENT_METHOD] : []),
+    ]
 
     return SIDEBAR_STEPS
         .filter((item) => !hiddenSteps.includes(item.stepName))
@@ -87,11 +90,11 @@ export const transitions = {
         back: () => null,
     },
     [STEPS.FEES]: {
-        next: (data) => data?.kycApproved ? STEPS.PAYMENT_METHOD : STEPS.VERIFICATION,
+        next: (data) => data?.kycApproved ? (data?.skipPaymentStep ? STEPS.SUMMARY : STEPS.PAYMENT_METHOD) : STEPS.VERIFICATION,
         back: () => STEPS.JURISDICTION,
     },
     [STEPS.VERIFICATION]: {
-        next: () => STEPS.PAYMENT_METHOD,
+        next: (data) => data?.skipPaymentStep ? STEPS.SUMMARY : STEPS.PAYMENT_METHOD,
         back: () => STEPS.FEES,
     },
     [STEPS.PAYMENT_METHOD]: {
@@ -104,7 +107,7 @@ export const transitions = {
     },
     [STEPS.SUMMARY]: {
         next: () => STEPS.PENDING,
-        back: (data) => data?.paymentType === "paypal" ? STEPS.PAYMENT_METHOD : STEPS.PAYMENT_DETAILS,
+        back: (data) => data?.skipPaymentStep ? (data?.kycApproved ? STEPS.FEES : STEPS.VERIFICATION) : data?.paymentType === "paypal" ? STEPS.PAYMENT_METHOD : STEPS.PAYMENT_DETAILS,
     },
     [STEPS.PENDING]: {
         next: () => STEPS.DONE,
@@ -180,11 +183,13 @@ export const isSidebarStepActive = (sidebarItem, currentStep) => {
 export const isSidebarStepCompleted = (sidebarItem, currentStep, data = {}) => {
     const order = getSidebarSteps(data).map((item) => item.stepName)
     const currentRank =
-        currentStep === STEPS.SUMMARY || currentStep === STEPS.PAYMENT_DETAILS
-            ? order.indexOf(STEPS.PAYMENT_METHOD)
-            : currentStep === STEPS.PENDING
-                ? order.indexOf(STEPS.DONE)
-            : order.indexOf(currentStep)
+        currentStep === STEPS.SUMMARY && data?.skipPaymentStep
+            ? order.indexOf(STEPS.DONE)
+            : currentStep === STEPS.SUMMARY || currentStep === STEPS.PAYMENT_DETAILS
+                ? order.indexOf(STEPS.PAYMENT_METHOD)
+                : currentStep === STEPS.PENDING
+                    ? order.indexOf(STEPS.DONE)
+                    : order.indexOf(currentStep)
     const itemRank = order.indexOf(sidebarItem.stepName)
     return itemRank >= 0 && itemRank < currentRank
 }
@@ -199,8 +204,8 @@ const formatFeeAmount = (amount) =>
 
 export const buildMockFeeDetails = (jurisdiction, paymentType, paymentFee = {}) => {
     const info = getJurisdiction(jurisdiction)
-    const baseAmount = VIRTUAL_IBAN_ACTIVATION_FEE
-    const baseCurrency = info.activationFeeCurrency || VIRTUAL_IBAN_ACTIVATION_FEE_CURRENCY
+    const baseAmount = paymentFee.baseAmount ?? VIRTUAL_IBAN_ACTIVATION_FEE
+    const baseCurrency = paymentFee.baseCurrency || info.activationFeeCurrency || VIRTUAL_IBAN_ACTIVATION_FEE_CURRENCY
     const feeAmount = formatFeeAmount(paymentFee.amount ?? baseAmount)
     const feeCurrency = paymentFee.currency || baseCurrency
 

@@ -17,7 +17,7 @@ import ConfirmationStep from "../../MyMasterCard/PaymentModal/ConfirmationStep"
 import ContactBox from "../../MyMasterCard/PaymentModal/ContactBox"
 import PaymentSelect from "../../MyMasterCard/PaymentModal/PaymentSelectStep"
 import PaymentStep from "../../MyMasterCard/PaymentModal/PaymentStep"
-import addFundsStyles from "../../MyMasterCard/styles/addFunds.module.scss"
+import addFundsStyles from "../WithdrawBalanceModal/withdrawBalance.module.scss"
 import { UserContext } from "../../../Context/UserContext"
 import { decryptData } from "../../../Helper/EssentilaMethods/Decryption"
 import { CARD_TYPES } from "../../CreditInput/CreditCardTypes"
@@ -40,8 +40,6 @@ import {
     JURISDICTIONS,
     MOCK_WALLET_STATE,
     STEPS,
-    VIRTUAL_IBAN_ACTIVATION_FEE,
-    VIRTUAL_IBAN_ACTIVATION_FEE_CURRENCY,
 } from "../../../stateMachines/virtualIbanPayment"
 import DoneStep from "./DoneStep"
 import FeesStep from "./FeesStep"
@@ -60,6 +58,14 @@ import { useCreateVirtualIban, useVirtualIbans, virtualIbanQueryKeys } from "../
 import { handlePaymentApiError } from "../../../utils/Functions/handlePaymentApiError"
 import { useNavigate } from "react-router"
 import OTPConfirmation from "../../UserSettingsNew/OTPConfirmation"
+import {
+    getActivationFeeConfig,
+    getActiveInstaWallets,
+    getWalletAvailableBalance,
+    getWalletCurrencyCode,
+    normalizeWalletState,
+    parseAmount,
+} from "../utils/virtualIbanPreflight"
 
 const SIDEBAR_ICONS = {
     [STEPS.JURISDICTION]: JurisIcon,
@@ -93,29 +99,15 @@ const ChevronRight = () => (
     </svg>
 )
 
-const parseAmount = (value) => {
-    const amount = Number(String(value ?? "").replace(/[^\d.-]/g, ""))
-    return Number.isFinite(amount) ? amount : 0
-}
-
-const getWalletAvailableBalance = (wallet) =>
-    parseAmount(
-        wallet?.balance?.available ??
-        wallet?.balance?.available_balance ??
-        wallet?.available_balance ??
-        wallet?.availableBalance ??
-        wallet?.available
-    )
-
-const getWalletCurrencyCode = (wallet) =>
-    wallet?.currency?.code || wallet?.currency_code || wallet?.name || ""
-
 const VirtualIbanModal = ({
     isOpen,
     toggle,
     onCreated,
     resumeProcessingData,
     resumeProcessingLoading = false,
+    activationFeeConfig,
+    skipPaymentStep = false,
+    preselectedWallet,
 }) => {
     const { t } = useTranslation()
     const width = useWindowWidth()
@@ -157,16 +149,20 @@ const VirtualIbanModal = ({
 
     const createVirtualIban = useCreateVirtualIban()
     const { data: existingIbans = [], isLoading: existingIbansLoading } = useVirtualIbans()
+    const activationFee = useMemo(() => getActivationFeeConfig(activationFeeConfig), [activationFeeConfig])
+
     const {
         getExchangeRate: getPlainExchangeRate,
         isPending: isActivationFxPending,
     } = usePlainFx()
+
     const [activationFeeFx, setActivationFeeFx] = useState({
-        amount: VIRTUAL_IBAN_ACTIVATION_FEE,
-        currency: VIRTUAL_IBAN_ACTIVATION_FEE_CURRENCY,
+        amount: activationFee.amount,
+        currency: activationFee.currency,
         exchangeRate: 1,
         error: "",
     })
+
     const { sendOtp, isSendingOtp } = useSendOtp({
         onSuccess: (token) => {
             setOtpToken(token)
@@ -185,6 +181,7 @@ const VirtualIbanModal = ({
 
         return userDetails?.company?.kyb_status === "approved"
     }, [userDetails])
+    const isBusinessAccount = userDetails?.account_type !== "individual"
 
     const socketConfig = useMemo(() => ({
         url: import.meta.env.VITE_IP_DEV_API,
@@ -302,11 +299,11 @@ const VirtualIbanModal = ({
     }, [cardDetail.cardNumber])
 
     const filteredWallets = useMemo(() => {
-        return userWallets
-            ?.filter(item => item?.wallet_type === "insta" && !item?.blocked && !item?.admin_blocked && item?.status === "active")
-            ?.sort((a, b) => (b?.default === true ? 1 : -1))
-            ?.map(item => ({ name: item?.currency?.code, ...item }))
+        return getActiveInstaWallets(userWallets)
+            ?.map(item => normalizeWalletState(item))
     }, [userWallets])
+
+    const preselectedWalletState = useMemo(() => normalizeWalletState(preselectedWallet), [preselectedWallet])
 
     const jurisdictionAvailability = useMemo(() => {
         const existingCountries = new Set(
@@ -337,20 +334,28 @@ const VirtualIbanModal = ({
         }
     }, [jurisdiction, jurisdictionAvailability])
 
-    useEffect(() => {
-        if (isKycApproved && currentStep === STEPS.VERIFICATION) {
-            setCurrentStep(STEPS.PAYMENT_METHOD)
-        }
-    }, [currentStep, isKycApproved])
-
     const jurisdictionInfo = getJurisdiction(jurisdiction)
     const selectedWalletCurrency = getWalletCurrencyCode(walletState)
+    const shouldSkipPaymentStep = skipPaymentStep
 
     useEffect(() => {
-        if (paymentType !== "wallet" || !selectedWalletCurrency) {
+        if (!shouldSkipPaymentStep) return
+
+        setPaymentType("wallet")
+        setWalletState(preselectedWalletState)
+    }, [preselectedWalletState, shouldSkipPaymentStep])
+
+    useEffect(() => {
+        if (isKycApproved && currentStep === STEPS.VERIFICATION) {
+            setCurrentStep(shouldSkipPaymentStep ? STEPS.SUMMARY : STEPS.PAYMENT_METHOD)
+        }
+    }, [currentStep, isKycApproved, shouldSkipPaymentStep])
+
+    useEffect(() => {
+        if (shouldSkipPaymentStep || paymentType !== "wallet" || !selectedWalletCurrency) {
             setActivationFeeFx({
-                amount: VIRTUAL_IBAN_ACTIVATION_FEE,
-                currency: VIRTUAL_IBAN_ACTIVATION_FEE_CURRENCY,
+                amount: activationFee.amount,
+                currency: activationFee.currency,
                 exchangeRate: 1,
                 error: "",
             })
@@ -360,10 +365,10 @@ const VirtualIbanModal = ({
         let isActive = true
 
         const convertActivationFee = async () => {
-            if (selectedWalletCurrency === VIRTUAL_IBAN_ACTIVATION_FEE_CURRENCY) {
+            if (selectedWalletCurrency === activationFee.currency) {
                 setActivationFeeFx({
-                    amount: VIRTUAL_IBAN_ACTIVATION_FEE,
-                    currency: VIRTUAL_IBAN_ACTIVATION_FEE_CURRENCY,
+                    amount: activationFee.amount,
+                    currency: activationFee.currency,
                     exchangeRate: 1,
                     error: "",
                 })
@@ -381,9 +386,9 @@ const VirtualIbanModal = ({
             try {
                 const convertedAmount = parseAmount(
                     await getPlainExchangeRate(
-                        VIRTUAL_IBAN_ACTIVATION_FEE_CURRENCY,
+                        activationFee.currency,
                         selectedWalletCurrency,
-                        VIRTUAL_IBAN_ACTIVATION_FEE
+                        activationFee.amount
                     )
                 )
 
@@ -395,7 +400,7 @@ const VirtualIbanModal = ({
                     setActivationFeeFx({
                         amount: convertedAmount,
                         currency: selectedWalletCurrency,
-                        exchangeRate: convertedAmount / VIRTUAL_IBAN_ACTIVATION_FEE,
+                        exchangeRate: convertedAmount / activationFee.amount,
                         error: "",
                     })
                 }
@@ -416,17 +421,18 @@ const VirtualIbanModal = ({
         return () => {
             isActive = false
         }
-    }, [getPlainExchangeRate, paymentType, selectedWalletCurrency, t])
+    }, [activationFee.amount, activationFee.currency, getPlainExchangeRate, paymentType, selectedWalletCurrency, shouldSkipPaymentStep, t])
 
     const feeDetails = useMemo(
         () => buildMockFeeDetails(jurisdiction, paymentType, {
-            amount: activationFeeFx.amount ?? VIRTUAL_IBAN_ACTIVATION_FEE,
-            currency: activationFeeFx.currency || VIRTUAL_IBAN_ACTIVATION_FEE_CURRENCY,
+            amount: shouldSkipPaymentStep ? activationFee.amount : activationFeeFx.amount ?? activationFee.amount,
+            currency: shouldSkipPaymentStep ? activationFee.currency : activationFeeFx.currency || activationFee.currency,
+            baseAmount: activationFee.amount,
+            baseCurrency: activationFee.currency,
             exchangeRate: activationFeeFx.exchangeRate,
         }),
-        [activationFeeFx, jurisdiction, paymentType]
+        [activationFee.amount, activationFee.currency, activationFeeFx, jurisdiction, paymentType, shouldSkipPaymentStep]
     )
-
     const machineData = useMemo(
         () => ({
             jurisdiction,
@@ -437,8 +443,9 @@ const VirtualIbanModal = ({
             cardDetail,
             cardNumberError,
             kycApproved: isKycApproved,
+            skipPaymentStep: shouldSkipPaymentStep,
         }),
-        [jurisdiction, feesAccepted, paymentType, walletState, selectedSaveCard, cardDetail, cardNumberError, isKycApproved]
+        [jurisdiction, feesAccepted, paymentType, walletState, selectedSaveCard, cardDetail, cardNumberError, isKycApproved, shouldSkipPaymentStep]
     )
 
     const sidebarSteps = useMemo(
@@ -448,9 +455,10 @@ const VirtualIbanModal = ({
 
     const isCreating = isSendingOtp || createVirtualIban.isPending
     const isActivationFxBlocked =
+        !shouldSkipPaymentStep &&
         paymentType === "wallet" &&
         !!selectedWalletCurrency &&
-        selectedWalletCurrency !== VIRTUAL_IBAN_ACTIVATION_FEE_CURRENCY &&
+        selectedWalletCurrency !== activationFee.currency &&
         (
             isActivationFxPending ||
             activationFeeFx.currency !== selectedWalletCurrency ||
@@ -458,16 +466,18 @@ const VirtualIbanModal = ({
             !activationFeeFx.amount
         )
     const isActivationBalanceInsufficient =
+        !shouldSkipPaymentStep &&
         paymentType === "wallet" &&
-        !!walletState?.wallet_id &&
+        !!(walletState?.wallet_id || walletState?._id) &&
         !!activationFeeFx.amount &&
         getWalletAvailableBalance(walletState) < parseAmount(activationFeeFx.amount)
     const disabled =
         getDisabledState(currentStep, machineData) ||
         isCreating ||
         isActivationFxBlocked ||
-        isActivationBalanceInsufficient
-    const continueLabel = getContinueLabel(currentStep, t)
+        isActivationBalanceInsufficient ||
+        (shouldSkipPaymentStep && currentStep === STEPS.SUMMARY && !(walletState?.wallet_id || walletState?._id))
+    const continueLabel = shouldSkipPaymentStep && currentStep === STEPS.SUMMARY ? t("Continue") : getContinueLabel(currentStep, t)
 
     const resetState = () => {
         setCurrentStep(STEPS.JURISDICTION)
@@ -483,8 +493,8 @@ const VirtualIbanModal = ({
         setPendingTransactionRef("")
         setIsResumedPending(false)
         setActivationFeeFx({
-            amount: VIRTUAL_IBAN_ACTIVATION_FEE,
-            currency: VIRTUAL_IBAN_ACTIVATION_FEE_CURRENCY,
+            amount: activationFee.amount,
+            currency: activationFee.currency,
             exchangeRate: 1,
             error: "",
         })
@@ -524,39 +534,45 @@ const VirtualIbanModal = ({
         handleClose()
     }
 
-    const getCreatePayload = () => ({
-        wallet_id: walletState?.wallet_id,
+    const getCreatePayload = (wallet = walletState) => ({
+        wallet_id: wallet?.wallet_id || wallet?._id,
         currencyCode: jurisdictionInfo.currencyCode,
         name: userDetails?.full_name || userDetails?.name || userDetails?.username || "Virtual IBAN",
         activation_fee: {
             amount: parseAmount(feeDetails?.totalFee),
             currency: feeDetails?.currency,
-            base_amount: VIRTUAL_IBAN_ACTIVATION_FEE,
-            base_currency: VIRTUAL_IBAN_ACTIVATION_FEE_CURRENCY,
+            base_amount: activationFee.amount,
+            base_currency: activationFee.currency,
             exchange_rate: activationFeeFx.exchangeRate,
         },
     })
-
     const handleSendOtp = async (otpCodeType = codeType) => {
+        const selectedWallet = (walletState?.wallet_id || walletState?._id)
+            ? walletState
+            : preselectedWalletState
 
-        if (!walletState?.wallet_id) {
+        if (!(selectedWallet?.wallet_id || selectedWallet?._id)) {
             toast.error(t("Please select an InstaPay wallet to pay the activation fee"))
             return
         }
 
-        if (isActivationFxBlocked) {
+        if (shouldSkipPaymentStep && !(walletState?.wallet_id || walletState?._id)) {
+            setWalletState(selectedWallet)
+        }
+
+        if (!shouldSkipPaymentStep && isActivationFxBlocked) {
             toast.error(activationFeeFx.error || t("Please wait while we convert the activation fee"))
             return
         }
 
-        if (isActivationBalanceInsufficient) {
+        if (!shouldSkipPaymentStep && isActivationBalanceInsufficient) {
             toast.error(t("Insufficient wallet balance for the activation fee"))
             return
         }
 
         try {
             setCodeType(otpCodeType || codeType)
-            await sendOtp(getCreatePayload(), otpCodeType || codeType)
+            await sendOtp(getCreatePayload(selectedWallet), otpCodeType || codeType)
         } catch (error) {
             handlePaymentApiError({
                 error,
@@ -566,7 +582,6 @@ const VirtualIbanModal = ({
             })
         }
     }
-
     const verifyOtp = async (setter, type = "", otp, setOtpError) => {
         try {
             const res = await createVirtualIban.mutateAsync({
@@ -602,6 +617,13 @@ const VirtualIbanModal = ({
             return
         }
 
+        if (currentStep === STEPS.JURISDICTION && isBusinessAccount && !isKycApproved) {
+            resetState()
+            toggle?.()
+            navigate("/settings?tab=verification")
+            return
+        }
+
         if (currentStep === STEPS.SUMMARY) {
             await handleSendOtp()
             return
@@ -625,7 +647,7 @@ const VirtualIbanModal = ({
             setWalletState({})
             setSelectedSaveCard({})
         }
-        if (currentStep === STEPS.SUMMARY && paymentType !== "paypal") setWalletState({})
+        if (currentStep === STEPS.SUMMARY && paymentType !== "paypal" && !shouldSkipPaymentStep) setWalletState({})
 
         const { prevStep } = goBack(currentStep, machineData)
         if (prevStep === null) handleClose()
@@ -655,7 +677,10 @@ const VirtualIbanModal = ({
                     <FeesStep
                         jurisdiction={jurisdiction}
                         feesAccepted={feesAccepted}
+                        monthlyFeeCurr={"USD"}
                         setFeesAccepted={setFeesAccepted}
+                        activationFeeAmount={activationFee.amount}
+                        activationFeeCurrency={activationFee.currency}
                     />
                 )
             case STEPS.VERIFICATION:
@@ -683,7 +708,7 @@ const VirtualIbanModal = ({
                         paymentType={paymentType}
                         saveCard={saveCard}
                         setCardDetails={setCardDetails}
-                        amount={VIRTUAL_IBAN_ACTIVATION_FEE}
+                        amount={activationFee.amount}
                         setFeeDetails={() => { }}
                         setSaveCard={setSaveCard}
                         setSelectedSaveCard={setSelectedSaveCard}
@@ -700,8 +725,8 @@ const VirtualIbanModal = ({
                             const feeAmount =
                                 walletCurrency === activationFeeFx.currency
                                     ? activationFeeFx.amount
-                                    : walletCurrency === VIRTUAL_IBAN_ACTIVATION_FEE_CURRENCY
-                                        ? VIRTUAL_IBAN_ACTIVATION_FEE
+                                    : walletCurrency === activationFee.currency
+                                        ? activationFee.amount
                                         : activationFeeFx.amount
 
                             return !!feeAmount && getWalletAvailableBalance(wallet) >= parseAmount(feeAmount)
@@ -715,7 +740,7 @@ const VirtualIbanModal = ({
                         feeDetails={feeDetails}
                         walletState={
                             paymentType === "wallet"
-                                ? walletState
+                                ? ((walletState?.wallet_id || walletState?._id) ? walletState : preselectedWalletState)
                                 : paymentType === "paypal"
                                     ? { name: "Paypal", wallet_id: "" }
                                     : (selectedSaveCard?._id
@@ -723,9 +748,9 @@ const VirtualIbanModal = ({
                                         : { name: cardDetail.cardHolderName || "Payment Card", wallet_id: cardDetail.cardNumber ? `•••• ${cardDetail.cardNumber.slice(-4)}` : "" })
                         }
                         sendOtp={handleSendOtp}
-                        setStep={() => setCurrentStep(STEPS.PAYMENT_METHOD)}
+                        setStep={() => setCurrentStep(shouldSkipPaymentStep ? STEPS.FEES : STEPS.PAYMENT_METHOD)}
                         paymentType={paymentType}
-                        cardDets={{ currency: VIRTUAL_IBAN_ACTIVATION_FEE_CURRENCY }}
+                        cardDets={{ currency: activationFee.currency }}
                         feeLabel="IBAN activation fee"
                         hideButtons={true}
                     />
@@ -749,59 +774,61 @@ const VirtualIbanModal = ({
         }
     }
 
-    const showFooter = ![STEPS.PENDING, STEPS.DONE].includes(currentStep) && (width > 1000)
+    const showFooter = ![STEPS.PENDING, STEPS.DONE].includes(currentStep)
 
     const renderBody = () => (
         <div
             className={styles.modalLayout}
             style={{ flexDirection: width < 1000 ? "column" : "row" }}
         >
-            {width >= 1000 && (
-                <div className={addFundsStyles.left}>
-                    <div>
-                        <div className={styles.bankHeader}>
-                            <div className={styles.bankIcon}>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
-                                    <path d="M1.6875 6.75H16.3125L9 2.25L1.6875 6.75Z" stroke="#F2EEFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                                    <path d="M3.9375 6.75V12.375" stroke="#F2EEFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                                    <path d="M7.3125 6.75V12.375" stroke="#F2EEFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                                    <path d="M10.6875 6.75V12.375" stroke="#F2EEFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                                    <path d="M14.0625 6.75V12.375" stroke="#F2EEFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                                    <path d="M2.25 12.375H15.75" stroke="#F2EEFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                                    <path d="M1.125 14.625H16.875" stroke="#F2EEFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                                </svg>
-                            </div>
-                            <h2>{t("Open a new IBAN account")}</h2>
+            {/* {width >= 1000 && ( */}
+            <div className={addFundsStyles.left}>
+                <div>
+                    <div className={styles.bankHeader}>
+                        <div className={styles.bankIcon}>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
+                                <path d="M1.6875 6.75H16.3125L9 2.25L1.6875 6.75Z" stroke="#F2EEFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                                <path d="M3.9375 6.75V12.375" stroke="#F2EEFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                                <path d="M7.3125 6.75V12.375" stroke="#F2EEFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                                <path d="M10.6875 6.75V12.375" stroke="#F2EEFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                                <path d="M14.0625 6.75V12.375" stroke="#F2EEFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                                <path d="M2.25 12.375H15.75" stroke="#F2EEFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                                <path d="M1.125 14.625H16.875" stroke="#F2EEFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                            </svg>
                         </div>
-                        <div
-                            className={addFundsStyles.progressEffect}
-                            style={{ marginTop: "2rem" }}
-                        >
-                            {sidebarSteps.map((item, index) => (
-                                <SidebarProgress
-                                    key={item.stepName}
-                                    stepLabel={item.stepLabel}
-                                    label={item.label}
-                                    Icon={SIDEBAR_ICONS[item.stepName]}
-                                    isActive={isSidebarStepActive(
-                                        item,
-                                        currentStep
-                                    )}
-                                    isCompleted={isSidebarStepCompleted(
-                                        item,
-                                        currentStep,
-                                        machineData
-                                    )}
-                                    showBar={index < sidebarSteps.length - 1}
-                                />
-                            ))}
-                        </div>
+                        <h2>{t("Open a new IBAN account")}</h2>
                     </div>
-                    <div className={addFundsStyles.contactBox}>
-                        <ContactBox />
+                    <div
+                        className={addFundsStyles.progressEffect}
+                        style={{ marginTop: "2rem" }}
+                    >
+                        {sidebarSteps.map((item, index) => (
+                            <SidebarProgress
+                                key={item.stepName}
+                                stepLabel={item.stepLabel}
+                                label={item.label}
+                                Icon={SIDEBAR_ICONS[item.stepName]}
+                                isActive={isSidebarStepActive(
+                                    item,
+                                    currentStep
+                                )}
+                                isCompleted={isSidebarStepCompleted(
+                                    item,
+                                    currentStep,
+                                    machineData
+                                )}
+                                showBar={index < sidebarSteps.length - 1}
+                            />
+                        ))}
                     </div>
                 </div>
-            )}
+                {
+                    width > 700 && <div className={addFundsStyles.contactBox}>
+                        <ContactBox />
+                    </div>
+                }
+            </div>
+            {/* )} */}
 
             <div
                 className={styles.rightPanel}
@@ -850,18 +877,19 @@ const VirtualIbanModal = ({
     return (
         <>
             <Modal
-                isOpen={isOpen && width > 1000}
-                style={{ minWidth: "900px" }}
-                toggle={handleClose}
+                isOpen={isOpen}
+                style={{
+                    minWidth: width > 1000 ? "900px" : "0px",
+                }} toggle={handleClose}
                 backdrop={currentStep === STEPS.PENDING ? "static" : true}
                 keyboard={currentStep !== STEPS.PENDING}
             >
                 <ModalBody style={{ padding: "20px" }}>{renderBody()}</ModalBody>
             </Modal>
 
-            {isOpen && width < 1000 && (
+            {/* {isOpen && width < 1000 && (
                 <div style={{ padding: "16px" }}>{renderBody()}</div>
-            )}
+            )} */}
 
             <Modal isOpen={showOtp} toggle={() => setShowOtp(false)} centered>
                 <ModalBody>
