@@ -130,8 +130,8 @@ const NewMenu = () => {
                     setActiveItem("media")
                     navigate("/Insta-media")
                 }}
-                style={activeItem === "media" ? activeStyle : itemStyle} 
-                >
+                style={activeItem === "media" ? activeStyle : itemStyle}
+            >
                 <img
                     src={InstaMedia}
                     alt="media"
