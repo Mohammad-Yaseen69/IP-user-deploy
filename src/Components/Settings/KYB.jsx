@@ -13,6 +13,7 @@ import { UserContext } from '../../Context/UserContext'
 import { decryptData } from '../../Helper/EssentilaMethods/Decryption'
 import { encryptData } from '../../Helper/EssentilaMethods/Encryption'
 import { apiWrapper } from '../../utils/Functions/apiWrapper'
+import bvnkIndustryReference from '../../utils/Data/bvnkIndustryReference.json'
 import { isEmailValid } from '../../utils/Functions/validations'
 import errors from "../AddFunds/TrustPaymentErrors.json"
 import InstaPayLoader from '../Loader'
@@ -44,6 +45,26 @@ const KYB_ACTION_BLOCKED_STATUSES = ["verified", "approved", "needs-review", "ne
 
 const isKybActionBlocked = (status) => KYB_ACTION_BLOCKED_STATUSES.includes(status)
 
+const getIndustryPayload = (industry) => ({
+    name: industry?.name,
+    productionReference: industry?.productionReference,
+    sandboxReference: industry?.sandboxReference || industry?.stagingReference,
+})
+
+const parseIndustryReference = (industryReference) => {
+    if (!industryReference) return null
+
+    if (typeof industryReference === "string") {
+        try {
+            return JSON.parse(industryReference)
+        } catch {
+            return null
+        }
+    }
+
+    return industryReference
+}
+
 const getFeeAmount = async ({ payload, authHeader }) => {
     const enc = encryptData(payload)
     const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/company/kyb-fee`, {
@@ -73,6 +94,7 @@ const KYB = () => {
     const [showAdditionalModal, setShowAdditionalModal] = useState(false)
     const [partners, setPartners] = useState([])
     const [companyType, setCompanyType] = useState("")
+    const [industryReference, setIndustryReference] = useState(null)
     const [compnanyFiles, setCompanyFiles] = useState([])
     const [compnanyFileNames, setCompanyFileNames] = useState([])
     const [isUploading, setIsUploading] = useState(false)
@@ -159,6 +181,11 @@ const KYB = () => {
             if (kyb_files?.length > 0 && compnanyFiles.length === 0) {
                 setCompanyFiles(kyb_files);
                 setCompanyFileNames(kyb_files.map(f => f?.document_name));
+            }
+
+            const savedIndustryReference = parseIndustryReference(userDetails.company.industryReference || userDetails.company.industry_reference);
+            if (savedIndustryReference && !industryReference) {
+                setIndustryReference(savedIndustryReference);
             }
         }
     }, [userDetails])
@@ -249,18 +276,18 @@ const KYB = () => {
             .map((file, idx) => ({ file, name: compnanyFileNames[idx] }))
             .filter(({ file }) => file && (file instanceof File || !('status' in file)))?.filter(entry => entry.name !== undefined);
 
-        if (editedEntries?.length === 0 && allowPayment) {
-            const data = await mutateAsync({
-                payment_type: "card"
-            })
-            if (data?.isPaymentRequired) {
-                setFeeAmount(data?.base_fee_breakdown?.base_fee_usd)
-                setShowPaymentModal(true);
-            } else {
-                await processWithoutCharge()
-            }
-            return;
-        }
+        // if (editedEntries?.length === 0 && allowPayment) {
+        //     const data = await mutateAsync({
+        //         payment_type: "card"
+        //     })
+        //     if (data?.isPaymentRequired) {
+        //         setFeeAmount(data?.base_fee_breakdown?.base_fee_usd)
+        //         setShowPaymentModal(true);
+        //     } else {
+        //         await processWithoutCharge()
+        //     }
+        //     return;
+        // }
 
         const bigFile = getFirstLargeFileName(editedEntries?.map(item => item?.file?.file || item?.file))
 
@@ -282,6 +309,8 @@ const KYB = () => {
 
             formdata.append("registration_number", registrationNum);
             formdata.append("tax_id", taxId);
+            formdata.append("industryReference", JSON.stringify(industryReference));
+            
             console.log(dateOfI)
             formdata.append(
                 "date_of_incorporation",
@@ -348,6 +377,35 @@ const KYB = () => {
     const requiredFilesLength = useMemo(() => {
         return companyType?.name?.toLowerCase()?.includes("ngos") ? 6 : companyType?.name?.toLowerCase()?.includes("sole") ? 3 : 5
     }, [companyType])
+
+    const industryOptions = useMemo(() => {
+        return bvnkIndustryReference.map(group => ({
+            name: group.name,
+            children: (group.children || []).map(child => getIndustryPayload(child)),
+        }))
+    }, [])
+
+    const selectedIndustryValue = useMemo(() => {
+        if (!industryReference) return ""
+
+        const selected = industryOptions
+            .flatMap(group => group.children)
+            .find(industry => (
+                industry.productionReference === industryReference.productionReference ||
+                industry.sandboxReference === industryReference.sandboxReference ||
+                industry.name === industryReference.name
+            ))
+
+        return selected?.productionReference || ""
+    }, [industryOptions, industryReference])
+
+    const handleIndustryChange = (event) => {
+        const selected = industryOptions
+            .flatMap(group => group.children)
+            .find(industry => industry.productionReference === event.target.value)
+
+        setIndustryReference(selected || null)
+    }
 
     const isReadOnly = useMemo(() => {
         return isKybActionBlocked(userDetails?.company?.kyb_status)
@@ -422,6 +480,29 @@ const KYB = () => {
                         </FormGroup>
                         <FormGroup>
                             <Label>
+                                {t("Industry")} <span style={{ color: "red", fontWeight: 600 }}>*</span>
+                            </Label>
+                            <Input
+                                type="select"
+                                name="Industry"
+                                value={selectedIndustryValue}
+                                onChange={handleIndustryChange}
+                                disabled={isReadOnly}
+                            >
+                                <option value="" disabled>{t("Select Industry")}</option>
+                                {industryOptions.map(group => (
+                                    <optgroup key={group.name} label={t(group.name)}>
+                                        {group.children.map(industry => (
+                                            <option key={industry.productionReference} value={industry.productionReference}>
+                                                {t(industry.name)}
+                                            </option>
+                                        ))}
+                                    </optgroup>
+                                ))}
+                            </Input>
+                        </FormGroup>
+                        <FormGroup>
+                            <Label>
                                 {t("Date of Incorporation")} <span style={{ color: "red", fontWeight: 600 }}>*</span>
                             </Label>
                             <DatePicker
@@ -480,6 +561,7 @@ const KYB = () => {
                                 disabled={
                                     isReadOnly ||
                                     !taxId ||
+                                    !industryReference ||
                                     !registrationNum ||
                                     !dateOfI ||
                                     compnanyFiles?.length === 0 ||
@@ -562,7 +644,7 @@ const KYB = () => {
                             outline: "none",
                             alignSelf: "flex-end "
                         }}
-                        disabled={isReadOnly || isUploading || compnanyFiles?.length === 0 || partners?.length === 0 || !taxId || !dateOfI || !registrationNum || compnanyFileNames.length < requiredFilesLength || isPending}
+                        disabled={isReadOnly || isUploading || compnanyFiles?.length === 0 || partners?.length === 0 || !taxId || !industryReference || !dateOfI || !registrationNum || compnanyFileNames.length < requiredFilesLength || isPending}
                         onClick={uploadKybFiles}
                     >{t("Submit")}</Button>
                 }

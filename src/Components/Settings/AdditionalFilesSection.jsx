@@ -260,7 +260,7 @@ const AdditionalFilesSection = ({ files, uploadEndpoint }) => {
                                             <td style={{ padding: '16px', textAlign: 'right' }}>
                                                 {isActionable ? (
                                                     item.input_type === 'text' ? (
-                                                        <div style={{ display: 'inline-flex', flexDirection: 'column', alignItems: 'flex-end', gap: '8px' }}>
+                                                        <div style={{ display: 'inline-flex', flexDirection: 'row', alignItems: 'flex-end', gap: '8px' }}>
                                                             <input
                                                                 type="text"
                                                                 value={textInputs[item._id] || ''}
