@@ -12,7 +12,10 @@ import { MobileSbContext } from "../Layout";
 const greetMessage = () => {
     const date = new Date()
     const hour = date.getHours()
-    return hour > 5 && hour < 12 ? "Good Morning!" : hour > 12 && hour < 17 ? "Good Afternoon!" : hour > 17 && hour < 20 ? "Good Evening!" : "Good Night!"
+    if (hour < 5) return "Good evening!"
+    if (hour < 12) return "Good morning!"
+    if (hour < 17) return "Good afternoon!"
+    return "Good evening!"
 }
 
 const MobileSidebar = ({ setShowModal }) => {
