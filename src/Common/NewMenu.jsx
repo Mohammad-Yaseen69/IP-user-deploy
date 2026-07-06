@@ -91,8 +91,9 @@ const NewMenu = () => {
                         border: "0.25px solid rgba(255, 255, 255, 0.28)",
                     }),
                 }}
-                onClick={() => {setActiveItem("instapay")
-navigate("/")
+                onClick={() => {
+                    setActiveItem("instapay")
+                    navigate("/")
                 }}
             >     {activeItem === "instapay" ?
                 <img
@@ -124,7 +125,13 @@ navigate("/")
                 )}
             </div>
 
-            <div style={activeItem === "media" ? activeStyle : itemStyle} onClick={() => setActiveItem("media")}>
+            <div
+                onClick={() => {
+                    setActiveItem("media")
+                    navigate("/Insta-media")
+                }}
+                style={activeItem === "media" ? activeStyle : itemStyle}
+            >
                 <img
                     src={InstaMedia}
                     alt="media"
