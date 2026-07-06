@@ -564,7 +564,7 @@ const KYB = () => {
                         }}
                         disabled={isReadOnly || isUploading || compnanyFiles?.length === 0 || partners?.length === 0 || !taxId || !dateOfI || !registrationNum || compnanyFileNames.length < requiredFilesLength || isPending}
                         onClick={uploadKybFiles}
-                    >{t("Submit")}</Button>
+                    >{isPending ? "Submitting..." : t("Submit")}</Button>
                 }
 
                 {showPaymentModal &&
