@@ -74,6 +74,7 @@ const CreateAgentPassword = lazy(() => import("../Components/CreateAgentPassword
 const AgentLogin = lazy(() => import("../Components/Auth/agentAuth/index"))
 const LogActivity = lazy(() => import("../Components/LogActivity"))
 const VirtyalBank = lazy(() => import("../Components/VirtualIBAN"))
+const KYBOnboarding = lazy(() => import("../Components/KYBOnboarding"))
 const ThirdPartySenders = lazy(() => import("../Components/ThirdPartySenders"))
 
 
@@ -206,7 +207,7 @@ export const publicRoutes = [
     { path: "/pay/subscription/:subscriptionId", component: <PlansSubscription /> },
     { path: "/pay/plan/:username/:planId", component: <PlanPaymentLink /> },
     { path: "/create-agent-password/:token", component: <CreateAgentPassword /> },
-
+    { path: "/KYBOnboarding", component: <KYBOnboarding /> },
     { path: "*", component: <NotFound type='Page' /> }
 ]
 export const authRoutes = [
