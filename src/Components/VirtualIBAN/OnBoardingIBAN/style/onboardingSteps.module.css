@@ -1,20 +1,30 @@
-/* ==========================================
-   IBAN Onboarding Steps - Shared Styles
-   ========================================== */
+/* ============================================
+   Onboarding Steps - Complete Shared Styles
+   Figma: Business IBAN Page - hvBAqk1nxaHWtP91SjQqau
+   ============================================ */
 
-/* Layout */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+/* --- Layout --- */
 .onboardingLayout {
     display: flex;
     gap: 32px;
     width: 100%;
     flex: 1;
     min-height: 0;
-    animation: fadeSlideIn 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+    animation: fadeIn 0.3s ease;
 }
 
-@keyframes fadeSlideIn {
-    from { opacity: 0; transform: translateX(20px); }
-    to   { opacity: 1; transform: translateX(0); }
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateX(16px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
 }
 
 .mainArea {
@@ -25,24 +35,24 @@
     min-width: 0;
 }
 
-/* ==========================================
-   Wizard Progress Bar (Horizontal)
-   ========================================== */
-
+/* --- Wizard (step indicators) --- */
 .wizardSteps {
     display: flex;
     align-items: center;
     gap: 0;
-    width: 100%;
     overflow-x: auto;
-    padding-bottom: 4px;
+    padding-bottom: 2px;
+    scrollbar-width: none;
+}
+
+.wizardSteps::-webkit-scrollbar {
+    display: none;
 }
 
 .wizardStep {
     display: flex;
     align-items: center;
-    gap: 6px;
-    position: relative;
+    gap: 5px;
     flex-shrink: 0;
 }
 
@@ -51,28 +61,24 @@
     font-weight: 700;
     color: #b0b7c3;
     letter-spacing: 0.5px;
-    transition: color 0.2s;
 }
 
 .wizardStepDot {
     font-size: 12px;
     color: #b0b7c3;
-    transition: color 0.2s;
 }
 
 .wizardStepLabel {
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 500;
     color: #b0b7c3;
-    transition: color 0.2s;
 }
 
 .wizardStepLine {
-    width: 40px;
+    width: 36px;
     height: 1px;
     background: #e2e8f0;
-    margin: 0 10px;
-    transition: background 0.3s;
+    margin: 0 8px;
 }
 
 .activeStep .wizardStepNum,
@@ -88,32 +94,23 @@
     color: #22c55e;
 }
 
-.doneStep + .wizardStep .wizardStepLine,
-.doneStep .wizardStepLine {
-    background: #4A32E3;
-}
-
-/* ==========================================
-   Form Container
-   ========================================== */
-
+/* --- Form Card --- */
 .formContainer {
     background: #fff;
-    border: 1px solid #f0eeff;
+    border: 1px solid #EBEBF0;
     border-radius: 16px;
     padding: 36px 40px;
     display: flex;
     flex-direction: column;
     gap: 20px;
-    box-shadow: 0 2px 12px rgba(74, 50, 227, 0.06);
     flex: 1;
 }
 
 .formIconBox {
-    width: 56px;
-    height: 56px;
-    border-radius: 14px;
-    background: linear-gradient(135deg, #EBF0FE 0%, #f5f3ff 100%);
+    width: 52px;
+    height: 52px;
+    border-radius: 12px;
+    background: #F1F0FD;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -121,48 +118,44 @@
     margin-bottom: 4px;
 }
 
-.formIcon {
-    color: #4A32E3;
-}
-
 .formHeading {
-    font-size: 22px;
+    font-size: 21px;
     font-weight: 700;
-    color: #1F1F21;
+    color: #1B1F2A;
     margin: 0;
-    letter-spacing: -0.5px;
+    letter-spacing: -0.4px;
+    font-family: 'Inter', sans-serif;
 }
 
 .formSubheading {
-    font-size: 14px;
-    color: rgba(31, 31, 33, 0.6);
+    font-size: 13.5px;
+    color: rgba(31, 31, 33, 0.55);
     line-height: 1.6;
     margin: 0;
     max-width: 520px;
+    font-family: 'Inter', sans-serif;
 }
 
-/* ==========================================
-   Form Inputs
-   ========================================== */
-
+/* --- Form inputs --- */
 .onboardingForm {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 14px;
 }
 
 .inputGroup {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 6px;
 }
 
 .inputLabel {
-    font-size: 11px;
+    font-size: 10.5px;
     font-weight: 700;
     letter-spacing: 0.8px;
     color: #6e7687;
     text-transform: uppercase;
+    font-family: 'Inter', sans-serif;
 }
 
 .inputWrapper {
@@ -176,21 +169,22 @@
     left: 14px;
     color: #9ca3af;
     pointer-events: none;
+    flex-shrink: 0;
 }
 
 .textInput {
     width: 100%;
-    height: 48px;
-    padding: 0 16px 0 44px;
-    border: 1.5px solid #e2e8f0;
+    height: 44px;
+    padding: 0 14px 0 42px;
+    border: 1.5px solid #E2E8F0;
     border-radius: 10px;
-    font-size: 14px;
-    color: #1F1F21;
-    background: #fafbff;
+    font-size: 13.5px;
+    color: #1B1F2A;
+    background: #FAFBFF;
     outline: none;
-    transition: border-color 0.2s, box-shadow 0.2s;
+    transition: border-color 0.18s, box-shadow 0.18s;
     box-sizing: border-box;
-    font-family: inherit;
+    font-family: 'Inter', sans-serif;
 }
 
 .textInput:focus {
@@ -203,30 +197,46 @@
     color: #c4c9d4;
 }
 
-.textInputPlain {
-    composes: textInput;
-    padding-left: 16px;
+.textInputNoIcon {
+    width: 100%;
+    height: 44px;
+    padding: 0 14px;
+    border: 1.5px solid #E2E8F0;
+    border-radius: 10px;
+    font-size: 13.5px;
+    color: #1B1F2A;
+    background: #FAFBFF;
+    outline: none;
+    transition: border-color 0.18s, box-shadow 0.18s;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
 }
 
-/* Select */
+.textInputNoIcon:focus {
+    border-color: #4A32E3;
+    box-shadow: 0 0 0 3px rgba(74, 50, 227, 0.1);
+    background: #fff;
+}
+
 .selectInput {
     width: 100%;
-    height: 48px;
-    padding: 0 16px;
-    border: 1.5px solid #e2e8f0;
+    height: 44px;
+    padding: 0 14px;
+    border: 1.5px solid #E2E8F0;
     border-radius: 10px;
-    font-size: 14px;
-    color: #1F1F21;
-    background: #fafbff;
+    font-size: 13.5px;
+    color: #1B1F2A;
+    background: #FAFBFF;
     outline: none;
-    transition: border-color 0.2s, box-shadow 0.2s;
+    transition: border-color 0.18s, box-shadow 0.18s;
     box-sizing: border-box;
-    font-family: inherit;
+    font-family: 'Inter', sans-serif;
     cursor: pointer;
     appearance: none;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236e7687' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
     background-repeat: no-repeat;
-    background-position: right 14px center;
+    background-position: right 12px center;
+    background-color: #FAFBFF;
 }
 
 .selectInput:focus {
@@ -235,21 +245,21 @@
     background-color: #fff;
 }
 
-/* Textarea */
 .textArea {
     width: 100%;
-    padding: 14px 16px;
-    border: 1.5px solid #e2e8f0;
+    padding: 12px 14px;
+    border: 1.5px solid #E2E8F0;
     border-radius: 10px;
-    font-size: 14px;
-    color: #1F1F21;
-    background: #fafbff;
+    font-size: 13.5px;
+    color: #1B1F2A;
+    background: #FAFBFF;
     outline: none;
-    transition: border-color 0.2s, box-shadow 0.2s;
+    transition: border-color 0.18s, box-shadow 0.18s;
     box-sizing: border-box;
-    font-family: inherit;
+    font-family: 'Inter', sans-serif;
     resize: vertical;
-    min-height: 100px;
+    min-height: 90px;
+    line-height: 1.5;
 }
 
 .textArea:focus {
@@ -258,77 +268,69 @@
     background: #fff;
 }
 
-/* Two-column form row */
 .formRow {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 16px;
+    gap: 14px;
 }
 
-/* ==========================================
-   Send Code Button
-   ========================================== */
-
+/* --- Send code / OTP --- */
 .sendCodeBtn {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    height: 44px;
-    padding: 0 22px;
+    height: 42px;
+    padding: 0 20px;
     background: #4A32E3;
     color: #fff;
     border: none;
     border-radius: 10px;
-    font-size: 14px;
+    font-size: 13.5px;
     font-weight: 600;
     cursor: pointer;
-    transition: background 0.2s, transform 0.15s;
+    transition: background 0.18s, transform 0.12s;
     align-self: flex-start;
-    font-family: inherit;
+    font-family: 'Inter', sans-serif;
 }
 
 .sendCodeBtn:hover {
-    background: #3927c5;
+    background: #3927C5;
     transform: translateY(-1px);
 }
-
-/* ==========================================
-   OTP Section
-   ========================================== */
 
 .otpSection {
     display: flex;
     flex-direction: column;
-    gap: 12px;
-    padding-top: 8px;
+    gap: 10px;
 }
 
 .otpHeading {
-    font-size: 11px;
+    font-size: 10.5px;
     font-weight: 700;
     letter-spacing: 0.8px;
     color: #6e7687;
     margin: 0;
+    text-transform: uppercase;
 }
 
 .otpInputs {
     display: flex;
-    gap: 10px;
+    gap: 8px;
 }
 
 .otpInput {
-    width: 52px;
-    height: 60px;
+    width: 48px;
+    height: 56px;
     text-align: center;
-    font-size: 20px;
+    font-size: 19px;
     font-weight: 700;
-    color: #1F1F21;
-    border: 1.5px solid #e2e8f0;
+    color: #1B1F2A;
+    border: 1.5px solid #E2E8F0;
     border-radius: 10px;
     outline: none;
-    transition: border-color 0.2s, box-shadow 0.2s;
-    background: #fafbff;
-    font-family: inherit;
+    transition: border-color 0.18s, box-shadow 0.18s;
+    background: #FAFBFF;
+    font-family: 'Inter', sans-serif;
 }
 
 .otpInput:focus {
@@ -340,8 +342,8 @@
 .otpMeta {
     display: flex;
     align-items: center;
-    gap: 10px;
-    font-size: 13px;
+    gap: 8px;
+    font-size: 12.5px;
 }
 
 .otpTimer {
@@ -349,7 +351,7 @@
 }
 
 .otpDivider {
-    color: #c4c9d4;
+    color: #cbd5e1;
 }
 
 .resendLink {
@@ -358,26 +360,24 @@
     color: #4A32E3;
     font-weight: 600;
     cursor: pointer;
-    font-size: 13px;
+    font-size: 12.5px;
     padding: 0;
-    font-family: inherit;
+    font-family: 'Inter', sans-serif;
     text-decoration: underline;
     text-underline-offset: 2px;
 }
 
-/* ==========================================
-   Security Footer
-   ========================================== */
-
+/* --- Security footer --- */
 .formSecurityFooter {
     display: flex;
     align-items: center;
     gap: 8px;
-    font-size: 12px;
+    font-size: 11.5px;
     color: #9ca3af;
-    border-top: 1px solid #f0eeff;
-    padding-top: 16px;
+    border-top: 1px solid #F0EEFF;
+    padding-top: 14px;
     margin-top: auto;
+    font-family: 'Inter', sans-serif;
 }
 
 .securityIcon {
@@ -385,32 +385,29 @@
     flex-shrink: 0;
 }
 
-/* ==========================================
-   Navigation Footer
-   ========================================== */
-
+/* --- Navigation footer --- */
 .navigationFooter {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding-top: 8px;
+    padding-top: 4px;
 }
 
 .backButton {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    height: 44px;
-    padding: 0 20px;
+    height: 42px;
+    padding: 0 18px;
     background: transparent;
-    border: 1.5px solid #e2e8f0;
+    border: 1.5px solid #E2E8F0;
     border-radius: 10px;
-    font-size: 14px;
+    font-size: 13.5px;
     font-weight: 500;
     color: #6e7687;
     cursor: pointer;
-    transition: all 0.2s;
-    font-family: inherit;
+    transition: all 0.18s;
+    font-family: 'Inter', sans-serif;
 }
 
 .backButton:hover {
@@ -423,42 +420,38 @@
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    height: 44px;
-    padding: 0 28px;
+    height: 42px;
+    padding: 0 26px;
     background: #4A32E3;
     border: none;
     border-radius: 10px;
-    font-size: 14px;
+    font-size: 13.5px;
     font-weight: 600;
     color: #fff;
     cursor: pointer;
-    transition: background 0.2s, transform 0.15s;
-    font-family: inherit;
+    transition: background 0.18s, transform 0.12s;
+    font-family: 'Inter', sans-serif;
 }
 
 .continueButton:hover {
-    background: #3927c5;
+    background: #3927C5;
     transform: translateY(-1px);
 }
 
-/* ==========================================
-   Sidebar
-   ========================================== */
-
+/* --- Sidebar --- */
 .sidebarArea {
-    width: 280px;
+    width: 272px;
     flex-shrink: 0;
 }
 
 .sidebar {
     background: #fff;
-    border: 1px solid #f0eeff;
+    border: 1px solid #EBEBF0;
     border-radius: 16px;
-    padding: 24px;
+    padding: 22px;
     display: flex;
     flex-direction: column;
-    gap: 20px;
-    box-shadow: 0 2px 12px rgba(74, 50, 227, 0.06);
+    gap: 18px;
     position: sticky;
     top: 0;
 }
@@ -475,6 +468,14 @@
     gap: 8px;
 }
 
+.assistantHeaderTitle h3 {
+    font-size: 13px;
+    font-weight: 700;
+    color: #1B1F2A;
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+}
+
 .pulseDot {
     width: 8px;
     height: 8px;
@@ -484,28 +485,31 @@
 }
 
 @keyframes pulse {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50%       { opacity: 0.5; transform: scale(1.3); }
-}
 
-.assistantHeaderTitle h3 {
-    font-size: 14px;
-    font-weight: 700;
-    color: #1F1F21;
-    margin: 0;
+    0%,
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: 0.5;
+        transform: scale(1.3);
+    }
 }
 
 .sidebarSubtitle {
-    font-size: 12px;
+    font-size: 11.5px;
     color: #9ca3af;
     margin: 0;
+    font-family: 'Inter', sans-serif;
 }
 
 /* Circular Progress */
 .progressCircleContainer {
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 14px;
 }
 
 .circleSvgWrapper {
@@ -520,7 +524,7 @@
 }
 
 .circleBg {
-    opacity: 0.3;
+    opacity: 0.25;
 }
 
 .circleProgress {
@@ -536,37 +540,40 @@
 }
 
 .percentText {
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 800;
     color: #4A32E3;
     line-height: 1;
+    font-family: 'Inter', sans-serif;
 }
 
 .readyText {
-    font-size: 8px;
+    font-size: 7.5px;
     font-weight: 700;
     color: #9ca3af;
     letter-spacing: 0.5px;
+    font-family: 'Inter', sans-serif;
 }
 
 .stepsLeftBadge {
-    font-size: 12px;
+    font-size: 11.5px;
     font-weight: 600;
     color: #6e7687;
-    background: #f5f3ff;
-    padding: 6px 12px;
+    background: #F5F3FF;
+    padding: 5px 10px;
     border-radius: 100px;
+    font-family: 'Inter', sans-serif;
 }
 
-/* AI Bubble */
+/* AI bubble */
 .assistantBubble {
-    background: linear-gradient(135deg, #f5f3ff 0%, #EBF0FE 100%);
-    border-radius: 12px;
-    padding: 14px 16px;
+    background: linear-gradient(135deg, #F5F3FF 0%, #EBF0FE 100%);
+    border-radius: 10px;
+    padding: 12px 14px;
     display: flex;
     flex-direction: column;
-    gap: 6px;
-    border: 1px solid #e8e4ff;
+    gap: 5px;
+    border: 1px solid #E8E4FF;
 }
 
 .assistantLabel {
@@ -574,20 +581,22 @@
     font-weight: 800;
     letter-spacing: 1.2px;
     color: #4A32E3;
+    font-family: 'Inter', sans-serif;
 }
 
 .assistantBubble p {
-    font-size: 13px;
+    font-size: 12.5px;
     color: #374151;
     line-height: 1.55;
     margin: 0;
+    font-family: 'Inter', sans-serif;
 }
 
 /* Checklist */
 .checklistSection {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 9px;
 }
 
 .checklistHeader {
@@ -597,41 +606,43 @@
 }
 
 .checklistHeader h4 {
-    font-size: 10px;
+    font-size: 9.5px;
     font-weight: 800;
     letter-spacing: 0.8px;
     color: #9ca3af;
     margin: 0;
+    font-family: 'Inter', sans-serif;
 }
 
 .checklistHeader span {
     font-size: 11px;
     color: #6e7687;
     font-weight: 500;
+    font-family: 'Inter', sans-serif;
 }
 
 .checklistList {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 7px;
 }
 
 .checklistItem {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 9px;
 }
 
 .checkIconBox {
-    width: 20px;
-    height: 20px;
+    width: 19px;
+    height: 19px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    background: #f0eeff;
-    border: 1.5px solid #e2e8f0;
+    background: #F0EEFF;
+    border: 1.5px solid #E2E8F0;
 }
 
 .checklistItem.done .checkIconBox {
@@ -655,15 +666,12 @@
     background: #d1d5db;
 }
 
-.checklistItem.in-progress .checkDot {
-    background: #fff;
-}
-
 .checklistLabel {
     flex: 1;
-    font-size: 13px;
+    font-size: 12.5px;
     color: #374151;
     font-weight: 500;
+    font-family: 'Inter', sans-serif;
 }
 
 .checklistItem.done .checklistLabel {
@@ -674,8 +682,9 @@
 .statusLabel {
     font-size: 10px;
     font-weight: 600;
-    padding: 2px 8px;
+    padding: 2px 7px;
     border-radius: 100px;
+    font-family: 'Inter', sans-serif;
 }
 
 .statusLabel.done {
@@ -693,67 +702,63 @@
     background: #f1f5f9;
 }
 
-/* Ask Assistant Button */
 .askAssistantBtn {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
+    gap: 7px;
     width: 100%;
-    height: 40px;
+    height: 38px;
     background: transparent;
-    border: 1.5px solid #e2e8f0;
+    border: 1.5px solid #E2E8F0;
     border-radius: 10px;
-    font-size: 13px;
+    font-size: 12.5px;
     font-weight: 600;
     color: #4A32E3;
     cursor: pointer;
-    transition: all 0.2s;
-    font-family: inherit;
+    transition: all 0.18s;
+    font-family: 'Inter', sans-serif;
 }
 
 .askAssistantBtn:hover {
-    background: rgba(74, 50, 227, 0.06);
+    background: rgba(74, 50, 227, 0.05);
     border-color: #4A32E3;
 }
 
-/* ==========================================
-   Company / Detail Steps – Option Cards
-   ========================================== */
-
+/* --- Option/choice cards (tx types etc) --- */
 .optionCards {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 14px;
+    gap: 10px;
 }
 
 .optionCard {
-    border: 1.5px solid #e2e8f0;
-    border-radius: 12px;
-    padding: 18px;
+    border: 1.5px solid #E2E8F0;
+    border-radius: 10px;
+    padding: 14px;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all 0.18s;
     display: flex;
     flex-direction: column;
-    gap: 8px;
-    background: #fafbff;
+    gap: 7px;
+    background: #FAFBFF;
 }
 
 .optionCard:hover {
     border-color: #4A32E3;
-    box-shadow: 0 4px 12px rgba(74, 50, 227, 0.08);
+    box-shadow: 0 3px 10px rgba(74, 50, 227, 0.08);
 }
 
 .optionCard.selected {
     border-color: #4A32E3;
-    background: #f5f3ff;
+    background: #F5F3FF;
     box-shadow: 0 0 0 3px rgba(74, 50, 227, 0.1);
 }
 
 .optionCardIcon {
-    width: 40px;
-    height: 40px;
-    border-radius: 10px;
+    width: 36px;
+    height: 36px;
+    border-radius: 9px;
     background: #EBF0FE;
     display: flex;
     align-items: center;
@@ -767,45 +772,43 @@
 }
 
 .optionCard h4 {
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 700;
-    color: #1F1F21;
+    color: #1B1F2A;
     margin: 0;
+    font-family: 'Inter', sans-serif;
 }
 
 .optionCard p {
-    font-size: 12px;
+    font-size: 11.5px;
     color: #6e7687;
     margin: 0;
-    line-height: 1.4;
+    font-family: 'Inter', sans-serif;
 }
 
-/* ==========================================
-   Document Upload
-   ========================================== */
-
+/* --- Upload area --- */
 .uploadArea {
-    border: 2px dashed #d1d5db;
-    border-radius: 12px;
-    padding: 32px;
+    border: 2px dashed #D1D5DB;
+    border-radius: 10px;
+    padding: 26px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 12px;
+    gap: 10px;
     cursor: pointer;
-    transition: all 0.2s;
-    background: #fafbff;
+    transition: all 0.18s;
+    background: #FAFBFF;
     text-align: center;
 }
 
 .uploadArea:hover {
     border-color: #4A32E3;
-    background: #f5f3ff;
+    background: #F5F3FF;
 }
 
 .uploadIcon {
-    width: 52px;
-    height: 52px;
+    width: 48px;
+    height: 48px;
     border-radius: 50%;
     background: #EBF0FE;
     display: flex;
@@ -815,24 +818,26 @@
 }
 
 .uploadTitle {
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 600;
-    color: #1F1F21;
+    color: #1B1F2A;
     margin: 0;
+    font-family: 'Inter', sans-serif;
 }
 
 .uploadSubtitle {
-    font-size: 12px;
+    font-size: 11.5px;
     color: #9ca3af;
     margin: 0;
+    font-family: 'Inter', sans-serif;
 }
 
 .uploadedFile {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 12px 16px;
-    border: 1.5px solid #e2e8f0;
+    padding: 10px 14px;
+    border: 1.5px solid #E2E8F0;
     border-radius: 10px;
     background: #fff;
 }
@@ -840,12 +845,12 @@
 .uploadedFileInfo {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 9px;
 }
 
 .uploadedFileIcon {
-    width: 36px;
-    height: 36px;
+    width: 34px;
+    height: 34px;
     border-radius: 8px;
     background: #EBF0FE;
     display: flex;
@@ -856,14 +861,16 @@
 }
 
 .uploadedFileName {
-    font-size: 13px;
+    font-size: 12.5px;
     font-weight: 600;
-    color: #1F1F21;
+    color: #1B1F2A;
+    font-family: 'Inter', sans-serif;
 }
 
 .uploadedFileSize {
     font-size: 11px;
     color: #9ca3af;
+    font-family: 'Inter', sans-serif;
 }
 
 .removeFileBtn {
@@ -875,25 +882,22 @@
     display: flex;
     align-items: center;
     border-radius: 6px;
-    transition: background 0.15s;
+    transition: background 0.12s;
 }
 
 .removeFileBtn:hover {
     background: #fee2e2;
 }
 
-/* ==========================================
-   Review Step – Summary Cards
-   ========================================== */
-
+/* --- Review cards --- */
 .reviewSection {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 12px;
 }
 
 .reviewCard {
-    border: 1px solid #f0eeff;
+    border: 1px solid #F0EEFF;
     border-radius: 12px;
     overflow: hidden;
 }
@@ -902,21 +906,22 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 14px 20px;
-    background: #fafbff;
-    border-bottom: 1px solid #f0eeff;
+    padding: 12px 18px;
+    background: #FAFBFF;
+    border-bottom: 1px solid #F0EEFF;
 }
 
 .reviewCardHeaderLeft {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 9px;
 }
 
 .reviewCardHeaderLeft span {
-    font-size: 13px;
+    font-size: 12.5px;
     font-weight: 700;
-    color: #1F1F21;
+    color: #1B1F2A;
+    font-family: 'Inter', sans-serif;
 }
 
 .reviewCardHeaderLeft svg {
@@ -925,101 +930,103 @@
 
 .editBtn {
     background: none;
-    border: 1.5px solid #e2e8f0;
-    border-radius: 8px;
-    padding: 4px 12px;
-    font-size: 12px;
+    border: 1.5px solid #E2E8F0;
+    border-radius: 7px;
+    padding: 3px 10px;
+    font-size: 11.5px;
     font-weight: 600;
     color: #4A32E3;
     cursor: pointer;
-    transition: all 0.15s;
-    font-family: inherit;
+    transition: all 0.14s;
+    font-family: 'Inter', sans-serif;
 }
 
 .editBtn:hover {
-    background: rgba(74, 50, 227, 0.06);
+    background: rgba(74, 50, 227, 0.05);
     border-color: #4A32E3;
 }
 
 .reviewCardBody {
-    padding: 16px 20px;
+    padding: 14px 18px;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 8px;
 }
 
 .reviewRow {
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
-    gap: 16px;
+    gap: 14px;
 }
 
 .reviewRowLabel {
-    font-size: 12px;
+    font-size: 11.5px;
     color: #9ca3af;
     font-weight: 500;
     flex-shrink: 0;
-    min-width: 120px;
+    min-width: 110px;
+    font-family: 'Inter', sans-serif;
 }
 
 .reviewRowValue {
-    font-size: 13px;
+    font-size: 12.5px;
     font-weight: 600;
-    color: #1F1F21;
+    color: #1B1F2A;
     text-align: right;
+    font-family: 'Inter', sans-serif;
 }
 
-/* ==========================================
-   Submit / Confirmation
-   ========================================== */
-
+/* --- Submit button --- */
 .submitBtn {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 10px;
+    gap: 9px;
     width: 100%;
-    height: 52px;
+    height: 50px;
     background: linear-gradient(135deg, #4A32E3 0%, #5926F0 100%);
     border: none;
     border-radius: 12px;
-    font-size: 15px;
+    font-size: 14.5px;
     font-weight: 700;
     color: #fff;
     cursor: pointer;
-    transition: opacity 0.2s, transform 0.15s;
-    font-family: inherit;
-    box-shadow: 0 4px 15px rgba(74, 50, 227, 0.3);
+    transition: opacity 0.18s, transform 0.12s;
+    font-family: 'Inter', sans-serif;
+    box-shadow: 0 4px 14px rgba(74, 50, 227, 0.28);
 }
 
 .submitBtn:hover {
-    opacity: 0.93;
+    opacity: 0.92;
     transform: translateY(-1px);
 }
 
-/* ==========================================
-   Checkbox / Toggle
-   ========================================== */
+.submitBtn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
 
+/* --- Checkbox --- */
 .checkboxRow {
     display: flex;
     align-items: flex-start;
-    gap: 12px;
+    gap: 11px;
     cursor: pointer;
 }
 
 .checkboxBox {
-    width: 20px;
-    height: 20px;
+    width: 18px;
+    height: 18px;
     border: 1.5px solid #d1d5db;
     border-radius: 5px;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    transition: all 0.15s;
-    margin-top: 1px;
+    transition: all 0.14s;
+    margin-top: 2px;
     background: #fff;
 }
 
@@ -1029,9 +1036,10 @@
 }
 
 .checkboxLabel {
-    font-size: 13px;
+    font-size: 12.5px;
     color: #374151;
-    line-height: 1.5;
+    line-height: 1.55;
+    font-family: 'Inter', sans-serif;
 }
 
 .checkboxLabel a {
@@ -1040,10 +1048,400 @@
     text-underline-offset: 2px;
 }
 
-/* ==========================================
-   Responsive
-   ========================================== */
+/* ============================================
+   STATUS SCREEN styles (post-submission)
+   Figma: Wireframe-19, Request Submitted, etc.
+   ============================================ */
+.statusLayout {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    flex: 1;
+    width: 100%;
+    animation: fadeIn 0.3s ease;
+}
 
+.statusCard {
+    background: #fff;
+    border: 1px solid #EBEBF0;
+    border-radius: 16px;
+    overflow: hidden;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.statusCardTop {
+    padding: 28px 32px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 24px;
+    border-bottom: 1px solid #F0F0F5;
+}
+
+.statusCardTopLeft {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    flex: 1;
+}
+
+.statusBadge {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 6px 14px;
+    border-radius: 100px;
+    font-size: 12px;
+    font-weight: 700;
+    font-family: 'Inter', sans-serif;
+    width: fit-content;
+}
+
+.statusBadge.review {
+    background: #EBF0FE;
+    color: #4A32E3;
+}
+
+.statusBadge.submitted {
+    background: #FFF7ED;
+    color: #C2410C;
+}
+
+.statusBadge.pending {
+    background: #FEF9C3;
+    color: #854D0E;
+}
+
+.statusBadge.action {
+    background: #DCFCE7;
+    color: #166534;
+}
+
+.statusBadge.rejected {
+    background: #FEE2E2;
+    color: #991B1B;
+}
+
+.statusBadge.waiting {
+    background: #F3F4F6;
+    color: #374151;
+}
+
+.statusBadgeDot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: currentColor;
+    opacity: 0.7;
+}
+
+.statusCardTitle {
+    font-size: 22px;
+    font-weight: 700;
+    color: #1B1F2A;
+    margin: 0;
+    letter-spacing: -0.4px;
+    font-family: 'Inter', sans-serif;
+}
+
+.statusCardDesc {
+    font-size: 14px;
+    color: rgba(31, 31, 33, 0.55);
+    line-height: 1.65;
+    margin: 0;
+    max-width: 600px;
+    font-family: 'Inter', sans-serif;
+}
+
+.statusVisual {
+    width: 220px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* IBAN Preview Card */
+.ibanPreviewCard {
+    background: linear-gradient(135deg, #4A32E3 0%, #7C3AED 100%);
+    border-radius: 14px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 200px;
+    box-shadow: 0 8px 24px rgba(74, 50, 227, 0.25);
+}
+
+.ibanPreviewLabel {
+    font-size: 9.5px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: rgba(255, 255, 255, 0.65);
+    text-transform: uppercase;
+    font-family: 'Inter', sans-serif;
+}
+
+.ibanPreviewNumber {
+    font-size: 12px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 1.5px;
+    font-family: 'Inter', monospace;
+}
+
+.ibanPreviewName {
+    font-size: 12px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.8);
+    font-family: 'Inter', sans-serif;
+}
+
+.ibanPreviewLock {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.12);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+/* Timeline */
+.statusTimeline {
+    padding: 24px 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    flex: 1;
+}
+
+.timelineTitle {
+    font-size: 10.5px;
+    font-weight: 800;
+    letter-spacing: 0.8px;
+    color: #9ca3af;
+    text-transform: uppercase;
+    margin: 0 0 18px;
+    font-family: 'Inter', sans-serif;
+}
+
+.timelineItem {
+    display: flex;
+    gap: 16px;
+    position: relative;
+    padding-bottom: 22px;
+}
+
+.timelineItem:last-child {
+    padding-bottom: 0;
+}
+
+.timelineLeft {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-shrink: 0;
+    gap: 0;
+}
+
+.timelineDot {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    z-index: 1;
+    border: 2px solid #E2E8F0;
+    background: #fff;
+    color: #b0b7c3;
+}
+
+.timelineDot.done {
+    background: #22c55e;
+    border-color: #22c55e;
+    color: #fff;
+}
+
+.timelineDot.active {
+    background: #4A32E3;
+    border-color: #4A32E3;
+    color: #fff;
+}
+
+.timelineDot.pending {
+    background: #F5F3FF;
+    border-color: #C4BCFF;
+    color: #9ca3af;
+}
+
+.timelineLine {
+    width: 1.5px;
+    flex: 1;
+    background: #E2E8F0;
+    margin: 3px 0;
+    min-height: 16px;
+}
+
+.timelineLine.done {
+    background: #22c55e;
+}
+
+.timelineLine.active {
+    background: linear-gradient(to bottom, #4A32E3, #E2E8F0);
+}
+
+.timelineContent {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    padding-top: 3px;
+    flex: 1;
+}
+
+.timelineLabel {
+    font-size: 13px;
+    font-weight: 700;
+    color: #1B1F2A;
+    font-family: 'Inter', sans-serif;
+}
+
+.timelineSub {
+    font-size: 12px;
+    color: #9ca3af;
+    font-family: 'Inter', sans-serif;
+}
+
+.timelineItem.active .timelineSub {
+    color: #6e7687;
+}
+
+/* Action buttons */
+.statusActions {
+    display: flex;
+    gap: 12px;
+    padding: 20px 32px 28px;
+    border-top: 1px solid #F0F0F5;
+    flex-wrap: wrap;
+}
+
+.primaryActionBtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    height: 42px;
+    padding: 0 22px;
+    background: #4A32E3;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-size: 13.5px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.18s, transform 0.12s;
+    font-family: 'Inter', sans-serif;
+}
+
+.primaryActionBtn:hover {
+    background: #3927C5;
+    transform: translateY(-1px);
+}
+
+.ghostActionBtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    height: 42px;
+    padding: 0 18px;
+    background: transparent;
+    color: #6e7687;
+    border: 1.5px solid #E2E8F0;
+    border-radius: 10px;
+    font-size: 13.5px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.18s;
+    font-family: 'Inter', sans-serif;
+}
+
+.ghostActionBtn:hover {
+    border-color: #9ca3af;
+    color: #374151;
+}
+
+.dangerActionBtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    height: 42px;
+    padding: 0 18px;
+    background: transparent;
+    color: #ef4444;
+    border: 1.5px solid #fecaca;
+    border-radius: 10px;
+    font-size: 13.5px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.18s;
+    font-family: 'Inter', sans-serif;
+}
+
+.dangerActionBtn:hover {
+    background: #fee2e2;
+    border-color: #ef4444;
+}
+
+/* Help box */
+.helpBox {
+    background: #FAFBFF;
+    border: 1px solid #F0EEFF;
+    border-radius: 12px;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin: 0 32px 24px;
+}
+
+.helpBoxLeft {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.helpBoxTitle {
+    font-size: 13px;
+    font-weight: 700;
+    color: #1B1F2A;
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+}
+
+.helpBoxSub {
+    font-size: 12px;
+    color: #6e7687;
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+}
+
+.helpBoxLink {
+    font-size: 12px;
+    font-weight: 600;
+    color: #4A32E3;
+    text-decoration: none;
+}
+
+.helpBoxLink:hover {
+    text-decoration: underline;
+}
+
+/* Responsive */
 @media (max-width: 960px) {
     .onboardingLayout {
         flex-direction: column;
@@ -1053,10 +1451,6 @@
         width: 100%;
     }
 
-    .sidebar {
-        position: static;
-    }
-
     .formRow {
         grid-template-columns: 1fr;
     }
@@ -1064,24 +1458,37 @@
     .optionCards {
         grid-template-columns: 1fr;
     }
+
+    .statusCardTop {
+        flex-direction: column;
+    }
+
+    .statusVisual {
+        width: 100%;
+    }
 }
 
 @media (max-width: 600px) {
     .formContainer {
-        padding: 24px 20px;
+        padding: 22px 18px;
     }
 
     .otpInput {
-        width: 42px;
-        height: 50px;
-        font-size: 18px;
+        width: 40px;
+        height: 48px;
+        font-size: 17px;
     }
 
-    .wizardSteps {
-        gap: 0;
+    .statusTimeline {
+        padding: 18px 20px;
     }
 
-    .wizardStepLabel {
-        display: none;
+    .statusActions {
+        padding: 16px 20px 22px;
+    }
+
+    .helpBox {
+        margin: 0 20px 20px;
+        flex-direction: column;
     }
 }

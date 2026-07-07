@@ -11,7 +11,6 @@ const AccountStep = ({ onNext, onBack, userType }) => {
     const [otp, setOtp] = useState(['4', '8', '1', '2', '', ''])
     const [timeLeft, setTimeLeft] = useState(287) // 4:47 in seconds
     
-    // Format seconds to MM:SS
     const formatTime = (seconds) => {
         const m = Math.floor(seconds / 60).toString().padStart(2, '0')
         const s = (seconds % 60).toString().padStart(2, '0')
@@ -43,7 +42,6 @@ const AccountStep = ({ onNext, onBack, userType }) => {
         newOtp[index] = value
         setOtp(newOtp)
         
-        // Auto focus next input
         if (value !== '' && index < 5) {
             const nextInput = document.getElementById(`otp-${index + 1}`)
             nextInput?.focus()
@@ -58,7 +56,6 @@ const AccountStep = ({ onNext, onBack, userType }) => {
     }
 
     const handleContinue = () => {
-        // Proceed to next step
         onNext({ email, otp: otp.join('') })
     }
 
@@ -74,9 +71,7 @@ const AccountStep = ({ onNext, onBack, userType }) => {
 
     return (
         <div className={styles.onboardingLayout}>
-            {/* Main content area */}
             <div className={styles.mainArea}>
-                {/* Horizontal wizard steps indicator */}
                 <div className={styles.wizardSteps}>
                     {steps.map((s, idx) => (
                         <div 
@@ -91,7 +86,6 @@ const AccountStep = ({ onNext, onBack, userType }) => {
                     ))}
                 </div>
 
-                {/* Form container */}
                 <div className={styles.formContainer}>
                     <div className={styles.formIconBox}>
                         <Shield className={styles.formIcon} size={28} />
@@ -124,7 +118,6 @@ const AccountStep = ({ onNext, onBack, userType }) => {
                         </button>
                     </form>
 
-                    {/* OTP Entry Section (Always shown or shown after click, showing as active in wireframe) */}
                     <div className={styles.otpSection}>
                         <h4 className={styles.otpHeading}>{t("ENTER THE CODE")}</h4>
                         <div className={styles.otpInputs}>
@@ -156,7 +149,6 @@ const AccountStep = ({ onNext, onBack, userType }) => {
                         </div>
                     </div>
 
-                    {/* Security Footer */}
                     <div className={styles.formSecurityFooter}>
                         <Lock size={14} className={styles.securityIcon} />
                         <span>
@@ -165,7 +157,6 @@ const AccountStep = ({ onNext, onBack, userType }) => {
                     </div>
                 </div>
 
-                {/* Navigation Buttons at the bottom */}
                 <div className={styles.navigationFooter}>
                     <button onClick={onBack} className={styles.backButton}>
                         <ArrowLeft size={16} />
@@ -178,7 +169,6 @@ const AccountStep = ({ onNext, onBack, userType }) => {
                 </div>
             </div>
 
-            {/* Sidebar progress tracking */}
             <div className={styles.sidebarArea}>
                 <SidebarProgress 
                     percent={15} 
