@@ -1,18 +1,16 @@
-/* ============================================
-   Onboarding Steps - Complete Shared Styles
-   Figma: Business IBAN Page - hvBAqk1nxaHWtP91SjQqau
-   ============================================ */
-
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
-/* --- Layout --- */
 .onboardingLayout {
     display: flex;
     gap: 32px;
     width: 100%;
+    flex-direction: column;
     flex: 1;
     min-height: 0;
     animation: fadeIn 0.3s ease;
+    padding: var(--lg, 24px);
+    background-color: #fff;
+    border-radius: 10px;
 }
 
 @keyframes fadeIn {
@@ -30,80 +28,79 @@
 .mainArea {
     flex: 1;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     gap: 24px;
     min-width: 0;
 }
 
-/* --- Wizard (step indicators) --- */
 .wizardSteps {
     display: flex;
-    align-items: center;
-    gap: 0;
-    overflow-x: auto;
-    padding-bottom: 2px;
-    scrollbar-width: none;
+    width: 100%;
+    gap: 10px;
 }
 
-.wizardSteps::-webkit-scrollbar {
-    display: none;
+.step {
+    flex: 1;
 }
 
-.wizardStep {
+.stepLine {
+    width: 100%;
+    height: 3px;
+    background: #E7EAF0;
+}
+
+.stepContent {
     display: flex;
     align-items: center;
-    gap: 5px;
-    flex-shrink: 0;
+    gap: 4px;
+    padding-top: 10px;
 }
 
-.wizardStepNum {
+.stepNumber {
     font-size: 11px;
     font-weight: 700;
-    color: #b0b7c3;
-    letter-spacing: 0.5px;
+    color: #A0A7B5;
 }
 
-.wizardStepDot {
-    font-size: 12px;
-    color: #b0b7c3;
-}
-
-.wizardStepLabel {
+.stepLabel {
     font-size: 11px;
     font-weight: 500;
-    color: #b0b7c3;
+    color: #A0A7B5;
 }
 
-.wizardStepLine {
-    width: 36px;
-    height: 1px;
-    background: #e2e8f0;
-    margin: 0 8px;
+/* Active */
+
+.active .stepLine {
+    background: #4A32E3;
 }
 
-.activeStep .wizardStepNum,
-.activeStep .wizardStepDot,
-.activeStep .wizardStepLabel {
-    color: #4A32E3;
+.active .stepNumber,
+.active .stepLabel {
+    color: #111827;
     font-weight: 700;
 }
 
-.doneStep .wizardStepNum,
-.doneStep .wizardStepDot,
-.doneStep .wizardStepLabel {
-    color: #22c55e;
+
+.completed .stepLine {
+    background: #4A32E3;
 }
 
-/* --- Form Card --- */
+.completed .stepNumber,
+.completed .stepLabel {
+    color: #111827;
+}
+
 .formContainer {
-    background: #fff;
-    border: 1px solid #EBEBF0;
+
     border-radius: 16px;
     padding: 36px 40px;
     display: flex;
     flex-direction: column;
+    justify-content: center;
     gap: 20px;
     flex: 1;
+    align-items: center;
+
 }
 
 .formIconBox {
@@ -134,13 +131,16 @@
     margin: 0;
     max-width: 520px;
     font-family: 'Inter', sans-serif;
+    text-align: center;
 }
 
-/* --- Form inputs --- */
 .onboardingForm {
     display: flex;
     flex-direction: column;
     gap: 14px;
+    width: 90%;
+
+
 }
 
 .inputGroup {
@@ -175,9 +175,9 @@
 .textInput {
     width: 100%;
     height: 44px;
-    padding: 0 14px 0 42px;
+    padding: 14.5px 14px 14.5px 38px;
     border: 1.5px solid #E2E8F0;
-    border-radius: 10px;
+    border-radius: 6px;
     font-size: 13.5px;
     color: #1B1F2A;
     background: #FAFBFF;
@@ -274,23 +274,20 @@
     gap: 14px;
 }
 
-/* --- Send code / OTP --- */
 .sendCodeBtn {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    height: 42px;
-    padding: 0 20px;
+    border-radius: 6px;
     background: #4A32E3;
-    color: #fff;
+    box-shadow: 0 8px 20px -8px rgba(74, 50, 227, 0.50);
+    color: #FFF;
+    text-align: center;
+    font-family: Arial;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    height: 48px;
+    width: 100%;
     border: none;
-    border-radius: 10px;
-    font-size: 13.5px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.18s, transform 0.12s;
-    align-self: flex-start;
-    font-family: 'Inter', sans-serif;
 }
 
 .sendCodeBtn:hover {
@@ -311,6 +308,7 @@
     color: #6e7687;
     margin: 0;
     text-transform: uppercase;
+    text-align: center;
 }
 
 .otpInputs {
@@ -344,6 +342,7 @@
     align-items: center;
     gap: 8px;
     font-size: 12.5px;
+    justify-content: center;
 }
 
 .otpTimer {
@@ -394,20 +393,22 @@
 }
 
 .backButton {
-    display: inline-flex;
+    display: flex;
+    width: 110px;
+    height: 48px;
+    padding: 0 var(--md, 16px);
     align-items: center;
     gap: 8px;
-    height: 42px;
-    padding: 0 18px;
-    background: transparent;
-    border: 1.5px solid #E2E8F0;
-    border-radius: 10px;
-    font-size: 13.5px;
+    border-radius: var(--sm, 6px);
+    background: var(--Greyscale-15, #F3F3F4);
+    color: var(--Primary-900, #1A144F);
+    text-align: center;
+    font-size: 16px;
+    font-style: normal;
     font-weight: 500;
-    color: #6e7687;
-    cursor: pointer;
-    transition: all 0.18s;
-    font-family: 'Inter', sans-serif;
+    line-height: normal;
+    letter-spacing: -0.48px;
+    border: none;
 }
 
 .backButton:hover {
@@ -417,20 +418,23 @@
 }
 
 .continueButton {
-    display: inline-flex;
+    display: flex;
+    width: 352px;
+    height: 48px;
+    padding: 0 var(--md, 16px);
+    justify-content: center;
     align-items: center;
     gap: 8px;
-    height: 42px;
-    padding: 0 26px;
-    background: #4A32E3;
+    border-radius: var(--sm, 6px);
+    background: var(--Primary-600---Base, #4A32E3);
+    color: var(--Greyscale-0, #FFF);
+    text-align: center;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    letter-spacing: -0.48px;
     border: none;
-    border-radius: 10px;
-    font-size: 13.5px;
-    font-weight: 600;
-    color: #fff;
-    cursor: pointer;
-    transition: background 0.18s, transform 0.12s;
-    font-family: 'Inter', sans-serif;
 }
 
 .continueButton:hover {
@@ -438,165 +442,147 @@
     transform: translateY(-1px);
 }
 
-/* --- Sidebar --- */
 .sidebarArea {
     width: 272px;
     flex-shrink: 0;
 }
 
 .sidebar {
+    width: 280px;
     background: #fff;
-    border: 1px solid #EBEBF0;
-    border-radius: 16px;
-    padding: 22px;
+    border: 1px solid #E7EAF2;
+    border-radius: 18px;
+    padding: 20px;
     display: flex;
     flex-direction: column;
-    gap: 18px;
+    gap: 20px;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, .05);
     position: sticky;
-    top: 0;
+    top: 20px;
 }
+
 
 .sidebarHeader {
     display: flex;
     flex-direction: column;
-    gap: 4px;
 }
 
-.assistantHeaderTitle {
+.logoRow {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
 }
 
-.assistantHeaderTitle h3 {
-    font-size: 13px;
-    font-weight: 700;
-    color: #1B1F2A;
-    margin: 0;
-    font-family: 'Inter', sans-serif;
-}
-
-.pulseDot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: #22c55e;
-    animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-
-    0%,
-    100% {
-        opacity: 1;
-        transform: scale(1);
-    }
-
-    50% {
-        opacity: 0.5;
-        transform: scale(1.3);
-    }
-}
-
-.sidebarSubtitle {
-    font-size: 11.5px;
-    color: #9ca3af;
-    margin: 0;
-    font-family: 'Inter', sans-serif;
-}
-
-/* Circular Progress */
-.progressCircleContainer {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-}
-
-.circleSvgWrapper {
-    position: relative;
+.logoIcon {
+    width: 32px;
+    height: 32px;
+    border-radius: 10px;
+    background: #4A32E3;
+    color: #fff;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-.svgCircle {
+.logoRow h3 {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 700;
+    color: #1F2937;
+}
+
+.logoRow p {
+    margin: 2px 0 0;
+    font-size: 12px;
+    color: #94A3B8;
+}
+
+
+.progressSection {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.progressWrapper {
+    width: 118px;
+    height: 118px;
+    position: relative;
+}
+
+.progressSvg {
     transform: rotate(-90deg);
 }
 
-.circleBg {
-    opacity: 0.25;
-}
-
-.circleProgress {
-    transition: stroke-dashoffset 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.circleText {
+.progressCenter {
     position: absolute;
+    inset: 0;
     display: flex;
     flex-direction: column;
-    align-items: center;
     justify-content: center;
+    align-items: center;
+    pointer-events: none;
 }
 
-.percentText {
-    font-size: 13px;
-    font-weight: 800;
-    color: #4A32E3;
-    line-height: 1;
-    font-family: 'Inter', sans-serif;
-}
-
-.readyText {
-    font-size: 7.5px;
-    font-weight: 700;
-    color: #9ca3af;
-    letter-spacing: 0.5px;
-    font-family: 'Inter', sans-serif;
-}
-
-.stepsLeftBadge {
-    font-size: 11.5px;
-    font-weight: 600;
-    color: #6e7687;
-    background: #F5F3FF;
-    padding: 5px 10px;
-    border-radius: 100px;
-    font-family: 'Inter', sans-serif;
-}
-
-/* AI bubble */
-.assistantBubble {
-    background: linear-gradient(135deg, #F5F3FF 0%, #EBF0FE 100%);
-    border-radius: 10px;
-    padding: 12px 14px;
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-    border: 1px solid #E8E4FF;
-}
-
-.assistantLabel {
-    font-size: 9px;
-    font-weight: 800;
-    letter-spacing: 1.2px;
-    color: #4A32E3;
-    font-family: 'Inter', sans-serif;
-}
-
-.assistantBubble p {
-    font-size: 12.5px;
-    color: #374151;
-    line-height: 1.55;
+.progressCenter h2 {
     margin: 0;
-    font-family: 'Inter', sans-serif;
+    font-size: 28px;
+    font-weight: 800;
+    color: #4A32E3;
 }
 
-/* Checklist */
-.checklistSection {
+.progressCenter span {
+    font-size: 11px;
+    color: #94A3B8;
+    font-weight: 700;
+    letter-spacing: .08em;
+}
+
+.stepsBadge {
+    background: #ECFDF3;
+    color: #16A34A;
+    padding: 7px 14px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+    margin-top: -22px;
+    z-index: 100;
+}
+
+
+.assistantCard {
+    background: linear-gradient(180deg, #F8F6FF 0%, #F3F5FF 100%);
+    border: 1px solid #E6E3FF;
+    border-radius: 14px;
+    padding: 16px;
+}
+
+.assistantTop {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #4A32E3;
+    margin-bottom: 10px;
+}
+
+.assistantTop span {
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: .08em;
+}
+
+.assistantCard p {
+    margin: 0;
+    color: #475569;
+    line-height: 1.6;
+    font-size: 13px;
+}
+
+
+.checklist {
     display: flex;
     flex-direction: column;
-    gap: 9px;
+    gap: 10px;
 }
 
 .checklistHeader {
@@ -605,131 +591,140 @@
     align-items: center;
 }
 
-.checklistHeader h4 {
-    font-size: 9.5px;
-    font-weight: 800;
-    letter-spacing: 0.8px;
-    color: #9ca3af;
-    margin: 0;
-    font-family: 'Inter', sans-serif;
-}
-
-.checklistHeader span {
+.checklistHeader span:first-child {
     font-size: 11px;
-    color: #6e7687;
-    font-weight: 500;
-    font-family: 'Inter', sans-serif;
+    font-weight: 800;
+    color: #94A3B8;
+    letter-spacing: .08em;
 }
 
-.checklistList {
-    display: flex;
-    flex-direction: column;
-    gap: 7px;
+.checklistHeader span:last-child {
+    font-size: 12px;
+    color: #64748B;
 }
 
-.checklistItem {
+.checkItem {
     display: flex;
     align-items: center;
-    gap: 9px;
+    justify-content: space-between;
+    border: 1px solid #EEF2F7;
+    background: #FAFBFD;
+    border-radius: 12px;
+    padding: 12px;
 }
 
-.checkIconBox {
-    width: 19px;
-    height: 19px;
+.left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.iconWrap {
+    width: 22px;
+    height: 22px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    background: #F0EEFF;
-    border: 1.5px solid #E2E8F0;
 }
 
-.checklistItem.done .checkIconBox {
-    background: #22c55e;
-    border-color: #22c55e;
-}
-
-.checklistItem.in-progress .checkIconBox {
-    background: #4A32E3;
-    border-color: #4A32E3;
-}
-
-.checkIconDone {
-    color: #fff;
-}
-
-.checkDot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: #d1d5db;
-}
-
-.checklistLabel {
-    flex: 1;
-    font-size: 12.5px;
-    color: #374151;
+.label {
+    font-size: 13px;
+    color: #334155;
     font-weight: 500;
-    font-family: 'Inter', sans-serif;
 }
 
-.checklistItem.done .checklistLabel {
-    color: #9ca3af;
+.dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+
+/* -------- Done -------- */
+
+.done .iconWrap {
+    background: #22C55E;
+    color: white;
+}
+
+.done .label {
+    color: #94A3B8;
     text-decoration: line-through;
 }
 
-.statusLabel {
-    font-size: 10px;
-    font-weight: 600;
-    padding: 2px 7px;
-    border-radius: 100px;
-    font-family: 'Inter', sans-serif;
+.doneBadge {
+    background: #DCFCE7;
+    color: #16A34A;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 5px 10px;
+    border-radius: 999px;
 }
 
-.statusLabel.done {
-    color: #16a34a;
-    background: #dcfce7;
+/* -------- Progress -------- */
+
+.inprogress .iconWrap {
+    background: #4A32E3;
 }
 
-.statusLabel.in-progress {
+.inprogress .dot {
+    background: white;
+}
+
+.progressBadge {
+    background: #ECE9FF;
     color: #4A32E3;
-    background: #EBF0FE;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 5px 10px;
+    border-radius: 999px;
 }
 
-.statusLabel.to-do {
-    color: #9ca3af;
-    background: #f1f5f9;
+/* -------- Todo -------- */
+
+.todo .iconWrap {
+    border: 2px solid #CBD5E1;
+    background: white;
 }
 
-.askAssistantBtn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 7px;
+.todo .dot {
+    background: #CBD5E1;
+}
+
+.todoBadge {
+    background: #F1F5F9;
+    color: #64748B;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 5px 10px;
+    border-radius: 999px;
+}
+
+/* ---------------- Footer Button ---------------- */
+
+.askBtn {
+    margin-top: auto;
     width: 100%;
-    height: 38px;
-    background: transparent;
-    border: 1.5px solid #E2E8F0;
-    border-radius: 10px;
-    font-size: 12.5px;
-    font-weight: 600;
+    height: 46px;
+    border: 1px solid #DDD6FE;
+    background: #F8F6FF;
     color: #4A32E3;
+    border-radius: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 700;
     cursor: pointer;
-    transition: all 0.18s;
-    font-family: 'Inter', sans-serif;
+    transition: .2s;
 }
 
-.askAssistantBtn:hover {
-    background: rgba(74, 50, 227, 0.05);
+.askBtn:hover {
+    background: #4A32E3;
+    color: white;
     border-color: #4A32E3;
-}
-
-/* --- Option/choice cards (tx types etc) --- */
-.optionCards {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
 }
 
 .optionCard {

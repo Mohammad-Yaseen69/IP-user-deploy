@@ -49,23 +49,24 @@ const CompanyStep = ({ onNext, onBack, userType, data = {} }) => {
 
     return (
         <div className={styles.onboardingLayout}>
-            <div className={styles.mainArea}>
-                {/* Wizard */}
-                <div className={styles.wizardSteps}>
-                    {steps.map((s, idx) => (
-                        <div
-                            key={idx}
-                            className={`${styles.wizardStep} ${s.active ? styles.activeStep : ''} ${s.done ? styles.doneStep : ''}`}
-                        >
-                            <span className={styles.wizardStepNum}>{s.num}</span>
-                            <span className={styles.wizardStepDot}>·</span>
-                            <span className={styles.wizardStepLabel}>{s.label}</span>
-                            {idx < steps.length - 1 && <div className={styles.wizardStepLine} />}
-                        </div>
-                    ))}
-                </div>
+            <div className={styles.wizardSteps}>
+                {steps.map((step, index) => (
+                    <div
+                        key={index}
+                        className={`${styles.step} ${step.active ? styles.active : ""
+                            } ${step.completed ? styles.completed : ""}`}
+                    >
+                        <div className={styles.stepLine}></div>
 
-                {/* Form */}
+                        <div className={styles.stepContent}>
+                            <span className={styles.stepNumber}>{step.num}</span>
+                            <span className={styles.stepLabel}>{step.label}</span>
+                        </div>
+                    </div>
+                ))}
+            </div>
+            <div className={styles.mainArea}>
+
                 <div className={styles.formContainer}>
                     <div className={styles.formIconBox}>
                         <Briefcase className={styles.formIcon} size={26} />
@@ -187,27 +188,26 @@ const CompanyStep = ({ onNext, onBack, userType, data = {} }) => {
                         <span>{t("All data transmitted over TLS 1.3 and stored encrypted. GDPR compliant.")}</span>
                     </div>
                 </div>
-
-                <div className={styles.navigationFooter}>
-                    <button onClick={onBack} className={styles.backButton}>
-                        <ArrowLeft size={16} />
-                        {t("Back")}
-                    </button>
-                    <button onClick={handleContinue} className={styles.continueButton}>
-                        {t("Continue")}
-                        <ArrowRight size={16} />
-                    </button>
+                <div className={styles.sidebarArea}>
+                    <SidebarProgress
+                        percent={30}
+                        stepsLeft={4}
+                        currentStepKey="company"
+                        assistantMessage="Great start! Now let's capture your company's legal identity. This helps us verify your registration."
+                    />
                 </div>
             </div>
-
-            <div className={styles.sidebarArea}>
-                <SidebarProgress
-                    percent={30}
-                    stepsLeft={4}
-                    currentStepKey="company"
-                    assistantMessage="Great start! Now let's capture your company's legal identity. This helps us verify your registration."
-                />
+            <div className={styles.navigationFooter}>
+                <button onClick={onBack} className={styles.backButton}>
+                    <ArrowLeft size={16} />
+                    {t("Back")}
+                </button>
+                <button onClick={handleContinue} className={styles.continueButton}>
+                    {t("Continue")}
+                </button>
             </div>
+
+
         </div>
     )
 }
