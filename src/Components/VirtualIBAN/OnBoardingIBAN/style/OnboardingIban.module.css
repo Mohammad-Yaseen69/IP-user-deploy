@@ -9,7 +9,7 @@
     min-height: 100vh;
     flex-direction: column;
     border-radius: var(--md, 10px);
-    height: 100vh;
+    height: auto;
 }
 
 
@@ -209,6 +209,203 @@
 
 
 
+.titleWithBack {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.backBtn {
+    background: transparent;
+    border: none;
+    padding: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    color: #4A32E3;
+    transition: background-color 0.2s, transform 0.2s;
+}
+
+.backBtn:hover {
+    background-color: rgba(74, 50, 227, 0.08);
+    transform: scale(1.05);
+}
+
+.selectionContainer {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    margin-top: 32px;
+    box-sizing: border-box;
+}
+
+.banner {
+    background: linear-gradient(135deg, #4A32E3 0%, #5926F0 100%);
+    border-radius: 16px;
+    padding: 40px;
+    color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    box-shadow: 0 8px 30px rgba(74, 50, 227, 0.15);
+}
+
+.bannerTitle {
+    font-size: 28px;
+    font-weight: 700;
+    color: #ffffff;
+    margin: 0;
+    line-height: 1.2;
+}
+
+.bannerDescription {
+    font-size: 15px;
+    color: rgba(255, 255, 255, 0.85);
+    line-height: 1.6;
+    max-width: 850px;
+    margin: 0;
+}
+
+.bannerCards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
+    margin-top: 8px;
+}
+
+.bannerCard {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 12px;
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: transform 0.2s, background-color 0.2s;
+}
+
+.bannerCard:hover {
+    background-color: rgba(255, 255, 255, 0.12);
+    transform: translateY(-2px);
+}
+
+.bannerIconWrapper {
+    background: rgba(255, 255, 255, 0.15);
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    flex-shrink: 0;
+}
+
+.bannerCardText {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.bannerCardText h4 {
+    font-size: 14px;
+    font-weight: 600;
+    color: #ffffff;
+    margin: 0;
+}
+
+.bannerCardText p {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.7);
+    margin: 0;
+}
+
+.selectionTitleCont {
+    margin-top: 16px;
+}
+
+.selectionHeading {
+    font-size: 20px;
+    font-weight: 600;
+    color: #1F1F21;
+    margin: 0;
+}
+
+.choiceCards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+}
+
+.choiceCard {
+    background: #ffffff;
+    border: 1px solid #E2E8F0;
+    border-radius: 16px;
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+}
+
+.choiceCard:hover {
+    border-color: #4A32E3;
+    box-shadow: 0 10px 25px -5px rgba(74, 50, 227, 0.12);
+    transform: translateY(-4px);
+}
+
+.choiceIconBox {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    background: #F1F0FD;
+    color: #4A32E3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.choiceIcon {
+    color: #4A32E3;
+}
+
+.choiceCard h3 {
+    font-size: 20px;
+    font-weight: 600;
+    color: #1F1F21;
+    margin: 0;
+}
+
+.choiceCard p {
+    font-size: 14px;
+    color: rgba(31, 31, 33, 0.64);
+    line-height: 1.5;
+    margin: 0;
+    flex-grow: 1;
+}
+
+.badgeContainer {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 16px;
+}
+
+.badge {
+    font-size: 11px;
+    font-weight: 600;
+    color: #4A32E3;
+    background: #F1F0FD;
+    padding: 6px 12px;
+    border-radius: 100px;
+}
+
 @media (max-width: 600px) {
     .heading {
         font-size: 32px;
@@ -218,11 +415,7 @@
         flex-direction: column;
         gap: 16px;
     }
-
-
 }
-
-
 
 @media (max-width: 768px) {
     .container {
@@ -249,7 +442,6 @@
 
     .rightSection img {
         width: 100%;
-        /* max-width: 320px; */
         height: auto;
         border-radius: 12px;
     }
@@ -283,5 +475,29 @@
         margin-top: 16px;
     }
 
-   
+    .banner {
+        padding: 24px;
+        gap: 16px;
+    }
+
+    .bannerTitle {
+        font-size: 22px;
+    }
+
+    .bannerDescription {
+        font-size: 13.5px;
+    }
+
+    .bannerCards {
+        grid-template-columns: 1fr;
+    }
+
+    .choiceCards {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .choiceCard {
+        padding: 24px;
+    }
 }
