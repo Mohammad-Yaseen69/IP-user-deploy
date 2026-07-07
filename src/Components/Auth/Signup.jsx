@@ -61,6 +61,9 @@ function reducer(state, action) {
     }
 }
 
+const individualNameRegex = /^[A-Za-z\s]+$/
+const companyNameRegex = /^[A-Za-z0-9\s/-]+$/
+
 const Signup = ({ country, setIsLoginForm, setHideLogo }) => {
     // eslint-disable-next-line no-useless-escape
     const emailRegex = /^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$/
@@ -100,7 +103,9 @@ const Signup = ({ country, setIsLoginForm, setHideLogo }) => {
             case 1:
                 return !data.account_type
             case 2:
-                return data.account_type === "individual" ? !data.first_name || !data.last_name : !data.category_id || !data.company_name || !data.country?._id
+                return data.account_type === "individual"
+                    ? !data.first_name?.trim() || !data.last_name?.trim() || !individualNameRegex.test(data.first_name) || !individualNameRegex.test(data.last_name)
+                    : !data.category_id || !data.company_name?.trim() || !data.country?._id || !companyNameRegex.test(data.company_name)
             case 3:
                 return data.account_type === "individual" ? !data.phone || data.phone.length < 9 || !/^\d{9,20}$/g.test(data.phone) : (!emailRegex.test(data.email))
             case 4:
