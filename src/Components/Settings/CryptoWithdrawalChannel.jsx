@@ -129,7 +129,6 @@ const CryptoWithdrawalChannel = () => {
         const duplicate = cryptoAccounts.some(account => {
             const sameAccount = editingAccount?.accountId && account.accountId === editingAccount.accountId
             return !sameAccount &&
-                account.network === form.network &&
                 account.wallet_address?.trim()?.toLowerCase() === address.toLowerCase()
         })
 
@@ -373,7 +372,10 @@ const CryptoWithdrawalChannel = () => {
                         </FormGroup>
                         <FormGroup>
                             <Label>{t("Network")} <span className="req_star">*</span></Label>
-                            <Input type="select" value={form.network} disabled={isSaving} onChange={event => setForm(prev => ({ ...prev, network: event.target.value }))}>
+                            <Input type="select" value={form.network} disabled={isSaving} onChange={event => {
+                                setTouched(false)
+                                setForm(prev => ({ ...prev, network: event.target.value, wallet_address: "" }))
+                            }}>
                                 {NETWORKS.map(network => (
                                     <option key={network.value} value={network.value}>{t(network.value)}</option>
                                 ))}
