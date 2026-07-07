@@ -1,40 +1,15 @@
-import React, { useState, useRef } from 'react'
+import { useRef, useState } from 'react'
+import { ArrowLeft, ArrowRight, Upload } from 'react-feather'
 import { useTranslation } from 'react-i18next'
-import { FileText, Upload, X, ArrowLeft, ArrowRight, Shield, File } from 'react-feather'
 import styles from '../style/onboardingSteps.module.css'
 import SidebarProgress from './SidebarProgress'
 
 const REQUIRED_DOCS = [
-    {
-        key: 'certificate',
-        label: 'Certificate of Incorporation',
-        description: 'Official certificate issued by the companies registry',
-        required: true
-    },
-    {
-        key: 'memorandum',
-        label: 'Memorandum & Articles of Association',
-        description: 'Constitutional documents of the company',
-        required: true
-    },
-    {
-        key: 'ownership_chart',
-        label: 'Ownership / Structure Chart',
-        description: 'Diagram showing the corporate ownership structure',
-        required: true
-    },
-    {
-        key: 'id_directors',
-        label: 'ID Documents (All Directors/UBOs)',
-        description: 'Passport or national ID for each director and UBO',
-        required: true
-    },
-    {
-        key: 'proof_address',
-        label: 'Proof of Registered Address',
-        description: 'Utility bill or bank statement, dated within 3 months',
-        required: false
-    }
+    { key: 'certificate', label: 'Certificate of Incorporation' },
+    { key: 'memorandum', label: 'Memorandum & Articles of Association' },
+    { key: 'ownership_chart', label: 'Ownership / Structure Chart' },
+    { key: 'id_directors', label: 'ID Documents (All Directors/UBOs)' },
+    { key: 'proof_address', label: 'Proof of Registered Address' }
 ]
 
 const DocumentsStep = ({ onNext, onBack, userType, data = {} }) => {
@@ -42,19 +17,15 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {} }) => {
     const [files, setFiles] = useState(data.files || {})
     const inputRefs = useRef({})
 
-    const handleFileDrop = (key, e) => {
-        e.preventDefault()
-        const file = e.dataTransfer?.files?.[0] || e.target?.files?.[0]
+    const handleFileChange = (key, e) => {
+        const file = e.target.files?.[0]
         if (!file) return
         setFiles(prev => ({ ...prev, [key]: file }))
+        e.target.value = ''
     }
 
-    const removeFile = (key) => {
-        setFiles(prev => {
-            const next = { ...prev }
-            delete next[key]
-            return next
-        })
+    const openFilePicker = (key) => {
+        inputRefs.current[key]?.click()
     }
 
     const handleContinue = () => {
@@ -69,6 +40,41 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {} }) => {
         { num: '05', label: t('Documents'), active: true },
         { num: '06', label: t('Review'), active: false }
     ]
+
+    const uploadedCount = Object.keys(files).length
+    const progressPercent = Math.min(100, Math.round((uploadedCount / REQUIRED_DOCS.length) * 100))
+
+    const renderUploadControl = (key, badgeClassName = styles.optional, badgeText = 'OPTIONAL') => {
+        const selectedFile = files[key]
+
+        return (
+            <div className={styles.right}>
+                {selectedFile ? (
+                    <>
+                        <span className={styles.provided}>{selectedFile.name}</span>
+                        <button type="button" className={styles.uploadBtn} onClick={() => openFilePicker(key)}>
+                            <Upload size={10} /> Replace
+                        </button>
+                    </>
+                ) : (
+                    <>
+                        <span className={badgeClassName}>{badgeText}</span>
+                        <button type="button" className={styles.uploadBtn} onClick={() => openFilePicker(key)}>
+                            <Upload size={10} /> Upload
+                        </button>
+                    </>
+                )}
+                <input
+                    ref={(el) => {
+                        inputRefs.current[key] = el
+                    }}
+                    type="file"
+                    style={{ display: 'none' }}
+                    onChange={(e) => handleFileChange(key, e)}
+                />
+            </div>
+        )
+    }
 
     return (
         <div className={styles.onboardingLayout}>
@@ -100,7 +106,7 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {} }) => {
                 <div className={styles.onboardingForm}>
                     <div className={styles.progressCard}>
                         <div className={styles.progressTop}>
-                            <div className={styles.progressCount}>7 / 18</div>
+                            <div className={styles.progressCount}>{uploadedCount} / {REQUIRED_DOCS.length}</div>
 
                             <div className={styles.progressContent}>
                                 <h4>Required documents provided</h4>
@@ -110,7 +116,7 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {} }) => {
                                 </p>
 
                                 <div className={styles.progressBar}>
-                                    <div className={styles.progressFill}></div>
+                                    <div className={styles.progressFill} style={{ width: `${progressPercent}%` }}></div>
                                 </div>
                             </div>
                         </div>
@@ -154,11 +160,7 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {} }) => {
                                     <span>Certificate of good standing</span>
                                 </div>
 
-                                <div className={styles.right}>
-                                    <span className={styles.optional}>OPTIONAL</span>
-
-                                    <button className={styles.uploadBtn}><Upload size={10} /> Upload</button>
-                                </div>
+                                {renderUploadControl('good_standing', styles.optional, 'OPTIONAL')}
                             </div>
                         </div>
                     </div>
@@ -181,11 +183,7 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {} }) => {
                                     </span>
                                 </div>
 
-                                <div className={styles.right}>
-                                    <span className={styles.oneof}>ONE OF</span>
-
-                                    <button className={styles.uploadBtn}><Upload size={10} /> Upload</button>
-                                </div>
+                                {renderUploadControl('registered_extract', styles.oneof, 'ONE OF')}
                             </div>
 
                             <div className={styles.documentRow}>
@@ -194,11 +192,7 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {} }) => {
                                     <span>Official certificate of domiciliation</span>
                                 </div>
 
-                                <div className={styles.right}>
-                                    <span className={styles.oneof}>ONE OF</span>
-
-                                    <button className={styles.uploadBtn}><Upload size={10} /> Upload</button>
-                                </div>
+                                {renderUploadControl('domiciliation_certificate', styles.oneof, 'ONE OF')}
                             </div>
 
                             <div className={styles.documentRow}>
@@ -207,11 +201,7 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {} }) => {
                                     <span>Professional lease agreement</span>
                                 </div>
 
-                                <div className={styles.right}>
-                                    <span className={styles.oneof}>ONE OF</span>
-
-                                    <button className={styles.uploadBtn}><Upload size={10} /> Upload</button>
-                                </div>
+                                {renderUploadControl('lease_agreement', styles.oneof, 'ONE OF')}
                             </div>
 
                             <div className={styles.documentRow}>
@@ -223,11 +213,7 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {} }) => {
                                     </span>
                                 </div>
 
-                                <div className={styles.right}>
-                                    <span className={styles.oneof}>ONE OF</span>
-
-                                    <button className={styles.uploadBtn}><Upload size={10} /> Upload</button>
-                                </div>
+                                {renderUploadControl('utility_bill', styles.oneof, 'ONE OF')}
                             </div>
 
                             <div className={styles.documentRow}>
@@ -251,11 +237,7 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {} }) => {
                                     </span>
                                 </div>
 
-                                <div className={styles.right}>
-                                    <span className={styles.oneof}>ONE OF</span>
-
-                                    <button className={styles.uploadBtn}><Upload size={10} /> Upload</button>
-                                </div>
+                                {renderUploadControl('authority_letter', styles.oneof, 'ONE OF')}
                             </div>
                         </div>
                     </div>
@@ -312,11 +294,7 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {} }) => {
                                     <span>Valid passport / ID for each UBO</span>
                                 </div>
 
-                                <div className={styles.right}>
-                                    <span className={styles.required}>REQUIRED</span>
-
-                                    <button className={styles.uploadBtn}><Upload size={10} /> Upload</button>
-                                </div>
+                                {renderUploadControl('ubo_passport', styles.required, 'REQUIRED')}
                             </div>
 
                             <div className={styles.documentRow}>
@@ -325,11 +303,7 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {} }) => {
                                     <span>Private proof of address under 3 months for each UBO</span>
                                 </div>
 
-                                <div className={styles.right}>
-                                    <span className={styles.required}>REQUIRED</span>
-
-                                    <button className={styles.uploadBtn}><Upload size={10} /> Upload</button>
-                                </div>
+                                {renderUploadControl('ubo_address_proof', styles.required, 'REQUIRED')}
                             </div>
                         </div>
                     </div>
