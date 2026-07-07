@@ -60,6 +60,7 @@ const UserState = ({ children }) => {
     const [userSessions, setUserSessions] = useState([])
     const [allowedFeatures, setAllowedFeatures] = useState(null)
     const [userWithdrawals, setUserWithdrawals] = useState(undefined)
+    const [cryptoWithdrawals, setCryptoWithdrawals] = useState([])
     const [allowedWithdrawals, setAllowedWithdrawals] = useState(null)
     const [allowedCountries, setAllowedCountries] = useState([])
     const [userPortfolio, setUserPortfolio] = useState([])
@@ -157,6 +158,7 @@ const UserState = ({ children }) => {
         setUserSessions([])
         setAllowedFeatures(null)
         setUserWithdrawals([])
+        setCryptoWithdrawals([])
         setAllowedWithdrawals(null)
         setUserPortfolio([])
         setProfileCompleted(null)
@@ -461,7 +463,7 @@ const UserState = ({ children }) => {
             headers: authHeader
         })
             .then(res => {
-                const decrypted = decryptData(res.data.data)               
+                const decrypted = decryptData(res.data.data)
                 const formattedUrl = `${base_url}/signup/`;
                 setReferralLink(formattedUrl)
             })
@@ -556,7 +558,8 @@ const UserState = ({ children }) => {
                 setMissingTabsData(prev => prev.includes("withdrawls") ? prev : [...prev, "withdrawls"]);
             }
             console.log(decrypted)
-            setUserWithdrawals(decrypted?.withdrawalList ?? [])
+            setUserWithdrawals(decrypted?.withdrawalList?.filter(withdrawal => !withdrawal.isCrypto) ?? [])
+            setCryptoWithdrawals(decrypted?.withdrawalList?.filter(withdrawal => withdrawal.isCrypto === true) ?? [])
         } catch (error) {
             const dec = decryptData(error.response?.data?.data);
 
@@ -564,6 +567,7 @@ const UserState = ({ children }) => {
                 setMissingTabsData(prev => prev.includes("withdrawls") ? prev : [...prev, "withdrawls"]);
             }
             setUserWithdrawals([])
+            setCryptoWithdrawals([])
         }
     }
 
@@ -683,7 +687,7 @@ const UserState = ({ children }) => {
 
 
     return (
-        <UserContext.Provider value={{ userDetails, setUserDetails, userWallets, setUserWallets, token, authHeader, beneficiaries, setBeneficiaries, userTransactions, setUserTransactions, searchQuery, setSearchQuery, apiDates, setApiDates, userSecurityQues, referralLink, userSessions, allowedFeatures, verifyToken, userWithdrawals, setUserWithdrawals, allowedWithdrawals, registeredBeneficiaries, profileCompleted, allowedCountries, userPortfolio, profileIncompleteReason, setUserPortfolio, setUserVideos, getUserVideos, userVideos, checkRegisteredBenficiaries, getAllActiveCountries, getUserWallets, getUserBeneficiaries, getUserDocuments, checkAuth, getSecurityQuestions, getInvitationLink, getSessions, profileCompletedPercentage, getWithdrawals, getReferralCommission, totalReferralAmount, validateSendingLimits, validateReceivingLimits, validateTransactionsCount, profileLockTIme, setProfileLockTime, showInactivityModal, setShowInactivityModal, is30Days, setIs30Days, threeDaysReminder, set3DaysReminder, is30DaysInfo, setIs30DaysInfo, threeDaysReminderInfo, set3DaysReminderInfo, clearData, croppedImages, updateCoordinates, setCroppedImages, missingTabsData, setMissingTabsData, setAvailable, available, setBlocked, blocked, benLoading, balanceLoading, showModalState, setShowModalState, processReceivingNonIpFunds: processReceivingNonIpFunds.mutateAsync, showAnotherLoginModal, setShowAnotherLoginModal, isAgentLogin, setIsAgentLogin, agentDetails, setAgentDetails, commisions }}>
+        <UserContext.Provider value={{ userDetails, setUserDetails, userWallets, setUserWallets, token, authHeader, beneficiaries, setBeneficiaries, userTransactions, setUserTransactions, searchQuery, setSearchQuery, apiDates, setApiDates, userSecurityQues, referralLink, userSessions, allowedFeatures, verifyToken, userWithdrawals, setUserWithdrawals, cryptoWithdrawals, setCryptoWithdrawals, allowedWithdrawals, registeredBeneficiaries, profileCompleted, allowedCountries, userPortfolio, profileIncompleteReason, setUserPortfolio, setUserVideos, getUserVideos, userVideos, checkRegisteredBenficiaries, getAllActiveCountries, getUserWallets, getUserBeneficiaries, getUserDocuments, checkAuth, getSecurityQuestions, getInvitationLink, getSessions, profileCompletedPercentage, getWithdrawals, getReferralCommission, totalReferralAmount, validateSendingLimits, validateReceivingLimits, validateTransactionsCount, profileLockTIme, setProfileLockTime, showInactivityModal, setShowInactivityModal, is30Days, setIs30Days, threeDaysReminder, set3DaysReminder, is30DaysInfo, setIs30DaysInfo, threeDaysReminderInfo, set3DaysReminderInfo, clearData, croppedImages, updateCoordinates, setCroppedImages, missingTabsData, setMissingTabsData, setAvailable, available, setBlocked, blocked, benLoading, balanceLoading, showModalState, setShowModalState, processReceivingNonIpFunds: processReceivingNonIpFunds.mutateAsync, showAnotherLoginModal, setShowAnotherLoginModal, isAgentLogin, setIsAgentLogin, agentDetails, setAgentDetails, commisions }}>
             {((showModalState || Boolean(isSessionExpired)) && !location.pathname.startsWith("/pay/")) &&
                 <SessionExpireModal
                     isOpen={(showModalState || Boolean(isSessionExpired))}
