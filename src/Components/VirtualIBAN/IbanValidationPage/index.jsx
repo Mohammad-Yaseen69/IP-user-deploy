@@ -122,7 +122,7 @@ const ValidState = ({ iban, account }) => {
                     </div>
                     <div>
                         <span>{t('IBAN')}</span>
-                        <strong className={styles.mono}>{iban?.iban || '-'}</strong>
+                        <strong>{iban?.iban || '-'}</strong>
                     </div>
                     <div>
                         <span>{t('Status')}</span>
