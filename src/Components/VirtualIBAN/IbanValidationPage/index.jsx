@@ -112,7 +112,7 @@ const ValidState = ({ iban, account }) => {
                     <Illustration valid />
                     <span className={`${styles.statusPill} ${styles.validPill}`}>{t('Verified')}</span>
                     <h1>{t('This virtual IBAN is valid')}</h1>
-                    <p>{t('This virtual IBAN is registered with InstaPay and the account information below matches our records.')}</p>
+                    <p>{t('This virtual IBAN is registered with InstaPay and the IBAN information below matches our records.')}</p>
                 </div>
 
                 <div className={styles.summaryBar}>
@@ -121,8 +121,8 @@ const ValidState = ({ iban, account }) => {
                         <strong>{iban?.account_holder_name || accountName || '-'}</strong>
                     </div>
                     <div>
-                        <span>{t('Currency')}</span>
-                        <strong>{iban?.currency || '-'}</strong>
+                        <span>{t('IBAN')}</span>
+                        <strong className={styles.mono}>{iban?.iban || '-'}</strong>
                     </div>
                     <div>
                         <span>{t('Status')}</span>
@@ -130,6 +130,7 @@ const ValidState = ({ iban, account }) => {
                     </div>
                 </div>
 
+                {/*
                 <div className={styles.detailsGrid}>
                     <section className={styles.detailSection}>
                         <h2>{t('Account information')}</h2>
@@ -162,6 +163,8 @@ const ValidState = ({ iban, account }) => {
                         </div>
                     </section>
                 </div>
+                */}
+
             </section>
         </main>
     )
