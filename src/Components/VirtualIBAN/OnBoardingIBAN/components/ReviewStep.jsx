@@ -32,20 +32,23 @@ const ReviewStep = ({ onSubmit, onBack, allData = {} }) => {
 
     return (
         <div className={styles.onboardingLayout}>
-            <div className={styles.mainArea}>
-                <div className={styles.wizardSteps}>
-                    {steps.map((s, idx) => (
-                        <div
-                            key={idx}
-                            className={`${styles.wizardStep} ${s.active ? styles.activeStep : ''} ${s.done ? styles.doneStep : ''}`}
-                        >
-                            <span className={styles.wizardStepNum}>{s.num}</span>
-                            <span className={styles.wizardStepDot}>·</span>
-                            <span className={styles.wizardStepLabel}>{s.label}</span>
-                            {idx < steps.length - 1 && <div className={styles.wizardStepLine} />}
+            <div className={styles.wizardSteps}>
+                {steps.map((step, index) => (
+                    <div
+                        key={index}
+                        className={`${styles.step} ${step.active ? styles.active : ""
+                            } ${step.completed ? styles.completed : ""}`}
+                    >
+                        <div className={styles.stepLine}></div>
+
+                        <div className={styles.stepContent}>
+                            <span className={styles.stepNumber}>{step.num}</span>
+                            <span className={styles.stepLabel}>{step.label}</span>
                         </div>
-                    ))}
-                </div>
+                    </div>
+                ))}
+            </div>
+            <div className={styles.mainArea}>
 
                 <div className={styles.formContainer}>
                     <div className={styles.formIconBox}>
@@ -232,22 +235,23 @@ const ReviewStep = ({ onSubmit, onBack, allData = {} }) => {
                     </div>
                 </div>
 
-                <div className={styles.navigationFooter}>
-                    <button onClick={() => onBack()} className={styles.backButton}>
-                        <ArrowLeft size={16} />
-                        {t("Back")}
-                    </button>
+
+                <div className={styles.sidebarArea}>
+                    <SidebarProgress
+                        percent={95}
+                        stepsLeft={0}
+                        currentStepKey="review"
+                        assistantMessage="You're at the finish line! Review your application carefully, agree to the terms, and submit. We'll be in touch within 1-3 business days."
+                    />
                 </div>
             </div>
-
-            <div className={styles.sidebarArea}>
-                <SidebarProgress
-                    percent={95}
-                    stepsLeft={0}
-                    currentStepKey="review"
-                    assistantMessage="You're at the finish line! Review your application carefully, agree to the terms, and submit. We'll be in touch within 1-3 business days."
-                />
+            <div className={styles.navigationFooter}>
+                <button onClick={() => onBack()} className={styles.backButton}>
+                    <ArrowLeft size={16} />
+                    {t("Back")}
+                </button>
             </div>
+
         </div>
     )
 }

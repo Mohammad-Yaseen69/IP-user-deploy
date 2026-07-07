@@ -9,17 +9,17 @@ import styles from "./style/OnboardingIban.module.css"
 import TopRight from '../../topRight'
 import useWindowWidth from '../../../utils/useWindowWidth'
 
-import AccountStep   from './components/AccountStep'
-import CompanyStep   from './components/CompanyStep'
-import ActivityStep  from './components/ActivityStep'
+import AccountStep from './components/AccountStep'
+import CompanyStep from './components/CompanyStep'
+import ActivityStep from './components/ActivityStep'
 import OwnershipStep from './components/OwnershipStep'
 import DocumentsStep from './components/DocumentsStep'
-import ReviewStep    from './components/ReviewStep'
-import StatusScreen  from './components/StatusScreen'
+import ReviewStep from './components/ReviewStep'
+import StatusScreen from './components/StatusScreen'
 
 
-const STEPS_BUSINESS    = ['landing', 'selection', 'account', 'company', 'activity', 'ownership', 'documents', 'review']
-const STEPS_INDIVIDUAL  = ['landing', 'selection', 'account', 'review']
+const STEPS_BUSINESS = ['landing', 'selection', 'account', 'company', 'activity', 'ownership', 'documents', 'review']
+const STEPS_INDIVIDUAL = ['landing', 'selection', 'account', 'review']
 
 const STATUS_ORDER = [
     'submitted', 'in_review', 'under_review', 'pending_kyb',
@@ -28,33 +28,57 @@ const STATUS_ORDER = [
 ]
 
 const OnboardingIBAN = ({ onCreated }) => {
-    const { t }      = useTranslation()
-    const can        = usePermission()
-    const width      = useWindowWidth()
-    const navigate   = useNavigate()
+    const { t } = useTranslation()
+    const can = usePermission()
+    const width = useWindowWidth()
+    const navigate = useNavigate()
 
     const canCreateIban = can("virtual-iban.account.create")
     const { userDetails } = useContext(UserContext)
 
-    const [step, setStep]         = useState('landing')
-    const [userType, setUserType] = useState(null)   
+    const [step, setStep] = useState('landing')
+    const [userType, setUserType] = useState(null)
     const [formData, setFormData] = useState({})
-    const [status, setStatus]     = useState('submitted') 
+    const [status, setStatus] = useState('submitted')
 
     const stepOrder = userType === 'individual' ? STEPS_INDIVIDUAL : STEPS_BUSINESS
 
+    const getNextStep = (currentStep) => {
+        if (currentStep === 'landing') return 'selection'
+        if (currentStep === 'selection') return 'account'
+        if (currentStep === 'account') return userType === 'individual' ? 'review' : 'company'
+        if (currentStep === 'company') return 'activity'
+        if (currentStep === 'activity') return 'ownership'
+        if (currentStep === 'ownership') return 'documents'
+        if (currentStep === 'documents') return 'review'
+        return 'status'
+    }
+
+    const getPrevStep = (currentStep) => {
+        if (currentStep === 'status') return 'review'
+        if (currentStep === 'review') return userType === 'individual' ? 'account' : 'documents'
+        if (currentStep === 'documents') return 'ownership'
+        if (currentStep === 'ownership') return 'activity'
+        if (currentStep === 'activity') return 'company'
+        if (currentStep === 'company') return 'account'
+        if (currentStep === 'account') return 'selection'
+        if (currentStep === 'selection') return 'landing'
+        return 'landing'
+    }
+
     const goNext = (newData = {}) => {
-        setFormData(prev => ({ ...prev, ...newData }))
-        const idx = stepOrder.indexOf(step)
-        if (idx < stepOrder.length - 1) setStep(stepOrder[idx + 1])
-        else setStep('status') 
+        // setFormData(prev => ({ ...prev, ...newData }))
+        const nextStep = getNextStep(step)
+        setStep(nextStep)
     }
 
     const goBack = (target) => {
-        if (typeof target === 'string' && stepOrder.includes(target)) { setStep(target); return }
-        const idx = stepOrder.indexOf(step)
-        if (idx > 0) setStep(stepOrder[idx - 1])
-        else if (step === 'status') setStep('review')
+        if (typeof target === 'string' && stepOrder.includes(target)) {
+            setStep(target)
+            return
+        }
+
+        setStep(getPrevStep(step))
     }
 
     const handleTypeSelect = (type) => {
@@ -140,11 +164,11 @@ const OnboardingIBAN = ({ onCreated }) => {
                         </p>
                         <div className={styles.bannerCards}>
                             {[
-                                { Icon: Globe,      title: "Banking",       sub: "IBAN · SEPA · SWIFT" },
-                                { Icon: Activity,   title: "Treasury",      sub: "Hold & convert · live FX" },
-                                { Icon: CreditCard, title: "Cards",         sub: "Spend your balances" },
-                                { Icon: Zap,        title: "Crypto → Fiat", sub: "Receive · convert · settle" },
-                                { Icon: Cpu,        title: "AI Assistant",  sub: "Guides every step" },
+                                { Icon: Globe, title: "Banking", sub: "IBAN · SEPA · SWIFT" },
+                                { Icon: Activity, title: "Treasury", sub: "Hold & convert · live FX" },
+                                { Icon: CreditCard, title: "Cards", sub: "Spend your balances" },
+                                { Icon: Zap, title: "Crypto → Fiat", sub: "Receive · convert · settle" },
+                                { Icon: Cpu, title: "AI Assistant", sub: "Guides every step" },
                             ].map(({ Icon, title, sub }) => (
                                 <div key={title} className={styles.bannerCard}>
                                     <div className={styles.bannerIconWrapper}><Icon size={17} /></div>
@@ -230,7 +254,7 @@ const OnboardingIBAN = ({ onCreated }) => {
                 />
             )}
 
-            
+
             {step === 'status' && (
                 <StatusScreen
                     status={status}

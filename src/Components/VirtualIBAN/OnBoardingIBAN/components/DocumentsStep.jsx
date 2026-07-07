@@ -72,21 +72,23 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {} }) => {
 
     return (
         <div className={styles.onboardingLayout}>
-            <div className={styles.mainArea}>
-                <div className={styles.wizardSteps}>
-                    {steps.map((s, idx) => (
-                        <div
-                            key={idx}
-                            className={`${styles.wizardStep} ${s.active ? styles.activeStep : ''} ${s.done ? styles.doneStep : ''}`}
-                        >
-                            <span className={styles.wizardStepNum}>{s.num}</span>
-                            <span className={styles.wizardStepDot}>·</span>
-                            <span className={styles.wizardStepLabel}>{s.label}</span>
-                            {idx < steps.length - 1 && <div className={styles.wizardStepLine} />}
-                        </div>
-                    ))}
-                </div>
+            <div className={styles.wizardSteps}>
+                {steps.map((step, index) => (
+                    <div
+                        key={index}
+                        className={`${styles.step} ${step.active ? styles.active : ""
+                            } ${step.completed ? styles.completed : ""}`}
+                    >
+                        <div className={styles.stepLine}></div>
 
+                        <div className={styles.stepContent}>
+                            <span className={styles.stepNumber}>{step.num}</span>
+                            <span className={styles.stepLabel}>{step.label}</span>
+                        </div>
+                    </div>
+                ))}
+            </div>
+            <div className={styles.mainArea}>
                 <div className={styles.formContainer}>
                     <div className={styles.formIconBox}>
                         <FileText className={styles.formIcon} size={26} />
@@ -164,26 +166,26 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {} }) => {
                         <span>{t("Documents are encrypted at rest and in transit. Only our compliance team can access them.")}</span>
                     </div>
                 </div>
-
-                <div className={styles.navigationFooter}>
-                    <button onClick={onBack} className={styles.backButton}>
-                        <ArrowLeft size={16} />
-                        {t("Back")}
-                    </button>
-                    <button onClick={handleContinue} className={styles.continueButton}>
-                        {t("Continue to Review")}
-                        <ArrowRight size={16} />
-                    </button>
+                <div className={styles.sidebarArea}>
+                    <SidebarProgress
+                        percent={80}
+                        stepsLeft={1}
+                        currentStepKey="documents"
+                        assistantMessage="Almost done! Upload your company docs and we'll move to the final review. Good quality scans speed up approval."
+                    />
                 </div>
+
             </div>
 
-            <div className={styles.sidebarArea}>
-                <SidebarProgress
-                    percent={80}
-                    stepsLeft={1}
-                    currentStepKey="documents"
-                    assistantMessage="Almost done! Upload your company docs and we'll move to the final review. Good quality scans speed up approval."
-                />
+            <div className={styles.navigationFooter}>
+                <button onClick={onBack} className={styles.backButton}>
+                    <ArrowLeft size={16} />
+                    {t("Back")}
+                </button>
+                <button onClick={handleContinue} className={styles.continueButton}>
+                    {t("Continue to Review")}
+                    <ArrowRight size={16} />
+                </button>
             </div>
         </div>
     )

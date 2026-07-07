@@ -51,20 +51,24 @@ const OwnershipStep = ({ onNext, onBack, userType, data = {} }) => {
 
     return (
         <div className={styles.onboardingLayout}>
-            <div className={styles.mainArea}>
-                <div className={styles.wizardSteps}>
-                    {steps.map((s, idx) => (
-                        <div
-                            key={idx}
-                            className={`${styles.wizardStep} ${s.active ? styles.activeStep : ''} ${s.done ? styles.doneStep : ''}`}
-                        >
-                            <span className={styles.wizardStepNum}>{s.num}</span>
-                            <span className={styles.wizardStepDot}>·</span>
-                            <span className={styles.wizardStepLabel}>{s.label}</span>
-                            {idx < steps.length - 1 && <div className={styles.wizardStepLine} />}
+            <div className={styles.wizardSteps}>
+                {steps.map((step, index) => (
+                    <div
+                        key={index}
+                        className={`${styles.step} ${step.active ? styles.active : ""
+                            } ${step.completed ? styles.completed : ""}`}
+                    >
+                        <div className={styles.stepLine}></div>
+
+                        <div className={styles.stepContent}>
+                            <span className={styles.stepNumber}>{step.num}</span>
+                            <span className={styles.stepLabel}>{step.label}</span>
                         </div>
-                    ))}
-                </div>
+                    </div>
+                ))}
+            </div>
+            <div className={styles.mainArea}>
+
 
                 <div className={styles.formContainer}>
                     <div className={styles.formIconBox}>
@@ -208,25 +212,26 @@ const OwnershipStep = ({ onNext, onBack, userType, data = {} }) => {
                     </div>
                 </div>
 
-                <div className={styles.navigationFooter}>
-                    <button onClick={onBack} className={styles.backButton}>
-                        <ArrowLeft size={16} />
-                        {t("Back")}
-                    </button>
-                    <button onClick={handleContinue} className={styles.continueButton}>
-                        {t("Continue")}
-                        <ArrowRight size={16} />
-                    </button>
+
+                <div className={styles.sidebarArea}>
+                    <SidebarProgress
+                        percent={60}
+                        stepsLeft={2}
+                        currentStepKey="owners"
+                        assistantMessage="Add all directors and anyone owning 25%+. This step is required under EU anti-money laundering rules."
+                    />
                 </div>
             </div>
 
-            <div className={styles.sidebarArea}>
-                <SidebarProgress
-                    percent={60}
-                    stepsLeft={2}
-                    currentStepKey="owners"
-                    assistantMessage="Add all directors and anyone owning 25%+. This step is required under EU anti-money laundering rules."
-                />
+            <div className={styles.navigationFooter}>
+                <button onClick={onBack} className={styles.backButton}>
+                    <ArrowLeft size={16} />
+                    {t("Back")}
+                </button>
+                <button onClick={handleContinue} className={styles.continueButton}>
+                    {t("Continue")}
+                    <ArrowRight size={16} />
+                </button>
             </div>
         </div>
     )
