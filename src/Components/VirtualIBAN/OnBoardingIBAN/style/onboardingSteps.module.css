@@ -139,13 +139,13 @@
 }
 
 .formSubheading {
-    font-size: 13.5px;
+    font-size: 12.5px;
     color: rgba(31, 31, 33, 0.55);
     line-height: 1.6;
     margin: 0;
     max-width: 520px;
     font-family: 'Inter', sans-serif;
-    text-align: center;
+    text-align: start;
 }
 
 .onboardingForm {
@@ -287,6 +287,107 @@
     align-items: center;
 }
 
+.chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.chip,
+.addChip {
+    /* height: 30px; */
+    padding: 9px 16px;
+    border-radius: 7px;
+    border: 1px solid #DDE3EE;
+    background: #FFF;
+    color: #6E7687;
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: .18s;
+    white-space: nowrap;
+}
+
+.chip:hover,
+.addChip:hover {
+    border-color: #4A32E3;
+    color: #4A32E3;
+}
+
+.activeChip {
+    background: #4A32E3 !important;
+    color: #FFF !important;
+    border-color: #4A32E3 !important;
+}
+
+.addChip {
+    background: #FAFBFD;
+}
+
+/* ---------- Divider ---------- */
+
+.sectionDivider {
+    width: 100%;
+    height: 1px;
+    background: #ECEFF5;
+    margin: 4px 0;
+}
+
+
+.sectionTitle {
+    margin: 0;
+    color: #4A32E3;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+
+.noticeStrip {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 42px;
+    padding: 12px 14px;
+    border-radius: 8px;
+    background: #F3F0FF;
+    color: #6757B7;
+    font-size: 11px;
+    line-height: 1.5;
+    border: 1px solid #E6E0FF;
+}
+
+.noticeStri2 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 42px;
+    padding: 12px 14px;
+    border-radius: 10px;
+    background: #FFFCE0;
+    color: #6B5900;
+    font-family: Inter;
+    font-size: 12.5px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px;
+}
+
+.noticeStrip::before {
+    content: "";
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #4A32E3;
+    flex-shrink: 0;
+}
+
+
+
 .inputIcon {
     position: absolute;
     left: 14px;
@@ -366,6 +467,130 @@
     border-color: #4A32E3;
     box-shadow: 0 0 0 3px rgba(74, 50, 227, 0.1);
     background-color: #fff;
+}
+
+.card {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    border: 1px solid #e8e8e8;
+    border-radius: 8px;
+    background: #fff;
+    padding: 14px 16px;
+    margin-bottom: 10px;
+}
+
+.left {
+    display: flex;
+    align-items: flex-start;
+}
+
+.avatar {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: #ece8ff;
+    color: #6f56d9;
+    font-size: 11px;
+    font-weight: 600;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 12px;
+}
+
+.companyIcon {
+    width: 34px;
+    height: 34px;
+    border-radius: 6px;
+    background: #f2efff;
+    color: #7b61ff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 12px;
+}
+
+.info h4 {
+    margin: 0;
+    font-size: 13px;
+    font-weight: 600;
+    color: #333;
+}
+
+.info p {
+    margin: 3px 0 10px;
+    font-size: 11px;
+    color: #8a8a8a;
+}
+
+.actions {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.onboardingFormOwnership {
+    width: 100%;
+    background: #ffffff;
+    box-sizing: border-box;
+}
+
+.actions button {
+    height: 28px;
+    border: 1px solid #dddddd;
+    background: #fff;
+    border-radius: 5px;
+    padding: 0 12px;
+    font-size: 11px;
+    color: #555;
+    cursor: pointer;
+}
+
+.note {
+    display: block;
+    font-size: 10px;
+    color: #b0b0b0;
+    line-height: 1.4;
+}
+
+.badge {
+    height: 22px;
+    border-radius: 999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 10px;
+    font-size: 10px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.success {
+    background: #e7f8ee;
+    color: #1a8f55;
+}
+
+.pending {
+    background: #fff5d8;
+    color: #a67c00;
+}
+
+.footer {
+    display: flex;
+    gap: 10px;
+    margin-top: 6px;
+}
+
+.addBtn {
+    height: 30px;
+    padding: 0 14px;
+    background: #f7f7f7;
+    border: 1px solid #dddddd;
+    border-radius: 5px;
+    font-size: 12px;
+    color: #666;
+    cursor: pointer;
 }
 
 .textArea {
@@ -534,6 +759,203 @@
     border: none;
 }
 
+.progressCard {
+    background: #f5f2ff;
+    border: 1px solid #ebe6ff;
+    border-radius: 10px;
+    padding: 16px;
+    margin-bottom: 18px;
+}
+
+.progressTop {
+    display: flex;
+    gap: 16px;
+}
+
+.progressCount {
+    width: 54px;
+    height: 36px;
+    background: #ede7ff;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 700;
+    color: #6246ea;
+}
+
+.progressContent {
+    flex: 1;
+}
+
+.progressContent h4 {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.progressContent p {
+    margin: 5px 0 12px;
+    font-size: 11px;
+    color: #9a9a9a;
+}
+
+.progressBar {
+    height: 6px;
+    background: #e6e6e6;
+    border-radius: 30px;
+    overflow: hidden;
+}
+
+.progressFill {
+    width: 72%;
+    height: 100%;
+    background: #6b4eff;
+    border-radius: 30px;
+}
+
+.section {
+    border: 1px solid #ececec;
+    border-radius: 12px;
+    background: #fff;
+    padding: 18px;
+    margin-bottom: 18px;
+}
+
+.sectionHeader {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 14px;
+}
+
+.sectionNumber {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #f2edff;
+    color: #6448ff;
+    font-size: 11px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sectionHeader h3 {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.subtitle {
+    font-size: 11px;
+    color: #9a9a9a;
+    margin-bottom: 12px;
+}
+
+.documentList {
+    display: flex;
+    flex-direction: column;
+}
+
+.documentRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 11px 0;
+    border-top: 1px solid #f1f1f1;
+}
+
+.documentRow:first-child {
+    border-top: none;
+}
+
+.left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 12px;
+}
+
+.success {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #dff7e9;
+    position: relative;
+}
+
+.success::after {
+    content: "✓";
+    position: absolute;
+    left: 3px;
+    top: -1px;
+    font-size: 10px;
+    color: #22a566;
+    font-weight: 700;
+}
+
+.empty {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 1px solid #d8d8d8;
+}
+
+.right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.provided {
+    background: #dcf7e8;
+    color: #19975d;
+    padding: 3px 8px;
+    border-radius: 20px;
+    font-size: 10px;
+    font-weight: 700;
+}
+
+.optional {
+    background: #efefef;
+    color: #777;
+    padding: 3px 8px;
+    border-radius: 20px;
+    font-size: 10px;
+    font-weight: 700;
+}
+
+.oneof {
+    background: #efe9ff;
+    color: #6246ea;
+    padding: 3px 8px;
+    border-radius: 20px;
+    font-size: 10px;
+    font-weight: 700;
+}
+
+.required {
+    background: #fff2bf;
+    color: #8c6a00;
+    padding: 3px 8px;
+    border-radius: 20px;
+    font-size: 10px;
+    font-weight: 700;
+}
+
+.uploadBtn {
+    height: 30px;
+    padding: 0 14px;
+    border: 1px solid #e5e5e5;
+    background: #fff;
+    border-radius: 8px;
+    font-size: 12px;
+    cursor: pointer;
+}
+
 .backButton:hover {
     border-color: #4A32E3;
     color: #4A32E3;
@@ -625,6 +1047,105 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+
+.summaryWrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    margin-top: 20px;
+}
+
+.summaryCard {
+    background: #fff;
+    border: 1px solid #e9e9e9;
+    border-radius: 12px;
+    padding: 18px 20px;
+}
+
+.cardHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 18px;
+}
+
+.cardHeader h4 {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: #202020;
+}
+
+.edit {
+    font-size: 13px;
+    color: #6d4eff;
+    cursor: pointer;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 80px;
+    row-gap: 16px;
+}
+
+.item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.item label {
+    font-size: 11px;
+    color: #9d9d9d;
+}
+
+.item span {
+    font-size: 12px;
+    font-weight: 500;
+    color: #202020;
+}
+
+.infoBox {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    background: #f6f3ff;
+    border: 1px solid #e7ddff;
+    padding: 14px 16px;
+    border-radius: 10px;
+}
+
+.infoIcon {
+    color: #6d4eff;
+    font-size: 15px;
+    line-height: 1;
+}
+
+.infoBox p {
+    margin: 0;
+    font-size: 11px;
+    line-height: 1.6;
+    color: #6b6792;
+}
+
+.confirmRow {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-top: 6px;
+    font-size: 11px;
+    line-height: 1.6;
+    color: #7a7a7a;
+    cursor: pointer;
+}
+
+.confirmRow input {
+    margin-top: 2px;
+    width: 16px;
+    height: 16px;
+    accent-color: #6d4eff;
 }
 
 .progressWrapper {
@@ -1608,5 +2129,24 @@
     .helpBox {
         margin: 0 20px 20px;
         flex-direction: column;
+    }
+}
+
+@media (max-width:900px) {
+
+    .formGrid,
+    .formRow,
+    .formGridThree {
+        grid-template-columns: 1fr;
+    }
+
+    .chips {
+        gap: 6px;
+    }
+
+    .chip,
+    .addChip {
+        font-size: 10px;
+        padding: 0 12px;
     }
 }

@@ -88,82 +88,246 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {} }) => {
                     </div>
                 ))}
             </div>
+            <h2 className={styles.formHeading}>{t("Drop your documents - we'll sort them out")}</h2>
+            <p className={styles.formSubheading}>
+                {t("Your checklist adapts to your profile. Scan or upload; we detect the type automatically. Provide sensitive files through the secure channel - never by ordinary email.")}
+            </p>
             <div className={styles.mainArea}>
-                <div className={styles.formContainer}>
-                    <div className={styles.formIconBox}>
-                        <FileText className={styles.formIcon} size={26} />
-                    </div>
+                <div className={styles.onboardingForm}>
+                    <div className={styles.progressCard}>
+                        <div className={styles.progressTop}>
+                            <div className={styles.progressCount}>7 / 18</div>
 
-                    <h2 className={styles.formHeading}>{t("Upload your documents")}</h2>
-                    <p className={styles.formSubheading}>
-                        {t("Please upload clear, legible copies. Accepted formats: PDF, JPG, PNG (max 10 MB each). Our team reviews documents within 1-2 business days.")}
-                    </p>
+                            <div className={styles.progressContent}>
+                                <h4>Required documents provided</h4>
+                                <p>
+                                    Optional and not listed docs are listed below too. Upload them
+                                    whenever you have them ready.
+                                </p>
 
-                    <div className={styles.onboardingForm}>
-                        {REQUIRED_DOCS.map(doc => {
-                            const uploadedFile = files[doc.key]
-                            return (
-                                <div key={doc.key} className={styles.inputGroup}>
-                                    <label className={styles.inputLabel}>
-                                        {t(doc.label)}
-                                        {!doc.required && (
-                                            <span style={{ marginLeft: '6px', fontSize: '10px', color: '#9ca3af', fontWeight: '500', textTransform: 'none' }}>
-                                                — {t("optional")}
-                                            </span>
-                                        )}
-                                    </label>
-                                    <p style={{ fontSize: '12px', color: '#9ca3af', margin: '0 0 8px 0' }}>{t(doc.description)}</p>
-
-                                    {uploadedFile ? (
-                                        <div className={styles.uploadedFile}>
-                                            <div className={styles.uploadedFileInfo}>
-                                                <div className={styles.uploadedFileIcon}>
-                                                    <File size={16} />
-                                                </div>
-                                                <div>
-                                                    <div className={styles.uploadedFileName}>{uploadedFile.name}</div>
-                                                    <div className={styles.uploadedFileSize}>
-                                                        {(uploadedFile.size / 1024).toFixed(1)} KB
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <button
-                                                type="button"
-                                                className={styles.removeFileBtn}
-                                                onClick={() => removeFile(doc.key)}
-                                            >
-                                                <X size={15} />
-                                            </button>
-                                        </div>
-                                    ) : (
-                                        <div
-                                            className={styles.uploadArea}
-                                            onDragOver={(e) => e.preventDefault()}
-                                            onDrop={(e) => handleFileDrop(doc.key, e)}
-                                            onClick={() => inputRefs.current[doc.key]?.click()}
-                                        >
-                                            <div className={styles.uploadIcon}>
-                                                <Upload size={22} />
-                                            </div>
-                                            <p className={styles.uploadTitle}>{t("Drop file here or click to upload")}</p>
-                                            <p className={styles.uploadSubtitle}>{t("PDF, JPG, PNG — max 10 MB")}</p>
-                                            <input
-                                                ref={(el) => (inputRefs.current[doc.key] = el)}
-                                                type="file"
-                                                accept=".pdf,.jpg,.jpeg,.png"
-                                                style={{ display: 'none' }}
-                                                onChange={(e) => handleFileDrop(doc.key, e)}
-                                            />
-                                        </div>
-                                    )}
+                                <div className={styles.progressBar}>
+                                    <div className={styles.progressFill}></div>
                                 </div>
-                            )
-                        })}
+                            </div>
+                        </div>
                     </div>
 
-                    <div className={styles.formSecurityFooter}>
-                        <Shield size={14} className={styles.securityIcon} />
-                        <span>{t("Documents are encrypted at rest and in transit. Only our compliance team can access them.")}</span>
+
+                    <div className={styles.section}>
+                        <div className={styles.sectionHeader}>
+                            <div className={styles.sectionNumber}>1</div>
+                            <h3>Company registration documents</h3>
+                        </div>
+
+                        <div className={styles.documentList}>
+                            <div className={styles.documentRow}>
+                                <div className={styles.left}>
+                                    <span className={styles.success}></span>
+                                    <span>
+                                        Recent commercial register extract or certificate of incorporation
+                                    </span>
+                                </div>
+
+                                <div className={styles.right}>
+                                    <span className={styles.provided}>PROVIDED</span>
+                                </div>
+                            </div>
+
+                            <div className={styles.documentRow}>
+                                <div className={styles.left}>
+                                    <span className={styles.success}></span>
+                                    <span>Company articles of association</span>
+                                </div>
+
+                                <div className={styles.right}>
+                                    <span className={styles.provided}>PROVIDED</span>
+                                </div>
+                            </div>
+
+                            <div className={styles.documentRow}>
+                                <div className={styles.left}>
+                                    <span className={styles.empty}></span>
+                                    <span>Certificate of good standing</span>
+                                </div>
+
+                                <div className={styles.right}>
+                                    <span className={styles.optional}>OPTIONAL</span>
+
+                                    <button className={styles.uploadBtn}><Upload size={10} /> Upload</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div className={styles.section}>
+                        <div className={styles.sectionHeader}>
+                            <div className={styles.sectionNumber}>2</div>
+                            <h3>Company proof of address</h3>
+                        </div>
+
+                        <p className={styles.subtitle}>Provide ONE of the following</p>
+
+                        <div className={styles.documentList}>
+                            <div className={styles.documentRow}>
+                                <div className={styles.left}>
+                                    <span className={styles.empty}></span>
+                                    <span>
+                                        Register extract showing the registered office address
+                                    </span>
+                                </div>
+
+                                <div className={styles.right}>
+                                    <span className={styles.oneof}>ONE OF</span>
+
+                                    <button className={styles.uploadBtn}><Upload size={10} /> Upload</button>
+                                </div>
+                            </div>
+
+                            <div className={styles.documentRow}>
+                                <div className={styles.left}>
+                                    <span className={styles.empty}></span>
+                                    <span>Official certificate of domiciliation</span>
+                                </div>
+
+                                <div className={styles.right}>
+                                    <span className={styles.oneof}>ONE OF</span>
+
+                                    <button className={styles.uploadBtn}><Upload size={10} /> Upload</button>
+                                </div>
+                            </div>
+
+                            <div className={styles.documentRow}>
+                                <div className={styles.left}>
+                                    <span className={styles.empty}></span>
+                                    <span>Professional lease agreement</span>
+                                </div>
+
+                                <div className={styles.right}>
+                                    <span className={styles.oneof}>ONE OF</span>
+
+                                    <button className={styles.uploadBtn}><Upload size={10} /> Upload</button>
+                                </div>
+                            </div>
+
+                            <div className={styles.documentRow}>
+                                <div className={styles.left}>
+                                    <span className={styles.empty}></span>
+                                    <span>
+                                        Utility bill under 3 months (electricity, water, gas, internet,
+                                        landline)
+                                    </span>
+                                </div>
+
+                                <div className={styles.right}>
+                                    <span className={styles.oneof}>ONE OF</span>
+
+                                    <button className={styles.uploadBtn}><Upload size={10} /> Upload</button>
+                                </div>
+                            </div>
+
+                            <div className={styles.documentRow}>
+                                <div className={styles.left}>
+                                    <span className={styles.success}></span>
+                                    <span>
+                                        Recent business bank statement showing company name and address
+                                    </span>
+                                </div>
+
+                                <div className={styles.right}>
+                                    <span className={styles.provided}>PROVIDED</span>
+                                </div>
+                            </div>
+
+                            <div className={styles.documentRow}>
+                                <div className={styles.left}>
+                                    <span className={styles.empty}></span>
+                                    <span>
+                                        Official letter from an administration or tax authority
+                                    </span>
+                                </div>
+
+                                <div className={styles.right}>
+                                    <span className={styles.oneof}>ONE OF</span>
+
+                                    <button className={styles.uploadBtn}><Upload size={10} /> Upload</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* ===================== Section 3 ===================== */}
+
+                    <div className={styles.section}>
+                        <div className={styles.sectionHeader}>
+                            <div className={styles.sectionNumber}>3</div>
+                            <h3>Ultimate Beneficial Owners (UBO)</h3>
+                        </div>
+
+                        <p className={styles.subtitle}>
+                            For each UBO holding directly or indirectly 25% or more
+                        </p>
+
+                        <div className={styles.documentList}>
+                            <div className={styles.documentRow}>
+                                <div className={styles.left}>
+                                    <span className={styles.success}></span>
+                                    <span>Shareholders register</span>
+                                </div>
+
+                                <div className={styles.right}>
+                                    <span className={styles.provided}>PROVIDED</span>
+                                </div>
+                            </div>
+
+                            <div className={styles.documentRow}>
+                                <div className={styles.left}>
+                                    <span className={styles.success}></span>
+                                    <span>Ownership structure chart</span>
+                                </div>
+
+                                <div className={styles.right}>
+                                    <span className={styles.provided}>PROVIDED</span>
+                                </div>
+                            </div>
+
+                            <div className={styles.documentRow}>
+                                <div className={styles.left}>
+                                    <span className={styles.success}></span>
+                                    <span>UBO declaration (including corporate UBO if applicable)</span>
+                                </div>
+
+                                <div className={styles.right}>
+                                    <span className={styles.provided}>PROVIDED</span>
+                                </div>
+                            </div>
+
+                            <div className={styles.documentRow}>
+                                <div className={styles.left}>
+                                    <span className={styles.empty}></span>
+                                    <span>Valid passport / ID for each UBO</span>
+                                </div>
+
+                                <div className={styles.right}>
+                                    <span className={styles.required}>REQUIRED</span>
+
+                                    <button className={styles.uploadBtn}><Upload size={10} /> Upload</button>
+                                </div>
+                            </div>
+
+                            <div className={styles.documentRow}>
+                                <div className={styles.left}>
+                                    <span className={styles.empty}></span>
+                                    <span>Private proof of address under 3 months for each UBO</span>
+                                </div>
+
+                                <div className={styles.right}>
+                                    <span className={styles.required}>REQUIRED</span>
+
+                                    <button className={styles.uploadBtn}><Upload size={10} /> Upload</button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div className={styles.sidebarArea}>
@@ -176,7 +340,11 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {} }) => {
                 </div>
 
             </div>
-
+            <div className={styles.noticeStrip}>
+                {t(
+                    "Secure handling: don't send sensitive KYC/KYB files by ordinary email. Where a CRM reference is used, share only the reference - never the document itself."
+                )}
+            </div>
             <div className={styles.navigationFooter}>
                 <button onClick={onBack} className={styles.backButton}>
                     <ArrowLeft size={16} />

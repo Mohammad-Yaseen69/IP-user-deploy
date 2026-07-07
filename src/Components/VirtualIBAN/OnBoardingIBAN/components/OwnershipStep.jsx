@@ -67,151 +67,77 @@ const OwnershipStep = ({ onNext, onBack, userType, data = {} }) => {
                     </div>
                 ))}
             </div>
+            <h2 className={styles.formHeading}>{t("Ownership & control")}</h2>
+            <p className={styles.formSubheading}>
+                {t("List anyone, individual or company, owning 25% or more (UBOs), plus your directors and authorised signatories.Individuals complete a quick e - ID via Didit; entities are verified against the registry.")}
+            </p>
             <div className={styles.mainArea}>
 
+                <div className={styles.onboardingFormOwnership}>
+                    <div className={styles.card}>
+                        <div className={styles.left}>
+                            <div className={styles.avatar}>JE</div>
 
-                <div className={styles.formContainer}>
-                    <div className={styles.formIconBox}>
-                        <Users className={styles.formIcon} size={26} />
-                    </div>
+                            <div className={styles.info}>
+                                <h4>Jean-Jacques Elong</h4>
+                                <p>Director • UBO • 60% - UBO</p>
 
-                    <h2 className={styles.formHeading}>{t("Directors & Beneficial Owners")}</h2>
-                    <p className={styles.formSubheading}>
-                        {t("EU AML regulations require us to identify all individuals who own or control 25% or more of the company, and all directors.")}
-                    </p>
-
-                    <div className={styles.onboardingForm}>
-                        {owners.map((owner, idx) => (
-                            <div key={owner.id} style={{
-                                border: '1.5px solid #f0eeff',
-                                borderRadius: '12px',
-                                padding: '20px',
-                                display: 'flex',
-                                flexDirection: 'column',
-                                gap: '14px',
-                                background: '#fafbff',
-                                position: 'relative'
-                            }}>
-                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                        <User size={16} color="#4A32E3" />
-                                        <span style={{ fontSize: '13px', fontWeight: '700', color: '#4A32E3' }}>
-                                            {t("Person")} {idx + 1}
-                                        </span>
-                                    </div>
-                                    {owners.length > 1 && (
-                                        <button
-                                            type="button"
-                                            className={styles.removeFileBtn}
-                                            onClick={() => removeOwner(owner.id)}
-                                            title={t("Remove")}
-                                        >
-                                            <Trash2 size={15} />
-                                        </button>
-                                    )}
-                                </div>
-
-                                <div className={styles.formRow}>
-                                    <div className={styles.inputGroup}>
-                                        <label className={styles.inputLabel}>{t("FULL LEGAL NAME")}</label>
-                                        <div className={styles.inputWrapper}>
-                                            <User className={styles.inputIcon} size={15} />
-                                            <input
-                                                type="text"
-                                                className={styles.textInput}
-                                                value={owner.fullName}
-                                                onChange={(e) => updateOwner(owner.id, 'fullName', e.target.value)}
-                                                placeholder={t("First & Last name")}
-                                            />
-                                        </div>
-                                    </div>
-                                    <div className={styles.inputGroup}>
-                                        <label className={styles.inputLabel}>{t("ROLE")}</label>
-                                        <select
-                                            className={styles.selectInput}
-                                            value={owner.role}
-                                            onChange={(e) => updateOwner(owner.id, 'role', e.target.value)}
-                                        >
-                                            <option value="">{t("Select role...")}</option>
-                                            {ROLES.map(r => (
-                                                <option key={r} value={r}>{t(r)}</option>
-                                            ))}
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div className={styles.formRow}>
-                                    <div className={styles.inputGroup}>
-                                        <label className={styles.inputLabel}>{t("OWNERSHIP %")}</label>
-                                        <div className={styles.inputWrapper}>
-                                            <Percent className={styles.inputIcon} size={15} />
-                                            <input
-                                                type="number"
-                                                min="0"
-                                                max="100"
-                                                className={styles.textInput}
-                                                value={owner.ownershipPercent}
-                                                onChange={(e) => updateOwner(owner.id, 'ownershipPercent', e.target.value)}
-                                                placeholder="e.g. 50"
-                                            />
-                                        </div>
-                                    </div>
-                                    <div className={styles.inputGroup}>
-                                        <label className={styles.inputLabel}>{t("NATIONALITY")}</label>
-                                        <input
-                                            type="text"
-                                            className={styles.textInput}
-                                            style={{ paddingLeft: '16px' }}
-                                            value={owner.nationality}
-                                            onChange={(e) => updateOwner(owner.id, 'nationality', e.target.value)}
-                                            placeholder={t("e.g. Maltese")}
-                                        />
-                                    </div>
-                                </div>
-
-                                <div className={styles.inputGroup}>
-                                    <label className={styles.inputLabel}>{t("DATE OF BIRTH")}</label>
-                                    <input
-                                        type="date"
-                                        className={styles.textInput}
-                                        style={{ paddingLeft: '16px' }}
-                                        value={owner.dateOfBirth}
-                                        onChange={(e) => updateOwner(owner.id, 'dateOfBirth', e.target.value)}
-                                    />
+                                <div className={styles.actions}>
+                                    <button>PEP: No</button>
+                                    <button>Remove</button>
                                 </div>
                             </div>
-                        ))}
+                        </div>
 
-                        <button
-                            type="button"
-                            onClick={addOwner}
-                            style={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: '8px',
-                                background: 'transparent',
-                                border: '1.5px dashed #c4bcf5',
-                                borderRadius: '10px',
-                                padding: '12px 20px',
-                                color: '#4A32E3',
-                                fontSize: '13px',
-                                fontWeight: '600',
-                                cursor: 'pointer',
-                                fontFamily: 'inherit',
-                                transition: 'all 0.2s'
-                            }}
-                        >
-                            <Plus size={16} />
-                            {t("Add another person")}
-                        </button>
+                        <div className={`${styles.badge} ${styles.success}`}>
+                            Verified e-ID
+                        </div>
                     </div>
 
-                    <div className={styles.formSecurityFooter}>
-                        <Users size={14} className={styles.securityIcon} />
-                        <span>{t("UBO data processed under EU AML Directive 6AMLD. Stored encrypted and access-controlled.")}</span>
+                    <div className={styles.card}>
+                        <div className={styles.left}>
+                            <div className={styles.companyIcon}>
+                                <svg
+                                    width="18"
+                                    height="18"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    strokeWidth="1.7"
+                                >
+                                    <path d="M3 21h18" />
+                                    <path d="M5 21V7l7-4 7 4v14" />
+                                    <path d="M9 11h2v2H9zM13 11h2v2h-2zM9 15h2v2H9zM13 15h2v2h-2z" />
+                                </svg>
+                            </div>
+
+                            <div className={styles.info}>
+                                <h4>K2 Holdings SA - Entity</h4>
+                                <p>Corporate shareholder · 40% · UBO · Switzerland</p>
+
+                                <div className={styles.actions}>
+                                    <button>PEP: No</button>
+                                    <button>Verify entity (registry)</button>
+                                    <button>Remove</button>
+                                </div>
+
+                                <span className={styles.note}>
+                                    Corporate shareholder, its own UBOs are collected in the
+                                    ownership chart (indirect ownership).
+                                </span>
+                            </div>
+                        </div>
+
+                        <div className={`${styles.badge} ${styles.pending}`}>
+                            Pending registry
+                        </div>
+                    </div>
+
+                    <div className={styles.footer}>
+                        <button className={styles.addBtn}><Plus /> Add individual</button>
+                        <button className={styles.addBtn}><Plus /> Add entity / company</button>
                     </div>
                 </div>
-
 
                 <div className={styles.sidebarArea}>
                     <SidebarProgress

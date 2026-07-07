@@ -48,207 +48,141 @@ const ReviewStep = ({ onSubmit, onBack, allData = {} }) => {
                     </div>
                 ))}
             </div>
+            <h2 className={styles.formHeading}>{t("Review your activation request")}</h2>
+            <p className={styles.formSubheading}>
+                {t("Check everything below before you submit. You can jump back to any step to make changes.")}
+            </p>
             <div className={styles.mainArea}>
 
-                <div className={styles.formContainer}>
-                    <div className={styles.formIconBox}>
-                        <CheckCircle className={styles.formIcon} size={26} />
-                    </div>
+                <div className={styles.summaryWrapper}>
 
-                    <h2 className={styles.formHeading}>{t("Review & Submit")}</h2>
-                    <p className={styles.formSubheading}>
-                        {t("Please review your application before submitting. Our compliance team will review it and respond within 1-3 business days.")}
-                    </p>
-
-                    <div className={styles.reviewSection}>
-                        {/* Company Details */}
-                        <div className={styles.reviewCard}>
-                            <div className={styles.reviewCardHeader}>
-                                <div className={styles.reviewCardHeaderLeft}>
-                                    <Briefcase size={16} />
-                                    <span>{t("Company Details")}</span>
-                                </div>
-                                <button className={styles.editBtn} onClick={() => onBack('company')}>
-                                    {t("Edit")}
-                                </button>
-                            </div>
-                            <div className={styles.reviewCardBody}>
-                                {company.legalName && (
-                                    <div className={styles.reviewRow}>
-                                        <span className={styles.reviewRowLabel}>{t("Legal Name")}</span>
-                                        <span className={styles.reviewRowValue}>{company.legalName}</span>
-                                    </div>
-                                )}
-                                {company.registrationNumber && (
-                                    <div className={styles.reviewRow}>
-                                        <span className={styles.reviewRowLabel}>{t("Reg. Number")}</span>
-                                        <span className={styles.reviewRowValue}>{company.registrationNumber}</span>
-                                    </div>
-                                )}
-                                {company.legalStructure && (
-                                    <div className={styles.reviewRow}>
-                                        <span className={styles.reviewRowLabel}>{t("Legal Structure")}</span>
-                                        <span className={styles.reviewRowValue}>{company.legalStructure}</span>
-                                    </div>
-                                )}
-                                {company.countryOfIncorporation && (
-                                    <div className={styles.reviewRow}>
-                                        <span className={styles.reviewRowLabel}>{t("Country")}</span>
-                                        <span className={styles.reviewRowValue}>{company.countryOfIncorporation}</span>
-                                    </div>
-                                )}
-                                {company.registeredAddress && (
-                                    <div className={styles.reviewRow}>
-                                        <span className={styles.reviewRowLabel}>{t("Address")}</span>
-                                        <span className={styles.reviewRowValue}>{company.registeredAddress}</span>
-                                    </div>
-                                )}
-                                {!company.legalName && (
-                                    <span style={{ fontSize: '13px', color: '#9ca3af' }}>{t("No company details provided")}</span>
-                                )}
-                            </div>
+                    <div className={styles.summaryCard}>
+                        <div className={styles.cardHeader}>
+                            <h4>Company details</h4>
+                            <span className={styles.edit}>Edit</span>
                         </div>
 
-                        {/* Business Activity */}
-                        <div className={styles.reviewCard}>
-                            <div className={styles.reviewCardHeader}>
-                                <div className={styles.reviewCardHeaderLeft}>
-                                    <Activity size={16} />
-                                    <span>{t("Business Activity")}</span>
-                                </div>
-                                <button className={styles.editBtn} onClick={() => onBack('activity')}>
-                                    {t("Edit")}
-                                </button>
+                        <div className={styles.grid}>
+                            <div className={styles.item}>
+                                <label>Legal name</label>
+                                <span>Exadel Trade Solutions SA</span>
                             </div>
-                            <div className={styles.reviewCardBody}>
-                                {activity.industry && (
-                                    <div className={styles.reviewRow}>
-                                        <span className={styles.reviewRowLabel}>{t("Industry")}</span>
-                                        <span className={styles.reviewRowValue}>{activity.industry}</span>
-                                    </div>
-                                )}
-                                {activity.monthlyVolume && (
-                                    <div className={styles.reviewRow}>
-                                        <span className={styles.reviewRowLabel}>{t("Monthly Volume")}</span>
-                                        <span className={styles.reviewRowValue}>{activity.monthlyVolume}</span>
-                                    </div>
-                                )}
-                                {activity.transactionTypes && activity.transactionTypes.length > 0 && (
-                                    <div className={styles.reviewRow}>
-                                        <span className={styles.reviewRowLabel}>{t("Tx Types")}</span>
-                                        <span className={styles.reviewRowValue}>{activity.transactionTypes.join(', ')}</span>
-                                    </div>
-                                )}
-                                {!activity.industry && (
-                                    <span style={{ fontSize: '13px', color: '#9ca3af' }}>{t("No activity details provided")}</span>
-                                )}
-                            </div>
-                        </div>
 
-                        {/* Ownership */}
-                        <div className={styles.reviewCard}>
-                            <div className={styles.reviewCardHeader}>
-                                <div className={styles.reviewCardHeaderLeft}>
-                                    <Users size={16} />
-                                    <span>{t("Directors & Owners")}</span>
-                                </div>
-                                <button className={styles.editBtn} onClick={() => onBack('owners')}>
-                                    {t("Edit")}
-                                </button>
+                            <div className={styles.item}>
+                                <label>Registration</label>
+                                <span>CHE-106.327.324</span>
                             </div>
-                            <div className={styles.reviewCardBody}>
-                                {owners && owners.length > 0 ? owners.map((o, i) => (
-                                    <div key={i} className={styles.reviewRow}>
-                                        <span className={styles.reviewRowLabel}>{o.role || t('Person ' + (i + 1))}</span>
-                                        <span className={styles.reviewRowValue}>
-                                            {o.fullName || '—'}
-                                            {o.ownershipPercent ? ` (${o.ownershipPercent}%)` : ''}
-                                        </span>
-                                    </div>
-                                )) : (
-                                    <span style={{ fontSize: '13px', color: '#9ca3af' }}>{t("No owners added")}</span>
-                                )}
-                            </div>
-                        </div>
 
-                        {/* Documents */}
-                        <div className={styles.reviewCard}>
-                            <div className={styles.reviewCardHeader}>
-                                <div className={styles.reviewCardHeaderLeft}>
-                                    <FileText size={16} />
-                                    <span>{t("Documents")}</span>
-                                </div>
-                                <button className={styles.editBtn} onClick={() => onBack('documents')}>
-                                    {t("Edit")}
-                                </button>
+                            <div className={styles.item}>
+                                <label>Jurisdiction</label>
+                                <span>Switzerland</span>
                             </div>
-                            <div className={styles.reviewCardBody}>
-                                <div className={styles.reviewRow}>
-                                    <span className={styles.reviewRowLabel}>{t("Files uploaded")}</span>
-                                    <span className={styles.reviewRowValue} style={{ color: docCount > 0 ? '#22c55e' : '#ef4444' }}>
-                                        {docCount} {t("file(s)")}
-                                    </span>
-                                </div>
+
+                            <div className={styles.item}>
+                                <label>Agent</label>
+                                <span>Trays SA Switzerland</span>
                             </div>
                         </div>
                     </div>
 
-                    {/* Terms agreement */}
-                    <div
-                        className={styles.checkboxRow}
-                        onClick={() => setAgreed(a => !a)}
-                        style={{ marginTop: '8px' }}
-                    >
-                        <div className={`${styles.checkboxBox} ${agreed ? styles.checked : ''}`}>
-                            {agreed && <CheckCircle size={12} color="#fff" />}
+
+                    <div className={styles.summaryCard}>
+                        <div className={styles.cardHeader}>
+                            <h4>Ownership &amp; control</h4>
                         </div>
-                        <p className={styles.checkboxLabel}>
-                            {t("I confirm that all information provided is accurate and complete. I agree to the")}{' '}
-                            <a href="#" onClick={e => e.stopPropagation()}>{t("Terms of Service")}</a>{' '}
-                            {t("and")}{' '}
-                            <a href="#" onClick={e => e.stopPropagation()}>{t("Privacy Policy")}</a>.
+
+                        <div className={styles.grid}>
+                            <div className={styles.item}>
+                                <label>Owners</label>
+                                <span>
+                                    Jean-Jacques Elong (60% UBO, UBO) • K2 Holdings SA (40%, UBO)
+                                </span>
+                            </div>
+
+                            <div className={styles.item}>
+                                <label>Criteria</label>
+                                <span>Entity / Individual</span>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div className={styles.summaryCard}>
+                        <div className={styles.cardHeader}>
+                            <h4>Activity &amp; intended use</h4>
+                            <span className={styles.edit}>Edit</span>
+                        </div>
+
+                        <div className={styles.grid}>
+                            <div className={styles.item}>
+                                <label>Sector</label>
+                                <span>FinTech &amp; payments</span>
+                            </div>
+
+                            <div className={styles.item}>
+                                <label>Countries</label>
+                                <span>Switzerland, France, Senegal</span>
+                            </div>
+
+                            <div className={styles.item}>
+                                <label>Expected inflow</label>
+                                <span>&lt;250,000 / month</span>
+                            </div>
+
+                            <div className={styles.item}>
+                                <label>Currencies</label>
+                                <span>EUR, USD, XOF</span>
+                            </div>
+
+                            <div className={styles.item}>
+                                <label>Services</label>
+                                <span>SEPA &amp; SWIFT, Crypto to fiat</span>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div className={styles.summaryCard}>
+                        <div className={styles.cardHeader}>
+                            <h4>Documents</h4>
+                            <span className={styles.edit}>Edit</span>
+                        </div>
+
+                        <div className={styles.grid}>
+                            <div className={styles.item}>
+                                <label>Provided</label>
+                                <span>8 documents</span>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div className={styles.infoBox}>
+                        <span className={styles.infoIcon}>ⓘ</span>
+
+                        <p>
+                            {t("You won't be charged now. There's no pricing to accept at this stage, our team confirms your eligibility and sends a personalized offer with the applicable terms and next steps.")}
                         </p>
                     </div>
 
-                    <button
-                        className={styles.submitBtn}
-                        onClick={handleSubmit}
-                        disabled={!agreed || submitting}
-                        style={{ opacity: (!agreed || submitting) ? 0.5 : 1, cursor: (!agreed || submitting) ? 'not-allowed' : 'pointer' }}
-                    >
-                        {submitting ? (
-                            <>
-                                <span style={{ animation: 'spin 1s linear infinite', display: 'inline-block' }}>⏳</span>
-                                {t("Submitting...")}
-                            </>
-                        ) : (
-                            <>
-                                <Send size={17} />
-                                {t("Submit Application")}
-                            </>
-                        )}
-                    </button>
 
-                    <div className={styles.formSecurityFooter}>
-                        <Shield size={14} className={styles.securityIcon} />
-                        <span>{t("Bank-grade security, encrypted under EU GDPR by Kemit Kingdom SA (K2 SA)")}</span>
+                    <div className={styles.infoBox}>
+                        <input type="checkbox" />
+
+                        <span>
+                            {t("I confirm the information provided is true and complete, and I authorise InstaPay to carry out KYB, AML, sanctions, PEP and adverse-media checks. I understand submission does not guarantee approval.")}
+                        </span>
                     </div>
                 </div>
 
-
-                <div className={styles.sidebarArea}>
-                    <SidebarProgress
-                        percent={95}
-                        stepsLeft={0}
-                        currentStepKey="review"
-                        assistantMessage="You're at the finish line! Review your application carefully, agree to the terms, and submit. We'll be in touch within 1-3 business days."
-                    />
-                </div>
             </div>
             <div className={styles.navigationFooter}>
                 <button onClick={() => onBack()} className={styles.backButton}>
                     <ArrowLeft size={16} />
                     {t("Back")}
+                </button>
+                <button className={styles.continueButton}>
+                    {t("Request IBAN activation")}
                 </button>
             </div>
 
