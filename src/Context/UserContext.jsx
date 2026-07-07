@@ -108,6 +108,7 @@ const initialUserContext = {
     agentDetails: null,
     setIsAgentLogin: () => { },
     isAgentLogin: false,
+    cryptoWithdrawals: 0,
 };
 
 const createImage = (url) =>
