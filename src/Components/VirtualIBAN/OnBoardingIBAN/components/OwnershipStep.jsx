@@ -67,10 +67,14 @@ const OwnershipStep = ({ onNext, onBack, userType, data = {} }) => {
                     </div>
                 ))}
             </div>
-            <h2 className={styles.formHeading}>{t("Ownership & control")}</h2>
-            <p className={styles.formSubheading}>
-                {t("List anyone, individual or company, owning 25% or more (UBOs), plus your directors and authorised signatories.Individuals complete a quick e - ID via Didit; entities are verified against the registry.")}
-            </p>
+            <div style={{
+                width: "100%"
+            }}>
+                <h2 className={styles.formHeading}>{t("Ownership & control")}</h2>
+                <p className={styles.formSubheading}>
+                    {t("List anyone, individual or company, owning 25% or more (UBOs), plus your directors and authorised signatories.Individuals complete a quick e - ID via Didit; entities are verified against the registry.")}
+                </p>
+            </div>
             <div className={styles.mainArea}>
 
                 <div className={styles.onboardingFormOwnership}>

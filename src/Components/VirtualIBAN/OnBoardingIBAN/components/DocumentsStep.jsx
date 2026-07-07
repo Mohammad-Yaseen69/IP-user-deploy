@@ -88,10 +88,14 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {} }) => {
                     </div>
                 ))}
             </div>
-            <h2 className={styles.formHeading}>{t("Drop your documents - we'll sort them out")}</h2>
-            <p className={styles.formSubheading}>
-                {t("Your checklist adapts to your profile. Scan or upload; we detect the type automatically. Provide sensitive files through the secure channel - never by ordinary email.")}
-            </p>
+            <div style={{
+                width: "100%"
+            }}>
+                <h2 className={styles.formHeading}>{t("Drop your documents - we'll sort them out")}</h2>
+                <p className={styles.formSubheading}>
+                    {t("Your checklist adapts to your profile. Scan or upload; we detect the type automatically. Provide sensitive files through the secure channel - never by ordinary email.")}
+                </p>
+            </div>
             <div className={styles.mainArea}>
                 <div className={styles.onboardingForm}>
                     <div className={styles.progressCard}>

@@ -79,10 +79,14 @@ const ActivityStep = ({ onNext, onBack, userType, data = {} }) => {
                     </div>
                 ))}
             </div>
-            <h2 className={styles.formHeading}>{t("How will you use InstaPay?")}</h2>
-            <p className={styles.formSubheading}>
-                {t("These answers tailor your account. Some questions and documents appear dynamically based on your profile, nothing more than we need.")}
-            </p>
+            <div style={{
+                width: "100%"
+            }}>
+                <h2 className={styles.formHeading}>{t("How will you use InstaPay?")}</h2>
+                <p className={styles.formSubheading}>
+                    {t("These answers tailor your account. Some questions and documents appear dynamically based on your profile, nothing more than we need.")}
+                </p>
+            </div>
             <div className={styles.mainArea}>
 
                 <div className={styles.formContainer}>

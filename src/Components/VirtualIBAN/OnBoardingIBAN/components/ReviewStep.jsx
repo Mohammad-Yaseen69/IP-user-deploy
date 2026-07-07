@@ -1,8 +1,7 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
+import { ArrowLeft } from 'react-feather'
 import { useTranslation } from 'react-i18next'
-import { CheckCircle, Shield, Briefcase, Activity, Users, FileText, Send, ArrowLeft } from 'react-feather'
 import styles from '../style/onboardingSteps.module.css'
-import SidebarProgress from './SidebarProgress'
 
 const ReviewStep = ({ onSubmit, onBack, allData = {} }) => {
     const { t } = useTranslation()
@@ -48,10 +47,15 @@ const ReviewStep = ({ onSubmit, onBack, allData = {} }) => {
                     </div>
                 ))}
             </div>
-            <h2 className={styles.formHeading}>{t("Review your activation request")}</h2>
-            <p className={styles.formSubheading}>
-                {t("Check everything below before you submit. You can jump back to any step to make changes.")}
-            </p>
+            <div
+                style={{
+                    width: "100%"
+                }}>
+                <h2 className={styles.formHeading}>{t("Review your activation request")}</h2>
+                <p className={styles.formSubheading}>
+                    {t("Check everything below before you submit. You can jump back to any step to make changes.")}
+                </p>
+            </div>
             <div className={styles.mainArea}>
 
                 <div className={styles.summaryWrapper}>

@@ -142,21 +142,17 @@ const StatusScreen = ({ status = 'submitted', ibanNumber, companyName, onAction,
         <div className={styles.statusLayout}>
             <div className={styles.statusCard}>
 
-                {/* Top section */}
                 <div className={styles.statusCardTop}>
                     <div className={styles.statusCardTopLeft}>
-                        {/* Badge */}
                         <div className={`${styles.statusBadge} ${styles[cfg.badge]}`}>
                             <span className={styles.statusBadgeDot} />
                             {t(cfg.badgeText)}
                         </div>
 
-                        {/* Title + desc */}
                         <h2 className={styles.statusCardTitle}>{t(cfg.title)}</h2>
                         <p className={styles.statusCardDesc}>{t(cfg.description)}</p>
                     </div>
 
-                    {/* IBAN card preview */}
                     <div className={styles.statusVisual}>
                         <div className={styles.ibanPreviewCard}>
                             <div className={styles.ibanPreviewLabel}>{t('Business IBAN')}</div>
@@ -173,7 +169,6 @@ const StatusScreen = ({ status = 'submitted', ibanNumber, companyName, onAction,
                     </div>
                 </div>
 
-                {/* Timeline */}
                 <div className={styles.statusTimeline}>
                     <p className={styles.timelineTitle}>{t('ACTIVATION PROGRESS')}</p>
 
@@ -209,7 +204,6 @@ const StatusScreen = ({ status = 'submitted', ibanNumber, companyName, onAction,
                     })}
                 </div>
 
-                {/* Help box */}
                 <div className={styles.helpBox}>
                     <div className={styles.helpBoxLeft}>
                         <p className={styles.helpBoxTitle}>{t('Need help?')}</p>
@@ -220,7 +214,6 @@ const StatusScreen = ({ status = 'submitted', ibanNumber, companyName, onAction,
                     </a>
                 </div>
 
-                {/* Action buttons */}
                 <div className={styles.statusActions}>
                     {cfg.secondaryBtn && (
                         <button className={styles.dangerActionBtn} onClick={onCancel}>
