@@ -32,6 +32,7 @@ import OTPConfirmation from "../../WithdrawBalanceModal/OTPConfirmation"
 import MT from "../../VirtualIbanModal/icons/mt.svg"
 import success from "../../VirtualIbanModal/icons/success.png"
 import styles from "./SepaTransfer.module.css"
+import withdrawStyles from "../../WithdrawBalanceModal/withdrawBalance.module.scss"
 
 const DEFAULT_BENEFICIARIES = [
     { id: "arnold-mbuku", name: "Arnold Mbuku", country: "Senegal", type: "Individual", initial: "A", accountCount: 2, accent: "gold", iban: "SN08 2100 0001 1234 5678 9012", bic: "SNBKSNDA", bankName: "Dakar National Bank" },
@@ -390,7 +391,12 @@ const SepaTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, b
                     <aside className={styles.leftPanel}>
                         <div>
                             <div className={styles.flowHeader}><div className={styles.flowIcon}><Send size={18} /></div><div><h2>{t("SEPA Transfer")}</h2><p>{t("European Bank Transfer - EUR only")}</p></div></div>
-                            <div className={styles.progressEffect}>
+                            <div
+                                style={{
+                                    marginTop: "2rem"
+                                }}
+                                className={withdrawStyles.progressEffect}
+                            >
                                 {SIDEBAR_STEPS.map((item, index) => {
                                     const IconComponent = sidebarIcons[item.stepName]
                                     return <SidebarProgress key={item.stepName} stepLabel={item.stepLabel} label={item.label} Icon={IconComponent} isActive={isSidebarStepActive(item, currentStep)} isCompleted={isSidebarStepCompleted(item, currentStep)} showBar={index < SIDEBAR_STEPS.length - 1} />
