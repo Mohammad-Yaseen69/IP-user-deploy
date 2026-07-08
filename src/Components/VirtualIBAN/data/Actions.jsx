@@ -1,5 +1,5 @@
 import React from "react";
-import { PlusCircle, ArrowRight } from "react-feather";
+import { PlusCircle, ArrowRight, Send } from "react-feather";
 
 
 export const actions = [
@@ -21,14 +21,19 @@ export const actions = [
             <path d="M1.6875 5.625C1.6875 5.625 1.125 5.20312 1.125 4.5C1.125 4.05245 1.30279 3.62322 1.61926 3.30676C1.93572 2.99029 2.36495 2.8125 2.8125 2.8125C3.26005 2.8125 3.68928 2.99029 4.00574 3.30676C4.32221 3.62322 4.5 4.05245 4.5 4.5V13.5C4.5 13.9476 4.67779 14.3768 4.99426 14.6932C5.31072 15.0097 5.73995 15.1875 6.1875 15.1875M6.1875 15.1875C6.63505 15.1875 7.06428 15.0097 7.38074 14.6932C7.69721 14.3768 7.875 13.9476 7.875 13.5C7.875 12.7969 7.3125 12.375 7.3125 12.375H15.1875C15.1875 12.375 15.75 12.7969 15.75 13.5C15.75 13.9476 15.5722 14.3768 15.2557 14.6932C14.9393 15.0097 14.5101 15.1875 14.0625 15.1875H6.1875Z" stroke="#5926F0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
         </svg>, label: "Download statement", sub: "PDF or CSV", color: "#10b981"
     },
+    // {
+    //     id: 5, icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
+    //         <path d="M14.625 2.8125H3.375C3.06434 2.8125 2.8125 3.06434 2.8125 3.375V14.625C2.8125 14.9357 3.06434 15.1875 3.375 15.1875H14.625C14.9357 15.1875 15.1875 14.9357 15.1875 14.625V3.375C15.1875 3.06434 14.9357 2.8125 14.625 2.8125Z" stroke="#5926F0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+    //         <path d="M6.75 9.5625L9 11.8125L11.25 9.5625" stroke="#5926F0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+    //         <path d="M9 6.1875V11.8125" stroke="#5926F0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+    //     </svg>,
+    //     label: "Request money from vIBAN", sub: "Send a payment request link", color: "#8b5cf6"
+    // },
     {
-        id: 5, icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
-            <path d="M14.625 2.8125H3.375C3.06434 2.8125 2.8125 3.06434 2.8125 3.375V14.625C2.8125 14.9357 3.06434 15.1875 3.375 15.1875H14.625C14.9357 15.1875 15.1875 14.9357 15.1875 14.625V3.375C15.1875 3.06434 14.9357 2.8125 14.625 2.8125Z" stroke="#5926F0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-            <path d="M6.75 9.5625L9 11.8125L11.25 9.5625" stroke="#5926F0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-            <path d="M9 6.1875V11.8125" stroke="#5926F0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-        </svg>,
-        label: "Request money from vIBAN", sub: "Send a payment request link", color: "#8b5cf6"
+        id: 9, icon: <Send size={20} />,
+        label: "SEPA Transfer", sub: "European bank transfer", color: "#6366f1"
     },
+
     {
         id: 6, icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
             <path d="M2.25 15.75C2.64296 15.226 3.15252 14.8008 3.73832 14.5079C4.32411 14.215 4.97006 14.0625 5.625 14.0625C6.27994 14.0625 6.92589 14.215 7.51168 14.5079C8.09748 14.8008 8.60704 15.226 9 15.75C9.39296 15.226 9.90252 14.8008 10.4883 14.5079C11.0741 14.215 11.7201 14.0625 12.375 14.0625C13.0299 14.0625 13.6759 14.215 14.2617 14.5079C14.8475 14.8008 15.357 15.226 15.75 15.75" stroke="#5926F0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />

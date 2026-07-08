@@ -22,6 +22,7 @@ import { asVirtualIbanArray } from './utils/virtualIban'
 import { useVirtualIbanProcessingStatus, useVirtualIbans } from '../../hooks/useVirtualIban'
 import { UserContext } from '../../Context/UserContext'
 
+
 const VirtualBank = () => {
     const {userDetails} = useContext(UserContext)
     const { t } = useTranslation();
@@ -153,6 +154,8 @@ const VirtualBank = () => {
                 <div className={styles.topright}>
                     {width > 1000 && <TopRight />}
                 </div>
+
+
             </div>
             {
                 isInitialLoading ? (
