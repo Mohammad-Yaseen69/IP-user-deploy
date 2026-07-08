@@ -317,7 +317,7 @@ const QuotationDetails = ({ amount, currency, setAmount, setCurrency, title, set
                             alignItems: "center",
                         }}
                         className="i_t_button"
-                        disabled={!amount || !currency || !title || !description}
+                        disabled={Number(amount) <= 0 || !currency || !title || !description}
                         onClick={() => setSubStep(prev => prev + 1)}
                     >
                         <span>{t("Confirm")}</span>

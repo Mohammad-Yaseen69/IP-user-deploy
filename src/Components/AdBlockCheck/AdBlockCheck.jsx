@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
-import { Modal, ModalBody, ModalHeader, ModalFooter, Button } from "reactstrap";
 import { useDetectAdBlock } from "adblock-detect-react";
-import { AlertCircle } from "react-feather";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-
+import { IoWarning } from "react-icons/io5";
+import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
+import style from "./AdBlockCheck.module.css";
 const detectBrave = async () => {
   try {
     return !!(navigator.brave && await navigator.brave.isBrave());
@@ -63,37 +63,40 @@ const AdBlockCheck = () => {
   }, [adBlockDetected]);
 
   return (
-    <Modal isOpen={show} centered backdrop="static" keyboard={false}>
-      <ModalHeader>
+    <Modal isOpen={show} centered backdrop="static" keyboard={false} className={style.modalMain}>
+      <ModalHeader className={style["modal-header"]}>
         <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-          <AlertCircle color="#ff4c4c" size={24} />
-          <span style={{ fontWeight: 600 }}>{t("Ad Blocker Detected")}</span>
+          <div className={style["alert-circle"]}>
+            <IoWarning color="#fff" size={30} />
+          </div>
+          <span className={style["modal-title"]}>
+            {t("Ad Blocker Detected")}
+          </span>
         </div>
       </ModalHeader>
       <ModalBody>
-        <div style={{ fontSize: "15px", lineHeight: "1.5", color: "#333" }}>
-          <p>
-            {t("It looks like you are using an ad blocker or privacy shield (e.g. Brave Shields). Please disable it to continue using our platform.")}
+        <div className={style["modal-content"]}>
+          <p className={style["modal-message"]}>
+            {t("It looks like you are using an ad blocker or privacy shield (e.g.Brave Shields).Please disable it to continue using our platform.")}
           </p>
-          <p>
+          <p className={style["why-ask"]}>
             <strong>{t("Why do we ask this?")}</strong>
             <br />
-            {t("Ad blockers and browser shields interfere with our crash reporting tool (Sentry), preventing us from detecting, tracking, and fixing bugs effectively.")}
+            {t("Ad blockers and browser shields interfere with our crash reporting tool(Sentry), preventing us from detecting, tracking, and fixing bugs effectively.")}
           </p>
-          <p style={{ marginBottom: 0 }}>
-            {t("We value your experience and promise that")}{" "}
-            <strong>{t("we do not show any ads")}</strong>{" "}
-            {t("on our platform.")}
+          <p className={style["no-ads"]}>
+            {t("We value your experience and promise that")}
+            <span>{t("we do not show any ads")}</span>{" "}
+            {t("on our payment platform.")}
           </p>
         </div>
       </ModalBody>
-      <ModalFooter>
+      <ModalFooter className={style["modal-footer"]}>
         <Button
-          color="primary"
           onClick={() => window.location.reload()}
-          style={{ width: "100%", fontWeight: "600", padding: "10px" }}
+          className={style["reload-button"]}
         >
-          {t("I have disabled my ad blocker (Reload Page)")}
+          {t("I've disabled it - reload page")}
         </Button>
       </ModalFooter>
     </Modal>

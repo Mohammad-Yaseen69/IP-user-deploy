@@ -16,12 +16,12 @@ export const virtualIbanQueryKeys = {
     processingStatus: () => [...virtualIbanQueryKeys.all, "processing-status"],
 }
 
-export const useVirtualIbans = () =>
+export const useVirtualIbans = (accountId) =>
     useQuery({
-        queryKey: virtualIbanQueryKeys.list(),
+        queryKey: [...virtualIbanQueryKeys.list(), accountId],
         queryFn: async () => {
             const res = await apiWrapper({
-                endpoint: "/api/virtual-iban",
+                endpoint: `/api/virtual-iban?account_id=${accountId}`,
                 method: "GET",
                 isDecrypted: true,
             })
