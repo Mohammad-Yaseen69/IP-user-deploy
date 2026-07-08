@@ -3,7 +3,7 @@ import { ArrowLeft } from 'react-feather'
 import { useTranslation } from 'react-i18next'
 import styles from '../style/onboardingSteps.module.css'
 
-const ReviewStep = ({ onSubmit, onBack, allData = {} }) => {
+const ReviewStep = ({ onSubmit, onBack, allData = {}, onNext }) => {
     const { t } = useTranslation()
     const [agreed, setAgreed] = useState(false)
     const [submitting, setSubmitting] = useState(false)
@@ -185,7 +185,7 @@ const ReviewStep = ({ onSubmit, onBack, allData = {} }) => {
                     <ArrowLeft size={16} />
                     {t("Back")}
                 </button>
-                <button className={styles.continueButton}>
+                <button className={styles.continueButton} onClick={() => onNext()}>
                     {t("Request IBAN activation")}
                 </button>
             </div>

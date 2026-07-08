@@ -16,6 +16,8 @@ import OwnershipStep from './components/OwnershipStep'
 import DocumentsStep from './components/DocumentsStep'
 import ReviewStep from './components/ReviewStep'
 import StatusScreen from './components/StatusScreen'
+import Pricing from './components/Pricing'
+import ActivateAccount from './components/ActivateAccount'
 
 
 const STEPS_BUSINESS = ['landing', 'selection', 'account', 'company', 'activity', 'ownership', 'documents', 'review']
@@ -51,10 +53,15 @@ const OnboardingIBAN = ({ onCreated }) => {
         if (currentStep === 'activity') return 'ownership'
         if (currentStep === 'ownership') return 'documents'
         if (currentStep === 'documents') return 'review'
+        if (currentStep === 'review') return 'pricing'
+        if (currentStep === 'pricing') return 'ActivateAccount'
+        if (currentStep === 'ActivateAccount') return 'status'
         return 'status'
     }
 
     const getPrevStep = (currentStep) => {
+        if (currentStep === 'status') return 'ActivateAccount'
+        if (currentStep === 'status') return 'pricing'
         if (currentStep === 'status') return 'review'
         if (currentStep === 'review') return userType === 'individual' ? 'account' : 'documents'
         if (currentStep === 'documents') return 'ownership'
@@ -89,7 +96,7 @@ const OnboardingIBAN = ({ onCreated }) => {
     const handleSubmit = (data) => {
         setFormData(data)
         setStatus('submitted')
-        setStep('status')
+        setStep('pricing')
     }
 
     const handleStatusAction = () => {
@@ -245,16 +252,41 @@ const OnboardingIBAN = ({ onCreated }) => {
                 <DocumentsStep onNext={goNext} onBack={goBack} userType={userType} data={{ files: formData.documents }} />
             )}
 
+
+
+            {step === 'pricing' && (
+                <Pricing
+                    onNext={() => {
+                        setStatus('submitted')
+                        setStep('ActivateAccount')
+                    }}
+                    onBack={goBack}
+                    userType={userType}
+                    t={t}
+                />)}
+            {step === 'ActivateAccount' && (
+                <ActivateAccount
+                    onNext={() => {
+                        setStatus('submitted')
+                        setStep('status')
+                    }}
+                    onBack={goBack}
+                    userType={userType}
+                    t={t}
+                />)}
+
             {step === 'review' && (
                 <ReviewStep
-                    onSubmit={handleSubmit}
+                    onNext={() => {
+                        setStatus('submitted')
+                        setStep('pricing')
+                    }}
+                    t={t}
                     onBack={(target) => goBack(target)}
                     allData={formData}
                     userType={userType}
                 />
             )}
-
-
             {step === 'status' && (
                 <StatusScreen
                     status={status}
