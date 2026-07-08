@@ -56,7 +56,9 @@ const ActivateAccount = ({ onBack, onNext, t }) => {
                                 <CreditCard size={16} />
                             </div>
 
-                            <div>
+                            <div style={{
+                                textAlign: "start",
+                            }}>
                                 <h5>{t(item.title)}</h5>
                                 <span>{t(item.subtitle)}</span>
                             </div>

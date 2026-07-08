@@ -89,8 +89,10 @@ const ActivityStep = ({ onNext, onBack, userType, data = {} }) => {
             </div>
             <div className={styles.mainArea}>
 
-                <div className={styles.formContainer}>
-                    <div className={styles.formContainer2}>
+                <div >
+                    <div className={styles.formContainer2} style={{
+                        marginBottom: "15px",
+                    }}>
                         <div className={styles.onboardingForm2}>
 
 
