@@ -77,6 +77,7 @@ const VirtyalBank = lazy(() => import("../Components/VirtualIBAN"))
 const KYBOnboarding = lazy(() => import("../Components/KYBOnboarding"))
 const ThirdPartySenders = lazy(() => import("../Components/ThirdPartySenders"))
 const OnboardingIBAN = lazy(() => import("../Components/VirtualIBAN/OnBoardingIBAN"))
+const PriceActivation = lazy(() => import("../Components/VirtualIBAN/OnBoardingIBAN/PriceActivation/PriceActivation"))
 
 
 const PermissionRoute = ({ permission, children }) => {
@@ -173,6 +174,7 @@ export const routes = [
     },
     { path: "/virtual-IBAN", component: <PermissionRoute permission="virtual-iban.view"><VirtyalBank /></PermissionRoute> },
     { path: "/onboarding-IBAN", component: <PermissionRoute permission="virtual-iban.view"><OnboardingIBAN /></PermissionRoute> },
+    { path: "/onboarding-IBAN/priceAcitvation", component: <PermissionRoute permission="virtual-iban.view"><PriceActivation /></PermissionRoute> },
     { path: "/third-party-senders", component: <PermissionRoute permission="payments.send-as-third-party.view"><ThirdPartySenders /></PermissionRoute> },
     { path: "*", component: <NotFound type='Page' /> }
 ]
