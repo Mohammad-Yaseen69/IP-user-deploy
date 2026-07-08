@@ -184,6 +184,38 @@ export const useExecuteVirtualIbanTransfer = () => {
     })
 }
 
+export const useVirtualIbanPayoutFee = () =>
+    useMutation({
+        mutationFn: (payload) =>
+            apiWrapper({
+                endpoint: "/api/virtual-iban/payout/fee",
+                method: "POST",
+                payload,
+                isEncrypted: true,
+                isDecrypted: true,
+            }),
+    })
+
+export const useVirtualIbanPayoutDirect = () => {
+    const queryClient = useQueryClient()
+
+    return useMutation({
+        mutationFn: (payload) =>
+            apiWrapper({
+                endpoint: "/api/virtual-iban/payout",
+                method: "POST",
+                payload,
+                isEncrypted: true,
+                isDecrypted: true,
+            }),
+        onSuccess: (_, variables) => {
+            queryClient.invalidateQueries({ queryKey: virtualIbanQueryKeys.list() })
+            queryClient.invalidateQueries({ queryKey: virtualIbanQueryKeys.detail(variables?.iban_id) })
+            queryClient.invalidateQueries({ queryKey: virtualIbanQueryKeys.balance(variables?.iban_id) })
+        },
+    })
+}
+
 
 const useVirtualIbanGraphData = (filter = "this_year") =>
     useQuery({

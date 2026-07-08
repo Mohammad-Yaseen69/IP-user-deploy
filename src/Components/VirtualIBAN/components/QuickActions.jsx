@@ -6,6 +6,7 @@ import WithdrawBalanceModal from "../WithdrawBalanceModal";
 import AddFundsModal from "../AddFundsModal";
 import ConvertFundsModal from "../ConvertFundsModal";
 import UnsubscribeModal from "../UnsubscribeModal/index.jsx";
+import SepaTransfer from "../SendMoney/SepaTransfer";
 import StatementModal from "../StatementModal";
 import IBANDetails from "../IBAN/IBANDetails.jsx";
 import { X } from "react-feather";
@@ -21,6 +22,7 @@ const MODAL_MAP = {
     3: "withdrawal",
     4: "statement",
     8: "unsubscribe",
+    9: "sepa",
 }
 
 const BLOCKED_DISABLED_ACTIONS = new Set([1, 2, 3])
@@ -41,7 +43,7 @@ const QuickActions = ({ selectedIban }) => {
         withdrawal: false,
         statement: false,
         unsubscribe: false,
-
+        sepa: false,
     })
     const { t } = useTranslation()
     const openModal = (key) => setModals((prev) => ({ ...prev, [key]: true }))
@@ -51,7 +53,7 @@ const QuickActions = ({ selectedIban }) => {
         2: "virtual-iban.funds.convert",
         3: "virtual-iban.funds.withdraw",
         4: "virtual-iban.statement.download",
-        5: "payments.money.request",
+        // 5: "payments.money.request",
         6: "beneficiaries.view",
         8: "virtual-iban.status.update",
     }
@@ -65,9 +67,9 @@ const QuickActions = ({ selectedIban }) => {
         }
 
         switch (actionId) {
-            case 5:
-                navigate("/payments?payment_action=req_money");
-                return;
+            // case 5:
+            //     navigate("/payments?payment_action=req_money");
+            //     return;
 
             case 6:
                 navigate("/beneficiaries");
@@ -226,6 +228,12 @@ const QuickActions = ({ selectedIban }) => {
                     toggle={() => closeModal("statement")}
                 />
             )}
+            <SepaTransfer
+                isOpen={modals.sepa}
+                toggle={() => closeModal("sepa")}
+                selectedIban={selectedIban}
+                availableBalance={currentBalance}
+            />
         </div>
     );
 };

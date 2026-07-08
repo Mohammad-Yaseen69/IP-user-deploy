@@ -21,6 +21,7 @@ import { usePermission } from '../../hooks/GeneralUse/usePermission'
 import { asVirtualIbanArray } from './utils/virtualIban'
 import { useVirtualIbanProcessingStatus, useVirtualIbans } from '../../hooks/useVirtualIban'
 
+
 const VirtualBank = () => {
     const { t } = useTranslation();
     const can = usePermission();
@@ -151,6 +152,8 @@ const VirtualBank = () => {
                 <div className={styles.topright}>
                     {width > 1000 && <TopRight />}
                 </div>
+
+
             </div>
             {
                 isInitialLoading ? (

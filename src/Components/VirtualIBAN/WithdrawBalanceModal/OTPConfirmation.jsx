@@ -1,7 +1,7 @@
 import { useContext, useEffect, useRef, useState } from "react"
 import { useNavigate } from "react-router"
 import { useTranslation } from "react-i18next"
-import { Star } from "react-feather"
+import { Smartphone, Star } from "react-feather"
 import { InactivityContext } from "../../../InactivityWrapper"
 import { UserContext } from "../../../Context/UserContext"
 import styles from "./withdrawBalance.module.scss"
@@ -14,6 +14,7 @@ const formatTime = (seconds) => {
 
 const verificationMethods = [
     { id: "authenticator", label: "Google Authenticator", Icon: Star },
+    { id: "sms", label: "SMS / Email", Icon: Smartphone },
 ]
 
 const OTPConfirmation = ({
@@ -138,6 +139,9 @@ const OTPConfirmation = ({
     const handleAuthTypeChange = (methodId) => {
         if (hideTfaSwitch || !setAuthType) return
 
+        const currentMethod = authType === "sms" ? "sms" : "authenticator"
+        if (methodId === currentMethod) return
+
         if (methodId === "authenticator" && !userDetails?.tfa) {
             navigate("/settings?tab=tfa")
             return
@@ -149,7 +153,8 @@ const OTPConfirmation = ({
         setIsAnyFieldEmpty(true)
         setAuthType(methodId === "authenticator" ? "authenticator" : "sms")
 
-        if (methodId !== "authenticator" && resendTimer === 0) {
+        if (methodId === "sms") {
+            setResendTimer(type === "email" ? 300 : 90)
             resendHandler(methodId)
         }
     }
