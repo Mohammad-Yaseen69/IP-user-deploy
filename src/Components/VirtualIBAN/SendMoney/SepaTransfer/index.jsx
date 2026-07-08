@@ -29,12 +29,12 @@ import MT from "../../VirtualIbanModal/icons/mt.svg"
 import success from "../../VirtualIbanModal/icons/success.png"
 import styles from "./SepaTransfer.module.css"
 import withdrawStyles from "../../WithdrawBalanceModal/withdrawBalance.module.scss"
-import CountriesData from "../../../CitiesDropDown/CitiesData.json"
 import { UserContext } from "../../../../Context/UserContext"
 import useSendOtp from "../../../../hooks/GeneralUse/useSendOtp"
 import { useVirtualIbanPayoutDirect, useVirtualIbanPayoutFee } from "../../../../hooks/useVirtualIban"
 import { handlePaymentApiError } from "../../../../utils/Functions/handlePaymentApiError"
 import OTPConfirmation from "../../../UserSettingsNew/OTPConfirmation"
+import sepaCountries from "./sepaCountries.json"
 
 const DEFAULT_BENEFICIARY_FORM = {
     type: "individual",
@@ -354,7 +354,7 @@ const SepaTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance })
 
     useEffect(() => {
         if (beneficiaries && beneficiaries.length > 0) {
-            const europeanCountries = CountriesData.filter((country) => country.region === "Europe").map((country) => country.iso3)
+            const europeanCountries = sepaCountries
             const europeanBeneficiaries = beneficiaries.filter((beneficiary) => {
                 if (beneficiary?.account_type?.includes("bank")) {
                     const bankCountry = beneficiary?.bank_details?.[0]?.extras?.country_iso_code
@@ -490,54 +490,54 @@ const SepaTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance })
 
     return (
         <>
-        <Modal isOpen={isOpen} style={{ minWidth: width > 1000 ? "980px" : "0%" }} toggle={handleClose}>
-            <ModalBody style={{ padding: "20px" }}>
-                <div className={styles.modalLayout} style={{ flexDirection: width < 1000 ? "column" : "row" }}>
-                    <aside className={styles.leftPanel}>
-                        <div>
-                            <div className={styles.flowHeader}><div className={styles.flowIcon}><Send size={18} /></div><div><h2>{t("SEPA Transfer")}</h2><p>{t("European Bank Transfer - EUR only")}</p></div></div>
-                            <div
-                                style={{
-                                    marginTop: "2rem"
-                                }}
-                                className={withdrawStyles.progressEffect}
-                            >
-                                {SIDEBAR_STEPS.map((item, index) => {
-                                    const IconComponent = sidebarIcons[item.stepName]
-                                    return <SidebarProgress key={item.stepName} stepLabel={item.stepLabel} label={item.label} Icon={IconComponent} isActive={isSidebarStepActive(item, currentStep)} isCompleted={isSidebarStepCompleted(item, currentStep)} showBar={index < SIDEBAR_STEPS.length - 1} />
-                                })}
-                            </div>
-                        </div>
-                        {width > 700 && <div className={styles.contactBox}><ContactBox /></div>}
-                    </aside>
-                    <section className={styles.rightPanel}>
-                        <div className={styles.content}>{renderStepContent()}</div>
-                        {showFooter && (
-                            <div className={styles.footer}>
-                                <button type="button" className={styles.cancelBtn} onClick={handleClose}>{t("Cancel")}</button>
-                                <div className={styles.footerNav}>
-                                    <button type="button" className={styles.backBtn} onClick={handleBack}><ChevronLeft size={14} />{t("Back")}</button>
-                                    <button type="button" className={styles.nextBtn} disabled={disabled} onClick={handleContinue}>{isProcessing ? t("Processing...") : getContinueLabel(currentStep, t)}<ChevronRight size={14} /></button>
+            <Modal isOpen={isOpen} style={{ minWidth: width > 1000 ? "980px" : "0%" }} toggle={handleClose}>
+                <ModalBody style={{ padding: "20px" }}>
+                    <div className={styles.modalLayout} style={{ flexDirection: width < 1000 ? "column" : "row" }}>
+                        <aside className={styles.leftPanel}>
+                            <div>
+                                <div className={styles.flowHeader}><div className={styles.flowIcon}><Send size={18} /></div><div><h2>{t("SEPA Transfer")}</h2><p>{t("European Bank Transfer - EUR only")}</p></div></div>
+                                <div
+                                    style={{
+                                        marginTop: "2rem"
+                                    }}
+                                    className={withdrawStyles.progressEffect}
+                                >
+                                    {SIDEBAR_STEPS.map((item, index) => {
+                                        const IconComponent = sidebarIcons[item.stepName]
+                                        return <SidebarProgress key={item.stepName} stepLabel={item.stepLabel} label={item.label} Icon={IconComponent} isActive={isSidebarStepActive(item, currentStep)} isCompleted={isSidebarStepCompleted(item, currentStep)} showBar={index < SIDEBAR_STEPS.length - 1} />
+                                    })}
                                 </div>
                             </div>
-                        )}
-                    </section>
-                </div>
-            </ModalBody>
-        </Modal>
+                            {width > 700 && <div className={styles.contactBox}><ContactBox /></div>}
+                        </aside>
+                        <section className={styles.rightPanel}>
+                            <div className={styles.content}>{renderStepContent()}</div>
+                            {showFooter && (
+                                <div className={styles.footer}>
+                                    <button type="button" className={styles.cancelBtn} onClick={handleClose}>{t("Cancel")}</button>
+                                    <div className={styles.footerNav}>
+                                        <button type="button" className={styles.backBtn} onClick={handleBack}><ChevronLeft size={14} />{t("Back")}</button>
+                                        <button type="button" className={styles.nextBtn} disabled={disabled} onClick={handleContinue}>{isProcessing ? t("Processing...") : getContinueLabel(currentStep, t)}<ChevronRight size={14} /></button>
+                                    </div>
+                                </div>
+                            )}
+                        </section>
+                    </div>
+                </ModalBody>
+            </Modal>
 
-        <Modal style={{ minWidth: width > 1000 ? "900px" : "0%" }} toggle={() => setShowBeneficiaryAddModal(false)} isOpen={showBeneficiaryAddModal}>
-            <ModalBody style={{ padding: "0px" }}>
-                <AddBeneficiary
-                    inInternationalModal={true}
-                    toggleHandler={async (addedBen) => {
-                        await getUserBeneficiaries()
-                        if (addedBen) setSelectedBeneficiary(addedBen)
-                        setShowBeneficiaryAddModal(false)
-                    }}
-                />
-            </ModalBody>
-        </Modal>
+            <Modal style={{ minWidth: width > 1000 ? "900px" : "0%" }} toggle={() => setShowBeneficiaryAddModal(false)} isOpen={showBeneficiaryAddModal}>
+                <ModalBody style={{ padding: "0px" }}>
+                    <AddBeneficiary
+                        inInternationalModal={true}
+                        toggleHandler={async (addedBen) => {
+                            await getUserBeneficiaries()
+                            if (addedBen) setSelectedBeneficiary(addedBen)
+                            setShowBeneficiaryAddModal(false)
+                        }}
+                    />
+                </ModalBody>
+            </Modal>
         </>
     )
 }
