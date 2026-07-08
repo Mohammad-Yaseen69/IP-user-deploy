@@ -75,6 +75,7 @@ const AgentLogin = lazy(() => import("../Components/Auth/agentAuth/index"))
 const LogActivity = lazy(() => import("../Components/LogActivity"))
 const VirtyalBank = lazy(() => import("../Components/VirtualIBAN"))
 const ThirdPartySenders = lazy(() => import("../Components/ThirdPartySenders"))
+const IbanValidationPage = lazy(() => import("../Components/VirtualIBAN/IbanValidationPage"))
 const InstaMedia = lazy(() => import("../Components/InstaMedia/Index"))
 
 
@@ -207,8 +208,8 @@ export const publicRoutes = [
     { path: "/pay/subscription/:subscriptionId", component: <PlansSubscription /> },
     { path: "/pay/plan/:username/:planId", component: <PlanPaymentLink /> },
     { path: "/create-agent-password/:token", component: <CreateAgentPassword /> },
+    { path: "/validate-iban/:ibanId", component: <IbanValidationPage /> },
     { path: "/Insta-media", component: <InstaMedia /> },
-
     { path: "*", component: <NotFound type='Page' /> }
 ]
 export const authRoutes = [
