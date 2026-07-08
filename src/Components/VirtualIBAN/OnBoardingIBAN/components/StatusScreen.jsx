@@ -1,40 +1,37 @@
-import React from 'react'
-import { useTranslation } from 'react-i18next'
 import {
-    Check, Clock, FileText, PenTool, CreditCard,
-    AlertCircle, ArrowRight, X, Eye, Lock
+    AlertCircle, ArrowRight,
+    Check, Clock,
+    CreditCard,
+    Eye,
+    FileText,
+    Info,
+    PenTool,
+    X
 } from 'react-feather'
-import styles from '../style/onboardingSteps.module.css'
+import { useTranslation } from 'react-i18next'
+import styles from '../style/status.module.css'
 
-/**
- * StatusScreen - Figma: Business IBAN post-submission status pages
- * Covers: In Review, Request Submitted, Under Review, Pending KYB Approval,
- *         Pending Commercial Approval, Activation Pack Sent, Awaiting Signature,
- *         Awaiting Payment, Payment Received, Rejected
- */
 
-// Timeline steps shown on every status screen
 const TIMELINE_STEPS = [
-    { key: 'submitted',   label: 'Request Submitted',        sub: 'Application received' },
-    { key: 'review',      label: 'Under Review',             sub: 'KYB & commercial review' },
-    { key: 'pack_sent',   label: 'Activation Pack Sent',     sub: 'Terms & fees confirmed' },
-    { key: 'signature',   label: 'Awaiting Signature',       sub: 'Sign the declaration' },
-    { key: 'payment',     label: 'Awaiting Payment',         sub: 'Activation fee' },
-    { key: 'activated',   label: 'IBAN Activated',           sub: 'You\'re live' },
+    { key: 'submitted', label: 'Request Submitted', sub: 'Application received' },
+    { key: 'review', label: 'Under Review', sub: 'KYB & commercial review' },
+    { key: 'pack_sent', label: 'Activation Pack Sent', sub: 'Terms & fees confirmed' },
+    { key: 'signature', label: 'Awaiting Signature', sub: 'Sign the declaration' },
+    { key: 'payment', label: 'Awaiting Payment', sub: 'Activation fee' },
+    { key: 'activated', label: 'IBAN Activated', sub: 'You\'re live' },
 ]
 
-// Map each status to which timeline step is "active"
 const STATUS_ACTIVE_STEP = {
-    'in_review':               'review',
-    'submitted':               'submitted',
-    'under_review':            'review',
-    'pending_kyb':             'review',
-    'pending_commercial':      'review',
-    'activation_pack_sent':    'pack_sent',
-    'awaiting_signature':      'signature',
-    'awaiting_payment':        'payment',
-    'payment_received':        'activated',
-    'rejected':                null,
+    'in_review': 'review',
+    'submitted': 'submitted',
+    'under_review': 'review',
+    'pending_kyb': 'review',
+    'pending_commercial': 'review',
+    'activation_pack_sent': 'pack_sent',
+    'awaiting_signature': 'signature',
+    'awaiting_payment': 'payment',
+    'payment_received': 'activated',
+    'rejected': null,
 }
 
 const STATUS_CONFIG = {
@@ -126,7 +123,7 @@ const StatusScreen = ({ status = 'submitted', ibanNumber, companyName, onAction,
     const activeStep = STATUS_ACTIVE_STEP[status]
 
     const getStepState = (stepKey) => {
-        const activeIdx  = TIMELINE_STEPS.findIndex(s => s.key === activeStep)
+        const activeIdx = TIMELINE_STEPS.findIndex(s => s.key === activeStep)
         const currentIdx = TIMELINE_STEPS.findIndex(s => s.key === stepKey)
         if (status === 'rejected') return currentIdx === 0 ? 'done' : 'pending'
         if (activeIdx === -1) return 'done'
@@ -142,95 +139,194 @@ const StatusScreen = ({ status = 'submitted', ibanNumber, companyName, onAction,
         <div className={styles.statusLayout}>
             <div className={styles.statusCard}>
 
-                <div className={styles.statusCardTop}>
-                    <div className={styles.statusCardTopLeft}>
-                        <div className={`${styles.statusBadge} ${styles[cfg.badge]}`}>
-                            <span className={styles.statusBadgeDot} />
-                            {t(cfg.badgeText)}
-                        </div>
+                <div className={styles.statusHeader}>
+                    <h2 className={styles.statusCardTitle}>
+                        {t("Your application is moving")}
+                    </h2>
 
-                        <h2 className={styles.statusCardTitle}>{t(cfg.title)}</h2>
-                        <p className={styles.statusCardDesc}>{t(cfg.description)}</p>
-                    </div>
-
-                    <div className={styles.statusVisual}>
-                        <div className={styles.ibanPreviewCard}>
-                            <div className={styles.ibanPreviewLabel}>{t('Business IBAN')}</div>
-                            <div className={styles.ibanPreviewLock}>
-                                <Lock size={14} />
-                            </div>
-                            <div className={styles.ibanPreviewNumber}>
-                                {ibanNumber || 'MT•• •••• •••• ••••'}
-                            </div>
-                            <div className={styles.ibanPreviewName}>
-                                {companyName || t('Pending activation')}
-                            </div>
-                        </div>
-                    </div>
+                    <p className={styles.statusCardDesc}>
+                        {t(
+                            "Request reference DEAL-4921 submitted just now. We'll email you at each step."
+                        )}
+                    </p>
                 </div>
 
-                <div className={styles.statusTimeline}>
-                    <p className={styles.timelineTitle}>{t('ACTIVATION PROGRESS')}</p>
+                <div className={styles.actionCard}>
 
-                    {TIMELINE_STEPS.map((step, idx) => {
-                        const state = getStepState(step.key)
-                        const isLast = idx === TIMELINE_STEPS.length - 1
-                        const prevState = idx > 0 ? getStepState(TIMELINE_STEPS[idx - 1].key) : 'done'
+                    <div className={styles.actionHeader}>
+                        <div className={styles.actionLeft}>
+                            <AlertCircle size={16} />
 
-                        return (
-                            <div key={step.key} className={`${styles.timelineItem} ${state === 'active' ? styles.active : ''}`}>
-                                <div className={styles.timelineLeft}>
-                                    <div className={`${styles.timelineDot} ${styles[state]}`}>
-                                        {state === 'done'   && <Check size={13} />}
-                                        {state === 'active' && <Clock size={13} />}
-                                        {state === 'pending'&& <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#d1d5db', display: 'block' }} />}
-                                    </div>
-                                    {!isLast && (
-                                        <div className={`${styles.timelineLine} ${prevState === 'done' || state === 'done' ? styles.done : state === 'active' ? styles.active : ''}`} />
+                            <div>
+                                <h4>{t("Action required - Information requested")}</h4>
+                                <p>
+                                    {t(
+                                        "We need a couple more items to finalize your application (usually today)."
                                     )}
-                                </div>
-                                <div className={styles.timelineContent}>
-                                    <span className={styles.timelineLabel}
-                                        style={{ color: state === 'active' ? '#4A32E3' : state === 'done' ? '#1B1F2A' : '#9ca3af' }}>
-                                        {t(step.label)}
-                                    </span>
-                                    <span className={styles.timelineSub}
-                                        style={{ color: state === 'pending' ? '#c4c9d4' : undefined }}>
-                                        {t(step.sub)}
-                                    </span>
-                                </div>
+                                </p>
                             </div>
-                        )
-                    })}
-                </div>
+                        </div>
 
-                <div className={styles.helpBox}>
-                    <div className={styles.helpBoxLeft}>
-                        <p className={styles.helpBoxTitle}>{t('Need help?')}</p>
-                        <p className={styles.helpBoxSub}>{t('Reach our compliance team at help@insta-pay.ch')}</p>
+                        <span className={styles.requestId}>DEAL-4921</span>
                     </div>
-                    <a href="mailto:help@insta-pay.ch" className={styles.helpBoxLink}>
-                        {t('Contact us')} →
-                    </a>
+
+                    <div className={styles.documentList}>
+
+                        <div className={styles.documentItem}>
+                            <div className={styles.documentInfo}>
+                                <FileText size={16} />
+                                <span>{t("Last 3 month's Bank statement")}</span>
+                            </div>
+
+                            <button className={styles.uploadBtn}>
+                                {t("Upload")}
+                            </button>
+                        </div>
+
+                        <div
+                            className={`${styles.documentItem} ${styles.completed}`}
+                        >
+                            <div className={styles.documentInfo}>
+                                <Check size={16} />
+                                <span>{t("Source of funds declaration")}</span>
+                            </div>
+
+                            <span className={styles.uploadedBadge}>
+                                {t("Uploaded")}
+                            </span>
+                        </div>
+                    </div>
+
+                    <button
+                        className={styles.primaryUploadBtn}
+                        onClick={onAction}
+                    >
+                        {t("Upload all files to submit")}
+                    </button>
+
+                </div>
+                <div className={styles.progressSection}>
+
+                    <div className={styles.progressHeader}>
+                        <h4>{t("Compliance review progress")}</h4>
+                        <span>{t("Estimated completion: 1–2 business days")}</span>
+                    </div>
+
+                    <div className={styles.timeline}>
+
+                        {TIMELINE_STEPS.map((step, index) => {
+                            const state = getStepState(step.key);
+                            const isLast = index === TIMELINE_STEPS.length - 1;
+
+                            return (
+                                <div
+                                    key={step.key}
+                                    className={styles.timelineItem}
+                                >
+                                    <div className={styles.timelineIndicator}>
+
+                                        <div
+                                            className={`${styles.timelineCircle} ${styles[state]
+                                                }`}
+                                        >
+                                            {state === "done" && (
+                                                <Check size={13} />
+                                            )}
+
+                                            {state === "active" && (
+                                                <Clock size={13} />
+                                            )}
+
+                                            {state === "pending" && (
+                                                <span
+                                                    className={
+                                                        styles.pendingDot
+                                                    }
+                                                />
+                                            )}
+                                        </div>
+
+                                        {!isLast && (
+                                            <div
+                                                className={`${styles.timelineLine} ${state === "done"
+                                                    ? styles.done
+                                                    : state === "active"
+                                                        ? styles.active
+                                                        : ""
+                                                    }`}
+                                            />
+                                        )}
+                                    </div>
+
+                                    <div className={styles.timelineContent}>
+                                        <h5
+                                            className={
+                                                state === "active"
+                                                    ? styles.activeTitle
+                                                    : ""
+                                            }
+                                        >
+                                            {t(step.label)}
+                                        </h5>
+
+                                        <p>{t(step.sub)}</p>
+                                    </div>
+                                </div>
+                            );
+                        })}
+
+                    </div>
+
+
+
+                </div>
+                <div className={styles.statusFooter}>
+
+
+                    <div className={styles.helpCard}>
+
+                        <div className={styles.helpLeft}>
+                            <Info size={30} color='#3B17A8' />
+
+                            <p>
+                                {t(
+                                    "What happens next: our team reviews your KYB and risk profile, sets your commercial terms (or applies your agent's package), and sends your personalized Welcome Letter / Activation Pack. You'll sign, settle the activation, and your IBAN goes live."
+                                )}
+                            </p>
+                        </div>
+
+
+
+                    </div>
+
+                    <div className={styles.statusActions}>
+
+                        <button
+                            type="button"
+                            className={styles.backButton}
+                            onClick={onCancel}
+                        >
+                            {t("Back")}
+                        </button>
+
+                        {cfg.primaryBtn && (
+                            <button
+                                type="button"
+                                className={styles.primaryActionBtn}
+                                onClick={onAction}
+                            >
+                                {PrimaryIcon && <PrimaryIcon size={16} />}
+                                {t(cfg.primaryBtn.label)}
+                            </button>
+                        )}
+
+                    </div>
+
                 </div>
 
-                <div className={styles.statusActions}>
-                    {cfg.secondaryBtn && (
-                        <button className={styles.dangerActionBtn} onClick={onCancel}>
-                            {SecondaryIcon && <SecondaryIcon size={15} />}
-                            {t(cfg.secondaryBtn.label)}
-                        </button>
-                    )}
-                    {cfg.primaryBtn && (
-                        <button className={styles.primaryActionBtn} onClick={onAction}>
-                            {PrimaryIcon && <PrimaryIcon size={15} />}
-                            {t(cfg.primaryBtn.label)}
-                        </button>
-                    )}
-                </div>
             </div>
         </div>
-    )
+    );
 }
 
 export default StatusScreen

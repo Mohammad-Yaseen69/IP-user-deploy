@@ -84,7 +84,7 @@
 
 
 
-.header {
+.headerTitle {
     display: flex;
     justify-content: start;
     align-items: center;
@@ -92,9 +92,12 @@
 
     .cont {
         display: flex;
+        width: 34px;
+        height: 34px;
         justify-content: center;
-        align-items: start;
-        flex-direction: column;
+        align-items: center;
+        border-radius: 10px;
+        background: linear-gradient(135deg, #4A32E3 0%, #5926F0 100%);
     }
 }
 

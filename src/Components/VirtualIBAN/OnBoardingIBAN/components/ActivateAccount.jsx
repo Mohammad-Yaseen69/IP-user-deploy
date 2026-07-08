@@ -31,7 +31,7 @@ const ActivateAccount = ({ onBack, onNext, t }) => {
             <div className={styles.mainArea}>
                 <div className={styles.header}>
                     <div className={styles.headerTitle}>
-                        <div className={styles.logo}>
+                        <div className={styles.cont}>
                             <Magicsvg />
                         </div>
 

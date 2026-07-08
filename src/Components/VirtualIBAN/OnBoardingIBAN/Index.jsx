@@ -296,6 +296,15 @@ const OnboardingIBAN = ({ onCreated }) => {
                     onCancel={handleStatusCancel}
                 />
             )}
+            {step === 'status' && (
+                <StatusScreen
+                    status={status}
+                    ibanNumber={null}
+                    companyName={formData?.company?.legalName || formData?.email}
+                    onAction={handleStatusAction}
+                    onCancel={handleStatusCancel}
+                />
+            )}
         </div>
     )
 }
