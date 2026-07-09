@@ -1,0 +1,183 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 8px;
+
+    .header {
+        text-align: center;
+
+        h3 {
+            color: #141414;
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        p {
+            color: #848484;
+            font-size: 13.5px;
+            font-weight: 600;
+            margin-bottom: 0;
+        }
+    }
+
+    .detailsCard {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        padding: 16px;
+        border-radius: 8px;
+        background: #FAFAFA;
+        border: 1px solid #F0F0F0;
+
+        .detailRow {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 14px;
+            border-radius: 8px;
+            background: #FFF;
+            box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.03);
+
+            .detailLabel {
+                color: #848484;
+                font-size: 13px;
+                font-weight: 600;
+                margin-bottom: 0;
+            }
+
+            .detailValue {
+                color: #141414;
+                font-size: 14px;
+                font-weight: 700;
+                margin-bottom: 0;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+
+            .amountValue {
+                color: #5926F0;
+                font-size: 18px;
+                font-weight: 700;
+                margin-bottom: 0;
+            }
+        }
+
+        .walletRow {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            padding: 12px 14px;
+            border-radius: 8px;
+            background: #FFF;
+            box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.03);
+
+            .detailLabel {
+                color: #848484;
+                font-size: 13px;
+                font-weight: 600;
+                margin-bottom: 0;
+            }
+
+            .walletAddress {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 8px;
+                padding: 10px 12px;
+                border-radius: 6px;
+                background: #F7F7F7;
+                border: 1px solid #E5E7EB;
+
+                span {
+                    color: #141414;
+                    font-size: 13px;
+                    font-weight: 600;
+                    word-break: break-all;
+                    flex: 1;
+                }
+            }
+        }
+    }
+
+    .copyBtn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        background: none;
+        border: 1px solid #E5E7EB;
+        border-radius: 6px;
+        padding: 6px 12px;
+        cursor: pointer;
+        color: #141414;
+        font-size: 12px;
+        font-weight: 600;
+        transition: all 0.2s ease;
+        white-space: nowrap;
+        flex-shrink: 0;
+
+        &:hover {
+            background: #F7F7F7;
+            border-color: #5926F0;
+            color: #5926F0;
+        }
+
+        &.copied {
+            background: rgba(89, 38, 240, 0.08);
+            border-color: #5926F0;
+            color: #5926F0;
+        }
+
+        svg {
+            width: 14px;
+            height: 14px;
+        }
+    }
+
+    .importantNote {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        padding: 14px 16px;
+        border-radius: 8px;
+        background: #FEF4E6;
+        border: 1.5px solid #F79008;
+
+        svg {
+            flex-shrink: 0;
+            width: 20px;
+            height: 20px;
+            color: #F79008;
+            margin-top: 1px;
+        }
+
+        p {
+            color: #78350F;
+            font-size: 13.5px;
+            font-weight: 700;
+            margin-bottom: 0;
+            line-height: 1.6;
+        }
+    }
+
+    .closeBtn {
+        width: 100%;
+        padding: 12px;
+        border: none;
+        outline: none;
+        border-radius: 8px;
+        background: #5926F0;
+        color: #FFF;
+        font-size: 14px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: background 0.2s ease;
+
+        &:hover {
+            background: #4a1ed0;
+        }
+    }
+}
