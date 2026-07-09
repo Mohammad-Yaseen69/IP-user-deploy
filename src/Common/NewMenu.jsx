@@ -70,7 +70,6 @@ const NewMenu = () => {
         borderRadius: "8px",
         cursor: "pointer",
         transition: "all .3s ease",
-        background: "#37246E",
         backdropFilter: "blur(0.65px)",
     }
 
@@ -89,6 +88,8 @@ const NewMenu = () => {
                     ...(activeItem === "instapay" ? activeStyle : itemStyle),
                     ...(activeItem !== "instapay" && {
                         border: "0.25px solid rgba(255, 255, 255, 0.28)",
+                        background: "#37246E",
+
                     }),
                 }}
                 onClick={() => {
