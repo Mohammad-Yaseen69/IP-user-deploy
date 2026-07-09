@@ -53,7 +53,7 @@ const PaymentUI = ({ data, user_name, state, dataHandler, url }) => {
             onClick: () => {
                 dataHandler("showCryptoModal", true)
             },
-            disabled: true
+            // disabled: true
         },
         {
             label: "Pay As Guest",

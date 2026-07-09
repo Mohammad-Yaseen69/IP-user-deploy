@@ -24,6 +24,7 @@ import { apiErrorMessage } from "../PaymentsNewer/InternationalFlow";
 import { LimitsErrorMessage } from "../PaymentsNewer/OTPConfirmation";
 import { WidgetSDK } from "@keabank/websdk";
 import ErrorModal from "../PaymentsNewer/InternationalFlow/ErrorModal";
+import CryptoDetailsModal from "../PaymentAddressPublic/CryptoDetailsModal";
 
 
 const sdk = new WidgetSDK({
@@ -45,6 +46,8 @@ const CryptoFund = ({ setAction }) => {
     const [error, setError] = useState(null)
     const [transactionComplete, setTransactionComplete] = useState(false)
     const [transactionLoading, setTransactionLoading] = useState(false)
+    const [showCryptoDetailsModal, setShowCryptoDetailsModal] = useState(false)
+    const [cryptoPaymentRef, setCryptoPaymentRef] = useState(null)
     const [limits, setLimits] = useState({
         min: 0,
         max: 0
@@ -122,16 +125,24 @@ const CryptoFund = ({ setAction }) => {
 
             console.log(response)
 
-            const paymentConfig = {
-                orderId: payment_id,
-                amount: exchangeRate.total,
-                currency: "USDT_TRC20",
-                paymentPurpose: `Crypto Topup`
-            }
+            // Save payment reference for details modal
+            setCryptoPaymentRef(payment_id)
 
-            sdk.init(paymentConfig).then(() => {
-                setTransactionComplete(true)
-            })
+            // --- Keabank payment initialization (temporarily disabled) ---
+            // const paymentConfig = {
+            //     orderId: payment_id,
+            //     amount: exchangeRate.total,
+            //     currency: "USDT_TRC20",
+            //     paymentPurpose: `Crypto Topup`
+            // }
+
+            // sdk.init(paymentConfig).then(() => {
+            //     setTransactionComplete(true)
+            // })
+            // --- End keabank payment initialization ---
+
+            // Show crypto details modal instead
+            setShowCryptoDetailsModal(true)
         } catch (error) {
             const dec = decryptData(error?.response?.data?.data)
 
@@ -438,6 +449,16 @@ const CryptoFund = ({ setAction }) => {
                         </div>
                     </div >
             }
+            <CryptoDetailsModal
+                isOpen={showCryptoDetailsModal}
+                toggle={() => {
+                    setShowCryptoDetailsModal(false)
+                    setTransactionComplete(true)
+                }}
+                amount={amount}
+                currency={cryptoCurrency?.currency?.code}
+                paymentReference={cryptoPaymentRef}
+            />
         </>
     )
 }
