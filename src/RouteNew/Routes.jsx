@@ -74,7 +74,11 @@ const CreateAgentPassword = lazy(() => import("../Components/CreateAgentPassword
 const AgentLogin = lazy(() => import("../Components/Auth/agentAuth/index"))
 const LogActivity = lazy(() => import("../Components/LogActivity"))
 const VirtyalBank = lazy(() => import("../Components/VirtualIBAN"))
+const KYBOnboarding = lazy(() => import("../Components/KYBOnboarding"))
 const ThirdPartySenders = lazy(() => import("../Components/ThirdPartySenders"))
+const OnboardingIBAN = lazy(() => import("../Components/VirtualIBAN/OnBoardingIBAN"))
+const PriceActivation = lazy(() => import("../Components/VirtualIBAN/OnBoardingIBAN/PriceActivation/PriceActivation"))
+const MoveMoney = lazy(() => import("../Components/VirtualIBAN/OnBoardingIBAN/moveMoney/DepositDetails"))
 const IbanValidationPage = lazy(() => import("../Components/VirtualIBAN/IbanValidationPage"))
 const InstaMedia = lazy(() => import("../Components/InstaMedia/Index"))
 
@@ -172,6 +176,9 @@ export const routes = [
             </BusinessRoute>
     },
     { path: "/virtual-IBAN", component: <PermissionRoute permission="virtual-iban.view"><VirtyalBank /></PermissionRoute> },
+    { path: "/onboarding-IBAN", component: <PermissionRoute permission="virtual-iban.view"><OnboardingIBAN /></PermissionRoute> },
+    { path: "/onboarding-IBAN/priceAcitvation", component: <PermissionRoute permission="virtual-iban.view"><PriceActivation /></PermissionRoute> },
+    { path: "/onboarding-IBAN/moneymove", component: <PermissionRoute permission="virtual-iban.view"><MoveMoney /></PermissionRoute> },
     { path: "/third-party-senders", component: <PermissionRoute permission="payments.send-as-third-party.view"><ThirdPartySenders /></PermissionRoute> },
     { path: "*", component: <NotFound type='Page' /> }
 ]
@@ -208,6 +215,7 @@ export const publicRoutes = [
     { path: "/pay/subscription/:subscriptionId", component: <PlansSubscription /> },
     { path: "/pay/plan/:username/:planId", component: <PlanPaymentLink /> },
     { path: "/create-agent-password/:token", component: <CreateAgentPassword /> },
+    { path: "/KYBOnboarding", component: <KYBOnboarding /> },
     { path: "/validate-iban/:ibanId", component: <IbanValidationPage /> },
     { path: "/Insta-media", component: <InstaMedia /> },
     { path: "*", component: <NotFound type='Page' /> }
