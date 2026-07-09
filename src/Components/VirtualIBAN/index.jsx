@@ -24,7 +24,7 @@ import { UserContext } from '../../Context/UserContext'
 
 
 const VirtualBank = () => {
-    const {userDetails} = useContext(UserContext)
+    const { userDetails } = useContext(UserContext)
     const { t } = useTranslation();
     const can = usePermission();
     const width = useWindowWidth();
@@ -140,7 +140,6 @@ const VirtualBank = () => {
             scrollToIbanDetails()
         }
     }, [activeTab, selectedAccount]);
-
     return (
         <div className={styles.container}>
             <div className={styles.top}>
@@ -228,7 +227,7 @@ const VirtualBank = () => {
                                     <div className={styles.section}>
                                         {transactionsLoading ? (
                                             <InstaPayLoader />
-                                        ) : (transactions?.items?.length ?? 0) !== 0 ? (
+                                        ) : (transactions?.items?.length ?? 0) === 0 ? (
                                             <Empty selectedIban={selectedIban} />
                                         ) : (
                                             <RecentTransactions
