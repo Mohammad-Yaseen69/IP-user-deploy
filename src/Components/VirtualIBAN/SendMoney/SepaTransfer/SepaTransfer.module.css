@@ -269,6 +269,24 @@
 
 .selectedSpeedCard {
     border-color: #5926f0;
+    background: #5926f0;
+    color: #fff;
+}
+
+.selectedSpeedCard h4,
+.selectedSpeedCard p,
+.selectedSpeedCard strong {
+    color: #fff !important;
+}
+
+.selectedSpeedCard .railPill {
+    background: rgba(255, 255, 255, 0.2) !important;
+    color: #fff !important;
+}
+
+.selectedSpeedCard .defaultPill {
+    background: rgba(255, 255, 255, 0.25) !important;
+    color: #fff !important;
 }
 
 .speedCardTop {

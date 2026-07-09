@@ -4,6 +4,7 @@ import styles from "../styles/RecentTransactions.module.css";
 import { useTranslation } from 'react-i18next';
 import Paginations from '../../../Common/Component/Paginations';
 import { Button, Menu, MenuItem, Divider, ListItemText } from '@mui/material';
+import Empty from "./Empty";
 
 const statusColors = {
   COMPLETED: { bg: "rgba(34,197,94,0.1)", color: "#16a34a" },
@@ -93,18 +94,20 @@ const TransactionRow = ({ tx }) => {
                   value={`${tx.currency} ${tx.amount?.toFixed(2)}`} />
                 <DetailItem label={t("Fee")}
                   value={`${tx.currency} ${tx.fee?.toFixed(2)}`} />
-                <DetailItem label={t("Total")}
-                  value={`${tx.currency} ${tx.total?.toFixed(2)}`} />
-                <DetailItem label={t("Exchange Rate")}
-                  value={tx.exchange_rate?.toFixed(4) ?? "N/A"} />
-                <DetailItem label={t("Balance After")}
-                  value={`${tx.currency} ${tx.current_balance?.toFixed(2)}`} />
+                <DetailItem
+                  label={t("Total")}
+                  value={
+                    tx.total != null
+                      ? `${tx.currency ?? ""} ${tx.total.toFixed(2)}`
+                      : "N/A"
+                  }
+                />
+
                 <DetailItem label={t("Transaction Type")}
                   value={t(tx.transaction_type || "N/A")} />
                 <DetailItem label={t("Service Type")}
                   value={t(formatType(tx.type || ""))} />
-                <DetailItem label={t("BVNK Status")}
-                  value={tx.bvnk_status || "N/A"} />
+
               </div>
 
             </div>
@@ -146,6 +149,7 @@ const RecentTransactions = ({
     }, 400);
     return () => clearTimeout(searchDebounce.current);
   }, [search, setQ, setPage]);
+  console.log(transactions, "transactions")
 
   return (
     <>
@@ -235,9 +239,11 @@ const RecentTransactions = ({
               </tr>
             </thead>
             <tbody>
-              {transactions.map((tx) => (
-                <TransactionRow key={tx._id} tx={tx} />
-              ))}
+              {
+                transactions?.map((tx) => (
+                  <TransactionRow key={tx._id} tx={tx} />
+                ))
+              }
             </tbody>
           </table>
         </div>

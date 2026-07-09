@@ -39,8 +39,8 @@ export const SEPA_TRANSFER_SPEEDS = [
         rail: "SEPA_CT",
         label: "Standard",
         description: "SEPA Credit Transfer. Settles within 1-2 business days.",
-        feeLabel: "Free - full amount delivered",
-        feeAmount: 0,
+        feeLabel: "0.4% fee",
+        feeAmount: 0.004,
         default: true,
     },
     {
@@ -48,7 +48,7 @@ export const SEPA_TRANSFER_SPEEDS = [
         rail: "SEPA_INST",
         label: "Instant",
         description: "Real-time SEPA. Arrives in seconds, 24/7 - including weekends.",
-        feeLabel: "EUR 0.20 fee - max EUR 500,000 / transfer",
+        feeLabel: "0.4% + 0.2 EUR fee",
         feeAmount: 0.2,
     },
 ]
@@ -60,6 +60,12 @@ export const PURPOSE_OPTIONS = [
     "Supplier payment",
     "Refund",
 ]
+
+export const getPurposeCode = (label) =>
+    String(label || "")
+        .toUpperCase()
+        .replace(/[^A-Z0-9]+/g, "_")
+        .replace(/^_+|_+$/g, "")
 
 export const transitions = {
     [STEPS.AMOUNT]: {
