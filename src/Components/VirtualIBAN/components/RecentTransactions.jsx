@@ -50,7 +50,7 @@ const TransactionRow = ({ tx }) => {
           </span>
         </td>
 
-        <td className={styles.txId}>{tx.reference_id || tx._id}</td>
+        <td className={styles.txId}>{tx.reference_id || tx.external_reference || "N/A"}</td>
 
         <td>{tx.virtual_iban?.account_holder_name || "N/A"}</td>
 
@@ -135,6 +135,7 @@ const RecentTransactions = ({
 
   const openFilter = Boolean(anchorFilter);
   const openSort = Boolean(anchorSort);
+  // console.log("transactions", transactions);
 
   useEffect(() => {
     if (!setQ) return;

@@ -140,6 +140,12 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
             active_icon: mwc_active,
             tabType: 'withdrawls'
         },
+        can("settings.receiving-accounts.view") &&
+        {
+            name: "Crypto Receiving Accounts",
+            icon: mwc,
+            active_icon: mwc_active,
+        },
         can("settings.saved-cards.view") &&
         {
             name: "Manage Saved Cards",
@@ -184,12 +190,16 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
             if (tab?.toLowerCase()?.includes("tfa")) {
                 setCurrentTab("Two Factor Authentication")
             }
+            if (tab?.toLowerCase()?.includes("crypto")) {
+                setCurrentTab("Crypto Receiving Accounts")
+            }
         }
     }, [tab])
 
     const [navigatedTabs] = useState([
         { param: "tfa", name: "Two Factor Authentication" },
         { param: "social", name: "My Social Network Accounts" },
+        { param: "crypto", name: "Crypto Receiving Accounts" },
         { param: 'verification', name: "Identity Verification" }
     ])
     useEffect(() => {

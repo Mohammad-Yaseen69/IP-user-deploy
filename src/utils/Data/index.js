@@ -127,7 +127,9 @@ export const beneficiaryInitialFormData = {
 
 export const bankExtrasInitial = {
     cbu: "",
+    cbu_alias: "",
     swift_bic_code: "",
+    bik_code: "",
     account_type: "",
     bsb_number: "",
     branch_number: "",
@@ -139,8 +141,10 @@ export const bankExtrasInitial = {
     sort_code: "",
     country_iso_code: "",
     iban: "",
-    swift_bic_code: "",
-}
+    aba_routing_number: "",
+    card_number: "",
+    qr_code: ""
+};
 
 
 export const basicExtrasInitial = {

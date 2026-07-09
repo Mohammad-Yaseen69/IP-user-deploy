@@ -79,6 +79,8 @@ const ThirdPartySenders = lazy(() => import("../Components/ThirdPartySenders"))
 const OnboardingIBAN = lazy(() => import("../Components/VirtualIBAN/OnBoardingIBAN"))
 const PriceActivation = lazy(() => import("../Components/VirtualIBAN/OnBoardingIBAN/PriceActivation/PriceActivation"))
 const MoveMoney = lazy(() => import("../Components/VirtualIBAN/OnBoardingIBAN/moveMoney/DepositDetails"))
+const IbanValidationPage = lazy(() => import("../Components/VirtualIBAN/IbanValidationPage"))
+const InstaMedia = lazy(() => import("../Components/InstaMedia/Index"))
 
 
 const PermissionRoute = ({ permission, children }) => {
@@ -214,6 +216,8 @@ export const publicRoutes = [
     { path: "/pay/plan/:username/:planId", component: <PlanPaymentLink /> },
     { path: "/create-agent-password/:token", component: <CreateAgentPassword /> },
     { path: "/KYBOnboarding", component: <KYBOnboarding /> },
+    { path: "/validate-iban/:ibanId", component: <IbanValidationPage /> },
+    { path: "/Insta-media", component: <InstaMedia /> },
     { path: "*", component: <NotFound type='Page' /> }
 ]
 export const authRoutes = [

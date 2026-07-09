@@ -1,4 +1,4 @@
-import { useState, useRef, useMemo, useEffect } from 'react'
+import { useState, useRef, useMemo, useEffect, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 import useWindowWidth from '../../utils/useWindowWidth'
 import TopRight from '../topRight'
@@ -20,12 +20,15 @@ import InstaPayLoader from '../Loader'
 import { usePermission } from '../../hooks/GeneralUse/usePermission'
 import { asVirtualIbanArray } from './utils/virtualIban'
 import { useVirtualIbanProcessingStatus, useVirtualIbans } from '../../hooks/useVirtualIban'
+import { UserContext } from '../../Context/UserContext'
+
 
 const VirtualBank = () => {
+    const {userDetails} = useContext(UserContext)
     const { t } = useTranslation();
     const can = usePermission();
     const width = useWindowWidth();
-    const { data: rawIbans = [], isLoading: ibansLoading } = useVirtualIbans()
+    const { data: rawIbans = [], isLoading: ibansLoading } = useVirtualIbans(userDetails?._id)
     const {
         data: ibanCreationStatus,
         isLoading: ibanCreationStatusLoading,
@@ -151,6 +154,8 @@ const VirtualBank = () => {
                 <div className={styles.topright}>
                     {width > 1000 && <TopRight />}
                 </div>
+
+
             </div>
             {
                 isInitialLoading ? (

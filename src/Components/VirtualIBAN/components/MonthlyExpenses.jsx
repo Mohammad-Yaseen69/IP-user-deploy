@@ -156,7 +156,6 @@ const MonthlyExpenses = () => {
   const [expenseFilter, setExpenseFilter] = useState("this_year");
 
   const { data, isLoading } = useVirtualIbanGraphData(incomeFilter);
-
   const formatAmount = (amount, currency) =>
     `${currency || "EUR"} ${Number(amount || 0).toLocaleString("en-US", {
       minimumFractionDigits: 2,
