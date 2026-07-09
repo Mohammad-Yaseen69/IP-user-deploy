@@ -740,10 +740,11 @@ const WalletFundsFlow = ({ setAction }) => {
   const disabledButton = useMemo(() => {
     switch (data.step) {
       case 1:
-        return !data.wallet?._id || data.error;
+        return !data.wallet?._id || data.error
       case 2:
         return (
-          !data.amount ||
+          !data.amount
+          || data?.loading ||
           data.amount <
           parseFloat(
             String(data.limits.min ?? "0.00")?.replaceAll(",", ""),
