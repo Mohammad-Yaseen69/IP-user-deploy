@@ -207,6 +207,7 @@ const OTPConfirmation = ({
                     .catch(err => {
                         setIsSaving(false)
                         const decrypted = decryptData(err.response.data.data)
+                        console.log(decrypted, "decrypted")
                         const error = LimitsErrorMessage(decrypted?.code ?? decrypted?.message)
                         if (error) {
                             setOtpError(error)
@@ -219,7 +220,7 @@ const OTPConfirmation = ({
                             localStorage.setItem("ip_country", coun)
                             navigate("/login")
                         } else {
-                            setOtpError("You have entered wrong OTP.")
+                            setOtpError(decrypted?.message ?? "You have entered the wrong OTP.")
                         }
                     })
             }
