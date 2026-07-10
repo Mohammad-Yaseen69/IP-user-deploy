@@ -78,7 +78,7 @@ const KYBOnboarding = lazy(() => import("../Components/KYBOnboarding"))
 const ThirdPartySenders = lazy(() => import("../Components/ThirdPartySenders"))
 const OnboardingIBAN = lazy(() => import("../Components/VirtualIBAN/OnBoardingIBAN"))
 const PriceActivation = lazy(() => import("../Components/VirtualIBAN/OnBoardingIBAN/PriceActivation/PriceActivation"))
-const MoveMoney = lazy(() => import("../Components/VirtualIBAN/OnBoardingIBAN/moveMoney/DepositDetails"))
+const MoveMoney = lazy(() => import("../Components/VirtualIBAN/OnBoardingIBAN/moveMoney/MoveMoney"))
 const IbanValidationPage = lazy(() => import("../Components/VirtualIBAN/IbanValidationPage"))
 const InstaMedia = lazy(() => import("../Components/InstaMedia/Index"))
 

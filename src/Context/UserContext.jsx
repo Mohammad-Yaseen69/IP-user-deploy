@@ -29,6 +29,8 @@ axios.defaults.withCredentials = true
 const initialUserContext = {
     userDetails: null,
     setUserDetails: () => { },
+    selectedAccount: null,
+    setselectedAccount: () => { },
     userWallets: [],
     setUserWallets: () => { },
     token: '',

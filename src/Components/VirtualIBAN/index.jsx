@@ -24,7 +24,11 @@ import { UserContext } from '../../Context/UserContext'
 
 
 const VirtualBank = () => {
-    const { userDetails } = useContext(UserContext)
+    const {
+        userDetails,
+        selectedAccount,
+        setSelectedAccount,
+    } = useContext(UserContext);
     const { t } = useTranslation();
     const can = usePermission();
     const width = useWindowWidth();
@@ -33,7 +37,6 @@ const VirtualBank = () => {
         data: ibanCreationStatus,
         isLoading: ibanCreationStatusLoading,
     } = useVirtualIbanProcessingStatus()
-    const [selectedAccount, setSelectedAccount] = useState(null);
     const [activeTab, setActiveTab] = useState("overview");
     const [showGetIBAN, setShowGetIBAN] = useState(false);
     const ibanDetailsRef = useRef(null);
