@@ -5,10 +5,13 @@ import { useTranslation } from 'react-i18next';
 import useWindowWidth from '../../../utils/useWindowWidth';
 import TopRight from '../../topRight';
 import DynamicChannelModal from './Modals/DynamicChannelModal';
+import Form from '../Form';
+import { Box, Modal } from '@mui/material';
 
 const BeneficiariesVirtual = () => {
     const { t } = useTranslation();
     const width = useWindowWidth();
+    const [openFormModal, setOpenFormModal] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const handleCopy = (text) => {
         navigator.clipboard.writeText(text);
@@ -53,7 +56,10 @@ const BeneficiariesVirtual = () => {
                             <div className={styles.lefHeader}>
                                 <div className={styles.subHeaderFlex}>
                                     <h1>{t("Beneficiaries")}</h1>
-                                    <button className={styles.addBeneficiaryBtn}>
+                                    <button className={styles.addBeneficiaryBtn}
+                                        onClick={() => setOpenFormModal(true)}
+
+                                    >
                                         <Plus size={16} /> {t("Add beneficiary")}
                                     </button>
                                 </div>
@@ -200,6 +206,32 @@ const BeneficiariesVirtual = () => {
 
                 </div>
             </div>
+            <Modal
+                open={openFormModal}
+                onClose={() => setOpenFormModal(false)}
+            >
+                <Box
+                    sx={{
+                        position: "absolute",
+                        top: "50%",
+                        left: "50%",
+                        transform: "translate(-50%, -50%)",
+                        width: "auto",
+                        maxWidth: 900,
+                        maxHeight: "90vh",
+                        overflowY: "auto",
+                        bgcolor: "#fff",
+                        borderRadius: "16px",
+                        p: 0,
+                        outline: "none",
+                        scrollbarWidth: "none"
+                    }}
+                >
+                    <Form
+                        onClose={() => setOpenFormModal(false)}
+                    />
+                </Box>
+            </Modal>
             <DynamicChannelModal
                 open={isModalOpen}
                 handleClose={() => setIsModalOpen(false)}
