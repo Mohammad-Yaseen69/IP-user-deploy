@@ -82,6 +82,7 @@ const MoveMoney = lazy(() => import("../Components/VirtualIBAN/OnBoardingIBAN/mo
 const IbanValidationPage = lazy(() => import("../Components/VirtualIBAN/IbanValidationPage"))
 const InstaMedia = lazy(() => import("../Components/InstaMedia/Index"))
 const StatementsLetters = lazy(() => import("../Components/VirtualIBAN/StatementsLetters/StatementsLetters"))
+const BeneficiariesVirtual = lazy(() => import("../Components/VirtualIBAN/Beneficiaries/BeneficiariesVirtual"))
 
 
 const PermissionRoute = ({ permission, children }) => {
@@ -179,6 +180,7 @@ export const routes = [
     },
     { path: "/virtual-IBAN", component: <PermissionRoute permission="virtual-iban.view"><VirtyalBank /></PermissionRoute> },
     { path: "/virtual-IBAN/statements-letters", component: <PermissionRoute permission="virtual-iban.view"><StatementsLetters /></PermissionRoute> },
+    { path: "/virtual-IBAN/beneficiaries-virtual", component: <PermissionRoute permission="virtual-iban.view"><BeneficiariesVirtual /></PermissionRoute> },
     { path: "/onboarding-IBAN", component: <PermissionRoute permission="virtual-iban.view"><OnboardingIBAN /></PermissionRoute> },
     { path: "/onboarding-IBAN/priceAcitvation", component: <PermissionRoute permission="virtual-iban.view"><PriceActivation /></PermissionRoute> },
     { path: "/onboarding-IBAN/moneymove", component: <PermissionRoute permission="virtual-iban.view"><MoveMoney /></PermissionRoute> },
