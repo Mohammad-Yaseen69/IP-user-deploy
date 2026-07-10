@@ -1,18 +1,21 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Copy, Plus, ChevronLeft, Search, User } from 'react-feather';
 import styles from './BeneficiariesVirtual.module.css';
 import { useTranslation } from 'react-i18next';
 import useWindowWidth from '../../../utils/useWindowWidth';
 import TopRight from '../../topRight';
+import DynamicChannelModal from './Modals/DynamicChannelModal';
 
 const BeneficiariesVirtual = () => {
     const { t } = useTranslation();
     const width = useWindowWidth();
-
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const handleCopy = (text) => {
         navigator.clipboard.writeText(text);
     };
-
+    const handleSaveChannel = (channelData) => {
+        console.log("Saved dynamic dataset payload:", channelData);
+    };
     return (
         <div className={styles.container}>
             <div className={styles.top}>
@@ -111,7 +114,9 @@ const BeneficiariesVirtual = () => {
 
                             <div className={styles.sectionHeaderRow}>
                                 <span className={styles.sectionSubTitle}>{t("Payout Channels")}</span>
-                                <button className={styles.addChannelLink}>+ {t("Add channel")}</button>
+                                <button className={styles.addChannelLink}
+                                    onClick={() => setIsModalOpen(true)}
+                                >+ {t("Add channel")}</button>
                             </div>
 
                             <div className={styles.cryptoWalletCard}>
@@ -195,6 +200,11 @@ const BeneficiariesVirtual = () => {
 
                 </div>
             </div>
+            <DynamicChannelModal
+                open={isModalOpen}
+                handleClose={() => setIsModalOpen(false)}
+                onSave={handleSaveChannel}
+            />
         </div >
     );
 };
