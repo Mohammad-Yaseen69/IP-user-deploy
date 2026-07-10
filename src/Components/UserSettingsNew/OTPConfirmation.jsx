@@ -14,7 +14,7 @@ const formatTime = (seconds) => {
     const remainingSeconds = seconds % 60;
     return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
 };
-const OTPConfirmation = ({ setter, callback, setterValue, hideOtp, type = "", processing = false, resendHandler = () => { }, authType, setAuthType, hideTfaSwitch = false, showAuthToggle = true, inBasic }) => {
+const OTPConfirmation = ({ setter, callback, setterValue, hideOtp, type = "", processing = false, resendHandler = () => { }, authType, setAuthType, hideTfaSwitch = false, showAuthToggle = true, inBasic, fullHeight }) => {
     const { t } = useTranslation()
     const { userDetails } = useContext(UserContext)
     const navigate = useNavigate()
@@ -131,7 +131,7 @@ const OTPConfirmation = ({ setter, callback, setterValue, hideOtp, type = "", pr
             }}
 
             style={{
-                height: '450px',
+                height: fullHeight ? "100%" : '450px',
                 marginBottom: 0,
                 boxShadow: 'none',
                 gap: '1.3rem',

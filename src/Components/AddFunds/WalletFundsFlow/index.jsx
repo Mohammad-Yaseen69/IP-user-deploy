@@ -740,10 +740,11 @@ const WalletFundsFlow = ({ setAction }) => {
   const disabledButton = useMemo(() => {
     switch (data.step) {
       case 1:
-        return !data.wallet?._id || data.error;
+        return !data.wallet?._id || data.error
       case 2:
         return (
           !data.amount ||
+
           data.amount <
           parseFloat(
             String(data.limits.min ?? "0.00")?.replaceAll(",", ""),
@@ -1119,13 +1120,15 @@ const WalletFundsFlow = ({ setAction }) => {
                             {t("Back")}
                           </button>
                           {/* } */}
-                          <button
-                            disabled={data.loading || disabledButton}
-                            onClick={onClickHandler}
-                          >
-                            {t("Next")}
-                            <ChevronRight size={18} />
-                          </button>
+                          {!data.loading &&
+                            <button
+                              disabled={data.loading || disabledButton}
+                              onClick={onClickHandler}
+                            >
+                              {t("Next")}
+                              <ChevronRight size={18} />
+                            </button>
+                          }
                         </div>
                       </div>
                     )}

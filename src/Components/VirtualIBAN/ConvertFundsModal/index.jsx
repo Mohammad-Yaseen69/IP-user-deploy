@@ -273,7 +273,7 @@ const ConvertFundsModal = ({ isOpen, toggle, selectedIban, availableBalance }) =
                 <div
                     style={
                         {
-                            width: width > 1000 ? "0%" : "100%",
+                            width: "100%",
 
                         }
                     }>

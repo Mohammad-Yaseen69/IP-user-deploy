@@ -70,7 +70,6 @@ const NewMenu = () => {
         borderRadius: "8px",
         cursor: "pointer",
         transition: "all .3s ease",
-        background: "#37246E",
         backdropFilter: "blur(0.65px)",
     }
 
@@ -89,10 +88,13 @@ const NewMenu = () => {
                     ...(activeItem === "instapay" ? activeStyle : itemStyle),
                     ...(activeItem !== "instapay" && {
                         border: "0.25px solid rgba(255, 255, 255, 0.28)",
+                        background: "#37246E",
+
                     }),
                 }}
-                onClick={() => {setActiveItem("instapay")
-navigate("/")
+                onClick={() => {
+                    setActiveItem("instapay")
+                    navigate("/")
                 }}
             >     {activeItem === "instapay" ?
                 <img
@@ -124,7 +126,13 @@ navigate("/")
                 )}
             </div>
 
-            <div style={activeItem === "media" ? activeStyle : itemStyle} onClick={() => setActiveItem("media")}>
+            <div
+                onClick={() => {
+                    setActiveItem("media")
+                    navigate("/Insta-media")
+                }}
+                style={activeItem === "media" ? activeStyle : itemStyle}
+            >
                 <img
                     src={InstaMedia}
                     alt="media"

@@ -9,55 +9,68 @@ import { decryptData } from '../../../Helper/EssentilaMethods/Decryption'
 import { IoScan } from 'react-icons/io5'
 import { BsQrCode } from 'react-icons/bs'
 import { useTranslation } from 'react-i18next'
+import { useQuery, keepPreviousData } from '@tanstack/react-query'
+import Paginations from '../../../Common/Component/Paginations'
+
+const getEsims = async ({ userId, authHeader, skip, limit }) => {
+    const response = await axios.get(
+        `${import.meta.env.VITE_IP_DEV_API}/api/user/esims/${userId}?skip=${skip}&limit=${limit}`,
+        { headers: authHeader }
+    )
+    const decrypted = decryptData(response.data.data)
+    return {
+        esims: decrypted?.data?.esims ?? [],
+        total: decrypted?.data?.total ?? 0
+    }
+}
 
 const PrevModal = ({ isOpen, toggle, isMobile }) => {
-    const [esims, setEsims] = useState([])
-    const [filteredEsims, setFilteredEsims] = useState([])
     const [searchTerm, setSearchTerm] = useState('')
-    const [isLoading, setIsLoading] = useState(false)
+    const [page, setPage] = useState(1)
+    const [limit, setLimit] = useState(10)
     const width = useWindowWidth()
     const { authHeader, userDetails } = useContext(UserContext)
     const [qrModalContent, setQrModalContent] = useState({
         show: false,
         url: ""
     })
-    const fetchEsims = async () => {
-        setIsLoading(true)
-        try {
-            const response = await axios.get(
-                `${import.meta.env.VITE_IP_DEV_API}/api/user/esims/${userDetails._id}?skip=0&limit=1111111111110`,
-                { headers: authHeader }
-            )
-            const data = decryptData(response.data.data)
-            setEsims(data?.data?.esims)
-            setFilteredEsims(data?.data?.esims)
-        } catch (error) {
-            console.log(decryptData(error?.response?.data?.data))
-        } finally {
-            setIsLoading(false)
-        }
-    }
+    const { t } = useTranslation()
+
+    const skip = (page - 1) * limit
+
+    const {
+        data,
+        isLoading,
+        isFetching,
+        isError,
+        error
+    } = useQuery({
+        queryKey: ['esims', userDetails?._id, skip, limit],
+        queryFn: () => getEsims({ userId: userDetails._id, authHeader, skip, limit }),
+        enabled: isOpen && !!userDetails?._id,
+        placeholderData: keepPreviousData,     
+        staleTime: 30 * 1000
+    })
+
+    const esims = data?.esims ?? []
+    const total = data?.total ?? 0
+    const totalPages = Math.max(1, Math.ceil(total / limit))
 
     useEffect(() => {
         if (isOpen) {
-            fetchEsims()
+            setPage(1)
         }
     }, [isOpen])
 
+    const filteredEsims = esims.filter(esim =>
+        esim.productName?.toLowerCase().includes(searchTerm) ||
+        esim.productDesc?.toLowerCase().includes(searchTerm) ||
+        esim.operator?.toLowerCase().includes(searchTerm)
+    )
+
     const handleSearch = (e) => {
-        const term = e.target.value.toLowerCase()
-        setSearchTerm(term)
-
-        const filtered = esims.filter(esim =>
-            esim.productName.toLowerCase().includes(term) ||
-            esim.productDesc.toLowerCase().includes(term) ||
-            esim.operator.toLowerCase().includes(term)
-        )
-        setFilteredEsims(filtered)
+        setSearchTerm(e.target.value.toLowerCase())
     }
-
-    const { t } = useTranslation()
-
 
     return (
         <Modal style={{ minWidth: width > 1000 && "900px" }} isOpen={isOpen} toggle={toggle} className="prevModal" centered>
@@ -79,9 +92,11 @@ const PrevModal = ({ isOpen, toggle, isMobile }) => {
                     <div className={styles.wrapper}>
                         {isLoading ? (
                             <p>{t("Loading eSIMs")}...</p>
+                        ) : isError ? (
+                            <p>{t("Failed to load eSIMs")}: {error?.message}</p>
                         ) : filteredEsims?.length > 0 ? (
                             filteredEsims?.map((esim) => (
-                                <div style={{flexDirection: isMobile && "column"}} key={esim._id} className={styles.card}>
+                                <div style={{ flexDirection: isMobile && "column" }} key={esim._id} className={styles.card}>
                                     <div style={{ justifyContent: "space-between", alignSelf: "stretch" }} className={styles.left}>
                                         <div>
                                             <h3>{esim.productName}</h3>
@@ -109,7 +124,7 @@ const PrevModal = ({ isOpen, toggle, isMobile }) => {
                                             </button>
                                         </div>
                                     </div>
-                                    <div style={{width: isMobile && "100%"}} className={styles.right}>
+                                    <div style={{ width: isMobile && "100%" }} className={styles.right}>
                                         <div className={styles.card}>
                                             <span>{t("Price")}</span>
                                             <p>{esim.currency} {esim.price}</p>
@@ -138,6 +153,16 @@ const PrevModal = ({ isOpen, toggle, isMobile }) => {
                             <p>{t("No eSIMs found")}</p>
                         )}
                     </div>
+
+                    {!isLoading && (
+                        <Paginations
+                            page={page}
+                            totalPages={totalPages}
+                            setPage={setPage}
+                            limit={limit}
+                            setLimit={setLimit}
+                        />
+                    )}
                 </div>
 
 

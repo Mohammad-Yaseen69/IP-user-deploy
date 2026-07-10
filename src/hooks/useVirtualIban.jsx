@@ -16,12 +16,12 @@ export const virtualIbanQueryKeys = {
     processingStatus: () => [...virtualIbanQueryKeys.all, "processing-status"],
 }
 
-export const useVirtualIbans = () =>
+export const useVirtualIbans = (accountId) =>
     useQuery({
-        queryKey: virtualIbanQueryKeys.list(),
+        queryKey: [...virtualIbanQueryKeys.list(), accountId],
         queryFn: async () => {
             const res = await apiWrapper({
-                endpoint: "/api/virtual-iban",
+                endpoint: `/api/virtual-iban?account_id=${accountId}`,
                 method: "GET",
                 isDecrypted: true,
             })
@@ -171,6 +171,38 @@ export const useExecuteVirtualIbanTransfer = () => {
         mutationFn: (payload) =>
             apiWrapper({
                 endpoint: "/api/virtual-iban/transfer",
+                method: "POST",
+                payload,
+                isEncrypted: true,
+                isDecrypted: true,
+            }),
+        onSuccess: (_, variables) => {
+            queryClient.invalidateQueries({ queryKey: virtualIbanQueryKeys.list() })
+            queryClient.invalidateQueries({ queryKey: virtualIbanQueryKeys.detail(variables?.iban_id) })
+            queryClient.invalidateQueries({ queryKey: virtualIbanQueryKeys.balance(variables?.iban_id) })
+        },
+    })
+}
+
+export const useVirtualIbanPayoutFee = () =>
+    useMutation({
+        mutationFn: (payload) =>
+            apiWrapper({
+                endpoint: "/api/virtual-iban/payout/fee",
+                method: "POST",
+                payload,
+                isEncrypted: true,
+                isDecrypted: true,
+            }),
+    })
+
+export const useVirtualIbanPayoutDirect = () => {
+    const queryClient = useQueryClient()
+
+    return useMutation({
+        mutationFn: (payload) =>
+            apiWrapper({
+                endpoint: "/api/virtual-iban/payout",
                 method: "POST",
                 payload,
                 isEncrypted: true,
