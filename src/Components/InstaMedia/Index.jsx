@@ -4,25 +4,20 @@ import {
     Facebook,
     Instagram,
     Linkedin,
+    MessageSquare,
     Minus,
-    Monitor,
     Plus,
     Twitter,
-    X,
     XCircle,
     Youtube
 } from 'react-feather';
-import InstaMedia from "./files/Frame 2095585479.svg";
-import avtar from "./files/Frame 2095585495.png";
+import InstaMedia from "../../assets/images/logo/InstaMedia.png";
 import cardoneImg from "./files/Group 2128.png";
 import card3Img from "./files/Group 2132.png";
+import avtar from "./files/Frame 2095585495.png";
 import Icon from "./files/Icon.png";
-import bgGradient from "./files/Rectangle 2.png";
 import screenShot from "./files/Screenshot 2026-07-03 214237.png";
 import style from './InstaMedia.module.css';
-import TicSvg from './svg';
-import { BsBroadcast, BsLightning, BsWhatsapp } from 'react-icons/bs';
-import { FaCrown } from 'react-icons/fa6';
 
 const keepMore = [
     "Instant payouts direct to your InstaPay wallet - no 30-day wait",
@@ -99,31 +94,11 @@ const Index = () => {
                         One platform for live streaming, video, posts and memberships - built on <br /> InstaPay so every tip, sub and sale lands in your wallet instantly.
                     </p>
 
-                    <div
-                        className={style.heroFormWrapper}
-                        style={{
-                            backgroundImage: `
-      linear-gradient(
-        to bottom,
-        rgba(255,255,255,.95),
-        rgba(255,255,255,.6),
-        rgba(255,255,255,0)
-      ),
-      url(${bgGradient})
-    `,
-                            backgroundSize: "100% 20%, cover",
-                            // backgroundPosition: "center",
-                            backgroundRepeat: "no-repeat",
-                        }}
-                    >
+                    <div className={style.heroFormWrapper}>
+                        <div className={style.gradientBlob} />
                         <div className={style.heroForm}>
                             <span className={style.formLabel}>Get notified when we launch</span>
                             <div className={style.formRow}>
-                                <span>
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                                        <path d="M17.5 3.75H2.5C2.33424 3.75 2.17527 3.81585 2.05806 3.93306C1.94085 4.05027 1.875 4.20924 1.875 4.375V15C1.875 15.3315 2.0067 15.6495 2.24112 15.8839C2.47554 16.1183 2.79348 16.25 3.125 16.25H16.875C17.2065 16.25 17.5245 16.1183 17.7589 15.8839C17.9933 15.6495 18.125 15.3315 18.125 15V4.375C18.125 4.20924 18.0592 4.05027 17.9419 3.93306C17.8247 3.81585 17.6658 3.75 17.5 3.75ZM15.893 5L10 10.4023L4.10703 5H15.893ZM16.875 15H3.125V5.79609L9.57734 11.7109C9.69265 11.8168 9.84348 11.8755 10 11.8755C10.1565 11.8755 10.3073 11.8168 10.4227 11.7109L16.875 5.79609V15Z" fill="#6B6B6B" />
-                                    </svg>
-                                </span>
                                 <input
                                     type="email"
                                     placeholder="Enter your email"
@@ -150,14 +125,14 @@ const Index = () => {
                         <div className={style.partnerTrack}>
                             {[...Array(2)].map((_, index) => (
                                 <div className={style.partnerGroup} key={index}>
+                                    <span className={style.partnerItem}>◆ Trusted by creators</span>
+                                    <span className={style.partnerItem}>▲ Featured Product</span>
+                                    <span className={style.partnerItem}>● Top Rated App</span>
+                                    <span className={style.partnerItem}>■ Fast Growing</span>
+                                    <span className={style.partnerItem}>◆ Editor's Choice</span>
                                     <span className={style.partnerItem}>✦ Video on Demand</span>
                                     <span className={style.partnerItem}>✦ Subscriptions</span>
                                     <span className={style.partnerItem}>✦ Instant Payouts</span>
-                                    <span className={style.partnerItem}>✦ Posts & Stories</span>
-                                    <span className={style.partnerItem}>✦ Tips & Donations</span>
-                                    <span className={style.partnerItem}>✦ Live Streaming</span>
-                                    <span className={style.partnerItem}>✦ Video on Demand</span>
-                                    <span className={style.partnerItem}>✦ Subscriptions</span>
                                     <span className={style.partnerItem}>✦ Posts & Stories</span>
                                     <span className={style.partnerItem}>✦ Tips & Donations</span>
                                     <span className={style.partnerItem}>✦ Live Streaming</span>
@@ -216,15 +191,10 @@ const Index = () => {
                                         </div>
                                     </div>
                                     <div className={style.planRowBtn}>
-                                        <button className={style.cancelButton2}>
+                                        <button className={style.cancelButton}>
                                             Cancel
                                         </button>
-                                        <button className={style.cancelButton2}
-                                            style={{
-                                                background: "#090909",
-                                                color: "#fff"
-                                            }}
-                                        >
+                                        <button className={style.notifyButton}>
                                             Continue
                                         </button>
                                     </div>
@@ -283,10 +253,7 @@ const Index = () => {
                                 <h3 className={style.cardTitle}>Your world,
                                     <br />
                                     their feed.</h3>
-                                <p style={{
-                                    fontSize: "12px",
-                                    fontWeight: 400,
-                                }}>
+                                <p>
                                     Photo posts, stories, exclusive drops. Interest-based discovery brings new fans every day.
                                 </p>
 
@@ -301,34 +268,22 @@ const Index = () => {
                                     </p>
 
                                     <div className={style.item}>
-                                        <span className={style.iconStyle}>
-                                            <BsBroadcast size={16} />
-
-                                        </span>
+                                        <XCircle size={16} />
                                         <span>Twitch for live streaming</span>
                                     </div>
 
                                     <div className={style.item}>
-                                        <span className={style.iconStyle}>
-
-                                            <Monitor size={16} />
-                                        </span>
+                                        <XCircle size={16} />
                                         <span>YouTube for video</span>
                                     </div>
 
                                     <div className={style.item}>
-                                        <span className={style.iconStyle}>
-
-                                            <FaCrown size={16} />
-                                        </span>
+                                        <XCircle size={16} />
                                         <span>Patreon for memberships</span>
                                     </div>
 
                                     <div className={style.item}>
-                                        <span className={style.iconStyle}>
-
-                                            <BsLightning size={16} />
-                                        </span>
+                                        <XCircle size={16} />
                                         <span>Stripe + 30–60 day delays</span>
                                     </div>
                                 </div>
@@ -345,17 +300,17 @@ const Index = () => {
                                     </div>
 
                                     <div className={style.itemSuccess}>
-                                        <TicSvg size={17} />
+                                        <CheckCircle size={17} />
                                         <span>All content formats in one app</span>
                                     </div>
 
                                     <div className={style.itemSuccess}>
-                                        <TicSvg size={17} />
+                                        <CheckCircle size={17} />
                                         <span>One wallet, every revenue stream</span>
                                     </div>
 
                                     <div className={style.itemSuccess}>
-                                        <TicSvg size={17} />
+                                        <CheckCircle size={17} />
                                         <span>Payouts land instantly via InstaPay</span>
                                     </div>
 
@@ -397,7 +352,7 @@ const Index = () => {
                             <ul className={style.calloutList}>
                                 {keepMore.map((item) => (
                                     <li key={item}>
-                                        <TicSvg size={17} />
+                                        <CheckCircle size={13} className={style.checkIcon} />
                                         {item}
                                     </li>
                                 ))}
@@ -416,7 +371,7 @@ const Index = () => {
                             <ul className={style.calloutList}>
                                 {everyoneYouLove.map((item) => (
                                     <li key={item}>
-                                        <TicSvg size={17} />
+                                        <CheckCircle size={13} className={style.checkIcon} />
                                         {item}
                                     </li>
                                 ))}
@@ -460,21 +415,14 @@ const Index = () => {
                         <form
                             className={style.ctaForm}
                             onSubmit={(e) => e.preventDefault()}
-                        >   <span>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                                    <path d="M17.5 3.75H2.5C2.33424 3.75 2.17527 3.81585 2.05806 3.93306C1.94085 4.05027 1.875 4.20924 1.875 4.375V15C1.875 15.3315 2.0067 15.6495 2.24112 15.8839C2.47554 16.1183 2.79348 16.25 3.125 16.25H16.875C17.2065 16.25 17.5245 16.1183 17.7589 15.8839C17.9933 15.6495 18.125 15.3315 18.125 15V4.375C18.125 4.20924 18.0592 4.05027 17.9419 3.93306C17.8247 3.81585 17.6658 3.75 17.5 3.75ZM15.893 5L10 10.4023L4.10703 5H15.893ZM16.875 15H3.125V5.79609L9.57734 11.7109C9.69265 11.8168 9.84348 11.8755 10 11.8755C10.1565 11.8755 10.3073 11.8168 10.4227 11.7109L16.875 5.79609V15Z" fill="#6B6B6B" />
-                                </svg>
-                            </span>
-
+                        >
                             <input
                                 type="email"
-                                placeholder="eg: name@email.com"
+                                placeholder="you@email.com"
                                 className={style.ctaInput}
                                 required
                             />
-                            <button type="submit" className={style.ctaButton}
-
-                            >
+                            <button type="submit" className={style.ctaButton}>
                                 Continue                                </button>
                         </form>
                         <p>
@@ -534,11 +482,7 @@ const Index = () => {
 
                 <footer className={style.footer}>
                     <div className={style.footerLogo}>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" viewBox="0 0 35 35" fill="none">
-                            <rect width="34.1157" height="34.1157" rx="7.08018" fill="#F8F9FC" />
-                            <path fill-rule="evenodd" clip-rule="evenodd" d="M25.3018 17.7427H28.4299V23.4222C28.4299 26.5591 25.8872 29.1018 22.7503 29.1018L5.70288 29.1018L5.70288 23.4222C5.70288 20.2854 8.24558 17.7427 11.3824 17.7427L17.062 17.7427V23.4222C18.329 20.1019 21.5358 17.7427 25.3018 17.7427Z" fill="#5926F0" />
-                            <path fill-rule="evenodd" clip-rule="evenodd" d="M8.81424 16.3733H5.6861L5.6861 10.6937C5.6861 7.55686 8.22879 5.01416 11.3657 5.01416L28.4131 5.01416V10.6937C28.4131 13.8306 25.8704 16.3733 22.7335 16.3733L17.054 16.3733V10.6937C15.787 14.0141 12.5802 16.3733 8.81424 16.3733Z" fill="#5926F0" />
-                        </svg>
+                        <img src={InstaMedia} className={style.logoMark} alt="" />
                         <span >InstaMedia</span>
                     </div>
                     <p className={style.footerTagline}>
@@ -548,16 +492,15 @@ const Index = () => {
 
                     </p>
                     <div className={style.footerIcons}>
-                        <span><Instagram size={16} /></span>
-                        <span><Linkedin size={16} /></span>
-                        <span><Facebook size={16} /></span>
-                        <span><BsWhatsapp size={16} /></span>
-                        <span><Youtube size={16} /></span>
-                        <span><X size={16} /></span>
+                        <span><Facebook size={13} /></span>
+                        <span><Twitter size={13} /></span>
+                        <span><Instagram size={13} /></span>
+                        <span><Linkedin size={13} /></span>
+                        <span><Youtube size={13} /></span>
                     </div>
                     <p className={style.footerCopy}>® 2026 All rights reserved.</p>
                 </footer>
-            </div >
+            </div>
         </div >
     )
 }
