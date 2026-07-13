@@ -28,10 +28,10 @@
 }
 
 .logoText {
-    font-weight: 700;
+    font-weight: 800;
     font-size: 15px;
     color: #111;
-    font-size: 20px;
+    font-size: 25px;
 }
 
 .navRight {
@@ -45,6 +45,7 @@
     color: #555;
     text-decoration: none;
     font-size: 14px;
+    font-style: 600;
 }
 
 .navButton {
@@ -62,6 +63,7 @@
     text-align: center;
     padding: 56px 0px 0;
     overflow: hidden;
+
 }
 
 .heroEyebrow {
@@ -72,7 +74,7 @@
     background: #EBF0FE;
     padding: 4px 12px;
     border-radius: 999px;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
 
 }
 
@@ -83,7 +85,8 @@
     font-weight: 700;
     line-height: 50px;
     letter-spacing: -2.88px;
-    margin-bottom: 12px;
+    margin-bottom: 20px;
+    margin-top: 20px;
 }
 
 .heroHighlight {
@@ -98,15 +101,29 @@
     font-size: 13.5px;
     margin: 0 auto;
     line-height: 1.6;
+    margin-bottom: 20px;
 }
 
 .heroFormWrapper {
     position: relative;
     margin-top: 34px;
     padding-bottom: 90px;
+
 }
 
-.gradientBlob {
+.heroFormWrapper::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom,
+            rgba(255, 255, 255, 1) 0%,
+            rgba(255, 255, 255, .95) 20%,
+            rgba(255, 255, 255, .6) 40%,
+            rgba(255, 255, 255, 0) 65%);
+    pointer-events: none;
+}
+
+/* .gradientBlob {
     position: absolute;
     left: 0%;
     right: 0%;
@@ -122,7 +139,7 @@
     filter: blur(18px);
     opacity: 0.9;
     z-index: 0;
-}
+} */
 
 .avatarCont {
     width: fit-content;
@@ -137,11 +154,14 @@
     z-index: 1;
     width: 696px;
     margin: 0 auto;
-    padding: 22px 26px 26px;
+    padding: var(--xxl, 48px);
     border-radius: 60px;
     border: 1px solid var(--gray-gray-100, #EFF1F6);
     background: linear-gradient(180deg, rgba(255, 255, 255, 0.00) 74.52%, rgba(89, 38, 240, 0.27) 100%);
-    /* box-shadow: 0 22px 45.4px 0 rgba(0, 0, 0, 0.73); */
+    box-shadow: 0 22px 45.4px 0 rgba(0, 0, 0, 0.73);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
 }
 
 .formLabel {
@@ -156,31 +176,47 @@
 
 .formRow {
     display: flex;
-    gap: 8px;
+    gap: 6px;
+    position: relative;
+
+    span {
+        position: absolute;
+        z-index: 10;
+        left: 2%;
+        top: 25%;
+    }
 }
 
 .emailInput {
     flex: 1;
-    border: 1px solid #e5e5e5;
     border-radius: 999px;
-    padding: 10px 16px;
+    padding: 10px 42px;
     font-size: 12.5px;
     outline: none;
-    background: #fff;
+    border-radius: var(--fulll, 999px);
+    border: 1px solid var(--gray-gray-300, #D1D6E0);
+    background: var(--Neutral-50, #FFF);
+
+
 }
 
 .notifyButton {
-    background: #111;
-    color: #fff;
-    border: none;
-    border-radius: 999px;
-    padding: 10px 18px;
-    font-size: 12.5px;
     display: flex;
+    width: 165px;
+    height: 48px;
+    padding: 16px 24px;
+    justify-content: center;
     align-items: center;
-    gap: 4px;
-    white-space: nowrap;
-    cursor: pointer;
+    gap: 6px;
+    border-radius: var(--fulll, 999px);
+    background: var(--Neutral-1000, #090909);
+    color: var(--Neutral-50, #FFF);
+    text-align: center;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    letter-spacing: -0.48px;
 }
 
 .formNote {
@@ -194,7 +230,7 @@
     text-align: center;
     font-size: 14px;
     font-style: normal;
-    font-weight: 500;
+    font-weight: 600;
     line-height: 150%;
     letter-spacing: -0.42px;
 }
@@ -202,8 +238,8 @@
 .partnerWrapper {
     position: relative;
     overflow: hidden;
-    background: #111;
-    padding: 16px 0;
+    padding: 20px 51px;
+    background: var(--gray-gray-900, #1B1F2A);
     white-space: nowrap;
 }
 
@@ -222,10 +258,10 @@
 }
 
 .partnerItem {
-    color: #fff;
-    font-size: 10.5px;
-    letter-spacing: .3px;
-    white-space: nowrap;
+    color: var(--Neutral-50, #FFF);
+    font-size: 16px;
+    font-style: normal;
+    line-height: 100%;
     font-weight: 700;
     text-transform: capitalize;
 }
@@ -374,11 +410,13 @@
 }
 
 .headerSub {
-    font-size: 14px;
-    line-height: 1.5;
-    color: var(--muted);
-    margin: 0 0 6px;
+    color: rgba(0, 0, 0, 0.50);
     text-align: right;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 150%;
+    letter-spacing: -0.36px;
 }
 
 .grid {
@@ -397,7 +435,7 @@
     gap: 6px;
     min-height: 220px;
     overflow: hidden;
-    
+
 }
 
 .cardWide {
@@ -503,7 +541,7 @@
 
 .cardTitle {
     font-size: 21px;
-    font-weight: 600;
+    font-weight: 800;
     line-height: 1.2;
     letter-spacing: -0.01em;
     margin: 0 0 4px;
@@ -532,6 +570,7 @@
     line-height: 1.5;
     color: var(--muted);
     margin: 0;
+    width: fit-content;
 }
 
 .mockTable {
@@ -665,8 +704,8 @@
     position: absolute;
     right: 10px;
     top: 0%;
-    border-bottom-left-radius: 10px;
-    border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 19.562px;
+    border-bottom-right-radius: 19.562px;
     background: var(--Neutral-50, #FFF);
 
     span {
@@ -718,9 +757,24 @@
     }
 }
 
+.cancelButton2 {
+    display: flex;
+    width: 50%;
+    padding: 9.781px 14.672px;
+    justify-content: center;
+    align-items: center;
+    gap: 3.668px;
+    flex-shrink: 0;
+    border-radius: 610.704px;
+    background: var(--Neutral-150, #F2F2F2);
+    border: none;
+}
+
 .planRowBtn {
     display: flex;
     gap: 10px;
+    width: 100%;
+    padding: 1px 19px;
 
     .cancelButton {
         display: flex;
@@ -743,7 +797,7 @@
     position: relative;
     max-width: 920px;
     margin: auto;
-    padding: 3px 20px;
+    padding: 14px 14px;
     background: #fafafa;
     border: 1px solid #ececec;
     border-radius: 16px;
@@ -786,10 +840,13 @@
 }
 
 .smallHeading {
-    font-size: 11px;
-    font-weight: 700;
-    color: #9ca3af;
-    letter-spacing: 0.08em;
+    color: rgba(0, 0, 0, 0.60);
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 150%;
+    letter-spacing: -0.42px;
+    text-transform: uppercase;
     margin-bottom: 18px;
 }
 
@@ -1142,9 +1199,10 @@
 
 .ctaBox {
     display: flex;
-    padding: var(--xxl, 30px);
+    padding: var(--xxl, 48px);
     flex-direction: column;
     align-items: center;
+    gap: 16px;
     border-radius: var(--md, 10px);
     background: #FAFAFA;
 }
@@ -1184,12 +1242,20 @@
     align-items: center;
     margin-bottom: 10px;
     width: 100%;
+    position: relative;
+
+    span {
+        position: absolute;
+        z-index: 10;
+        left: 2%;
+        top: 30%;
+    }
 }
 
 .ctaInput {
     display: flex;
     width: 70%;
-    padding: var(--md, 10px);
+    padding: var(--md, 10px) 35px;
     align-items: center;
     gap: 12px;
     flex: 1 0 0;
@@ -1206,7 +1272,7 @@
 
 .ctaButton {
     display: flex;
-    width: 30%;
+    width: 35%;
     padding: 11px 20px;
     justify-content: center;
     align-items: center;
@@ -1264,7 +1330,7 @@
 }
 
 .faqItem {
-    border-bottom: 1px solid var(--line);
+    border-bottom: 1px solid var(--border-subtle, #E1E5EE);
 }
 
 .faqQuestion {
@@ -1276,14 +1342,7 @@
     background: none;
     border: none;
     padding: 18px 4px;
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--ink);
-    cursor: pointer;
-    text-align: left;
     color: #000;
-
-    font-family: Inter;
     font-size: 16px;
     font-style: normal;
     font-weight: 600;
@@ -1292,11 +1351,7 @@
 }
 
 .faqAnswer {
-    margin: 0 4px 18px;
-    font-size: 13px;
-    line-height: 1.6;
     color: var(--text-secondary, #6E7687);
-
     font-size: 14px;
     font-style: normal;
     font-weight: 400;
@@ -1342,6 +1397,16 @@
     }
 }
 
+.iconStyle {
+    width: 24px;
+    height: 24px;
+    aspect-ratio: 1/1;
+    background-color: #D1D6E0;
+    border-radius: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 
 .footer {
     width: 100%;
@@ -1349,6 +1414,11 @@
     background: var(--gray-gray-900, #1B1F2A);
     padding: 40px 24px 30px;
     text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    flex-direction: column;
+    gap: 25px;
 }
 
 .footerLogo {
