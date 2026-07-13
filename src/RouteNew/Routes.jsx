@@ -78,9 +78,11 @@ const KYBOnboarding = lazy(() => import("../Components/KYBOnboarding"))
 const ThirdPartySenders = lazy(() => import("../Components/ThirdPartySenders"))
 const OnboardingIBAN = lazy(() => import("../Components/VirtualIBAN/OnBoardingIBAN"))
 const PriceActivation = lazy(() => import("../Components/VirtualIBAN/OnBoardingIBAN/PriceActivation/PriceActivation"))
-const MoveMoney = lazy(() => import("../Components/VirtualIBAN/OnBoardingIBAN/moveMoney/DepositDetails"))
+const MoveMoney = lazy(() => import("../Components/VirtualIBAN/OnBoardingIBAN/moveMoney/MoveMoney"))
 const IbanValidationPage = lazy(() => import("../Components/VirtualIBAN/IbanValidationPage"))
 const InstaMedia = lazy(() => import("../Components/InstaMedia/Index"))
+const StatementsLetters = lazy(() => import("../Components/VirtualIBAN/StatementsLetters/StatementsLetters"))
+const BeneficiariesVirtual = lazy(() => import("../Components/VirtualIBAN/Beneficiaries/BeneficiariesVirtual"))
 
 
 const PermissionRoute = ({ permission, children }) => {
@@ -164,7 +166,8 @@ export const routes = [
         path: "/delegate-access", component:
             <BusinessRoute>
                 <PermissionRoute permission="delegate-access.view">
-                    <DelegateAccess /></PermissionRoute>
+                    <DelegateAccess />
+                </PermissionRoute>
             </BusinessRoute>
     },
     {
@@ -176,6 +179,8 @@ export const routes = [
             </BusinessRoute>
     },
     { path: "/virtual-IBAN", component: <PermissionRoute permission="virtual-iban.view"><VirtyalBank /></PermissionRoute> },
+    { path: "/virtual-IBAN/statements-letters", component: <PermissionRoute permission="virtual-iban.view"><StatementsLetters /></PermissionRoute> },
+    { path: "/virtual-IBAN/beneficiaries-virtual", component: <PermissionRoute permission="virtual-iban.view"><BeneficiariesVirtual /></PermissionRoute> },
     { path: "/onboarding-IBAN", component: <PermissionRoute permission="virtual-iban.view"><OnboardingIBAN /></PermissionRoute> },
     { path: "/onboarding-IBAN/priceAcitvation", component: <PermissionRoute permission="virtual-iban.view"><PriceActivation /></PermissionRoute> },
     { path: "/onboarding-IBAN/moneymove", component: <PermissionRoute permission="virtual-iban.view"><MoveMoney /></PermissionRoute> },
