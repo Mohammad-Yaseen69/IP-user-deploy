@@ -106,7 +106,7 @@ const TransactionRow = ({ tx }) => {
                 <DetailItem label={t("Transaction Type")}
                   value={t(tx.transaction_type || "N/A")} />
                 <DetailItem label={t("Service Type")}
-                  value={t(formatType(tx.type || ""))} />
+                  value={t(formatType(tx.type || "N/A"))} />
 
               </div>
 
