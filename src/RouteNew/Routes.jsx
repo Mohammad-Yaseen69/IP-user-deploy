@@ -80,7 +80,7 @@ const OnboardingIBAN = lazy(() => import("../Components/VirtualIBAN/OnBoardingIB
 const PriceActivation = lazy(() => import("../Components/VirtualIBAN/OnBoardingIBAN/PriceActivation/PriceActivation"))
 const MoveMoney = lazy(() => import("../Components/VirtualIBAN/OnBoardingIBAN/moveMoney/MoveMoney"))
 const IbanValidationPage = lazy(() => import("../Components/VirtualIBAN/IbanValidationPage"))
-const InstaMedia = lazy(() => import("../Components/InstaMedia/Index"))
+const InstaMedia = lazy(() => import("../Components/InstaMedia"))
 const StatementsLetters = lazy(() => import("../Components/VirtualIBAN/StatementsLetters/StatementsLetters"))
 const BeneficiariesVirtual = lazy(() => import("../Components/VirtualIBAN/Beneficiaries/BeneficiariesVirtual"))
 
