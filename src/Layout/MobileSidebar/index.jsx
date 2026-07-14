@@ -7,6 +7,7 @@ import { MENU } from "../SidebarNew/SbNMenu";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { MobileSbContext } from "../Layout";
+import { usePermission } from "../../hooks/GeneralUse/usePermission";
 
 
 const greetMessage = () => {
@@ -22,7 +23,22 @@ const MobileSidebar = ({ setShowModal }) => {
     const { userDetails, verifyToken, profileCompletedPercentage, clearData } = useContext(UserContext)
     const { t } = useTranslation()
     const { toggleSidebar, mobileSidebar } = useContext(MobileSbContext)
+    const checkPermission = usePermission();
+    const filteredMenu = MENU[0].menu.filter((item) => {
+        if (item.showOnly === "business") {
+            return userDetails?.account_type?.toLowerCase() === "business";
+        }
 
+        if (item.permission === "payments.send-as-third-party.view") {
+            return userDetails?.isThirdPartyAllowed;
+        }
+
+        if (item.permission) {
+            return checkPermission(item.permission);
+        }
+
+        return true;
+    });
     return (
         <div className={`${styles.sidebar} ${mobileSidebar ? styles.sidebar_in_view : ""}`}>
             <div className={styles.content_wrapper}>
@@ -68,7 +84,7 @@ const MobileSidebar = ({ setShowModal }) => {
                 }}>
                     <ul className={styles.nav_items}>
                         {
-                            MENU[0].menu.map(item => (
+                            filteredMenu?.map(item => (
                                 // <li key={item.title} className={`${styles.nav_item} ${window.location.pathname === item.url && styles.nav_item_active} ${item.title === "Logout" && styles.ni_logout}`} onClick={verifyToken}>
                                 <li key={item.title} className={`${styles.nav_item} ${window.location.pathname === item.url && styles.nav_item_active} ${item.title === "Logout" && styles.ni_logout}`}>
                                     {
