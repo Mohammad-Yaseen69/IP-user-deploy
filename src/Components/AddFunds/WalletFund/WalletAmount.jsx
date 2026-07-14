@@ -199,7 +199,7 @@ const WalletAmount = ({ setSubStep, amount, setAmount, wallet, limits, setLimits
                             fontWeight: 600,
                             color: "red"
                         }}>{
-                                userDetails?.user?.kyc_status !== "approved"
+                                userDetails?.account_type === "individual" ? userDetails?.user?.kyc_status !== "approved" : userDetails?.company?.kyb_status !== "approved"
                                     ?
                                     t("⚠️ Invalid Amount: Your current  identity verification level limits the  maximum amount you can add. Please upgrade your identity verification to benefit from higher limits.           ")
                                         .replace("⚠️ ", "")
