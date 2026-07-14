@@ -80,7 +80,7 @@ const SidebarSubMenu = ({ menu, className, setIsOpen, isOpen, level, showModal, 
             return userDetails?.account_type === "business"
         }
 
-        if(item?.permission === "payments.send-as-third-party.view"){
+        if (item?.permission === "payments.send-as-third-party.view") {
             return userDetails?.isThirdPartyAllowed
         }
 
