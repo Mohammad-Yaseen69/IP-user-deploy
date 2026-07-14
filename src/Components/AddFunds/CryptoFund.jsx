@@ -94,6 +94,16 @@ const CryptoFund = ({ setAction }) => {
 
 
     useEffect(() => {
+
+        const amountNumber = Number(String(amount || "0").replaceAll(",", ""));
+
+        if (amountNumber < 10 || !cryptoCurrency?.currency?.code) {
+            setExchangeRate({});
+            setExchangeRateError(null);
+            setLoading(false);
+            return;
+        }
+
         setLoading(true)
         setExchangeRateError(null)
         setExchangeRate({})
@@ -178,8 +188,8 @@ const CryptoFund = ({ setAction }) => {
         }
     }
 
-    console.log(amount, 'ya h wo amount')
-
+    // console.log(amount, 'ya h wo amount')
+    const amountNumber = Number(String(amount || "0").replaceAll(",", ""));
     return (
         <>
             <ErrorModal isOpen={error} message={error} toggle={() => setError(null)} heading="Crypto Topup Failed" />
@@ -432,7 +442,7 @@ const CryptoFund = ({ setAction }) => {
                                     )}
                                     <button
                                         className={flowStyles.full}
-                                        disabled={subStep === 1 ? !cryptoCurrency?._id : !amount || !!exchangeRateError || !!amountLimitError || loading || transactionLoading}
+                                        disabled={subStep === 1 ? !cryptoCurrency?._id : amountNumber < 10 || !amount || !!exchangeRateError || !!amountLimitError || loading || transactionLoading}
                                         onClick={() => {
                                             if (transactionComplete) {
                                                 navigate("/wallets")
