@@ -66,7 +66,7 @@ const faqItems = [
         a: "Create your page, turn on tips or subscriptions, and share your link. You can go live or post your first piece of content in minutes.",
     },
 ];
-const Index = () => {
+const InstaMediaComponent = () => {
 
     const [openIndex, setOpenIndex] = useState(0);
 
@@ -562,4 +562,4 @@ const Index = () => {
     )
 }
 
-export default Index
+export default InstaMediaComponent
