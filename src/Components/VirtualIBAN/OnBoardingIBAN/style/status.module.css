@@ -1,0 +1,383 @@
+.statusLayout {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    animation: fadeIn .25s ease;
+}
+
+.statusCard {
+    width: 100%;
+    background: #FFFFFF;
+    /* border: 1px solid #ECECF2; */
+    border-radius: 10px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 1px 2px rgba(16, 24, 40, .03);
+}
+
+.statusHeader {
+    padding: 14px 30px 0px 30px;
+}
+
+.statusCardTitle {
+    margin: 0;
+    font-size: 28px;
+    font-weight: 700;
+    color: #111827;
+    line-height: 1.2;
+}
+
+.statusCardDesc {
+    margin: 10px 0 0;
+    max-width: 720px;
+    color: #667085;
+    font-size: 14px;
+    line-height: 24px;
+}
+
+.actionCard {
+    margin: 28px 32px;
+    border: 1px solid #F8D48B;
+    background: #FFF8E7;
+    border-radius: 16px;
+    padding: 24px;
+}
+
+.actionHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 24px;
+}
+
+.actionLeft {
+    display: flex;
+    gap: 14px;
+}
+
+.actionLeft svg {
+    color: #F59E0B;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.actionLeft h4 {
+    margin: 0;
+    font-size: 17px;
+    font-weight: 700;
+    color: #1F2937;
+}
+
+.actionLeft p {
+    margin: 6px 0 0;
+    color: #667085;
+    font-size: 14px;
+    line-height: 22px;
+}
+
+.requestId {
+    background: #ffffff;
+    border: 1px solid #F3D28A;
+    border-radius: 999px;
+    padding: 7px 14px;
+    font-size: 12px;
+    font-weight: 700;
+    color: #7C5C13;
+}
+
+.documentList {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-top: 24px;
+}
+
+.documentItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #fff;
+    border: 1px solid #ECECF2;
+    border-radius: 12px;
+    padding: 16px 18px;
+}
+
+.documentInfo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.documentInfo svg {
+    color: #6B7280;
+}
+
+.documentInfo span {
+    font-size: 14px;
+    font-weight: 600;
+    color: #1F2937;
+}
+
+.uploadBtn {
+    height: 38px;
+    padding: 0 18px;
+    border: none;
+    border-radius: 10px;
+    background: #5B3DF5;
+    color: #fff;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.completed {
+    background: #F9FAFB;
+}
+
+.uploadedBadge {
+    background: #DCFCE7;
+    color: #166534;
+    border-radius: 999px;
+    padding: 7px 14px;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.primaryUploadBtn {
+    margin-top: 22px;
+    width: fit-content;
+    padding: 10px 10px;
+    border: none;
+    border-radius: 6px;
+    background: #5B3DF5;
+    color: #fff;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.progressSection {
+    display: flex;
+    padding: 37px 26px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    align-self: stretch;
+    border-radius: 14px;
+    border: 1px solid #E1E5EE;
+    background: #FFF;
+    margin: 28px 32px;
+}
+
+.progressHeader {
+    margin-bottom: 26px;
+}
+
+.progressHeader h4 {
+    margin: 0;
+    font-size: 18px;
+    color: #111827;
+    font-weight: 700;
+}
+
+.progressHeader span {
+    display: block;
+    margin-top: 6px;
+    color: #667085;
+    font-size: 13px;
+}
+
+.timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+}
+
+.timelineItem {
+    display: flex;
+    gap: 16px;
+}
+
+.timelineIndicator {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.timelineCircle {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.timelineCircle.done {
+    background: #DCFCE7;
+    color: #16A34A;
+}
+
+.timelineCircle.active {
+    background: #F2EEFF;
+    color: #5B3DF5;
+}
+
+.timelineCircle.pending {
+    background: #F3F4F6;
+}
+
+.pendingDot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #D1D5DB;
+}
+
+.timelineLine {
+    width: 2px;
+    flex: 1;
+    background: #E5E7EB;
+    margin-top: 4px;
+}
+
+.timelineLine.done {
+    background: #16A34A;
+}
+
+.timelineLine.active {
+    background: #5B3DF5;
+}
+
+.timelineContent h5 {
+    margin: 3px 0 4px;
+    font-size: 15px;
+    font-weight: 700;
+    color: #111827;
+}
+
+.activeTitle {
+    color: #5B3DF5 !important;
+}
+
+.timelineContent p {
+    margin: 0;
+    color: #667085;
+    font-size: 13px;
+    line-height: 20px;
+}
+
+.reviewInfo {
+    display: flex;
+    gap: 14px;
+    margin-top: 30px;
+    padding: 18px;
+    background: #F5F3FF;
+    border: 1px solid #DDD6FE;
+    border-radius: 14px;
+}
+
+.reviewInfoIcon {
+    color: #5B3DF5;
+}
+
+.reviewInfoContent h5 {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.reviewInfoContent p {
+    margin: 6px 0 0;
+    color: #667085;
+    font-size: 14px;
+    line-height: 22px;
+}
+
+.statusFooter {
+    padding: 5px 30px;
+}
+
+.footerInfo {
+    display: flex;
+    gap: 14px;
+    padding: 18px;
+    border-radius: 12px;
+    background: #F9FAFB;
+}
+
+.footerIcon {
+    color: #16A34A;
+}
+
+.footerInfo h5 {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.footerInfo p {
+    margin: 6px 0 0;
+    color: #667085;
+    font-size: 14px;
+    line-height: 22px;
+}
+
+.helpCard {
+    display: flex;
+    padding: 13px 16px;
+    align-items: flex-start;
+    gap: 10px;
+    align-self: stretch;
+    border-radius: 10px;
+    background: #F5F2FF;
+    padding: 13px 16px;
+}
+
+.helpLeft {
+    display: flex;
+    gap: 10px;
+    align-items: start;
+    border-radius: 10px;
+}
+
+.helpLeft p {
+    color: #3B17A8;
+    font-family: Inter;
+    font-size: 12.5px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px;
+    /* 160% */
+}
+
+
+
+.statusActions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 28px;
+}
+
+.backButton {
+    height: 46px;
+    padding: 0 24px;
+    border-radius: 10px;
+    border: 1px solid #D0D5DD;
+    background: #fff;
+    cursor: pointer;
+}
+
+.primaryActionBtn {
+    height: 46px;
+    padding: 0 24px;
+    border: none;
+    border-radius: 10px;
+    background: #5B3DF5;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+}

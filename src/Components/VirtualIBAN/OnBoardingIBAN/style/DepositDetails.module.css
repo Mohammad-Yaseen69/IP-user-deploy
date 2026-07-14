@@ -1,0 +1,332 @@
+.container {
+    display: flex;
+    padding: 16px 24px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    align-self: stretch;
+    background: #FFF;
+    font-family: 'Inter', -apple-system, sans-serif;
+    box-sizing: border-box;
+}
+
+.navigationRow {
+    display: flex;
+    align-items: center;
+    gap: var(--sm, 8px);
+    align-self: stretch;
+    margin-bottom: 4px;
+}
+
+.backBtn {
+    display: flex;
+    padding: 6px 12px;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    border-radius: 6px;
+    border: none;
+    background: #FFF;
+    color: var(--Primary-600---Base, #4A32E3);
+    text-align: center;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    letter-spacing: -0.36px;
+}
+
+.breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: #475467;
+    font-size: 14px;
+    font-weight: 400;
+}
+
+.breadcrumbActive {
+    color: #6941C6;
+    font-weight: 500;
+}
+
+.tagHeader {
+    display: flex;
+    height: 28px;
+    padding: 8px 10px;
+    align-items: center;
+    gap: 6px;
+    border-radius: 100px;
+    background: var(--Primary-50, #EBF0FE);
+    color: var(--Primary-700, #3427AC);
+    font-size: var(--font-size-caption, 12px);
+    font-style: normal;
+    font-weight: var(--font-weight-semibold, 600);
+    line-height: var(--line-height-caption, 16px);
+    letter-spacing: -0.12px;
+    margin-bottom: 12px;
+}
+
+.mainHeading {
+    color: #101828;
+    font-size: 20px;
+    font-weight: 600;
+    margin: 0 0 8px 0;
+}
+
+.subHeading {
+    color: #475467;
+    font-size: 14px;
+    line-height: 20px;
+    margin: 0 0 20px 0;
+    max-width: 800px;
+}
+
+.alertBox {
+    display: flex;
+    padding: 16px;
+    flex-direction: column;
+    gap: 6px;
+    align-self: stretch;
+    border-radius: 8px;
+    background: #FEF08A;
+    border-left: 4px solid #EAAA08;
+    margin-bottom: 16px;
+}
+
+.alertTitle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--primary, #5926F0);
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 150%;
+    letter-spacing: -0.42px;
+}
+
+.alertText {
+    color: var(--gray-gray-700, #4B5263);
+
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 150%;
+    letter-spacing: -0.36px;
+}
+
+.cardsGrid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    width: 100%;
+}
+
+.copyAllDetails {
+    display: flex;
+    height: 32px;
+    padding: 0 12px;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    color: var(--Primary-600---Base, #4A32E3);
+    text-align: center;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    letter-spacing: -0.36px;
+}
+
+.bankCard {
+    display: flex;
+    padding: 24px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    flex: 1;
+    border-radius: 12px;
+    border: 1px solid #EAECF0;
+    background: #FFF;
+}
+
+.cardHeaderRow {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.currencyIcon {
+    display: flex;
+    width: 32px;
+    height: 32px;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    background: #EFF8FF;
+    color: #175CD3;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.currencyMeta h4 {
+    color: #667085;
+    font-size: 11px;
+    font-weight: 600;
+    margin: 0;
+    text-transform: uppercase;
+}
+
+.currencyMeta p {
+    color: #101828;
+    font-size: 14px;
+    font-weight: 600;
+    margin: 2px 0 0 0;
+}
+
+/* Data Rows */
+.infoBlock {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+}
+
+.dataRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    width: 100%;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #F2F4F7;
+}
+
+.labelStack h5 {
+    color: #667085;
+    font-size: 11px;
+    font-weight: 500;
+    margin: 0;
+    text-transform: uppercase;
+}
+
+.labelStack p {
+    color: #344054;
+    font-size: 13px;
+    font-weight: 500;
+    margin: 4px 0 0 0;
+}
+
+.copyBtn {
+    background: none;
+    border: none;
+    color: #98A2B3;
+    cursor: pointer;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+}
+
+.copyBtn:hover {
+    color: #6941C6;
+}
+
+.remittanceBox {
+    display: flex;
+    padding: var(--md, 16px);
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: var(--md, 16px);
+    align-self: stretch;
+    border-radius: var(--md, 10px);
+    border: 1px solid var(--border-subtle, #E1E5EE);
+    background: #E4DBFF;
+}
+
+.remittanceHeader {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--primary, #5926F0);
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 150%;
+    letter-spacing: -0.36px;
+}
+
+.remittanceValueRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #FFF;
+    padding: 10px 12px;
+    border-radius: 6px;
+    border: 1px solid #D0D5DD;
+}
+
+.remittanceCode {
+    color: #101828;
+    font-size: 14px;
+    font-weight: 600;
+    font-family: monospace;
+}
+
+.remittanceExample {
+    color: #667085;
+    font-size: 11px;
+    margin: 0;
+}
+
+/* Dark Blue Strip Ribbon Banner (Need Help Section) */
+.needHelpBanner {
+    display: flex;
+    padding: 16px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 8px;
+    align-self: stretch;
+    border-radius: 10px;
+    border: 1px solid #A88BFF;
+    /* Primary light purple/blue border */
+    background: #3B17A8;
+    /* Dark blue/purple background from Figma */
+    margin-top: 12px;
+    position: relative;
+    overflow: hidden;
+}
+
+.needHelpBanner h4 {
+    color: #FFFFFF;
+    font-size: 14px;
+    font-weight: 600;
+    margin: 0;
+}
+
+.needHelpBanner p {
+    color: #E0D7FF;
+    font-size: 13px;
+    line-height: 18px;
+    margin: 0;
+}
+
+.needHelpLink {
+    color: #FFFFFF;
+    text-decoration: underline;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.bottomDisclaimer {
+    color: var(--Typography-tertiary, rgba(31, 31, 33, 0.56));
+    text-align: center;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 150%;
+    letter-spacing: -0.48px;
+    margin-top: 8px;
+    align-self: stretch;
+}

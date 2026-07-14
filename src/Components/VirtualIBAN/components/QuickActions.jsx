@@ -77,7 +77,9 @@ const QuickActions = ({ selectedIban }) => {
 
             case 7:
                 return;
-
+            case 9:
+                navigate("/onboarding-IBAN/moneymove");
+                return;
             default: {
                 const modalKey = MODAL_MAP[actionId];
                 if (modalKey) openModal(modalKey);
@@ -228,12 +230,12 @@ const QuickActions = ({ selectedIban }) => {
                     toggle={() => closeModal("statement")}
                 />
             )}
-            <SepaTransfer
+            {/* <SepaTransfer
                 isOpen={modals.sepa}
                 toggle={() => closeModal("sepa")}
                 selectedIban={selectedIban}
                 availableBalance={currentBalance}
-            />
+            /> */}
         </div>
     );
 };

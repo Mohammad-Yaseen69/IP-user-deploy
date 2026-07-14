@@ -1,30 +1,34 @@
-import { useState, useRef, useMemo, useEffect, useContext } from 'react'
+import { useQuery } from '@tanstack/react-query'
+import { useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { UserContext } from '../../Context/UserContext'
+import { usePermission } from '../../hooks/GeneralUse/usePermission'
+import { useVirtualIbanProcessingStatus, useVirtualIbans } from '../../hooks/useVirtualIban'
+import { apiWrapper } from '../../utils/Functions/apiWrapper'
 import useWindowWidth from '../../utils/useWindowWidth'
+import InstaPayLoader from '../Loader'
 import TopRight from '../topRight'
 import AccountsSidebar from './components/AccountsSidebar'
 import BalanceHeader from './components/BalanceHeader'
+import Empty from './components/Empty'
 import MonthlyExpenses from './components/MonthlyExpenses'
 import QuickActions from './components/QuickActions'
 import RecentTransactions from './components/RecentTransactions'
 import TabsNav from './components/TabsNav'
 import IBAN from './IBAN/IBAN'
-import styles from "./styles/index.module.css"
 import IBANDetails from './IBAN/IBANDetails'
 import Manage from './Manage/Manage'
-import { useQuery } from '@tanstack/react-query'
-import { apiWrapper } from '../../utils/Functions/apiWrapper'
-import Empty from './components/Empty'
-import VirtualIbanModal from './VirtualIbanModal'
-import InstaPayLoader from '../Loader'
-import { usePermission } from '../../hooks/GeneralUse/usePermission'
+import styles from "./styles/index.module.css"
 import { asVirtualIbanArray } from './utils/virtualIban'
-import { useVirtualIbanProcessingStatus, useVirtualIbans } from '../../hooks/useVirtualIban'
-import { UserContext } from '../../Context/UserContext'
+import VirtualIbanModal from './VirtualIbanModal'
 
 
 const VirtualBank = () => {
-    const { userDetails } = useContext(UserContext)
+    const {
+        userDetails,
+        selectedAccount,
+        setSelectedAccount,
+    } = useContext(UserContext);
     const { t } = useTranslation();
     const can = usePermission();
     const width = useWindowWidth();
@@ -33,7 +37,6 @@ const VirtualBank = () => {
         data: ibanCreationStatus,
         isLoading: ibanCreationStatusLoading,
     } = useVirtualIbanProcessingStatus()
-    const [selectedAccount, setSelectedAccount] = useState(null);
     const [activeTab, setActiveTab] = useState("overview");
     const [showGetIBAN, setShowGetIBAN] = useState(false);
     const ibanDetailsRef = useRef(null);
