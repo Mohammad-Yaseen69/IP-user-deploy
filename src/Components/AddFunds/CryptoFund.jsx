@@ -42,7 +42,10 @@ const CryptoFund = ({ setAction }) => {
     const [amount, setAmount] = useState('10.00')
     const [exchangeRate, setExchangeRate] = useState({})
     const [loading, setLoading] = useState(false)
+
     const [exchangeRateError, setExchangeRateError] = useState("")
+    const [amountLimitError, setAmountLimitError] = useState("")
+
     const [error, setError] = useState(null)
     const [transactionComplete, setTransactionComplete] = useState(false)
     const [transactionLoading, setTransactionLoading] = useState(false)
@@ -53,7 +56,7 @@ const CryptoFund = ({ setAction }) => {
         max: 0
     })
 
-    console.log(exchangeRateError)
+    console.log(exchangeRateError, amountLimitError)
 
     const getCryptoFeeDetails = async (amountArg) => {
 
@@ -80,8 +83,8 @@ const CryptoFund = ({ setAction }) => {
 
         } catch (error) {
             const dec = decryptData(error?.response?.data?.data);
-            setExchangeRateError(dec?.message ?? "We cannot process your request at the moment, please try again later.")
-            setError(dec?.message ?? "We cannot process your request at the moment, please try again later.")
+            setExchangeRateError(dec?.message ?? "We cannot process your request at the moment, please try again later.")
+            setError(dec?.message ?? "We cannot process your request at the moment, please try again later.")
             console.log(dec)
         } finally {
             setLoading(false)
@@ -155,7 +158,7 @@ const CryptoFund = ({ setAction }) => {
             else if (error2) {
                 setError(t(error2))
             } else {
-                setError(dec?.message ?? "We cannot process your request at the moment, please try again later.")
+                setError(dec?.message ?? "We cannot process your request at the moment, please try again later.")
             }
         } finally {
             setTransactionLoading(false)
@@ -170,6 +173,7 @@ const CryptoFund = ({ setAction }) => {
             setAmount('10.00')
             setExchangeRate({})
             setExchangeRateError(null)
+            setAmountLimitError("")
             setSubStep(1)
         }
     }
@@ -278,8 +282,8 @@ const CryptoFund = ({ setAction }) => {
                                                 if (key === "limits") {
                                                     setLimits(value)
                                                 }
-                                                if (key === "exchange_rate_error") {
-                                                    setExchangeRateError(value)
+                                                if (key === "exchangeRateError") {
+                                                    setAmountLimitError(value)
                                                 }
                                             }}
                                         />
@@ -307,7 +311,7 @@ const CryptoFund = ({ setAction }) => {
                                                 {t("Back")}
                                             </button>
                                             <button
-                                                disabled={subStep === 1 ? !cryptoCurrency?._id : !amount || exchangeRateError || loading || transactionLoading}
+                                                disabled={subStep === 1 ? !cryptoCurrency?._id : !amount || !!exchangeRateError || !!amountLimitError || loading || transactionLoading}
                                                 onClick={() => {
                                                     if (transactionComplete) {
                                                         navigate("/wallets")
@@ -381,8 +385,8 @@ const CryptoFund = ({ setAction }) => {
                                             if (key === "limits") {
                                                 setLimits(value)
                                             }
-                                            if (key === "exchange_rate_error") {
-                                                setExchangeRateError(value)
+                                            if (key === "exchangeRateError") {
+                                                setAmountLimitError(value)
                                             }
                                         }}
                                     />
@@ -428,7 +432,7 @@ const CryptoFund = ({ setAction }) => {
                                     )}
                                     <button
                                         className={flowStyles.full}
-                                        disabled={subStep === 1 ? !cryptoCurrency?._id : !amount || exchangeRateError || loading || transactionLoading}
+                                        disabled={subStep === 1 ? !cryptoCurrency?._id : !amount || !!exchangeRateError || !!amountLimitError || loading || transactionLoading}
                                         onClick={() => {
                                             if (transactionComplete) {
                                                 navigate("/wallets")
