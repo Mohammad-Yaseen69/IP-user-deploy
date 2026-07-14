@@ -74,7 +74,7 @@ const CreateAgentPassword = lazy(() => import("../Components/CreateAgentPassword
 const AgentLogin = lazy(() => import("../Components/Auth/agentAuth/index"))
 const LogActivity = lazy(() => import("../Components/LogActivity"))
 const VirtyalBank = lazy(() => import("../Components/VirtualIBAN"))
-const KYBOnboarding = lazy(() => import("../Components/KYBOnboarding"))
+const KYBOnboarding = lazy(() => import("../Components/KYBOnboarding/index"))
 const ThirdPartySenders = lazy(() => import("../Components/ThirdPartySenders"))
 const OnboardingIBAN = lazy(() => import("../Components/VirtualIBAN/OnBoardingIBAN"))
 const PriceActivation = lazy(() => import("../Components/VirtualIBAN/OnBoardingIBAN/PriceActivation/PriceActivation"))
