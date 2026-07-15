@@ -71,7 +71,6 @@ const CryptoDetailsModal = ({ isOpen, toggle, amount, currency, paymentReference
                     </div>
 
                     <div className={styles.detailsCard}>
-                        {/* Amount */}
                         <div className={styles.detailRow}>
                             <p className={styles.detailLabel}>{t("Amount (USDT)")}</p>
                             <p className={styles.amountValue}>
@@ -116,20 +115,21 @@ const CryptoDetailsModal = ({ isOpen, toggle, amount, currency, paymentReference
                                 </button>
                             </div>
                         </div>
-
-                        {/* Payment Reference */}
                         {paymentReference &&
-                            <div className={styles.detailRow}>
+
+                            <div className={styles.walletRow}>
                                 <p className={styles.detailLabel}>{t("Payment Reference")}</p>
-                                <p className={styles.detailValue}>
-                                    {paymentReference?.replace("keabank_", "")}
+                                <div className={styles.walletAddress}>
+                                    <span>
+                                        {paymentReference?.replace("keabank_", "")}
+                                    </span>
                                     <button
                                         className={`${styles.copyBtn} ${copiedField === 'reference' ? styles.copied : ''}`}
                                         onClick={() => handleCopy(paymentReference, 'reference')}
                                     >
                                         {copiedField === 'reference' ? <><CheckIcon /> {t("Copied")}</> : <><CopyIcon /> {t("Copy")}</>}
                                     </button>
-                                </p>
+                                </div>
                             </div>
                         }
                     </div>

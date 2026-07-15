@@ -59,6 +59,7 @@ const NewMenu = () => {
         position: "fixed",
         left: "8px",
         top: "18px",
+        zIndex: 10,
     };
 
     const itemStyle = {

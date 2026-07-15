@@ -19,6 +19,7 @@ export const virtualIbanQueryKeys = {
 export const useVirtualIbans = (accountId) =>
     useQuery({
         queryKey: [...virtualIbanQueryKeys.list(), accountId],
+        enabled: !!accountId,
         queryFn: async () => {
             const res = await apiWrapper({
                 endpoint: `/api/virtual-iban?account_id=${accountId}`,
