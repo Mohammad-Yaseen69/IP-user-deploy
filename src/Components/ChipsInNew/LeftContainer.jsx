@@ -34,8 +34,8 @@ const LeftContainer = ({ currentWallet, currency, setCurrency, setWalletRefresh,
 
     useEffect(() => {
         setGeneralQRactive(currentWallet?.qrCode?.status === "true" ? true : false)
-        setTitle(currentWallet?.qrCode?.title ?? "")
-        setDescription(currentWallet?.qrCode?.description ?? "")
+        setTitle(currentWallet?.qrCode?.title ?? "PKR Wallet")
+        setDescription(currentWallet?.qrCode?.description ?? "PKR wallet QR")
     }, [currentWallet])
 
     const updateQr = (setter, type = () => { }) => {
@@ -44,7 +44,7 @@ const LeftContainer = ({ currentWallet, currency, setCurrency, setWalletRefresh,
         const data = {
             title,
             description,
-            status: `${!generalQRactive}`,
+            status: setter ? `${!generalQRactive}` : `${generalQRactive}`,
             wallet_id: currentWallet?.wallet_id
         }
         const encrypted = encryptData(data)
@@ -58,7 +58,9 @@ const LeftContainer = ({ currentWallet, currency, setCurrency, setWalletRefresh,
                 const decrypted = decryptData(res.data.data)
                 type(false)
                 setCurrentWallet(currentWallet)
-                setGeneralQRactive(!generalQRactive)
+                if (setter) {
+                    setGeneralQRactive(!generalQRactive)
+                }
             })
             .catch(err => {
                 const decrypted = decryptData(err.response?.data?.data)

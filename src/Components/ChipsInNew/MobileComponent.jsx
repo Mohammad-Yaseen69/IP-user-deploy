@@ -11,13 +11,14 @@ import axios from "axios";
 import SocialModal from "../ShareBtn/SocialModal";
 import DownloadQR from "./DownloadQR";
 import { Button } from "reactstrap";
+import { Toggle } from "../MyMasterCard/CardPurchased";
 
 const MobileComponent = ({ wallet, current }) => {
     const { t } = useTranslation()
     const [editMode, setEditMode] = useState(false)
     const [title, setTitle] = useState(wallet?.qrCode?.title)
     const [description, setDescription] = useState(wallet?.qrCode?.description)
-    const [status, setStatus] = useState(wallet?.qrCode?.status);
+    const [status, setStatus] = useState(wallet?.qrCode?.status === "true" ? true : false);
     const [saving, setSaving] = useState(false)
     const { setWalletRefresh, authHeader } = useContext(UserContext)
     const [showFullDesc, setShowFullDesc] = useState(false)
@@ -26,7 +27,10 @@ const MobileComponent = ({ wallet, current }) => {
         setEditMode(false)
         setSaving(false)
         setShowFullDesc(false)
-    }, [current])
+        setTitle(wallet?.qrCode?.title ?? "")
+        setDescription(wallet?.qrCode?.description ?? "")
+        setStatus(wallet?.qrCode?.status === "true" || wallet?.qrCode?.status === true ? true : false)
+    }, [current, wallet?.wallet_id])
 
 
     const switchStyle = {
@@ -52,37 +56,38 @@ const MobileComponent = ({ wallet, current }) => {
 
 
     const updateQr = (e, setter = null) => {
-        e.preventDefault()
+        if (e) e.preventDefault()
+        if (saving) return;
         setSaving(true)
         const data = {
-            title,
-            description,
-            status: setter ? `${!status}` : status
+            title: title || wallet?.currency?.code + " Wallet" || "Wallet",
+            description: description || wallet?.currency?.code + " QR" || "QR",
+            status: setter ? `${!status}` : `${status}`,
+            wallet_id: wallet?.wallet_id
         }
 
         const encrypted = encryptData(data)
 
-        axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/wallet-qrcode/${wallet?.wallet_id}`, {
+        axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/update-qr-details`, {
             data: encrypted
         }, {
             headers: authHeader
         })
             .then(res => {
-                const decrypted = decryptData(res.data.data)
-                // console.log(decrypted)
-                setWalletRefresh(prev => prev + 1)
+                // setWalletRefresh(prev => prev + 1)
                 if (setter) {
-                    setter(decrypted?.updated?.qrCode?.status == "false" ? false : true)
+                    setter(prev => !prev)
                 }
                 setEditMode(false)
             })
             .catch(err => {
-                const decrypted = decryptData(err.response.data.data)
-                // console.log(decrypted)
+                console.log(err)
             })
             .finally(() => setSaving(false))
     }
 
+
+    console.log(status, "status")
     const [showShareModal, setShowShareModal] = useState()
     const [showDownloadModal, setShowDownloadModal] = useState(false)
     return (
@@ -102,8 +107,8 @@ const MobileComponent = ({ wallet, current }) => {
                             <input type="text" id="title" placeholder={t("Title")} value={title} onChange={e => setTitle(e.target.value)} />
                         </div>
                         <div className={styles.inp_con}>
-                            <label htmlFor="description">{t("QR Code Description")} (<span style={{ fontSize: "80%" }}>{description.length}/180 characters</span>)</label>
-                            <textarea id="description" placeholder={t("Description")} value={description} onChange={e => e.target.value.length >= 180 ? "" : setDescription(e.target.value)} />
+                            <label htmlFor="description">{t("QR Code Description")} (<span style={{ fontSize: "80%" }}>{description?.length}/180 characters</span>)</label>
+                            <textarea id="description" placeholder={t("Description")} value={description} onChange={e => e.target.value?.length >= 180 ? "" : setDescription(e.target.value)} />
                         </div>
                         <button disabled={saving || !description || !title}>{t("Save")}</button>
                     </form>
@@ -150,11 +155,13 @@ const MobileComponent = ({ wallet, current }) => {
             }
             <div className={styles.switch__container}>
                 {t("QR Status")}
-                <div style={switchStyle} onClick={(e) => {
-                    updateQr(e, setStatus)
-                }}>
-                    <div style={thumbStyle}></div>
-                </div>
+
+                <Toggle
+                    bottom={'5px'}
+                    checked={status}
+                    disabled={saving}
+                    onChange={() => updateQr(null, setStatus)}
+                />
             </div>
             <SocialModal
                 isOpen={showShareModal}
