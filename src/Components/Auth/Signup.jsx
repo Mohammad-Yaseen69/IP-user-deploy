@@ -506,7 +506,7 @@ const Signup = ({ country, setIsLoginForm, setHideLogo }) => {
                                         </form>
                             }
 
-                            <div style={{ marginTop: window.innerWidth < 625 && "3rem" }} className={styles.auth_details}>
+                            <div style={{ marginTop: window.innerWidth < 625 && "30%" }} className={styles.auth_details}>
                                 <div className={styles.left}>
                                     <h5>{t("Two-factor authentication (2FA) is the best way to protect yourself online.")}</h5>
                                     <p>{t("We recommend you download and install the Google Authenticator app to ensure you receive your verification codes instantly, avoiding any SMS delays or issues.")}</p>
