@@ -68,8 +68,8 @@
 
 .heroEyebrow {
     color: #6c4bff;
-    font-size: 11px;
-    font-weight: 700;
+    font-size: 14px;
+    font-weight: 500;
     letter-spacing: 1px;
     background: #EBF0FE;
     padding: 4px 12px;
@@ -86,7 +86,7 @@
     line-height: 50px;
     letter-spacing: -2.88px;
     margin-bottom: 20px;
-    margin-top: 20px;
+    margin-top: 4%;
 }
 
 .heroHighlight {
@@ -404,7 +404,7 @@
 .heading {
     font-size: 44px;
     line-height: 1.05;
-    font-weight: 600;
+    font-weight: 700;
     letter-spacing: -0.02em;
     margin: 0;
 }
@@ -412,7 +412,7 @@
 .headerSub {
     color: rgba(0, 0, 0, 0.50);
     text-align: right;
-    font-size: 18px;
+    font-size: 16px;
     font-style: normal;
     font-weight: 400;
     line-height: 150%;
@@ -540,7 +540,7 @@
 }
 
 .cardTitle {
-    font-size: 21px;
+    font-size: 30px;
     font-weight: 800;
     line-height: 1.2;
     letter-spacing: -0.01em;
