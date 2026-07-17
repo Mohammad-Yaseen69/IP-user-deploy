@@ -192,6 +192,7 @@ export const publicRoutes = [
     { path: "/q/:wallet_id", component: <QRScan /> },
     // {path: "/tcbf", component: <TempCountriesBankFields /> },
     { path: "/pay/:user_name", component: <PaymentAddressPublic /> },
+    { path: "/iban-onboarding", component: <OnboardingIBAN /> },
     { path: "/pay/:user_name/:status", component: <PaymentAddressPublic /> },
     // {path: "/profile/:user_name", component: <UserProfilePublic /> },
     { path: "/partners/verification/:token", component: <PartnerVerificationPage /> },
