@@ -35,7 +35,7 @@ const qrCode = new QRCodeStyling({
     backgroundOptions: { color: "#ffffff" },
 });
 
-    const base_url = window.location.origin || 'https://my.insta-pay.ch';
+const base_url = window.location.origin || 'https://my.insta-pay.ch';
 
 
 const QrPoster = ({ wallet }) => {
@@ -43,7 +43,7 @@ const QrPoster = ({ wallet }) => {
     const [qrLink, setQrLink] = useState("")
     const ref = useRef(null)
     const { userDetails } = useContext(UserContext)
-
+    // console.log(wallet)
     useEffect(() => {
         qrCode.append(ref.current);
     }, []);

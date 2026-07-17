@@ -148,6 +148,31 @@
     position: relative;
 }
 
+.logo2_img {
+    position: absolute;
+    left: 50%;
+    top: 40%;
+    transform: translate(-50%, -50%);
+    width: 3rem;
+    padding: 0.6rem;
+    background: white;
+    border-radius: 10px;
+}
+
+@media (max-width: 700px) {
+    .qr_container {
+        height: 100px;
+
+        div {
+            margin-top: 40px;
+
+            img {
+                top: -59% !important;
+            }
+        }
+    }
+}
+
 .t {
     color: #FFF;
     font-family: Manrope;
