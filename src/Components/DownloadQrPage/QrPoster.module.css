@@ -184,3 +184,17 @@
     line-height: 210%;
     text-decoration-line: underline;
 }
+
+@media (max-width: 700px) {
+    .qr_container {
+        height: 100px;
+
+        div {
+            margin-top: 40px;
+
+            img {
+                top: -59% !important;
+            }
+        }
+    }
+}
