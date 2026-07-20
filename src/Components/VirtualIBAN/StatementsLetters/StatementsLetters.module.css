@@ -246,13 +246,32 @@
     background: #FFF;
 }
 
+.docBlock {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.divider {
+    height: 1px;
+    background: #EAECF0;
+    margin: 16px 0;
+}
+
 .iconCircleWrapper {
     display: flex;
     padding: 10px;
-    border-radius: 50%;
     border-radius: 11px;
-    background: blue;
+    background: #5626E6;
     box-shadow: 0 8px 18px -8px rgba(74, 50, 227, 0.45);
+}
+
+.iconCircleWrapperGreen {
+    display: flex;
+    padding: 10px;
+    border-radius: 11px;
+    background: #10B981;
+    box-shadow: 0 8px 18px -8px rgba(16, 185, 129, 0.45);
 }
 
 .actionContent {
@@ -294,6 +313,18 @@
     font-size: 13px;
     font-weight: 500;
     cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.previewBtn:hover:not(:disabled) {
+    background: #F9FAFB;
+    border-color: #B2DDFF;
+    color: #5626E6;
+}
+
+.previewBtn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
 }
 
 .downloadBtn {
@@ -302,12 +333,32 @@
     align-items: center;
     gap: 6px;
     border-radius: 6px;
-    border: 1px solid #D0D5DD;
-    background: #FFF;
-    color: #344054;
+    border: 1px solid #5626E6;
+    background: #5626E6;
+    color: #FFF;
     font-size: 13px;
     font-weight: 500;
     cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.downloadBtn:hover:not(:disabled) {
+    background: #45159C;
+    border-color: #45159C;
+}
+
+.downloadBtn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.spinIcon {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
 }
 
 .shareBtn {
@@ -316,12 +367,39 @@
     align-items: center;
     gap: 6px;
     border-radius: 6px;
-    background: #4F46E5;
-    border: 1px solid #4F46E5;
+    background: #FFF;
+    border: 1px solid #D0D5DD;
+    color: #344054;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.shareBtn:hover {
+    background: #F9FAFB;
+    border-color: #D0D5DD;
+    color: #101828;
+}
+
+.downloadStatementBtn {
+    display: flex;
+    padding: 8px 14px;
+    align-items: center;
+    gap: 6px;
+    border-radius: 6px;
+    border: 1px solid #10B981;
+    background: #10B981;
     color: #FFF;
     font-size: 13px;
     font-weight: 500;
     cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.downloadStatementBtn:hover {
+    background: #059669;
+    border-color: #059669;
 }
 
 .infoHelpAlertBox {

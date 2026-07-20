@@ -32,6 +32,7 @@ const sdk = new WidgetSDK({
     merchantId: import.meta.env.VITE_KEABANK_MERCHANT_ID,
 });
 
+const base_url = window.location.origin || 'https://my.insta-pay.ch';
 
 const CryptoFund = ({ setAction }) => {
     const { t } = useTranslation()
@@ -64,7 +65,8 @@ const CryptoFund = ({ setAction }) => {
             const enc = encryptData({
                 from: cryptoCurrency?.currency?.code,
                 to: "USDT",
-                amount: Number(String(amountArg || amount)?.replaceAll(",", ""))
+                amount: Number(String(amountArg || amount)?.replaceAll(",", "")),
+                isCryptoToFiat: true
             })
             const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/crypto/rates`, { data: enc }, {
                 headers: authHeader,
@@ -126,11 +128,12 @@ const CryptoFund = ({ setAction }) => {
             wallet_id: cryptoCurrency?.wallet_id,
             token: exchangeRate?.token,
             amount: amount,
+            returnUrl: `${base_url}/add-funds/crypto-success`
         }
 
         try {
             const response = await apiWrapper({
-                endpoint: `/api/crypto/crypto-topup`,
+                endpoint: `/api/crypto/topup-wallet`,
                 isEncrypted: true,
                 method: "POST",
                 payload
