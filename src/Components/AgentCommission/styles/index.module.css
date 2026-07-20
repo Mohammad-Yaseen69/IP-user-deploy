@@ -42,7 +42,6 @@
 .main {
     display: flex;
     flex-direction: column;
-    padding: 24px 32px;
     gap: 24px;
     max-width: 1400px;
 }
@@ -176,7 +175,6 @@
     font-size: 13px;
     font-weight: 600;
     color: #101828;
-    /* Values are dark black in Figma, not colored */
 }
 
 .funnelBarContainer {
@@ -191,11 +189,9 @@
     height: 100%;
     border-radius: 99px;
     transition: width 0.4s ease-in-out;
-    /* Optional: Adding diagonal stripe effect to match Figma strictly */
     background-image: repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.15) 0px, rgba(255, 255, 255, 0.15) 4px, transparent 4px, transparent 8px);
 }
 
-/* --- QUICK ACTIONS STYLES --- */
 .actionButtons {
     display: flex;
     flex-wrap: wrap;

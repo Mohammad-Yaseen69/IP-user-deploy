@@ -84,6 +84,7 @@ const InstaMedia = lazy(() => import("../Components/InstaMedia"))
 const StatementsLetters = lazy(() => import("../Components/VirtualIBAN/StatementsLetters/StatementsLetters.jsx"))
 const BeneficiariesVirtual = lazy(() => import("../Components/VirtualIBAN/Beneficiaries/BeneficiariesVirtual.jsx"))
 const AgentCommission = lazy(() => import("../Components/AgentCommission/index.jsx"))
+const Leads = lazy(() => import("../Components/AgentCommission/Leads/Leads.jsx"))
 
 
 const PermissionRoute = ({ permission, children }) => {
@@ -186,7 +187,8 @@ export const routes = [
     { path: "/onboarding-IBAN/priceAcitvation", component: <PermissionRoute permission="virtual-iban.view"><PriceActivation /></PermissionRoute> },
     { path: "/onboarding-IBAN/moneymove", component: <PermissionRoute permission="virtual-iban.view"><MoveMoney /></PermissionRoute> },
     { path: "/third-party-senders", component: <PermissionRoute permission="payments.send-as-third-party.view"><ThirdPartySenders /></PermissionRoute> },
-    { path: "/AgentCommission", component: <PermissionRoute permission="agent-commission.view"><AgentCommission /></PermissionRoute> },
+    { path: "/agent-commission", component: <PermissionRoute permission="agent-commission.view"><AgentCommission /></PermissionRoute> },
+    { path: "/leads", component: <PermissionRoute permission="leads.view"><Leads /></PermissionRoute> },
     { path: "*", component: <NotFound type='Page' /> }
 ]
 export const publicRoutes = [

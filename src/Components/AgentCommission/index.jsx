@@ -64,7 +64,6 @@ const AgentCommission = () => {
             </div>
 
             <div className={styles.main}>
-                {/* 8 Metric Cards */}
                 <div className={styles.metricsGrid}>
                     {metricsData.map((card) => (
                         <div key={card.id} className={styles.metricCard}>
