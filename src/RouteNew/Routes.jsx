@@ -17,6 +17,7 @@ const GetLocation = lazy(() => import("../Components/Chatbot/GetLocation"));
 const ShowLocation = lazy(() => import("../Components/Chatbot/ShowLocation"));
 const AddBeneficiary = lazy(() => import('../Components/AddBeneficiary'));
 const AddFunds = lazy(() => import('../Components/AddFunds'));
+const CryptoFundSuccess = lazy(() => import('../Components/AddFunds/CryptoFundSuccess'));
 const Analytics = lazy(() => import('../Components/Analytics'));
 const AuthNew = lazy(() => import('../Components/AuthNew'));
 const Beneficiaries = lazy(() => import('../Components/Beneficiaries'));
@@ -149,6 +150,7 @@ export const routes = [
     { path: "/add-funds", component: <AddFunds /> },
     { path: "/add-funds/card/:type", component: <AddFunds /> },
     { path: "/add-funds/card/:type/:code", component: <AddFunds /> },
+    { path: "/add-funds/crypto-success", component: <CryptoFundSuccess /> },
     { path: "/add-funds/success/:enc", component: <AddFunds /> },
     { path: "/add-funds/error/:enc", component: <AddFunds /> },
     { path: "/add-funds/aborted/:enc", component: <AddFunds /> },
