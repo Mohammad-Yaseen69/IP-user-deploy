@@ -249,7 +249,7 @@ const WithdrawBalanceModal = ({ isOpen, toggle, selectedIban, availableBalance }
             <div className={styles.left}>
                 <div style={
                     {
-                        width: width > 1000 ? "0%" : "100%",
+                        width: width > 1000 ? "100%" : "100%",
 
                     }
                 }>

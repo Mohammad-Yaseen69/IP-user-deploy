@@ -110,7 +110,6 @@ export const SOURCE_IBAN = {
     currency: "EUR",
 }
 
-// Transfer speed options
 export const TRANSFER_SPEEDS = [
     {
         id: "instant",
