@@ -70,6 +70,10 @@ const QuickActions = ({ selectedIban }) => {
         }
 
         switch (actionId) {
+            case 8:
+                navigate("/virtual-IBAN/statements-letters");
+                return;
+
             case 6:
                 navigate("/payments?payment_action=req_money");
                 return;
@@ -228,6 +232,7 @@ const QuickActions = ({ selectedIban }) => {
                 <StatementModal
                     isOpen={modals.statement}
                     toggle={() => closeModal("statement")}
+                    selectedIban={selectedIban}
                 />
             )}
             {/* <SepaTransfer

@@ -1,9 +1,10 @@
 import { useState, useEffect, useRef } from "react";
-import { ArrowUp, Filter, Search, ChevronDown } from "react-feather";
+import { ArrowUp, Filter, Search, ChevronDown, Download } from "react-feather";
 import styles from "../styles/RecentTransactions.module.css";
 import { useTranslation } from 'react-i18next';
 import Paginations from '../../../Common/Component/Paginations';
 import { Button, Menu, MenuItem, Divider, ListItemText } from '@mui/material';
+import StatementModal from "../StatementModal";
 import Empty from "./Empty";
 
 const statusColors = {
@@ -128,17 +129,17 @@ const DetailItem = ({ label, value }) => (
 const RecentTransactions = ({
   setActiveTab, transactions, page, setPage,
   limit, setLimit, totalPages,
-  setStatusFilter, setQ, setOrder,
+  setStatusFilter, setQ, setOrder, selectedIban
 }) => {
   const { t } = useTranslation();
   const [search, setSearch] = useState("");
   const [anchorFilter, setAnchorFilter] = useState(null);
   const [anchorSort, setAnchorSort] = useState(null);
+  const [showStatementModal, setShowStatementModal] = useState(false);
   const searchDebounce = useRef(null);
 
   const openFilter = Boolean(anchorFilter);
   const openSort = Boolean(anchorSort);
-  // console.log("transactions", transactions);
 
   useEffect(() => {
     if (!setQ) return;
@@ -149,7 +150,6 @@ const RecentTransactions = ({
     }, 400);
     return () => clearTimeout(searchDebounce.current);
   }, [search, setQ, setPage]);
-  console.log(transactions, "transactions")
 
   return (
     <>
@@ -174,6 +174,14 @@ const RecentTransactions = ({
           </div>
 
           <div className={styles.toolbarRight}>
+            <Button
+              className={styles.toolBtn}
+              onClick={() => setShowStatementModal(true)}
+              startIcon={<Download size={13} />}
+            >
+              <span>{t("Download Statement")}</span>
+            </Button>
+
             <div>
               <Button
                 className={styles.toolBtn}
@@ -258,6 +266,12 @@ const RecentTransactions = ({
           />
         )}
       </div>
+
+      <StatementModal
+        isOpen={showStatementModal}
+        toggle={() => setShowStatementModal(false)}
+        selectedIban={selectedIban}
+      />
     </>
   );
 };
