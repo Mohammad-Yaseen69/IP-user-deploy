@@ -258,6 +258,12 @@
     line-height: 150%;
 }
 
+.bottom_class {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: flex-start;
+}
 
 .input_error a {
     color: #F32D2D;
@@ -703,7 +709,7 @@
 
 @media screen and (max-width: 1600px) {
     .form {
-        padding: 2rem;
+        padding: 1rem;
         min-width: 700px;
     }
 
@@ -715,6 +721,8 @@
     .f_top img {
         object-fit: contain;
     }
+
+
 
     .form_details,
     .otp {
@@ -803,6 +811,11 @@
 
     .f_footer {
         display: none;
+    }
+
+    .bottom_class {
+        text-align: center !important;
+        align-items: center;
     }
 
     .form_details,
@@ -905,4 +918,6 @@
     .otp_methods {
         flex-direction: column;
     }
+
+
 }

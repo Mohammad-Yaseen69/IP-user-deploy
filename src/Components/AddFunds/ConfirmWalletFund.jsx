@@ -30,6 +30,7 @@ const sdk = new WidgetSDK({
 });
 
 const isBig = window.innerWidth > 1000
+const base_url = window.location.origin || 'https://my.insta-pay.ch';
 
 const ConfirmWalletFund = ({ setSubStep, wallet = {}, amount, payoutChannel, card_number, card_expiry, card_cvc, saveCard, type = "add_fund", paymentWithSavedCard = false, currentCard, merchant = "", payer = {}, setExternalLink = () => { }, paypalAmount, token, rate, reEnterCallback = () => { }, sendKybWalletOTP, kybFeeDets, partnerId, exchangeRate }) => {
     const navigate = useNavigate()
@@ -175,35 +176,31 @@ const ConfirmWalletFund = ({ setSubStep, wallet = {}, amount, payoutChannel, car
                     setLoading(false)
                 }
             } else if (payoutChannel?.value === "crypto") {
-                const payment_id = `keabank_instapay_topup_${Date.now()}`
+                const payment_id = `instapay_topup_${Date.now()}`
 
                 const payload = {
                     payment_id,
-                    wallet_id: wallet?.wallet_id,
+                    wallet_id: wallet?.wallet_id || wallet?._id,
                     token: exchangeRate?.token,
                     amount: amount,
+                    // returnUrl: "https://your-url-here.com/status"
+                    returnUrl: `${base_url}/add-funds/crypto-success`
                 }
 
                 try {
                     const response = await apiWrapper({
-                        endpoint: `/api/crypto/${isCrypto ? "crypto" : "wallet"}-topup`,
+                        endpoint: `/api/crypto/topup-wallet`,
                         isEncrypted: true,
                         method: "POST",
                         payload,
                         idempotencyKey: getKey()
-
                     })
 
                     console.log(response)
 
-                    const paymentConfig = {
-                        payment_id,
-                        amount: exchangeRate.total,
-                        currency: "USDT_TRC20",
-                        paymentPurpose: `${isCrypto ? "Crypto" : "Wallet"} Topup`
+                    if (response?.data?.checkout_url) {
+                        window.location.href = response?.data?.checkout_url
                     }
-
-                    sdk.init(paymentConfig);
                 } catch (error) {
                     const dec = decryptData(error?.response?.data?.data)
 
@@ -216,7 +213,7 @@ const ConfirmWalletFund = ({ setSubStep, wallet = {}, amount, payoutChannel, car
                     else if (error2) {
                         setError(t(error2))
                     } else {
-                        setError(dec?.message ?? "We cannot process your request at the moment, please try again later.")
+                        setError(dec?.message ?? "We cannot process your request at the moment, please try again later.")
                     }
                 } finally {
                     setLoading(false)

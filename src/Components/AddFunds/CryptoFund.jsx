@@ -121,13 +121,14 @@ const CryptoFund = ({ setAction }) => {
 
     const handleConfirm = async () => {
         setTransactionLoading(true)
-        const payment_id = `keabank_instapay_topup_${Date.now()}`
+        const payment_id = `instapay_topup_${Date.now()}`
 
         const payload = {
             payment_id,
             wallet_id: cryptoCurrency?.wallet_id,
             token: exchangeRate?.token,
             amount: amount,
+            // returnUrl: "https://your-url-here.com/status"
             returnUrl: `${base_url}/add-funds/crypto-success`
         }
 
@@ -142,7 +143,9 @@ const CryptoFund = ({ setAction }) => {
             console.log(response)
 
             // Save payment reference for details modal
-            setCryptoPaymentRef(payment_id)
+            // setCryptoPaymentRef(payment_id)
+
+            window.location.href = response?.data?.checkout_url
 
             // --- Keabank payment initialization (temporarily disabled) ---
             // const paymentConfig = {
@@ -158,7 +161,7 @@ const CryptoFund = ({ setAction }) => {
             // --- End keabank payment initialization ---
 
             // Show crypto details modal instead
-            setShowCryptoDetailsModal(true)
+            // setShowCryptoDetailsModal(true)
         } catch (error) {
             const dec = decryptData(error?.response?.data?.data)
 
