@@ -55,17 +55,26 @@ const Steptwo = ({ data, dataHandler }) => {
                         </div>
                     </div>
                     <div className={styles.inp}>
-                        <label>{t("First Name")}</label>
+                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                            <label>{t("First Name")}</label>
+                            <span style={{ fontSize: "12px", fontWeight: 600, color: "#8A8A8A" }}>{(data.first_name || "").length}/30</span>
+                        </div>
                         <input type="text" value={data.first_name} maxLength={30} onChange={e => dataHandler("first_name", sanitizeIndividualName(e.target.value))} placeholder={t("Enter Your First Name")} />
                     </div>
                     <div className={styles.inp}>
-                        <label>{t("Last Name")}</label>
+                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                            <label>{t("Last Name")}</label>
+                            <span style={{ fontSize: "12px", fontWeight: 600, color: "#8A8A8A" }}>{(data.last_name || "").length}/30</span>
+                        </div>
                         <input type="text" value={data.last_name} maxLength={30} onChange={e => dataHandler("last_name", sanitizeIndividualName(e.target.value))} placeholder={t("Enter Your Last Name")} />
                     </div>
                 </> :
                 <>
                     <div className={styles.inp}>
-                        <label>{t("Company Name")}:</label>
+                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                            <label>{t("Company Name")}:</label>
+                            <span style={{ fontSize: "12px", fontWeight: 600, color: "#8A8A8A" }}>{(data.company_name || "").length}/80</span>
+                        </div>
                         <input type="text" value={data.company_name} maxLength={80} onChange={e => dataHandler("company_name", sanitizeCompanyName(e.target.value))} placeholder={t("Enter Your Company Name")} />
                     </div>
                     <div className={styles.inp}>
