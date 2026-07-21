@@ -7,10 +7,12 @@ import TopRight from '../../topRight';
 import DynamicChannelModal from './Modals/DynamicChannelModal';
 import Form from '../Form';
 import { Box, Modal } from '@mui/material';
+import { useNavigate } from 'react-router';
 
 const BeneficiariesVirtual = () => {
     const { t } = useTranslation();
     const width = useWindowWidth();
+    const navigate = useNavigate()
     const [openFormModal, setOpenFormModal] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const handleCopy = (text) => {
@@ -37,7 +39,9 @@ const BeneficiariesVirtual = () => {
 
                 <div className={styles.navigationHeader}>
                     <div className={styles.navigationRow}>
-                        <button className={styles.backBtn}>
+                        <button className={styles.backBtn}
+                            onClick={() => navigate("/virtual-IBAN")}
+                        >
                             <ChevronLeft size={16} /> {t("Back")}
                         </button>
                         <span className={styles.breadcrumb}>

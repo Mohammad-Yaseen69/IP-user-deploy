@@ -19,11 +19,13 @@ import SepaTransfer from '../../SendMoney/SepaTransfer';
 import { useSyncVirtualIbanBalance, useVirtualIbans } from '../../../../hooks/useVirtualIban';
 import { asVirtualIbanArray } from '../../utils/virtualIban';
 import { UserContext } from '../../../../Context/UserContext';
+import { useNavigate } from 'react-router';
 
 const MoveMoney = () => {
     const { t } = useTranslation();
     const width = useWindowWidth();
     const [showSepaPage, setShowSepaPage] = useState(false);
+    const navigate = useNavigate();
     const {
         userDetails,
         selectedAccount,
@@ -95,7 +97,9 @@ const MoveMoney = () => {
                             <div className={styles.headerTitle}>
 
                                 <div className={styles.navigationRow}>
-                                    <button className={styles.backBtn}>
+                                    <button className={styles.backBtn}
+                                        onClick={() => navigate("/virtual-IBAN")}
+                                    >
                                         <ArrowLeft size={16} /> {t("Back")}
                                     </button>
                                     <span className={styles.breadcrumb}>

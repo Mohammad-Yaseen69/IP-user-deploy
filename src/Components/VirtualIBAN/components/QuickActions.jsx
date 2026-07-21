@@ -1,27 +1,25 @@
-import { useState } from "react";
-import { useTranslation } from "react-i18next";
-import styles from "../styles/QuickActions.module.css";
-import { actions } from "../data/Actions.jsx";
-import WithdrawBalanceModal from "../WithdrawBalanceModal";
-import AddFundsModal from "../AddFundsModal";
-import ConvertFundsModal from "../ConvertFundsModal";
-import UnsubscribeModal from "../UnsubscribeModal/index.jsx";
-import SepaTransfer from "../SendMoney/SepaTransfer";
-import StatementModal from "../StatementModal";
-import IBANDetails from "../IBAN/IBANDetails.jsx";
-import { X } from "react-feather";
-import { useNavigate } from "react-router";
 import { Tooltip } from "@mui/material";
+import { useState } from "react";
+import { X } from "react-feather";
+import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router";
 import { toast } from "react-toastify";
 import { usePermission } from "../../../hooks/GeneralUse/usePermission";
 import { useSyncVirtualIbanBalance, useUpdateVirtualIbanStatus } from "../../../hooks/useVirtualIban.jsx";
+import ConvertFundsModal from "../ConvertFundsModal";
+import { actions } from "../data/Actions.jsx";
+import IBANDetails from "../IBAN/IBANDetails.jsx";
+import StatementModal from "../StatementModal";
+import styles from "../styles/QuickActions.module.css";
+import UnsubscribeModal from "../UnsubscribeModal/index.jsx";
+import WithdrawBalanceModal from "../WithdrawBalanceModal";
 
 const MODAL_MAP = {
     1: "deposit",
     2: "convertFunds",
-    3: "withdrawal",
-    4: "statement",
-    8: "unsubscribe",
+    3: "convertFunds",
+    4: "unsubscribe",
+    8: "statement",
     9: "sepa",
 }
 
@@ -46,14 +44,19 @@ const QuickActions = ({ selectedIban }) => {
         sepa: false,
     })
     const { t } = useTranslation()
-    const openModal = (key) => setModals((prev) => ({ ...prev, [key]: true }))
+    const openModal = (key) => setModals((prev) =>
+        Object.keys(prev).reduce((next, modalKey) => ({
+            ...next,
+            [modalKey]: modalKey === key,
+        }), {})
+    )
     const closeModal = (key) => setModals((prev) => ({ ...prev, [key]: false }))
     const permissionByAction = {
         1: "virtual-iban.details.view",
         2: "virtual-iban.funds.convert",
         3: "virtual-iban.funds.withdraw",
         4: "virtual-iban.statement.download",
-        // 5: "payments.money.request",
+        5: "payments.money.request",
         6: "beneficiaries.view",
         8: "virtual-iban.status.update",
     }
@@ -67,17 +70,17 @@ const QuickActions = ({ selectedIban }) => {
         }
 
         switch (actionId) {
-            // case 5:
-            //     navigate("/payments?payment_action=req_money");
-            //     return;
-
             case 6:
-                navigate("/beneficiaries");
+                navigate("/payments?payment_action=req_money");
+                return;
+
+            case 5:
                 return;
 
             case 7:
+                navigate("/virtual-IBAN/beneficiaries-virtual");
                 return;
-            case 9:
+            case 2:
                 navigate("/onboarding-IBAN/moneymove");
                 return;
             default: {
@@ -88,10 +91,7 @@ const QuickActions = ({ selectedIban }) => {
         }
     };
 
-    const handleUnsubscribeWithdraw = () => {
-        closeModal("unsubscribe")
-        openModal("withdrawal")
-    }
+    const handleUnsubscribeWithdraw = () => openModal("withdrawal")
 
     const handleToggleIbanStatus = async ({ action }) => {
         if (!can("virtual-iban.status.update")) return false
@@ -118,9 +118,9 @@ const QuickActions = ({ selectedIban }) => {
                 return !permission || can(permission)
             }).map((action) => {
                 const disabledByBlockedIban = isBlocked && BLOCKED_DISABLED_ACTIONS.has(action.id)
-                const actionLabel = action.id === 8 && isBlocked ? "Reactivate" : action.label
-                const actionSub = action.id === 8 && isBlocked ? "Resume virtual account" : action.sub
-                const actionColor = action.id === 8 && isBlocked ? "#5926F0" : action.color
+                const actionLabel = action.id === 4 && isBlocked ? "Reactivate" : action.label
+                const actionSub = action.id === 4 && isBlocked ? "Resume virtual account" : action.sub
+                const actionColor = action.id === 4 && isBlocked ? "#5926F0" : action.color
                 const card = (
                     <button
                         key={action.id}
@@ -158,7 +158,7 @@ const QuickActions = ({ selectedIban }) => {
                     )
                 }
 
-                if (action.id === 7) {
+                if (action.id === 5) {
                     return (
                         <Tooltip
                             key={action.id}
