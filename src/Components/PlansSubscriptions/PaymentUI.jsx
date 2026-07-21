@@ -84,11 +84,13 @@ const PaymentUI = ({ data, user_name, state, dataHandler, url }) => {
                 <PayWithCrypto
                     data={{
                         ...state,
-                        currentWallet: data.receivingWallet,
-                        amount: data.amount || data.price
+                        currentWallet: data.receivingWallet || data?.plan?.receivingWallet,
+                        amount: data.amount || data.price || data?.plan?.price
                     }}
                     dataHandler={dataHandler}
-                    type='subscription'
+                    type={data.subscriptionId ? 'subscription' : 'plan'}
+                    subscriptionId={data.subscriptionId}
+                    planId={data?.plan?.planId || data?.planId}
                     isOpen={state.showCryptoModal}
                     toggle={() => dataHandler("showCryptoModal", false)}
                     invoiceId={data.invoiceId}
