@@ -59,6 +59,7 @@ const initialState = {
     phone: "",
     reason: "",
     email: "",
+    dob: "",
   },
 };
 

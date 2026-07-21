@@ -17,6 +17,8 @@ import { verifyPhoneNumber } from '../../../utils/Functions/phoneVerification'
 import ShippingDetails from '../../ReceiptInvoices/InvoicePaymentQr/ShippingDetails'
 import { WidgetSDK } from "@keabank/websdk";
 import CryptoDetailsModal from '../CryptoDetailsModal'
+import DateMomentUtils from '@date-io/moment'
+import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers'
 
 
 const sdk = new WidgetSDK({
@@ -24,7 +26,9 @@ const sdk = new WidgetSDK({
     merchantId: import.meta.env.VITE_KEABANK_MERCHANT_ID,
 });
 
-const PayWithCrypto = ({ data = {}, dataHandler, type = "payment_address", invoiceId, isOpen, toggle, isShipping }) => {
+const base_url = window.location.origin || 'https://my.insta-pay.ch';
+
+const PayWithCrypto = ({ data = {}, dataHandler, type = "payment_address", invoiceId, planId, subscriptionId, isOpen, toggle, isShipping }) => {
     const { t } = useTranslation()
     const [error, setError] = useState()
     const [loading, setLoading] = useState(false)
@@ -34,9 +38,18 @@ const PayWithCrypto = ({ data = {}, dataHandler, type = "payment_address", invoi
     const [cryptoPaymentRef, setCryptoPaymentRef] = useState(null)
 
     const { data: feeDetails } = useQuery({
-        queryKey: ['CryptoFee', data.amount, data.currentWallet?.wallet_id],
-        queryFn: () => apiWrapper({ endpoint: `/api/guest-pay/crypto-fee/${data?.currentWallet?.wallet_id}/${Number(String(data.amount)?.replaceAll(",", ""))}?payment_type=${type}&invoice_id=${invoiceId}` }).then(res => res),
+        queryKey: ['CryptoFee', data.amount, data.currentWallet?.wallet_id, isOpen],
+        queryFn: () => {
+            let url = `/api/guest-pay/crypto-fee/${data?.currentWallet?.wallet_id}/${Number(String(data.amount)?.replaceAll(",", ""))}?payment_type=${type}`
+            if (invoiceId) url += `&invoice_id=${invoiceId}`
+            if (planId) url += `&plan_id=${planId}`
+            if (subscriptionId) url += `&subscription_id=${subscriptionId}`
+            return apiWrapper({ endpoint: url }).then(res => res)
+        },
         retry: 2,
+        enabled: isOpen,
+        staleTime: 0,
+        gcTime: 0,
     })
 
     const mutation = useMutation({
@@ -75,12 +88,41 @@ const PayWithCrypto = ({ data = {}, dataHandler, type = "payment_address", invoi
             phone: "",
             reason: "",
             email: "",
+            dob: "",
         })
     }
+
+    const handleDateChange = (date) => {
+        if (date) {
+            const selected = new Date(date);
+            const minDate = new Date();
+            minDate.setFullYear(minDate.getFullYear() - 15);
+            if (selected <= minDate) {
+                dataHandler("cryptoDetails", {
+                    ...data.cryptoDetails,
+                    dob: date.format ? date.format("YYYY-MM-DD") : date.toISOString().split("T")[0]
+                });
+            } else {
+                toast.error(t("Please select a date at least 15 years ago or earlier."));
+            }
+        } else {
+            dataHandler("cryptoDetails", {
+                ...data.cryptoDetails,
+                dob: ""
+            });
+        }
+    };
 
     const cryptoTransactionHandler = async () => {
         const paymentId = `instapay_${Date.now()}`
         console.log(data.cryptoDetails)
+
+        let formattedDob = data.cryptoDetails?.dob;
+        if (formattedDob && formattedDob.includes("-")) {
+            const [yyyy, mm, dd] = formattedDob.split("-");
+            formattedDob = `${dd}-${mm}-${yyyy}`;
+        }
+
         const payload = {
             token: feeDetails?.token,
             shipping_details: data?.shippingDetails,
@@ -89,48 +131,32 @@ const PayWithCrypto = ({ data = {}, dataHandler, type = "payment_address", invoi
             email: data?.cryptoDetails.email,
             phone: data.cryptoDetails.phone,
             name: data?.cryptoDetails?.name,
-            invoice_id: invoiceId,
+            dob: formattedDob,
             payment_type: type,
             reason: data?.cryptoDetails?.reason,
-            iso_code: country?.alpha3
+            iso_code: country?.alpha3,
+            returnUrl: "https://your-url-here.com/status"
+            // returnUrl: `${base_url}/add-funds/crypto-success`
         }
+
+        if (invoiceId) payload.invoice_id = invoiceId;
+        if (planId) payload.plan_id = planId;
+        if (subscriptionId) payload.subscription_id = subscriptionId;
 
         const createdTransaction = await mutation.mutateAsync(payload)
 
         // Save payment reference for the details modal
-        setCryptoPaymentRef(createdTransaction.payment_id || data?.cryptoDetails?.paymentRef || '')
+        setCryptoPaymentRef(createdTransaction?.payment_id || data?.cryptoDetails?.paymentRef || '')
 
-        // --- Keabank payment initialization (temporarily disabled) ---
-        // const paymentConfig = {
-        //     amount: feeDetails?.totalCryptoAmount,
-        //     orderId: createdTransaction.payment_id,
-        //     paymentPurpose: reasons[data.cryptoDetails?.reason],
-        //     currency: 'USDT_TRC20',
-        // };
+        const checkoutUrl = createdTransaction?.checkout_url || createdTransaction?.data?.checkout_url
+        if (checkoutUrl) {
+            window.location.href = checkoutUrl
+            return
+        }
 
-        // const paymentStatus = sdk.init(paymentConfig);
-        // handleClose()
-
-        // paymentStatus.then(async (status) => {
-        //     console.log(status)
-
-        //     if (status === 'paid' || status === "success") {
-        //         await flagTransaction.mutateAsync({
-        //             transaction_id: createdTransaction.transaction_id,
-        //             flag: false,
-        //         })
-        //     } else {
-        //         await flagTransaction.mutateAsync({
-        //             transaction_id: createdTransaction.transaction_id,
-        //             flag: true,
-        //         })
-        //     }
-        // })
-        // --- End keabank payment initialization ---
-
-        // Show crypto details modal instead and close the form modal
+        // Show crypto details modal instead and close the form modal if no checkoutUrl
         setShowFormModal(false)
-        setShowCryptoDetailsModal(true)
+        // setShowCryptoDetailsModal(true)
     }
 
     const clickHandler = async () => {
@@ -213,6 +239,35 @@ const PayWithCrypto = ({ data = {}, dataHandler, type = "payment_address", invoi
                                     />
                                 </div>
                                 <div>
+                                    <label htmlFor="dob">{t("Date of Birth")}{"*:"}</label>
+                                    <MuiPickersUtilsProvider utils={DateMomentUtils}>
+                                        <DatePicker
+                                            required={true}
+                                            format="YYYY-MM-DD"
+                                            className="form-control"
+                                            style={{ width: '100%' }}
+                                            value={data?.cryptoDetails?.dob || null}
+                                            onChange={handleDateChange}
+                                            placeholder="YYYY-MM-DD"
+                                            maxDate={new Date(new Date().setFullYear(new Date().getFullYear() - 15))}
+                                            disableFuture
+                                            InputProps={{
+                                                disableUnderline: true,
+                                                style: {
+                                                    background: '#f7f7f7',
+                                                    border: '1px solid rgb(229, 231, 235)',
+                                                    borderRadius: '4px',
+                                                    boxShadow: 'none',
+                                                    padding: '0 10px',
+                                                    minHeight: '40px',
+                                                    fontFamily: 'inherit',
+                                                    fontSize: '1rem',
+                                                }
+                                            }}
+                                        />
+                                    </MuiPickersUtilsProvider>
+                                </div>
+                                <div>
                                     <label htmlFor="email">{t("Email (Optional)")}</label>
                                     <TextInput
                                         styles={{ background: "#f7f7f7" }}
@@ -281,6 +336,7 @@ const PayWithCrypto = ({ data = {}, dataHandler, type = "payment_address", invoi
                                         !data.cryptoDetails?.reason ||
                                         !data.cryptoDetails?.phone ||
                                         !data.cryptoDetails?.name ||
+                                        !data.cryptoDetails?.dob ||
                                         (isShipping ? Object.values(data.shippingDetails || {}).some(val => !val) : false)
                                     }
                                 >
