@@ -1,13 +1,30 @@
-import React from 'react';
+import React, { useState } from 'react';
 import useWindowWidth from '../../../utils/useWindowWidth';
 import { useTranslation } from 'react-i18next';
 import styles from "../styles/leads.module.css";
 import TopRight from '../../topRight';
 import { Search } from 'react-feather';
+import LeadModal from './LeadModal';
 
 const Leads = () => {
     const { t } = useTranslation();
     const width = useWindowWidth();
+
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [initialEntityType, setInitialEntityType] = useState('corporate');
+
+    const handleOpenModal = (type = 'corporate') => {
+        setInitialEntityType(type);
+        setIsModalOpen(true);
+    };
+
+    const handleCloseModal = () => {
+        setIsModalOpen(false);
+    };
+
+    const handleLeadSubmit = (leadData) => {
+        console.log('Submitted lead data:', leadData);
+    };
 
     const buttons = [
         { label: "All" },
@@ -128,7 +145,6 @@ const Leads = () => {
 
                 <div className={styles.controlsRow}>
                     <div className={styles.searchWrapper}>
-
                         <Search className={styles.searchIcon} size={16} />
                         <input type="text" placeholder={t("Search...")} className={styles.searchInput} />
                     </div>
@@ -151,7 +167,7 @@ const Leads = () => {
                             {t("Sort By")}
                         </button>
 
-                        <button className={styles.primaryBtn}>
+                        <button className={styles.primaryBtn} onClick={() => handleOpenModal('corporate')}>
                             <span>+ {t("Add new lead")}</span>
                         </button>
                     </div>
@@ -159,7 +175,6 @@ const Leads = () => {
 
                 <div className={styles.tableContainer}>
                     <div className={styles.tableWrapper}>
-
                         <div className={styles.tableHeaderRow}>
                             <div className={styles.thCell}>{t("Client")}</div>
                             <div className={styles.thCell}>{t("Type")}</div>
@@ -225,8 +240,15 @@ const Leads = () => {
                     </div>
                 </div>
             </div>
+
+            <LeadModal
+                open={isModalOpen}
+                onClose={handleCloseModal}
+                onSubmit={handleLeadSubmit}
+                initialEntityType={initialEntityType}
+            />
         </div>
     );
 };
 
-export default Leads;
+export default Leads;

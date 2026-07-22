@@ -1,0 +1,222 @@
+.container {
+    padding: 24px;
+    min-height: 100vh;
+    font-family: 'Inter', sans-serif;
+    background-color: #F8F9FC;
+}
+
+.top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.headerTitle h1 {
+    color: #5626e6;
+    font-size: 40px;
+    font-weight: 700;
+    margin: 0;
+}
+
+.headerTitle p {
+    color: #868686;
+    font-size: 14px;
+    font-weight: 400;
+    margin: 0;
+}
+
+.main {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    max-width: 1400px;
+    margin-top: 20px;
+}
+
+.statsGrid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+}
+
+.statCard {
+    background: #FFFFFF;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    border-radius: 14px;
+    border-top: 2px solid #5926F0;
+    box-shadow: 0 2px 15px 0 rgba(12, 10, 32, 0.06);
+}
+
+.statHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.statTitle {
+    font-size: 13px;
+    font-weight: 500;
+    color: #475467;
+}
+
+.statValue {
+    font-size: 28px;
+    font-weight: 600;
+    color: #101828;
+}
+
+.statSubtext {
+    font-size: 13px;
+    color: #667085;
+}
+
+.controlsRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.searchWrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 50%;
+}
+
+.searchIcon {
+    position: absolute;
+    left: 14px;
+    color: #667085;
+    pointer-events: none;
+}
+
+.searchInput {
+    width: 100%;
+    height: 38px;
+    padding: 10px 14px 10px 40px;
+    border-radius: 8px;
+    border: 1px solid #E7E9E9;
+    background: #FFFFFF;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+}
+
+.actionGroup {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.primaryBtn {
+    display: flex;
+    height: 36px;
+    padding: 8px 16px;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    border-radius: 6px;
+    border: none;
+    color: #FFFFFF;
+    font-size: 14px;
+    font-weight: 500;
+    background: #4A32E3;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+}
+
+.primaryBtn:hover {
+    background: #3B25C4;
+}
+
+.tableContainer {
+    background: #FFFFFF;
+    border-radius: 12px;
+    border: 1px solid #EAECF0;
+    overflow: hidden;
+}
+
+.tableHeaderRow,
+.tableDataRow {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr;
+    align-items: center;
+    padding: 12px 24px;
+}
+
+.tableHeaderRow {
+    background: #EFF1F6;
+    border-bottom: 1px solid #EAECF0;
+    font-size: 13px;
+    font-weight: 600;
+    color: #6E7687;
+}
+
+.tableDataRow {
+    border-bottom: 1px solid #EAECF0;
+    font-size: 14px;
+    color: #475467;
+}
+
+.subAgentCell {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 600;
+    color: #FFFFFF;
+}
+
+.avatarPurple { background: #7F56D9; }
+.avatarBlue { background: #0086C9; }
+.avatarPink { background: #E31B54; }
+
+.subAgentName {
+    font-weight: 600;
+    color: #101828;
+}
+
+.badgeActive {
+    display: inline-flex;
+    padding: 4px 10px;
+    border-radius: 100px;
+    font-size: 12px;
+    font-weight: 600;
+    background: #ECFDF5;
+    color: #027A48;
+}
+
+.badgePending {
+    display: inline-flex;
+    padding: 4px 10px;
+    border-radius: 100px;
+    font-size: 12px;
+    font-weight: 600;
+    background: #FEF3C7;
+    color: #D97706;
+}
+
+.actionBtn {
+    background: transparent;
+    border: none;
+    color: #5926F0;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 13px;
+}
+
+.actionBtn:hover {
+    text-decoration: underline;
+}

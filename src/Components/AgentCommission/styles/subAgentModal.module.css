@@ -1,0 +1,199 @@
+.modalPaper {
+    width: 460px;
+    max-width: 95vw;
+    border-radius: 16px !important;
+    padding: 24px !important;
+    background-color: #FFFFFF !important;
+    box-shadow: 0px 20px 25px -5px rgba(0, 0, 0, 0.1), 0px 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
+    font-family: 'Inter', sans-serif !important;
+    overflow-y: auto !important;
+}
+
+.backdrop {
+    background-color: rgba(0, 0, 0, 0.5) !important;
+    backdrop-filter: blur(2px) !important;
+}
+
+.modalContent {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 0 !important;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #1B1F2A;
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+}
+
+.closeBtn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: #6B7280;
+    padding: 4px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.closeBtn:hover {
+    background-color: #F3F4F6;
+}
+
+.entityToggleContainer {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    background-color: #F8F9FC;
+    padding: 4px;
+    border-radius: 10px;
+    border: 1px solid #EBE8F5;
+}
+
+.entityTab {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 10px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    background-color: transparent;
+    border: 1px solid transparent;
+    transition: all 0.2s ease;
+}
+
+.entityTabActive {
+    background-color: #FFFFFF;
+    border: 1px solid #5926F0;
+    box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.tabTitle {
+    font-size: 14px;
+    font-weight: 600;
+    color: #667085;
+    font-family: 'Inter', sans-serif;
+}
+
+.tabTitleActive {
+    color: #101828;
+}
+
+.tabSubtitle {
+    font-size: 12px;
+    font-weight: 500;
+    color: #6E7687;
+    font-family: 'Inter', sans-serif;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.fieldGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.fieldLabel {
+    font-size: 14px;
+    font-weight: 500;
+    color: #6E7687;
+    font-family: 'Inter', sans-serif;
+}
+
+.inputControl {
+    width: 100%;
+}
+
+.inputControl :global(.MuiOutlinedInput-root) {
+    border-radius: 8px;
+    background-color: #FFFFFF;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+}
+
+.inputControl :global(.MuiOutlinedInput-notchedOutline) {
+    border-color: #E7E9E9 !important;
+}
+
+.inputControl:hover :global(.MuiOutlinedInput-notchedOutline) {
+    border-color: #5926F0 !important;
+}
+
+.inputControl :global(.Mui-focused .MuiOutlinedInput-notchedOutline) {
+    border-color: #5926F0 !important;
+}
+
+.hintRow {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.hintIcon {
+    color: #9AA3B2;
+}
+
+.hintText {
+    font-size: 13px;
+    font-weight: 500;
+    color: #9AA3B2;
+    font-family: 'Inter', sans-serif;
+}
+
+.warningNoticeBox {
+    background-color: #FEF3C7;
+    border-radius: 10px;
+    padding: 12px 16px;
+    border: 1px solid #FCD34D;
+}
+
+.warningNoticeText {
+    font-size: 12px;
+    font-weight: 600;
+    color: #D97706;
+    font-family: 'Inter', sans-serif;
+    line-height: 1.5;
+    margin: 0;
+}
+
+.submitBtn {
+    height: 48px;
+    width: 100%;
+    background-color: #4A32E3;
+    border-radius: 8px;
+    border: none;
+    color: #FFFFFF;
+    font-size: 16px;
+    font-weight: 500;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: background-color 0.2s ease;
+}
+
+.submitBtn:hover {
+    background-color: #3B25C4;
+}
+
+.placeholderText {
+    color: #9E9DA6;
+}
