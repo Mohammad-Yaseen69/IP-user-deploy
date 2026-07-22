@@ -50,7 +50,7 @@ const Clients = () => {
             <div className={styles.top}>
                 <div className={styles.headerTitle}>
                     <h1>{t("Clients")}</h1>
-                    <p>{t("Manage activated clients and view their performance.")}</p>
+                    <p>{t("Your activated clients and the revenue they generate.")}</p>
                 </div>
                 <div className={styles.topright}>
                     {width > 1000 && <TopRight />}
@@ -61,7 +61,28 @@ const Clients = () => {
                 <div className={styles.controlsRow}>
                     <div className={styles.searchWrapper}>
                         <Search className={styles.searchIcon} size={16} />
-                        <input type="text" placeholder={t("Search clients...")} className={styles.searchInput} />
+                        <input type="text" placeholder={t("Search...")} className={styles.searchInput} />
+                    </div>
+
+                    <div className={styles.actionGroup}>
+                        <button className={styles.secondaryBtn}>
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#344054" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+                            </svg>
+                            {t("Filter")}
+                        </button>
+
+                        <button className={styles.secondaryBtn}>
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#344054" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="M11 5L6 10L1 5"></path>
+                                <path d="M6 19V6"></path>
+                                <path d="M13 19L18 14L23 19"></path>
+                                <path d="M18 5V18"></path>
+                            </svg>
+                            {t("Sort By")}
+                        </button>
+
+
                     </div>
                 </div>
 
