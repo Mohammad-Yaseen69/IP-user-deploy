@@ -32,6 +32,7 @@ const sdk = new WidgetSDK({
     merchantId: import.meta.env.VITE_KEABANK_MERCHANT_ID,
 });
 
+const base_url = window.location.origin || 'https://my.insta-pay.ch';
 
 const CryptoFund = ({ setAction }) => {
     const { t } = useTranslation()
@@ -64,7 +65,8 @@ const CryptoFund = ({ setAction }) => {
             const enc = encryptData({
                 from: cryptoCurrency?.currency?.code,
                 to: "USDT",
-                amount: Number(String(amountArg || amount)?.replaceAll(",", ""))
+                amount: Number(String(amountArg || amount)?.replaceAll(",", "")),
+                isCryptoToFiat: true
             })
             const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/crypto/rates`, { data: enc }, {
                 headers: authHeader,
@@ -119,18 +121,20 @@ const CryptoFund = ({ setAction }) => {
 
     const handleConfirm = async () => {
         setTransactionLoading(true)
-        const payment_id = `keabank_instapay_topup_${Date.now()}`
+        const payment_id = `instapay_topup_${Date.now()}`
 
         const payload = {
             payment_id,
             wallet_id: cryptoCurrency?.wallet_id,
             token: exchangeRate?.token,
             amount: amount,
+            // returnUrl: "https://your-url-here.com/status"
+            returnUrl: `${base_url}/add-funds/crypto-success`
         }
 
         try {
             const response = await apiWrapper({
-                endpoint: `/api/crypto/crypto-topup`,
+                endpoint: `/api/crypto/topup-wallet`,
                 isEncrypted: true,
                 method: "POST",
                 payload
@@ -139,7 +143,9 @@ const CryptoFund = ({ setAction }) => {
             console.log(response)
 
             // Save payment reference for details modal
-            setCryptoPaymentRef(payment_id)
+            // setCryptoPaymentRef(payment_id)
+
+            window.location.href = response?.data?.checkout_url
 
             // --- Keabank payment initialization (temporarily disabled) ---
             // const paymentConfig = {
@@ -155,7 +161,7 @@ const CryptoFund = ({ setAction }) => {
             // --- End keabank payment initialization ---
 
             // Show crypto details modal instead
-            setShowCryptoDetailsModal(true)
+            // setShowCryptoDetailsModal(true)
         } catch (error) {
             const dec = decryptData(error?.response?.data?.data)
 

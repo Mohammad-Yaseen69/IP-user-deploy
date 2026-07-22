@@ -191,8 +191,8 @@ const DownloadStatement = ({ showModal, setShowModal, wallet, isTransection }) =
         !isTransection ? doc.text(`Wallet ID: INSTA - ${wallet?.wallet_id}`, 14, 32) : null;
 
         doc.text(`Name: ${userDetails?.user?.first_name ?? userDetails?.company_name} ${userDetails?.user?.last_name ?? ""} `, 14, 38);
-        doc.text(`Address: ${userDetails?.address ?? "N/A"} `, 14, 44);
-        doc.text(`Statement Duration: ${apiDates?.from} to ${apiDates?.to} `, 14, 50);
+        // doc.text(`Address: ${userDetails?.address ?? "N/A"} `, 14, 44);
+        doc.text(`Statement Duration: ${apiDates?.from} to ${apiDates?.to} `, 14, 44);
 
         if (!isTransection && doc.autoTable) {
             doc.autoTable({

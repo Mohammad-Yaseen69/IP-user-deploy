@@ -459,6 +459,7 @@ const WalletFundsFlow = ({ setAction }) => {
             from: data?.wallet?.currency?.code,
             to: "USDT",
             amount: Number(String(data?.amount)?.replaceAll(",", "")),
+            isCryptoToFiat: false,
           });
           const res = await axios.post(
             `${import.meta.env.VITE_IP_DEV_API}/api/crypto/rates`,
@@ -508,7 +509,6 @@ const WalletFundsFlow = ({ setAction }) => {
             wallet_id: data?.wallet?.wallet_id,
             amount: Number(String(data?.amount)?.replaceAll(",", "")),
             accountId: userDetails?._id,
-            isCryptoToFiat: true
           });
           const res = await axios.post(
             `${import.meta.env.VITE_IP_DEV_API}/api/collection/rate`,

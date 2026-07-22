@@ -77,7 +77,6 @@ const PlansModal = ({ isOpen, toggle, plansData, dataHandler, isLoading, user, u
             action: () => {
                 setShowCryptoModal(true)
             },
-            disabled: true
         },
         {
             label: "Pay As Guest",
@@ -279,9 +278,14 @@ const PlansModal = ({ isOpen, toggle, plansData, dataHandler, isLoading, user, u
 
 
             <PayWithCrypto
-                data={data}
+                data={{
+                    ...data,
+                    currentWallet: selectedPlan?.receivingWallet,
+                    amount: selectedPlan?.price
+                }}
                 dataHandler={dataHandler}
                 type='plan'
+                planId={selectedPlan?.planId}
                 isOpen={showCryptoModal}
                 toggle={() => setShowCryptoModal(false)}
             />
