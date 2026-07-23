@@ -1,5 +1,5 @@
 import { Tooltip } from "@mui/material"
-import { ArrowRight, ArrowUpRight, Copy } from "react-feather"
+import { ArrowRight, Copy } from "react-feather"
 import { useTranslation } from "react-i18next"
 import { usePermission } from "../../../hooks/GeneralUse/usePermission"
 import { useSyncVirtualIbanBalance } from "../../../hooks/useVirtualIban"
@@ -83,7 +83,7 @@ const BalanceHeader = ({ iban, isLoading, setActiveTab, onShowDetails }) => {
                       className={`${styles.iconBtn} ${isBlocked ? styles.disabledBtn : ""}`}
                     >
                       <span>{t("Virtual bank details")}</span>
-                      <ArrowUpRight size={16} />
+                      <ArrowRight size={16} />
                     </button>
                   </span>
                 </Tooltip>

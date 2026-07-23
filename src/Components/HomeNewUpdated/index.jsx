@@ -8,7 +8,6 @@ import axios from "axios";
 import { UserContext } from "../../Context/UserContext";
 import { service_name_formatter } from "../TransactionsNewApi/TransactionItem";
 
-//  Lazy-loaded components
 const BalanceComponent = lazy(() => import("./BalanceCard"));
 const EarnMoneyBanner = lazy(() => import("./EarnMoneyBanner"));
 const TransDetails = lazy(() => import("./TransDetails"));
@@ -27,7 +26,6 @@ const TopBar = lazy(() => import("../../Layout/TopBar"));
 const BusinessModal = lazy(() => import("../BusinessModal"));
 const OtherBalance = lazy(() => import("./OtherBalance"));
 
-//  Static assets (normal imports)
 import btc from "../PaymentsNewer/files/btc.png";
 import eth from "../PaymentsNewer/files/eth.webp";
 import usdt from "../PaymentsNewer/files/usdt.webp";
@@ -114,6 +112,20 @@ const HomeNewUpdated = () => {
         getCryptoRates()
     }, [])
 
+    const getGreeting = () => {
+        const hour = new Date().getHours();
+
+        if (hour >= 5 && hour < 12) {
+            return "Good morning";
+        }
+
+        if (hour >= 12 && hour < 17) {
+            return "Good afternoon";
+        }
+
+        return "Good evening";
+    };
+
     const { userDetails, profileCompletedPercentage, userWallets, croppedImages, isAgentLogin, agentDetails } = useContext(UserContext)
     const [showCompletionModal, setShowCompletionModal] = useState(false)
     const [selectedWallet, setSelectedWallet] = useState(null)
@@ -136,8 +148,7 @@ const HomeNewUpdated = () => {
                             <div className={styles.card}>
                                 <div className={styles.top}>
                                     <div className={styles.greet}>
-                                        <h5>{t("Good Evening")}</h5>
-                                        <div style={{
+                                        <h5>{t(getGreeting())}</h5>                                        <div style={{
                                             display: "flex", alignItems: "center", gap: window.innerWidth > 1650 ? "1rem" : ".6rem"
                                         }}>
                                             <div style={{ padding: "1px", border: "3px solid #72C123", borderRadius: "50px" }}>

@@ -27,7 +27,7 @@
     display: flex;
     width: 100%;
     height: 64px;
-    padding: var(--sm, 8px) var(--md, 16px);
+    padding: var(--sm, 8px) var(--md, 12px);
     align-items: center;
     gap: var(--sm, 8px);
     grid-row: span 1;
@@ -72,21 +72,24 @@
 
 .label {
     color: var(--text-primary, #1B1F2A);
-    font-size: 12px;
+    font-size: 14px;
     font-style: normal;
     font-weight: 600;
     line-height: 150%;
     letter-spacing: -0.42px;
+    text-align: start;
 }
 
 .sub {
     color: var(--text-secondary, #6E7687);
     font-family: Inter;
-    font-size: 9px;
+    font-size: 10px;
     font-style: normal;
     font-weight: 500;
     line-height: 150%;
     letter-spacing: -0.33px;
+    text-align: start;
+
 }
 
 .modalOverlay {
