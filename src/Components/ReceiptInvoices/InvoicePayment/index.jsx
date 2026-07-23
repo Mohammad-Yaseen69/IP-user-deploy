@@ -25,6 +25,7 @@ const initialState = {
     phone: "",
     reason: "",
     email: "",
+    dob: "",
   },
   shippingDetails: {
     houseNo: "",
