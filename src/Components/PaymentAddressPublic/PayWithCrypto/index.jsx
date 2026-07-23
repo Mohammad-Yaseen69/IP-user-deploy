@@ -135,8 +135,8 @@ const PayWithCrypto = ({ data = {}, dataHandler, type = "payment_address", invoi
             payment_type: type,
             reason: data?.cryptoDetails?.reason,
             iso_code: country?.alpha3,
-            returnUrl: "https://your-url-here.com/status"
-            // returnUrl: `${base_url}/add-funds/crypto-success`
+            // returnUrl: "https://your-url-here.com/status"
+            returnUrl: `${base_url}/add-funds/crypto-success`
         }
 
         if (invoiceId) payload.invoice_id = invoiceId;
