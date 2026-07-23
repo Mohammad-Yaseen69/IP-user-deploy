@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react"
+import { useContext, useEffect, useRef, useState } from "react"
 import crypto_selected from "./files/crypto_selected.png"
 import { Card, CardBody } from "reactstrap";
 import c_vid from "../PaymentsNewer/files/confirm.mp4"
@@ -59,7 +59,7 @@ const CryptoFund = ({ setAction }) => {
 
     console.log(exchangeRateError, amountLimitError)
 
-    const getCryptoFeeDetails = async (amountArg) => {
+    const getCryptoFeeDetails = async (amountArg, signal) => {
 
         try {
             const enc = encryptData({
@@ -70,6 +70,7 @@ const CryptoFund = ({ setAction }) => {
             })
             const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/crypto/rates`, { data: enc }, {
                 headers: authHeader,
+                signal,
             })
             const dec = decryptData(res.data.data)
             console.log(dec)
@@ -84,16 +85,24 @@ const CryptoFund = ({ setAction }) => {
             })
 
         } catch (error) {
+            if (axios.isCancel(error) || error?.name === "AbortError" || error?.name === "CanceledError") {
+                // Request was cancelled due to newer input — ignore silently
+                return;
+            }
             const dec = decryptData(error?.response?.data?.data);
             setExchangeRateError(dec?.message ?? "We cannot process your request at the moment, please try again later.")
             setError(dec?.message ?? "We cannot process your request at the moment, please try again later.")
             console.log(dec)
         } finally {
-            setLoading(false)
+            if (!signal?.aborted) {
+                setLoading(false)
+            }
         }
     }
 
 
+    const debounceRef = useRef(null);
+    const abortRef = useRef(null);
 
     useEffect(() => {
 
@@ -109,13 +118,31 @@ const CryptoFund = ({ setAction }) => {
         setLoading(true)
         setExchangeRateError(null)
         setExchangeRate({})
-        if (amount && cryptoCurrency?.currency?.code) {
-            let timeout;
-            clearTimeout(timeout)
-            timeout = setTimeout(() => {
-                getCryptoFeeDetails(amount)
-            }, 500)
+
+        // Clear any previous debounce timer
+        if (debounceRef.current) {
+            clearTimeout(debounceRef.current);
         }
+
+        // Abort any in-flight request from previous keystroke
+        if (abortRef.current) {
+            abortRef.current.abort();
+        }
+
+        const controller = new AbortController();
+        abortRef.current = controller;
+
+        debounceRef.current = setTimeout(() => {
+            if (amount && cryptoCurrency?.currency?.code) {
+                getCryptoFeeDetails(amount, controller.signal)
+            }
+        }, 500)
+
+        // Cleanup: cancel timeout and abort request on unmount or re-run
+        return () => {
+            clearTimeout(debounceRef.current);
+            controller.abort();
+        };
     }, [amount, cryptoCurrency])
 
 
