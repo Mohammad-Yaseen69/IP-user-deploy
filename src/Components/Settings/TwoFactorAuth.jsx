@@ -221,7 +221,7 @@ const TwoFactorAuth = () => {
                 {
                     deviceName: deviceName,
                     credentialId: data2.credentials.id,
-                    enabled: true 
+                    enabled: true
                 }
             ])
             setToken(null)
