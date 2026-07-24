@@ -1,282 +1,298 @@
-import React, { useState, useEffect } from 'react';
-import {
-    Dialog,
-    DialogContent,
-    TextField,
-    MenuItem
-} from '@mui/material';
-import { X, ArrowRight, CheckCircle, ChevronDown } from 'react-feather';
+import React, { useState } from 'react';
+import { Dialog } from '@mui/material';
+import { UserPlus, Check, LifeBuoy, ChevronDown } from 'react-feather';
 import { useTranslation } from 'react-i18next';
 import styles from '../styles/subAgentModal.module.css';
 
 const AddSubAgentModal = ({ open, onClose, onSubmit }) => {
     const { t } = useTranslation();
+    const [step, setStep] = useState(1);
 
-    const [entityType, setEntityType] = useState('individual');
     const [formData, setFormData] = useState({
-        firstName: '',
-        lastName: '',
-        phoneCode: '+44',
-        phoneNumber: '',
+        companyName: '',
+        country: '',
+        mobileNumber: '',
         email: '',
-        assignedLead: '',
-        commissionSplit: '35%',
-        ibanOption: ''
+        isIndependent: false,
+        clientProfile: '',
+        commissionSplit: '30%',
+        additionalClients: ''
     });
 
-    useEffect(() => {
-        if (open) {
-            setFormData({
-                firstName: '',
-                lastName: '',
-                phoneCode: '+44',
-                phoneNumber: '',
-                email: '',
-                assignedLead: '',
-                commissionSplit: '35%',
-                ibanOption: ''
-            });
-        }
-    }, [open]);
-
-    const handleChange = (field, value) => {
-        setFormData(prev => ({ ...prev, [field]: value }));
+    const handleChange = (field) => (e) => {
+        setFormData((prev) => ({ ...prev, [field]: e.target.value }));
     };
 
-    const handleSubmit = (e) => {
-        if (e) e.preventDefault();
-        if (onSubmit) {
-            onSubmit({ entityType, ...formData });
-        }
-        onClose();
+    const handleCheckboxChange = () => {
+        setFormData((prev) => ({ ...prev, isIndependent: !prev.isIndependent }));
     };
 
-    const leadOptions = [
-        'Anna Petrova',
-        'Apex Platinum Co.',
-        'Regal Goldsmiths',
-        'Summit Metals Inc.',
-        'BlueLine Button Traders'
-    ];
+    // Basic Validation
+    const isStep1Valid = formData.companyName.trim() !== '' && formData.email.trim() !== '';
+    const isStep2Valid = formData.clientProfile.trim() !== '';
 
-    const ibanOptions = [
-        'Generate new sub-agent IBAN',
-        'Link existing sub-agent IBAN',
-        'Assign later'
-    ];
+    const handleNext = () => {
+        if (step === 1 && isStep1Valid) setStep(2);
+        if (step === 2 && isStep2Valid) setStep(3);
+    };
+
+    const handleBack = () => {
+        if (step > 1) setStep(step - 1);
+    };
+
+    const handleSubmit = () => {
+        if (onSubmit) onSubmit(formData);
+    };
 
     return (
         <Dialog
             open={open}
             onClose={onClose}
             maxWidth={false}
-            PaperProps={{
-                className: styles.modalPaper
-            }}
-            BackdropProps={{
-                className: styles.backdrop
-            }}
+            PaperProps={{ className: styles.dialogPaper }}
         >
-            <DialogContent className={styles.modalContent}>
-                {/* Header */}
-                <div className={styles.header}>
-                    <h2 className={styles.title}>{t('Add sub-agent')}</h2>
-                    <button onClick={onClose} className={styles.closeBtn} type="button">
-                        <X size={20} />
-                    </button>
+            <div className={styles.container}>
+
+                {/* LEFT SIDEBAR */}
+                <div className={styles.sidebar}>
+                    <div className={styles.sidebarTop}>
+                        <div className={styles.iconBox}>
+                            <UserPlus size={24} />
+                        </div>
+                        <h2 className={styles.title}>{t("Add Sub-Agent")}</h2>
+
+                        <div className={styles.stepper}>
+                            {/* Step 1 Indicator */}
+                            <div className={styles.step}>
+                                <div className={`${styles.stepIndicator} ${step > 1 ? styles.stepIndicatorCompleted : styles.stepIndicatorActive}`}>
+                                    {step > 1 ? <Check size={14} /> : <div className={styles.dotActive} />}
+                                </div>
+                                <span className={`${styles.stepLabel} ${styles.stepLabelActive}`}>
+                                    {t("Sub-agent profile")}
+                                </span>
+                            </div>
+
+                            <div className={styles.stepConnector} />
+
+                            {/* Step 2 Indicator */}
+                            <div className={styles.step}>
+                                <div className={`${styles.stepIndicator} ${step > 1 ? styles.stepIndicatorActive : styles.stepIndicatorInactive}`}>
+                                    {step > 1 ? <div className={styles.dotActive} /> : <div className={styles.dotInactive} />}
+                                </div>
+                                <span className={`${styles.stepLabel} ${step > 1 ? styles.stepLabelActive : styles.stepLabelInactive}`}>
+                                    {t("Assign clients")}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className={styles.sidebarBottom}>
+                        <div className={styles.contactUs}>
+                            <LifeBuoy size={18} />
+                            <span>{t("Need help? Contact Us")}</span>
+                        </div>
+                    </div>
                 </div>
 
-                {/* Entity Type Toggle Tabs */}
-                <div className={styles.entityToggleContainer}>
-                    <div
-                        onClick={() => setEntityType('individual')}
-                        className={`${styles.entityTab} ${entityType === 'individual' ? styles.entityTabActive : ''}`}
-                    >
-                        <span className={`${styles.tabTitle} ${entityType === 'individual' ? styles.tabTitleActive : ''}`}>
-                            {t('Private individual')}
-                        </span>
-                        <span className={styles.tabSubtitle}>{t('KYC required')}</span>
+                {/* RIGHT CONTENT */}
+                <div className={styles.content}>
+                    <div className={styles.formBody}>
+
+                        {/* STEP 1: Profile */}
+                        {step === 1 && (
+                            <>
+                                <div className={styles.formGroup}>
+                                    <label className={styles.label}>{t("Company Name")}</label>
+                                    <input
+                                        type="text"
+                                        className={styles.input}
+                                        placeholder={t("Company Name")}
+                                        value={formData.companyName}
+                                        onChange={handleChange('companyName')}
+                                    />
+                                </div>
+
+                                <div className={styles.formGroup}>
+                                    <label className={styles.label}>{t("Country")}</label>
+                                    <div className={styles.selectWrapper}>
+                                        <select
+                                            className={`${styles.select} ${!formData.country ? styles.placeholderText : ''}`}
+                                            value={formData.country}
+                                            onChange={handleChange('country')}
+                                        >
+                                            <option value="" disabled hidden>{t("Select country")}</option>
+                                            <option value="uk">United Kingdom</option>
+                                            <option value="us">United States</option>
+                                        </select>
+                                        <ChevronDown className={styles.selectIcon} size={16} />
+                                    </div>
+                                </div>
+
+                                <div className={styles.formGroup}>
+                                    <label className={styles.label}>{t("Mobile Number")}</label>
+                                    <div className={styles.mobileInputWrapper}>
+                                        <div className={styles.countryCode}>
+                                            <span>🇬🇧 +44</span>
+                                            <ChevronDown size={14} />
+                                        </div>
+                                        <input
+                                            type="text"
+                                            className={styles.mobileInput}
+                                            placeholder={t("e.g., +44 1234 567890")}
+                                            value={formData.mobileNumber}
+                                            onChange={handleChange('mobileNumber')}
+                                        />
+                                    </div>
+                                </div>
+
+                                <div className={styles.formGroup}>
+                                    <label className={styles.label}>{t("Email Address")}</label>
+                                    <input
+                                        type="email"
+                                        className={styles.input}
+                                        placeholder={t("Email")}
+                                        value={formData.email}
+                                        onChange={handleChange('email')}
+                                    />
+                                </div>
+
+                                <div className={styles.checkboxContainer} onClick={handleCheckboxChange}>
+                                    <div className={`${styles.checkbox} ${formData.isIndependent ? styles.checkboxChecked : ''}`}>
+                                        {formData.isIndependent && <Check size={12} strokeWidth={3} />}
+                                    </div>
+                                    <span className={styles.checkboxLabel}>
+                                        {t("Sub-agent acts independently and holds their own required license.")}
+                                    </span>
+                                </div>
+                            </>
+                        )}
+
+                        {/* STEP 2: Assign Clients */}
+                        {step === 2 && (
+                            <>
+                                <div className={styles.formGroup}>
+                                    <label className={styles.label}>{t("Select client profile")}</label>
+                                    <div className={styles.selectWrapper}>
+                                        <select
+                                            className={`${styles.select} ${!formData.clientProfile ? styles.placeholderText : ''}`}
+                                            value={formData.clientProfile}
+                                            onChange={handleChange('clientProfile')}
+                                        >
+                                            <option value="" disabled hidden>{t("Select profile")}</option>
+                                            <option value="apex">Apex Platinum Co.</option>
+                                            <option value="regal">Regal Goldsmiths</option>
+                                            <option value="blue">BlueLine Button Traders</option>
+                                        </select>
+                                        <ChevronDown className={styles.selectIcon} size={16} />
+                                    </div>
+                                </div>
+
+                                <div className={styles.formGroup}>
+                                    <label className={styles.label}>{t("Commission split")}</label>
+                                    <input
+                                        type="text"
+                                        className={styles.input}
+                                        value={formData.commissionSplit}
+                                        onChange={handleChange('commissionSplit')}
+                                    />
+                                </div>
+
+                                <div className={styles.formGroup}>
+                                    <label className={styles.label}>{t("Assign more clients (Optional)")}</label>
+                                    <div className={styles.selectWrapper}>
+                                        <select
+                                            className={`${styles.select} ${!formData.additionalClients ? styles.placeholderText : ''}`}
+                                            value={formData.additionalClients}
+                                            onChange={handleChange('additionalClients')}
+                                        >
+                                            <option value="" disabled hidden>{t("Select profile")}</option>
+                                            <option value="regal">Regal Goldsmiths</option>
+                                        </select>
+                                        <ChevronDown className={styles.selectIcon} size={16} />
+                                    </div>
+                                </div>
+                            </>
+                        )}
+
+                        {/* STEP 3: Review */}
+                        {step === 3 && (
+                            <div className={styles.reviewSection}>
+                                <div>
+                                    <h4 className={styles.reviewSubtitle}>{t("Primary Contact")}</h4>
+                                </div>
+                                <div className={styles.profileRow}>
+                                    <div className={`${styles.avatar} ${styles.avatarPurple}`}>AP</div>
+                                    <span className={styles.profileName}>Anna Petrova</span>
+                                </div>
+                                <div className={styles.detailsGrid}>
+                                    <div className={styles.detailItem}>
+                                        <span className={styles.detailLabel}>{t("Email Address")}</span>
+                                        <span className={styles.detailValue}>anna@example.com</span>
+                                    </div>
+                                    <div className={styles.detailItem}>
+                                        <span className={styles.detailLabel}>{t("Mobile Number")}</span>
+                                        <span className={styles.detailValue}>+44 1234 567890</span>
+                                    </div>
+                                </div>
+
+                                <div className={styles.divider} />
+
+                                <div className={styles.reviewHeaderFlex}>
+                                    <h4 className={styles.reviewTitleDark}>{t("Assigned clients (2)")}</h4>
+                                    <button className={styles.resetBtn}>{t("Reset selection")}</button>
+                                </div>
+
+                                <div className={styles.clientList}>
+                                    <div className={styles.clientRow}>
+                                        <div className={styles.clientInfo}>
+                                            <div className={`${styles.avatar} ${styles.avatarBlue}`}>AP</div>
+                                            <span className={styles.clientName}>Apex Platinum Co.</span>
+                                        </div>
+                                        <span className={styles.clientCommission}>30%</span>
+                                    </div>
+                                    <div className={styles.clientRow}>
+                                        <div className={styles.clientInfo}>
+                                            <div className={`${styles.avatar} ${styles.avatarGreen}`}>BB</div>
+                                            <span className={styles.clientName}>BlueLine Button Traders</span>
+                                        </div>
+                                        <span className={styles.clientCommission}>30%</span>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
                     </div>
 
-                    <div
-                        onClick={() => setEntityType('corporate')}
-                        className={`${styles.entityTab} ${entityType === 'corporate' ? styles.entityTabActive : ''}`}
-                    >
-                        <span className={`${styles.tabTitle} ${entityType === 'corporate' ? styles.tabTitleActive : ''}`}>
-                            {t('Corporate')}
-                        </span>
-                        <span className={styles.tabSubtitle}>{t('KYB required')}</span>
+                    {/* FOOTER BUTTONS */}
+                    <div className={styles.footer}>
+                        <button className={styles.btnGhost} onClick={onClose}>
+                            {t("Cancel")}
+                        </button>
+
+                        <div className={styles.rightBtns}>
+                            {step > 1 && (
+                                <button className={styles.btnOutline} onClick={handleBack}>
+                                    {t("Back")}
+                                </button>
+                            )}
+
+                            {step < 3 ? (
+                                <button
+                                    className={styles.btnPrimary}
+                                    onClick={handleNext}
+                                    disabled={(step === 1 && !isStep1Valid) || (step === 2 && !isStep2Valid)}
+                                >
+                                    {t("Next")}
+                                </button>
+                            ) : (
+                                <button className={styles.btnPrimary} onClick={handleSubmit}>
+                                    {t("Send")}
+                                </button>
+                            )}
+                        </div>
                     </div>
                 </div>
 
-                {/* Form Fields */}
-                <form onSubmit={handleSubmit} className={styles.form}>
-                    {/* First Name */}
-                    <div className={styles.fieldGroup}>
-                        <label className={styles.fieldLabel}>{t('Sub-agent first name')}</label>
-                        <TextField
-                            fullWidth
-                            size="small"
-                            placeholder="Mohammed"
-                            value={formData.firstName}
-                            onChange={(e) => handleChange('firstName', e.target.value)}
-                            className={styles.inputControl}
-                        />
-                        <div className={styles.hintRow}>
-                            <CheckCircle size={14} className={styles.hintIcon} />
-                            <span className={styles.hintText}>{t('Used for compliance and reporting')}</span>
-                        </div>
-                    </div>
-
-                    {/* Last Name */}
-                    <div className={styles.fieldGroup}>
-                        <label className={styles.fieldLabel}>{t('Sub-agent last name')}</label>
-                        <TextField
-                            fullWidth
-                            size="small"
-                            placeholder="Hunain"
-                            value={formData.lastName}
-                            onChange={(e) => handleChange('lastName', e.target.value)}
-                            className={styles.inputControl}
-                        />
-                        <div className={styles.hintRow}>
-                            <CheckCircle size={14} className={styles.hintIcon} />
-                            <span className={styles.hintText}>{t('Used for compliance and reporting')}</span>
-                        </div>
-                    </div>
-
-                    {/* Phone Number */}
-                    <div className={styles.fieldGroup}>
-                        <label className={styles.fieldLabel}>{t('Sub-agent phone number')}</label>
-                        <TextField
-                            fullWidth
-                            size="small"
-                            placeholder="00000"
-                            value={formData.phoneNumber}
-                            onChange={(e) => handleChange('phoneNumber', e.target.value)}
-                            className={styles.inputControl}
-                        />
-                        <div className={styles.hintRow}>
-                            <CheckCircle size={14} className={styles.hintIcon} />
-                            <span className={styles.hintText}>{t('Used for compliance and reporting')}</span>
-                        </div>
-                    </div>
-
-                    {/* Email */}
-                    <div className={styles.fieldGroup}>
-                        <label className={styles.fieldLabel}>{t('Sub-agent email')}</label>
-                        <TextField
-                            fullWidth
-                            size="small"
-                            type="email"
-                            placeholder="eg:mail@email.com"
-                            value={formData.email}
-                            onChange={(e) => handleChange('email', e.target.value)}
-                            className={styles.inputControl}
-                        />
-                        <div className={styles.hintRow}>
-                            <CheckCircle size={14} className={styles.hintIcon} />
-                            <span className={styles.hintText}>{t('Used for compliance and reporting')}</span>
-                        </div>
-                    </div>
-
-                    {/* Assign lead */}
-                    <div className={styles.fieldGroup}>
-                        <label className={styles.fieldLabel}>{t('Assign lead')}</label>
-                        <TextField
-                            select
-                            fullWidth
-                            size="small"
-                            value={formData.assignedLead}
-                            onChange={(e) => handleChange('assignedLead', e.target.value)}
-                            className={styles.inputControl}
-                            SelectProps={{
-                                displayEmpty: true,
-                                renderValue: (selected) => {
-                                    if (!selected) {
-                                        return <span className={styles.placeholderText}>{t('Select your lead')}</span>;
-                                    }
-                                    return selected;
-                                },
-                                IconComponent: ChevronDown
-                            }}
-                        >
-                            {leadOptions.map((ld) => (
-                                <MenuItem key={ld} value={ld} sx={{ fontFamily: 'Inter', fontSize: '14px' }}>
-                                    {ld}
-                                </MenuItem>
-                            ))}
-                        </TextField>
-                        <div className={styles.hintRow}>
-                            <CheckCircle size={14} className={styles.hintIcon} />
-                            <span className={styles.hintText}>{t('Used for compliance and reporting')}</span>
-                        </div>
-                    </div>
-
-                    {/* Commission Split */}
-                    <div className={styles.fieldGroup}>
-                        <label className={styles.fieldLabel}>{t('Commission split')}</label>
-                        <TextField
-                            fullWidth
-                            size="small"
-                            placeholder="35%"
-                            value={formData.commissionSplit}
-                            onChange={(e) => handleChange('commissionSplit', e.target.value)}
-                            className={styles.inputControl}
-                        />
-                        <div className={styles.hintRow}>
-                            <CheckCircle size={14} className={styles.hintIcon} />
-                            <span className={styles.hintText}>{t('Used for compliance and reporting')}</span>
-                        </div>
-                    </div>
-
-                    {/* Assign IBAN */}
-                    <div className={styles.fieldGroup}>
-                        <label className={styles.fieldLabel}>{t('Assign IBAN for payouts')}</label>
-                        <TextField
-                            select
-                            fullWidth
-                            size="small"
-                            value={formData.ibanOption}
-                            onChange={(e) => handleChange('ibanOption', e.target.value)}
-                            className={styles.inputControl}
-                            SelectProps={{
-                                displayEmpty: true,
-                                renderValue: (selected) => {
-                                    if (!selected) {
-                                        return <span className={styles.placeholderText}>{t('Generate new sub-agent IBAN')}</span>;
-                                    }
-                                    return selected;
-                                },
-                                IconComponent: ChevronDown
-                            }}
-                        >
-                            {ibanOptions.map((opt) => (
-                                <MenuItem key={opt} value={opt} sx={{ fontFamily: 'Inter', fontSize: '14px' }}>
-                                    {t(opt)}
-                                </MenuItem>
-                            ))}
-                        </TextField>
-                        <div className={styles.hintRow}>
-                            <CheckCircle size={14} className={styles.hintIcon} />
-                            <span className={styles.hintText}>{t('Used for compliance and reporting')}</span>
-                        </div>
-                    </div>
-
-                    {/* Warning Notice Box */}
-                    <div className={styles.warningNoticeBox}>
-                        <p className={styles.warningNoticeText}>
-                            {t('Sub-agent must complete identity verification before receiving leads or payouts.')}
-                        </p>
-                    </div>
-
-                    {/* Submit Button */}
-                    <button type="submit" className={styles.submitBtn}>
-                        {t('Add Sub-agent')}
-                        <ArrowRight size={18} />
-                    </button>
-                </form>
-            </DialogContent>
+            </div>
         </Dialog>
     );
 };

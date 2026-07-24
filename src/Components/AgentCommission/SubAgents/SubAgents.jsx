@@ -51,7 +51,7 @@ const SubAgents = () => {
                             {t("Sort By")}
                         </button>
 
-                        <button className={styles.primaryBtn} onClick={() => setIsModalOpen()}>
+                        <button className={styles.primaryBtn} onClick={() => setIsModalOpen(true)}>
                             <span>+ {t("Add sub-agent")}</span>
                         </button>
                     </div>
