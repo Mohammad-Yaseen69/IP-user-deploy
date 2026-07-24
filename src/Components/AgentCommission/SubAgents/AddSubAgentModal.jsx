@@ -27,7 +27,6 @@ const AddSubAgentModal = ({ open, onClose, onSubmit }) => {
         setFormData((prev) => ({ ...prev, isIndependent: !prev.isIndependent }));
     };
 
-    // Basic Validation
     const isStep1Valid = formData.companyName.trim() !== '' && formData.email.trim() !== '';
     const isStep2Valid = formData.clientProfile.trim() !== '';
 
@@ -53,7 +52,6 @@ const AddSubAgentModal = ({ open, onClose, onSubmit }) => {
         >
             <div className={styles.container}>
 
-                {/* LEFT SIDEBAR */}
                 <div className={styles.sidebar}>
                     <div className={styles.sidebarTop}>
                         <div className={styles.iconBox}>
@@ -62,7 +60,6 @@ const AddSubAgentModal = ({ open, onClose, onSubmit }) => {
                         <h2 className={styles.title}>{t("Add Sub-Agent")}</h2>
 
                         <div className={styles.stepper}>
-                            {/* Step 1 Indicator */}
                             <div className={styles.step}>
                                 <div className={`${styles.stepIndicator} ${step > 1 ? styles.stepIndicatorCompleted : styles.stepIndicatorActive}`}>
                                     {step > 1 ? <Check size={14} /> : <div className={styles.dotActive} />}
@@ -74,7 +71,6 @@ const AddSubAgentModal = ({ open, onClose, onSubmit }) => {
 
                             <div className={styles.stepConnector} />
 
-                            {/* Step 2 Indicator */}
                             <div className={styles.step}>
                                 <div className={`${styles.stepIndicator} ${step > 1 ? styles.stepIndicatorActive : styles.stepIndicatorInactive}`}>
                                     {step > 1 ? <div className={styles.dotActive} /> : <div className={styles.dotInactive} />}
@@ -94,11 +90,9 @@ const AddSubAgentModal = ({ open, onClose, onSubmit }) => {
                     </div>
                 </div>
 
-                {/* RIGHT CONTENT */}
                 <div className={styles.content}>
                     <div className={styles.formBody}>
 
-                        {/* STEP 1: Profile */}
                         {step === 1 && (
                             <>
                                 <div className={styles.formGroup}>
@@ -167,7 +161,6 @@ const AddSubAgentModal = ({ open, onClose, onSubmit }) => {
                             </>
                         )}
 
-                        {/* STEP 2: Assign Clients */}
                         {step === 2 && (
                             <>
                                 <div className={styles.formGroup}>
@@ -214,7 +207,6 @@ const AddSubAgentModal = ({ open, onClose, onSubmit }) => {
                             </>
                         )}
 
-                        {/* STEP 3: Review */}
                         {step === 3 && (
                             <div className={styles.reviewSection}>
                                 <div>
@@ -262,7 +254,6 @@ const AddSubAgentModal = ({ open, onClose, onSubmit }) => {
                         )}
                     </div>
 
-                    {/* FOOTER BUTTONS */}
                     <div className={styles.footer}>
                         <button className={styles.btnGhost} onClick={onClose}>
                             {t("Cancel")}
