@@ -45,6 +45,12 @@ const Clients = () => {
         }
     ];
 
+    const missingDocuments = [
+        { id: 1, client: 'Anna Petrova', document: 'Proof of address' },
+        { id: 2, client: 'GreenBean Traders', document: 'UBO eKYC ×2' },
+        { id: 3, client: 'West Africa Agro Inputs', document: 'Proof of address' }
+    ];
+
     return (
         <div className={styles.container}>
             <div className={styles.top}>
@@ -114,6 +120,36 @@ const Clients = () => {
                         </div>
                     ))}
                 </div>
+
+                <section className={styles.missingDocumentsCard} aria-labelledby="missing-documents-title">
+                    <h2 id="missing-documents-title" className={styles.missingDocumentsTitle}>
+                        {t('Missing documents')}
+                    </h2>
+
+                    <p className={styles.missingDocumentsNotice}>
+                        {t('3 leads are waiting on documents - nudge clients to keep onboarding moving.')}
+                    </p>
+
+                    <div className={styles.missingDocumentsTable}>
+                        <div className={styles.missingDocumentsHeader}>
+                            <span>{t('Client')}</span>
+                            <span>{t('Missing documents')}</span>
+                            <span>{t('STATUS')}</span>
+                        </div>
+
+                        {missingDocuments.map((item) => (
+                            <div key={item.id} className={styles.missingDocumentsRow}>
+                                <span className={styles.missingDocumentsClient}>{item.client}</span>
+                                <span>
+                                    <span className={styles.missingDocumentBadge}>{t(item.document)}</span>
+                                </span>
+                                <button type="button" className={styles.sendReminderButton}>
+                                    {t('Send reminder')}
+                                </button>
+                            </div>
+                        ))}
+                    </div>
+                </section>
             </div>
         </div>
     );
