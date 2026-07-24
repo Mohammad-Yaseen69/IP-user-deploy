@@ -35,7 +35,6 @@ const Leads = () => {
         { label: "Active" }
     ];
 
-    // Table Data matching exactly with Figma Rows
     const tableData = [
         {
             id: 1,
@@ -121,7 +120,6 @@ const Leads = () => {
 
     return (
         <div className={styles.container}>
-            {/* Header section */}
             <div className={styles.top}>
                 <div className={styles.headerTitle}>
                     <h1>{t("Leads")}</h1>
@@ -251,4 +249,4 @@ const Leads = () => {
     );
 };
 
-export default Leads;
+export default Leads;
