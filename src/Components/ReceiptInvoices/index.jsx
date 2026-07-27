@@ -160,7 +160,7 @@ const ReceiptInvoice = () => {
             </div>
             ) : (
                 <div>
-                    
+
                     <PricingsAndPlan isInvoicePage={true} />
                 </div>
             )}
