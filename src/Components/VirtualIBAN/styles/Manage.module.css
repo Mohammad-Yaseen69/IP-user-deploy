@@ -65,9 +65,9 @@
 }
 
 .inputGroup label {
-    color: var(--gray-gray-600, #6E7687) !important;
+    color: var(--gray-gray-600, #6E7687);
     text-align: center;
-    font-size: 16px;
+    font-size: 14px;
     font-style: normal;
     font-weight: 500;
     line-height: 150%;

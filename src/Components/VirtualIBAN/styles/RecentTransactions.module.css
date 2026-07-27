@@ -104,7 +104,9 @@
     border-radius: var(--sm, 6px) !important;
     background: var(--Greyscale-15, #F3F3F4) !important;
     border: none !important;
-    color: #151514 !important;
+    color: #1B1F2A !important;
+    font-size: 14px !important;
+
     font-weight: 600 !important;
 
 }
