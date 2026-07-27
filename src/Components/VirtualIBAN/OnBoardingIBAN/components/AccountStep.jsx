@@ -178,7 +178,12 @@ const AccountStep = ({ onNext, onBack, userType }) => {
                     <ArrowLeft size={16} />
                     {t("Back")}
                 </button>
-                <button onClick={handleContinue} className={styles.continueButton}>
+                <button 
+                    onClick={handleContinue} 
+                    className={styles.continueButton}
+                    disabled={!email || !email.includes('@')}
+                    style={{ opacity: (!email || !email.includes('@')) ? 0.5 : 1, cursor: (!email || !email.includes('@')) ? 'not-allowed' : 'pointer' }}
+                >
                     {t("Continue")}
                 </button>
             </div>

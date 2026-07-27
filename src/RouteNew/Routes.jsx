@@ -187,6 +187,8 @@ export const routes = [
     { path: "/onboarding-IBAN/priceAcitvation", component: <PermissionRoute permission="virtual-iban.view"><PriceActivation /></PermissionRoute> },
     { path: "/onboarding-IBAN/moneymove", component: <PermissionRoute permission="virtual-iban.view"><MoveMoney /></PermissionRoute> },
     { path: "/third-party-senders", component: <PermissionRoute permission="payments.send-as-third-party.view"><ThirdPartySenders /></PermissionRoute> },
+    { path: "/iban-onboarding", component: <OnboardingIBAN /> },
+
     { path: "*", component: <NotFound type='Page' /> }
 ]
 export const publicRoutes = [
@@ -194,7 +196,6 @@ export const publicRoutes = [
     { path: "/q/:wallet_id", component: <QRScan /> },
     // {path: "/tcbf", component: <TempCountriesBankFields /> },
     { path: "/pay/:user_name", component: <PaymentAddressPublic /> },
-    { path: "/iban-onboarding", component: <OnboardingIBAN /> },
     { path: "/pay/:user_name/:status", component: <PaymentAddressPublic /> },
     // {path: "/profile/:user_name", component: <UserProfilePublic /> },
     { path: "/partners/verification/:token", component: <PartnerVerificationPage /> },
