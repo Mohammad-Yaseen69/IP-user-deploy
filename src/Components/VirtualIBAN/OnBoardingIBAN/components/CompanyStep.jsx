@@ -1,10 +1,11 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Briefcase, MapPin, Globe, ArrowLeft, ArrowRight, Hash } from 'react-feather'
 import styles from '../style/onboardingSteps.module.css'
 import SidebarProgress from './SidebarProgress'
 import Magicsvg from '../magicsvg'
 import { FaHand } from 'react-icons/fa6'
+import { UserContext } from '../../../../Context/UserContext'
 
 const LEGAL_STRUCTURES = [
     'Limited Liability Company (LLC)',
@@ -24,25 +25,39 @@ const COUNTRIES = [
 
 const CompanyStep = ({ onNext, onBack, userType, data = {} }) => {
     const { t } = useTranslation()
+    const { userDetails } = useContext(UserContext)
+    const agentDefault = userDetails?.parentIdAgent?.username || userDetails?.parentIdAgent?.agentCode || ''
+
+
+    console.log(userDetails, "agent")
     const [form, setForm] = useState({
-        legalName: data.legalName || '',
+        legalName: userDetails?.company_name || '',
         tradingName: data.tradingName || '',
-        registrationNumber: data.registrationNumber || '',
+        registrationNumber: userDetails?.company?.registration_number || data.registrationNumber || '',
         legalStructure: data.legalStructure || '',
-        countryOfIncorporation: data.countryOfIncorporation || '',
-        registeredAddress: data.registeredAddress || '',
+        countryOfIncorporation: userDetails?.country_name || '',
+        registeredAddress: userDetails?.address || '',
         website: data.website || '',
-        legalForm: "",
-        dateOfIncorporation: "",
-        taxNumber: "",
-        mainContact: "",
-        agent: "",
+        legalForm: userDetails?.category?.name || '',
+        dateOfIncorporation: userDetails?.company?.date_of_incorporation || data.dateOfIncorporation || '',
+        taxNumber: userDetails?.company?.tax_id || data.taxNumber || '',
+        mainContact: data.mainContact || '',
+        agent: agentDefault,
     })
+
+    const isFormValid = Boolean(
+        form.countryOfIncorporation &&
+        form.registrationNumber?.trim() &&
+        form.legalName?.trim() &&
+        form.registeredAddress?.trim()
+    )
+
+    console.log(form, "form")
 
     const set = (key) => (e) => setForm(prev => ({ ...prev, [key]: e.target.value }))
 
     const handleContinue = () => {
-        onNext({ company: form })
+        onNext(form, 'company')
     }
 
     const steps = [
@@ -110,15 +125,28 @@ const CompanyStep = ({ onNext, onBack, userType, data = {} }) => {
                         style={{ width: "100%" }}
                     >
 
-                        <div className={styles.inputGroup}>
-                            <label className={styles.inputLabel}>
-                                {t("COUNTRY OF INCORPORATION")}
-                            </label>
 
-                            <div className={styles.inputWrapper}>
-                                <MapPin className={styles.inputIcon} size={16} />
 
-                                <select
+                        <div className={styles.formRow}>
+                            <div className={styles.inputGroup}>
+                                <label className={styles.inputLabel}>
+                                    {t("COUNTRY OF INCORPORATION")}
+                                </label>
+
+                                <div className={styles.inputWrapper}>
+                                    <MapPin className={styles.inputIcon} size={16} />
+
+
+                                    <input
+                                        type="text"
+                                        onChange={set("registrationNumber")}
+                                        placeholder="CHE-105.837.234"
+                                        disabled
+                                        className={styles.textInput}
+                                        readOnly
+                                        value={form.countryOfIncorporation}
+                                    />
+                                    {/* <select
                                     className={styles.selectInput}
                                     value={form.countryOfIncorporation}
                                     onChange={set("countryOfIncorporation")}
@@ -131,12 +159,10 @@ const CompanyStep = ({ onNext, onBack, userType, data = {} }) => {
                                             {t(c)}
                                         </option>
                                     ))}
-                                </select>
+                                </select> */}
+                                </div>
                             </div>
-                        </div>
 
-
-                        <div className={styles.formRow}>
                             <div className={styles.inputGroup}>
                                 <label className={styles.inputLabel}>
                                     {t("REGISTRATION NUMBER")}
@@ -151,12 +177,19 @@ const CompanyStep = ({ onNext, onBack, userType, data = {} }) => {
                                         value={form.registrationNumber}
                                         onChange={set("registrationNumber")}
                                         placeholder="CHE-105.837.234"
+                                        disabled={Boolean(userDetails?.company?.registration_number)}
+                                        readOnly={Boolean(userDetails?.company?.registration_number)}
                                     />
                                 </div>
                             </div>
+                        </div>
 
 
-                            <div className={styles.inputGroup}>
+                        <div className={styles.formRow}>
+
+
+
+                            {/* <div className={styles.inputGroup}>
                                 <label className={styles.inputLabel}>&nbsp;</label>
 
                                 <button
@@ -165,7 +198,7 @@ const CompanyStep = ({ onNext, onBack, userType, data = {} }) => {
                                 >
                                     {t("Look up on registry")}
                                 </button>
-                            </div>
+                            </div> */}
                         </div>
 
 
@@ -182,6 +215,8 @@ const CompanyStep = ({ onNext, onBack, userType, data = {} }) => {
                                         className={styles.textInput}
                                         value={form.legalName}
                                         onChange={set("legalName")}
+                                        readOnly
+                                        disabled
                                     />
                                 </div>
                             </div>
@@ -215,6 +250,8 @@ const CompanyStep = ({ onNext, onBack, userType, data = {} }) => {
                                     value={form.legalForm}
                                     onChange={set("legalForm")}
                                     placeholder="SA"
+                                    disabled
+                                    readOnly
                                 />
                             </div>
 
@@ -228,6 +265,8 @@ const CompanyStep = ({ onNext, onBack, userType, data = {} }) => {
                                     value={form.dateOfIncorporation}
                                     onChange={set("dateOfIncorporation")}
                                     placeholder="2021"
+                                    disabled={Boolean(userDetails?.company?.date_of_incorporation)}
+                                    readOnly={Boolean(userDetails?.company?.date_of_incorporation)}
                                 />
                             </div>
                         </div>
@@ -244,6 +283,8 @@ const CompanyStep = ({ onNext, onBack, userType, data = {} }) => {
                                     value={form.taxNumber}
                                     onChange={set("taxNumber")}
                                     placeholder="CHE-105.837.234 VAT"
+                                    disabled={Boolean(userDetails?.company?.tax_id)}
+                                    readOnly={Boolean(userDetails?.company?.tax_id)}
                                 />
                             </div>
 
@@ -279,6 +320,8 @@ const CompanyStep = ({ onNext, onBack, userType, data = {} }) => {
                                     value={form.registeredAddress}
                                     onChange={set("registeredAddress")}
                                     placeholder={t("Street, City, Country")}
+                                    disabled
+                                    readOnly
                                 />
                             </div>
                         </div>
@@ -306,6 +349,8 @@ const CompanyStep = ({ onNext, onBack, userType, data = {} }) => {
                                     className={styles.textInput}
                                     value={form.agent}
                                     onChange={set("agent")}
+                                    disabled
+                                    readOnly
                                 />
                             </div>
                         </div>
@@ -322,12 +367,13 @@ const CompanyStep = ({ onNext, onBack, userType, data = {} }) => {
                     />
                 </div>
             </div>
-            <div className={styles.navigationFooter}>
-                <button onClick={onBack} className={styles.backButton}>
-                    <ArrowLeft size={16} />
-                    {t("Back")}
-                </button>
-                <button onClick={handleContinue} className={styles.continueButton}>
+            <div className={styles.navigationFooter} style={{ justifyContent: "flex-end" }}>
+                <button
+                    onClick={handleContinue}
+                    className={styles.continueButton}
+                    disabled={!isFormValid}
+                    style={{ opacity: !isFormValid ? 0.5 : 1, cursor: !isFormValid ? 'not-allowed' : 'pointer' }}
+                >
                     {t("Continue")}
                 </button>
             </div>

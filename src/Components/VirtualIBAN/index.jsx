@@ -21,6 +21,7 @@ import Manage from './Manage/Manage'
 import styles from "./styles/index.module.css"
 import { asVirtualIbanArray } from './utils/virtualIban'
 import VirtualIbanModal from './VirtualIbanModal'
+import OnboardingIBAN from './OnBoardingIBAN'
 
 
 const VirtualBank = () => {
@@ -148,9 +149,9 @@ const VirtualBank = () => {
             <div className={styles.top}>
                 <div className={styles.headerTitle}>
                     <h1>
-                        {t("My virtual bank")}
+                        {userDetails?.account_type === "business" ? t("Business IBAN") : t("My virtual bank")}
                     </h1>
-                    <p>{t("Manage and monitor your InstaPay Virtual Bank Account.")}</p>
+                    <p>{userDetails?.account_type === "business" ? t("Activate a dedicated business account to receive and hold company funds.") : t("Manage and monitor your InstaPay Virtual Bank Account.")}</p>
                 </div>
 
                 <div className={styles.topright}>
@@ -167,7 +168,11 @@ const VirtualBank = () => {
                 ) : creationInProgress ? (
                     <div style={{ minHeight: "520px", width: "100%" }} />
                 ) :
-                    (showGetIBAN || (ibans.length === 0 && canCreateIban)) ? <IBAN onCreated={handleBackToDashboard} /> :
+                    (showGetIBAN || (ibans.length === 0 && canCreateIban)) ?
+                        userDetails?.account_type === "business" ?
+                            <OnboardingIBAN /> :
+                            <IBAN onCreated={handleBackToDashboard} />
+                        :
                         <div className={styles.main}>
                             <div className={styles.topPanel}>
                                 <AccountsSidebar

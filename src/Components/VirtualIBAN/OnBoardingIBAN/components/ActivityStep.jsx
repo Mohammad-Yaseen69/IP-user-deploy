@@ -1,15 +1,23 @@
-import React, { useState } from 'react'
+import React, { useState, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Activity, DollarSign, BarChart2, ArrowLeft, ArrowRight, CheckSquare } from 'react-feather'
 import styles from '../style/onboardingSteps.module.css'
 import SidebarProgress from './SidebarProgress'
+import bvnkIndustryReference from '../../../../utils/Data/bvnkIndustryReference.json'
 
-const INDUSTRIES = [
-    'Technology & Software', 'E-commerce & Retail', 'Financial Services',
-    'Healthcare & Pharma', 'Real Estate', 'Professional Services',
-    'Import / Export & Trade', 'Media & Entertainment', 'Logistics & Transport',
-    'Manufacturing', 'Crypto & Web3', 'Other'
-]
+const getIndustryPayload = (industry) => ({
+    name: industry?.name,
+    productionReference: industry?.productionReference,
+    sandboxReference: industry?.sandboxReference || industry?.stagingReference,
+})
+
+const parseIndustryReference = (industryReference) => {
+    if (!industryReference) return null
+    if (typeof industryReference === "string") {
+        try { return JSON.parse(industryReference) } catch { return null }
+    }
+    return industryReference
+}
 
 const MONTHLY_VOLUMES = [
     'Under €10,000', '€10,000 – €50,000', '€50,000 – €250,000',
@@ -25,16 +33,75 @@ const TRANSACTION_TYPES = [
     { key: 'treasury', label: 'Treasury & Liquidity' }
 ]
 
+const COUNTRY_LIST = ['Switzerland', 'France', 'Germany', 'United Kingdom', 'Netherlands', 'Luxembourg', 'Ireland', 'Malta', 'United Arab Emirates', 'United States', 'Senegal', 'Pakistan', 'India', 'China', 'Brazil', 'Canada', 'Japan', 'Australia', 'Saudi Arabia', 'South Africa']
+
 const ActivityStep = ({ onNext, onBack, userType, data = {} }) => {
     const { t } = useTranslation()
     const [form, setForm] = useState({
         industry: data.industry || '',
+        industryReference: data.industryReference || parseIndustryReference(data.industry),
         businessDescription: data.businessDescription || '',
         monthlyVolume: data.monthlyVolume || '',
         transactionTypes: data.transactionTypes || [],
+        countries: data.countries || [],
+        currencies: data.currencies || [],
+        services: data.services || [],
+        paymentRails: data.paymentRails || [],
+        originCountries: data.originCountries || [],
+        destinationCountries: data.destinationCountries || [],
+        purpose: data.purpose || '',
+        paymentNature: data.paymentNature || '',
+        averageTransaction: data.averageTransaction || '',
+        maximumTransaction: data.maximumTransaction || '',
+        averageBalance: data.averageBalance || '',
+        incomingPayments: data.incomingPayments || '',
+        outgoingPayments: data.outgoingPayments || '',
     })
 
+    const industryOptions = useMemo(() => {
+        return bvnkIndustryReference.map(group => ({
+            name: group.name,
+            children: (group.children || []).map(child => getIndustryPayload(child)),
+        }))
+    }, [])
+
+    const selectedIndustryValue = useMemo(() => {
+        const ref = form.industryReference || parseIndustryReference(form.industry)
+        if (!ref) return ""
+        const selected = industryOptions
+            .flatMap(group => group.children)
+            .find(ind => (
+                ind.productionReference === ref.productionReference ||
+                ind.sandboxReference === ref.sandboxReference ||
+                ind.name === ref.name
+            ))
+        return selected?.productionReference || ""
+    }, [industryOptions, form.industryReference, form.industry])
+
+    const handleIndustryChange = (event) => {
+        const selected = industryOptions
+            .flatMap(group => group.children)
+            .find(ind => ind.productionReference === event.target.value)
+
+        if (selected) {
+            setForm(prev => ({
+                ...prev,
+                industry: selected.name,
+                industryReference: selected
+            }))
+        }
+    }
+
+    const isFormValid = Boolean((form.industryReference || form.industry) && form.monthlyVolume && (form.purpose?.trim() || form.businessDescription?.trim() || true))
+
     const set = (key) => (e) => setForm(prev => ({ ...prev, [key]: e.target.value }))
+
+    const toggleArrayItem = (key, item) => {
+        setForm(prev => {
+            const current = prev[key] || []
+            return { ...prev, [key]: current.includes(item) ? current.filter(i => i !== item) : [...current, item] }
+        })
+    }
 
     const toggleTxType = (key) => {
         setForm(prev => {
@@ -49,7 +116,7 @@ const ActivityStep = ({ onNext, onBack, userType, data = {} }) => {
     }
 
     const handleContinue = () => {
-        onNext({ activity: form })
+        onNext(form, 'activity')
     }
 
     const steps = [
@@ -98,34 +165,25 @@ const ActivityStep = ({ onNext, onBack, userType, data = {} }) => {
 
                             <div className={styles.inputGroup}>
                                 <label className={styles.inputLabel}>
-                                    {t("INDUSTRY / SECTOR")}
+                                    {t("INDUSTRY / SECTOR")} <span style={{ color: "red", fontWeight: 600 }}>*</span>
                                 </label>
 
-                                <div className={styles.chips}>
-                                    {INDUSTRIES.map((item) => (
-                                        <button
-                                            type="button"
-                                            key={item}
-                                            className={`${styles.chip} ${form.industry === item ? styles.activeChip : ""
-                                                }`}
-                                            onClick={() =>
-                                                setForm((p) => ({
-                                                    ...p,
-                                                    industry: item,
-                                                }))
-                                            }
-                                        >
-                                            {t(item)}
-                                        </button>
-                                    ))}
-                                </div>
-
-                                <input
+                                <select
                                     className={styles.textInput}
-                                    placeholder={t("Specify your industry / sector")}
-                                    value={form.industryOther || ""}
-                                    onChange={set("industryOther")}
-                                />
+                                    value={selectedIndustryValue}
+                                    onChange={handleIndustryChange}
+                                >
+                                    <option value="" disabled>{t("Select Industry / Sector")}</option>
+                                    {industryOptions.map(group => (
+                                        <optgroup key={group.name} label={t(group.name)}>
+                                            {group.children.map(ind => (
+                                                <option key={ind.productionReference} value={ind.productionReference}>
+                                                    {t(ind.name)}
+                                                </option>
+                                            ))}
+                                        </optgroup>
+                                    ))}
+                                </select>
                             </div>
 
 
@@ -165,7 +223,7 @@ const ActivityStep = ({ onNext, onBack, userType, data = {} }) => {
                                                 ? styles.activeChip
                                                 : ""
                                                 }`}
-                                        // onClick={() => toggleCountry(country)}
+                                            onClick={() => toggleArrayItem('countries', country)}
                                         >
                                             {country}
                                         </button>
@@ -228,7 +286,7 @@ const ActivityStep = ({ onNext, onBack, userType, data = {} }) => {
                                                 ? styles.activeChip
                                                 : ""
                                                 }`}
-                                        // onClick={() => toggleCurrency(item)}
+                                            onClick={() => toggleArrayItem('currencies', item)}
                                         >
                                             {item}
                                         </button>
@@ -256,7 +314,7 @@ const ActivityStep = ({ onNext, onBack, userType, data = {} }) => {
                                                 ? styles.activeChip
                                                 : ""
                                                 }`}
-                                        // onClick={() => toggleService(item)}
+                                            onClick={() => toggleArrayItem('services', item)}
                                         >
                                             {item}
                                         </button>
@@ -279,7 +337,7 @@ const ActivityStep = ({ onNext, onBack, userType, data = {} }) => {
                                                 ? styles.activeChip
                                                 : ""
                                                 }`}
-                                        // onClick={() => toggleRail(item)}
+                                            onClick={() => toggleArrayItem('paymentRails', item)}
                                         >
                                             {item}
                                         </button>
@@ -344,19 +402,26 @@ const ActivityStep = ({ onNext, onBack, userType, data = {} }) => {
 
                                     <select
                                         className={styles.selectInput}
-                                        value={form.originCountry}
-                                        onChange={set("originCountry")}
+                                        value=""
+                                        onChange={(e) => {
+                                            if (e.target.value) toggleArrayItem("originCountries", e.target.value)
+                                        }}
                                     >
-                                        <option>{t("Add country...")}</option>
+                                        <option value="">{t("Add country...")}</option>
+                                        {COUNTRY_LIST.filter(c => !form.originCountries?.includes(c)).map(c => (
+                                            <option key={c} value={c}>{c}</option>
+                                        ))}
                                     </select>
 
                                     <div className={styles.chips}>
-                                        {["Switzerland", "France"].map((c) => (
+                                        {form.originCountries?.map((c) => (
                                             <span
                                                 key={c}
                                                 className={styles.activeChip}
+                                                onClick={() => toggleArrayItem("originCountries", c)}
+                                                style={{ cursor: "pointer" }}
                                             >
-                                                {c}
+                                                {c} ✕
                                             </span>
                                         ))}
                                     </div>
@@ -369,19 +434,26 @@ const ActivityStep = ({ onNext, onBack, userType, data = {} }) => {
 
                                     <select
                                         className={styles.selectInput}
-                                        value={form.destinationCountry}
-                                        onChange={set("destinationCountry")}
+                                        value=""
+                                        onChange={(e) => {
+                                            if (e.target.value) toggleArrayItem("destinationCountries", e.target.value)
+                                        }}
                                     >
-                                        <option>{t("Add country...")}</option>
+                                        <option value="">{t("Add country...")}</option>
+                                        {COUNTRY_LIST.filter(c => !form.destinationCountries?.includes(c)).map(c => (
+                                            <option key={c} value={c}>{c}</option>
+                                        ))}
                                     </select>
 
                                     <div className={styles.chips}>
-                                        {["Senegal", "Pakistan"].map((c) => (
+                                        {form.destinationCountries?.map((c) => (
                                             <span
                                                 key={c}
                                                 className={styles.activeChip}
+                                                onClick={() => toggleArrayItem("destinationCountries", c)}
+                                                style={{ cursor: "pointer" }}
                                             >
-                                                {c}
+                                                {c} ✕
                                             </span>
                                         ))}
                                     </div>
@@ -480,12 +552,16 @@ const ActivityStep = ({ onNext, onBack, userType, data = {} }) => {
                     <ArrowLeft size={16} />
                     {t("Back")}
                 </button>
-                <button onClick={handleContinue} className={styles.continueButton}>
+                <button 
+                    onClick={handleContinue} 
+                    className={styles.continueButton}
+                    disabled={!isFormValid}
+                    style={{ opacity: !isFormValid ? 0.5 : 1, cursor: !isFormValid ? 'not-allowed' : 'pointer' }}
+                >
                     {t("Continue")}
                     <ArrowRight size={16} />
                 </button>
             </div>
-
         </div>
     )
 }

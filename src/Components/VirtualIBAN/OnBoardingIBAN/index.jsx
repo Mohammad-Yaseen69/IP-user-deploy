@@ -1,7 +1,9 @@
-import { useContext, useState } from 'react'
+import { useContext, useEffect, useReducer, useState } from 'react'
 import { ArrowRight, ArrowLeft, Briefcase, User, Globe, Activity, CreditCard, Cpu, Zap } from 'react-feather'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
+import axios from 'axios'
+import { toast } from 'react-toastify'
 import { UserContext } from '../../../Context/UserContext'
 import { usePermission } from '../../../hooks/GeneralUse/usePermission'
 import imageCard from "../files/images/Frame_2147236087.png"
@@ -19,6 +21,11 @@ import StatusScreen from './components/StatusScreen'
 import Pricing from './components/Pricing'
 import ActivateAccount from './components/ActivateAccount'
 
+import useSendOtp from '../../../hooks/GeneralUse/useSendOtp'
+import OTPConfirmation from '../../UserSettingsNew/OTPConfirmation'
+import { Modal, ModalBody } from 'reactstrap'
+import { decryptData } from '../../../Helper/EssentilaMethods/Decryption'
+import { encryptData } from '../../../Helper/EssentilaMethods/Encryption'
 
 const STEPS_BUSINESS = ['landing', 'selection', 'account', 'company', 'activity', 'ownership', 'documents', 'review']
 const STEPS_INDIVIDUAL = ['landing', 'selection', 'account', 'review']
@@ -29,6 +36,57 @@ const STATUS_ORDER = [
     'awaiting_payment', 'payment_received'
 ]
 
+const initialState = {
+    step: 'landing',
+    userType: 'business',
+    status: 'submitted',
+    account: { email: '', otp: '' },
+    company: {
+        legalName: '', tradingName: '', registrationNumber: '', legalStructure: '',
+        countryOfIncorporation: '', registeredAddress: '', website: '', legalForm: '',
+        dateOfIncorporation: '', taxNumber: '', mainContact: '', agent: ''
+    },
+    activity: {
+        industry: '', businessDescription: '', monthlyVolume: '', transactionTypes: [],
+        purpose: '', paymentNature: '', originCountry: '', destinationCountry: '',
+        averageTransaction: '', maximumTransaction: '', averageBalance: '',
+        incomingPayments: '', outgoingPayments: ''
+    },
+    ownership: { owners: [] },
+    documents: { files: {} },
+    selectedWallet: null,
+    feeDetails: { baseAmount: 500, convertedAmount: 500, currency: 'EUR', exchangeRate: 1 },
+}
+
+function onboardingReducer(state, action) {
+    switch (action.type) {
+        case 'SET_STEP':
+            return { ...state, step: action.payload }
+        case 'SET_USER_TYPE':
+            return { ...state, userType: action.payload }
+        case 'SET_STATUS':
+            return { ...state, status: action.payload }
+        case 'UPDATE_ACCOUNT':
+            return { ...state, account: { ...state.account, ...action.payload } }
+        case 'UPDATE_COMPANY':
+            return { ...state, company: { ...state.company, ...action.payload } }
+        case 'UPDATE_ACTIVITY':
+            return { ...state, activity: { ...state.activity, ...action.payload } }
+        case 'UPDATE_OWNERSHIP':
+            return { ...state, ownership: { ...state.ownership, ...action.payload } }
+        case 'UPDATE_DOCUMENTS':
+            return { ...state, documents: { ...state.documents, ...action.payload } }
+        case 'SET_SELECTED_WALLET':
+            return { ...state, selectedWallet: action.payload }
+        case 'SET_FEE_DETAILS':
+            return { ...state, feeDetails: { ...state.feeDetails, ...action.payload } }
+        case 'RESET_ALL':
+            return initialState
+        default:
+            return state
+    }
+}
+
 const OnboardingIBAN = ({ onCreated }) => {
     const { t } = useTranslation()
     const can = usePermission()
@@ -36,19 +94,61 @@ const OnboardingIBAN = ({ onCreated }) => {
     const navigate = useNavigate()
 
     const canCreateIban = can("virtual-iban.account.create")
-    const { userDetails } = useContext(UserContext)
+    const { userDetails, authHeader } = useContext(UserContext)
 
-    const [step, setStep] = useState('landing')
-    const [userType, setUserType] = useState(null)
-    const [formData, setFormData] = useState({})
-    const [status, setStatus] = useState('submitted')
+    const [state, dispatch] = useReducer(onboardingReducer, initialState)
+    const [showOtpModal, setShowOtpModal] = useState(false)
+    const [otpToken, setOtpToken] = useState('')
+    const [codeType, setCodeType] = useState('sms')
 
-    const stepOrder = userType === 'individual' ? STEPS_INDIVIDUAL : STEPS_BUSINESS
+    useEffect(() => {
+        if (!userDetails?._id) return;
+        const checkRequestStatus = async () => {
+            try {
+                const res = await axios.get(
+                    `${import.meta.env.VITE_IP_DEV_API}/api/iban-fees/request-status`,
+                    { headers: authHeader }
+                );
+                const dec = decryptData(res.data?.data);
+                if (dec?.hasRequest && dec?.requestStatus && dec.requestStatus !== 'none') {
+                    dispatch({ type: 'SET_STATUS', payload: dec.requestStatus });
+                    dispatch({ type: 'SET_STEP', payload: 'status' });
+                    if (dec?.data) {
+                        dispatch({
+                            type: 'UPDATE_COMPANY',
+                            payload: {
+                                legalName: dec.data.legalCompanyName || '',
+                                tradingName: dec.data.tradingName || '',
+                                registrationNumber: dec.data.registrationNumber || '',
+                                website: dec.data.website || '',
+                                registeredAddress: dec.data.registeredAddress || '',
+                            }
+                        });
+                    }
+                }
+            } catch (err) {
+                console.error("Error fetching IBAN request status:", err);
+            }
+        };
+        checkRequestStatus();
+    }, [userDetails?._id]);
+
+    const { sendOtp } = useSendOtp({
+        onSuccess: (token) => {
+            setOtpToken(token)
+            setShowOtpModal(true)
+        },
+        onError: (err) => {
+            toast.error(err?.message || t("Unable to send verification OTP"))
+        }
+    })
+
+    const stepOrder = state.userType === 'individual' ? STEPS_INDIVIDUAL : STEPS_BUSINESS
 
     const getNextStep = (currentStep) => {
         if (currentStep === 'landing') return 'selection'
-        if (currentStep === 'selection') return 'account'
-        if (currentStep === 'account') return userType === 'individual' ? 'review' : 'company'
+        if (currentStep === 'selection') return state.userType === 'individual' ? 'review' : 'company'
+        if (currentStep === 'account') return state.userType === 'individual' ? 'review' : 'company'
         if (currentStep === 'company') return 'activity'
         if (currentStep === 'activity') return 'ownership'
         if (currentStep === 'ownership') return 'documents'
@@ -61,80 +161,145 @@ const OnboardingIBAN = ({ onCreated }) => {
 
     const getPrevStep = (currentStep) => {
         if (currentStep === 'status') return 'ActivateAccount'
-        if (currentStep === 'status') return 'pricing'
-        if (currentStep === 'status') return 'review'
-        if (currentStep === 'review') return userType === 'individual' ? 'account' : 'documents'
+        if (currentStep === 'ActivateAccount') return 'pricing'
+        if (currentStep === 'pricing') return 'review'
+        if (currentStep === 'review') return state.userType === 'individual' ? 'selection' : 'documents'
         if (currentStep === 'documents') return 'ownership'
         if (currentStep === 'ownership') return 'activity'
         if (currentStep === 'activity') return 'company'
-        if (currentStep === 'company') return 'account'
+        if (currentStep === 'company') return 'selection'
         if (currentStep === 'account') return 'selection'
         if (currentStep === 'selection') return 'landing'
         return 'landing'
     }
 
-    const goNext = (newData = {}) => {
-        // setFormData(prev => ({ ...prev, ...newData }))
-        const nextStep = getNextStep(step)
-        setStep(nextStep)
+    const goNext = (newData = {}, sectionKey = null) => {
+        if (sectionKey === 'account') dispatch({ type: 'UPDATE_ACCOUNT', payload: newData })
+        else if (sectionKey === 'company') dispatch({ type: 'UPDATE_COMPANY', payload: newData.company || newData })
+        else if (sectionKey === 'activity') dispatch({ type: 'UPDATE_ACTIVITY', payload: newData.activity || newData })
+        else if (sectionKey === 'ownership') dispatch({ type: 'UPDATE_OWNERSHIP', payload: newData.ownership || newData })
+        else if (sectionKey === 'documents') dispatch({ type: 'UPDATE_DOCUMENTS', payload: newData.documents || newData })
+        else if (newData.company) dispatch({ type: 'UPDATE_COMPANY', payload: newData.company })
+        else if (newData.activity) dispatch({ type: 'UPDATE_ACTIVITY', payload: newData.activity })
+        else if (newData.ownership) dispatch({ type: 'UPDATE_OWNERSHIP', payload: newData.ownership })
+        else if (newData.documents) dispatch({ type: 'UPDATE_DOCUMENTS', payload: newData.documents })
+
+        const nextStep = getNextStep(state.step)
+        dispatch({ type: 'SET_STEP', payload: nextStep })
     }
 
     const goBack = (target) => {
         if (typeof target === 'string' && stepOrder.includes(target)) {
-            setStep(target)
+            dispatch({ type: 'SET_STEP', payload: target })
             return
         }
-
-        setStep(getPrevStep(step))
+        dispatch({ type: 'SET_STEP', payload: getPrevStep(state.step) })
     }
 
     const handleTypeSelect = (type) => {
-        setUserType(type)
-        setStep('account')
+        dispatch({ type: 'SET_USER_TYPE', payload: type })
+        dispatch({ type: 'SET_STEP', payload: type === 'individual' ? 'review' : 'company' })
     }
 
-    const handleSubmit = (data) => {
-        setFormData(data)
-        setStatus('submitted')
-        setStep('pricing')
+    const handleInitiatePayment = async () => {
+        if (!state.selectedWallet?._id) {
+            toast.error(t("Please select an Instapay wallet to continue."))
+            return
+        }
+
+        const selectedType = userDetails?.tfa ? 'authenticator' : 'sms'
+        setCodeType(selectedType)
+
+        const payload = {
+            wallet_id: state.selectedWallet._id,
+            amount: state.feeDetails.convertedAmount,
+            currency: state.feeDetails.currency
+        }
+
+        try {
+            await sendOtp(payload, selectedType)
+        } catch (err) {
+            toast.error(t("Failed to trigger verification code"))
+        }
+    }
+
+    const handleVerifyOtpSubmit = async (setVerified, type, otp, setOtpError) => {
+        try {
+            const formData = new FormData()
+            const payloadData = {
+                wallet_id: state.selectedWallet?._id,
+                token: otpToken,
+                otp,
+                type: type || codeType,
+                ...state.company,
+                ...state.activity,
+                email: state.account.email,
+            }
+
+            formData.append('data', encryptData(payloadData))
+
+            const rawDocs = state.documents?.files || state.documents || {};
+            Object.keys(rawDocs).forEach((key) => {
+                if (key === 'files' && rawDocs.files && typeof rawDocs.files === 'object') {
+                    Object.keys(rawDocs.files).forEach((nestedKey) => {
+                        const f = rawDocs.files[nestedKey];
+                        if (f && (f instanceof File || f instanceof Blob || f.name)) {
+                            formData.append(nestedKey, f);
+                        }
+                    });
+                } else {
+                    const f = rawDocs[key];
+                    if (f && (f instanceof File || f instanceof Blob || f.name)) {
+                        formData.append(key, f);
+                    }
+                }
+            });
+
+            const response = await axios.post(
+                `${import.meta.env.VITE_IP_DEV_API}/api/iban-fees/confirm-activation`,
+                formData,
+                { headers: { ...authHeader, 'Content-Type': 'multipart/form-data' } }
+            )
+
+            const dec = decryptData(response.data?.data)
+            if (dec?.status) {
+                setVerified(true)
+                setShowOtpModal(false)
+                dispatch({ type: 'SET_STATUS', payload: 'submitted' })
+                dispatch({ type: 'SET_STEP', payload: 'status' })
+                toast.success(t("IBAN Activation request and payment completed successfully!"))
+            } else {
+                setOtpError?.(dec?.message || t("Verification failed"))
+            }
+        } catch (err) {
+            const decErr = decryptData(err?.response?.data?.data)
+            setOtpError?.(decErr?.message || t("Verification failed or insufficient balance"))
+        }
     }
 
     const handleStatusAction = () => {
-        const idx = STATUS_ORDER.indexOf(status)
-        if (idx < STATUS_ORDER.length - 1) setStatus(STATUS_ORDER[idx + 1])
+        const idx = STATUS_ORDER.indexOf(state.status)
+        if (idx < STATUS_ORDER.length - 1) dispatch({ type: 'SET_STATUS', payload: STATUS_ORDER[idx + 1] })
         else if (onCreated) onCreated()
     }
 
     const handleStatusCancel = () => {
-        setStep('landing')
-        setStatus('submitted')
-        setFormData({})
-        setUserType(null)
+        dispatch({ type: 'RESET_ALL' })
     }
 
-    const showBack = !['landing', 'status'].includes(step)
-    const isStatusStep = step === 'status'
+    const showBack = !['landing', 'status'].includes(state.step)
+
+    const fullFormData = {
+        email: state.account.email,
+        company: state.company,
+        activity: state.activity,
+        owners: state.ownership.owners,
+        documents: state.documents.files,
+    }
 
     return (
-        <div className={styles.container}>
-            <div className={styles.top}>
-                <div className={styles.headerTitle}>
-                    <div className={styles.titleWithBack}>
-                        {showBack && (
-                            <button onClick={() => goBack()} className={styles.backBtn} aria-label="Back">
-                                <ArrowLeft size={20} />
-                            </button>
-                        )}
-                        <h1>{t("Business IBAN")}</h1>
-                    </div>
-                    <p>{t("Activate a dedicated business account to receive and hold company funds.")}</p>
-                </div>
-                <div className={styles.topright}>
-                    {width > 1000 && <TopRight />}
-                </div>
-            </div>
-
-            {step === 'landing' && (
+        <div>
+            {state.step === 'landing' && (
                 <div className={styles.mainContent}>
                     <div className={styles.leftSection}>
                         <p className={styles.subHeading}>{t("NEW · BUSINESS IBAN")}</p>
@@ -146,7 +311,7 @@ const OnboardingIBAN = ({ onCreated }) => {
                         </p>
                         <div className={styles.buttoncont}>
                             {canCreateIban && (
-                                <button className={styles.buttonGroup1} onClick={() => setStep('selection')}>
+                                <button className={styles.buttonGroup1} onClick={() => handleTypeSelect('business')}>
                                     {t("Request IBAN Activation")} <ArrowRight size={16} />
                                 </button>
                             )}
@@ -162,7 +327,7 @@ const OnboardingIBAN = ({ onCreated }) => {
                 </div>
             )}
 
-            {step === 'selection' && (
+            {state.step === 'selection' && (
                 <div className={styles.selectionContainer}>
                     <div className={styles.banner}>
                         <h2 className={styles.bannerTitle}>{t("One activation. A whole financial system.")}</h2>
@@ -188,115 +353,118 @@ const OnboardingIBAN = ({ onCreated }) => {
                         </div>
                     </div>
 
-                    <div className={styles.selectionTitleCont}>
-                        <h3 className={styles.selectionHeading}>{t("How will you use InstaPay?")}</h3>
-                    </div>
-
-                    <div className={styles.choiceCards}>
-                        <div
-                            className={styles.choiceCard}
+                    <div style={{ display: "flex", justifyContent: "flex-end", marginTop: "25px" }}>
+                        <button
+                            className={styles.buttonGroup1}
+                            style={{ display: "flex", alignItems: "center", gap: "8px", cursor: "pointer", padding: "12px 32px", fontSize: "15px", fontWeight: 600 }}
                             onClick={() => handleTypeSelect('business')}
-                            role="button" tabIndex={0}
-                            onKeyDown={e => e.key === 'Enter' && handleTypeSelect('business')}
                         >
-                            <div className={styles.choiceIconBox}>
-                                <Briefcase size={22} className={styles.choiceIcon} />
-                            </div>
-                            <h3>{t("Business")}</h3>
-                            <p>{t("For companies. Full KYB, UBOs & entity shareholders, multi-currency and crypto-to-fiat. Reviewed by our onboarding team.")}</p>
-                            <div className={styles.badgeContainer}>
-                                <span className={styles.badge}>{t("KYB")}</span>
-                                <span className={styles.badge}>{t("UBO / directors")}</span>
-                                <span className={styles.badge}>{t("Risk-based")}</span>
-                            </div>
-                        </div>
-
-                        <div
-                            className={styles.choiceCard}
-                            onClick={() => handleTypeSelect('individual')}
-                            role="button" tabIndex={0}
-                            onKeyDown={e => e.key === 'Enter' && handleTypeSelect('individual')}
-                        >
-                            <div className={styles.choiceIconBox}>
-                                <User size={22} className={styles.choiceIcon} />
-                            </div>
-                            <h3>{t("Individual")}</h3>
-                            <p>{t("For personal use. Streamlined identity check and a Malta EUR IBAN, ready to receive SEPA and SWIFT.")}</p>
-                            <div className={styles.badgeContainer}>
-                                <span className={styles.badge}>{t("KYC")}</span>
-                                <span className={styles.badge}>{t("Fast track")}</span>
-                                <span className={styles.badge}>{t("EUR IBAN")}</span>
-                            </div>
-                        </div>
+                            {t("Continue")} <ArrowRight size={18} />
+                        </button>
                     </div>
                 </div>
             )}
 
-            {step === 'account' && (
-                <AccountStep onNext={goNext} onBack={goBack} userType={userType} data={formData} />
-            )}
-
-            {step === 'company' && (
-                <CompanyStep onNext={goNext} onBack={goBack} userType={userType} data={formData.company} />
-            )}
-
-            {step === 'activity' && (
-                <ActivityStep onNext={goNext} onBack={goBack} userType={userType} data={formData.activity} />
-            )}
-
-            {step === 'ownership' && (
-                <OwnershipStep onNext={goNext} onBack={goBack} userType={userType} data={{ owners: formData.owners }} />
-            )}
-
-            {step === 'documents' && (
-                <DocumentsStep onNext={goNext} onBack={goBack} userType={userType} data={{ files: formData.documents }} />
-            )}
-
-
-
-            {step === 'pricing' && (
-                <Pricing
-                    onNext={() => {
-                        setStatus('submitted')
-                        setStep('ActivateAccount')
-                    }}
+            {/* {state.step === 'account' && (
+                <AccountStep
+                    onNext={(d) => goNext(d, 'account')}
                     onBack={goBack}
-                    userType={userType}
-                    t={t}
-                />)}
-            {step === 'ActivateAccount' && (
-                <ActivateAccount
-                    onNext={() => {
-                        setStatus('submitted')
-                        setStep('status')
-                    }}
-                    onBack={goBack}
-                    userType={userType}
-                    t={t}
-                />)}
+                    userType={state.userType}
+                    data={state.account}
+                />
+            )} */}
 
-            {step === 'review' && (
-                <ReviewStep
-                    onNext={() => {
-                        setStatus('submitted')
-                        setStep('pricing')
-                    }}
-                    t={t}
-                    onBack={(target) => goBack(target)}
-                    allData={formData}
-                    userType={userType}
+            {state.step === 'company' && (
+                <CompanyStep
+                    onNext={(d) => goNext(d.company || d, 'company')}
+                    onBack={goBack}
+                    userType={state.userType}
+                    data={state.company}
                 />
             )}
-            {step === 'status' && (
+
+            {state.step === 'activity' && (
+                <ActivityStep
+                    onNext={(d) => goNext(d.activity || d, 'activity')}
+                    onBack={goBack}
+                    userType={state.userType}
+                    data={state.activity}
+                />
+            )}
+
+            {state.step === 'ownership' && (
+                <OwnershipStep
+                    onNext={(d) => goNext({ owners: d.owners || d }, 'ownership')}
+                    onBack={goBack}
+                    userType={state.userType}
+                    data={{ owners: state.ownership.owners }}
+                />
+            )}
+
+            {state.step === 'documents' && (
+                <DocumentsStep
+                    onNext={(d) => goNext({ files: d.documents || d }, 'documents')}
+                    onBack={goBack}
+                    userType={state.userType}
+                    data={{ files: state.documents.files }}
+                />
+            )}
+
+            {state.step === 'review' && (
+                <ReviewStep
+                    onNext={() => dispatch({ type: 'SET_STEP', payload: 'pricing' })}
+                    onSubmit={() => dispatch({ type: 'SET_STEP', payload: 'pricing' })}
+                    t={t}
+                    onBack={(target) => goBack(target)}
+                    allData={fullFormData}
+                    userType={state.userType}
+                />
+            )}
+
+            {state.step === 'pricing' && (
+                <Pricing
+                    onNext={() => dispatch({ type: 'SET_STEP', payload: 'ActivateAccount' })}
+                    onBack={goBack}
+                    userType={state.userType}
+                    t={t}
+                />
+            )}
+
+            {state.step === 'ActivateAccount' && (
+                <ActivateAccount
+                    onBack={goBack}
+                    userType={state.userType}
+                    t={t}
+                    selectedWallet={state.selectedWallet}
+                    setSelectedWallet={(w) => dispatch({ type: 'SET_SELECTED_WALLET', payload: w })}
+                    feeDetails={state.feeDetails}
+                    setFeeDetails={(fd) => dispatch({ type: 'SET_FEE_DETAILS', payload: fd })}
+                    onSubmitPayment={handleInitiatePayment}
+                />
+            )}
+
+            {state.step === 'status' && (
                 <StatusScreen
-                    status={status}
+                    status={state.status}
                     ibanNumber={null}
-                    companyName={formData?.company?.legalName || formData?.email}
+                    companyName={state.company?.legalName || state.account?.email}
                     onAction={handleStatusAction}
                     onCancel={handleStatusCancel}
                 />
             )}
-          
+
+            <Modal isOpen={showOtpModal} toggle={() => setShowOtpModal(false)} centered>
+                <ModalBody>
+                    <OTPConfirmation
+                        authType={codeType}
+                        setAuthType={setCodeType}
+                        callback={handleVerifyOtpSubmit}
+                        hideOtp={() => setShowOtpModal(false)}
+                        setter={() => { }}
+                        resendHandler={() => sendOtp({ wallet_id: state.selectedWallet?._id }, codeType)}
+                    />
+                </ModalBody>
+            </Modal>
         </div>
     )
 }

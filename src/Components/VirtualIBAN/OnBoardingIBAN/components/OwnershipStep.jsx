@@ -37,7 +37,7 @@ const OwnershipStep = ({ onNext, onBack, userType, data = {} }) => {
     }
 
     const handleContinue = () => {
-        onNext({ owners })
+        onNext({ owners }, 'ownership')
     }
 
     const steps = [

@@ -29,7 +29,7 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {} }) => {
     }
 
     const handleContinue = () => {
-        onNext({ documents: files })
+        onNext({ files }, 'documents')
     }
 
     const steps = [
@@ -132,26 +132,22 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {} }) => {
                         <div className={styles.documentList}>
                             <div className={styles.documentRow}>
                                 <div className={styles.left}>
-                                    <span className={styles.success}></span>
+                                    <span className={styles.empty}></span>
                                     <span>
                                         Recent commercial register extract or certificate of incorporation
                                     </span>
                                 </div>
 
-                                <div className={styles.right}>
-                                    <span className={styles.provided}>PROVIDED</span>
-                                </div>
+                                {renderUploadControl('commercial_register', styles.required, 'REQUIRED')}
                             </div>
 
                             <div className={styles.documentRow}>
                                 <div className={styles.left}>
-                                    <span className={styles.success}></span>
+                                    <span className={styles.empty}></span>
                                     <span>Company articles of association</span>
                                 </div>
 
-                                <div className={styles.right}>
-                                    <span className={styles.provided}>PROVIDED</span>
-                                </div>
+                                {renderUploadControl('articles_association', styles.required, 'REQUIRED')}
                             </div>
 
                             <div className={styles.documentRow}>
@@ -218,15 +214,13 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {} }) => {
 
                             <div className={styles.documentRow}>
                                 <div className={styles.left}>
-                                    <span className={styles.success}></span>
+                                    <span className={styles.empty}></span>
                                     <span>
                                         Recent business bank statement showing company name and address
                                     </span>
                                 </div>
 
-                                <div className={styles.right}>
-                                    <span className={styles.provided}>PROVIDED</span>
-                                </div>
+                                {renderUploadControl('bank_statement', styles.required, 'REQUIRED')}
                             </div>
 
                             <div className={styles.documentRow}>
@@ -257,35 +251,29 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {} }) => {
                         <div className={styles.documentList}>
                             <div className={styles.documentRow}>
                                 <div className={styles.left}>
-                                    <span className={styles.success}></span>
+                                    <span className={styles.empty}></span>
                                     <span>Shareholders register</span>
                                 </div>
 
-                                <div className={styles.right}>
-                                    <span className={styles.provided}>PROVIDED</span>
-                                </div>
+                                {renderUploadControl('shareholders_register', styles.required, 'REQUIRED')}
                             </div>
 
                             <div className={styles.documentRow}>
                                 <div className={styles.left}>
-                                    <span className={styles.success}></span>
+                                    <span className={styles.empty}></span>
                                     <span>Ownership structure chart</span>
                                 </div>
 
-                                <div className={styles.right}>
-                                    <span className={styles.provided}>PROVIDED</span>
-                                </div>
+                                {renderUploadControl('ownership_chart', styles.required, 'REQUIRED')}
                             </div>
 
                             <div className={styles.documentRow}>
                                 <div className={styles.left}>
-                                    <span className={styles.success}></span>
+                                    <span className={styles.empty}></span>
                                     <span>UBO declaration (including corporate UBO if applicable)</span>
                                 </div>
 
-                                <div className={styles.right}>
-                                    <span className={styles.provided}>PROVIDED</span>
-                                </div>
+                                {renderUploadControl('ubo_declaration', styles.required, 'REQUIRED')}
                             </div>
 
                             <div className={styles.documentRow}>
