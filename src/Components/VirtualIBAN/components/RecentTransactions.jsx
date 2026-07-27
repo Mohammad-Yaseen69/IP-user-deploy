@@ -212,7 +212,15 @@ const RecentTransactions = ({
               <Button
                 className={styles.toolBtn}
                 onClick={(e) => setAnchorSort(e.currentTarget)}
-                startIcon={<ArrowUp size={13} />}
+                startIcon={
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                    <path d="M3 8H7.5" stroke="#1B1F2A" stroke-linecap="round" stroke-linejoin="round" />
+                    <path d="M3 4H6.5" stroke="#1B1F2A" stroke-linecap="round" stroke-linejoin="round" />
+                    <path d="M3 12H11.5" stroke="#1B1F2A" stroke-linecap="round" stroke-linejoin="round" />
+                    <path d="M9 5.5L11.5 3L14 5.5" stroke="#1B1F2A" stroke-linecap="round" stroke-linejoin="round" />
+                    <path d="M11.5 3V9" stroke="#1B1F2A" stroke-linecap="round" stroke-linejoin="round" />
+                  </svg>
+                }
               >
                 <span>{t("Sort By")}</span>
               </Button>

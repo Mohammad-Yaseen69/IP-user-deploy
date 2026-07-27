@@ -59,13 +59,16 @@
     padding: 8px 12px;
     align-items: center;
     gap: 6px;
-    border-radius: 6px;
-    background: #F8F9FA;
+    border-radius: var(--sm, 6px);
+    background: var(--bg-surface, #EFF1F6);
     border: none;
-    color: #344054;
-    font-size: 13px;
+    color: var(--gray-gray-900, #1B1F2A);
+    text-align: center;
+    font-size: 12px;
+    font-style: normal;
     font-weight: 500;
-    cursor: pointer;
+    line-height: normal;
+    letter-spacing: -0.36px;
     transition: background 0.2s ease;
 }
 
@@ -129,8 +132,8 @@
     width: 100%;
     box-sizing: border-box;
     border-radius: var(--sm, 6px);
-    border: 1px solid #D1E9FF;
-    background: radial-gradient(174.69% 292.21% at 68.74% -77.63%, #EFF6FF 0%, #FFFFFF 100%);
+    border: 1px solid #F2EEFF;
+    background: radial-gradient(174.69% 292.21% at 68.74% -77.63%, #F2EEFF 0%, #FFF 100%);
     gap: 16px;
 }
 
@@ -148,7 +151,7 @@
 }
 
 .label {
-    color: #667085;
+    color: #6E7687;
     font-size: 13px;
     font-weight: 500;
     text-transform: none;

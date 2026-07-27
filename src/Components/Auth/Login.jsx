@@ -1588,7 +1588,7 @@ const Login = ({ country, setIsLoginForm, }) => {
                                         {t("Back")}
                                     </button>
                                 }
-                                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', alignItems: 'flex-start' }}>
+                                <div className={styles.bottom_class}>
                                     {
                                         isPressed ? (<>
                                             ‎
