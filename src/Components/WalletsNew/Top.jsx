@@ -279,19 +279,36 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
                     <div className={styles.badge}>{currentWallet?.currency?.code}  {t("Wallet")}</div>
                 </div>
                 <div className={styles.actions}>
-                    {can("wallet.payment.topup") && (
-                        <Tooltip
-                            title={t("This currency wallet is currently blocked/disabled and funds cannot be added.")}
-                            arrow
-                            disableHoverListener={!blockedWallet}
+                    {can("wallet.payment.topup") ?
+                        <button
+                            disabled={blockedWallet}
+                            style={{
+                                opacity: blockedWallet ? .7 : 1,
+                                cursor: blockedWallet ? "not-allowed" : "pointer",
+                                backgroundColor: blockedWallet ? "grey" : "white",
+                                color: blockedWallet ? "white" : "inherit",
+                            }}
+                            className={styles.action}
+                            onClick={() => {
+                                navigate(`/add-funds?type=${currentWallet?.wallet_type === "crypto" ? "crypto" : "wallet"}&wallet_address=${currentWallet?.wallet_id}`)
+                            }}
                         >
+                            <img src={add_funds} alt="" />
+                            {t("Add Funds")}
+                        </button>
+                        : (
+                            <Tooltip
+                                title={t("This currency wallet is currently blocked/disabled and funds cannot be added.")}
+                                arrow
+                                disableHoverListener={!blockedWallet}
+                            >
                                 <button
-                                    disabled={blockedWallet}
+                                    disabled={true}
                                     style={{
-                                        opacity: blockedWallet ? .7 : 1,
-                                        cursor: blockedWallet ? "not-allowed" : "pointer",
-                                        backgroundColor: blockedWallet ? "grey" : "white",
-                                        color: blockedWallet ? "white" : "inherit",
+                                        opacity: .7,
+                                        cursor: "not-allowed",
+                                        backgroundColor: "grey",
+                                        color: "white",
                                     }}
                                     className={styles.action}
                                     onClick={() => {
@@ -301,44 +318,75 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
                                     <img src={add_funds} alt="" />
                                     {t("Add Funds")}
                                 </button>
-                        </Tooltip>)}
+                            </Tooltip>)}
 
-                    {can("wallet.payment.conversion") && (
-                        <Tooltip
-                            title={t("This currency wallet is currently blocked/disabled and funds cannot be converted.")}
-                            arrow
-                            disableHoverListener={!blockedWallet}
+                    {can("wallet.payment.conversion") ?
+                        <button
+                            disabled={blockedWallet}
+                            style={{
+                                opacity: blockedWallet ? .7 : 1,
+                                cursor: blockedWallet ? "not-allowed" : "pointer",
+                                backgroundColor: blockedWallet ? "grey" : "white",
+                                color: blockedWallet ? "white" : "inherit",
+                            }}
+                            className={styles.action}
+                            onClick={() => setShowConversionModal(!showConversionModal)}
+                            id="convert_funds"
                         >
-                            <button
-                                disabled={blockedWallet}
-                                style={{
-                                    opacity: blockedWallet ? .7 : 1,
-                                    cursor: blockedWallet ? "not-allowed" : "pointer",
-                                    backgroundColor: blockedWallet ? "grey" : "white",
-                                    color: blockedWallet ? "white" : "inherit",
-                                }}
-                                className={styles.action}
-                                onClick={() => setShowConversionModal(!showConversionModal)}
-                                id="convert_funds"
+                            <img style={{ height: "20px" }} src={convert} alt="" />
+                            {service_name_formatter(t("convert funds "))}
+                        </button> : (
+                            <Tooltip
+                                title={t("This currency wallet is currently blocked/disabled and funds cannot be converted.")}
+                                arrow
+                                disableHoverListener={!blockedWallet}
                             >
-                                <img style={{ height: "20px" }} src={convert} alt="" />
-                                {service_name_formatter(t("convert funds "))}
-                            </button>
-                        </Tooltip>
-                    )}
+                                <button
+                                    disabled={true}
+                                    style={{
+                                        opacity: .7,
+                                        cursor: "not-allowed",
+                                        backgroundColor: "grey",
+                                        color: "white",
+                                    }}
+                                    className={styles.action}
+                                    onClick={() => setShowConversionModal(!showConversionModal)}
+                                    id="convert_funds"
+                                >
+                                    <img style={{ height: "20px" }} src={convert} alt="" />
+                                    {service_name_formatter(t("convert funds "))}
+                                </button>
+                            </Tooltip>
+                        )}
 
-                    {can("wallet.payment.withdraw") && (
+                    {can("wallet.payment.withdraw") ? (
+                        <button
+                            disabled={blockedWallet}
+                            style={{
+                                opacity: blockedWallet ? .7 : 1,
+                                cursor: blockedWallet ? "not-allowed" : "pointer",
+                                backgroundColor: blockedWallet ? "grey" : "white",
+                                color: blockedWallet ? "white" : "inherit",
+                            }}
+                            className={styles.action}
+                            onClick={() => setShowWithdrawalModal(!showWithdrawalModal)}
+                            id="withdraw_balance"
+                        >
+                            <img style={{ height: "20px" }} src={withdraw} alt="" />
+                            {service_name_formatter(t("withdraw balance"))}
+                        </button>
+                    ) : (
                         <Tooltip
                             title={t("This currency wallet is currently blocked/disabled and you cannot withdraw balance.")}
                             arrow
                         >
                             <button
-                                disabled={blockedWallet}
+                                disabled={true}
                                 style={{
-                                    opacity: blockedWallet ? .7 : 1,
-                                    cursor: blockedWallet ? "not-allowed" : "pointer",
-                                    backgroundColor: blockedWallet ? "grey" : "white",
-                                    color: blockedWallet ? "white" : "inherit",
+                                    opacity: .7,
+                                    cursor: "not-allowed",
+                                    backgroundColor: "grey",
+                                    color: "white",
                                 }}
                                 className={styles.action}
                                 onClick={() => setShowWithdrawalModal(!showWithdrawalModal)}
@@ -350,12 +398,8 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
                         </Tooltip>
                     )}
 
-                    {can("transactions.wallet.export") && (
-                        <Tooltip
-                            title={t("This currency wallet is currently blocked/disabled and you cannot download the statement.")}
-                            arrow
-                            disableHoverListener={!blockedWallet}
-                        >                       <button
+                    {can("transactions.wallet.export") ?
+                        <button
                             disabled={blockedWallet}
                             style={{
                                 opacity: blockedWallet ? .7 : 1,
@@ -368,12 +412,32 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
                             onClick={() => setShowDownloadStatementModal(!showDownloadStatementModal)}
                             id={"download_statement"}
                         >
-                                <img style={{ height: "20px" }} src={download} alt="" />
-                                {t("Download Statement")}
-                            </button>
-                        </Tooltip>
+                            <img style={{ height: "20px" }} src={download} alt="" />
+                            {t("Download Statement")}
+                        </button>
+                        : (
+                            <Tooltip
+                                title={t("This currency wallet is currently blocked/disabled and you cannot download the statement.")}
+                                arrow
+                                disableHoverListener={!blockedWallet}
+                            >                       <button
+                                disabled={true}
+                                style={{
+                                    opacity: .7,
+                                    cursor: "not-allowed",
+                                    backgroundColor: "grey",
+                                    color: "white",
+                                }}
+                                className={styles.action}
+                                onClick={() => setShowDownloadStatementModal(!showDownloadStatementModal)}
+                                id={"download_statement"}
+                            >
+                                    <img style={{ height: "20px" }} src={download} alt="" />
+                                    {t("Download Statement")}
+                                </button>
+                            </Tooltip>
 
-                    )}
+                        )}
 
                     {can("wallet.status.update") && (
                         <Tooltip
@@ -427,7 +491,7 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
                             </button>
                         </Tooltip>
                     )}
-               
+
                 </div>
             </div>
             <DefaultWalletModal
