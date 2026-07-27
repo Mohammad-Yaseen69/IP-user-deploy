@@ -84,6 +84,15 @@ const IbanValidationPage = lazy(() => import("../Components/VirtualIBAN/IbanVali
 const InstaMedia = lazy(() => import("../Components/InstaMedia"))
 const StatementsLetters = lazy(() => import("../Components/VirtualIBAN/StatementsLetters/StatementsLetters.jsx"))
 const BeneficiariesVirtual = lazy(() => import("../Components/VirtualIBAN/Beneficiaries/BeneficiariesVirtual.jsx"))
+const AgentCommission = lazy(() => import("../Components/AgentCommission/index.jsx"))
+const Leads = lazy(() => import("../Components/AgentCommission/Leads/Leads.jsx"))
+const SubAgents = lazy(() => import("../Components/AgentCommission/SubAgents/SubAgents.jsx"))
+const Commissions = lazy(() => import("../Components/AgentCommission/Commissions/Commissions.jsx"))
+const Clients = lazy(() => import("../Components/AgentCommission/Clients/Clients.jsx"))
+const Documents = lazy(() => import("../Components/AgentCommission/Documents/Documents.jsx"))
+const Reports = lazy(() => import("../Components/AgentCommission/Reports/Reports.jsx"))
+const Support = lazy(() => import("../Components/AgentCommission/Support/Support.jsx"))
+const AgentProfile = lazy(() => import("../Components/AgentCommission/Profile/Profile.jsx"))
 
 
 const PermissionRoute = ({ permission, children }) => {
@@ -188,7 +197,15 @@ export const routes = [
     { path: "/onboarding-IBAN/moneymove", component: <PermissionRoute permission="virtual-iban.view"><MoveMoney /></PermissionRoute> },
     { path: "/third-party-senders", component: <PermissionRoute permission="payments.send-as-third-party.view"><ThirdPartySenders /></PermissionRoute> },
     { path: "/iban-onboarding", component: <OnboardingIBAN /> },
-
+    { path: "/agent-commission", component: <PermissionRoute permission="agent-commission.view"><AgentCommission /></PermissionRoute> },
+    { path: "/leads", component: <PermissionRoute permission="leads.view"><Leads /></PermissionRoute> },
+    { path: "/sub-agents", component: <PermissionRoute permission="sub-agents.view"><SubAgents /></PermissionRoute> },
+    { path: "/commissions", component: <PermissionRoute permission="commissions.view"><Commissions /></PermissionRoute> },
+    { path: "/clients", component: <PermissionRoute permission="clients.view"><Clients /></PermissionRoute> },
+    { path: "/documents", component: <PermissionRoute permission="documents.view"><Documents /></PermissionRoute> },
+    { path: "/reports", component: <PermissionRoute permission="reports.view"><Reports /></PermissionRoute> },
+    { path: "/support", component: <PermissionRoute permission="support.view"><Support /></PermissionRoute> },
+    { path: "/agent-profile", component: <PermissionRoute permission="agent-profile.view"><AgentProfile /></PermissionRoute> },
     { path: "*", component: <NotFound type='Page' /> }
 ]
 export const publicRoutes = [
