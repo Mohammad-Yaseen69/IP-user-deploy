@@ -182,6 +182,7 @@ const QuotationDetails = ({ amount, currency, setAmount, setCurrency, title, set
                                     id='files'
                                     hidden
                                     multiple={false}
+                                    accept="image/*"
                                     type='file'
                                     onChange={(e) => {
                                         const file = e.target?.files?.[0];
@@ -262,10 +263,8 @@ const QuotationDetails = ({ amount, currency, setAmount, setCurrency, title, set
                         })}
                     </div>
                 </div>
-                {/* remove img modal */}
                 <ImagePreviewModal isOpen={showPreview} toggle={() => setShowPreview(!showPreview)} currentImage={currentImage} />
 
-                {/* remove file modal */}
                 <Modal isOpen={showDelModal} toggle={() => setShowDelModal(!showDelModal)}>
                     <ModalHeader toggle={() => setShowDelModal(!showDelModal)}>{t("Confirm Removing File")}</ModalHeader>
                     <ModalBody>{t("Are you sure, you want to remove this file?")}</ModalBody>
