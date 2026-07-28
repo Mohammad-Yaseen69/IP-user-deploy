@@ -1,0 +1,70 @@
+.container {
+    padding: 24px;
+    min-height: 100vh;
+    font-family: 'Inter', sans-serif;
+    background-color: #F8F9FC;
+}
+
+.top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.headerTitle h1 {
+    color: #5626e6;
+    font-size: 40px;
+    font-weight: 700;
+    margin: 0;
+}
+
+.headerTitle p {
+    color: #868686;
+    font-size: 14px;
+    font-weight: 400;
+    margin: 0;
+}
+
+.main {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    max-width: 1400px;
+    margin-top: 20px;
+}
+
+.cardSection {
+    background: #FFFFFF;
+    border-radius: 12px;
+    border: 1px solid #EBE8F5;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.sectionTitle {
+    font-size: 18px;
+    font-weight: 600;
+    color: #101828;
+    margin: 0;
+}
+
+.infoRow {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid #EAECF0;
+}
+
+.label {
+    font-size: 14px;
+    font-weight: 500;
+    color: #6E7687;
+}
+
+.value {
+    font-size: 14px;
+    font-weight: 600;
+    color: #101828;
+}

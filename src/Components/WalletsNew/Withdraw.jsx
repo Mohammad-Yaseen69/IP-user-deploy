@@ -420,7 +420,7 @@ const WithdrawOldFlow = ({
         setStep(next)
 
         if (next === 1) {
-            setPayoutChannel("")
+            setIsLoading(false)
             setAmount(1.00)
             setAmountError("")
             setQuotationDetails(null)
@@ -435,7 +435,6 @@ const WithdrawOldFlow = ({
             setAgree(false)
             setCodeType(userDetails?.tfa ? "authenticator" : "sms")
         } else if (next === 2) {
-            // If stepping back to step 2, clear anything created in step 3/4
             setCreatedQuotation(null)
             setCreatedTransaction("")
             setTransactionDetails("")

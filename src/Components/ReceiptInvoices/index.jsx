@@ -44,9 +44,12 @@ const ReceiptInvoice = () => {
     })
     const invoices = data?.data || []
     const isDirectCardInvoice = (inv) => {
-        const invoiceType = inv?.invoiceType?.toLowerCase()
-        const paymentMethod = inv?.guestDetails?.paymentMethod?.toLowerCase()
-        return invoiceType === "direct-card" || invoiceType === "direct_card" || paymentMethod === "card"
+        const invoiceType = inv?.invoiceType
+            ?.toString()
+            ?.trim()
+            ?.toLowerCase()
+
+        return ["direct-card", "direct_card"].includes(invoiceType)
     }
     const visibleInvoices = useMemo(() => {
 
@@ -160,7 +163,7 @@ const ReceiptInvoice = () => {
             </div>
             ) : (
                 <div>
-                    
+
                     <PricingsAndPlan isInvoicePage={true} />
                 </div>
             )}

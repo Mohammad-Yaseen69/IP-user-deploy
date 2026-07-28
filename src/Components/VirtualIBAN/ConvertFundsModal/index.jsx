@@ -24,6 +24,7 @@ import SidebarProgress from "../VirtualIbanModal/SidebarProgress"
 import PaymentStep from "../../MyMasterCard/PaymentModal/PaymentStep"
 import { getAmountNumber } from "../utils/amount"
 import { useExecuteVirtualIbanTransfer, useVirtualIbanTransferFee } from "../../../hooks/useVirtualIban"
+import { getErrorMessage } from "../../../Helper/getErrorMessage"
 
 const CoinsIcon = () => (
     <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
@@ -85,16 +86,8 @@ const SIDEBAR_ICONS = {
     [STEPS.DONE]: () => <SealCheckSmall />,
 }
 
-// Mock wallet data for the convert flow
-const MOCK_WALLETS = [
-    { code: "EUR", walletId: "3MKTGFY7", balance: "€53,180.07" },
-    { code: "USD", walletId: "7HKWPR92", balance: "$12,450.00" },
-    { code: "GBP", walletId: "9XLQNM41", balance: "£8,320.50" },
-    { code: "INR", walletId: "2BVTJF85", balance: "₹9,00,000.00" },
-]
 
-const getErrorMessage = (error, fallback) =>
-    error?.response?.data?.message || error?.message || fallback
+
 
 const ConvertFundsModal = ({ isOpen, toggle, selectedIban, availableBalance }) => {
     const { t } = useTranslation()
