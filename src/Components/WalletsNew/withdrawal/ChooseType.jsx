@@ -1,11 +1,11 @@
-import React, { useContext, useMemo } from 'react'
+import { useContext, useMemo } from 'react'
 import { Check } from 'react-feather'
-import { Card, CardBody } from 'reactstrap'
-import { service_name_formatter } from '../../TransactionsNewApi/TransactionItem'
-import i from "../../PaymentsNewer/files/PaymentsNewFiles/i.svg"
 import { useTranslation } from 'react-i18next'
-import { UserContext } from '../../../Context/UserContext'
 import { useNavigate } from 'react-router'
+import { Card, CardBody } from 'reactstrap'
+import { UserContext } from '../../../Context/UserContext'
+import i from "../../PaymentsNewer/files/PaymentsNewFiles/i.svg"
+import { service_name_formatter } from '../../TransactionsNewApi/TransactionItem'
 
 const ChooseType = ({ selected, setter }) => {
     const { t } = useTranslation()

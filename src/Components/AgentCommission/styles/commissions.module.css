@@ -1,0 +1,362 @@
+.container {
+    padding: 24px;
+    min-height: 100vh;
+    font-family: 'Inter', sans-serif;
+}
+
+.top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    position: relative;
+    margin: 0px;
+    padding: 0px;
+}
+
+.headerTitle {
+    margin: 0px;
+    padding: 0px;
+}
+
+.headerTitle h1 {
+    color: #5626e6;
+    font-size: 40px;
+    font-style: normal;
+    font-weight: 700;
+    margin: 0px;
+    padding: 0px;
+}
+
+.headerTitle p {
+    color: #868686;
+    font-size: 14px;
+    font-weight: 400;
+    margin: 0px;
+    padding: 0px;
+}
+
+.topright {
+    margin-top: 100px;
+}
+
+.main {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    max-width: 1400px;
+}
+
+
+.statsGrid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px;
+}
+
+.statCard {
+    display: flex;
+    padding: 20px 24px;
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 8px;
+    flex: 1 0 0;
+    align-self: stretch;
+    border-radius: 14px;
+    border-top: 2px solid #5926F0;
+    background: #FFF;
+    box-shadow: 0 2px 15px 0 rgba(12, 10, 32, 0.06);
+}
+
+.statCard:nth-child(2) {
+    border-top: 2px solid #F59E0B;
+}
+
+.statCard:nth-child(3) {
+    border-top: 2px solid #10B981;
+}
+
+.statCard:nth-child(4) {
+    border-top: 2px solid #5926F0;
+}
+
+.statTop {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.statTitle {
+    color: #69707d;
+    font-size: 12px;
+    line-height: 16px;
+    font-weight: 500;
+}
+
+.statValue {
+    color: #20232b;
+    font-size: 18px;
+    line-height: 24px;
+    font-weight: 700;
+}
+
+.statSubtext {
+    color: #9b9eaa;
+    font-size: 12px;
+    line-height: 15px;
+}
+
+.statIcon {
+    width: 24px;
+    height: 24px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.iconPurple {
+    color: #6947e8;
+    background: #f0ecff;
+}
+
+.iconYellow {
+    color: #c69b00;
+    background: #fff8d9;
+}
+
+.iconGreen {
+    color: #159b6d;
+    background: #e2f8ef;
+}
+
+
+/* =========================
+   SECTION CARD
+========================= */
+
+.sectionCard {
+    width: 100%;
+    padding: 12px;
+    background: #ffffff;
+    border: 1px solid #e5e7ec;
+    border-radius: 8px;
+    box-sizing: border-box;
+}
+
+.sectionHeader,
+.statementHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.sectionHeader h2,
+.statementHeader h2 {
+    margin: 0;
+    color: #242731;
+    font-size: 14px;
+    line-height: 20px;
+    font-weight: 600;
+}
+
+.editButton {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    padding: 0;
+    border: none;
+    background: transparent;
+    color: #5626e6;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+
+/* =========================
+   COMMISSION RULES
+========================= */
+
+.rulesGrid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px;
+}
+
+.ruleCard {
+    min-height: 42px;
+    padding: 7px 9px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 2px;
+    background: #faf9fd;
+    border-radius: 5px;
+}
+
+.ruleName {
+    color: #8a8d99;
+    font-size: 12px;
+    line-height: 15px;
+    font-weight: 500;
+    text-transform: uppercase;
+}
+
+.ruleRate {
+    color: #5626e6;
+    font-size: 13px;
+    line-height: 17px;
+    font-weight: 600;
+}
+
+
+/* =========================
+   TABLE
+========================= */
+
+.tableContainer {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.tableHeaderRow,
+.tableDataRow {
+    min-width: 720px;
+    display: grid;
+    grid-template-columns: 1.6fr 1.5fr 1fr 0.7fr 1fr 0.8fr;
+    align-items: center;
+    column-gap: 12px;
+}
+
+.tableHeaderRow {
+    min-height: 26px;
+    padding: 0 10px;
+    box-sizing: border-box;
+    background: #eef0f5;
+    border-radius: 5px;
+    color: #777d89;
+    font-size: 12px;
+    line-height: 16px;
+    font-weight: 500;
+}
+
+.tableDataRow {
+    min-height: 34px;
+    padding: 0 10px;
+    box-sizing: border-box;
+    border-bottom: 1px solid #f0f1f4;
+    color: #292c34;
+    font-size: 12px;
+    line-height: 16px;
+    font-weight: 400;
+}
+
+.tableDataRow:last-child {
+    border-bottom: none;
+}
+
+.clientCell {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    min-width: 0;
+}
+
+.clientName {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.avatar {
+    width: 20px;
+    height: 20px;
+    min-width: 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    line-height: 12px;
+    font-weight: 600;
+}
+
+.avatarPurple {
+    color: #7555e8;
+    background: #eeeaff;
+}
+
+.avatarBlue {
+    color: #3199c7;
+    background: #e6f7fc;
+}
+
+.avatarGreen {
+    color: #2a9e64;
+    background: #e7f8ed;
+}
+
+
+/* =========================
+   STATUS BADGES
+========================= */
+
+.badgePaid,
+.badgePending {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 42px;
+    padding: 3px 8px;
+    border-radius: 10px;
+    font-size: 12px;
+    line-height: 15px;
+    font-weight: 500;
+}
+
+.badgePaid {
+    background: #e7f8ed;
+    color: #26945a;
+}
+
+.badgePending {
+    background: #fff6df;
+    color: #c58b18;
+}
+
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 1000px) {
+    .statsGrid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .rulesGrid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 600px) {
+    .container {
+        padding: 12px;
+    }
+
+    .statsGrid {
+        grid-template-columns: 1fr;
+    }
+
+    .rulesGrid {
+        grid-template-columns: 1fr;
+    }
+
+    .top {
+        flex-direction: column;
+        gap: 10px;
+    }
+}

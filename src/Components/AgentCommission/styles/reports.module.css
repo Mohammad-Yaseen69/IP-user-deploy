@@ -1,0 +1,76 @@
+.container {
+    padding: 24px;
+    min-height: 100vh;
+    font-family: 'Inter', sans-serif;
+    background-color: #F8F9FC;
+}
+
+.top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.headerTitle h1 {
+    color: #5626e6;
+    font-size: 40px;
+    font-weight: 700;
+    margin: 0;
+}
+
+.headerTitle p {
+    color: #868686;
+    font-size: 14px;
+    font-weight: 400;
+    margin: 0;
+}
+
+.main {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    max-width: 1400px;
+    margin-top: 20px;
+}
+
+.boxSection {
+    background: #FFFFFF;
+    border-radius: 13px;
+    border: 1px solid #EBE8F5;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.sectionTitle {
+    font-size: 16px;
+    font-weight: 600;
+    color: #101828;
+    margin: 0;
+}
+
+.exportButtons {
+    display: flex;
+    gap: 12px;
+}
+
+.exportBtn {
+    height: 40px;
+    padding: 8px 16px;
+    border-radius: 8px;
+    border: 1px solid #E1E5EE;
+    background: #FFFFFF;
+    color: #1B1F2A;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Inter', sans-serif;
+}
+
+.exportBtn:hover {
+    background: #F9FAFB;
+}

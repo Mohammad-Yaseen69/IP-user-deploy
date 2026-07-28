@@ -1,0 +1,82 @@
+.container {
+    padding: 24px;
+    min-height: 100vh;
+    font-family: 'Inter', sans-serif;
+    background-color: #F8F9FC;
+}
+
+.top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.headerTitle h1 {
+    color: #5626e6;
+    font-size: 40px;
+    font-weight: 700;
+    margin: 0;
+}
+
+.headerTitle p {
+    color: #868686;
+    font-size: 14px;
+    font-weight: 400;
+    margin: 0;
+}
+
+.main {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    max-width: 1400px;
+    margin-top: 20px;
+}
+
+.cardGrid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+.supportCard {
+    background: #FFFFFF;
+    border-radius: 12px;
+    border: 1px solid #EBE8F5;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.cardTitle {
+    font-size: 18px;
+    font-weight: 600;
+    color: #101828;
+    margin: 0;
+}
+
+.cardText {
+    font-size: 14px;
+    color: #475467;
+    line-height: 1.5;
+    margin: 0;
+}
+
+.contactBtn {
+    height: 40px;
+    padding: 8px 16px;
+    border-radius: 8px;
+    border: none;
+    background: #5926F0;
+    color: #FFFFFF;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    align-self: flex-start;
+    font-family: 'Inter', sans-serif;
+}
+
+.contactBtn:hover {
+    background: #4A32E3;
+}
