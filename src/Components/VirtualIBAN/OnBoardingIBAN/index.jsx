@@ -239,6 +239,7 @@ const OnboardingIBAN = ({ onCreated }) => {
                 type: type || codeType,
                 ...state.company,
                 ...state.activity,
+                ubos: state.ownership?.owners || state.ownership?.ubos || state.ownership || [],
                 email: state.account.email,
             }
 
