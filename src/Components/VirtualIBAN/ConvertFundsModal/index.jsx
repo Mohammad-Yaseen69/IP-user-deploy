@@ -339,7 +339,7 @@ const ConvertFundsModal = ({ isOpen, toggle, selectedIban, availableBalance }) =
                         <button
                             type="button"
                             className={styles.nextBtn}
-                            // disabled={footerDisabled}
+                            disabled={footerDisabled}
                             onClick={handleContinue}
                         >
                             {isProcessing ? t("Processing...") : isDone ? t("Convert more") : continueLabel}

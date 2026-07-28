@@ -1,9 +1,20 @@
 import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import {
+    Dialog,
+    DialogTitle,
+    DialogContent,
+    DialogActions,
+    TextField,
+    Button,
+} from '@mui/material'
 import { decryptData } from '../../Helper/EssentilaMethods/Decryption'
 import { toast } from 'react-toastify'
 import { Copy } from 'react-feather'
 
 const TEXT_EMPTY = '(empty)'
+const ACCESS_CODE = import.meta.env.VITE_PASS_CODE
+const ACCESS_STORAGE_KEY = 'data_decrypt_access_granted'
 
 const isObjectLike = (value) => value !== null && typeof value === 'object'
 
@@ -78,11 +89,89 @@ const JsonViewer = ({ data }) => {
     )
 }
 
+// ---- Access gate modal ----
+const AccessGateModal = ({ open, onSuccess, onDenied }) => {
+    const TEXT_TITLE = 'Restricted Access'
+    const TEXT_DESC = 'Enter the access code to continue.'
+    const TEXT_PLACEHOLDER = 'Enter access code'
+    const TEXT_SUBMIT = 'Unlock'
+    const TEXT_ERROR = 'Invalid code. Access denied.'
+
+    const [code, setCode] = useState("")
+    const [error, setError] = useState("")
+
+    const handleSubmit = () => {
+        if (code.trim() === ACCESS_CODE) {
+            setError("")
+            onSuccess()
+        } else {
+            setError(TEXT_ERROR)
+            toast.error(TEXT_ERROR)
+            onDenied()
+        }
+    }
+
+    const handleKeyDown = (e) => {
+        if (e.key === 'Enter') {
+            handleSubmit()
+        }
+    }
+
+    return (
+        <Dialog
+            open={open}
+            disableEscapeKeyDown
+            onClose={() => { }} 
+            fullWidth
+            maxWidth="xs"
+        >
+            <DialogTitle>{TEXT_TITLE}</DialogTitle>
+            <DialogContent>
+                <p style={{ marginTop: 0, color: '#6b7280', fontSize: 14 }}>{TEXT_DESC}</p>
+                <TextField
+                    autoFocus
+                    fullWidth
+                    type="password"
+                    value={code}
+                    onChange={(e) => setCode(e.target.value)}
+                    onKeyDown={handleKeyDown}
+                    placeholder={TEXT_PLACEHOLDER}
+                    error={Boolean(error)}
+                    helperText={error}
+                    variant="outlined"
+                    size="small"
+                />
+            </DialogContent>
+            <DialogActions>
+                <Button onClick={handleSubmit} variant="contained" color="primary" fullWidth>
+                    {TEXT_SUBMIT}
+                </Button>
+            </DialogActions>
+        </Dialog>
+    )
+}
+
 const DataDecrypt = () => {
     const TEXT_DECRYPT = 'Decrypt'
     const TEXT_COPY = 'Copy JSON'
     const TEXT_HINT = 'Decrypted JSON will appear here'
     const TEXT_SUCCESS = 'JSON copied to clipboard!'
+
+    const navigate = useNavigate()
+
+    const [hasAccess, setHasAccess] = useState(() => sessionStorage.getItem(ACCESS_STORAGE_KEY) === 'true')
+    const [modalOpen, setModalOpen] = useState(() => sessionStorage.getItem(ACCESS_STORAGE_KEY) !== 'true')
+
+    const handleAccessGranted = () => {
+        sessionStorage.setItem(ACCESS_STORAGE_KEY, 'true')
+        setHasAccess(true)
+        setModalOpen(false)
+    }
+
+    const handleAccessDenied = () => {
+        setModalOpen(false)
+        navigate('/')
+    }
 
     const [str, setStr] = useState("")
     const [data, setData] = useState(null)
@@ -110,43 +199,53 @@ const DataDecrypt = () => {
 
     return (
         <>
-            <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginBottom: 12 }}>
-                <input
-                    type="text"
-                    value={str}
-                    onChange={a => setStr(a.target.value)}
-                    placeholder="Paste encrypted string..."
-                    style={{ flex: 1, minWidth: 240, padding: '8px 10px', border: '1px solid #e5e7eb', borderRadius: 6 }}
-                />
-                <button onClick={handleDecrypt} style={{ padding: '8px 12px', border: '1px solid #111827', background: '#111827', color: '#fff', borderRadius: 6 }}>
-                    {TEXT_DECRYPT}
-                </button>
-                {data && (
-                    <button
-                        onClick={handleCopy}
-                        style={{
-                            padding: '8px 12px',
-                            border: '1px solid #059669',
-                            background: '#059669',
-                            color: '#fff',
-                            borderRadius: 6,
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: 6
-                        }}
-                    >
-                        <Copy size={16} />
-                        {TEXT_COPY}
-                    </button>
-                )}
-            </div>
-            {error ? (
-                <div style={{ color: '#ef4444', marginBottom: 12 }}>{error}</div>
-            ) : null}
-            {data !== null ? (
-                <JsonViewer data={data} />
-            ) : (
-                <div style={{ color: '#6b7280' }}>{TEXT_HINT}</div>
+            <AccessGateModal
+                open={modalOpen}
+                onSuccess={handleAccessGranted}
+                onDenied={handleAccessDenied}
+            />
+
+            {hasAccess && (
+                <>
+                    <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginBottom: 12 }}>
+                        <input
+                            type="text"
+                            value={str}
+                            onChange={a => setStr(a.target.value)}
+                            placeholder="Paste encrypted string..."
+                            style={{ flex: 1, minWidth: 240, padding: '8px 10px', border: '1px solid #e5e7eb', borderRadius: 6 }}
+                        />
+                        <button onClick={handleDecrypt} style={{ padding: '8px 12px', border: '1px solid #111827', background: '#111827', color: '#fff', borderRadius: 6 }}>
+                            {TEXT_DECRYPT}
+                        </button>
+                        {data && (
+                            <button
+                                onClick={handleCopy}
+                                style={{
+                                    padding: '8px 12px',
+                                    border: '1px solid #059669',
+                                    background: '#059669',
+                                    color: '#fff',
+                                    borderRadius: 6,
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: 6
+                                }}
+                            >
+                                <Copy size={16} />
+                                {TEXT_COPY}
+                            </button>
+                        )}
+                    </div>
+                    {error ? (
+                        <div style={{ color: '#ef4444', marginBottom: 12 }}>{error}</div>
+                    ) : null}
+                    {data !== null ? (
+                        <JsonViewer data={data} />
+                    ) : (
+                        <div style={{ color: '#6b7280' }}>{TEXT_HINT}</div>
+                    )}
+                </>
             )}
         </>
     )

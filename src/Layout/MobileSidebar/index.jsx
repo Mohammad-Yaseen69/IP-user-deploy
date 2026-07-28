@@ -10,14 +10,19 @@ import { MobileSbContext } from "../Layout";
 import { usePermission } from "../../hooks/GeneralUse/usePermission";
 
 
-const greetMessage = () => {
-    const date = new Date()
-    const hour = date.getHours()
-    if (hour < 5) return "Good evening!"
-    if (hour < 12) return "Good morning!"
-    if (hour < 17) return "Good afternoon!"
-    return "Good evening!"
-}
+const getGreeting = () => {
+    const hour = new Date().getHours();
+
+    if (hour >= 5 && hour < 12) {
+        return "Good morning";
+    }
+
+    if (hour >= 12 && hour < 17) {
+        return "Good afternoon";
+    }
+
+    return "Good evening";
+};
 
 const MobileSidebar = ({ setShowModal }) => {
     const { userDetails, verifyToken, profileCompletedPercentage, clearData } = useContext(UserContext)
@@ -50,7 +55,7 @@ const MobileSidebar = ({ setShowModal }) => {
                 </div>
                 <div className={styles.profile}>
                     <div>
-                        <span>{greetMessage()}</span>
+                        <span>{getGreeting()}</span>
                         <h5>
                             {
                                 userDetails?.account_type?.toLowerCase() === "individual"
