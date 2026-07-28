@@ -35,7 +35,6 @@ const AirtimeMobile = ({ step, setStep, setCurrentFlow, setAction }) => {
     const [subServicesProvider, setSubServicesProvider] = useState([])
 
 
-    // context 
     const { userWallets, userDetails } = useContext(UserContext)
     useEffect(() => {
         if (userWallets?.length > 0) {
