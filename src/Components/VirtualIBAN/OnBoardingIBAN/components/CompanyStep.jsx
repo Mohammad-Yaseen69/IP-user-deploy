@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Briefcase, MapPin, Globe, ArrowLeft, ArrowRight, Hash } from 'react-feather'
 import styles from '../style/onboardingSteps.module.css'
@@ -6,6 +6,45 @@ import SidebarProgress from './SidebarProgress'
 import Magicsvg from '../magicsvg'
 import { FaHand } from 'react-icons/fa6'
 import { UserContext } from '../../../../Context/UserContext'
+
+const formatDateForInput = (val) => {
+    if (!val) return '';
+    if (typeof val === 'string') {
+        const trimmed = val.trim();
+        if (!trimmed) return '';
+        if (/^\d{4}-\d{2}-\d{2}$/.test(trimmed)) {
+            return trimmed;
+        }
+        if (/^\d{4}$/.test(trimmed)) {
+            return `${trimmed}-01-01`;
+        }
+        if (trimmed.includes('T')) {
+            const datePart = trimmed.split('T')[0];
+            if (/^\d{4}-\d{2}-\d{2}$/.test(datePart)) return datePart;
+        }
+        if (/^\d{1,2}[\/\-]\d{1,2}[\/\-]\d{4}$/.test(trimmed)) {
+            const parts = trimmed.split(/[\/\-]/);
+            const day = parts[0].padStart(2, '0');
+            const month = parts[1].padStart(2, '0');
+            const year = parts[2];
+            return `${year}-${month}-${day}`;
+        }
+        const parsed = new Date(trimmed);
+        if (!isNaN(parsed.getTime())) {
+            const year = parsed.getFullYear();
+            const month = String(parsed.getMonth() + 1).padStart(2, '0');
+            const day = String(parsed.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+    }
+    if (val instanceof Date && !isNaN(val.getTime())) {
+        const year = val.getFullYear();
+        const month = String(val.getMonth() + 1).padStart(2, '0');
+        const day = String(val.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    }
+    return '';
+};
 
 const LEGAL_STRUCTURES = [
     'Limited Liability Company (LLC)',
@@ -28,8 +67,8 @@ const CompanyStep = ({ onNext, onBack, userType, data = {} }) => {
     const { userDetails } = useContext(UserContext)
     const agentDefault = userDetails?.parentIdAgent?.username || userDetails?.parentIdAgent?.agentCode || ''
 
+    const initialDate = userDetails?.company?.date_of_incorporation || data.dateOfIncorporation || ''
 
-    console.log(userDetails, "agent")
     const [form, setForm] = useState({
         legalName: userDetails?.company_name || '',
         tradingName: data.tradingName || '',
@@ -39,17 +78,28 @@ const CompanyStep = ({ onNext, onBack, userType, data = {} }) => {
         registeredAddress: userDetails?.address || '',
         website: data.website || '',
         legalForm: userDetails?.category?.name || '',
-        dateOfIncorporation: userDetails?.company?.date_of_incorporation || data.dateOfIncorporation || '',
+        dateOfIncorporation: formatDateForInput(initialDate),
         taxNumber: userDetails?.company?.tax_id || data.taxNumber || '',
         mainContact: data.mainContact || '',
         agent: agentDefault,
     })
 
+    useEffect(() => {
+        const rawDate = userDetails?.company?.date_of_incorporation || data.dateOfIncorporation || '';
+        if (rawDate) {
+            const formatted = formatDateForInput(rawDate);
+            if (formatted) {
+                setForm(prev => ({ ...prev, dateOfIncorporation: formatted }));
+            }
+        }
+    }, [userDetails?.company?.date_of_incorporation, data.dateOfIncorporation]);
+
     const isFormValid = Boolean(
-        form.countryOfIncorporation &&
+        form.countryOfIncorporation?.trim() &&
         form.registrationNumber?.trim() &&
         form.legalName?.trim() &&
-        form.registeredAddress?.trim()
+        form.registeredAddress?.trim() &&
+        form.dateOfIncorporation?.trim()
     )
 
     console.log(form, "form")
@@ -261,10 +311,10 @@ const CompanyStep = ({ onNext, onBack, userType, data = {} }) => {
                                 </label>
 
                                 <input
+                                    type="date"
                                     className={styles.textInput}
-                                    value={form.dateOfIncorporation}
+                                    value={form.dateOfIncorporation || ''}
                                     onChange={set("dateOfIncorporation")}
-                                    placeholder="2021"
                                     disabled={Boolean(userDetails?.company?.date_of_incorporation)}
                                     readOnly={Boolean(userDetails?.company?.date_of_incorporation)}
                                 />
