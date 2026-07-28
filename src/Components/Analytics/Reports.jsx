@@ -105,7 +105,6 @@ const Reports = () => {
         }
     }, [apiDates, userDetails, currentWallet?.wallet_id])
 
-    // additional data formatting
     const [creditPayments, setCreditPayments] = useState([])
     const [debitPayments, setDebitPayments] = useState([])
 
