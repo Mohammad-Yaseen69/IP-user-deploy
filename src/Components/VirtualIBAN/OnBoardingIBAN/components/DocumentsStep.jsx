@@ -76,6 +76,9 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {} }) => {
         )
     }
 
+    const requiredDocKeys = ['commercial_register', 'articles_association', 'bank_statement', 'shareholders_register', 'ownership_chart', 'ubo_declaration', 'ubo_passport', 'ubo_address_proof'];
+    const isDocsValid = requiredDocKeys.every(k => Boolean(files[k]));
+
     return (
         <div className={styles.onboardingLayout}>
             <div className={styles.wizardSteps}>
@@ -316,7 +319,12 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {} }) => {
                     <ArrowLeft size={16} />
                     {t("Back")}
                 </button>
-                <button onClick={handleContinue} className={styles.continueButton}>
+                <button
+                    onClick={handleContinue}
+                    disabled={!isDocsValid}
+                    className={styles.continueButton}
+                    style={{ opacity: !isDocsValid ? 0.5 : 1, cursor: !isDocsValid ? 'not-allowed' : 'pointer' }}
+                >
                     {t("Continue to Review")}
                     <ArrowRight size={16} />
                 </button>

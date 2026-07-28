@@ -23,7 +23,7 @@ import ActivateAccount from './components/ActivateAccount'
 
 import useSendOtp from '../../../hooks/GeneralUse/useSendOtp'
 import OTPConfirmation from '../../UserSettingsNew/OTPConfirmation'
-import { Modal, ModalBody } from 'reactstrap'
+import { Modal, ModalBody, Spinner } from 'reactstrap'
 import { decryptData } from '../../../Helper/EssentilaMethods/Decryption'
 import { encryptData } from '../../../Helper/EssentilaMethods/Encryption'
 
@@ -100,9 +100,13 @@ const OnboardingIBAN = ({ onCreated }) => {
     const [showOtpModal, setShowOtpModal] = useState(false)
     const [otpToken, setOtpToken] = useState('')
     const [codeType, setCodeType] = useState('sms')
+    const [loadingStatus, setLoadingStatus] = useState(true)
 
     useEffect(() => {
-        if (!userDetails?._id) return;
+        if (!userDetails?._id) {
+            setLoadingStatus(false);
+            return;
+        }
         const checkRequestStatus = async () => {
             try {
                 const res = await axios.get(
@@ -128,6 +132,8 @@ const OnboardingIBAN = ({ onCreated }) => {
                 }
             } catch (err) {
                 console.error("Error fetching IBAN request status:", err);
+            } finally {
+                setLoadingStatus(false);
             }
         };
         checkRequestStatus();
@@ -295,6 +301,14 @@ const OnboardingIBAN = ({ onCreated }) => {
         activity: state.activity,
         owners: state.ownership.owners,
         documents: state.documents.files,
+    }
+
+    if (loadingStatus) {
+        return (
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '350px', width: '100%' }}>
+                <Spinner style={{ width: '2.5rem', height: '2.5rem', color: '#5926F0' }} />
+            </div>
+        );
     }
 
     return (

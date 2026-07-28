@@ -23,6 +23,7 @@ const Pricing = ({ onBack, t, onNext }) => {
     const [feeSchedule, setFeeSchedule] = useState([])
     const [packName, setPackName] = useState("")
     const [loading, setLoading] = useState(true)
+    const [acceptedTerms, setAcceptedTerms] = useState(false)
 
     useEffect(() => {
         const fetchModel = async () => {
@@ -120,7 +121,10 @@ const Pricing = ({ onBack, t, onNext }) => {
 
 
                         <div className={styles.term}>
-                            <Checkbox />
+                            <Checkbox
+                                checked={acceptedTerms}
+                                onChange={(e) => setAcceptedTerms(e.target.checked)}
+                            />
                             <p>{t(
                                 "I accept this pricing and InstaPay's terms of service."
                             )}</p>
@@ -134,7 +138,12 @@ const Pricing = ({ onBack, t, onNext }) => {
                     <ArrowLeft size={16} />
                     {t("Back")}
                 </button>
-                <button onClick={onNext} className={styles.continueButton}>
+                <button
+                    onClick={onNext}
+                    disabled={!acceptedTerms}
+                    className={styles.continueButton}
+                    style={{ opacity: !acceptedTerms ? 0.5 : 1, cursor: !acceptedTerms ? 'not-allowed' : 'pointer' }}
+                >
                     {t("Request IBAN activation")}
                 </button>
             </div>
