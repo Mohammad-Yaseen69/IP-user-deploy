@@ -907,7 +907,9 @@ const Basic = ({ setCurrentTab }) => {
                                     // (userDetails?.account_type === "individual" ? !firstName || !lastName : !company) || !address || !city || !country || !email || !phone || !postalCode || !timezone || !username || !usernameValid || phone.length < 8
                                     disabled={isSaving || usernameError || !usernameValid ||
                                         !city || !username ||
-                                        (userDetails?.account_type === "business" && !company?.trim())
+                                        (userDetails?.account_type === "business" && !company?.trim()) ||
+                                        (!isAfricanCountry && !postalCode?.trim())
+
 
                                     }>
                                     {
