@@ -196,16 +196,6 @@ export const routes = [
     { path: "/onboarding-IBAN/priceAcitvation", component: <PermissionRoute permission="virtual-iban.view"><PriceActivation /></PermissionRoute> },
     { path: "/onboarding-IBAN/moneymove", component: <PermissionRoute permission="virtual-iban.view"><MoveMoney /></PermissionRoute> },
     { path: "/third-party-senders", component: <PermissionRoute permission="payments.send-as-third-party.view"><ThirdPartySenders /></PermissionRoute> },
-    { path: "/iban-onboarding", component: <OnboardingIBAN /> },
-    { path: "/agent-commission", component: <PermissionRoute permission="agent-commission.view"><AgentCommission /></PermissionRoute> },
-    { path: "/leads", component: <PermissionRoute permission="leads.view"><Leads /></PermissionRoute> },
-    { path: "/sub-agents", component: <PermissionRoute permission="sub-agents.view"><SubAgents /></PermissionRoute> },
-    { path: "/commissions", component: <PermissionRoute permission="commissions.view"><Commissions /></PermissionRoute> },
-    { path: "/clients", component: <PermissionRoute permission="clients.view"><Clients /></PermissionRoute> },
-    { path: "/documents", component: <PermissionRoute permission="documents.view"><Documents /></PermissionRoute> },
-    { path: "/reports", component: <PermissionRoute permission="reports.view"><Reports /></PermissionRoute> },
-    { path: "/support", component: <PermissionRoute permission="support.view"><Support /></PermissionRoute> },
-    { path: "/agent-profile", component: <PermissionRoute permission="agent-profile.view"><AgentProfile /></PermissionRoute> },
     { path: "*", component: <NotFound type='Page' /> }
 ]
 export const publicRoutes = [
@@ -258,5 +248,17 @@ export const authRoutes = [
 ]
 export const guestRoutes = [
     { path: `/guestSession/Guestlogin`, component: <GuestLogin /> },
+    { path: "*", component: <NotFound type='Page' /> }
+]
+export const AgentCommissionRoutes = [
+    { path: "/agent-commission", component: <PermissionRoute permission="agent-commission.view"><AgentCommission /></PermissionRoute> },
+    { path: "/leads", component: <PermissionRoute permission="leads.view"><Leads /></PermissionRoute> },
+    { path: "/sub-agents", component: <PermissionRoute permission="sub-agents.view"><SubAgents /></PermissionRoute> },
+    { path: "/commissions", component: <PermissionRoute permission="commissions.view"><Commissions /></PermissionRoute> },
+    { path: "/clients", component: <PermissionRoute permission="clients.view"><Clients /></PermissionRoute> },
+    { path: "/documents", component: <PermissionRoute permission="documents.view"><Documents /></PermissionRoute> },
+    { path: "/reports", component: <PermissionRoute permission="reports.view"><Reports /></PermissionRoute> },
+    { path: "/support", component: <PermissionRoute permission="support.view"><Support /></PermissionRoute> },
+    { path: "/agent-profile", component: <PermissionRoute permission="agent-profile.view"><AgentProfile /></PermissionRoute> },
     { path: "*", component: <NotFound type='Page' /> }
 ]

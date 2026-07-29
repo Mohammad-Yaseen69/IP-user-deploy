@@ -27,17 +27,17 @@ const Manage = () => {
                 <div className={styles.inputs}>
                     <div className={styles.inputGroup}>
                         <label>{t("Daily outgoing limit")}</label>
-                        <input type="text" value={t("€1500.00")} readOnly />
+                        <input type="text" value={t("€0.00")} readOnly />
                     </div>
 
                     <div className={styles.inputGroup}>
                         <label>{t("Per transaction limit")}</label>
-                        <input type="text" value={t("€1500.00")} readOnly />
+                        <input type="text" value={t("€0.00")} readOnly />
                     </div>
 
                     <div className={styles.inputGroup}>
                         <label>{t("Monthly volume threshold")}</label>
-                        <input type="text" value={t("€1500.00")} readOnly />
+                        <input type="text" value={t("€0.00")} readOnly />
                     </div>
                 </div>
             </div>
@@ -72,7 +72,9 @@ const Manage = () => {
 
                 <Tooltip title="Coming Soon" arrow placement="top">
                     <span>
-                        <button className={styles.linkBtn}>
+                        <button className={styles.linkBtn}
+
+                            disabled>
                             {t("Download")} <Download size={15} />
                         </button>
                     </span>

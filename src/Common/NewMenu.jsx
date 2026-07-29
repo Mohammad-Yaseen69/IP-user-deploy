@@ -4,11 +4,11 @@ import { useNavigate } from "react-router-dom";
 import { UserContext } from "../Context/UserContext";
 import { apiWrapper } from "../utils/Functions/apiWrapper";
 import { openInNewTab } from "../utils/Functions";
-import instapyLogo from "../assets/images/logo/logo.webp";
-import logo_white from "../assets/images/logo/logo_white.png";
-import InstaMedia from "../assets/images/logo/InstaMedia.png";
-import InstaFolio from "../assets/images/logo/InstaFolio.png";
-import bgImg from "../assets/images/logo/Vector.png";
+import instapyLogo from "../assets/images/logo/sidebarnewManulogo.svg";
+import logo_white from "../assets/images/logo/logoWhite2.svg";
+import InstaMedia from "../assets/images/logo/InstaMedia.svg";
+import InstaFolio from "../assets/images/logo/InstaFolio.svg";
+import bgImg from "../assets/images/logo/vector.png";
 
 const ShopActiveIcon = () => (
     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 17 14" fill="none">
@@ -50,12 +50,13 @@ const NewMenu = () => {
     }
 
     const containerStyle = {
-        padding: "4px",
+        padding: "5px",
         display: "flex",
         flexDirection: "column",
         gap: "6px",
         borderRadius: "12px",
-        background: `url(${bgImg}), linear-gradient(180deg, #4F1EDB 0%, #1F0E52 100%)`,
+        background: `url(${bgImg}), #000`,
+        boxShadow: "0 4px 15.9px 0 rgba(89, 38, 240, 0.38)",
         position: "fixed",
         left: "8px",
         top: "18px",
@@ -68,17 +69,19 @@ const NewMenu = () => {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        borderRadius: "8px",
+        borderRadius: "var(--RADIUS-radius-1, 4px)",
         cursor: "pointer",
         transition: "all .3s ease",
+        border: "0.25px solid rgba(255, 255, 255, 0.28)",
+        background: "rgba(255, 255, 255, 0.06)",
         backdropFilter: "blur(0.65px)",
-    }
+    };
 
     const activeStyle = {
         ...itemStyle,
         background: "#fff",
-        boxShadow: "0 6px 20px rgba(255,255,255,.25)",
-        border: "0.25px solid rgba(255, 255, 255, 0.28)",
+        boxShadow: "0 4px 15.1px 0 rgba(0, 0, 0, 0.50)",
+        // border: "0.25px solid rgba(255, 255, 255, 0.28)",
 
     };
 
@@ -89,7 +92,7 @@ const NewMenu = () => {
                     ...(activeItem === "instapay" ? activeStyle : itemStyle),
                     ...(activeItem !== "instapay" && {
                         border: "0.25px solid rgba(255, 255, 255, 0.28)",
-                        background: "#37246E",
+                        background: "#4c29b5",
 
                     }),
                 }}
@@ -102,17 +105,24 @@ const NewMenu = () => {
                     src={instapyLogo}
                     alt="logo"
                     width={20}
-                    height={24}
+                    height={20}
                 /> : <img
                     src={logo_white}
                     alt="logo"
                     width={20}
-                    height={24}
+                    height={20}
                 />}
             </div>
 
             <div
-                style={activeItem === "shop" ? activeStyle : itemStyle}
+                style={{
+                    ...(activeItem === "shop" ? activeStyle : itemStyle),
+                    ...(activeItem !== "shop" && {
+                        border: "0.25px solid rgba(255, 255, 255, 0.28)",
+                        background: "#4c29b5",
+
+                    }),
+                }}
                 onClick={handleEshopClick}
             >
                 {activeItem === "shop" ? (
@@ -121,8 +131,8 @@ const NewMenu = () => {
                     <img
                         src={InstaFolio}
                         alt="media"
-                        width={35}
-                        height={35}
+                        width={20}
+                        height={20}
                     />
                 )}
             </div>
@@ -132,13 +142,20 @@ const NewMenu = () => {
                     setActiveItem("media")
                     navigate("/Insta-media")
                 }}
-                style={activeItem === "media" ? activeStyle : itemStyle}
+                style={{
+                    ...(activeItem === "media" ? activeStyle : itemStyle),
+                    ...(activeItem !== "media" && {
+                        border: "0.25px solid rgba(255, 255, 255, 0.28)",
+                        background: "#4c29b5",
+
+                    }),
+                }}
             >
                 <img
                     src={InstaMedia}
                     alt="media"
-                    width={35}
-                    height={35}
+                    width={20}
+                    height={20}
                 />
             </div>
         </div>
