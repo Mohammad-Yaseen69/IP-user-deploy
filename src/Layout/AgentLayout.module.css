@@ -19,6 +19,12 @@
     z-index: 100;
 }
 
+.agentSidebarContainer {
+    position: sticky;
+    top: 0;
+    margin-left: 50px;
+}
+
 .main {
     flex: 1 1 auto;
     width: calc(100% - 260px);

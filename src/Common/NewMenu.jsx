@@ -158,6 +158,27 @@ const NewMenu = () => {
                     height={20}
                 />
             </div>
+            <div
+                onClick={() => {
+                    setActiveItem("agent")
+                    navigate("/agent-commission")
+                }}
+                style={{
+                    ...(activeItem === "agent" ? activeStyle : itemStyle),
+                    ...(activeItem !== "media" && {
+                        border: "0.25px solid rgba(255, 255, 255, 0.28)",
+                        background: "#4c29b5",
+
+                    }),
+                }}
+            >
+                <img
+                    src={InstaMedia}
+                    alt="agent"
+                    width={20}
+                    height={20}
+                />
+            </div>
         </div>
     );
 };
