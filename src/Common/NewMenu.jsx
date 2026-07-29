@@ -8,7 +8,7 @@ import instapyLogo from "../assets/images/logo/sidebarnewManulogo.svg";
 import logo_white from "../assets/images/logo/logoWhite2.svg";
 import InstaMedia from "../assets/images/logo/InstaMedia.svg";
 import InstaFolio from "../assets/images/logo/InstaFolio.svg";
-import bgImg from "../assets/images/logo/vector.png";
+import bgImg from "../assets/images/logo/Vector.png";
 
 const ShopActiveIcon = () => (
     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 17 14" fill="none">
