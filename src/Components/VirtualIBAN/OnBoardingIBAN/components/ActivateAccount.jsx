@@ -80,15 +80,6 @@ const ActivateAccount = ({
     if (!selectedWallet?._id) return;
 
     const walletCurr = selectedWallet?.currency?.code || "EUR";
-    if (walletCurr === "EUR") {
-      setFeeDetails({
-        baseAmount: 500,
-        convertedAmount: 500,
-        currency: "EUR",
-        exchangeRate: 1,
-      });
-      return;
-    }
 
     const fetchMarkupRates = async () => {
       setLoadingRates(true);
@@ -106,6 +97,10 @@ const ActivateAccount = ({
             convertedAmount: dec.data.converted_amount || 500,
             currency: dec.data.wallet_currency || walletCurr,
             exchangeRate: dec.data.exchange_rate || 1,
+            activationFee: dec.data.activation_fee || dec.data.base_amount || 500,
+            kybFee: dec.data.kyb_fee || 0,
+            isKybIncluded: dec.data.is_kyb_included || false,
+            kybFeeBreakdown: dec.data.kyb_fee_breakdown || null,
           });
         }
       } catch (err) {
@@ -230,7 +225,7 @@ const ActivateAccount = ({
                   width: "100%",
                 }}
               >
-                {[...activeWallets, ...activeWallets, ...activeWallets].map((wallet) => {
+                {activeWallets.map((wallet) => {
                   const isSelected = selectedWallet?._id === wallet._id;
                   return (
                     <div
@@ -358,6 +353,18 @@ const ActivateAccount = ({
               >
                 <div className={styles.summaryRow}>
                   <span>{t("IBAN activation fee")}</span>
+                  <strong>€{feeDetails?.activationFee || 500}.00</strong>
+                </div>
+
+                {feeDetails?.isKybIncluded && (
+                  <div className={styles.summaryRow} style={{ marginTop: "8px" }}>
+                    <span>{t("KYB Verification Fee")}</span>
+                    <strong>${feeDetails?.kybFee || 0}.00 USD</strong>
+                  </div>
+                )}
+
+                <div className={styles.summaryRow} style={{ marginTop: "8px" }}>
+                  <span>{t("Total")}</span>
                   <strong>€{feeDetails?.baseAmount || 500}.00</strong>
                 </div>
 

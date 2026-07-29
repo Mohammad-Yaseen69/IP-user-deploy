@@ -56,6 +56,7 @@ const initialState = {
     documents: { files: {} },
     selectedWallet: null,
     feeDetails: { baseAmount: 500, convertedAmount: 500, currency: 'EUR', exchangeRate: 1 },
+    requestData: null,
 }
 
 function onboardingReducer(state, action) {
@@ -80,6 +81,8 @@ function onboardingReducer(state, action) {
             return { ...state, selectedWallet: action.payload }
         case 'SET_FEE_DETAILS':
             return { ...state, feeDetails: { ...state.feeDetails, ...action.payload } }
+        case 'SET_REQUEST_DATA':
+            return { ...state, requestData: action.payload }
         case 'RESET_ALL':
             return initialState
         default:
@@ -102,40 +105,42 @@ const OnboardingIBAN = ({ onCreated }) => {
     const [codeType, setCodeType] = useState('sms')
     const [loadingStatus, setLoadingStatus] = useState(true)
 
-    useEffect(() => {
+    const checkRequestStatus = async () => {
         if (!userDetails?._id) {
             setLoadingStatus(false);
             return;
         }
-        const checkRequestStatus = async () => {
-            try {
-                const res = await axios.get(
-                    `${import.meta.env.VITE_IP_DEV_API}/api/iban-fees/request-status`,
-                    { headers: authHeader }
-                );
-                const dec = decryptData(res.data?.data);
-                if (dec?.hasRequest && dec?.requestStatus && dec.requestStatus !== 'none') {
-                    dispatch({ type: 'SET_STATUS', payload: dec.requestStatus });
-                    dispatch({ type: 'SET_STEP', payload: 'status' });
-                    if (dec?.data) {
-                        dispatch({
-                            type: 'UPDATE_COMPANY',
-                            payload: {
-                                legalName: dec.data.legalCompanyName || '',
-                                tradingName: dec.data.tradingName || '',
-                                registrationNumber: dec.data.registrationNumber || '',
-                                website: dec.data.website || '',
-                                registeredAddress: dec.data.registeredAddress || '',
-                            }
-                        });
-                    }
+        try {
+            const res = await axios.get(
+                `${import.meta.env.VITE_IP_DEV_API}/api/iban-fees/request-status`,
+                { headers: authHeader }
+            );
+            const dec = decryptData(res.data?.data);
+            if (dec?.hasRequest && dec?.requestStatus && dec.requestStatus !== 'none') {
+                dispatch({ type: 'SET_STATUS', payload: dec.requestStatus });
+                dispatch({ type: 'SET_STEP', payload: 'status' });
+                if (dec?.data) {
+                    dispatch({ type: 'SET_REQUEST_DATA', payload: dec.data });
+                    dispatch({
+                        type: 'UPDATE_COMPANY',
+                        payload: {
+                            legalName: dec.data.legalCompanyName || '',
+                            tradingName: dec.data.tradingName || '',
+                            registrationNumber: dec.data.registrationNumber || '',
+                            website: dec.data.website || '',
+                            registeredAddress: dec.data.registeredAddress || '',
+                        }
+                    });
                 }
-            } catch (err) {
-                console.error("Error fetching IBAN request status:", err);
-            } finally {
-                setLoadingStatus(false);
             }
-        };
+        } catch (err) {
+            console.error("Error fetching IBAN request status:", err);
+        } finally {
+            setLoadingStatus(false);
+        }
+    };
+
+    useEffect(() => {
         checkRequestStatus();
     }, [userDetails?._id]);
 
@@ -285,9 +290,9 @@ const OnboardingIBAN = ({ onCreated }) => {
     }
 
     const handleStatusAction = () => {
-        const idx = STATUS_ORDER.indexOf(state.status)
-        if (idx < STATUS_ORDER.length - 1) dispatch({ type: 'SET_STATUS', payload: STATUS_ORDER[idx + 1] })
-        else if (onCreated) onCreated()
+        if (state.status === 'approved' && onCreated) {
+            onCreated()
+        }
     }
 
     const handleStatusCancel = () => {
@@ -413,6 +418,7 @@ const OnboardingIBAN = ({ onCreated }) => {
                     onBack={goBack}
                     userType={state.userType}
                     data={{ owners: state.ownership.owners }}
+                    userDetails={userDetails}
                 />
             )}
 
@@ -422,6 +428,8 @@ const OnboardingIBAN = ({ onCreated }) => {
                     onBack={goBack}
                     userType={state.userType}
                     data={{ files: state.documents.files }}
+                    userDetails={userDetails}
+                    companyDetails={state.company}
                 />
             )}
 
@@ -465,6 +473,15 @@ const OnboardingIBAN = ({ onCreated }) => {
                     companyName={state.company?.legalName || state.account?.email}
                     onAction={handleStatusAction}
                     onCancel={handleStatusCancel}
+                    activationData={state.requestData}
+                    partners={state.requestData?.ubos || []}
+                    refreshPartners={checkRequestStatus}
+                    setPartners={(updatedPartners) => {
+                        dispatch({ 
+                            type: 'SET_REQUEST_DATA', 
+                            payload: { ...state.requestData, ubos: typeof updatedPartners === 'function' ? updatedPartners(state.requestData?.ubos || []) : updatedPartners }
+                        });
+                    }}
                 />
             )}
 

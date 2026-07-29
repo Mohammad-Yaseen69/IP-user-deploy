@@ -1,6 +1,16 @@
-import React from 'react'
-import { Globe } from 'react-feather'
+import React, { useContext, useState } from 'react'
+import { Globe, ArrowLeft } from 'react-feather'
 import { useTranslation } from 'react-i18next'
+import { Table, Button, Modal, ModalHeader, ModalBody, ModalFooter, FormGroup, Label, Input } from 'reactstrap'
+import { useMutation } from '@tanstack/react-query'
+import axios from 'axios'
+import { toast } from 'react-toastify'
+import { UserContext } from '../../../../Context/UserContext'
+import { encryptData } from '../../../../Helper/EssentilaMethods/Encryption'
+import { decryptData } from '../../../../Helper/EssentilaMethods/Decryption'
+import { isEmailValid } from '../../../../utils/Functions/validations'
+import KYBPartner from '../../../Settings/KYBPartner'
+import VerificationPayment from '../../../Settings/VerificationPayment'
 import imageCard from '../../files/images/Frame_2147236087.png'
 
 const STATUS_CONFIG = {
@@ -48,9 +58,252 @@ const STATUS_CONFIG = {
     },
 }
 
-const StatusScreen = ({ status = 'submitted', ibanNumber, companyName, onAction, onCancel }) => {
+const getFeeAmount = async ({ payload, authHeader }) => {
+    const encryptedData = encryptData(payload);
+    const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/company/kyb-fee-details`, { data: encryptedData }, { headers: authHeader });
+    return decryptData(res.data?.data);
+};
+
+const StatusScreen = ({ status = 'submitted', ibanNumber, companyName, onAction, onCancel, activationData, partners = [], refreshPartners, setPartners }) => {
     const { t } = useTranslation()
+    const { userDetails, authHeader } = useContext(UserContext)
+    const [showSubmittedInfo, setShowSubmittedInfo] = useState(false)
+
+    const [showAddModal, setShowAddModal] = useState(false)
+    const [partnerName, setPartnerName] = useState("")
+    const [partnerEmail, setPartnerEmail] = useState("")
+    const [partnerDesignation, setPartnerDesignation] = useState("")
+    const [adding, setAdding] = useState(false)
+    const [showPaymentModal, setShowPaymentModal] = useState(false)
+    const [partnerVerification, setPartnerVerification] = useState(null)
+    const [feeAmount, setFeeAmount] = useState(0)
+
+    const { mutateAsync, isPending } = useMutation({
+        mutationFn: (payload) => getFeeAmount({ payload, authHeader }),
+    })
+
+    const addPartnerHandler = async () => {
+        if (!isEmailValid(partnerEmail)) {
+            toast.error(t("Please enter a valid email address."));
+            return;
+        }
+
+        if (partners?.find(p => p?.email?.toLowerCase() === partnerEmail.toLowerCase())) {
+            toast.error(t("A director with this email already exists."));
+            return;
+        }
+
+        setAdding(true)
+        try {
+            const payload = {
+                name: partnerName,
+                email: partnerEmail,
+                designation: partnerDesignation,
+                account_id: userDetails?._id,
+            }
+            const encrypted = encryptData(payload)
+            const response = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/company/add-partner`, {
+                data: encrypted
+            }, {
+                headers: authHeader
+            })
+            const data = await decryptData(response.data.data)
+            setAdding(false)
+            setShowAddModal(false)
+            if (setPartners && data?.partner) {
+                setPartners(prev => [data.partner, ...prev])
+            }
+            setPartnerName("")
+            setPartnerEmail("")
+            setPartnerDesignation("")
+            if (refreshPartners) refreshPartners()
+            toast.success(t("Director added successfully!"))
+        } catch (error) {
+            setAdding(false)
+            toast.error(t("Unable to add director. Please try again."))
+        }
+    }
+
     const cfg = STATUS_CONFIG[status] || STATUS_CONFIG.submitted
+
+    if (showSubmittedInfo) {
+        return (
+            <div style={{
+                width: '100%',
+                background: '#FFFFFF',
+                borderRadius: '16px',
+                padding: '40px 36px',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '24px',
+                boxShadow: '0 1px 3px rgba(0,0,0,0.05)',
+                border: '1px solid #ECECF2',
+                marginTop: '20px'
+            }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                    <button 
+                        onClick={() => setShowSubmittedInfo(false)}
+                        style={{ background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', padding: 0 }}
+                    >
+                        <ArrowLeft size={20} color="#6B7280" />
+                    </button>
+                    <h2 style={{ fontSize: '24px', fontWeight: 700, margin: 0, color: '#111827' }}>{t("Submitted Information")}</h2>
+                </div>
+
+                <div style={{ background: '#F9FAFB', padding: '24px', borderRadius: '12px', border: '1px solid #F3F4F6' }}>
+                    <h3 style={{ fontSize: '18px', fontWeight: 600, margin: '0 0 16px 0', color: '#111827' }}>{t("Company Details")}</h3>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '16px' }}>
+                        <div>
+                            <span style={{ fontSize: '13px', color: '#6B7280' }}>{t("Legal Company Name")}</span>
+                            <div style={{ fontSize: '15px', fontWeight: 500, color: '#374151', wordBreak: 'break-word' }}>{activationData?.legalCompanyName || '-'}</div>
+                        </div>
+                        <div>
+                            <span style={{ fontSize: '13px', color: '#6B7280' }}>{t("Registration Number")}</span>
+                            <div style={{ fontSize: '15px', fontWeight: 500, color: '#374151', wordBreak: 'break-word' }}>{activationData?.registrationNumber || '-'}</div>
+                        </div>
+                        <div>
+                            <span style={{ fontSize: '13px', color: '#6B7280' }}>{t("Registered Address")}</span>
+                            <div style={{ fontSize: '15px', fontWeight: 500, color: '#374151', wordBreak: 'break-word' }}>{activationData?.registeredAddress || '-'}</div>
+                        </div>
+                        <div>
+                            <span style={{ fontSize: '13px', color: '#6B7280' }}>{t("Website")}</span>
+                            <div style={{ fontSize: '15px', fontWeight: 500, color: '#374151', wordBreak: 'break-word' }}>{activationData?.website || '-'}</div>
+                        </div>
+                        <div>
+                            <span style={{ fontSize: '13px', color: '#6B7280' }}>{t("Industry")}</span>
+                            <div style={{ fontSize: '15px', fontWeight: 500, color: '#374151', wordBreak: 'break-word' }}>{activationData?.industry || '-'}</div>
+                        </div>
+                        <div>
+                            <span style={{ fontSize: '13px', color: '#6B7280' }}>{t("Activity Description")}</span>
+                            <div style={{ fontSize: '15px', fontWeight: 500, color: '#374151', wordBreak: 'break-word' }}>{activationData?.activityDescription || '-'}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style={{ background: '#F9FAFB', padding: '24px', borderRadius: '12px', border: '1px solid #F3F4F6' }}>
+                    <h3 style={{ fontSize: '18px', fontWeight: 600, margin: '0 0 16px 0', color: '#111827' }}>{t("Documents")}</h3>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                        <div>
+                            <div style={{ fontSize: '14px', fontWeight: 600, marginBottom: '8px', color: '#374151' }}>{t("Registration Files")}</div>
+                            {activationData?.registrationFiles?.length > 0 ? activationData.registrationFiles.map((f, i) => (
+                                <div key={i} style={{ fontSize: '14px', color: '#5B3DF5' }}>{f.document_name || f.name || f}</div>
+                            )) : <div style={{ fontSize: '14px', color: '#6B7280' }}>-</div>}
+                        </div>
+                        <div>
+                            <div style={{ fontSize: '14px', fontWeight: 600, marginBottom: '8px', color: '#374151' }}>{t("Proof of Address (POA)")}</div>
+                            {activationData?.poaFiles?.length > 0 ? activationData.poaFiles.map((f, i) => (
+                                <div key={i} style={{ fontSize: '14px', color: '#5B3DF5' }}>{f.document_name || f.name || f}</div>
+                            )) : <div style={{ fontSize: '14px', color: '#6B7280' }}>-</div>}
+                        </div>
+                        <div>
+                            <div style={{ fontSize: '14px', fontWeight: 600, marginBottom: '8px', color: '#374151' }}>{t("UBO Documents")}</div>
+                            {activationData?.uboFiles?.length > 0 ? activationData.uboFiles.map((f, i) => (
+                                <div key={i} style={{ fontSize: '14px', color: '#5B3DF5' }}>{f.document_name || f.name || f}</div>
+                            )) : <div style={{ fontSize: '14px', color: '#6B7280' }}>-</div>}
+                        </div>
+                    </div>
+                </div>
+
+                <div style={{ background: '#F9FAFB', padding: '24px', borderRadius: '12px', border: '1px solid #F3F4F6' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+                        <h3 style={{ fontSize: '18px', fontWeight: 600, margin: 0, color: '#111827' }}>{t("Directors")}</h3>
+                        <Button 
+                            style={{
+                                background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+                                border: "none",
+                                outline: "none"
+                            }}
+                            onClick={() => setShowAddModal(!showAddModal)}
+                        >
+                            {t("Add New Director")}
+                        </Button>
+                    </div>
+
+                    <Modal isOpen={showAddModal} toggle={() => setShowAddModal(!showAddModal)}>
+                        <ModalHeader toggle={() => setShowAddModal(!showAddModal)}>
+                            {t("Add New Director")}
+                        </ModalHeader>
+                        <ModalBody>
+                            <FormGroup>
+                                <Label>{t("Director Name")}</Label>
+                                <Input placeholder={t("Director Name")} value={partnerName} onChange={e => setPartnerName(e.target.value)} />
+                            </FormGroup>
+                            <FormGroup>
+                                <Label>{t("Director Email")}</Label>
+                                <Input type='email' placeholder={t("Director Email")} value={partnerEmail} onChange={e => setPartnerEmail(e.target.value)} />
+                            </FormGroup>
+                            <FormGroup>
+                                <Label>{t("Director Designation")}</Label>
+                                <Input placeholder={t("Director Designation")} value={partnerDesignation} onChange={e => setPartnerDesignation(e.target.value)} />
+                            </FormGroup>
+                        </ModalBody>
+                        <ModalFooter>
+                            <Button 
+                                style={{
+                                    background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+                                    border: "none",
+                                    outline: "none"
+                                }}
+                                disabled={adding || !partnerName || !partnerEmail || !partnerDesignation}
+                                onClick={addPartnerHandler}
+                            >
+                                {adding ? t("Adding...") : t("Add Now")}
+                            </Button>
+                        </ModalFooter>
+                    </Modal>
+
+                    <Table responsive>
+                        <thead>
+                            <tr>
+                                <th>{t("Name")}</th>
+                                <th>{t("Email")}</th>
+                                <th>{t("Designation")}</th>
+                                <th>{t("Actions")}</th>
+                                <th>{t("Status")}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {partners?.map((item, index) => (
+                                <KYBPartner 
+                                    key={item?._id || index}
+                                    partner={item} 
+                                    partners={partners} 
+                                    setPartners={setPartners} 
+                                    refreshPartners={refreshPartners} 
+                                    index={index} 
+                                    setModalOpen={setShowPaymentModal} 
+                                    setPartnerVerification={setPartnerVerification} 
+                                />
+                            ))}
+                            {!partners?.length && (
+                                <tr>
+                                    <td colSpan="5" style={{ textAlign: 'center', padding: '20px', color: '#6B7280', fontSize: '14px' }}>
+                                        {t("No partners or directors found.")}
+                                    </td>
+                                </tr>
+                            )}
+                        </tbody>
+                    </Table>
+
+                    {showPaymentModal && (
+                        <VerificationPayment
+                            isOpen={showPaymentModal}
+                            toggle={() => {
+                                setShowPaymentModal(false)
+                                setPartnerVerification(null)
+                                if (refreshPartners) refreshPartners()
+                            }}
+                            isKYB={true}
+                            amount={feeAmount}
+                            partnerId={partnerVerification?._id}
+                            getFeeDetails={mutateAsync}
+                            isGettingFee={isPending}
+                        />
+                    )}
+                </div>
+            </div>
+        )
+    }
 
     return (
         <div style={{
@@ -175,7 +428,7 @@ const StatusScreen = ({ status = 'submitted', ibanNumber, companyName, onAction,
                                     cursor: 'pointer',
                                     transition: 'background 0.2s'
                                 }}
-                                onClick={onAction}
+                                onClick={cfg.primaryLabel === 'View submitted info' ? () => setShowSubmittedInfo(true) : onAction}
                             >
                                 {t(cfg.primaryLabel)}
                             </button>
