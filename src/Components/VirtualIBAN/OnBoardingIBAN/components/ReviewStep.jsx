@@ -99,7 +99,9 @@ const ReviewStep = ({ onSubmit, onBack, allData = {}, onNext }) => {
                             <div className={styles.item}>
                                 <label>Owners</label>
                                 <span>
-                                    Jean-Jacques Elong (60% UBO, UBO) • K2 Holdings SA (40%, UBO)
+                                    {owners.length > 0
+                                        ? owners.map(o => `${o.fullName || o.name || 'Owner'} (${o.ownershipPercent ? o.ownershipPercent + '%' : ''} ${o.role || 'UBO'})`).join(' • ')
+                                        : 'None'}
                                 </span>
                             </div>
 
