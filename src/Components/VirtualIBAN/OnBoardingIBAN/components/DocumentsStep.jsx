@@ -29,7 +29,7 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {} }) => {
     }
 
     const handleContinue = () => {
-        onNext({ documents: files })
+        onNext({ files }, 'documents')
     }
 
     const steps = [
@@ -75,6 +75,9 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {} }) => {
             </div>
         )
     }
+
+    const requiredDocKeys = ['commercial_register', 'articles_association', 'bank_statement', 'shareholders_register', 'ownership_chart', 'ubo_declaration', 'ubo_passport', 'ubo_address_proof'];
+    const isDocsValid = requiredDocKeys.every(k => Boolean(files[k]));
 
     return (
         <div className={styles.onboardingLayout}>
@@ -132,26 +135,22 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {} }) => {
                         <div className={styles.documentList}>
                             <div className={styles.documentRow}>
                                 <div className={styles.left}>
-                                    <span className={styles.success}></span>
+                                    <span className={styles.empty}></span>
                                     <span>
                                         Recent commercial register extract or certificate of incorporation
                                     </span>
                                 </div>
 
-                                <div className={styles.right}>
-                                    <span className={styles.provided}>PROVIDED</span>
-                                </div>
+                                {renderUploadControl('commercial_register', styles.required, 'REQUIRED')}
                             </div>
 
                             <div className={styles.documentRow}>
                                 <div className={styles.left}>
-                                    <span className={styles.success}></span>
+                                    <span className={styles.empty}></span>
                                     <span>Company articles of association</span>
                                 </div>
 
-                                <div className={styles.right}>
-                                    <span className={styles.provided}>PROVIDED</span>
-                                </div>
+                                {renderUploadControl('articles_association', styles.required, 'REQUIRED')}
                             </div>
 
                             <div className={styles.documentRow}>
@@ -218,15 +217,13 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {} }) => {
 
                             <div className={styles.documentRow}>
                                 <div className={styles.left}>
-                                    <span className={styles.success}></span>
+                                    <span className={styles.empty}></span>
                                     <span>
                                         Recent business bank statement showing company name and address
                                     </span>
                                 </div>
 
-                                <div className={styles.right}>
-                                    <span className={styles.provided}>PROVIDED</span>
-                                </div>
+                                {renderUploadControl('bank_statement', styles.required, 'REQUIRED')}
                             </div>
 
                             <div className={styles.documentRow}>
@@ -257,35 +254,29 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {} }) => {
                         <div className={styles.documentList}>
                             <div className={styles.documentRow}>
                                 <div className={styles.left}>
-                                    <span className={styles.success}></span>
+                                    <span className={styles.empty}></span>
                                     <span>Shareholders register</span>
                                 </div>
 
-                                <div className={styles.right}>
-                                    <span className={styles.provided}>PROVIDED</span>
-                                </div>
+                                {renderUploadControl('shareholders_register', styles.required, 'REQUIRED')}
                             </div>
 
                             <div className={styles.documentRow}>
                                 <div className={styles.left}>
-                                    <span className={styles.success}></span>
+                                    <span className={styles.empty}></span>
                                     <span>Ownership structure chart</span>
                                 </div>
 
-                                <div className={styles.right}>
-                                    <span className={styles.provided}>PROVIDED</span>
-                                </div>
+                                {renderUploadControl('ownership_chart', styles.required, 'REQUIRED')}
                             </div>
 
                             <div className={styles.documentRow}>
                                 <div className={styles.left}>
-                                    <span className={styles.success}></span>
+                                    <span className={styles.empty}></span>
                                     <span>UBO declaration (including corporate UBO if applicable)</span>
                                 </div>
 
-                                <div className={styles.right}>
-                                    <span className={styles.provided}>PROVIDED</span>
-                                </div>
+                                {renderUploadControl('ubo_declaration', styles.required, 'REQUIRED')}
                             </div>
 
                             <div className={styles.documentRow}>
@@ -328,7 +319,12 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {} }) => {
                     <ArrowLeft size={16} />
                     {t("Back")}
                 </button>
-                <button onClick={handleContinue} className={styles.continueButton}>
+                <button
+                    onClick={handleContinue}
+                    disabled={!isDocsValid}
+                    className={styles.continueButton}
+                    style={{ opacity: !isDocsValid ? 0.5 : 1, cursor: !isDocsValid ? 'not-allowed' : 'pointer' }}
+                >
                     {t("Continue to Review")}
                     <ArrowRight size={16} />
                 </button>
