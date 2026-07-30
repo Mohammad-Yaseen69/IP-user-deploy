@@ -1,8 +1,9 @@
 // import { Suspense } from "react";
 import { Route, Routes } from "react-router-dom";
 // import Loader from "../Layout/Loader";
-import { authRoutes, guestRoutes, publicRoutes, routes } from "./Routes";
+import { AgentCommissionRoutes, authRoutes, guestRoutes, publicRoutes, routes } from "./Routes";
 import Layout from "../Layout/Layout";
+import AgentLayout from "../Layout/AgentLayout";
 
 const Routers = () => {
   return (
@@ -15,6 +16,11 @@ const Routers = () => {
       }
       {routes.map((item, i) => (
         <Route element={<Layout />} key={i}>
+          <Route path={item.path} element={item.component} />
+        </Route>
+      ))}
+      {AgentCommissionRoutes.map((item, i) => (
+        <Route element={<AgentLayout />} key={i}>
           <Route path={item.path} element={item.component} />
         </Route>
       ))}

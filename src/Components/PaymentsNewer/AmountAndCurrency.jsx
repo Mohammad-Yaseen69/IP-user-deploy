@@ -828,7 +828,7 @@ const AmountAndCurrency = ({ setSubStep, amount, setAmount, currency, setCurrenc
                                 }}>{files.length > 0 ? files[0].name?.slice(0, 10) : t("Attach Files")}</span>
                                 <img src={file} alt="f" style={{ width: "14px" }} />
                             </Label>
-                            <Input type="file" id="file" hidden onChange={e => setFiles(e.target.files)} />
+                            <Input type="file" accept="image/*" id="file" hidden onChange={e => setFiles(e.target.files)} />
                         </div>
                     </div>
                 }

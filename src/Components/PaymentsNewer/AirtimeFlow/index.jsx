@@ -87,7 +87,6 @@ function reducer(state, action) {
                 ...state,
                 [action.field]: action.value
             };
-        // other cases can be added here
         case "UPDATE_FIELD_ESIM":
             return {
                 ...state,
@@ -147,6 +146,12 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
             updateDataHandler("localWallet", localWallet)
         }
     }, [userWallets])
+    useEffect(() => {
+        const numericAmount = +String(data.airtime_amount)?.replaceAll(",", "")
+        if (numericAmount > 0) {
+            updateDataHandler("amount", numericAmount)
+        }
+    }, [data.airtime_amount])
     useEffect(() => {
         if (userDetails) {
             if (userDetails.phone) {
