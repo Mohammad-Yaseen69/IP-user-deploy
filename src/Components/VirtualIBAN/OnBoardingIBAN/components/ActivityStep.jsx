@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
-import { ArrowLeft, ArrowRight } from 'react-feather'
 import { useTranslation } from 'react-i18next'
+import { Activity, DollarSign, BarChart2, ArrowLeft, ArrowRight, CheckSquare } from 'react-feather'
 import styles from '../style/onboardingSteps.module.css'
 import SidebarProgress from './SidebarProgress'
 import bvnkIndustryReference from '../../../../utils/Data/bvnkIndustryReference.json'
