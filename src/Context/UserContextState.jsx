@@ -10,6 +10,7 @@ import questionsData from "../Components/Settings/questions.json"
 import SessionExpireModal from "../Components/SessionExpireModal";
 import { useSearchParams } from "react-router-dom";
 import { apiWrapper } from "../utils/Functions/apiWrapper";
+import i18n from "../i18n";
 
 
 
@@ -447,7 +448,7 @@ const UserState = ({ children }) => {
             .then(res => {
                 const decrypted = decryptData(res.data.data)
                 const questions = decrypted.questionsList?.map(item => {
-                    const question = questionsData.find(it => it.language_code === (userDetails?.language ?? "en") && it.number === item?.question_no)
+                    const question = questionsData.find(it => it.language_code === (i18n.language || "en") && it.number === item?.question_no)
                     return { ...question, ...item }
                 })
                 setUserSecurityQues(questions)
