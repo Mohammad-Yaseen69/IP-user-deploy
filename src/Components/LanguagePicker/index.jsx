@@ -166,7 +166,7 @@ const LanguagePicker = ({ size = "24", backgroundWhite, newUI, defaultLanguage, 
 
     useEffect(() => {
         const loadLang = async () => {
-            const lang = await localforage.getItem("i18nextLng")
+            const lang = (await localforage.getItem("i18nextLng")) || localStorage.getItem("i18nextLng")
             if (lang) {
                 setCurrentLang(lang)
             }
@@ -229,17 +229,29 @@ const LanguagePicker = ({ size = "24", backgroundWhite, newUI, defaultLanguage, 
     useEffect(() => {
         const handleLanguage = async () => {
 
-            const userManuallySelected = await localforage.getItem("userSelectedLang", true)
-            const savedLang = await localforage.getItem("i18nextLng")
+            const userManuallySelected = await localforage.getItem("userSelectedLang")
+            const savedLang = (await localforage.getItem("i18nextLng")) || localStorage.getItem("i18nextLng")
 
 
             if (!isExtendedPage && savedLang && newLangs.includes(savedLang)) {
                 i18n.changeLanguage("en")
                 setCurrentLang("en")
+                localStorage.setItem("i18nextLng", "en")
                 await localforage.setItem("i18nextLng", "en")
                 await localforage.removeItem("userSelectedLang")
                 return
             }
+
+            if (userManuallySelected && savedLang) {
+                if (i18n.language !== savedLang) {
+                    i18n.changeLanguage(savedLang)
+                    setCurrentLang(savedLang)
+                }
+                localStorage.setItem("i18nextLng", savedLang)
+                await localforage.setItem("i18nextLng", savedLang)
+                return
+            }
+
             if (userDetails?.language) {
                 const targetLang = userDetails.language.toLowerCase()
 
@@ -251,15 +263,8 @@ const LanguagePicker = ({ size = "24", backgroundWhite, newUI, defaultLanguage, 
                 if (langItem && i18n.language !== langItem.lang) {
                     i18n.changeLanguage(langItem.lang)
                     setCurrentLang(langItem.lang)
+                    localStorage.setItem("i18nextLng", langItem.lang)
                     await localforage.setItem("i18nextLng", langItem.lang)
-                }
-                return
-            }
-
-            if (userManuallySelected) {
-                if (savedLang && i18n.language !== savedLang) {
-                    i18n.changeLanguage(savedLang)
-                    setCurrentLang(savedLang)
                 }
                 return
             }
@@ -270,14 +275,17 @@ const LanguagePicker = ({ size = "24", backgroundWhite, newUI, defaultLanguage, 
                 const detectedLang = countryLangMap[userCountryLocation] || 'en'
 
                 await localforage.removeItem("i18nextLng")
+                localStorage.removeItem("i18nextLng")
                 i18n.changeLanguage(detectedLang)
                 setCurrentLang(detectedLang)
+                localStorage.setItem("i18nextLng", detectedLang)
                 await localforage.setItem("i18nextLng", detectedLang)
                 return
             }
 
             i18n.changeLanguage('en')
             setCurrentLang('en')
+            localStorage.setItem("i18nextLng", 'en')
             await localforage.setItem("i18nextLng", 'en')
         }
 
@@ -380,6 +388,7 @@ const LanguagePicker = ({ size = "24", backgroundWhite, newUI, defaultLanguage, 
                             }} onClick={async () => {
                                 i18n.changeLanguage(eng.lang)
                                 setCurrentLang(eng.lang)
+                                localStorage.setItem("i18nextLng", eng.lang)
                                 await localforage.setItem("i18nextLng", eng.lang)
                                 await localforage.setItem("userSelectedLang", true)
                                 setLanguage(eng.lang)
@@ -408,6 +417,7 @@ const LanguagePicker = ({ size = "24", backgroundWhite, newUI, defaultLanguage, 
                                         }} onClick={async () => {
                                             i18n.changeLanguage(item.lang)
                                             setCurrentLang(item.lang)
+                                            localStorage.setItem("i18nextLng", item.lang)
                                             await localforage.setItem("i18nextLng", item.lang)
                                             await localforage.setItem("userSelectedLang", true)
                                             setLanguage(item.lang)
@@ -498,6 +508,7 @@ const LanguagePicker = ({ size = "24", backgroundWhite, newUI, defaultLanguage, 
                             }} onClick={async () => {
                                 i18n.changeLanguage(item.lang)
                                 setCurrentLang(item.lang)
+                                localStorage.setItem("i18nextLng", item.lang)
                                 await localforage.setItem("i18nextLng", item.lang)
                                 await localforage.setItem("userSelectedLang", true)
                                 toggleModal()
