@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { ArrowLeft, ArrowRight } from 'react-feather'
 import { useTranslation } from 'react-i18next'
 import styles from '../style/onboardingSteps.module.css'
