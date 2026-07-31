@@ -716,7 +716,7 @@
         "dial_code": "+998"
     },
     "VUT": {
-        "maxLength": 5,
+        "maxLength": 9,
         "dial_code": "+678"
     },
     "VEN": {
