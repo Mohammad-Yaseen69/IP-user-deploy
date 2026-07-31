@@ -19,6 +19,8 @@ import OTPConfirmation from '../UserSettingsNew/OTPConfirmation';
 import NextStepModal from './NextStepModal';
 import QrGenerate from './QrGenerate';
 import { usePermission } from '../../hooks/GeneralUse/usePermission';
+import { useQuery } from '@tanstack/react-query';
+import { apiWrapper } from '../../utils/Functions/apiWrapper';
 
 
 // dates
@@ -58,8 +60,29 @@ const Basic = ({ setCurrentTab }) => {
     useEffect(() => {
         setCodeType("sms")
     }, [userDetails])
-
+    console.log(userDetails, "userDetails")
     const isVerified = useMemo(() => userDetails?.user?.kyc_status === "approved" || userDetails?.user?.kyc_status === "verified", [userDetails])
+
+    const { data: statesResponse, isLoading: isStatesLoading } = useQuery({
+        queryKey: ['country-states', 'US'],
+        queryFn: () => apiWrapper({
+            endpoint: '/api/country/get-states/US',
+            isPublic: true
+        }),
+        enabled: country === 'USA',
+        retry: 1
+    })
+
+    const states = useMemo(() => {
+        const responseStates = Array.isArray(statesResponse)
+            ? statesResponse
+            : statesResponse?.States || statesResponse?.states || statesResponse?.data || []
+
+        return responseStates.map((item) => ({
+            value: item?.state_name || item?.name || item?.state || item?.state_code || item?.code || item?.iso_code || item,
+            label: item?.state_name || item?.name || item?.state || item?.state_code || item?.code || item
+        }))
+    }, [statesResponse])
 
     const refreshUserState = useCallback((field, value) => {
         setUserDetails(prev => {
@@ -865,13 +888,16 @@ const Basic = ({ setCurrentTab }) => {
                             </Label>
 
                             <Input
-                                type="text"
+                                type="select"
                                 disabled={!isEditMode || isVerified}
-                                readOnly={!isEditMode || isVerified}
                                 value={state}
                                 onChange={(e) => setState(e.target.value)}
-                                placeholder={t("Enter your state")}
-                            />
+                            >
+                                <option value="">{isStatesLoading ? t("Loading...") : t("--Select-State--")}</option>
+                                {states.map((item) => (
+                                    <option key={item.value} value={item.value}>{item.label}</option>
+                                ))}
+                            </Input>
                         </FormGroup>
                     )}
                     <FormGroup style={{ position: "relative" }}>
