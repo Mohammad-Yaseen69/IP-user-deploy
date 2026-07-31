@@ -40,6 +40,7 @@ const Basic = ({ setCurrentTab }) => {
     const [address, setAddress] = useState(userDetails?.address);
     const [city, setCity] = useState(userDetails?.city);
     const [postalCode, setPostalCode] = useState(userDetails?.postal_code);
+    const [state, setState] = useState(userDetails?.state ?? "");
     const [country, setCountry] = useState(userDetails?.country_iso_code);
     const [aboutMe, setAboutMe] = useState(userDetails?.about_me);
     const [timezone, setTimezone] = useState(userDetails?.timezone)
@@ -141,6 +142,7 @@ const Basic = ({ setCurrentTab }) => {
         setAddress(userDetails?.address)
         setCity(userDetails?.city ?? "")
         setPostalCode(userDetails?.postal_code)
+        setState(userDetails?.state ?? "");
         setCountry(userDetails?.country_iso_code ?? "")
         setAboutMe(userDetails?.about_me)
         setGender(userDetails?.gender)
@@ -232,6 +234,7 @@ const Basic = ({ setCurrentTab }) => {
                 last_name: lastName,
                 address,
                 city,
+                state,
                 postal_code: postalCode,
                 about_me: aboutMe,
                 // gender,
@@ -255,6 +258,7 @@ const Basic = ({ setCurrentTab }) => {
                     refreshUserState("last_name", lastName)
                     refreshUserState("address", address)
                     refreshUserState("city", city)
+                    refreshUserState("state", state)
                     refreshUserState("postal_code", postalCode)
                     refreshUserState("about_me", aboutMe)
                     const newDob = dateOfBirth ? dateOfBirth.split("-").reverse().join("-") : "";
@@ -274,6 +278,7 @@ const Basic = ({ setCurrentTab }) => {
                 company_name: company,
                 address,
                 city,
+                state,
                 postal_code: postalCode,
                 about_me: aboutMe,
                 // gender,
@@ -294,8 +299,10 @@ const Basic = ({ setCurrentTab }) => {
                     setIsSaving(false)
 
                     refreshUserState("company_name", company)
+
                     refreshUserState("address", address)
                     refreshUserState("city", city)
+                    refreshUserState("state", state)
                     refreshUserState("postal_code", postalCode)
                     refreshUserState("about_me", aboutMe)
                     refreshUserState("timezone", timezone)
@@ -832,6 +839,41 @@ const Basic = ({ setCurrentTab }) => {
                             && <span style={{ color: "red" }}>{t("(Required)")}</span>}</Label>
                         <Input disabled={true} readOnly={true} value={countriesData.find(item => item.alpha3 === country).name} onChange={e => setCountry(e.target.value)} />
                     </FormGroup>
+                    {country === "USA" && (
+                        <FormGroup style={{ position: "relative" }}>
+                            {!state && (
+                                <div
+                                    style={{
+                                        height: "9px",
+                                        width: "9px",
+                                        borderRadius: "9px",
+                                        background: "red",
+                                        position: "absolute",
+                                        bottom: "20px",
+                                        right: "-17px"
+                                    }}
+                                ></div>
+                            )}
+
+                            <Label>
+                                {t("State")}
+                                {!state && (
+                                    <span style={{ color: "red" }}>
+                                        {t("(Required)")}
+                                    </span>
+                                )}
+                            </Label>
+
+                            <Input
+                                type="text"
+                                disabled={!isEditMode || isVerified}
+                                readOnly={!isEditMode || isVerified}
+                                value={state}
+                                onChange={(e) => setState(e.target.value)}
+                                placeholder={t("Enter your state")}
+                            />
+                        </FormGroup>
+                    )}
                     <FormGroup style={{ position: "relative" }}>
                         {
                             !timezone
@@ -883,7 +925,29 @@ const Basic = ({ setCurrentTab }) => {
                             {t("Postal Code")}
                             {(!userDetails?.postal_code && !isAfricanCountry) && <span style={{ color: "red" }}>{t("(Required)")}</span>}
                         </Label>
-                        <Input disabled={!isEditMode || (isVerified && userDetails?.postal_code)} readOnly={!isEditMode || (isVerified && userDetails?.postal_code)} value={postalCode} onChange={e => setPostalCode(e.target.value)} />
+                        <Input disabled={!isEditMode || (isVerified && userDetails?.postal_code)}
+                            readOnly={!isEditMode || (isVerified && userDetails?.postal_code)}
+                            value={postalCode} onChange={(e) => {
+                                const value = e.target.value;
+
+                                if (/^\d{0,5}(-\d{0,4})?$/.test(value)) {
+                                    setPostalCode(value);
+                                }
+                            }}
+                            placeholder="55555 or 55555-5555"
+                            maxLength={10}
+                            pattern="\d{5}(-\d{4})?"
+                        />
+                        {postalCode && !/^\d{5}(-\d{4})?$/.test(postalCode) && (
+                            <div style={{
+                                color: "red",
+                                fontSize: "0.8rem",
+                                fontWeight: 600,
+                                marginTop: "5px"
+                            }}>
+                                {t("Postal code must be 55555 or 55555-5555.")}
+                            </div>
+                        )}
                     </FormGroup>
 
                 </CardBody>
@@ -905,12 +969,16 @@ const Basic = ({ setCurrentTab }) => {
                                     borderRadius: "10px"
                                 }} onClick={handleSaveClick}
                                     // (userDetails?.account_type === "individual" ? !firstName || !lastName : !company) || !address || !city || !country || !email || !phone || !postalCode || !timezone || !username || !usernameValid || phone.length < 8
-                                    disabled={isSaving || usernameError || !usernameValid ||
-                                        !city || !username ||
+                                    disabled={
+                                        isSaving ||
+                                        usernameError ||
+                                        !usernameValid ||
+                                        !city ||
+                                        !username ||
+                                        (country === "USA" && !state?.trim()) ||
                                         (userDetails?.account_type === "business" && !company?.trim()) ||
-                                        (!isAfricanCountry && !postalCode?.trim())
-
-
+                                        (!isAfricanCountry && !postalCode?.trim()) ||
+                                        (!isAfricanCountry && !/^\d{5}(-\d{4})?$/.test(postalCode || ""))
                                     }>
                                     {
                                         isSaving
