@@ -482,6 +482,7 @@ const OnboardingIBAN = ({ onCreated }) => {
                             payload: { ...state.requestData, ubos: typeof updatedPartners === 'function' ? updatedPartners(state.requestData?.ubos || []) : updatedPartners }
                         });
                     }}
+                    additionalFiles={state.requestData?.kyb_additional_file || state.requestData?.additionalFiles || userDetails?.company?.kyb_additional_file || []}
                 />
             )}
 
