@@ -1,40 +1,33 @@
+import axios from 'axios'
 import { useContext, useEffect, useReducer, useState } from 'react'
-import { ArrowRight, ArrowLeft, Briefcase, User, Globe, Activity, CreditCard, Cpu, Zap } from 'react-feather'
+import { Activity, ArrowRight, Cpu, CreditCard, Globe, Zap } from 'react-feather'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
-import axios from 'axios'
 import { toast } from 'react-toastify'
 import { UserContext } from '../../../Context/UserContext'
 import { usePermission } from '../../../hooks/GeneralUse/usePermission'
+import useWindowWidth from '../../../utils/useWindowWidth'
 import imageCard from "../files/images/Frame_2147236087.png"
 import styles from "./style/OnboardingIban.module.css"
-import TopRight from '../../topRight'
-import useWindowWidth from '../../../utils/useWindowWidth'
 
-import AccountStep from './components/AccountStep'
-import CompanyStep from './components/CompanyStep'
+import ActivateAccount from './components/ActivateAccount'
 import ActivityStep from './components/ActivityStep'
-import OwnershipStep from './components/OwnershipStep'
+import CompanyStep from './components/CompanyStep'
 import DocumentsStep from './components/DocumentsStep'
+import OwnershipStep from './components/OwnershipStep'
+import Pricing from './components/Pricing'
 import ReviewStep from './components/ReviewStep'
 import StatusScreen from './components/StatusScreen'
-import Pricing from './components/Pricing'
-import ActivateAccount from './components/ActivateAccount'
 
-import useSendOtp from '../../../hooks/GeneralUse/useSendOtp'
-import OTPConfirmation from '../../UserSettingsNew/OTPConfirmation'
 import { Modal, ModalBody, Spinner } from 'reactstrap'
 import { decryptData } from '../../../Helper/EssentilaMethods/Decryption'
 import { encryptData } from '../../../Helper/EssentilaMethods/Encryption'
+import useSendOtp from '../../../hooks/GeneralUse/useSendOtp'
+import OTPConfirmation from '../../UserSettingsNew/OTPConfirmation'
 
 const STEPS_BUSINESS = ['landing', 'selection', 'account', 'company', 'activity', 'ownership', 'documents', 'review']
 const STEPS_INDIVIDUAL = ['landing', 'selection', 'account', 'review']
 
-const STATUS_ORDER = [
-    'submitted', 'in_review', 'under_review', 'pending_kyb',
-    'pending_commercial', 'activation_pack_sent', 'awaiting_signature',
-    'awaiting_payment', 'payment_received'
-]
 
 const initialState = {
     step: 'landing',
@@ -477,8 +470,8 @@ const OnboardingIBAN = ({ onCreated }) => {
                     partners={state.requestData?.ubos || []}
                     refreshPartners={checkRequestStatus}
                     setPartners={(updatedPartners) => {
-                        dispatch({ 
-                            type: 'SET_REQUEST_DATA', 
+                        dispatch({
+                            type: 'SET_REQUEST_DATA',
                             payload: { ...state.requestData, ubos: typeof updatedPartners === 'function' ? updatedPartners(state.requestData?.ubos || []) : updatedPartners }
                         });
                     }}

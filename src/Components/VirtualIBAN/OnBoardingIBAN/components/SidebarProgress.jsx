@@ -165,7 +165,11 @@ const SidebarProgress = ({
             </div>
 
 
-            <button className={styles.askBtn}>
+            <button
+                type="button"
+                className={styles.askBtn}
+                onClick={() => window.open('https://wa.me/41783192428', '_blank', 'noopener,noreferrer')}
+            >
                 <MessageSquare size={15} />
 
                 <span>{t("Ask the assistant")}</span>
