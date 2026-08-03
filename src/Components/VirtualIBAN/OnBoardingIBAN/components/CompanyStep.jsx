@@ -212,6 +212,7 @@ const CompanyStep = ({ onNext, onBack, userType, data = {} }) => {
 
                                     <input
                                         type="text"
+                                        pattern="[a-zA-Z0-9\u00C0-\u024F\s-]+"
                                         className={styles.textInput}
                                         value={form.registrationNumber}
                                         onChange={set("registrationNumber")}
@@ -271,7 +272,14 @@ const CompanyStep = ({ onNext, onBack, userType, data = {} }) => {
                                     <input
                                         className={styles.textInput}
                                         value={form.tradingName}
-                                        onChange={set("tradingName")}
+                                        onChange={(e) => {
+                                            const value = e.target.value;
+
+                                            if (/^[A-Za-z\s]*$/.test(value)) {
+                                                set("tradingName")(e);
+                                            }
+                                        }}
+
                                     />
                                 </div>
                             </div>

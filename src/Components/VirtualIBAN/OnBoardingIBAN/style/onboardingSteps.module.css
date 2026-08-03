@@ -1011,7 +1011,7 @@
 }
 
 .sidebar {
-    width: 280px;
+    width: 300px;
     background: #fff;
     border: 1px solid #E7EAF2;
     border-radius: 18px;
@@ -1269,9 +1269,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    border: 1px solid #EEF2F7;
-    background: #FAFBFD;
-    border-radius: 12px;
+    border-bottom: 1px solid #EFF1F6;
     padding: 12px;
 }
 
@@ -1282,10 +1280,10 @@
 }
 
 .iconWrap {
-    width: 22px;
-    height: 22px;
-    border-radius: 50%;
+    width: 25px;
+    height: 25px;
     display: flex;
+    border-radius: 8px;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
@@ -1303,11 +1301,11 @@
     border-radius: 50%;
 }
 
-/* -------- Done -------- */
 
 .done .iconWrap {
-    background: #22C55E;
-    color: white;
+    color: green;
+    border-radius: 8px;
+    background: #EAFBF1;
 }
 
 .done .label {
@@ -1324,7 +1322,6 @@
     border-radius: 999px;
 }
 
-/* -------- Progress -------- */
 
 .inprogress .iconWrap {
     background: #4A32E3;
@@ -1343,11 +1340,10 @@
     border-radius: 999px;
 }
 
-/* -------- Todo -------- */
 
 .todo .iconWrap {
-    border: 2px solid #CBD5E1;
-    background: white;
+    border-radius: 8px;
+    background: #F3F3F4;
 }
 
 .todo .dot {
@@ -1355,32 +1351,39 @@
 }
 
 .todoBadge {
-    background: #F1F5F9;
-    color: #64748B;
-    font-size: 11px;
-    font-weight: 700;
-    padding: 5px 10px;
-    border-radius: 999px;
+    display: flex;
+    padding: 4px 11px;
+    flex-direction: column;
+    align-items: flex-start;
+    border-radius: 100px;
+    background: #FFFCE0;
+    color: #6B5900;
+    font-family: Inter;
+    font-size: 10px;
+    font-style: normal;
+    font-weight: 800;
+    line-height: normal;
 }
 
-/* ---------------- Footer Button ---------------- */
 
 .askBtn {
-    margin-top: auto;
-    width: 100%;
-    height: 46px;
-    border: 1px solid #DDD6FE;
-    background: #F8F6FF;
-    color: #4A32E3;
-    border-radius: 12px;
     display: flex;
+    height: 40px;
+    padding: 1px 6px;
     justify-content: center;
     align-items: center;
-    gap: 8px;
-    font-size: 13px;
+    gap: 7px;
+    align-self: stretch;
+    border-radius: 6px;
+    border: 1px solid #E9E0FF;
+    background: #F5F2FF;
+    color: #4A32E3;
+    text-align: center;
+    font-family: Arial;
+    font-size: 12px;
+    font-style: normal;
     font-weight: 700;
-    cursor: pointer;
-    transition: .2s;
+    line-height: normal;
 }
 
 .askBtn:hover {
