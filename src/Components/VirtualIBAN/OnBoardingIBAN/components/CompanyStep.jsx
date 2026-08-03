@@ -1,11 +1,12 @@
-import React, { useContext, useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
+import { Briefcase, Globe, Hash, MapPin } from 'react-feather'
 import { useTranslation } from 'react-i18next'
-import { Briefcase, MapPin, Globe, ArrowLeft, ArrowRight, Hash } from 'react-feather'
-import styles from '../style/onboardingSteps.module.css'
-import SidebarProgress from './SidebarProgress'
-import Magicsvg from '../magicsvg'
 import { FaHand } from 'react-icons/fa6'
 import { UserContext } from '../../../../Context/UserContext'
+import Magicsvg from '../magicsvg'
+import styles from '../style/onboardingSteps.module.css'
+import SidebarProgress from './SidebarProgress'
+import { BsDot } from 'react-icons/bs'
 
 const formatDateForInput = (val) => {
     if (!val) return '';
@@ -46,21 +47,7 @@ const formatDateForInput = (val) => {
     return '';
 };
 
-const LEGAL_STRUCTURES = [
-    'Limited Liability Company (LLC)',
-    'Corporation (Corp / Inc)',
-    'Public Limited Company (PLC)',
-    'Partnership',
-    'Sole Proprietorship',
-    'Non-Profit Organization',
-    'Other'
-]
 
-const COUNTRIES = [
-    'Malta', 'United Kingdom', 'Germany', 'France', 'Netherlands',
-    'Luxembourg', 'Ireland', 'Switzerland', 'United Arab Emirates',
-    'United States', 'Other'
-]
 
 const CompanyStep = ({ onNext, onBack, userType, data = {} }) => {
     const { t } = useTranslation()
@@ -111,13 +98,12 @@ const CompanyStep = ({ onNext, onBack, userType, data = {} }) => {
     }
 
     const steps = [
-        { num: '01', label: t('Account'), done: true },
+        { num: '01', label: t('Account'), completed: true },
         { num: '02', label: t('Company'), active: true },
         { num: '03', label: t('Activity'), active: false },
         { num: '04', label: t('Ownership'), active: false },
         { num: '05', label: t('Documents'), active: false },
         { num: '06', label: t('Review'), active: false }
-
     ]
 
     return (
@@ -127,12 +113,13 @@ const CompanyStep = ({ onNext, onBack, userType, data = {} }) => {
                     <div
                         key={index}
                         className={`${styles.step} ${step.active ? styles.active : ""
-                            } ${step.completed ? styles.completed : ""}`}
+                            } ${step.completed ? styles.completed : ""
+                            }`}
                     >
                         <div className={styles.stepLine}></div>
 
                         <div className={styles.stepContent}>
-                            <span className={styles.stepNumber}>{step.num}</span>
+                            <span className={styles.stepNumber}>{step.num} <BsDot /></span>
                             <span className={styles.stepLabel}>{step.label}</span>
                         </div>
                     </div>

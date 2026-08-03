@@ -48,10 +48,10 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {}, userDetails, compa
     }
 
     const steps = [
-        { num: '01', label: t('Account'), done: true },
-        { num: '02', label: t('Company'), done: true },
-        { num: '03', label: t('Activity'), done: true },
-        { num: '04', label: t('Ownership'), done: true },
+        { num: '01', label: t('Account'), completed: true },
+        { num: '02', label: t('Company'), completed: true },
+        { num: '03', label: t('Activity'), completed: true },
+        { num: '04', label: t('Ownership'), completed: true },
         { num: '05', label: t('Documents'), active: true },
         { num: '06', label: t('Review'), active: false }
     ]

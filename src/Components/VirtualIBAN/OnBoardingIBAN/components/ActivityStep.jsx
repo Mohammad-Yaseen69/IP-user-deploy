@@ -120,8 +120,8 @@ const ActivityStep = ({ onNext, onBack, userType, data = {} }) => {
     }
 
     const steps = [
-        { num: '01', label: t('Account'), done: true },
-        { num: '02', label: t('Company'), done: true },
+        { num: '01', label: t('Account'), completed: true },
+        { num: '02', label: t('Company'), completed: true },
         { num: '03', label: t('Activity'), active: true },
         { num: '04', label: t('Ownership'), active: false },
         { num: '05', label: t('Documents'), active: false },

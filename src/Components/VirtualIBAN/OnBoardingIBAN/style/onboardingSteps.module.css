@@ -57,18 +57,17 @@
 }
 
 .stepNumber {
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 700;
     color: #A0A7B5;
 }
 
 .stepLabel {
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 500;
     color: #A0A7B5;
 }
 
-/* Active */
 
 .active .stepLine {
     background: #4A32E3;
@@ -82,7 +81,7 @@
 
 
 .completed .stepLine {
-    background: #4A32E3;
+    background: #22C55E;
 }
 
 .completed .stepNumber,
