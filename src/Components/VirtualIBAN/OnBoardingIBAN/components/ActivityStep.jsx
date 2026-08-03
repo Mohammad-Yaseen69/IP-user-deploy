@@ -1,9 +1,9 @@
 import { useMemo, useState } from 'react'
+import { ArrowLeft, ArrowRight, X } from 'react-feather'
 import { useTranslation } from 'react-i18next'
-import { Activity, DollarSign, BarChart2, ArrowLeft, ArrowRight, CheckSquare } from 'react-feather'
+import bvnkIndustryReference from '../../../../utils/Data/bvnkIndustryReference.json'
 import styles from '../style/onboardingSteps.module.css'
 import SidebarProgress from './SidebarProgress'
-import bvnkIndustryReference from '../../../../utils/Data/bvnkIndustryReference.json'
 
 const getIndustryPayload = (industry) => ({
     name: industry?.name,
@@ -170,6 +170,7 @@ const ActivityStep = ({ onNext, onBack, userType, data = {} }) => {
 
                                 <select
                                     className={styles.textInput}
+                                    style={{ height: "auto", padding: "12px" }}
                                     value={selectedIndustryValue}
                                     onChange={handleIndustryChange}
                                 >
@@ -368,7 +369,7 @@ const ActivityStep = ({ onNext, onBack, userType, data = {} }) => {
                                 {t("Intended use of the account")}
                             </h4>
 
-                            <div className={styles.formGrid}>
+                            <div className={styles.formGrid} >
                                 <div className={styles.inputGroup}>
                                     <label className={styles.inputLabel}>
                                         {t("PURPOSE OF THE IBAN")}
@@ -421,7 +422,9 @@ const ActivityStep = ({ onNext, onBack, userType, data = {} }) => {
                                                 onClick={() => toggleArrayItem("originCountries", c)}
                                                 style={{ cursor: "pointer" }}
                                             >
-                                                {c} ✕
+                                                <span>
+                                                    {c}</span>
+                                                <X size={15} />
                                             </span>
                                         ))}
                                     </div>
@@ -439,7 +442,7 @@ const ActivityStep = ({ onNext, onBack, userType, data = {} }) => {
                                             if (e.target.value) toggleArrayItem("destinationCountries", e.target.value)
                                         }}
                                     >
-                                        <option value="">{t("Add country...")}</option>
+                                        <option value="">{t("Add Cities...")}</option>
                                         {COUNTRY_LIST.filter(c => !form.destinationCountries?.includes(c)).map(c => (
                                             <option key={c} value={c}>{c}</option>
                                         ))}
@@ -453,7 +456,9 @@ const ActivityStep = ({ onNext, onBack, userType, data = {} }) => {
                                                 onClick={() => toggleArrayItem("destinationCountries", c)}
                                                 style={{ cursor: "pointer" }}
                                             >
-                                                {c} ✕
+                                                <span>
+                                                    {c}</span>
+                                                <X size={15} />
                                             </span>
                                         ))}
                                     </div>
@@ -552,8 +557,8 @@ const ActivityStep = ({ onNext, onBack, userType, data = {} }) => {
                     <ArrowLeft size={16} />
                     {t("Back")}
                 </button>
-                <button 
-                    onClick={handleContinue} 
+                <button
+                    onClick={handleContinue}
                     className={styles.continueButton}
                     disabled={!isFormValid}
                     style={{ opacity: !isFormValid ? 0.5 : 1, cursor: !isFormValid ? 'not-allowed' : 'pointer' }}
