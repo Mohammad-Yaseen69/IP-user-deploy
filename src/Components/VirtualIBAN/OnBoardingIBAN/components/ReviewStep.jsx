@@ -173,7 +173,9 @@ const ReviewStep = ({ onSubmit, onBack, allData = {}, onNext }) => {
 
 
                     <div className={styles.infoBox}>
-                        <input type="checkbox" />
+                        <input type="checkbox" style={{
+                            marginTop: "3px"
+                        }} />
 
                         <span>
                             {t("I confirm the information provided is true and complete, and I authorise InstaPay to carry out KYB, AML, sanctions, PEP and adverse-media checks. I understand submission does not guarantee approval.")}

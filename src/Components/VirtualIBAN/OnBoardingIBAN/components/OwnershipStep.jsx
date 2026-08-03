@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react'
 import axios from 'axios'
+import { useEffect, useState } from 'react'
+import { ArrowLeft, ArrowRight, CheckCircle, Edit2, Plus, Trash2 } from 'react-feather'
 import { useTranslation } from 'react-i18next'
-import { Users, User, Plus, Trash2, Edit2, ArrowLeft, ArrowRight, Percent, CheckCircle } from 'react-feather'
-import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from 'reactstrap'
+import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap'
+import { decryptData } from '../../../../Helper/EssentilaMethods/Decryption'
 import styles from '../style/onboardingSteps.module.css'
 import SidebarProgress from './SidebarProgress'
-import { decryptData } from '../../../../Helper/EssentilaMethods/Decryption'
 
 
 const EMPTY_FORM = {

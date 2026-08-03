@@ -586,6 +586,7 @@
     font-style: normal;
     font-weight: 800;
     line-height: normal;
+    gap: 4px;
 }
 
 .success {
