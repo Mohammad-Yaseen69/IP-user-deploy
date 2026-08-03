@@ -1,332 +1,462 @@
-import {
-    AlertCircle, ArrowRight,
-    Check, Clock,
-    CreditCard,
-    Eye,
-    FileText,
-    Info,
-    PenTool,
-    X
-} from 'react-feather'
+import React, { useContext, useState } from 'react'
+import { Globe } from 'react-feather'
 import { useTranslation } from 'react-i18next'
-import styles from '../style/status.module.css'
-
-
-const TIMELINE_STEPS = [
-    { key: 'submitted', label: 'Request Submitted', sub: 'Application received' },
-    { key: 'review', label: 'Under Review', sub: 'KYB & commercial review' },
-    { key: 'pack_sent', label: 'Activation Pack Sent', sub: 'Terms & fees confirmed' },
-    { key: 'signature', label: 'Awaiting Signature', sub: 'Sign the declaration' },
-    { key: 'payment', label: 'Awaiting Payment', sub: 'Activation fee' },
-    { key: 'activated', label: 'IBAN Activated', sub: 'You\'re live' },
-]
-
-const STATUS_ACTIVE_STEP = {
-    'in_review': 'review',
-    'submitted': 'submitted',
-    'under_review': 'review',
-    'pending_kyb': 'review',
-    'pending_commercial': 'review',
-    'activation_pack_sent': 'pack_sent',
-    'awaiting_signature': 'signature',
-    'awaiting_payment': 'payment',
-    'payment_received': 'activated',
-    'rejected': null,
-}
+import { Table, Button, Modal, ModalHeader, ModalBody, ModalFooter, FormGroup, Label, Input } from 'reactstrap'
+import { useMutation } from '@tanstack/react-query'
+import axios from 'axios'
+import { toast } from 'react-toastify'
+import { UserContext } from '../../../../Context/UserContext'
+import { encryptData } from '../../../../Helper/EssentilaMethods/Encryption'
+import { decryptData } from '../../../../Helper/EssentilaMethods/Decryption'
+import { isEmailValid } from '../../../../utils/Functions/validations'
+import KYBPartner from '../../../Settings/KYBPartner'
+import VerificationPayment from '../../../Settings/VerificationPayment'
+import AdditionalFilesSection from '../../../Settings/AdditionalFilesSection'
+import imageCard from '../../files/images/Frame_2147236087.png'
 
 const STATUS_CONFIG = {
-    in_review: {
-        badge: 'review',
-        badgeText: 'In review · Submitted today, 09:42',
+    pending: {
+        badge: 'In review · Submitted today, 09:42',
         title: 'Your request is in review',
         description: 'Your IBAN activation request has been submitted. Our team will review your KYB status and commercial terms. You will receive your personalized activation pack shortly.',
-        primaryBtn: { label: 'View submitted info', icon: Eye },
-        secondaryBtn: { label: 'Cancel application', icon: X },
+        primaryLabel: 'View submitted info',
+        secondaryLabel: 'Cancel application',
     },
     submitted: {
-        badge: 'submitted',
-        badgeText: 'Request Submitted today, 09:42',
-        title: 'Your request is Submitted',
+        badge: 'In review · Submitted today, 09:42',
+        title: 'Your request is in review',
         description: 'Your IBAN activation request has been submitted. Our team will review your KYB status and commercial terms. You will receive your personalized activation pack shortly.',
-        primaryBtn: { label: 'View submitted info', icon: Eye },
-        secondaryBtn: { label: 'Cancel application', icon: X },
+        primaryLabel: 'View submitted info',
+        secondaryLabel: 'Cancel application',
+    },
+    in_review: {
+        badge: 'In review · Submitted today, 09:42',
+        title: 'Your request is in review',
+        description: 'Your IBAN activation request has been submitted. Our team will review your KYB status and commercial terms. You will receive your personalized activation pack shortly.',
+        primaryLabel: 'View submitted info',
+        secondaryLabel: 'Cancel application',
     },
     under_review: {
-        badge: 'review',
-        badgeText: 'Under Review',
-        title: 'Your request is Under Review',
-        description: 'Our onboarding team is reviewing your business profile, KYB status, and requested services. We\'ll notify you as soon as a decision is ready — no action is needed from you right now.',
-        primaryBtn: { label: 'View submitted info', icon: Eye },
-        secondaryBtn: { label: 'Cancel application', icon: X },
+        badge: 'Under Review',
+        title: 'Your request is under review',
+        description: "Our onboarding team is reviewing your business profile, KYB status, and requested services. We'll notify you as soon as a decision is ready — no action is needed from you right now.",
+        primaryLabel: 'View submitted info',
+        secondaryLabel: 'Cancel application',
     },
-    pending_kyb: {
-        badge: 'pending',
-        badgeText: 'Pending KYB Approval',
-        title: 'Your KYB review is in progress',
-        description: 'We\'re verifying your business documents and ownership information. This usually takes 1–2 business days — we\'ll notify you the moment it\'s confirmed.',
-        primaryBtn: { label: 'View submitted documents', icon: FileText },
-        secondaryBtn: { label: 'Cancel application', icon: X },
-    },
-    pending_commercial: {
-        badge: 'pending',
-        badgeText: 'Pending Commercial Approval',
-        title: 'Commercial terms under review',
-        description: 'Your KYB has been approved. Our commercial team is now reviewing your requested services, fee structure and risk profile. This step typically takes 1 business day.',
-        primaryBtn: { label: 'View submitted info', icon: Eye },
-        secondaryBtn: { label: 'Cancel application', icon: X },
-    },
-    activation_pack_sent: {
-        badge: 'action',
-        badgeText: 'Activation Pack Sent',
-        title: 'Your activation pack is ready',
-        description: 'We\'ve prepared your personalized activation pack with your applicable services, fees, and IBAN details. Review it and proceed to sign the declaration.',
-        primaryBtn: { label: 'View activation pack', icon: ArrowRight },
-        secondaryBtn: { label: 'Cancel application', icon: X },
-    },
-    awaiting_signature: {
-        badge: 'action',
-        badgeText: 'Awaiting Signature',
-        title: 'Your signature is needed',
-        description: 'Your activation pack is ready to review. Sign the declaration to confirm your activated services and fees so we can move you to payment.',
-        primaryBtn: { label: 'Review & sign pack', icon: PenTool },
-        secondaryBtn: { label: 'Cancel application', icon: X },
-    },
-    awaiting_payment: {
-        badge: 'waiting',
-        badgeText: 'Awaiting Payment',
-        title: 'Activation fee required',
-        description: 'Your declaration has been signed. Please complete the one-time activation fee payment to finalize your Business IBAN setup.',
-        primaryBtn: { label: 'Pay activation fee', icon: CreditCard },
-        secondaryBtn: { label: 'Cancel application', icon: X },
-    },
-    payment_received: {
-        badge: 'action',
-        badgeText: 'Payment Received',
-        title: 'Payment confirmed — you\'re almost live!',
-        description: 'Your activation fee has been received. Our team is finalizing your IBAN account. You\'ll receive your full account details by email within 24 hours.',
-        primaryBtn: { label: 'View account details', icon: Eye },
-        secondaryBtn: null,
+    approved: {
+        badge: 'Approved',
+        title: 'Your IBAN is active',
+        description: 'Congratulations! Your business IBAN activation request has been approved. You can now start using your IBAN for transfers and payments.',
+        primaryLabel: 'Go to Dashboard',
+        secondaryLabel: '',
     },
     rejected: {
-        badge: 'rejected',
-        badgeText: 'Rejected / More Information Required',
+        badge: 'Action Required',
         title: 'We need more information',
-        description: 'Unfortunately, we were unable to complete your IBAN activation at this time. This may be due to incomplete documentation or eligibility requirements. Please review the details below and resubmit.',
-        primaryBtn: { label: 'Resubmit application', icon: ArrowRight },
-        secondaryBtn: { label: 'Contact support', icon: AlertCircle },
+        description: 'Unfortunately, we were unable to complete your IBAN activation at this time. Please review the requirements or contact our support team.',
+        primaryLabel: 'Resubmit application',
+        secondaryLabel: 'Contact support',
     },
 }
 
-const StatusScreen = ({ status = 'submitted', ibanNumber, companyName, onAction, onCancel }) => {
-    const { t } = useTranslation()
-    const cfg = STATUS_CONFIG[status] || STATUS_CONFIG.submitted
-    const activeStep = STATUS_ACTIVE_STEP[status]
+const getFeeAmount = async ({ payload, authHeader }) => {
+    const encryptedData = encryptData(payload);
+    const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/company/kyb-fee-details`, { data: encryptedData }, { headers: authHeader });
+    return decryptData(res.data?.data);
+};
 
-    const getStepState = (stepKey) => {
-        const activeIdx = TIMELINE_STEPS.findIndex(s => s.key === activeStep)
-        const currentIdx = TIMELINE_STEPS.findIndex(s => s.key === stepKey)
-        if (status === 'rejected') return currentIdx === 0 ? 'done' : 'pending'
-        if (activeIdx === -1) return 'done'
-        if (currentIdx < activeIdx) return 'done'
-        if (currentIdx === activeIdx) return 'active'
-        return 'pending'
+const StatusScreen = ({ status = 'submitted', ibanNumber, companyName, onAction, onCancel, activationData, partners = [], refreshPartners, setPartners, additionalFiles = [] }) => {
+    const { t } = useTranslation()
+    const { userDetails, authHeader } = useContext(UserContext)
+
+    const kybFiles = userDetails?.company?.kyb_additional_file || activationData?.kyb_additional_file || [];
+    const ibanFiles = activationData?.iban_additional_file || (Array.isArray(additionalFiles) && additionalFiles.length > 0 ? additionalFiles : []);
+
+    const [showAddModal, setShowAddModal] = useState(false)
+    const [partnerName, setPartnerName] = useState("")
+    const [partnerEmail, setPartnerEmail] = useState("")
+    const [partnerDesignation, setPartnerDesignation] = useState("")
+    const [adding, setAdding] = useState(false)
+    const [showPaymentModal, setShowPaymentModal] = useState(false)
+    const [partnerVerification, setPartnerVerification] = useState(null)
+    const [feeAmount, setFeeAmount] = useState(0)
+
+    const { mutateAsync, isPending } = useMutation({
+        mutationFn: (payload) => getFeeAmount({ payload, authHeader }),
+    })
+
+    const addPartnerHandler = async () => {
+        if (!isEmailValid(partnerEmail)) {
+            toast.error(t("Please enter a valid email address."));
+            return;
+        }
+
+        if (partners?.find(p => p?.email?.toLowerCase() === partnerEmail.toLowerCase())) {
+            toast.error(t("A director with this email already exists."));
+            return;
+        }
+
+        setAdding(true)
+        try {
+            const payload = {
+                name: partnerName,
+                email: partnerEmail,
+                designation: partnerDesignation,
+                account_id: userDetails?._id,
+            }
+            const encrypted = encryptData(payload)
+            const response = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/company/add-partner`, {
+                data: encrypted
+            }, {
+                headers: authHeader
+            })
+            const data = await decryptData(response.data.data)
+            setAdding(false)
+            setShowAddModal(false)
+            if (setPartners && data?.partner) {
+                setPartners(prev => [data.partner, ...prev])
+            }
+            setPartnerName("")
+            setPartnerEmail("")
+            setPartnerDesignation("")
+            if (refreshPartners) refreshPartners()
+            toast.success(t("Director added successfully!"))
+        } catch (error) {
+            setAdding(false)
+            toast.error(t("Unable to add director. Please try again."))
+        }
     }
 
-    const PrimaryIcon = cfg.primaryBtn?.icon
-    const SecondaryIcon = cfg.secondaryBtn?.icon
+    const cfg = STATUS_CONFIG[status] || STATUS_CONFIG.submitted
 
     return (
-        <div className={styles.statusLayout}>
-            <div className={styles.statusCard}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', width: '100%' }}>
+            {/* Top Status Card */}
+            <div style={{
+                width: '100%',
+                background: '#FFFFFF',
+                borderRadius: '16px',
+                padding: '40px 36px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                gap: '40px',
+                boxShadow: '0 1px 3px rgba(0,0,0,0.05)',
+                border: '1px solid #ECECF2',
+                marginTop: '20px'
+            }}>
+                {/* Left Content */}
+                <div style={{ flex: '1 1 55%', maxWidth: '600px' }}>
+                    {/* Globe Icon */}
+                    <div style={{
+                        width: '52px',
+                        height: '52px',
+                        borderRadius: '14px',
+                        backgroundColor: '#5B3DF5',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        marginBottom: '20px'
+                    }}>
+                        <Globe size={26} color="#FFFFFF" />
+                    </div>
 
-                <div className={styles.statusHeader}>
-                    <h2 className={styles.statusCardTitle}>
-                        {t("Your application is moving")}
-                    </h2>
+                    {/* Status Badge */}
+                    <div style={{
+                        display: 'inline-block',
+                        background: '#FEF3C7',
+                        color: '#92400E',
+                        borderRadius: '9999px',
+                        padding: '5px 14px',
+                        fontSize: '13px',
+                        fontWeight: 600,
+                        marginBottom: '14px'
+                    }}>
+                        {t(cfg.badge)}
+                    </div>
 
-                    <p className={styles.statusCardDesc}>
-                        {t(
-                            "Request reference DEAL-4921 submitted just now. We'll email you at each step."
-                        )}
+                    {/* Title */}
+                    <h1 style={{
+                        fontSize: '32px',
+                        fontWeight: 700,
+                        color: '#111827',
+                        margin: '0 0 12px 0',
+                        lineHeight: '1.2'
+                    }}>
+                        {t(cfg.title)}
+                    </h1>
+
+                    {/* Description */}
+                    <p style={{
+                        fontSize: '15px',
+                        color: '#6B7280',
+                        lineHeight: '1.6',
+                        margin: '0 0 36px 0',
+                        maxWidth: '520px'
+                    }}>
+                        {t(cfg.description)}
                     </p>
-                </div>
 
-                <div className={styles.actionCard}>
-
-                    <div className={styles.actionHeader}>
-                        <div className={styles.actionLeft}>
-                            <AlertCircle size={16} />
-
-                            <div>
-                                <h4>{t("Action required - Information requested")}</h4>
-                                <p>
-                                    {t(
-                                        "We need a couple more items to finalize your application (usually today)."
-                                    )}
-                                </p>
-                            </div>
-                        </div>
-
-                        <span className={styles.requestId}>DEAL-4921</span>
-                    </div>
-
-                    <div className={styles.documentList}>
-
-                        <div className={styles.documentItem}>
-                            <div className={styles.documentInfo}>
-                                <FileText size={16} />
-                                <span>{t("Last 3 month's Bank statement")}</span>
-                            </div>
-
-                            <button className={styles.uploadBtn}>
-                                {t("Upload")}
-                            </button>
-                        </div>
-
-                        <div
-                            className={`${styles.documentItem} ${styles.completed}`}
-                        >
-                            <div className={styles.documentInfo}>
-                                <Check size={16} />
-                                <span>{t("Source of funds declaration")}</span>
-                            </div>
-
-                            <span className={styles.uploadedBadge}>
-                                {t("Uploaded")}
-                            </span>
-                        </div>
-                    </div>
-
-                    <button
-                        className={styles.primaryUploadBtn}
-                        onClick={onAction}
-                    >
-                        {t("Upload all files to submit")}
-                    </button>
-
-                </div>
-                <div className={styles.progressSection}>
-
-                    <div className={styles.progressHeader}>
-                        <h4>{t("Compliance review progress")}</h4>
-                        <span>{t("Estimated completion: 1–2 business days")}</span>
-                    </div>
-
-                    <div className={styles.timeline}>
-
-                        {TIMELINE_STEPS.map((step, index) => {
-                            const state = getStepState(step.key);
-                            const isLast = index === TIMELINE_STEPS.length - 1;
-
-                            return (
-                                <div
-                                    key={step.key}
-                                    className={styles.timelineItem}
+                    {/* Footer section: Need Help & Action Buttons */}
+                    <div style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'flex-end',
+                        flexWrap: 'wrap',
+                        gap: '20px'
+                    }}>
+                        <div>
+                            <h4 style={{ fontSize: '14px', fontWeight: 700, color: '#111827', margin: '0 0 4px 0' }}>
+                                {t("Need help?")}
+                            </h4>
+                            <p style={{ fontSize: '13px', color: '#6B7280', margin: 0 }}>
+                                {t("Reach our compliance team at")}{' '}
+                                <a
+                                    href="mailto:help@insta-pay.ch"
+                                    style={{ color: '#5B3DF5', fontWeight: 600, textDecoration: 'none' }}
                                 >
-                                    <div className={styles.timelineIndicator}>
-
-                                        <div
-                                            className={`${styles.timelineCircle} ${styles[state]
-                                                }`}
-                                        >
-                                            {state === "done" && (
-                                                <Check size={13} />
-                                            )}
-
-                                            {state === "active" && (
-                                                <Clock size={13} />
-                                            )}
-
-                                            {state === "pending" && (
-                                                <span
-                                                    className={
-                                                        styles.pendingDot
-                                                    }
-                                                />
-                                            )}
-                                        </div>
-
-                                        {!isLast && (
-                                            <div
-                                                className={`${styles.timelineLine} ${state === "done"
-                                                    ? styles.done
-                                                    : state === "active"
-                                                        ? styles.active
-                                                        : ""
-                                                    }`}
-                                            />
-                                        )}
-                                    </div>
-
-                                    <div className={styles.timelineContent}>
-                                        <h5
-                                            className={
-                                                state === "active"
-                                                    ? styles.activeTitle
-                                                    : ""
-                                            }
-                                        >
-                                            {t(step.label)}
-                                        </h5>
-
-                                        <p>{t(step.sub)}</p>
-                                    </div>
-                                </div>
-                            );
-                        })}
-
-                    </div>
-
-
-
-                </div>
-                <div className={styles.statusFooter}>
-
-
-                    <div className={styles.helpCard}>
-
-                        <div className={styles.helpLeft}>
-                            <Info size={30} color='#3B17A8' />
-
-                            <p>
-                                {t(
-                                    "What happens next: our team reviews your KYB and risk profile, sets your commercial terms (or applies your agent's package), and sends your personalized Welcome Letter / Activation Pack. You'll sign, settle the activation, and your IBAN goes live."
-                                )}
+                                    help@insta-pay.ch
+                                </a>
                             </p>
                         </div>
 
-
-
+                        <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+                            {cfg.primaryLabel && cfg.primaryLabel !== 'View submitted info' && (
+                                <button
+                                    type="button"
+                                    style={{
+                                        background: '#5B3DF5',
+                                        color: '#FFFFFF',
+                                        border: 'none',
+                                        padding: '10px 24px',
+                                        borderRadius: '8px',
+                                        fontWeight: 600,
+                                        fontSize: '14px',
+                                        cursor: 'pointer',
+                                        transition: 'background 0.2s'
+                                    }}
+                                    onClick={onAction}
+                                >
+                                    {t(cfg.primaryLabel)}
+                                </button>
+                            )}
+                        </div>
                     </div>
-
-                    <div className={styles.statusActions}>
-
-                        <button
-                            type="button"
-                            className={styles.backButton}
-                            onClick={onCancel}
-                        >
-                            {t("Back")}
-                        </button>
-
-                        {cfg.primaryBtn && (
-                            <button
-                                type="button"
-                                className={styles.primaryActionBtn}
-                                onClick={onAction}
-                            >
-                                {PrimaryIcon && <PrimaryIcon size={16} />}
-                                {t(cfg.primaryBtn.label)}
-                            </button>
-                        )}
-
-                    </div>
-
                 </div>
 
+                {/* Right Graphic Section */}
+                <div style={{
+                    flex: '1 1 40%',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center'
+                }}>
+                    <img
+                        src={imageCard}
+                        alt="IBAN Status Card Illustration"
+                        style={{
+                            maxWidth: '100%',
+                            maxHeight: '360px',
+                            objectFit: 'contain'
+                        }}
+                    />
+                </div>
             </div>
+
+            {/* Bottom Submitted Information Block */}
+            <div style={{
+                width: '100%',
+                background: '#FFFFFF',
+                borderRadius: '16px',
+                padding: '40px 36px',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '24px',
+                boxShadow: '0 1px 3px rgba(0,0,0,0.05)',
+                border: '1px solid #ECECF2'
+            }}>
+                <h2 style={{ fontSize: '24px', fontWeight: 700, margin: 0, color: '#111827' }}>{t("Submitted Information")}</h2>
+
+                <div style={{ background: '#F9FAFB', padding: '24px', borderRadius: '12px', border: '1px solid #F3F4F6' }}>
+                    <h3 style={{ fontSize: '18px', fontWeight: 600, margin: '0 0 16px 0', color: '#111827' }}>{t("Company Details")}</h3>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '16px' }}>
+                        <div>
+                            <span style={{ fontSize: '13px', color: '#6B7280' }}>{t("Legal Company Name")}</span>
+                            <div style={{ fontSize: '15px', fontWeight: 500, color: '#374151', wordBreak: 'break-word' }}>{activationData?.legalCompanyName || '-'}</div>
+                        </div>
+                        <div>
+                            <span style={{ fontSize: '13px', color: '#6B7280' }}>{t("Registration Number")}</span>
+                            <div style={{ fontSize: '15px', fontWeight: 500, color: '#374151', wordBreak: 'break-word' }}>{activationData?.registrationNumber || '-'}</div>
+                        </div>
+                        <div>
+                            <span style={{ fontSize: '13px', color: '#6B7280' }}>{t("Registered Address")}</span>
+                            <div style={{ fontSize: '15px', fontWeight: 500, color: '#374151', wordBreak: 'break-word' }}>{activationData?.registeredAddress || '-'}</div>
+                        </div>
+                        <div>
+                            <span style={{ fontSize: '13px', color: '#6B7280' }}>{t("Website")}</span>
+                            <div style={{ fontSize: '15px', fontWeight: 500, color: '#374151', wordBreak: 'break-word' }}>{activationData?.website || '-'}</div>
+                        </div>
+                        <div>
+                            <span style={{ fontSize: '13px', color: '#6B7280' }}>{t("Industry")}</span>
+                            <div style={{ fontSize: '15px', fontWeight: 500, color: '#374151', wordBreak: 'break-word' }}>{activationData?.industry || '-'}</div>
+                        </div>
+                        <div>
+                            <span style={{ fontSize: '13px', color: '#6B7280' }}>{t("Activity Description")}</span>
+                            <div style={{ fontSize: '15px', fontWeight: 500, color: '#374151', wordBreak: 'break-word' }}>{activationData?.activityDescription || '-'}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style={{ background: '#F9FAFB', padding: '24px', borderRadius: '12px', border: '1px solid #F3F4F6' }}>
+                    <h3 style={{ fontSize: '18px', fontWeight: 600, margin: '0 0 16px 0', color: '#111827' }}>{t("Documents")}</h3>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                        <div>
+                            <div style={{ fontSize: '14px', fontWeight: 600, marginBottom: '8px', color: '#374151' }}>{t("Registration Files")}</div>
+                            {activationData?.registrationFiles?.length > 0 ? activationData.registrationFiles.map((f, i) => (
+                                <div key={i} style={{ fontSize: '14px', color: '#5B3DF5' }}>{f.document_name || f.name || f}</div>
+                            )) : <div style={{ fontSize: '14px', color: '#6B7280' }}>-</div>}
+                        </div>
+                        <div>
+                            <div style={{ fontSize: '14px', fontWeight: 600, marginBottom: '8px', color: '#374151' }}>{t("Proof of Address (POA)")}</div>
+                            {activationData?.poaFiles?.length > 0 ? activationData.poaFiles.map((f, i) => (
+                                <div key={i} style={{ fontSize: '14px', color: '#5B3DF5' }}>{f.document_name || f.name || f}</div>
+                            )) : <div style={{ fontSize: '14px', color: '#6B7280' }}>-</div>}
+                        </div>
+                        <div>
+                            <div style={{ fontSize: '14px', fontWeight: 600, marginBottom: '8px', color: '#374151' }}>{t("UBO Documents")}</div>
+                            {activationData?.uboFiles?.length > 0 ? activationData.uboFiles.map((f, i) => (
+                                <div key={i} style={{ fontSize: '14px', color: '#5B3DF5' }}>{f.document_name || f.name || f}</div>
+                            )) : <div style={{ fontSize: '14px', color: '#6B7280' }}>-</div>}
+                        </div>
+                    </div>
+                </div>
+
+                <div style={{ background: '#F9FAFB', padding: '24px', borderRadius: '12px', border: '1px solid #F3F4F6' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+                        <h3 style={{ fontSize: '18px', fontWeight: 600, margin: 0, color: '#111827' }}>{t("Directors")}</h3>
+                        <Button 
+                            style={{
+                                background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+                                border: "none",
+                                outline: "none"
+                            }}
+                            onClick={() => setShowAddModal(!showAddModal)}
+                        >
+                            {t("Add New Director")}
+                        </Button>
+                    </div>
+
+                    <Modal isOpen={showAddModal} toggle={() => setShowAddModal(!showAddModal)}>
+                        <ModalHeader toggle={() => setShowAddModal(!showAddModal)}>
+                            {t("Add New Director")}
+                        </ModalHeader>
+                        <ModalBody>
+                            <FormGroup>
+                                <Label>{t("Director Name")}</Label>
+                                <Input placeholder={t("Director Name")} value={partnerName} onChange={e => setPartnerName(e.target.value)} />
+                            </FormGroup>
+                            <FormGroup>
+                                <Label>{t("Director Email")}</Label>
+                                <Input type='email' placeholder={t("Director Email")} value={partnerEmail} onChange={e => setPartnerEmail(e.target.value)} />
+                            </FormGroup>
+                            <FormGroup>
+                                <Label>{t("Director Designation")}</Label>
+                                <Input placeholder={t("Director Designation")} value={partnerDesignation} onChange={e => setPartnerDesignation(e.target.value)} />
+                            </FormGroup>
+                        </ModalBody>
+                        <ModalFooter>
+                            <Button 
+                                style={{
+                                    background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+                                    border: "none",
+                                    outline: "none"
+                                }}
+                                disabled={adding || !partnerName || !partnerEmail || !partnerDesignation}
+                                onClick={addPartnerHandler}
+                            >
+                                {adding ? t("Adding...") : t("Add Now")}
+                            </Button>
+                        </ModalFooter>
+                    </Modal>
+
+                    <Table responsive>
+                        <thead>
+                            <tr>
+                                <th>{t("Name")}</th>
+                                <th>{t("Email")}</th>
+                                <th>{t("Designation")}</th>
+                                <th>{t("Actions")}</th>
+                                <th>{t("Status")}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {partners?.map((item, index) => (
+                                <KYBPartner 
+                                    key={item?._id || index}
+                                    partner={item} 
+                                    partners={partners} 
+                                    setPartners={setPartners} 
+                                    refreshPartners={refreshPartners} 
+                                    index={index} 
+                                    setModalOpen={setShowPaymentModal} 
+                                    setPartnerVerification={setPartnerVerification} 
+                                />
+                            ))}
+                            {!partners?.length && (
+                                <tr>
+                                    <td colSpan="5" style={{ textAlign: 'center', padding: '20px', color: '#6B7280', fontSize: '14px' }}>
+                                        {t("No partners or directors found.")}
+                                    </td>
+                                </tr>
+                            )}
+                        </tbody>
+                    </Table>
+
+                    {showPaymentModal && (
+                        <VerificationPayment
+                            isOpen={showPaymentModal}
+                            toggle={() => {
+                                setShowPaymentModal(false)
+                                setPartnerVerification(null)
+                                if (refreshPartners) refreshPartners()
+                            }}
+                            isKYB={true}
+                            amount={feeAmount}
+                            partnerId={partnerVerification?._id}
+                            getFeeDetails={mutateAsync}
+                            isGettingFee={isPending}
+                        />
+                    )}
+                </div>
+            </div>
+
+            {/* KYB Additional Requested Files / Info Section */}
+            {kybFiles?.length > 0 && (
+                <div style={{ marginTop: '20px' }}>
+                    <h3 style={{ fontSize: '18px', fontWeight: 700, marginBottom: '12px', color: '#111827' }}>
+                        {t("KYB Additional Requested Documents & Information")}
+                    </h3>
+                    <AdditionalFilesSection 
+                        files={kybFiles} 
+                        uploadEndpoint={`${import.meta.env.VITE_IP_DEV_API}/api/company/upload-additional-file-kyb/${userDetails?._id}`} 
+                    />
+                </div>
+            )}
+
+            {/* IBAN Additional Requested Files / Info Section */}
+            {ibanFiles?.length > 0 && (
+                <div style={{ marginTop: '20px' }}>
+                    <h3 style={{ fontSize: '18px', fontWeight: 700, marginBottom: '12px', color: '#111827' }}>
+                        {t("IBAN Activation Additional Requested Documents & Information")}
+                    </h3>
+                    <AdditionalFilesSection 
+                        files={ibanFiles} 
+                        uploadEndpoint={`${import.meta.env.VITE_IP_DEV_API}/api/iban-fees/upload-additional-file-iban/${userDetails?._id}`} 
+                    />
+                </div>
+            )}
         </div>
-    );
+    )
 }
 
 export default StatusScreen

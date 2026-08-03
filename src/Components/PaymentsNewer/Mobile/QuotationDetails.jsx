@@ -113,6 +113,7 @@ const QuotationDetails = ({ amount, currency, setAmount, setCurrency, title, set
                             <Plus />
                             <input
                                 id='files'
+                                accept='image/*'
                                 hidden
                                 multiple={false}
                                 type='file'
