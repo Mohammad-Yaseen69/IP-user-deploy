@@ -574,15 +574,18 @@
 }
 
 .badge {
-    height: 22px;
-    border-radius: 999px;
     display: flex;
+    padding: 4px 11px;
+    flex-direction: row;
     align-items: center;
-    justify-content: center;
-    padding: 0 10px;
-    font-size: 10px;
-    font-weight: 600;
-    white-space: nowrap;
+    border-radius: 100px;
+    background: #EAFBF1;
+    color: #0A5A44;
+    font-family: Inter;
+    font-size: 10.5px;
+    font-style: normal;
+    font-weight: 800;
+    line-height: normal;
 }
 
 .success {

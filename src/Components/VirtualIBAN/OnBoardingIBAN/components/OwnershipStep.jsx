@@ -1,15 +1,16 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import axios from 'axios'
 import { useTranslation } from 'react-i18next'
 import { Users, User, Plus, Trash2, Edit2, ArrowLeft, ArrowRight, Percent, CheckCircle } from 'react-feather'
 import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from 'reactstrap'
 import styles from '../style/onboardingSteps.module.css'
 import SidebarProgress from './SidebarProgress'
+import { decryptData } from '../../../../Helper/EssentilaMethods/Decryption'
 
-const ROLES = ['Ultimate Beneficial Owner (UBO)', 'Director', 'Shareholder', 'Authorized Signatory', 'Other']
 
 const EMPTY_FORM = {
     id: '',
-    type: 'individual', // 'individual' or 'entity'
+    type: 'individual',
     fullName: '',
     email: '',
     role: 'Ultimate Beneficial Owner (UBO)',
@@ -45,6 +46,51 @@ const OwnershipStep = ({ onNext, onBack, userType, data = {}, userDetails }) => 
     const [isModalOpen, setIsModalOpen] = useState(false)
     const [formData, setFormData] = useState({ ...EMPTY_FORM })
     const [isEditing, setIsEditing] = useState(false)
+
+    useEffect(() => {
+        if (!userDetails?._id) return undefined
+
+        let isMounted = true
+
+        const loadKybPartners = async () => {
+            try {
+                const response = await axios.get(
+                    `${import.meta.env.VITE_IP_DEV_API}/api/company/get-partners/${userDetails._id}`
+                )
+                const data = await decryptData(response.data.data)
+                const kybPartners = data?.partners || []
+
+                if (!isMounted) return
+
+                setOwners(currentOwners => {
+                    const importedOwners = kybPartners.map((partner, index) => ({
+                        id: partner._id || `kyb-partner-${index}`,
+                        type: 'individual',
+                        fullName: partner.name || partner.fullName || '',
+                        email: partner.email || '',
+                        role: partner.designation || partner.role || 'Director',
+                        ownershipPercent: partner.ownershipPercent || '',
+                        isPep: Boolean(partner.pep || partner.isPep),
+                        isImportedPartner: true
+                    }))
+                    const importedEmails = new Set(importedOwners.map(owner => owner.email?.toLowerCase()).filter(Boolean))
+                    const localOwners = currentOwners.filter(owner =>
+                        !owner.isImportedPartner && !importedEmails.has(owner.email?.toLowerCase())
+                    )
+
+                    return [...importedOwners, ...localOwners]
+                })
+            } catch (error) {
+                console.error('Error fetching company partners:', decryptData(error.response?.data?.data) || error.message)
+            }
+        }
+
+        loadKybPartners()
+
+        return () => {
+            isMounted = false
+        }
+    }, [userDetails?._id])
 
     const openAddModal = (type = 'individual') => {
         if (isKybDone) return
@@ -152,7 +198,7 @@ const OwnershipStep = ({ onNext, onBack, userType, data = {}, userDetails }) => 
                                         {owner.role || 'UBO'} • {owner.ownershipPercent ? `${owner.ownershipPercent}% Ownership` : 'Shareholder'} {owner.email ? `• ${owner.email}` : ''}
                                     </p>
 
-                                    {!isKybDone ? (
+                                    {!isKybDone && !owner.isImportedPartner ? (
                                         <div className={styles.actions} style={{ display: "flex", gap: "8px" }}>
                                             <span style={{ fontSize: "12px", background: owner.isPep ? "#fef2f2" : "#f3f4f6", color: owner.isPep ? "#dc2626" : "#4b5563", padding: "2px 8px", borderRadius: "4px", fontWeight: 500 }}>
                                                 PEP: {owner.isPep ? 'Yes' : 'No'}
@@ -180,7 +226,9 @@ const OwnershipStep = ({ onNext, onBack, userType, data = {}, userDetails }) => 
                                 </div>
                             </div>
 
-                            <div className={`${styles.badge} ${styles.success}`} style={{ background: "#ecfdf5", color: "#059669", padding: "4px 10px", borderRadius: "6px", fontSize: "12px", fontWeight: 600, display: "flex", alignItems: "center", gap: "4px" }}>
+                            <div className={`${styles.badge} `}
+
+                            >
                                 <CheckCircle size={14} /> Recorded
                             </div>
                         </div>
