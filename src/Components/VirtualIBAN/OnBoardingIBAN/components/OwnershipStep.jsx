@@ -119,9 +119,9 @@ const OwnershipStep = ({ onNext, onBack, userType, data = {}, userDetails }) => 
             </div>
 
             <div style={{ width: "100%" }}>
-                <h2 className={styles.formHeading}>{t("Ownership & control")}</h2>
+                <h2 className={styles.formHeading}>{t("Directors, Ownership & control")}</h2>
                 <p className={styles.formSubheading}>
-                    {t("List anyone owning 25% or more (UBOs), plus your directors and authorised signatories.")}
+                    {t("List anyone, individual or company, owning 25% or more (UBOs), plus your directors and authorised signatories.Individuals complete a quick e - ID via Didit; entities are verified against the registry.")}
                 </p>
             </div>
 
@@ -228,7 +228,6 @@ const OwnershipStep = ({ onNext, onBack, userType, data = {}, userDetails }) => 
                 </button>
             </div>
 
-            {/* Modal for Add / Edit UBO */}
             <Modal isOpen={isModalOpen} toggle={() => setIsModalOpen(false)} centered>
                 <ModalHeader toggle={() => setIsModalOpen(false)}>
                     {isEditing ? 'Edit Beneficial Owner / Director' : 'Add Beneficial Owner / Director'}
