@@ -19,6 +19,8 @@ import OTPConfirmation from '../UserSettingsNew/OTPConfirmation';
 import NextStepModal from './NextStepModal';
 import QrGenerate from './QrGenerate';
 import { usePermission } from '../../hooks/GeneralUse/usePermission';
+import { useQuery } from '@tanstack/react-query';
+import { apiWrapper } from '../../utils/Functions/apiWrapper';
 
 
 // dates
@@ -40,6 +42,8 @@ const Basic = ({ setCurrentTab }) => {
     const [address, setAddress] = useState(userDetails?.address);
     const [city, setCity] = useState(userDetails?.city);
     const [postalCode, setPostalCode] = useState(userDetails?.postal_code);
+    const [state, setState] = useState(userDetails?.state ?? "");
+    const [stateCode, setStateCode] = useState(userDetails?.state_code ?? userDetails?.stateCode ?? "");
     const [country, setCountry] = useState(userDetails?.country_iso_code);
     const [aboutMe, setAboutMe] = useState(userDetails?.about_me);
     const [timezone, setTimezone] = useState(userDetails?.timezone)
@@ -57,8 +61,43 @@ const Basic = ({ setCurrentTab }) => {
     useEffect(() => {
         setCodeType("sms")
     }, [userDetails])
-
+    console.log(userDetails, "userDetails")
     const isVerified = useMemo(() => userDetails?.user?.kyc_status === "approved" || userDetails?.user?.kyc_status === "verified", [userDetails])
+
+    const { data: statesResponse, isLoading: isStatesLoading } = useQuery({
+        queryKey: ['country-states', 'US'],
+        queryFn: () => apiWrapper({
+            endpoint: '/api/country/get-states/US',
+            isPublic: true
+        }),
+        enabled: country === 'USA',
+        retry: 1
+    })
+
+    const states = useMemo(() => {
+        const responseStates = Array.isArray(statesResponse)
+            ? statesResponse
+            : statesResponse?.States || statesResponse?.states || statesResponse?.data || []
+
+        return responseStates.map((item) => ({
+            value: item?.state_name || item?.name || item?.state || item?.state_code || item?.code || item?.iso_code || item,
+            label: item?.state_name || item?.name || item?.state || item?.state_code || item?.code || item,
+            isoCode: (item?.isoCode || item?.iso_code || item?.state_code || item?.code || '').replace('US-', '')
+        }))
+    }, [statesResponse])
+
+    useEffect(() => {
+        if (country !== 'USA') {
+            setState('')
+            setStateCode('')
+            return
+        }
+
+        if (state && !stateCode) {
+            const selectedState = states.find(item => item.value === state || item.isoCode === state)
+            if (selectedState?.isoCode) setStateCode(selectedState.isoCode)
+        }
+    }, [country, state, stateCode, states])
 
     const refreshUserState = useCallback((field, value) => {
         setUserDetails(prev => {
@@ -141,6 +180,8 @@ const Basic = ({ setCurrentTab }) => {
         setAddress(userDetails?.address)
         setCity(userDetails?.city ?? "")
         setPostalCode(userDetails?.postal_code)
+        setState(userDetails?.state ?? "");
+        setStateCode(userDetails?.state_code ?? userDetails?.stateCode ?? "");
         setCountry(userDetails?.country_iso_code ?? "")
         setAboutMe(userDetails?.about_me)
         setGender(userDetails?.gender)
@@ -232,6 +273,7 @@ const Basic = ({ setCurrentTab }) => {
                 last_name: lastName,
                 address,
                 city,
+                state,
                 postal_code: postalCode,
                 about_me: aboutMe,
                 // gender,
@@ -255,6 +297,7 @@ const Basic = ({ setCurrentTab }) => {
                     refreshUserState("last_name", lastName)
                     refreshUserState("address", address)
                     refreshUserState("city", city)
+                    refreshUserState("state", state)
                     refreshUserState("postal_code", postalCode)
                     refreshUserState("about_me", aboutMe)
                     const newDob = dateOfBirth ? dateOfBirth.split("-").reverse().join("-") : "";
@@ -274,6 +317,7 @@ const Basic = ({ setCurrentTab }) => {
                 company_name: company,
                 address,
                 city,
+                state,
                 postal_code: postalCode,
                 about_me: aboutMe,
                 // gender,
@@ -294,8 +338,10 @@ const Basic = ({ setCurrentTab }) => {
                     setIsSaving(false)
 
                     refreshUserState("company_name", company)
+
                     refreshUserState("address", address)
                     refreshUserState("city", city)
+                    refreshUserState("state", state)
                     refreshUserState("postal_code", postalCode)
                     refreshUserState("about_me", aboutMe)
                     refreshUserState("timezone", timezone)
@@ -794,25 +840,7 @@ const Basic = ({ setCurrentTab }) => {
                             <Input disabled={!isEditMode || (userDetails?.address && isVerified)} readOnly={!isEditMode || (isVerified && userDetails?.address)} value={address} onChange={e => setAddress(e.target.value)} />
                         </FormGroup>
                     }
-                    <FormGroup style={{ position: "relative" }}>
-                        {
-                            !city
-                            &&
-                            <div style={{
-                                height: "9px",
-                                width: "9px",
-                                borderRadius: "9px",
-                                background: "red",
-                                position: "absolute",
-                                bottom: "20px",
-                                right: "-17px"
-                            }}></div>
-                        }
-                        <Label>{t("City")}   {
-                            !city
-                            && <span style={{ color: "red" }}>{t("(Required)")}</span>}</Label>
-                        <CitiesDropDown country={country === "Cabo Verde" ? "Cape Verde" : country} setUserCity={setCity} userCity={city} disabled={!isEditMode || isVerified} iso_3={userDetails?.country_iso_code} />
-                    </FormGroup>
+                  
                     <FormGroup style={{ position: "relative" }}>
                         {
                             !country
@@ -831,6 +859,68 @@ const Basic = ({ setCurrentTab }) => {
                             !country
                             && <span style={{ color: "red" }}>{t("(Required)")}</span>}</Label>
                         <Input disabled={true} readOnly={true} value={countriesData.find(item => item.alpha3 === country).name} onChange={e => setCountry(e.target.value)} />
+                    </FormGroup>
+                    {country === "USA" && (
+                        <FormGroup style={{ position: "relative" }}>
+                            {!state && (
+                                <div
+                                    style={{
+                                        height: "9px",
+                                        width: "9px",
+                                        borderRadius: "9px",
+                                        background: "red",
+                                        position: "absolute",
+                                        bottom: "20px",
+                                        right: "-17px"
+                                    }}
+                                ></div>
+                            )}
+
+                            <Label>
+                                {t("State")}
+                                {!state && (
+                                    <span style={{ color: "red" }}>
+                                        {t("(Required)")}
+                                    </span>
+                                )}
+                            </Label>
+
+                            <Input
+                                type="select"
+                                disabled={!isEditMode || isVerified}
+                                value={state}
+                                onChange={(e) => {
+                                    const selectedState = states.find(item => item.value === e.target.value)
+                                    setState(e.target.value)
+                                    setStateCode(selectedState?.isoCode || '')
+                                    setCity('')
+                                }}
+                            >
+                                <option value="">{isStatesLoading ? t("Loading...") : t("--Select-State--")}</option>
+                                {states.map((item) => (
+                                    <option key={item.value} value={item.value}>{item.label}</option>
+                                ))}
+                            </Input>
+                        </FormGroup>
+                    )}
+                      <FormGroup style={{ position: "relative" }}>
+                        {
+                            !city
+                            &&
+                            <div style={{
+                                height: "9px",
+                                width: "9px",
+                                borderRadius: "9px",
+                                background: "red",
+                                position: "absolute",
+                                bottom: "20px",
+                                right: "-17px"
+                            }}></div>
+                        }
+                        <Label>{t("City")}   {
+                            !city
+                            && <span style={{ color: "red" }}>{t("(Required)")}</span>}</Label>
+                        <CitiesDropDown country={country === "Cabo Verde" ? "Cape Verde" : country} setUserCity={setCity} userCity={city} disabled={!isEditMode || isVerified || (country === 'USA' && !stateCode)} iso_3={country} stateCode={stateCode} requireState={country === 'USA'} />
                     </FormGroup>
                     <FormGroup style={{ position: "relative" }}>
                         {
@@ -883,7 +973,29 @@ const Basic = ({ setCurrentTab }) => {
                             {t("Postal Code")}
                             {(!userDetails?.postal_code && !isAfricanCountry) && <span style={{ color: "red" }}>{t("(Required)")}</span>}
                         </Label>
-                        <Input disabled={!isEditMode || (isVerified && userDetails?.postal_code)} readOnly={!isEditMode || (isVerified && userDetails?.postal_code)} value={postalCode} onChange={e => setPostalCode(e.target.value)} />
+                        <Input disabled={!isEditMode || (isVerified && userDetails?.postal_code)}
+                            readOnly={!isEditMode || (isVerified && userDetails?.postal_code)}
+                            value={postalCode} onChange={(e) => {
+                                const value = e.target.value;
+
+                                if (/^\d{0,5}(-\d{0,4})?$/.test(value)) {
+                                    setPostalCode(value);
+                                }
+                            }}
+                            placeholder="55555 or 55555-5555"
+                            maxLength={10}
+                            pattern="\d{5}(-\d{4})?"
+                        />
+                        {postalCode && !/^\d{5}(-\d{4})?$/.test(postalCode) && (
+                            <div style={{
+                                color: "red",
+                                fontSize: "0.8rem",
+                                fontWeight: 600,
+                                marginTop: "5px"
+                            }}>
+                                {t("Postal code must be 55555 or 55555-5555.")}
+                            </div>
+                        )}
                     </FormGroup>
 
                 </CardBody>
@@ -905,7 +1017,17 @@ const Basic = ({ setCurrentTab }) => {
                                     borderRadius: "10px"
                                 }} onClick={handleSaveClick}
                                     // (userDetails?.account_type === "individual" ? !firstName || !lastName : !company) || !address || !city || !country || !email || !phone || !postalCode || !timezone || !username || !usernameValid || phone.length < 8
-                                    disabled={isSaving || usernameError || !usernameValid || !city || !username}>
+                                    disabled={
+                                        isSaving ||
+                                        usernameError ||
+                                        !usernameValid ||
+                                        !city ||
+                                        !username ||
+                                        (country === "USA" && !state?.trim()) ||
+                                        (userDetails?.account_type === "business" && !company?.trim()) ||
+                                        (!isAfricanCountry && !postalCode?.trim()) ||
+                                        (!isAfricanCountry && !/^\d{5}(-\d{4})?$/.test(postalCode || ""))
+                                    }>
                                     {
                                         isSaving
                                             ?
