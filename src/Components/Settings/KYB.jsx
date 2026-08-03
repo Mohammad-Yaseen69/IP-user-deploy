@@ -307,7 +307,7 @@ const KYB = () => {
             formdata.append("registration_number", registrationNum);
             formdata.append("tax_id", taxId);
             formdata.append("industryReference", JSON.stringify(industryReference));
-            
+
             console.log(dateOfI)
             formdata.append(
                 "date_of_incorporation",
@@ -456,11 +456,19 @@ const KYB = () => {
                                 {t("Registration Number")} <span style={{ color: "red", fontWeight: 600 }}>*</span>
                             </Label>
                             <Input
-                                type='text'
-                                name="Registration Number"
+                                type="text"
+                                name="registrationNumber"
                                 value={registrationNum}
-                                onChange={e => setRegistrationNum(e.target.value)}
+                                onChange={e => {
+                                    const value = e.target.value;
+
+                                    if (/^[a-zA-Z0-9\u00C0-\u024F\s-]*$/.test(value)) {
+                                        setRegistrationNum(value);
+                                    }
+                                }}
                                 disabled={isReadOnly}
+                                pattern="[a-zA-Z0-9\u00C0-\u024F\s-]+"
+                                title="Only letters (including accents), numbers, spaces, and dashes are allowed."
                             />
                         </FormGroup>
                         <FormGroup>

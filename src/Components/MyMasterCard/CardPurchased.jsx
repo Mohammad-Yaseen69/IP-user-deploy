@@ -45,12 +45,24 @@ import { apiWrapper } from '../../utils/Functions/apiWrapper';
 import { localCurrency } from '../../utils/Functions';
 import { formatCurrency } from '../../Helper/AmountFormat';
 import { usePermission } from '../../hooks/GeneralUse/usePermission';
-
-export const Toggle = ({ checked, onChange, isCheckbox = false, disabled = false, bottom, ref }) => (
-    <label disabled={disabled} className={isCheckbox ? styles.checkbox : styles.toggle}>
-
+export const Toggle = ({
+    checked,
+    onChange,
+    isCheckbox = false,
+    disabled = false,
+    bottom,
+    ref
+}) => (
+    <label
+        style={{
+            pointerEvents: disabled ? "none" : "auto",
+            opacity: disabled ? 0.6 : 1,
+            cursor: disabled ? "not-allowed" : "pointer"
+        }}
+        className={isCheckbox ? styles.checkbox : styles.toggle}
+    >
         <input
-            type={isCheckbox ? "checkbox" : "checkbox"}
+            type="checkbox"
             checked={checked}
             onChange={onChange}
             disabled={disabled}
@@ -58,7 +70,13 @@ export const Toggle = ({ checked, onChange, isCheckbox = false, disabled = false
         />
 
         <span className={isCheckbox ? styles.checkmark : styles.slider}>
-            {checked && <img style={{ bottom: bottom }} src={checktoggle} alt="" />}
+            {checked && (
+                <img
+                    style={{ bottom }}
+                    src={checktoggle}
+                    alt=""
+                />
+            )}
         </span>
     </label>
 );
