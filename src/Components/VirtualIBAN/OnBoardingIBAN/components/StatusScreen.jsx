@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react'
-import { Globe, ArrowLeft } from 'react-feather'
+import { Globe } from 'react-feather'
 import { useTranslation } from 'react-i18next'
 import { Table, Button, Modal, ModalHeader, ModalBody, ModalFooter, FormGroup, Label, Input } from 'reactstrap'
 import { useMutation } from '@tanstack/react-query'
@@ -11,6 +11,7 @@ import { decryptData } from '../../../../Helper/EssentilaMethods/Decryption'
 import { isEmailValid } from '../../../../utils/Functions/validations'
 import KYBPartner from '../../../Settings/KYBPartner'
 import VerificationPayment from '../../../Settings/VerificationPayment'
+import AdditionalFilesSection from '../../../Settings/AdditionalFilesSection'
 import imageCard from '../../files/images/Frame_2147236087.png'
 
 const STATUS_CONFIG = {
@@ -64,10 +65,12 @@ const getFeeAmount = async ({ payload, authHeader }) => {
     return decryptData(res.data?.data);
 };
 
-const StatusScreen = ({ status = 'submitted', ibanNumber, companyName, onAction, onCancel, activationData, partners = [], refreshPartners, setPartners }) => {
+const StatusScreen = ({ status = 'submitted', ibanNumber, companyName, onAction, onCancel, activationData, partners = [], refreshPartners, setPartners, additionalFiles = [] }) => {
     const { t } = useTranslation()
     const { userDetails, authHeader } = useContext(UserContext)
-    const [showSubmittedInfo, setShowSubmittedInfo] = useState(false)
+
+    const kybFiles = userDetails?.company?.kyb_additional_file || activationData?.kyb_additional_file || [];
+    const ibanFiles = activationData?.iban_additional_file || (Array.isArray(additionalFiles) && additionalFiles.length > 0 ? additionalFiles : []);
 
     const [showAddModal, setShowAddModal] = useState(false)
     const [partnerName, setPartnerName] = useState("")
@@ -126,8 +129,141 @@ const StatusScreen = ({ status = 'submitted', ibanNumber, companyName, onAction,
 
     const cfg = STATUS_CONFIG[status] || STATUS_CONFIG.submitted
 
-    if (showSubmittedInfo) {
-        return (
+    return (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', width: '100%' }}>
+            {/* Top Status Card */}
+            <div style={{
+                width: '100%',
+                background: '#FFFFFF',
+                borderRadius: '16px',
+                padding: '40px 36px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                gap: '40px',
+                boxShadow: '0 1px 3px rgba(0,0,0,0.05)',
+                border: '1px solid #ECECF2',
+                marginTop: '20px'
+            }}>
+                {/* Left Content */}
+                <div style={{ flex: '1 1 55%', maxWidth: '600px' }}>
+                    {/* Globe Icon */}
+                    <div style={{
+                        width: '52px',
+                        height: '52px',
+                        borderRadius: '14px',
+                        backgroundColor: '#5B3DF5',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        marginBottom: '20px'
+                    }}>
+                        <Globe size={26} color="#FFFFFF" />
+                    </div>
+
+                    {/* Status Badge */}
+                    <div style={{
+                        display: 'inline-block',
+                        background: '#FEF3C7',
+                        color: '#92400E',
+                        borderRadius: '9999px',
+                        padding: '5px 14px',
+                        fontSize: '13px',
+                        fontWeight: 600,
+                        marginBottom: '14px'
+                    }}>
+                        {t(cfg.badge)}
+                    </div>
+
+                    {/* Title */}
+                    <h1 style={{
+                        fontSize: '32px',
+                        fontWeight: 700,
+                        color: '#111827',
+                        margin: '0 0 12px 0',
+                        lineHeight: '1.2'
+                    }}>
+                        {t(cfg.title)}
+                    </h1>
+
+                    {/* Description */}
+                    <p style={{
+                        fontSize: '15px',
+                        color: '#6B7280',
+                        lineHeight: '1.6',
+                        margin: '0 0 36px 0',
+                        maxWidth: '520px'
+                    }}>
+                        {t(cfg.description)}
+                    </p>
+
+                    {/* Footer section: Need Help & Action Buttons */}
+                    <div style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'flex-end',
+                        flexWrap: 'wrap',
+                        gap: '20px'
+                    }}>
+                        <div>
+                            <h4 style={{ fontSize: '14px', fontWeight: 700, color: '#111827', margin: '0 0 4px 0' }}>
+                                {t("Need help?")}
+                            </h4>
+                            <p style={{ fontSize: '13px', color: '#6B7280', margin: 0 }}>
+                                {t("Reach our compliance team at")}{' '}
+                                <a
+                                    href="mailto:help@insta-pay.ch"
+                                    style={{ color: '#5B3DF5', fontWeight: 600, textDecoration: 'none' }}
+                                >
+                                    help@insta-pay.ch
+                                </a>
+                            </p>
+                        </div>
+
+                        <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+                            {cfg.primaryLabel && cfg.primaryLabel !== 'View submitted info' && (
+                                <button
+                                    type="button"
+                                    style={{
+                                        background: '#5B3DF5',
+                                        color: '#FFFFFF',
+                                        border: 'none',
+                                        padding: '10px 24px',
+                                        borderRadius: '8px',
+                                        fontWeight: 600,
+                                        fontSize: '14px',
+                                        cursor: 'pointer',
+                                        transition: 'background 0.2s'
+                                    }}
+                                    onClick={onAction}
+                                >
+                                    {t(cfg.primaryLabel)}
+                                </button>
+                            )}
+                        </div>
+                    </div>
+                </div>
+
+                {/* Right Graphic Section */}
+                <div style={{
+                    flex: '1 1 40%',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center'
+                }}>
+                    <img
+                        src={imageCard}
+                        alt="IBAN Status Card Illustration"
+                        style={{
+                            maxWidth: '100%',
+                            maxHeight: '360px',
+                            objectFit: 'contain'
+                        }}
+                    />
+                </div>
+            </div>
+
+            {/* Bottom Submitted Information Block */}
             <div style={{
                 width: '100%',
                 background: '#FFFFFF',
@@ -137,18 +273,9 @@ const StatusScreen = ({ status = 'submitted', ibanNumber, companyName, onAction,
                 flexDirection: 'column',
                 gap: '24px',
                 boxShadow: '0 1px 3px rgba(0,0,0,0.05)',
-                border: '1px solid #ECECF2',
-                marginTop: '20px'
+                border: '1px solid #ECECF2'
             }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                    <button 
-                        onClick={() => setShowSubmittedInfo(false)}
-                        style={{ background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', padding: 0 }}
-                    >
-                        <ArrowLeft size={20} color="#6B7280" />
-                    </button>
-                    <h2 style={{ fontSize: '24px', fontWeight: 700, margin: 0, color: '#111827' }}>{t("Submitted Information")}</h2>
-                </div>
+                <h2 style={{ fontSize: '24px', fontWeight: 700, margin: 0, color: '#111827' }}>{t("Submitted Information")}</h2>
 
                 <div style={{ background: '#F9FAFB', padding: '24px', borderRadius: '12px', border: '1px solid #F3F4F6' }}>
                     <h3 style={{ fontSize: '18px', fontWeight: 600, margin: '0 0 16px 0', color: '#111827' }}>{t("Company Details")}</h3>
@@ -302,158 +429,32 @@ const StatusScreen = ({ status = 'submitted', ibanNumber, companyName, onAction,
                     )}
                 </div>
             </div>
-        )
-    }
 
-    return (
-        <div style={{
-            width: '100%',
-            background: '#FFFFFF',
-            borderRadius: '16px',
-            padding: '40px 36px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            gap: '40px',
-            boxShadow: '0 1px 3px rgba(0,0,0,0.05)',
-            border: '1px solid #ECECF2',
-            marginTop: '20px'
-        }}>
-            {/* Left Content */}
-            <div style={{ flex: '1 1 55%', maxWidth: '600px' }}>
-                {/* Globe Icon */}
-                <div style={{
-                    width: '52px',
-                    height: '52px',
-                    borderRadius: '14px',
-                    backgroundColor: '#5B3DF5',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    marginBottom: '20px'
-                }}>
-                    <Globe size={26} color="#FFFFFF" />
+            {/* KYB Additional Requested Files / Info Section */}
+            {kybFiles?.length > 0 && (
+                <div style={{ marginTop: '20px' }}>
+                    <h3 style={{ fontSize: '18px', fontWeight: 700, marginBottom: '12px', color: '#111827' }}>
+                        {t("KYB Additional Requested Documents & Information")}
+                    </h3>
+                    <AdditionalFilesSection 
+                        files={kybFiles} 
+                        uploadEndpoint={`${import.meta.env.VITE_IP_DEV_API}/api/company/upload-additional-file-kyb/${userDetails?._id}`} 
+                    />
                 </div>
+            )}
 
-                {/* Status Badge */}
-                <div style={{
-                    display: 'inline-block',
-                    background: '#FEF3C7',
-                    color: '#92400E',
-                    borderRadius: '9999px',
-                    padding: '5px 14px',
-                    fontSize: '13px',
-                    fontWeight: 600,
-                    marginBottom: '14px'
-                }}>
-                    {t(cfg.badge)}
+            {/* IBAN Additional Requested Files / Info Section */}
+            {ibanFiles?.length > 0 && (
+                <div style={{ marginTop: '20px' }}>
+                    <h3 style={{ fontSize: '18px', fontWeight: 700, marginBottom: '12px', color: '#111827' }}>
+                        {t("IBAN Activation Additional Requested Documents & Information")}
+                    </h3>
+                    <AdditionalFilesSection 
+                        files={ibanFiles} 
+                        uploadEndpoint={`${import.meta.env.VITE_IP_DEV_API}/api/iban-fees/upload-additional-file-iban/${userDetails?._id}`} 
+                    />
                 </div>
-
-                {/* Title */}
-                <h1 style={{
-                    fontSize: '32px',
-                    fontWeight: 700,
-                    color: '#111827',
-                    margin: '0 0 12px 0',
-                    lineHeight: '1.2'
-                }}>
-                    {t(cfg.title)}
-                </h1>
-
-                {/* Description */}
-                <p style={{
-                    fontSize: '15px',
-                    color: '#6B7280',
-                    lineHeight: '1.6',
-                    margin: '0 0 36px 0',
-                    maxWidth: '520px'
-                }}>
-                    {t(cfg.description)}
-                </p>
-
-                {/* Footer section: Need Help & Action Buttons */}
-                <div style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'flex-end',
-                    flexWrap: 'wrap',
-                    gap: '20px'
-                }}>
-                    <div>
-                        <h4 style={{ fontSize: '14px', fontWeight: 700, color: '#111827', margin: '0 0 4px 0' }}>
-                            {t("Need help?")}
-                        </h4>
-                        <p style={{ fontSize: '13px', color: '#6B7280', margin: 0 }}>
-                            {t("Reach our compliance team at")}{' '}
-                            <a
-                                href="mailto:help@insta-pay.ch"
-                                style={{ color: '#5B3DF5', fontWeight: 600, textDecoration: 'none' }}
-                            >
-                                help@insta-pay.ch
-                            </a>
-                        </p>
-                    </div>
-
-                    <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-                        {/* {cfg.secondaryLabel && (
-                            <button
-                                type="button"
-                                style={{
-                                    background: '#F3F4F6',
-                                    color: '#374151',
-                                    border: 'none',
-                                    padding: '10px 20px',
-                                    borderRadius: '8px',
-                                    fontWeight: 600,
-                                    fontSize: '14px',
-                                    cursor: 'pointer',
-                                    transition: 'background 0.2s'
-                                }}
-                                onClick={onCancel}
-                            >
-                                {t(cfg.secondaryLabel)}
-                            </button>
-                        )} */}
-                        {cfg.primaryLabel && (
-                            <button
-                                type="button"
-                                style={{
-                                    background: '#5B3DF5',
-                                    color: '#FFFFFF',
-                                    border: 'none',
-                                    padding: '10px 24px',
-                                    borderRadius: '8px',
-                                    fontWeight: 600,
-                                    fontSize: '14px',
-                                    cursor: 'pointer',
-                                    transition: 'background 0.2s'
-                                }}
-                                onClick={cfg.primaryLabel === 'View submitted info' ? () => setShowSubmittedInfo(true) : onAction}
-                            >
-                                {t(cfg.primaryLabel)}
-                            </button>
-                        )}
-                    </div>
-                </div>
-            </div>
-
-            {/* Right Graphic Section */}
-            <div style={{
-                flex: '1 1 40%',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center'
-            }}>
-                <img
-                    src={imageCard}
-                    alt="IBAN Status Card Illustration"
-                    style={{
-                        maxWidth: '100%',
-                        maxHeight: '360px',
-                        objectFit: 'contain'
-                    }}
-                />
-            </div>
+            )}
         </div>
     )
 }
