@@ -3,8 +3,7 @@ import { useTranslation } from 'react-i18next';
 import useWindowWidth from '../../../../utils/useWindowWidth';
 import TopRight from '../../../topRight';
 import styles from "../style/moveMoney.module.css";
-
-// Icons Imports
+import Tooltip from "@mui/material/Tooltip";
 import {
     Compass,
     Globe,
@@ -141,41 +140,45 @@ const MoveMoney = () => {
                                             </div>
                                         </div>
                                     </div>
+                                    <Tooltip title="Coming Soon" arrow>
 
-                                    <div className={styles.card}>
-                                        <div className={`${styles.iconBox} ${styles.bgYellow}`}>
-                                            <Globe size={20} />
-                                        </div>
-                                        <div className={styles.cardBody}>
+                                        <div className={styles.card}>
+                                            <div className={`${styles.iconBox} ${styles.bgYellow}`}>
+                                                <Globe size={20} />
+                                            </div>
+                                            <div className={styles.cardBody}>
 
-                                            <h3 className={styles.cardTitle}>{t("SWIFT International")}</h3>
-                                            <p className={styles.cardDesc}>
-                                                {t("Worldwide bank transfers in USD, EUR, GBP, CHF and more, with country-specific routing.")}
-                                            </p>
-                                            <div className={styles.badgeRow}>
-                                                <span className={`${styles.tag} ${styles.tagBlue}`}>USD, EUR, GBP</span>
-                                                <span className={`${styles.tag} ${styles.tagGray}`}>1-5 Days</span>
-                                                <span className={`${styles.tag} ${styles.tagGray}`}>Worldwide</span>
+                                                <h3 className={styles.cardTitle}>{t("SWIFT International")}</h3>
+                                                <p className={styles.cardDesc}>
+                                                    {t("Worldwide bank transfers in USD, EUR, GBP, CHF and more, with country-specific routing.")}
+                                                </p>
+                                                <div className={styles.badgeRow}>
+                                                    <span className={`${styles.tag} ${styles.tagBlue}`}>USD, EUR, GBP</span>
+                                                    <span className={`${styles.tag} ${styles.tagGray}`}>1-5 Days</span>
+                                                    <span className={`${styles.tag} ${styles.tagGray}`}>Worldwide</span>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    </Tooltip>
+                                    <Tooltip title="Coming Soon" arrow>
 
-                                    <div className={`${styles.card} ${styles.cardPurple}`}>
-                                        <div className={`${styles.iconBox} ${styles.bgWhiteTrans}`}>
-                                            <Briefcase size={20} />
-                                        </div>
-                                        <div className={styles.cardBody}>
-                                            <h3 className={styles.cardTitleWhite}>{t("Global Remittance Hub")}</h3>
-                                            <p className={styles.cardDescWhite}>
-                                                {t("Pay to bank account, mobile money, wallet or cash pickup — country-adaptive, powered by Thunes.")}
-                                            </p>
-                                            <div className={styles.badgeRow}>
-                                                <span className={`${styles.tag} ${styles.tagWhite}`}>Worldwide</span>
-                                                <span className={`${styles.tag} ${styles.tagWhite}`}>Fast lookup</span>
-                                                <span className={`${styles.tag} ${styles.tagWhite}`}>Country-adaptive</span>
+                                        <div className={`${styles.card} ${styles.cardPurple}`}>
+                                            <div className={`${styles.iconBox} ${styles.bgWhiteTrans}`}>
+                                                <Briefcase size={20} />
+                                            </div>
+                                            <div className={styles.cardBody}>
+                                                <h3 className={styles.cardTitleWhite}>{t("Global Remittance Hub")}</h3>
+                                                <p className={styles.cardDescWhite}>
+                                                    {t("Pay to bank account, mobile money, wallet or cash pickup — country-adaptive, powered by Thunes.")}
+                                                </p>
+                                                <div className={styles.badgeRow}>
+                                                    <span className={`${styles.tag} ${styles.tagWhite}`}>Worldwide</span>
+                                                    <span className={`${styles.tag} ${styles.tagWhite}`}>Fast lookup</span>
+                                                    <span className={`${styles.tag} ${styles.tagWhite}`}>Country-adaptive</span>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    </Tooltip>
 
                                 </div>
                             </div>
@@ -184,72 +187,78 @@ const MoveMoney = () => {
                                 <div className={styles.sectionLabel}>{t("WITHIN INSTAPAY")} <span>{t("Instant, free transfers between InstaPay accounts")}</span></div>
 
                                 <div className={styles.cardsGrid2}>
+                                    <Tooltip title="Coming Soon" arrow>
 
-                                    <div className={styles.card}>
-                                        <div className={`${styles.iconBox} ${styles.bgRed}`}>
-                                            <RefreshCw size={20} />
-                                        </div>
-                                        <div className={styles.cardBody}>
-                                            <h3 className={styles.cardTitle}>{t("Move & Send")}</h3>
-                                            <p className={styles.cardDesc}>
-                                                {t("Move between your own accounts, or send to any InstaPay user by phone, username, email or IBAN.")}
-                                            </p>
-                                            <div className={styles.badgeRow}>
-                                                <span className={`${styles.tag} ${styles.tagGreen}`}>Instant</span>
-                                                <span className={`${styles.tag} ${styles.tagGray}`}>Free</span>
-                                                <span className={`${styles.tag} ${styles.tagGray}`}>Internal Send</span>
+                                        <div className={styles.card}>
+                                            <div className={`${styles.iconBox} ${styles.bgRed}`}>
+                                                <RefreshCw size={20} />
+                                            </div>
+                                            <div className={styles.cardBody}>
+                                                <h3 className={styles.cardTitle}>{t("Move & Send")}</h3>
+                                                <p className={styles.cardDesc}>
+                                                    {t("Move between your own accounts, or send to any InstaPay user by phone, username, email or IBAN.")}
+                                                </p>
+                                                <div className={styles.badgeRow}>
+                                                    <span className={`${styles.tag} ${styles.tagGreen}`}>Instant</span>
+                                                    <span className={`${styles.tag} ${styles.tagGray}`}>Free</span>
+                                                    <span className={`${styles.tag} ${styles.tagGray}`}>Internal Send</span>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
 
+                                    </Tooltip>
                                 </div>
                             </div>
+
 
                             <div className={styles.sectionBlock}>
                                 <div className={styles.sectionLabel}>{t("YOUR MONEY & ASSETS")} <span>{t("Hold, convert and grow your balances")}</span></div>
                                 <div className={styles.cardsGrid2}>
+                                    <Tooltip title="Coming Soon" arrow>
 
-                                    <div className={styles.card}>
-                                        <div className={`${styles.iconBox} ${styles.bgGreen}`}>
-                                            <CreditCard size={20} />
-                                        </div>
-                                        <div className={styles.cardBody}>
-                                            <h3 className={styles.cardTitle}>{t("Balances")}</h3>
-                                            <p className={styles.cardDesc}>
-                                                {t("All your money in one place — hold EUR, USD, CHF and crypto, and convert instantly at live FX.")}
-                                            </p>
-                                            <div className={styles.badgeRow}>
-                                                <span className={`${styles.tag} ${styles.tagBlue}`}>Multi-currency</span>
-                                                <span className={`${styles.tag} ${styles.tagGray}`}>Fiat/Crypto</span>
-                                                <span className={`${styles.tag} ${styles.tagGray}`}>Accounts</span>
+                                        <div className={styles.card}>
+                                            <div className={`${styles.iconBox} ${styles.bgGreen}`}>
+                                                <CreditCard size={20} />
+                                            </div>
+                                            <div className={styles.cardBody}>
+                                                <h3 className={styles.cardTitle}>{t("Balances")}</h3>
+                                                <p className={styles.cardDesc}>
+                                                    {t("All your money in one place — hold EUR, USD, CHF and crypto, and convert instantly at live FX.")}
+                                                </p>
+                                                <div className={styles.badgeRow}>
+                                                    <span className={`${styles.tag} ${styles.tagBlue}`}>Multi-currency</span>
+                                                    <span className={`${styles.tag} ${styles.tagGray}`}>Fiat/Crypto</span>
+                                                    <span className={`${styles.tag} ${styles.tagGray}`}>Accounts</span>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-
-                                    <div className={styles.card}>
-                                        <div className={`${styles.iconBox} ${styles.bgOrange}`}>
-                                            <Cpu size={20} />
-                                        </div>
-                                        <div className={styles.cardBody}>
-                                            <h3 className={styles.cardTitle}>{t("Crypto & Stablecoins")}</h3>
-                                            <p className={styles.cardDesc}>
-                                                {t("Receive, send, convert, request and mass-pay in crypto — auto-settle to your IBAN. Powered by BVNK.")}
-                                            </p>
-                                            <div className={styles.badgeRow}>
-                                                <span className={`${styles.tag} ${styles.tagBlue}`}>Assets</span>
-                                                <span className={`${styles.tag} ${styles.tagGray}`}>Payouts</span>
-                                                <span className={`${styles.tag} ${styles.tagGray}`}>Gateways</span>
+                                    </Tooltip>
+                                    <Tooltip title="Coming Soon" arrow>
+                                        <div className={styles.card}>
+                                            <div className={`${styles.iconBox} ${styles.bgOrange}`}>
+                                                <Cpu size={20} />
+                                            </div>
+                                            <div className={styles.cardBody}>
+                                                <h3 className={styles.cardTitle}>{t("Crypto & Stablecoins")}</h3>
+                                                <p className={styles.cardDesc}>
+                                                    {t("Receive, send, convert, request and mass-pay in crypto — auto-settle to your IBAN. Powered by BVNK.")}
+                                                </p>
+                                                <div className={styles.badgeRow}>
+                                                    <span className={`${styles.tag} ${styles.tagBlue}`}>Assets</span>
+                                                    <span className={`${styles.tag} ${styles.tagGray}`}>Payouts</span>
+                                                    <span className={`${styles.tag} ${styles.tagGray}`}>Gateways</span>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-
+                                    </Tooltip>
                                 </div>
-                            </div></>
+                            </div>
+                        </>
                 }
 
             </div>
 
-        </div>
+        </div >
     );
 };
 
