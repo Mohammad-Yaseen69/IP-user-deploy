@@ -4,6 +4,7 @@ import styles from "./styles/index.module.css";
 import useWindowWidth from '../../utils/useWindowWidth';
 import TopRight from '../topRight';
 import LeadModal from './Leads/LeadModal';
+import FeeModelRequestModal from './FeeModelRequestModal';
 
 const AgentCommission = () => {
     const { t } = useTranslation();
@@ -11,6 +12,7 @@ const AgentCommission = () => {
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [initialEntityType, setInitialEntityType] = useState('corporate');
+    const [isFeeRequestModalOpen, setIsFeeRequestModalOpen] = useState(false);
 
     const handleOpenModal = (type = 'corporate') => {
         setInitialEntityType(type);
@@ -200,6 +202,10 @@ const AgentCommission = () => {
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#5926F0" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line><line x1="23" y1="11" x2="17" y2="11"></line></svg>
                             {t("Add sub-agent")}
                         </button>
+                        <button className={styles.actionBtn} onClick={() => setIsFeeRequestModalOpen(true)}>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#5926F0" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+                            {t("Request fee model")}
+                        </button>
                         <button className={styles.actionBtn}>
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#5926F0" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
                             {t("View commissions")}
@@ -214,6 +220,11 @@ const AgentCommission = () => {
                 onClose={handleCloseModal}
                 onSubmit={handleLeadSubmit}
                 initialEntityType={initialEntityType}
+            />
+
+            <FeeModelRequestModal
+                isOpen={isFeeRequestModalOpen}
+                toggle={() => setIsFeeRequestModalOpen(!isFeeRequestModalOpen)}
             />
         </div>
     );

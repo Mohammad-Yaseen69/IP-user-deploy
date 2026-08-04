@@ -307,7 +307,7 @@ const KYB = () => {
             formdata.append("registration_number", registrationNum);
             formdata.append("tax_id", taxId);
             formdata.append("industryReference", JSON.stringify(industryReference));
-            
+
             console.log(dateOfI)
             formdata.append(
                 "date_of_incorporation",

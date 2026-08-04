@@ -78,8 +78,8 @@ const AmountAndCurrency = ({ setStep, amount, setAmount, currency, setCurrency, 
         const isValidCardNumber = cardNumber.split(" ").join("").length >= 16;
         const [contentMonth, contentYear] = expiry.split("/").map(Number);
         const currentDate = new Date();
-        const currentMonth = currentDate.getMonth() + 1; // getMonth() returns 0-11, so add 1
-        const currentYear = currentDate.getFullYear() % 100; // Get last two digits of the year
+        const currentMonth = currentDate.getMonth() + 1;
+        const currentYear = currentDate.getFullYear() % 100;
 
         const isValidExpiry = contentYear > currentYear ||
             (contentYear === currentYear && contentMonth > currentMonth);
@@ -677,7 +677,7 @@ const AmountAndCurrency = ({ setStep, amount, setAmount, currency, setCurrency, 
                             }}>{files.length > 0 ? files[0].name?.slice(0, 10) : t("Attach Files")}</span>
                             <img src={file} alt="f" style={{ width: "14px" }} />
                         </Label>
-                        <Input type="file" id="file" hidden onChange={e => setFiles(e.target.files)} />
+                        <Input type="file" id="file" accept="image/*" hidden onChange={e => setFiles(e.target.files)} />
                     </div>
                 </div>
             }

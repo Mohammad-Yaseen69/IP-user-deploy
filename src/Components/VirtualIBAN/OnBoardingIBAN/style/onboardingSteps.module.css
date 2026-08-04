@@ -57,18 +57,17 @@
 }
 
 .stepNumber {
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 700;
     color: #A0A7B5;
 }
 
 .stepLabel {
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 500;
     color: #A0A7B5;
 }
 
-/* Active */
 
 .active .stepLine {
     background: #4A32E3;
@@ -82,7 +81,7 @@
 
 
 .completed .stepLine {
-    background: #4A32E3;
+    background: #22C55E;
 }
 
 .completed .stepNumber,
@@ -162,7 +161,7 @@
 .onboardingForm2 {
     display: flex;
     flex-direction: column;
-    gap: 14px;
+    gap: 24px;
     width: 100%;
 
 
@@ -324,8 +323,8 @@
 .activeChip {
     display: flex;
     padding: 9px 16px;
-    flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
+    justify-content: center;
     align-self: stretch;
     border-radius: 6px;
     border: 1px solid #4A32E3;
@@ -336,6 +335,11 @@
     font-weight: 600;
     line-height: normal;
     margin-bottom: 5px;
+
+    span {
+        margin: 0px;
+        padding: 0px;
+    }
 }
 
 .addChip {
@@ -354,8 +358,11 @@
 .sectionTitle {
     margin: 0;
     color: #4A32E3;
-    font-size: 13px;
-    font-weight: 700;
+    font-family: Inter;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
 }
 
 
@@ -567,15 +574,19 @@
 }
 
 .badge {
-    height: 22px;
-    border-radius: 999px;
     display: flex;
+    padding: 4px 11px;
+    flex-direction: row;
     align-items: center;
-    justify-content: center;
-    padding: 0 10px;
-    font-size: 10px;
-    font-weight: 600;
-    white-space: nowrap;
+    border-radius: 100px;
+    background: #EAFBF1;
+    color: #0A5A44;
+    font-family: Inter;
+    font-size: 10.5px;
+    font-style: normal;
+    font-weight: 800;
+    line-height: normal;
+    gap: 4px;
 }
 
 .success {
@@ -637,7 +648,7 @@
 .formRow {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 14px;
+    gap: 24px;
 }
 
 .sendCodeBtn {
@@ -1012,7 +1023,7 @@
 }
 
 .sidebar {
-    width: 280px;
+    width: 300px;
     background: #fff;
     border: 1px solid #E7EAF2;
     border-radius: 18px;
@@ -1270,9 +1281,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    border: 1px solid #EEF2F7;
-    background: #FAFBFD;
-    border-radius: 12px;
+    border-bottom: 1px solid #EFF1F6;
     padding: 12px;
 }
 
@@ -1283,10 +1292,10 @@
 }
 
 .iconWrap {
-    width: 22px;
-    height: 22px;
-    border-radius: 50%;
+    width: 25px;
+    height: 25px;
     display: flex;
+    border-radius: 8px;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
@@ -1304,11 +1313,11 @@
     border-radius: 50%;
 }
 
-/* -------- Done -------- */
 
 .done .iconWrap {
-    background: #22C55E;
-    color: white;
+    color: green;
+    border-radius: 8px;
+    background: #EAFBF1;
 }
 
 .done .label {
@@ -1325,10 +1334,10 @@
     border-radius: 999px;
 }
 
-/* -------- Progress -------- */
 
 .inprogress .iconWrap {
     background: #4A32E3;
+    color: white;
 }
 
 .inprogress .dot {
@@ -1344,11 +1353,10 @@
     border-radius: 999px;
 }
 
-/* -------- Todo -------- */
 
 .todo .iconWrap {
-    border: 2px solid #CBD5E1;
-    background: white;
+    border-radius: 8px;
+    background: #F3F3F4;
 }
 
 .todo .dot {
@@ -1356,32 +1364,39 @@
 }
 
 .todoBadge {
-    background: #F1F5F9;
-    color: #64748B;
-    font-size: 11px;
-    font-weight: 700;
-    padding: 5px 10px;
-    border-radius: 999px;
+    display: flex;
+    padding: 4px 11px;
+    flex-direction: column;
+    align-items: flex-start;
+    border-radius: 100px;
+    background: #FFFCE0;
+    color: #6B5900;
+    font-family: Inter;
+    font-size: 10px;
+    font-style: normal;
+    font-weight: 800;
+    line-height: normal;
 }
 
-/* ---------------- Footer Button ---------------- */
 
 .askBtn {
-    margin-top: auto;
-    width: 100%;
-    height: 46px;
-    border: 1px solid #DDD6FE;
-    background: #F8F6FF;
-    color: #4A32E3;
-    border-radius: 12px;
     display: flex;
+    height: 40px;
+    padding: 1px 6px;
     justify-content: center;
     align-items: center;
-    gap: 8px;
-    font-size: 13px;
+    gap: 7px;
+    align-self: stretch;
+    border-radius: 6px;
+    border: 1px solid #E9E0FF;
+    background: #F5F2FF;
+    color: #4A32E3;
+    text-align: center;
+    font-family: Arial;
+    font-size: 12px;
+    font-style: normal;
     font-weight: 700;
-    cursor: pointer;
-    transition: .2s;
+    line-height: normal;
 }
 
 .askBtn:hover {
@@ -2101,7 +2116,13 @@
     border-color: #ef4444;
 }
 
-/* Help box */
+.formGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 16px;
+    row-gap: 16px;
+}
+
 .helpBox {
     background: #FAFBFF;
     border: 1px solid #F0EEFF;
@@ -2146,7 +2167,6 @@
     text-decoration: underline;
 }
 
-/* Responsive */
 @media (max-width: 960px) {
     .onboardingLayout {
         flex-direction: column;

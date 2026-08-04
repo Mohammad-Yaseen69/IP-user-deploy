@@ -1,19 +1,59 @@
+import { useContext, useState, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import useWindowWidth from '../../../utils/useWindowWidth';
 import TopRight from '../../topRight';
 import styles from '../styles/commissions.module.css';
+import { UserContext } from '../../../Context/UserContext';
+import axios from 'axios';
+import { decryptData } from '../../../Helper/EssentilaMethods/Decryption';
 
 import {
     BarChart,
-    DollarSign,
-    Edit2
+    DollarSign
 } from 'react-feather';
 
 const Commissions = () => {
     const { t } = useTranslation();
     const width = useWindowWidth();
+    const { userDetails, authHeader } = useContext(UserContext);
 
-    const commissionRules = [
+    const [commissionsList, setCommissionsList] = useState([]);
+    const [fetchedRules, setFetchedRules] = useState([]);
+    const [ledgerSummary, setLedgerSummary] = useState({ totalCredit: 0, totalDebit: 0, availableBalance: 0 });
+    const [loading, setLoading] = useState(true);
+
+    const fetchCommissions = async () => {
+        setLoading(true);
+        try {
+            const res = await axios.get(
+                `${import.meta.env.VITE_IP_DEV_API}/api/iban-fees/agent-commissions`,
+                { headers: authHeader }
+            );
+            const dec = decryptData(res.data?.data);
+            if (dec?.data) {
+                const list = Array.isArray(dec.data.commissions) ? dec.data.commissions : Array.isArray(dec.data) ? dec.data : [];
+                setCommissionsList(list);
+                if (Array.isArray(dec.data.rules)) {
+                    setFetchedRules(dec.data.rules);
+                }
+                if (dec.data.summary) {
+                    setLedgerSummary(dec.data.summary);
+                }
+            }
+        } catch (err) {
+            console.error("Failed to fetch agent commissions:", err);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        if (userDetails?._id) {
+            fetchCommissions();
+        }
+    }, [userDetails?._id]);
+
+    const defaultRules = [
         { name: 'IBAN ACTIVATION', rate: '20%' },
         { name: 'MONTHLY FEE', rate: '15%' },
         { name: 'SEPA', rate: '10%' },
@@ -24,63 +64,41 @@ const Commissions = () => {
         { name: 'FX MARGIN', rate: '8%' }
     ];
 
-    const commissionData = [
-        {
-            id: 1,
-            initials: 'SC',
-            avatarClass: styles.avatarPurple,
-            client: 'Sahil Cashew Union',
-            product: 'IBAN Activation',
-            revenue: '€500',
-            rate: '20%',
-            commission: '€100',
-            status: 'Paid'
-        },
-        {
-            id: 2,
-            initials: 'SC',
-            avatarClass: styles.avatarPurple,
-            client: 'Sahil Cashew Union',
-            product: 'Monthly fee (Jun)',
-            revenue: '$120',
-            rate: '15%',
-            commission: '$18',
-            status: 'Paid'
-        },
-        {
-            id: 3,
-            initials: 'SC',
-            avatarClass: styles.avatarBlue,
-            client: 'Sahil Cashew Union',
-            product: 'Monthly fee (Jun)',
-            revenue: '€2,100',
-            rate: '12%',
-            commission: '€252',
-            status: 'Pending'
-        },
-        {
-            id: 4,
-            initials: 'AC',
-            avatarClass: styles.avatarPurple,
-            client: 'Aromatic Coffee DMCC',
-            product: 'IBAN Activation',
-            revenue: '€500',
-            rate: '20%',
-            commission: '€100',
-            status: 'Pending'
-        },
-        {
-            id: 5,
-            initials: 'DO',
-            avatarClass: styles.avatarGreen,
-            client: 'David Osei',
-            product: 'IBAN Activation',
-            revenue: '€500',
-            rate: '20%',
-            commission: '€100',
-            status: 'Paid'
-        }
-    ];
+    const commissionRules = fetchedRules.length > 0 ? fetchedRules : defaultRules;
+
+    const stats = useMemo(() => {
+        let totalCredit = 0;
+        let totalDebit = 0;
+        const clientsSet = new Set();
+
+        commissionsList.forEach(item => {
+            const amt = item.commission || 0;
+            const isDebit = item.entry_type === 'debit';
+
+            if (isDebit) {
+                totalDebit += amt;
+            } else {
+                totalCredit += amt;
+                if (item.user) {
+                    const uid = typeof item.user === 'object' ? item.user._id || item.user.email : item.user;
+                    clientsSet.add(uid);
+                }
+            }
+        });
+
+        totalCredit = Math.round(totalCredit * 100) / 100;
+        totalDebit = Math.round(totalDebit * 100) / 100;
+        const availableBalance = Math.round((totalCredit - totalDebit) * 100) / 100;
+        const totalClients = clientsSet.size || 1;
+        const avgPerClient = Math.round((totalCredit / totalClients) * 100) / 100;
+
+        return {
+            totalCredit: ledgerSummary.totalCredit || totalCredit,
+            totalDebit: ledgerSummary.totalDebit || totalDebit,
+            availableBalance: ledgerSummary.availableBalance !== undefined ? ledgerSummary.availableBalance : availableBalance,
+            avgPerClient
+        };
+    }, [commissionsList, ledgerSummary]);
 
     return (
         <div className={styles.container}>
@@ -88,9 +106,9 @@ const Commissions = () => {
             {/* Header */}
             <div className={styles.top}>
                 <div className={styles.headerTitle}>
-                    <h1>{t('Commissions')}</h1>
+                    <h1>{t('Commissions Ledger')}</h1>
                     <p>
-                        {t('Earned, pending and paid - by client and product.')}
+                        {t('Track agent earnings (Credit), payouts (Debit), and available balance.')}
                     </p>
                 </div>
 
@@ -106,69 +124,60 @@ const Commissions = () => {
                     <div className={styles.statCard}>
                         <div className={styles.statTop}>
                             <span className={styles.statTitle}>
-                                Earned (YTD)
+                                Available Balance
                             </span>
 
                             <div className={`${styles.statIcon} ${styles.iconPurple}`}>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                    <path d="M22.5 17.5115C13.9088 21.7087 10.0912 13.5412 1.5 17.7383V6.48834C10.0912 2.29115 13.9088 10.4587 22.5 6.26147V17.5115Z" stroke="#5926F0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                                    <path d="M12 14.25C13.2426 14.25 14.25 13.2426 14.25 12C14.25 10.7574 13.2426 9.75 12 9.75C10.7574 9.75 9.75 10.7574 9.75 12C9.75 13.2426 10.7574 14.25 12 14.25Z" stroke="#5926F0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                                    <path d="M4.5 9V13.5" stroke="#5926F0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                                    <path d="M19.5 10.5V15" stroke="#5926F0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                                </svg>                            </div>
-                        </div>
-
-                        <span className={styles.statValue}>
-                            €38,420
-                        </span>
-                    </div>
-
-                    <div className={styles.statCard}>
-                        <div className={styles.statTop}>
-                            <span className={styles.statTitle}>
-                                Pending
-                            </span>
-
-                            <div className={`${styles.statIcon} ${styles.iconYellow}`}>
-                                <DollarSign size={16} />
+                                    <path d="M22.5 17.5115C13.9088 21.7087 10.0912 13.5412 1.5 17.7383V6.48834C10.0912 2.29115 13.9088 10.4587 22.5 6.26147V17.5115Z" stroke="#5926F0" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                                    <path d="M12 14.25C13.2426 14.25 14.25 13.2426 14.25 12C14.25 10.7574 13.2426 9.75 12 9.75C10.7574 9.75 9.75 10.7574 9.75 12C9.75 13.2426 10.7574 14.25 12 14.25Z" stroke="#5926F0" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                                    <path d="M4.5 9V13.5" stroke="#5926F0" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                                    <path d="M19.5 10.5V15" stroke="#5926F0" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                                </svg>
                             </div>
                         </div>
 
-                        <span className={styles.statValue}>
-                            €5,180
-                        </span>
-
-                        <span className={styles.statSubtext}>
-                            Next run 31 Jul
+                        <span className={styles.statValue} style={{ color: "#5926F0", fontWeight: 700 }}>
+                            €{stats.availableBalance.toLocaleString()}
                         </span>
                     </div>
 
                     <div className={styles.statCard}>
                         <div className={styles.statTop}>
                             <span className={styles.statTitle}>
-                                Paid (30d)
+                                Total Earned (Credit)
                             </span>
 
                             <div className={`${styles.statIcon} ${styles.iconGreen}`}>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                    <path d="M3 21C3.52395 20.3014 4.20336 19.7344 4.98442 19.3438C5.76549 18.9533 6.62675 18.75 7.5 18.75C8.37325 18.75 9.23451 18.9533 10.0156 19.3438C10.7966 19.7344 11.476 20.3014 12 21C12.524 20.3014 13.2034 19.7344 13.9844 19.3438C14.7655 18.9533 15.6267 18.75 16.5 18.75C17.3733 18.75 18.2345 18.9533 19.0156 19.3438C19.7966 19.7344 20.476 20.3014 21 21" stroke="#B5A300" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                                    <path d="M3 11.25C3.52395 10.5514 4.20336 9.98438 4.98442 9.59385C5.76549 9.20332 6.62675 9 7.5 9C8.37325 9 9.23451 9.20332 10.0156 9.59385C10.7966 9.98438 11.476 10.5514 12 11.25C12.524 10.5514 13.2034 9.98438 13.9844 9.59385C14.7655 9.20332 15.6267 9 16.5 9C17.3733 9 18.2345 9.20332 19.0156 9.59385C19.7966 9.98438 20.476 10.5514 21 11.25" stroke="#B5A300" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                                    <path d="M7.5 18.75C9.15685 18.75 10.5 17.4069 10.5 15.75C10.5 14.0931 9.15685 12.75 7.5 12.75C5.84315 12.75 4.5 14.0931 4.5 15.75C4.5 17.4069 5.84315 18.75 7.5 18.75Z" stroke="#B5A300" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                                    <path d="M7.5 9C9.15685 9 10.5 7.65685 10.5 6C10.5 4.34315 9.15685 3 7.5 3C5.84315 3 4.5 4.34315 4.5 6C4.5 7.65685 5.84315 9 7.5 9Z" stroke="#B5A300" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                                    <path d="M16.5 18.75C18.1569 18.75 19.5 17.4069 19.5 15.75C19.5 14.0931 18.1569 12.75 16.5 12.75C14.8431 12.75 13.5 14.0931 13.5 15.75C13.5 17.4069 14.8431 18.75 16.5 18.75Z" stroke="#B5A300" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                                    <path d="M16.5 9C18.1569 9 19.5 7.65685 19.5 6C19.5 4.34315 18.1569 3 16.5 3C14.8431 3 13.5 4.34315 13.5 6C13.5 7.65685 14.8431 9 16.5 9Z" stroke="#B5A300" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                                </svg>                            </div>
+                                <DollarSign size={16} color="#16a34a" />
+                            </div>
                         </div>
 
-                        <span className={styles.statValue}>
-                            €6,240
+                        <span className={styles.statValue} style={{ color: "#16a34a" }}>
+                            +€{stats.totalCredit.toLocaleString()}
                         </span>
                     </div>
 
                     <div className={styles.statCard}>
                         <div className={styles.statTop}>
                             <span className={styles.statTitle}>
-                                Avg per client
+                                Total Paid / Payout (Debit)
+                            </span>
+
+                            <div className={`${styles.statIcon} ${styles.iconYellow}`}>
+                                <DollarSign size={16} color="#dc2626" />
+                            </div>
+                        </div>
+
+                        <span className={styles.statValue} style={{ color: "#dc2626" }}>
+                            -€{stats.totalDebit.toLocaleString()}
+                        </span>
+                    </div>
+
+                    <div className={styles.statCard}>
+                        <div className={styles.statTop}>
+                            <span className={styles.statTitle}>
+                                Avg per Client
                             </span>
 
                             <div className={`${styles.statIcon} ${styles.iconPurple}`}>
@@ -177,7 +186,7 @@ const Commissions = () => {
                         </div>
 
                         <span className={styles.statValue}>
-                            €1,130
+                            €{stats.avgPerClient.toLocaleString()}
                         </span>
                     </div>
 
@@ -188,11 +197,6 @@ const Commissions = () => {
 
                     <div className={styles.sectionHeader}>
                         <h2>Commission rules</h2>
-
-                        <button className={styles.editButton}>
-                            <Edit2 size={12} />
-                            Edit
-                        </button>
                     </div>
 
                     <div className={styles.rulesGrid}>
@@ -218,66 +222,80 @@ const Commissions = () => {
                 <div className={styles.sectionCard}>
 
                     <div className={styles.statementHeader}>
-                        <h2>Commission statement</h2>
+                        <h2>Commission Ledger Statement</h2>
                     </div>
 
                     <div className={styles.tableContainer}>
 
                         <div className={styles.tableHeaderRow}>
                             <div>Client</div>
-                            <div>Product</div>
-                            <div>Revenue base</div>
-                            <div>Rate</div>
-                            <div>Commission</div>
-                            <div>Status</div>
+                            <div>Description / Service</div>
+                            <div>Entry Type</div>
+                            <div>Revenue Base</div>
+                            <div>Amount</div>
+                            <div>Date</div>
                         </div>
 
-                        {commissionData.map((row) => (
-                            <div
-                                key={row.id}
-                                className={styles.tableDataRow}
-                            >
-                                <div className={styles.clientCell}>
-                                    <span
-                                        className={`${styles.avatar} ${row.avatarClass}`}
+                        {commissionsList.length > 0 ? (
+                            commissionsList.map((row, idx) => {
+                                const isDebit = row.entry_type === 'debit';
+                                const clientObj = typeof row.user === 'object' ? row.user : {};
+                                const clientName = isDebit ? 'Payout Withdrawal' : (clientObj?.company_name || clientObj?.username || clientObj?.email || 'Client Account');
+                                const initials = clientName.substring(0, 2).toUpperCase();
+                                const avatarClass = isDebit ? styles.avatarBlue : (idx % 3 === 0 ? styles.avatarPurple : idx % 3 === 1 ? styles.avatarBlue : styles.avatarGreen);
+
+                                return (
+                                    <div
+                                        key={row._id || idx}
+                                        className={styles.tableDataRow}
                                     >
-                                        {row.initials}
-                                    </span>
+                                        <div className={styles.clientCell}>
+                                            <span className={`${styles.avatar} ${avatarClass}`}>
+                                                {initials}
+                                            </span>
+                                            <span className={styles.clientName}>
+                                                {clientName}
+                                            </span>
+                                        </div>
 
-                                    <span className={styles.clientName}>
-                                        {row.client}
-                                    </span>
-                                </div>
+                                        <div>
+                                            {row.description || row.transaction?.service_type || (isDebit ? 'Payout' : 'IBAN Service Fee')}
+                                        </div>
 
-                                <div>
-                                    {row.product}
-                                </div>
+                                        <div>
+                                            <span className={isDebit ? styles.badgePending : styles.badgePaid} style={{
+                                                backgroundColor: isDebit ? '#fee2e2' : '#dcfce7',
+                                                color: isDebit ? '#dc2626' : '#15803d',
+                                                fontWeight: 700,
+                                                padding: '4px 10px',
+                                                borderRadius: '6px',
+                                                fontSize: '12px'
+                                            }}>
+                                                {isDebit ? 'DEBIT' : 'CREDIT'}
+                                            </span>
+                                        </div>
 
-                                <div>
-                                    {row.revenue}
-                                </div>
+                                        <div>
+                                            {isDebit ? '-' : `€${row.transaction?.fee || row.transaction?.amount || 0}`}
+                                        </div>
 
-                                <div>
-                                    {row.rate}
-                                </div>
+                                        <div>
+                                            <strong style={{ color: isDebit ? '#dc2626' : '#16a34a' }}>
+                                                {isDebit ? `-€${row.commission || 0}` : `+€${row.commission || 0}`}
+                                            </strong>
+                                        </div>
 
-                                <div>
-                                    {row.commission}
-                                </div>
-
-                                <div>
-                                    <span
-                                        className={
-                                            row.status === 'Paid'
-                                                ? styles.badgePaid
-                                                : styles.badgePending
-                                        }
-                                    >
-                                        {row.status}
-                                    </span>
-                                </div>
+                                        <div style={{ color: '#666', fontSize: '13px' }}>
+                                            {row.createdAt ? new Date(row.createdAt).toLocaleDateString() : '-'}
+                                        </div>
+                                    </div>
+                                );
+                            })
+                        ) : (
+                            <div style={{ padding: '20px', textAlign: 'center', color: '#666' }}>
+                                {loading ? 'Loading commission ledger...' : 'No commission ledger records found.'}
                             </div>
-                        ))}
+                        )}
 
                     </div>
 
