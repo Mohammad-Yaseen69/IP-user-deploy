@@ -991,11 +991,27 @@ const Login = ({ country, setIsLoginForm, }) => {
 
     const getOtpLabel = () => {
         const maskValue = (value) => {
-            const str = String(value ?? "")
-            if (!str) return ""
-            if (str.length <= 4) return str.replace(/./g, "*")
-            return `${str.slice(0, str.length - 4).replace(/./g, "*")}${str.slice(-4)}`
-        }
+            const str = String(value ?? "");
+            if (!str) return "";
+
+            if (str.includes("@")) {
+                const [username, domain] = str.split("@");
+
+                if (!username || !domain) return str;
+
+                if (username.length <= 4) {
+                    return `${username[0]}***@${domain}`;
+                }
+
+                return `${username.slice(0, 6)}********${username.slice(-2)}@${domain}`;
+            }
+
+            if (str.length <= 4) {
+                return str.replace(/./g, "*");
+            }
+
+            return `${str.slice(0, str.length - 4).replace(/./g, "*")}${str.slice(-4)}`;
+        };
 
         const maskedEmail = maskValue(otpDeliveryInfo.email)
         const maskedPhone = maskValue(otpDeliveryInfo.phone)
@@ -1005,7 +1021,13 @@ const Login = ({ country, setIsLoginForm, }) => {
             case "auth": return t("Google Authenticator Code")
             case "insta": return t("Enter the code sent to your Instagram Account")
             case "wp": return t("Enter the code sent to your Whatsapp on {{phone}}", { phone: `\u200E${maskedPhone}\u200E` })
-            case "email": return t("Enter the code sent to {{email}} via Email", { email: `\u200E${maskedEmail}\u200E` })
+            case "email":
+                return t(
+                    "Enter the code sent to {{email}} via Email",
+                    {
+                        email: `\u200E${maskedEmail}\u200E`
+                    }
+                );
             default: return t("Enter the code sent to {{phone}} via {{service}}", { phone: `\u200E${maskedPhone}\u200E`, service })
         }
     };
