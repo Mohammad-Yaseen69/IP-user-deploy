@@ -21,11 +21,11 @@ const ReviewStep = ({ onSubmit, onBack, allData = {}, onNext }) => {
     const docCount = Object.keys(documents).length
 
     const steps = [
-        { num: '01', label: t('Account'), done: true },
-        { num: '02', label: t('Company'), done: true },
-        { num: '03', label: t('Activity'), done: true },
-        { num: '04', label: t('Ownership'), done: true },
-        { num: '05', label: t('Documents'), done: true },
+        { num: '01', label: t('Account'), completed: true },
+        { num: '02', label: t('Company'), completed: true },
+        { num: '03', label: t('Activity'), completed: true },
+        { num: '04', label: t('Ownership'), completed: true },
+        { num: '05', label: t('Documents'), completed: true },
         { num: '06', label: t('Review'), active: true }
     ]
 
@@ -99,7 +99,9 @@ const ReviewStep = ({ onSubmit, onBack, allData = {}, onNext }) => {
                             <div className={styles.item}>
                                 <label>Owners</label>
                                 <span>
-                                    Jean-Jacques Elong (60% UBO, UBO) • K2 Holdings SA (40%, UBO)
+                                    {owners.length > 0
+                                        ? owners.map(o => `${o.fullName || o.name || 'Owner'} (${o.ownershipPercent ? o.ownershipPercent + '%' : ''} ${o.role || 'UBO'})`).join(' • ')
+                                        : 'None'}
                                 </span>
                             </div>
 
@@ -171,7 +173,9 @@ const ReviewStep = ({ onSubmit, onBack, allData = {}, onNext }) => {
 
 
                     <div className={styles.infoBox}>
-                        <input type="checkbox" />
+                        <input type="checkbox" style={{
+                            marginTop: "3px"
+                        }} />
 
                         <span>
                             {t("I confirm the information provided is true and complete, and I authorise InstaPay to carry out KYB, AML, sanctions, PEP and adverse-media checks. I understand submission does not guarantee approval.")}

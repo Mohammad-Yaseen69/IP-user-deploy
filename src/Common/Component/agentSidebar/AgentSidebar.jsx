@@ -14,6 +14,7 @@ import {
     User,
     UserCheck,
     Users,
+    Tag,
 } from "react-feather";
 import { useLocation, useNavigate } from "react-router-dom";
 import instaPay from "../../../assets/images/logo/logo2.webp";
@@ -37,6 +38,7 @@ const NAV_SECTIONS = [
         items: [
             { icon: DollarSign, text: "Commissions", to: "/commissions" },
             { icon: BarChart2, text: "Reports", to: "/reports" },
+            { icon: Tag, text: "Fee Model Requests", to: "/fee-model-requests" },
         ],
     },
     {

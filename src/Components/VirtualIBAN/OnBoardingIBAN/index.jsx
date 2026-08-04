@@ -1,40 +1,33 @@
+import axios from 'axios'
 import { useContext, useEffect, useReducer, useState } from 'react'
-import { ArrowRight, ArrowLeft, Briefcase, User, Globe, Activity, CreditCard, Cpu, Zap } from 'react-feather'
+import { Activity, ArrowRight, Cpu, CreditCard, Globe, Zap } from 'react-feather'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
-import axios from 'axios'
 import { toast } from 'react-toastify'
 import { UserContext } from '../../../Context/UserContext'
 import { usePermission } from '../../../hooks/GeneralUse/usePermission'
+import useWindowWidth from '../../../utils/useWindowWidth'
 import imageCard from "../files/images/Frame_2147236087.png"
 import styles from "./style/OnboardingIban.module.css"
-import TopRight from '../../topRight'
-import useWindowWidth from '../../../utils/useWindowWidth'
 
-import AccountStep from './components/AccountStep'
-import CompanyStep from './components/CompanyStep'
+import ActivateAccount from './components/ActivateAccount'
 import ActivityStep from './components/ActivityStep'
-import OwnershipStep from './components/OwnershipStep'
+import CompanyStep from './components/CompanyStep'
 import DocumentsStep from './components/DocumentsStep'
+import OwnershipStep from './components/OwnershipStep'
+import Pricing from './components/Pricing'
 import ReviewStep from './components/ReviewStep'
 import StatusScreen from './components/StatusScreen'
-import Pricing from './components/Pricing'
-import ActivateAccount from './components/ActivateAccount'
 
-import useSendOtp from '../../../hooks/GeneralUse/useSendOtp'
-import OTPConfirmation from '../../UserSettingsNew/OTPConfirmation'
 import { Modal, ModalBody, Spinner } from 'reactstrap'
 import { decryptData } from '../../../Helper/EssentilaMethods/Decryption'
 import { encryptData } from '../../../Helper/EssentilaMethods/Encryption'
+import useSendOtp from '../../../hooks/GeneralUse/useSendOtp'
+import OTPConfirmation from '../../UserSettingsNew/OTPConfirmation'
 
 const STEPS_BUSINESS = ['landing', 'selection', 'account', 'company', 'activity', 'ownership', 'documents', 'review']
 const STEPS_INDIVIDUAL = ['landing', 'selection', 'account', 'review']
 
-const STATUS_ORDER = [
-    'submitted', 'in_review', 'under_review', 'pending_kyb',
-    'pending_commercial', 'activation_pack_sent', 'awaiting_signature',
-    'awaiting_payment', 'payment_received'
-]
 
 const initialState = {
     step: 'landing',
@@ -56,6 +49,7 @@ const initialState = {
     documents: { files: {} },
     selectedWallet: null,
     feeDetails: { baseAmount: 500, convertedAmount: 500, currency: 'EUR', exchangeRate: 1 },
+    requestData: null,
 }
 
 function onboardingReducer(state, action) {
@@ -80,6 +74,8 @@ function onboardingReducer(state, action) {
             return { ...state, selectedWallet: action.payload }
         case 'SET_FEE_DETAILS':
             return { ...state, feeDetails: { ...state.feeDetails, ...action.payload } }
+        case 'SET_REQUEST_DATA':
+            return { ...state, requestData: action.payload }
         case 'RESET_ALL':
             return initialState
         default:
@@ -102,40 +98,42 @@ const OnboardingIBAN = ({ onCreated }) => {
     const [codeType, setCodeType] = useState('sms')
     const [loadingStatus, setLoadingStatus] = useState(true)
 
-    useEffect(() => {
+    const checkRequestStatus = async () => {
         if (!userDetails?._id) {
             setLoadingStatus(false);
             return;
         }
-        const checkRequestStatus = async () => {
-            try {
-                const res = await axios.get(
-                    `${import.meta.env.VITE_IP_DEV_API}/api/iban-fees/request-status`,
-                    { headers: authHeader }
-                );
-                const dec = decryptData(res.data?.data);
-                if (dec?.hasRequest && dec?.requestStatus && dec.requestStatus !== 'none') {
-                    dispatch({ type: 'SET_STATUS', payload: dec.requestStatus });
-                    dispatch({ type: 'SET_STEP', payload: 'status' });
-                    if (dec?.data) {
-                        dispatch({
-                            type: 'UPDATE_COMPANY',
-                            payload: {
-                                legalName: dec.data.legalCompanyName || '',
-                                tradingName: dec.data.tradingName || '',
-                                registrationNumber: dec.data.registrationNumber || '',
-                                website: dec.data.website || '',
-                                registeredAddress: dec.data.registeredAddress || '',
-                            }
-                        });
-                    }
+        try {
+            const res = await axios.get(
+                `${import.meta.env.VITE_IP_DEV_API}/api/iban-fees/request-status`,
+                { headers: authHeader }
+            );
+            const dec = decryptData(res.data?.data);
+            if (dec?.hasRequest && dec?.requestStatus && dec.requestStatus !== 'none') {
+                dispatch({ type: 'SET_STATUS', payload: dec.requestStatus });
+                dispatch({ type: 'SET_STEP', payload: 'status' });
+                if (dec?.data) {
+                    dispatch({ type: 'SET_REQUEST_DATA', payload: dec.data });
+                    dispatch({
+                        type: 'UPDATE_COMPANY',
+                        payload: {
+                            legalName: dec.data.legalCompanyName || '',
+                            tradingName: dec.data.tradingName || '',
+                            registrationNumber: dec.data.registrationNumber || '',
+                            website: dec.data.website || '',
+                            registeredAddress: dec.data.registeredAddress || '',
+                        }
+                    });
                 }
-            } catch (err) {
-                console.error("Error fetching IBAN request status:", err);
-            } finally {
-                setLoadingStatus(false);
             }
-        };
+        } catch (err) {
+            console.error("Error fetching IBAN request status:", err);
+        } finally {
+            setLoadingStatus(false);
+        }
+    };
+
+    useEffect(() => {
         checkRequestStatus();
     }, [userDetails?._id]);
 
@@ -239,6 +237,7 @@ const OnboardingIBAN = ({ onCreated }) => {
                 type: type || codeType,
                 ...state.company,
                 ...state.activity,
+                ubos: state.ownership?.owners || state.ownership?.ubos || state.ownership || [],
                 email: state.account.email,
             }
 
@@ -284,9 +283,9 @@ const OnboardingIBAN = ({ onCreated }) => {
     }
 
     const handleStatusAction = () => {
-        const idx = STATUS_ORDER.indexOf(state.status)
-        if (idx < STATUS_ORDER.length - 1) dispatch({ type: 'SET_STATUS', payload: STATUS_ORDER[idx + 1] })
-        else if (onCreated) onCreated()
+        if (state.status === 'approved' && onCreated) {
+            onCreated()
+        }
     }
 
     const handleStatusCancel = () => {
@@ -412,6 +411,7 @@ const OnboardingIBAN = ({ onCreated }) => {
                     onBack={goBack}
                     userType={state.userType}
                     data={{ owners: state.ownership.owners }}
+                    userDetails={userDetails}
                 />
             )}
 
@@ -421,6 +421,8 @@ const OnboardingIBAN = ({ onCreated }) => {
                     onBack={goBack}
                     userType={state.userType}
                     data={{ files: state.documents.files }}
+                    userDetails={userDetails}
+                    companyDetails={state.company}
                 />
             )}
 
@@ -464,6 +466,16 @@ const OnboardingIBAN = ({ onCreated }) => {
                     companyName={state.company?.legalName || state.account?.email}
                     onAction={handleStatusAction}
                     onCancel={handleStatusCancel}
+                    activationData={state.requestData}
+                    partners={state.requestData?.ubos || []}
+                    refreshPartners={checkRequestStatus}
+                    setPartners={(updatedPartners) => {
+                        dispatch({
+                            type: 'SET_REQUEST_DATA',
+                            payload: { ...state.requestData, ubos: typeof updatedPartners === 'function' ? updatedPartners(state.requestData?.ubos || []) : updatedPartners }
+                        });
+                    }}
+                    additionalFiles={state.requestData?.kyb_additional_file || state.requestData?.additionalFiles || userDetails?.company?.kyb_additional_file || []}
                 />
             )}
 

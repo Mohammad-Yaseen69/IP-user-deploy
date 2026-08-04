@@ -93,6 +93,7 @@ const Documents = lazy(() => import("../Components/AgentCommission/Documents/Doc
 const Reports = lazy(() => import("../Components/AgentCommission/Reports/Reports.jsx"))
 const Support = lazy(() => import("../Components/AgentCommission/Support/Support.jsx"))
 const AgentProfile = lazy(() => import("../Components/AgentCommission/Profile/Profile.jsx"))
+const FeeModelRequests = lazy(() => import("../Components/AgentCommission/FeeRequests/FeeModelRequests.jsx"))
 
 
 const PermissionRoute = ({ permission, children }) => {
@@ -260,5 +261,6 @@ export const AgentCommissionRoutes = [
     { path: "/reports", component: <PermissionRoute permission="reports.view"><Reports /></PermissionRoute> },
     { path: "/support", component: <PermissionRoute permission="support.view"><Support /></PermissionRoute> },
     { path: "/agent-profile", component: <PermissionRoute permission="agent-profile.view"><AgentProfile /></PermissionRoute> },
+    { path: "/fee-model-requests", component: <FeeModelRequests /> },
     { path: "*", component: <NotFound type='Page' /> }
 ]
