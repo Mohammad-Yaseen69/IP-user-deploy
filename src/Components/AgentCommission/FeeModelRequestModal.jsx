@@ -1,12 +1,12 @@
-import React, { useState, useEffect, useContext, useCallback } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Modal, ModalHeader, ModalBody, Button, FormGroup, Label, Input, Badge, Table, Spinner } from 'reactstrap';
-import { UserContext } from '../../Context/UserContext';
-import { encryptData } from '../../Helper/EssentilaMethods/Encryption';
-import { decryptData } from '../../Helper/EssentilaMethods/Decryption';
 import axios from 'axios';
+import { useCallback, useContext, useEffect, useState } from 'react';
+import { CheckCircle, Clock, Copy, Plus, XCircle } from 'react-feather';
+import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
-import { Plus, CheckCircle, Clock, XCircle, Copy } from 'react-feather';
+import { Badge, Button, FormGroup, Input, Label, Modal, ModalBody, ModalHeader, Spinner, Table } from 'reactstrap';
+import { UserContext } from '../../Context/UserContext';
+import { decryptData } from '../../Helper/EssentilaMethods/Decryption';
+import { encryptData } from '../../Helper/EssentilaMethods/Encryption';
 
 const DEFAULT_FEE_ITEMS = [
     { id: "opening_fee", name: "Opening Fee (One-Time)", flatEuro: 500, percentAmount: 0 },
@@ -24,7 +24,7 @@ const FeeModelRequestModal = ({ isOpen, toggle }) => {
     const { t } = useTranslation();
     const { userDetails, authHeader } = useContext(UserContext);
 
-    const [activeTab, setActiveTab] = useState('list'); // 'list' | 'create'
+    const [activeTab, setActiveTab] = useState('list');
     const [title, setTitle] = useState('');
     const [revenueModel, setRevenueModel] = useState('markup');
     const [feeSchedule, setFeeSchedule] = useState(DEFAULT_FEE_ITEMS);

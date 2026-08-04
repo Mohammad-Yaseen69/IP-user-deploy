@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
 import { Dialog } from '@mui/material';
-import { UserPlus, Check, LifeBuoy, ChevronDown } from 'react-feather';
+import { useState } from 'react';
+import { Check, ChevronDown, LifeBuoy, UserPlus } from 'react-feather';
 import { useTranslation } from 'react-i18next';
 import styles from '../styles/subAgentModal.module.css';
 

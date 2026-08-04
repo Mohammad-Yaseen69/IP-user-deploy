@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { Search } from 'react-feather';
 import { useTranslation } from 'react-i18next';
 import useWindowWidth from '../../../utils/useWindowWidth';
 import TopRight from '../../topRight';
