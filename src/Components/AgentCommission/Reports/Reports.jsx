@@ -5,91 +5,22 @@ import { useTranslation } from 'react-i18next';
 import styles from '../styles/reports.module.css';
 import TopRight from '../../topRight';
 import {
-    Download,
-    Eye,
-    Filter,
-    TrendingUp,
-    TrendingDown,
-    FileText,
-    Calendar,
     ChevronDown,
+    ChevronRight,
+    RefreshCw,
+    CheckCircle
 } from 'react-feather';
-import { RiskDistribution } from './RiskDistribution';
 
-
-
-const COMMISSION_BAR_DATA = {
-    monthly: {
-        categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-        data: [3200, 4100, 2800, 5300, 4700, 6200, 5800, 7100, 6400, 4900, 5600, 7800],
-    },
-    quarterly: {
-        categories: ['Q1', 'Q2', 'Q3', 'Q4'],
-        data: [10100, 16200, 19300, 18300],
-    },
-    yearly: {
-        categories: ['2021', '2022', '2023', '2024'],
-        data: [38000, 52000, 61000, 63900],
-    },
-};
-
-const VOLUME_BY_PRODUCT = [
-    { label: 'SWIFT', value: 38, color: '#5926F0' },
-    { label: 'Crypto', value: 27, color: '#8B5CF6' },
-    { label: 'IBAN activ.', value: 18, color: '#10B981' },
-    { label: 'Cards', value: 12, color: '#F59E0B' },
-    { label: 'Remittance', value: 5, color: '#E5E7EC' },
-];
-
-const SUB_AGENT_RANKING = [
-    { rank: 1, name: 'Marco Rossi', clients: 54, commission: '€ 4,820', volume: '€ 198k', growth: 12.4, trend: 'up', avatarColor: 'avatarPurple', initials: 'MR' },
-    { rank: 2, name: 'Lena Fischer', clients: 47, commission: '€ 3,960', volume: '€ 172k', growth: 8.7, trend: 'up', avatarColor: 'avatarBlue', initials: 'LF' },
-    { rank: 3, name: 'Carlos Mendes', clients: 41, commission: '€ 3,210', volume: '€ 143k', growth: 5.1, trend: 'up', avatarColor: 'avatarGreen', initials: 'CM' },
-    { rank: 4, name: 'Sofia Novak', clients: 36, commission: '€ 2,740', volume: '€ 118k', growth: -2.3, trend: 'down', avatarColor: 'avatarOrange', initials: 'SN' },
-    { rank: 5, name: 'Alex Patel', clients: 29, commission: '€ 1,990', volume: '€ 87k', growth: 3.6, trend: 'up', avatarColor: 'avatarTeal', initials: 'AP' },
-    { rank: 6, name: 'Yuki Tanaka', clients: 24, commission: '€ 1,520', volume: '€ 65k', growth: -1.1, trend: 'down', avatarColor: 'avatarRed', initials: 'YT' },
-];
-
-
-
-
-const COMMISSION_STATEMENTS = [
-    {
-        id: 1,
-        period: 'Monthly commission statement',
-        date: '01 Apr 2024',
-        details: 'Earned, pending, paid by product',
-        status: 'Paid',
-    },
-    {
-        id: 2,
-        period: 'Payout report',
-        date: '01 Apr 2024',
-        details: 'Commission, payouts & status',
-        status: 'Pending',
-    },
-    {
-        id: 3,
-        period: 'Clients activation report',
-        date: '01 Apr 2024',
-        details: 'Client activation + conversion',
-        status: 'Processing',
-    },
-    {
-        id: 4,
-        period: 'Clients activation report',
-        date: '01 Apr 2024',
-        details: 'BV sub-agent + volume & split',
-        status: 'Paid',
-    },
-];
-
+/* ─────────────────────────────────────────────────────────────
+   CARD 1: COMMISSION EARNED BAR CHART
+───────────────────────────────────────────────────────────── */
 const CommissionEarnedChart = () => {
     const { t } = useTranslation();
-    const [period, setPeriod] = useState('monthly');
-    const dataset = COMMISSION_BAR_DATA[period];
 
-    const barOptions = {
+    const categories = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
+    const dataValues = [1.8, 2.3, 3.0, 4.0, 5.8, 6.8];
+
+    const chartOptions = {
         chart: {
             type: 'bar',
             toolbar: { show: false },
@@ -98,25 +29,37 @@ const CommissionEarnedChart = () => {
         },
         plotOptions: {
             bar: {
-                borderRadius: 5,
-                columnWidth: '50%',
-                distributed: false,
+                borderRadius: 6,
+                columnWidth: '40%',
+                distributed: true,
             },
         },
-        dataLabels: { enabled: false },
+        dataLabels: {
+            enabled: true,
+            formatter: (val) => `${val}k`,
+            style: {
+                fontSize: '11px',
+                fontFamily: 'Inter, sans-serif',
+                fontWeight: 600,
+                colors: ['#FFFFFF', '#FFFFFF', '#FFFFFF', '#FFFFFF', '#FFFFFF', '#FFFFFF'],
+            },
+            offsetY: -20,
+        },
         xaxis: {
-            categories: dataset.categories,
+            categories: categories,
             labels: {
-                style: { colors: '#9B9EAA', fontSize: '11px', fontWeight: 400 },
+                style: { colors: '#1F1F21', fontSize: '12px', fontWeight: 500, fontFamily: 'Manrope, sans-serif' },
             },
             axisBorder: { show: false },
             axisTicks: { show: false },
         },
         yaxis: {
             labels: {
-                style: { colors: '#9B9EAA', fontSize: '11px' },
-                formatter: (v) => `€${(v / 1000).toFixed(0)}k`,
+                style: { colors: '#1F1F21', fontSize: '12px', fontWeight: 500, fontFamily: 'Manrope, sans-serif' },
+                formatter: (val) => `${val}k`,
             },
+            max: 7,
+            tickAmount: 4,
         },
         grid: {
             borderColor: '#F0F1F4',
@@ -124,51 +67,33 @@ const CommissionEarnedChart = () => {
             yaxis: { lines: { show: true } },
             xaxis: { lines: { show: false } },
         },
-        colors: ['#5926F0'],
-        fill: {
-            type: 'gradient',
-            gradient: {
-                shade: 'light',
-                type: 'vertical',
-                shadeIntensity: 0.3,
-                gradientToColors: ['#8B5CF6'],
-                opacityFrom: 1,
-                opacityTo: 0.75,
-                stops: [0, 100],
-            },
-        },
-        tooltip: {
-            y: { formatter: (v) => `€ ${v.toLocaleString()}` },
-            theme: 'light',
-        },
-        states: {
-            hover: { filter: { type: 'darken', value: 0.85 } },
-        },
+        colors: ['#BC95FC', '#BC95FC', '#BC95FC', '#BC95FC', '#BC95FC', '#5926F0'],
         legend: { show: false },
+        tooltip: {
+            y: { formatter: (val) => `€${val}k` },
+        },
     };
 
-    const barSeries = [{ name: t('Commission (€)'), data: dataset.data }];
+    const series = [{ name: t('Commission'), data: dataValues }];
 
     return (
         <div className={styles.sectionCard}>
             <div className={styles.sectionHeader}>
                 <div className={styles.sectionHeaderLeft}>
-                    <p className={styles.sectionTitle}>{t('Commission earned (€, monthly)')}</p>
-                </div>
-                <div className={styles.periodTabs}>
-                    <button
-
-                    >
-                        {("Stable")}
-                    </button>
+                    <h3 className={styles.sectionTitle}>{t('Commission earned (€, monthly)')}</h3>
+                    <span className={styles.stableBadge}>
+                        <CheckCircle size={10} />
+                        {t('Stable')}
+                    </span>
                 </div>
             </div>
+
             <div className={styles.barChartWrap}>
                 <ReactApexChart
-                    options={barOptions}
-                    series={barSeries}
+                    options={chartOptions}
+                    series={series}
                     type="bar"
-                    height={240}
+                    height={220}
                     width="100%"
                 />
             </div>
@@ -176,82 +101,71 @@ const CommissionEarnedChart = () => {
     );
 };
 
-
-export const VolumeByProductChart = () => {
+/* ─────────────────────────────────────────────────────────────
+   CARD 2: VOLUME BY PRODUCT
+───────────────────────────────────────────────────────────── */
+const VolumeByProductChart = () => {
     const { t } = useTranslation();
-    const total = VOLUME_BY_PRODUCT.reduce((s, i) => s + i.value, 0);
+
+    const products = [
+        { name: 'SWIFT', price: '$45,15.00', color: '#904CBC', value: 20 },
+        { name: 'Crypto', price: '$90,30.00', color: '#6EC1E1', value: 30 },
+        { name: 'IBAN activ.', price: '$75,20.00', color: '#5926F0', value: 25 },
+        { name: 'Cards', price: '$85,22.00', color: '#EDEDED', value: 15 },
+        { name: 'Remittance', price: '$120,40.00', color: '#9FE870', value: 10 },
+    ];
 
     const donutOptions = {
         chart: {
             type: 'donut',
             fontFamily: 'Inter, sans-serif',
-            toolbar: { show: false },
         },
-        labels: VOLUME_BY_PRODUCT.map((i) => t(i.label)),
-        colors: VOLUME_BY_PRODUCT.map((i) => i.color),
+        labels: products.map((p) => p.name),
+        colors: products.map((p) => p.color),
         plotOptions: {
             pie: {
                 donut: {
-                    size: '72%',
-                    labels: {
-                        show: true,
-                        total: {
-                            show: true,
-                            label: t('Total Volume'),
-                            fontSize: '11px',
-                            color: '#9B9EAA',
-                            fontFamily: 'Inter, sans-serif',
-                            formatter: () => `${total}%`,
-                        },
-                        value: {
-                            fontSize: '18px',
-                            fontWeight: '700',
-                            color: '#242731',
-                            fontFamily: 'Inter, sans-serif',
-                        },
-                    },
+                    size: '70%',
                 },
             },
         },
         dataLabels: { enabled: false },
-        stroke: { width: 2, colors: ['#FFFFFF'] },
+        stroke: { show: false },
         legend: { show: false },
         tooltip: {
-            y: { formatter: (v) => `${v}%` },
+            y: { formatter: (val) => `${val}%` },
         },
     };
 
     return (
         <div className={styles.sectionCard}>
             <div className={styles.sectionHeader}>
-                <div className={styles.sectionHeaderLeft}>
-                    <p className={styles.sectionTitle}>{t('Volume by product')}</p>
-                </div>
-                <div className={styles.sectionHeaderRight}>
-                    <button className={styles.monthDropdownBtn}>
-                        <span>{t('This month')}</span>
-                        <ChevronDown size={14} color="#6B6584" />
-                    </button>
-                </div>
+                <h3 className={styles.sectionTitle}>{t('Volume by product')}</h3>
+                <button className={styles.dropdownBtn}>
+                    <span>{t('This month')}</span>
+                    <ChevronDown size={14} />
+                </button>
             </div>
-            <div className={styles.donutChartWrap}>
-                <div className={styles.chartContainer}>
+
+            <div className={styles.donutBody}>
+                <div className={styles.donutChartArea}>
                     <ReactApexChart
                         options={donutOptions}
-                        series={VOLUME_BY_PRODUCT.map((i) => i.value)}
+                        series={products.map((p) => p.value)}
                         type="donut"
-                        height={220}
-                        width="220"
+                        height={140}
+                        width={140}
                     />
                 </div>
-                <div className={styles.donutLegend}>
-                    {VOLUME_BY_PRODUCT.map((item) => (
-                        <div key={item.label} className={styles.donutLegendItem}>
-                            <div className={styles.donutLegendLeft}>
-                                <span className={styles.donutDot} style={{ background: item.color }} />
-                                <span className={styles.donutLegendLabel}>{t(item.label)}</span>
+
+                <div className={styles.productGrid}>
+                    {products.map((p) => (
+                        <div key={p.name} className={styles.productItem}>
+                            <div className={styles.productLeft}>
+                                <span className={styles.productDot} style={{ background: p.color }} />
+                                <span className={styles.productName}>{t(p.name)}</span>
                             </div>
-                            <span className={styles.donutLegendValue}>{item.value}%,00</span>
+                            <span className={styles.productPrice}>{p.price}</span>
                         </div>
                     ))}
                 </div>
@@ -260,90 +174,48 @@ export const VolumeByProductChart = () => {
     );
 };
 
-
-const getRankBadgeClass = (rank) => {
-    if (rank === 1) return styles.rankBadgeGold;
-    if (rank === 2) return styles.rankBadgeSilver;
-    if (rank === 3) return styles.rankBadgeBronze;
-    return styles.rankBadge;
-};
-
-const MAX_COMMISSION = Math.max(...SUB_AGENT_RANKING.map((a) =>
-    parseFloat(a.commission.replace(/[€,\s]/g, ''))
-));
-
+/* ─────────────────────────────────────────────────────────────
+   CARD 3: SUB-AGENT RANKING
+───────────────────────────────────────────────────────────── */
 const SubAgentRanking = () => {
     const { t } = useTranslation();
 
+    const subAgents = [
+        { name: 'TradeBridge Ltd', clients: 11, volume: '€500', avatarCls: styles.avatarPurple },
+        { name: 'Ibrahim Sow', clients: 9, volume: '$120', avatarCls: styles.avatarDeepPurple },
+        { name: 'Aïcha Ndiaye', clients: 3, volume: '€2,100', avatarCls: styles.avatarCyan },
+    ];
+
     return (
-        <div className={styles.sectionCard} style={{ width: '50%' }}>
+        <div className={styles.sectionCard}>
             <div className={styles.sectionHeader}>
-                <div className={styles.sectionHeaderLeft}>
-                    <p className={styles.sectionTitle}>{t('Sub-agent ranking')}</p>
-                </div>
+                <h3 className={styles.sectionTitleSub}>{t('Sub-agent ranking')}</h3>
             </div>
+
             <div className={styles.rankingTableWrap}>
                 <table className={styles.rankingTable}>
                     <thead>
                         <tr>
-                            <th>#</th>
-                            <th>{t('Agent')}</th>
-                            <th>{t('Clients')}</th>
-                            <th>{t('Commission')}</th>
+                            <th>{t('Sub-agent')}</th>
+                            <th>{t('Active clients')}</th>
                             <th>{t('Volume')}</th>
-                            <th>{t('Performance')}</th>
-                            <th>{t('Growth')}</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {SUB_AGENT_RANKING.map((agent) => {
-                            const commissionVal = parseFloat(agent.commission.replace(/[€,\s]/g, ''));
-                            const pct = Math.round((commissionVal / MAX_COMMISSION) * 100);
-                            return (
-                                <tr key={agent.rank}>
-                                    <td>
-                                        <span className={`${styles.rankBadge} ${getRankBadgeClass(agent.rank)}`}>
-                                            {agent.rank}
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <div className={styles.agentCell}>
-                                            <div className={`${styles.agentAvatar} ${styles[agent.avatarColor]}`}>
-                                                {agent.initials}
-                                            </div>
-                                            <span className={styles.agentName}>{agent.name}</span>
+                        {subAgents.map((agent, i) => (
+                            <tr key={i}>
+                                <td>
+                                    <div className={styles.agentCell}>
+                                        <div className={`${styles.agentAvatar} ${agent.avatarCls}`}>
+                                            SC
                                         </div>
-                                    </td>
-                                    <td>{agent.clients}</td>
-                                    <td className={styles.amountCell}>{agent.commission}</td>
-                                    <td>{agent.volume}</td>
-                                    <td>
-                                        <div className={styles.progressCell}>
-                                            <div className={styles.progressBar}>
-                                                <div
-                                                    className={styles.progressFill}
-                                                    style={{ width: `${pct}%` }}
-                                                />
-                                            </div>
-                                            <span className={styles.progressLabel}>{pct}%</span>
-                                        </div>
-                                    </td>
-                                    <td className={styles.tdCenter}>
-                                        {agent.trend === 'up' ? (
-                                            <span className={styles.trendUp}>
-                                                <TrendingUp size={12} />
-                                                {agent.growth}%
-                                            </span>
-                                        ) : (
-                                            <span className={styles.trendDown}>
-                                                <TrendingDown size={12} />
-                                                {Math.abs(agent.growth)}%
-                                            </span>
-                                        )}
-                                    </td>
-                                </tr>
-                            );
-                        })}
+                                        <span>{agent.name}</span>
+                                    </div>
+                                </td>
+                                <td>{agent.clients}</td>
+                                <td>{agent.volume}</td>
+                            </tr>
+                        ))}
                     </tbody>
                 </table>
             </div>
@@ -351,23 +223,74 @@ const SubAgentRanking = () => {
     );
 };
 
-
-
-
-
-
-export const CommissionStatements = () => {
+/* ─────────────────────────────────────────────────────────────
+   CARD 4: RISK DISTRIBUTION OF ONBOARDED CLIENTS
+───────────────────────────────────────────────────────────── */
+const RiskDistribution = () => {
     const { t } = useTranslation();
-    const [page, setPage] = useState(1);
-    const totalPages = 3;
+
+    const riskLevels = [
+        { label: 'Low', count: 68, pct: 68, badgeCls: styles.riskBadgeLow, fillCls: styles.bgGreen },
+        { label: 'Standard', count: 39, pct: 39, badgeCls: styles.riskBadgeStandard, fillCls: styles.bgPurple },
+        { label: 'Medium', count: 44, pct: 44, badgeCls: styles.riskBadgeMedium, fillCls: styles.bgYellow },
+        { label: 'High', count: 36, pct: 36, badgeCls: styles.riskBadgeHigh, fillCls: styles.bgRed },
+    ];
 
     return (
         <div className={styles.sectionCard}>
-            <div className={styles.statementsHeader}>
-                <div className={styles.sectionHeaderLeft}>
-                    <p className={styles.sectionTitle}>{t('Commission statements & exports')}</p>
-                </div>
+            <div className={styles.sectionHeader}>
+                <h3 className={styles.sectionTitleSub}>{t('Risk distribution of onboarded clients')}</h3>
+            </div>
 
+            <div className={styles.riskRows}>
+                {riskLevels.map((r) => (
+                    <div key={r.label} className={styles.riskRow}>
+                        <div className={styles.riskRowTop}>
+                            <span className={styles.riskLabel}>{t(r.label)}</span>
+                            <span className={`${styles.riskBadge} ${r.badgeCls}`}>{r.count}</span>
+                        </div>
+                        <div className={styles.riskBarTrack}>
+                            <div
+                                className={`${styles.riskBarFill} ${r.fillCls}`}
+                                style={{ width: `${r.pct}%` }}
+                            />
+                        </div>
+                    </div>
+                ))}
+            </div>
+        </div>
+    );
+};
+
+/* ─────────────────────────────────────────────────────────────
+   CARD 5: COMMISSION STATEMENTS & EXPORTS
+───────────────────────────────────────────────────────────── */
+const CommissionStatements = () => {
+    const { t } = useTranslation();
+
+    const statements = [
+        {
+            report: 'Monthly commission statement',
+            covers: 'Earned, pending, paid by product',
+        },
+        {
+            report: 'Payout report',
+            covers: 'Commission payouts & status',
+        },
+        {
+            report: 'Client activation report',
+            covers: 'Leads activated • conversion',
+        },
+        {
+            report: 'Sub-agent report',
+            covers: 'By sub-agent • volume & split',
+        },
+    ];
+
+    return (
+        <div className={styles.sectionCard}>
+            <div className={styles.sectionHeader}>
+                <h3 className={styles.sectionTitle}>{t('Commission statements & exports')}</h3>
             </div>
 
             <div className={styles.statementsTableWrap}>
@@ -375,37 +298,32 @@ export const CommissionStatements = () => {
                     <thead>
                         <tr>
                             <th>{t('REPORT / STATEMENT')}</th>
-                            <th>{t('DETAILS')}</th>
-                            <th>{t('ACTIONS')}</th>
+                            <th>{t('COVERS')}</th>
+                            <th style={{ textAlign: 'right' }}>{t('ACTIONS')}</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {COMMISSION_STATEMENTS.map((row) => (
-                            <tr key={row.id}>
+                        {statements.map((row, index) => (
+                            <tr key={index}>
+                                <td>{t(row.report)}</td>
+                                <td>{t(row.covers)}</td>
                                 <td>
-                                    <div className={styles.periodCell}>
-                                        <div className={styles.periodIcon}>
-                                            <FileText size={13} color="#5926F0" />
-                                        </div>
-                                        <div className={styles.periodText}>
-                                            <span className={styles.periodName}>{t(row.period)}</span>
-                                            <span className={styles.periodDate}>{row.date}</span>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>{t(row.details)}</td>
-                                <td>
-                                    <div className={styles.actionCell}>
-                                        <button className={styles.iconBtn1} title={t('Generate')}>
-                                            {t("Generate")}
+                                    <div className={styles.actionGroup}>
+                                        <button className={styles.btnGenerate}>
+                                            <RefreshCw size={12} />
+                                            <span>{t('Generate')}</span>
+                                            <ChevronRight size={12} />
                                         </button>
-                                        <button className={styles.iconBtn} title={t('View')}>
-                                            {t("PDF")}
+                                        <button className={styles.btnFormat}>
+                                            <RefreshCw size={12} />
+                                            <span>{t('PDF')}</span>
+                                            <ChevronRight size={12} />
                                         </button>
-                                        <button className={styles.iconBtn} title={t('View')}>
-                                            {t("CSV")}
+                                        <button className={styles.btnFormat}>
+                                            <RefreshCw size={12} />
+                                            <span>{t('CSV')}</span>
+                                            <ChevronRight size={12} />
                                         </button>
-
                                     </div>
                                 </td>
                             </tr>
@@ -413,69 +331,45 @@ export const CommissionStatements = () => {
                     </tbody>
                 </table>
             </div>
-
-            <div className={styles.paginationRow}>
-                <span className={styles.paginationInfo}>
-                    {t('Showing')} 1–4 {t('of')} 18 {t('entries')}
-                </span>
-                <div className={styles.paginationPages}>
-                    <button
-                        className={styles.pageBtn}
-                        onClick={() => setPage(Math.max(1, page - 1))}
-                        disabled={page === 1}
-                    >
-                        ‹
-                    </button>
-                    {[1, 2, 3].map((p) => (
-                        <button
-                            key={p}
-                            className={`${styles.pageBtn} ${page === p ? styles.pageBtnActive : ''}`}
-                            onClick={() => setPage(p)}
-                        >
-                            {p}
-                        </button>
-                    ))}
-                    <button
-                        className={styles.pageBtn}
-                        onClick={() => setPage(Math.min(totalPages, page + 1))}
-                        disabled={page === totalPages}
-                    >
-                        ›
-                    </button>
-                </div>
-            </div>
         </div>
     );
 };
 
-
+/* ─────────────────────────────────────────────────────────────
+   MAIN REPORTS COMPONENT
+───────────────────────────────────────────────────────────── */
 const Reports = () => {
     const { t } = useTranslation();
     const width = useWindowWidth();
 
     return (
         <div className={styles.container}>
+            {/* EXISTING HEADER — UNTOUCHED */}
             <div className={styles.top}>
                 <div className={styles.headerTitle}>
-                    <h1>{t('Reports & Analytics')}</h1>
-                    <p>{t('Your funnel, revenue, product mix and sub-agent ranking.')}</p>
+                    <h1>{t("Reports & Analytics")}</h1>
+                    <p>{t("Your funnel, revenue, product mix and sub-agent ranking.")}</p>
                 </div>
                 <div className={styles.topright}>
                     {width > 1000 && <TopRight />}
                 </div>
             </div>
 
+            {/* CONTENT BELOW HEADER MATCHING FIGMA NODE 12201-40162 */}
             <div className={styles.main}>
-                <div className={styles.chartsRow}>
+                {/* TOP GRID: Bar Chart + Volume Donut */}
+                <div className={styles.topGrid}>
                     <CommissionEarnedChart />
                     <VolumeByProductChart />
                 </div>
 
-                <div className={styles.bottomRow}>
+                {/* MIDDLE GRID: Sub-agent Ranking + Risk Distribution */}
+                <div className={styles.middleGrid}>
                     <SubAgentRanking />
                     <RiskDistribution />
                 </div>
 
+                {/* BOTTOM: Commission Statements & Exports */}
                 <CommissionStatements />
             </div>
         </div>
