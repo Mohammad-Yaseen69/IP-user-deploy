@@ -132,19 +132,32 @@ const StatementModal = ({ isOpen, toggle, selectedIban }) => {
 
         try {
             const res = await apiWrapper({
-                endpoint: `/api/virtual-iban/transactions?iban_id=${ibanId}&limit=10000`,
+                endpoint: `/api/virtual-iban/transactions?iban_id=${ibanId}`,
                 method: "GET",
-            })
 
+            })
+            console.log(res, "res")
             let rawList = []
             if (Array.isArray(res)) rawList = res
             else if (res && res.data && Array.isArray(res.data)) rawList = res.data
             else if (res && Array.isArray(res.items)) rawList = res.items
-
-            // Filter transactions by date range
             const filteredTransactions = rawList.filter((tx) => {
-                const txDate = new Date(tx?.createdAt || tx?.date)
-                return txDate >= startDate && txDate <= endDate
+                const rawDate = tx?.createdAt || tx?.date
+                const txDate = new Date(rawDate)
+
+                console.log("CHECKING TRANSACTION:", {
+                    id: tx?._id,
+                    rawDate,
+                    txDate,
+                    startDate,
+                    endDate,
+                    isValidDate: !isNaN(txDate.getTime()),
+                    isInRange: txDate >= startDate && txDate <= endDate,
+                })
+
+                return !isNaN(txDate.getTime()) &&
+                    txDate >= startDate &&
+                    txDate <= endDate
             })
 
             if (filteredTransactions.length === 0) {
@@ -216,12 +229,27 @@ const StatementModal = ({ isOpen, toggle, selectedIban }) => {
                             "Recipient / Description",
                             "Type",
                             "Amount",
+                            "Fee",
+                            "Total Amount",
                             "Status",
                         ],
                     ],
                     body: filteredTransactions.map((item) => {
                         const isDebit = (item?.transaction_type ?? "")?.toLowerCase() === "debit"
-                        const amtStr = `${isDebit ? "-" : "+"}${item?.amount ? Number(item.amount).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : "0.00"} ${item?.currency || "EUR"}`
+                        const currency = item?.currency || "EUR"
+
+                        const amtStr = `${isDebit ? "-" : "+"}${item?.amount ? Number(item.amount).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : "0.00"} ${currency}`
+
+                        const feeStr = `${Number(item?.fee ?? 0).toLocaleString("en-US", {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2
+                        })} ${currency}`
+
+                        const totalStr = `${Number(item?.total ?? 0).toLocaleString("en-US", {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2
+                        })} ${currency}`
+
                         return [
                             new Date(item?.createdAt || item?.date)?.toLocaleString(),
                             item?.reference_id || item?.external_reference || item?._id || "N/A",
@@ -229,6 +257,8 @@ const StatementModal = ({ isOpen, toggle, selectedIban }) => {
                             renderRecipientName(item),
                             (item?.transaction_type || "TRANSFER").toUpperCase(),
                             amtStr,
+                            feeStr,
+                            totalStr,
                             (item?.status || "COMPLETED").toUpperCase(),
                         ]
                     }),
@@ -245,7 +275,7 @@ const StatementModal = ({ isOpen, toggle, selectedIban }) => {
                 doc.save(`IBAN_Statement_${cleanIban}_${startDate.toISOString().split('T')[0]}_to_${endDate.toISOString().split('T')[0]}.pdf`)
                 toast.success(t("Statement downloaded successfully!"))
             } else {
-                await exportToExcel(filteredTransactions, userDetails, () => {}, false)
+                await exportToExcel(filteredTransactions, userDetails, () => { }, false)
                 toast.success(t("CSV Statement exported successfully!"))
             }
 

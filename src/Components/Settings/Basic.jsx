@@ -922,6 +922,44 @@ const Basic = ({ setCurrentTab }) => {
                             && <span style={{ color: "red" }}>{t("(Required)")}</span>}</Label>
                         <CitiesDropDown country={country === "Cabo Verde" ? "Cape Verde" : country} setUserCity={setCity} userCity={city} disabled={!isEditMode || isVerified || (country === 'USA' && !stateCode)} iso_3={country} stateCode={stateCode} requireState={country === 'USA'} />
                     </FormGroup>
+                    {country === "USA" && (
+                        <FormGroup style={{ position: "relative" }}>
+                            {!state && (
+                                <div
+                                    style={{
+                                        height: "9px",
+                                        width: "9px",
+                                        borderRadius: "9px",
+                                        background: "red",
+                                        position: "absolute",
+                                        bottom: "20px",
+                                        right: "-17px"
+                                    }}
+                                ></div>
+                            )}
+
+                            <Label>
+                                {t("State")}
+                                {!state && (
+                                    <span style={{ color: "red" }}>
+                                        {t("(Required)")}
+                                    </span>
+                                )}
+                            </Label>
+
+                            <Input
+                                type="select"
+                                disabled={!isEditMode || isVerified}
+                                value={state}
+                                onChange={(e) => setState(e.target.value)}
+                            >
+                                <option value="">{isStatesLoading ? t("Loading...") : t("--Select-State--")}</option>
+                                {states.map((item) => (
+                                    <option key={item.value} value={item.value}>{item.label}</option>
+                                ))}
+                            </Input>
+                        </FormGroup>
+                    )}
                     <FormGroup style={{ position: "relative" }}>
                         {
                             !timezone

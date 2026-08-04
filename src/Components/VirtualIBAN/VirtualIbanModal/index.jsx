@@ -128,7 +128,7 @@ const VirtualIbanModal = ({
     const [pendingTransactionRef, setPendingTransactionRef] = useState("")
     const [isResumedPending, setIsResumedPending] = useState(false)
     const navigate = useNavigate()
-
+    const [walletFeeFxMap, setWalletFeeFxMap] = useState({})
     const [saveCard, setSaveCard] = useState(false)
     const [cards, setCards] = useState([])
     const [selectedSaveCard, setSelectedSaveCard] = useState({})
@@ -447,7 +447,44 @@ const VirtualIbanModal = ({
         }),
         [jurisdiction, feesAccepted, paymentType, walletState, selectedSaveCard, cardDetail, cardNumberError, isKycApproved, shouldSkipPaymentStep]
     )
+    useEffect(() => {
+        if (shouldSkipPaymentStep || paymentType !== "wallet") return
+        if (!filteredWallets?.length) return
 
+        let isActive = true
+
+        const uniqueCurrencies = Array.from(
+            new Set(filteredWallets.map((w) => getWalletCurrencyCode(w)).filter(Boolean))
+        )
+
+        const computeAll = async () => {
+            const entries = await Promise.all(
+                uniqueCurrencies.map(async (currencyCode) => {
+                    if (currencyCode === activationFee.currency) {
+                        return [currencyCode, activationFee.amount]
+                    }
+                    try {
+                        const converted = parseAmount(
+                            await getPlainExchangeRate(activationFee.currency, currencyCode, activationFee.amount)
+                        )
+                        return [currencyCode, converted || null]
+                    } catch {
+                        return [currencyCode, null]
+                    }
+                })
+            )
+
+            if (isActive) {
+                setWalletFeeFxMap(Object.fromEntries(entries))
+            }
+        }
+
+        computeAll()
+
+        return () => {
+            isActive = false
+        }
+    }, [activationFee.amount, activationFee.currency, filteredWallets, getPlainExchangeRate, paymentType, shouldSkipPaymentStep])
     const sidebarSteps = useMemo(
         () => getSidebarSteps(machineData),
         [machineData]
@@ -722,14 +759,13 @@ const VirtualIbanModal = ({
                         hideButtons={true}
                         getWalletIsSufficient={(wallet) => {
                             const walletCurrency = getWalletCurrencyCode(wallet)
-                            const feeAmount =
-                                walletCurrency === activationFeeFx.currency
-                                    ? activationFeeFx.amount
-                                    : walletCurrency === activationFee.currency
-                                        ? activationFee.amount
-                                        : activationFeeFx.amount
+                            const feeAmount = walletCurrency === activationFee.currency
+                                ? activationFee.amount
+                                : walletFeeFxMap[walletCurrency]
 
-                            return !!feeAmount && getWalletAvailableBalance(wallet) >= parseAmount(feeAmount)
+                            if (feeAmount == null) return false
+
+                            return getWalletAvailableBalance(wallet) >= parseAmount(feeAmount)
                         }}
                         marginTop="1rem"
                     />

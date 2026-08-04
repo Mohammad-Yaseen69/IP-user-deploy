@@ -76,7 +76,7 @@ const Login = ({ country, setIsLoginForm, }) => {
     const [pendingLoginData, setPendingLoginData] = useState(null)
     const [capturedSecurityData, setCapturedSecurityData] = useState(null)
     const [isDataLoaded, setIsDataLoaded] = useState(false);
-
+    const [otpDeliveryInfo, setOtpDeliveryInfo] = useState({})
 
     const normalizeCredential = (value) => (value ?? "").toString().trim().toLowerCase();
     const getResolvedCredential = () => {
@@ -260,7 +260,7 @@ const Login = ({ country, setIsLoginForm, }) => {
                 email: credential,
                 password,
                 authenticator: isAuth,
-                platform: (isInsta && !isInstagramBrowser) ? "instagram" : isWp ? "whatsapp" : isEmailOtp ? "email" : "email",
+                platform: (isInsta && !isInstagramBrowser) ? "instagram" : isWp ? "whatsapp" : isEmailOtp ? "email" : "sms",
                 first_time: isFirstTime || firstTime,
                 ...(restoreAccount && { restoreAccount: true })
             }
@@ -272,7 +272,7 @@ const Login = ({ country, setIsLoginForm, }) => {
                 first_time: isFirstTime || firstTime,
                 ...(restoreAccount && { restoreAccount: true })
             };
-        console.log("payload of the data :", credentials)
+        // console.log("payload of the data :", credentials)
         const encrypted = encryptData(credentials)
         axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/account/send-login-otp`, {
             data: encrypted
@@ -289,6 +289,8 @@ const Login = ({ country, setIsLoginForm, }) => {
                     setMethodLoading(false)
                     return
                 }
+                // console.log("FULL LOGIN RESPONSE:", decrypted)
+                setOtpDeliveryInfo({ email: decrypted?.email, phone: decrypted?.phone })
                 setMethods(prevMethods => prevMethods.map(method => {
                     switch (method.attr) {
                         case 'auth':
@@ -988,21 +990,23 @@ const Login = ({ country, setIsLoginForm, }) => {
 
 
     const getOtpLabel = () => {
-        const credential = getResolvedCredential();
-        const maskedEmail = `${credential.slice(0, credential.length - 4).split("").map(() => "*").join("")}${credential.slice(credential.length - 4)}`;
+        const maskValue = (value) => {
+            const str = String(value ?? "")
+            if (!str) return ""
+            if (str.length <= 4) return str.replace(/./g, "*")
+            return `${str.slice(0, str.length - 4).replace(/./g, "*")}${str.slice(-4)}`
+        }
 
-        const maskedPhone = isEmail.test(credential)
-            ? `${credential.slice(0, 4).split("").map(_ => "*").join("")}${credential.slice(4)}`
-            : maskedEmail;
-
-        const service = credential.slice(0, 3) === "971" ? "Whatsapp" : "SMS";
+        const maskedEmail = maskValue(otpDeliveryInfo.email)
+        const maskedPhone = maskValue(otpDeliveryInfo.phone)
+        const service = String(otpDeliveryInfo.phone ?? "").slice(0, 3) === "971" ? "Whatsapp" : "SMS"
 
         switch (currentOtpMethod) {
-            case "auth": return t("Google Authenticator Code");
-            case "insta": return t("Enter the code sent to your Instagram Account");
-            case "wp": return t("Enter the code sent to your Whatsapp on {{phone}}", { phone: `\u200E${maskedEmail}\u200E` });
-            case "email": return t("Enter the code sent to your email");
-            default: return t("Enter the code sent to {{phone}} via {{service}}", { phone: `\u200E${maskedPhone}\u200E`, service });
+            case "auth": return t("Google Authenticator Code")
+            case "insta": return t("Enter the code sent to your Instagram Account")
+            case "wp": return t("Enter the code sent to your Whatsapp on {{phone}}", { phone: `\u200E${maskedPhone}\u200E` })
+            case "email": return t("Enter the code sent to {{email}} via Email", { email: `\u200E${maskedEmail}\u200E` })
+            default: return t("Enter the code sent to {{phone}} via {{service}}", { phone: `\u200E${maskedPhone}\u200E`, service })
         }
     };
     const resolvedCredential = getResolvedCredential();

@@ -1,7 +1,63 @@
 import { Alert, Checkbox } from "@mui/material"
-import { Activity, ArrowDownCircle, ArrowLeft, ArrowUpCircle, CreditCard, DollarSign, RefreshCw, Repeat, TrendingUp } from "react-feather"
+import { useContext, useEffect, useState } from "react"
+import { Activity, ArrowDownCircle, ArrowLeft, ArrowUpCircle, DollarSign, RefreshCw, Repeat, TrendingUp } from "react-feather"
+import axios from "axios"
 import styles from "../style/Pricing.module.css"
+import { UserContext } from "../../../../Context/UserContext"
+import { decryptData } from "../../../../Helper/EssentilaMethods/Decryption"
+
+const ICON_MAP = {
+    opening_fee: DollarSign,
+    iban_activation: DollarSign,
+    monthly_iban_fee: Repeat,
+    sepa_inward: ArrowDownCircle,
+    sepa_outward: ArrowUpCircle,
+    swift_inward: ArrowDownCircle,
+    swift_outward: ArrowUpCircle,
+    crypto_ramp: RefreshCw,
+    fx_margin: TrendingUp,
+}
+
 const Pricing = ({ onBack, t, onNext }) => {
+    const { authHeader } = useContext(UserContext)
+    const [feeSchedule, setFeeSchedule] = useState([])
+    const [packName, setPackName] = useState("")
+    const [loading, setLoading] = useState(true)
+    const [acceptedTerms, setAcceptedTerms] = useState(false)
+
+    useEffect(() => {
+        const fetchModel = async () => {
+            try {
+                const res = await axios.get(
+                    `${import.meta.env.VITE_IP_DEV_API}/api/iban-fees/get-payment-model`,
+                    { headers: authHeader }
+                )
+                const dec = decryptData(res.data?.data)
+                if (dec?.data) {
+                    setFeeSchedule(dec.data.fee_schedule || [])
+                    setPackName(dec.data.name || "")
+                }
+            } catch {
+            } finally {
+                setLoading(false)
+            }
+        }
+        fetchModel()
+    }, [])
+
+    const getIcon = (id) => {
+        const Icon = ICON_MAP[id] || Activity
+        return <Icon size={15} />
+    }
+
+    const formatFee = (item) => {
+        const parts = []
+        if (item.flatEuro > 0) parts.push(`€${item.flatEuro} flat`)
+        if (item.percentAmount > 0) parts.push(`${item.percentAmount}%`)
+        if (parts.length === 0) return "Free"
+        return parts.join(" + ")
+    }
+
     return (
         <div className={styles.onboardingLayout}>
             <div className={styles.mainArea}>
@@ -29,101 +85,31 @@ const Pricing = ({ onBack, t, onNext }) => {
                             </div>
 
                             <div>
-                                <h4>Growth Pack</h4>
+                                <h4>{loading ? "Loading..." : (packName || "Growth Pack")}</h4>
                                 <p>We'll verify, update after your compliance review.</p>
                             </div>
                         </div>
                         <div className={styles.planCard}>
                             <div className={styles.pricingGrid}>
-                                <div className={styles.item}>
-                                    <div className={styles.left}>
-                                        <DollarSign size={15} />
-                                        <span>IBAN activation</span>
+                                {loading ? (
+                                    <div className={styles.item}>
+                                        <span>Loading pricing details...</span>
                                     </div>
-
-                                    <strong>€500 one-off</strong>
-                                </div>
-
-                                <div className={styles.item}>
-                                    <div className={styles.left}>
-                                        <RefreshCw size={15} />
-                                        <span>PAI monthly fee</span>
+                                ) : feeSchedule.length > 0 ? (
+                                    feeSchedule.map((item) => (
+                                        <div className={styles.item} key={item.id}>
+                                            <div className={styles.left}>
+                                                {getIcon(item.id)}
+                                                <span>{item.name}</span>
+                                            </div>
+                                            <strong>{formatFee(item)}</strong>
+                                        </div>
+                                    ))
+                                ) : (
+                                    <div className={styles.item}>
+                                        <span>No pricing model assigned yet</span>
                                     </div>
-
-                                    <strong>€120</strong>
-                                </div>
-
-                                <div className={styles.item}>
-                                    <div className={styles.left}>
-                                        <ArrowDownCircle size={15} />
-                                        <span>SEPA inward</span>
-                                    </div>
-
-                                    <strong>0.3%</strong>
-                                </div>
-
-                                <div className={styles.item}>
-                                    <div className={styles.left}>
-                                        <ArrowUpCircle size={15} />
-                                        <span>SEPA outward</span>
-                                    </div>
-
-                                    <strong>0.35%</strong>
-                                </div>
-
-                                <div className={styles.item}>
-                                    <div className={styles.left}>
-                                        <Repeat size={15} />
-                                        <span>SWIFT inward</span>
-                                    </div>
-
-                                    <strong>0.8%</strong>
-                                </div>
-
-                                <div className={styles.item}>
-                                    <div className={styles.left}>
-                                        <Repeat size={15} />
-                                        <span>SWIFT outward</span>
-                                    </div>
-
-                                    <strong>0.8%</strong>
-                                </div>
-
-                                <div className={styles.item}>
-                                    <div className={styles.left}>
-                                        <Activity size={15} />
-                                        <span>Crypto on/off-ramp</span>
-                                    </div>
-
-                                    <strong>0.85%</strong>
-                                </div>
-
-                                <div className={styles.item}>
-                                    <div className={styles.left}>
-                                        <CreditCard size={15} />
-                                        <span>Card issuance</span>
-                                    </div>
-
-                                    <strong>€15 / card</strong>
-                                </div>
-
-                                <div className={styles.item}>
-                                    <div className={styles.left}>
-                                        <CreditCard size={15} />
-                                        <span>Card top-up</span>
-                                    </div>
-
-                                    <strong>0.5%</strong>
-                                </div>
-
-                                <div className={styles.item}>
-                                    <div className={styles.left}>
-                                        <TrendingUp size={15} />
-                                        <span>FX margin</span>
-                                    </div>
-
-                                    <strong>0.35%</strong>
-                                </div>
+                                )}
                             </div>
                         </div>
 
@@ -135,7 +121,10 @@ const Pricing = ({ onBack, t, onNext }) => {
 
 
                         <div className={styles.term}>
-                            <Checkbox />
+                            <Checkbox
+                                checked={acceptedTerms}
+                                onChange={(e) => setAcceptedTerms(e.target.checked)}
+                            />
                             <p>{t(
                                 "I accept this pricing and InstaPay's terms of service."
                             )}</p>
@@ -149,7 +138,12 @@ const Pricing = ({ onBack, t, onNext }) => {
                     <ArrowLeft size={16} />
                     {t("Back")}
                 </button>
-                <button onClick={onNext} className={styles.continueButton}>
+                <button
+                    onClick={onNext}
+                    disabled={!acceptedTerms}
+                    className={styles.continueButton}
+                    style={{ opacity: !acceptedTerms ? 0.5 : 1, cursor: !acceptedTerms ? 'not-allowed' : 'pointer' }}
+                >
                     {t("Request IBAN activation")}
                 </button>
             </div>
