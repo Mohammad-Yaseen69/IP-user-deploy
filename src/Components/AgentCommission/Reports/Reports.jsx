@@ -1,19 +1,15 @@
-import React, { useState } from 'react';
 import ReactApexChart from 'react-apexcharts';
-import useWindowWidth from '../../../utils/useWindowWidth';
-import { useTranslation } from 'react-i18next';
-import styles from '../styles/reports.module.css';
-import TopRight from '../../topRight';
 import {
+    CheckCircle,
     ChevronDown,
     ChevronRight,
-    RefreshCw,
-    CheckCircle
+    RefreshCw
 } from 'react-feather';
+import { useTranslation } from 'react-i18next';
+import useWindowWidth from '../../../utils/useWindowWidth';
+import TopRight from '../../topRight';
+import styles from '../styles/reports.module.css';
 
-/* ─────────────────────────────────────────────────────────────
-   CARD 1: COMMISSION EARNED BAR CHART
-───────────────────────────────────────────────────────────── */
 const CommissionEarnedChart = () => {
     const { t } = useTranslation();
 
@@ -101,9 +97,6 @@ const CommissionEarnedChart = () => {
     );
 };
 
-/* ─────────────────────────────────────────────────────────────
-   CARD 2: VOLUME BY PRODUCT
-───────────────────────────────────────────────────────────── */
 const VolumeByProductChart = () => {
     const { t } = useTranslation();
 
@@ -174,9 +167,6 @@ const VolumeByProductChart = () => {
     );
 };
 
-/* ─────────────────────────────────────────────────────────────
-   CARD 3: SUB-AGENT RANKING
-───────────────────────────────────────────────────────────── */
 const SubAgentRanking = () => {
     const { t } = useTranslation();
 
@@ -223,9 +213,7 @@ const SubAgentRanking = () => {
     );
 };
 
-/* ─────────────────────────────────────────────────────────────
-   CARD 4: RISK DISTRIBUTION OF ONBOARDED CLIENTS
-───────────────────────────────────────────────────────────── */
+
 const RiskDistribution = () => {
     const { t } = useTranslation();
 
@@ -262,9 +250,7 @@ const RiskDistribution = () => {
     );
 };
 
-/* ─────────────────────────────────────────────────────────────
-   CARD 5: COMMISSION STATEMENTS & EXPORTS
-───────────────────────────────────────────────────────────── */
+
 const CommissionStatements = () => {
     const { t } = useTranslation();
 
@@ -335,16 +321,12 @@ const CommissionStatements = () => {
     );
 };
 
-/* ─────────────────────────────────────────────────────────────
-   MAIN REPORTS COMPONENT
-───────────────────────────────────────────────────────────── */
 const Reports = () => {
     const { t } = useTranslation();
     const width = useWindowWidth();
 
     return (
         <div className={styles.container}>
-            {/* EXISTING HEADER — UNTOUCHED */}
             <div className={styles.top}>
                 <div className={styles.headerTitle}>
                     <h1>{t("Reports & Analytics")}</h1>
@@ -355,21 +337,17 @@ const Reports = () => {
                 </div>
             </div>
 
-            {/* CONTENT BELOW HEADER MATCHING FIGMA NODE 12201-40162 */}
             <div className={styles.main}>
-                {/* TOP GRID: Bar Chart + Volume Donut */}
                 <div className={styles.topGrid}>
                     <CommissionEarnedChart />
                     <VolumeByProductChart />
                 </div>
 
-                {/* MIDDLE GRID: Sub-agent Ranking + Risk Distribution */}
                 <div className={styles.middleGrid}>
                     <SubAgentRanking />
                     <RiskDistribution />
                 </div>
 
-                {/* BOTTOM: Commission Statements & Exports */}
                 <CommissionStatements />
             </div>
         </div>

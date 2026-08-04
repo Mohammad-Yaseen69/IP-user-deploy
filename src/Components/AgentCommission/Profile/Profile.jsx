@@ -1,18 +1,18 @@
-import React, { useState } from 'react';
-import useWindowWidth from '../../../utils/useWindowWidth';
-import { useTranslation } from 'react-i18next';
-import styles from '../styles/profile.module.css';
-import TopRight from '../../topRight';
+import { useState } from 'react';
 import {
     Briefcase,
-    Users,
-    CreditCard,
-    Sliders,
-    Globe,
     CheckCircle,
+    CreditCard,
     Edit2,
-    Info
+    Globe,
+    Info,
+    Sliders,
+    Users
 } from 'react-feather';
+import { useTranslation } from 'react-i18next';
+import useWindowWidth from '../../../utils/useWindowWidth';
+import TopRight from '../../topRight';
+import styles from '../styles/profile.module.css';
 
 const Profile = () => {
     const { t } = useTranslation();

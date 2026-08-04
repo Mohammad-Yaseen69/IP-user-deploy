@@ -1,9 +1,8 @@
-import React from 'react';
-import useWindowWidth from '../../../utils/useWindowWidth';
-import { useTranslation } from 'react-i18next';
-import styles from '../styles/clients.module.css';
-import TopRight from '../../topRight';
 import { Search } from 'react-feather';
+import { useTranslation } from 'react-i18next';
+import useWindowWidth from '../../../utils/useWindowWidth';
+import TopRight from '../../topRight';
+import styles from '../styles/clients.module.css';
 
 const Clients = () => {
     const { t } = useTranslation();

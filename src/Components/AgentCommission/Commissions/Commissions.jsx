@@ -1,11 +1,11 @@
-import { useContext, useState, useEffect, useMemo } from 'react';
+import axios from 'axios';
+import { useContext, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { UserContext } from '../../../Context/UserContext';
+import { decryptData } from '../../../Helper/EssentilaMethods/Decryption';
 import useWindowWidth from '../../../utils/useWindowWidth';
 import TopRight from '../../topRight';
 import styles from '../styles/commissions.module.css';
-import { UserContext } from '../../../Context/UserContext';
-import axios from 'axios';
-import { decryptData } from '../../../Helper/EssentilaMethods/Decryption';
 
 import {
     BarChart,
@@ -103,7 +103,6 @@ const Commissions = () => {
     return (
         <div className={styles.container}>
 
-            {/* Header */}
             <div className={styles.top}>
                 <div className={styles.headerTitle}>
                     <h1>{t('Commissions Ledger')}</h1>

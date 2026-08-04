@@ -1,6 +1,5 @@
 import { useTranslation } from 'react-i18next';
 import styles from '../styles/RiskDistribution.module.css';
-import ReactApexChart from 'react-apexcharts';
 
 const RISK_DISTRIBUTION = [
     { label: 'Low Risk', count: 142, color: '#10B981' },
