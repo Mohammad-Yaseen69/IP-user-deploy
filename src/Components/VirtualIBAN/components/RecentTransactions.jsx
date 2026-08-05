@@ -1,11 +1,10 @@
-import { useState, useEffect, useRef } from "react";
-import { ArrowUp, Filter, Search, ChevronDown, Download } from "react-feather";
-import styles from "../styles/RecentTransactions.module.css";
+import { Button, Divider, ListItemText, Menu, MenuItem } from '@mui/material';
+import { useEffect, useRef, useState } from "react";
+import { ChevronDown, Download, Filter, Search } from "react-feather";
 import { useTranslation } from 'react-i18next';
 import Paginations from '../../../Common/Component/Paginations';
-import { Button, Menu, MenuItem, Divider, ListItemText } from '@mui/material';
 import StatementModal from "../StatementModal";
-import Empty from "./Empty";
+import styles from "../styles/RecentTransactions.module.css";
 
 const statusColors = {
   COMPLETED: { bg: "rgba(34,197,94,0.1)", color: "#16a34a" },
@@ -202,7 +201,7 @@ const RecentTransactions = ({
                 <Divider />
                 {["INITIATED", "PROCESSING", "COMPLETED", "FAILED"].map((s) => (
                   <MenuItem key={s} onClick={() => { setStatusFilter(s); setPage(1); setAnchorFilter(null); }}>
-                    {s}
+                    {t(s)}
                   </MenuItem>
                 ))}
               </Menu>

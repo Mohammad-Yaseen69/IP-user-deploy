@@ -55,9 +55,7 @@ const MoveMoney = () => {
         <div className={styles.container}>
             <div className={styles.top}>
                 <div className={styles.headerTitle}>
-                    <div className={styles.titleWithBack}>
-                        <h1>{t("Move money")}</h1>
-                    </div>
+                    <h1>{t("Move money")}</h1>
                     <p>{t("Choose how to pay, get paid and manage your balances — pick one to begin.")}</p>
                 </div>
                 <div className={styles.topright}>
