@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from 'react';
 import {
+    Checkbox,
     Dialog,
     DialogContent,
-    TextField,
+    FormControlLabel,
     MenuItem,
-    Checkbox,
-    FormControlLabel
+    TextField
 } from '@mui/material';
-import { X, ArrowRight, CheckCircle, ChevronDown } from 'react-feather';
+import { useEffect, useState } from 'react';
+import { ArrowRight, CheckCircle, ChevronDown, X } from 'react-feather';
 import { useTranslation } from 'react-i18next';
 import styles from '../styles/leadModal.module.css';
 
@@ -93,7 +93,6 @@ const LeadModal = ({ open, onClose, onSubmit, initialEntityType = 'corporate' })
             }}
         >
             <DialogContent className={styles.modalContent}>
-                {/* Header */}
                 <div className={styles.header}>
                     <h2 className={styles.title}>{t('Submit new lead')}</h2>
                     <button onClick={onClose} className={styles.closeBtn} type="button">
@@ -101,7 +100,6 @@ const LeadModal = ({ open, onClose, onSubmit, initialEntityType = 'corporate' })
                     </button>
                 </div>
 
-                {/* Entity Type Toggle Tabs */}
                 <div className={styles.entityToggleContainer}>
                     <div
                         onClick={() => setEntityType('individual')}
@@ -124,9 +122,7 @@ const LeadModal = ({ open, onClose, onSubmit, initialEntityType = 'corporate' })
                     </div>
                 </div>
 
-                {/* Form Fields */}
                 <form onSubmit={handleSubmit} className={styles.form}>
-                    {/* Name */}
                     <div className={styles.fieldGroup}>
                         <label className={styles.fieldLabel}>{t('Name')}</label>
                         <TextField
@@ -143,7 +139,6 @@ const LeadModal = ({ open, onClose, onSubmit, initialEntityType = 'corporate' })
                         </div>
                     </div>
 
-                    {/* Region */}
                     <div className={styles.fieldGroup}>
                         <label className={styles.fieldLabel}>{t('Region')}</label>
                         <TextField
@@ -176,7 +171,6 @@ const LeadModal = ({ open, onClose, onSubmit, initialEntityType = 'corporate' })
                         </div>
                     </div>
 
-                    {/* Country */}
                     <div className={styles.fieldGroup}>
                         <label className={styles.fieldLabel}>{t('Country')}</label>
                         <TextField
@@ -214,7 +208,6 @@ const LeadModal = ({ open, onClose, onSubmit, initialEntityType = 'corporate' })
                         </div>
                     </div>
 
-                    {/* Commodity */}
                     <div className={styles.fieldGroup}>
                         <label className={styles.fieldLabel}>{t('Commodity')}</label>
                         <TextField
@@ -247,7 +240,6 @@ const LeadModal = ({ open, onClose, onSubmit, initialEntityType = 'corporate' })
                         </div>
                     </div>
 
-                    {/* Client contact email */}
                     <div className={styles.fieldGroup}>
                         <label className={styles.fieldLabel}>{t('Client contact email')}</label>
                         <TextField
@@ -265,14 +257,12 @@ const LeadModal = ({ open, onClose, onSubmit, initialEntityType = 'corporate' })
                         </div>
                     </div>
 
-                    {/* Info Notice Box */}
                     <div className={styles.infoNoticeBox}>
                         <p className={styles.infoNoticeText}>
                             {t("You submit the introduction only. Your client receives a secure link to complete their own KYC/KYB e-form — you don't collect or handle their documents. You can then track their onboarding status and any compliance request here.")}
                         </p>
                     </div>
 
-                    {/* Checkbox Box Container */}
                     <div className={styles.checkboxRow}>
                         <FormControlLabel
                             className={styles.checkboxControl}
@@ -296,7 +286,6 @@ const LeadModal = ({ open, onClose, onSubmit, initialEntityType = 'corporate' })
                         />
                     </div>
 
-                    {/* Submit Button */}
                     <button type="submit" className={styles.submitBtn}>
                         {t('Submit lead & invite')}
                         <ArrowRight size={18} />

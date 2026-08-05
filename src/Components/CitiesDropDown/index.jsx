@@ -6,12 +6,15 @@ import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { decryptData } from '../../Helper/EssentilaMethods/Decryption';
 
-const getCities = async (iso2) => {
-    const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/country/get-cities/${iso2}`);
+const getCities = async (iso2, stateCode) => {
+    const stateQuery = iso2 === 'US' && stateCode
+        ? `?state=${encodeURIComponent(stateCode)}`
+        : ''
+    const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/country/get-cities/${iso2}${stateQuery}`);
     return decryptData(res.data.data)?.data;
 }
 
-const CitiesDropDown = ({ userCity, setUserCity, disabled = false, iso_3 = "", isState, title = "Select City", stateData, background = "#fff", }) => {
+const CitiesDropDown = ({ userCity, setUserCity, disabled = false, iso_3 = "", isState, title = "Select City", stateData, stateCode = "", requireState = false, background = "#fff", }) => {
     const { t } = useTranslation()
     const [isOpen, setIsOpen] = useState(false);
     const cityInputRef = useRef()
@@ -19,13 +22,14 @@ const CitiesDropDown = ({ userCity, setUserCity, disabled = false, iso_3 = "", i
     const iso2Value = useMemo(() => {
         return iso2[iso_3?.toUpperCase()]
     }, [iso2, iso_3])
+    const isWaitingForState = requireState && iso2Value === 'US' && !stateCode
 
     const { data: cities = [] } = useQuery({
-        queryKey: ["GetCities", iso2Value],
-        queryFn: () => getCities(iso2Value),
+        queryKey: ["GetCities", iso2Value, stateCode],
+        queryFn: () => getCities(iso2Value, stateCode),
         staleTime: Infinity,
         cacheTime: Infinity,
-        enabled: !!iso2Value,
+        enabled: !!iso2Value && !isWaitingForState,
     })
 
 
@@ -88,7 +92,7 @@ const CitiesDropDown = ({ userCity, setUserCity, disabled = false, iso_3 = "", i
 
     return (
         <Dropdown isOpen={isOpen} toggle={toggleDropdown}>
-            <DropdownToggle color='white' style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", border: "1px solid rgba(0,0,0,.05)", borderRadius: "5px", padding: ".75rem", background: disabled ? "#eee" : background }} disabled={disabled}>
+            <DropdownToggle color='white' style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", border: "1px solid rgba(0,0,0,.05)", borderRadius: "5px", padding: ".75rem", background: disabled || isWaitingForState ? "#eee" : background }} disabled={disabled || isWaitingForState}>
                 {
                     isOpen
                         ?
@@ -103,7 +107,7 @@ const CitiesDropDown = ({ userCity, setUserCity, disabled = false, iso_3 = "", i
                         </>
                 }
 
-                {!disabled && <span>{ }</span>}
+                {!disabled && !isWaitingForState && <span>{ }</span>}
 
             </DropdownToggle>
             <DropdownMenu style={{ maxHeight: "350px", overflowY: "auto", overflowX: "auto", width: "100%" }}>

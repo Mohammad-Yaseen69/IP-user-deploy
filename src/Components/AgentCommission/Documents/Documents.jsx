@@ -1,8 +1,7 @@
-import React from 'react';
-import useWindowWidth from '../../../utils/useWindowWidth';
 import { useTranslation } from 'react-i18next';
-import styles from '../styles/documents.module.css';
+import useWindowWidth from '../../../utils/useWindowWidth';
 import TopRight from '../../topRight';
+import styles from '../styles/documents.module.css';
 
 const Documents = () => {
     const { t } = useTranslation();
