@@ -138,7 +138,7 @@ const MoveMoney = () => {
                                             </div>
                                         </div>
                                     </div>
-                                    <Tooltip title="Coming Soon" arrow>
+                                    <Tooltip title={t("Coming Soon")} arrow>
 
                                         <div className={styles.card}>
                                             <div className={`${styles.iconBox} ${styles.bgYellow}`}>
@@ -158,7 +158,7 @@ const MoveMoney = () => {
                                             </div>
                                         </div>
                                     </Tooltip>
-                                    <Tooltip title="Coming Soon" arrow>
+                                    <Tooltip title={t("Coming Soon")} arrow>
 
                                         <div className={`${styles.card} ${styles.cardPurple}`}>
                                             <div className={`${styles.iconBox} ${styles.bgWhiteTrans}`}>
@@ -185,7 +185,7 @@ const MoveMoney = () => {
                                 <div className={styles.sectionLabel}>{t("WITHIN INSTAPAY")} <span>{t("Instant, free transfers between InstaPay accounts")}</span></div>
 
                                 <div className={styles.cardsGrid2}>
-                                    <Tooltip title="Coming Soon" arrow>
+                                    <Tooltip title={t("Coming Soon")} arrow>
 
                                         <div className={styles.card}>
                                             <div className={`${styles.iconBox} ${styles.bgRed}`}>
@@ -197,9 +197,9 @@ const MoveMoney = () => {
                                                     {t("Move between your own accounts, or send to any InstaPay user by phone, username, email or IBAN.")}
                                                 </p>
                                                 <div className={styles.badgeRow}>
-                                                    <span className={`${styles.tag} ${styles.tagGreen}`}>Instant</span>
-                                                    <span className={`${styles.tag} ${styles.tagGray}`}>Free</span>
-                                                    <span className={`${styles.tag} ${styles.tagGray}`}>Internal Send</span>
+                                                    <span className={`${styles.tag} ${styles.tagGreen}`}>{t("Instant")}</span>
+                                                    <span className={`${styles.tag} ${styles.tagGray}`}>{t("Free")}</span>
+                                                    <span className={`${styles.tag} ${styles.tagGray}`}>{t("Internal Send")}</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -212,7 +212,7 @@ const MoveMoney = () => {
                             <div className={styles.sectionBlock}>
                                 <div className={styles.sectionLabel}>{t("YOUR MONEY & ASSETS")} <span>{t("Hold, convert and grow your balances")}</span></div>
                                 <div className={styles.cardsGrid2}>
-                                    <Tooltip title="Coming Soon" arrow>
+                                    <Tooltip title={t("Coming Soon")} arrow>
 
                                         <div className={styles.card}>
                                             <div className={`${styles.iconBox} ${styles.bgGreen}`}>
@@ -224,14 +224,14 @@ const MoveMoney = () => {
                                                     {t("All your money in one place — hold EUR, USD, CHF and crypto, and convert instantly at live FX.")}
                                                 </p>
                                                 <div className={styles.badgeRow}>
-                                                    <span className={`${styles.tag} ${styles.tagBlue}`}>Multi-currency</span>
-                                                    <span className={`${styles.tag} ${styles.tagGray}`}>Fiat/Crypto</span>
-                                                    <span className={`${styles.tag} ${styles.tagGray}`}>Accounts</span>
+                                                    <span className={`${styles.tag} ${styles.tagBlue}`}>{t("Multi-currency")}</span>
+                                                    <span className={`${styles.tag} ${styles.tagGray}`}>{t("Fiat/Crypto")}</span>
+                                                    <span className={`${styles.tag} ${styles.tagGray}`}>{t("Accounts")}</span>
                                                 </div>
                                             </div>
                                         </div>
                                     </Tooltip>
-                                    <Tooltip title="Coming Soon" arrow>
+                                    <Tooltip title={t("Coming Soon")} arrow>
                                         <div className={styles.card}>
                                             <div className={`${styles.iconBox} ${styles.bgOrange}`}>
                                                 <Cpu size={20} />
@@ -242,9 +242,9 @@ const MoveMoney = () => {
                                                     {t("Receive, send, convert, request and mass-pay in crypto — auto-settle to your IBAN. Powered by BVNK.")}
                                                 </p>
                                                 <div className={styles.badgeRow}>
-                                                    <span className={`${styles.tag} ${styles.tagBlue}`}>Assets</span>
-                                                    <span className={`${styles.tag} ${styles.tagGray}`}>Payouts</span>
-                                                    <span className={`${styles.tag} ${styles.tagGray}`}>Gateways</span>
+                                                    <span className={`${styles.tag} ${styles.tagBlue}`}>{t("Assets")}</span>
+                                                    <span className={`${styles.tag} ${styles.tagGray}`}>{t("Payouts")}</span>
+                                                    <span className={`${styles.tag} ${styles.tagGray}`}>{t("Gateways")}</span>
                                                 </div>
                                             </div>
                                         </div>
