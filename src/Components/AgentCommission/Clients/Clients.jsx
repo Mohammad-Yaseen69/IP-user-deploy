@@ -4,8 +4,9 @@ import useWindowWidth from '../../../utils/useWindowWidth';
 import TopRight from '../../topRight';
 import styles from '../styles/clients.module.css';
 import { apiWrapper } from '../../../utils/Functions/apiWrapper';
-import { Search, ChevronLeft, ChevronRight, ArrowUp, ArrowDown } from 'react-feather';
-
+import { ChevronLeft, ChevronRight, ArrowUp, ArrowDown } from 'react-feather';
+import { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 const Clients = () => {
     const { t } = useTranslation();
     const width = useWindowWidth();
