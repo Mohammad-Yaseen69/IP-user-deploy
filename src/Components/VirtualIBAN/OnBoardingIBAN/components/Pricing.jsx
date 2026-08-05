@@ -7,7 +7,7 @@ import { UserContext } from "../../../../Context/UserContext"
 import { decryptData } from "../../../../Helper/EssentilaMethods/Decryption"
 
 const ICON_MAP = {
-    opening_fee: DollarSign,
+    activation_fee: DollarSign,
     iban_activation: DollarSign,
     monthly_iban_fee: Repeat,
     sepa_inward: ArrowDownCircle,

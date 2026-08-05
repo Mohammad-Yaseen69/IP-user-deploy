@@ -55,7 +55,7 @@ const PriceActivation = () => {
                                 <h3 className={styles.cardTitle}>Standard - Low risk</h3>
                                 <span className={`${styles.badge} ${styles.badgePrimary}`}>SUGGESTED</span>
                             </div>
-                            <p className={styles.cardDesc}>Opening €100 - Institution €0/mo</p>
+                            <p className={styles.cardDesc}>Activation €100 - Institution €0/mo</p>
                         </div>
                     </div>
 
@@ -75,7 +75,7 @@ const PriceActivation = () => {
                             <div className={styles.cardHeader}>
                                 <h3 className={styles.cardTitle}>Standard - Medium risk</h3>
                             </div>
-                            <p className={styles.cardDesc}>Opening €300 - Institution €50/mo</p>
+                            <p className={styles.cardDesc}>Activation €300 - Institution €50/mo</p>
                         </div>
                     </div>
 
@@ -95,7 +95,7 @@ const PriceActivation = () => {
                             <div className={styles.cardHeader}>
                                 <h3 className={styles.cardTitle}>Standard - High risk / High Vol</h3>
                             </div>
-                            <p className={styles.cardDesc}>Opening €1000 - Institution €200/mo</p>
+                            <p className={styles.cardDesc}>Activation €1000 - Institution €200/mo</p>
                         </div>
                     </div>
                     <div className={styles.card}>
@@ -114,7 +114,7 @@ const PriceActivation = () => {
                             <div className={styles.cardHeader}>
                                 <h3 className={styles.cardTitle}>Pack One</h3>
                             </div>
-                            <p className={styles.cardDesc}>Opening €500 - Activation €200 - €70/mo</p>
+                            <p className={styles.cardDesc}>Activation €500 - €70/mo</p>
                         </div>
                     </div>
                 </div>
@@ -132,13 +132,8 @@ const PriceActivation = () => {
                         </thead>
                         <tbody>
                             <tr>
-                                <td>Opening fee (one-time)</td>
+                                <td>Activation fee (one-time)</td>
                                 <td className={styles.textRight}><input type="text" className={styles.inputField} defaultValue="99" /></td>
-                                <td className={styles.textRight}><input type="text" className={styles.inputField} defaultValue="0" /></td>
-                            </tr>
-                            <tr>
-                                <td>IBAN activation (one-time)</td>
-                                <td className={styles.textRight}><input type="text" className={styles.inputField} defaultValue="0" /></td>
                                 <td className={styles.textRight}><input type="text" className={styles.inputField} defaultValue="0" /></td>
                             </tr>
                             <tr>
