@@ -15,6 +15,7 @@ import {
     Search
 } from 'react-feather';
 import SepaTransfer from '../../SendMoney/SepaTransfer';
+import CryptoTopupModal from '../../CryptoTopupModal';
 import { useSyncVirtualIbanBalance, useVirtualIbans } from '../../../../hooks/useVirtualIban';
 import { asVirtualIbanArray } from '../../utils/virtualIban';
 import { UserContext } from '../../../../Context/UserContext';
@@ -24,6 +25,7 @@ const MoveMoney = () => {
     const { t } = useTranslation();
     const width = useWindowWidth();
     const [showSepaPage, setShowSepaPage] = useState(false);
+    const [showCryptoTopupModal, setShowCryptoTopupModal] = useState(false);
     const navigate = useNavigate();
     const {
         userDetails,
@@ -253,10 +255,42 @@ const MoveMoney = () => {
                                     </Tooltip>
                                 </div>
                             </div>
+
+                            <div className={styles.sectionBlock}>
+                                <div className={styles.sectionLabel}>{t("ADD FUNDS")} <span>{t("Top up your Virtual IBAN balance using crypto")}</span></div>
+                                <div className={styles.cardsGrid2}>
+                                    <div
+                                        className={styles.card}
+                                        onClick={() => setShowCryptoTopupModal(true)}
+                                        style={{ cursor: "pointer" }}
+                                    >
+                                        <div className={`${styles.iconBox} ${styles.bgOrange}`}>
+                                            <Cpu size={20} />
+                                        </div>
+                                        <div className={styles.cardBody}>
+                                            <h3 className={styles.cardTitle}>{t("Topup via Crypto")}</h3>
+                                            <p className={styles.cardDesc}>
+                                                {t("Top up your Virtual IBAN instantly using USDT crypto payments — auto-settles in EUR.")}
+                                            </p>
+                                            <div className={styles.badgeRow}>
+                                                <span className={`${styles.tag} ${styles.tagBlue}`}>USDT</span>
+                                                <span className={`${styles.tag} ${styles.tagGreen}`}>Instant</span>
+                                                <span className={`${styles.tag} ${styles.tagGray}`}>Auto-settle</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </>
                 }
 
             </div>
+
+            <CryptoTopupModal
+                isOpen={showCryptoTopupModal}
+                toggle={() => setShowCryptoTopupModal(false)}
+                selectedIban={selectedIban}
+            />
 
         </div >
     );
