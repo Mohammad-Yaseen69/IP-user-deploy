@@ -68,7 +68,7 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {}, userDetails, compa
                     <>
                         <span className={styles.provided}>{selectedFile.name}</span>
                         <button type="button" className={styles.uploadBtn} onClick={() => openFilePicker(key)}>
-                            <Upload size={10} /> Replace
+                            <Upload size={10} /> {t("Replace")}
                         </button>
                     </>
                 ) : isKybDone ? (

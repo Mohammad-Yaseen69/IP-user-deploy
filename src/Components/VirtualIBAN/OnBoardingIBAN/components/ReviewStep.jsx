@@ -62,29 +62,29 @@ const ReviewStep = ({ onSubmit, onBack, allData = {}, onNext }) => {
 
                     <div className={styles.summaryCard}>
                         <div className={styles.cardHeader}>
-                            <h4>Company details</h4>
-                            <span className={styles.edit}>Edit</span>
+                            <h4>{t('Company details')}</h4>
+                            <span className={styles.edit}>{t('Edit')}</span>
                         </div>
 
                         <div className={styles.grid}>
                             <div className={styles.item}>
-                                <label>Legal name</label>
-                                <span>Exadel Trade Solutions SA</span>
+                                <label>{t('Legal name')}</label>
+                                <span>{t('Exadel Trade Solutions SA')}</span>
                             </div>
 
                             <div className={styles.item}>
-                                <label>Registration</label>
-                                <span>CHE-106.327.324</span>
+                                <label>{t('Registration')}</label>
+                                <span>{t('CHE-106.327.324')}</span>
                             </div>
 
                             <div className={styles.item}>
-                                <label>Jurisdiction</label>
-                                <span>Switzerland</span>
+                                <label>{t('Jurisdiction')}</label>
+                                <span>{t('Switzerland')}</span>
                             </div>
 
                             <div className={styles.item}>
-                                <label>Agent</label>
-                                <span>Trays SA Switzerland</span>
+                                <label>{t('Agent')}</label>
+                                <span>{t('Trays SA Switzerland')}</span>
                             </div>
                         </div>
                     </div>
@@ -92,22 +92,22 @@ const ReviewStep = ({ onSubmit, onBack, allData = {}, onNext }) => {
 
                     <div className={styles.summaryCard}>
                         <div className={styles.cardHeader}>
-                            <h4>Ownership &amp; control</h4>
+                            <h4>{t('Ownership & control')}</h4>
                         </div>
 
                         <div className={styles.grid}>
                             <div className={styles.item}>
-                                <label>Owners</label>
+                                <label>{t('Owners')}</label>
                                 <span>
                                     {owners.length > 0
-                                        ? owners.map(o => `${o.fullName || o.name || 'Owner'} (${o.ownershipPercent ? o.ownershipPercent + '%' : ''} ${o.role || 'UBO'})`).join(' • ')
-                                        : 'None'}
+                                        ? owners.map(o => `${o.fullName || o.name || t('Owner')} (${o.ownershipPercent ? o.ownershipPercent + '%' : ''} ${o.role || t('UBO')})`).join(' • ')
+                                        : t('None')}
                                 </span>
                             </div>
 
                             <div className={styles.item}>
-                                <label>Criteria</label>
-                                <span>Entity / Individual</span>
+                                <label>{t('Criteria')}</label>
+                                <span>{t('Entity / Individual')}</span>
                             </div>
                         </div>
                     </div>
@@ -115,34 +115,34 @@ const ReviewStep = ({ onSubmit, onBack, allData = {}, onNext }) => {
 
                     <div className={styles.summaryCard}>
                         <div className={styles.cardHeader}>
-                            <h4>Activity &amp; intended use</h4>
-                            <span className={styles.edit}>Edit</span>
+                            <h4>{t('Activity & intended use')}</h4>
+                            <span className={styles.edit}>{t('Edit')}</span>
                         </div>
 
                         <div className={styles.grid}>
                             <div className={styles.item}>
-                                <label>Sector</label>
-                                <span>FinTech &amp; payments</span>
+                                <label>{t('Sector')}</label>
+                                <span>{t('FinTech & payments')}</span>
                             </div>
 
                             <div className={styles.item}>
-                                <label>Countries</label>
-                                <span>Switzerland, France, Senegal</span>
+                                <label>{t('Countries')}</label>
+                                <span>{t('Switzerland, France, Senegal')}</span>
                             </div>
 
                             <div className={styles.item}>
-                                <label>Expected inflow</label>
-                                <span>&lt;250,000 / month</span>
+                                <label>{t('Expected inflow')}</label>
+                                <span>{t('<250,000 / month')}</span>
                             </div>
 
                             <div className={styles.item}>
-                                <label>Currencies</label>
-                                <span>EUR, USD, XOF</span>
+                                <label>{t('Currencies')}</label>
+                                <span>{t('EUR, USD, XOF')}</span>
                             </div>
 
                             <div className={styles.item}>
-                                <label>Services</label>
-                                <span>SEPA &amp; SWIFT, Crypto to fiat</span>
+                                <label>{t('Services')}</label>
+                                <span>{t('SEPA & SWIFT, Crypto to fiat')}</span>
                             </div>
                         </div>
                     </div>
@@ -150,21 +150,21 @@ const ReviewStep = ({ onSubmit, onBack, allData = {}, onNext }) => {
 
                     <div className={styles.summaryCard}>
                         <div className={styles.cardHeader}>
-                            <h4>Documents</h4>
-                            <span className={styles.edit}>Edit</span>
+                            <h4>{t('Documents')}</h4>
+                            <span className={styles.edit}>{t('Edit')}</span>
                         </div>
 
                         <div className={styles.grid}>
                             <div className={styles.item}>
-                                <label>Provided</label>
-                                <span>8 documents</span>
+                                <label>{t('Provided')}</label>
+                                <span>{t('{{count}} documents', { count: docCount })}</span>
                             </div>
                         </div>
                     </div>
 
 
                     <div className={styles.infoBox}>
-                        <span className={styles.infoIcon}>ⓘ</span>
+                        <span className={styles.infoIcon}>{t('ⓘ')}</span>
 
                         <p>
                             {t("You won't be charged now. There's no pricing to accept at this stage, our team confirms your eligibility and sends a personalized offer with the applicable terms and next steps.")}
