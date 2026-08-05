@@ -31,41 +31,272 @@
     flex-direction: column;
     gap: 24px;
     max-width: 1400px;
-    margin-top: 20px;
+    margin-top: 24px;
+}
+
+.tabsNav {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background: #EFF1F6;
+    border-radius: 10px;
+    padding: 4px;
+    width: fit-content;
+    max-width: 100%;
+    overflow-x: auto;
+}
+
+.tabItem {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: 8px;
+    border: none;
+    background: transparent;
+    color: #6E7687;
+    font-size: 14px;
+    font-weight: 500;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    white-space: nowrap;
+}
+
+.tabItem:hover {
+    color: #1B1F2A;
+}
+
+.tabItemActive {
+    background: #5926F0;
+    color: #F2EEFF !important;
+    font-weight: 600;
+    box-shadow: 0px 2px 6px rgba(89, 38, 240, 0.25);
+}
+
+.tabItemActive svg {
+    color: #F2EEFF !important;
+}
+
+
+.cardsStack {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
 }
 
 .cardSection {
     background: #FFFFFF;
-    border-radius: 12px;
+    border-radius: 14px;
     border: 1px solid #EBE8F5;
     padding: 24px;
     display: flex;
     flex-direction: column;
     gap: 16px;
+    box-shadow: 0px 1px 2px 0px rgba(15, 11, 31, 0.04);
+}
+
+.cardHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
 .sectionTitle {
     font-size: 18px;
     font-weight: 600;
-    color: #101828;
+    color: #1B1F2A;
     margin: 0;
+    line-height: 24px;
+}
+
+.editBtn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: #F4F3FA;
+    border: 1px solid #EBE8F5;
+    border-radius: 6px;
+    color: #4A32E3;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    transition: background 0.15s ease;
+}
+
+.editBtn:hover {
+    background: #EBE8F5;
+}
+
+.infoRowsList {
+    display: flex;
+    flex-direction: column;
 }
 
 .infoRow {
     display: flex;
     justify-content: space-between;
-    padding: 12px 0;
+    align-items: center;
+    padding: 13px 0;
     border-bottom: 1px solid #EAECF0;
+}
+
+.infoRow:last-child {
+    border-bottom: none;
 }
 
 .label {
     font-size: 14px;
-    font-weight: 500;
-    color: #6E7687;
+    font-weight: 600;
+    color: #9C97B3;
 }
 
 .value {
     font-size: 14px;
+    font-weight: 700;
+    color: #1B1F2A;
+}
+
+.badgeReseller {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 12px;
+    border-radius: 100px;
+    background: #EBF0FE;
+    color: #3427AC;
+    font-size: 11px;
+    font-weight: 500;
+}
+
+.badgeVerified {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    border-radius: 100px;
+    background: #EDFAF0;
+    color: #097224;
+    font-size: 11px;
+    font-weight: 500;
+}
+
+.tableWrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table thead tr {
+    background: #EFF1F6;
+}
+
+.table th {
+    padding: 10px 24px;
+    color: #6E7687;
+    font-size: 14px;
+    font-weight: 500;
+    text-align: left;
+    white-space: nowrap;
+}
+
+.table th:first-child {
+    border-radius: 6px 0 0 6px;
+}
+
+.table th:last-child {
+    border-radius: 0 6px 6px 0;
+}
+
+.table td {
+    padding: 16px 24px;
+    color: #151514;
+    font-size: 14px;
+    font-weight: 500;
+    border-bottom: 1px solid #EAECF0;
+}
+
+.table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+
+.infoBanner {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    border-radius: 8px;
+    background: #EAF1FE;
+    color: #1E3A8A;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 20px;
+}
+
+.ratesGrid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.rateCard {
+    background: #FAF9FD;
+    border-radius: 10px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.rateLabel {
+    color: #9C97B3;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.rateValue {
+    color: #4A1DCC;
+    font-size: 20px;
     font-weight: 600;
-    color: #101828;
+    line-height: 24px;
+}
+
+
+@media (max-width: 900px) {
+    .ratesGrid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 600px) {
+    .container {
+        padding: 12px;
+    }
+
+    .cardSection {
+        padding: 16px;
+    }
+
+    .ratesGrid {
+        grid-template-columns: 1fr;
+    }
+
+    .infoRow {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+    }
+
+    .tabsNav {
+        width: 100%;
+    }
 }

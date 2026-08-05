@@ -269,7 +269,7 @@ const Layout = ({ children, classNames, ...rest }) => {
         </ModalHeader>
         <ModalBody>
           <div>
-            <h4>{t("Looks like your internet is disconnect, please connect to the Internet to keep using Instapay.")}</h4>
+            <h4>{t("Please check your internet connection to continue using Instapay.")}</h4>
           </div>
         </ModalBody>
       </Modal>
@@ -371,7 +371,7 @@ const Layout = ({ children, classNames, ...rest }) => {
                         unmountOnExit
                       >
                         {/* <div> */}
-                          <Outlet />
+                        <Outlet />
                         {/* </div> */}
                       </CSSTransition>
                     </TransitionGroup>
