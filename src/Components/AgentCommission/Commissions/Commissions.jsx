@@ -1,21 +1,17 @@
-import axios from 'axios';
-import { useContext, useEffect, useMemo, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { useContext, useMemo } from 'react';
+import {
+    AlertCircle,
+    BarChart,
+    CheckCircle,
+    Clock
+} from 'react-feather';
 import { useTranslation } from 'react-i18next';
 import { UserContext } from '../../../Context/UserContext';
-import { decryptData } from '../../../Helper/EssentilaMethods/Decryption';
+import { apiWrapper } from '../../../utils/Functions/apiWrapper';
 import useWindowWidth from '../../../utils/useWindowWidth';
 import TopRight from '../../topRight';
 import styles from '../styles/commissions.module.css';
-import { UserContext } from '../../../Context/UserContext';
-import { apiWrapper } from '../../../utils/Functions/apiWrapper';
-
-import {
-    BarChart,
-    DollarSign,
-    Clock,
-    CheckCircle,
-    AlertCircle
-} from 'react-feather';
 
 const Commissions = () => {
     const { t } = useTranslation();
