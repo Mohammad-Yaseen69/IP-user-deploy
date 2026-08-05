@@ -103,18 +103,15 @@
 }
 
 .amountInput {
-    width: auto;
+    width: 100%;
     min-width: 60px;
     font-size: 64px;
     font-weight: 600;
     color: #0c0a20;
-
     background: transparent;
     border: none;
     outline: none;
-
     white-space: nowrap;
-
     &::placeholder {
         color: #bbb;
     }
