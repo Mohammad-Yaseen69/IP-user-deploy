@@ -419,7 +419,7 @@ const KYB = () => {
             <CardHeader style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                 <h4>{t("KYB Verification")}</h4>
                 <div className="card-options" style={{ display: 'flex', gap: "10px", alignItems: "center" }}>
-                    <Badge color={(userDetails?.company?.kyb_status === "verified" || userDetails?.company?.kyb_status === "approved") ? "success" : userDetails?.company?.kyb_status === "declined" ? "danger" : "warning"}>{userDetails?.company?.kyb_status?.toUpperCase()}</Badge>
+                    <Badge color={(userDetails?.company?.kyb_status === "verified" || userDetails?.company?.kyb_status === "approved") ? "success" : userDetails?.company?.kyb_status === "declined" ? "danger" : "warning"}>{t(userDetails?.company?.kyb_status?.toUpperCase())}</Badge>
                 </div>
             </CardHeader>
             <CardBody style={{ display: "flex", flexDirection: "column" }}>
