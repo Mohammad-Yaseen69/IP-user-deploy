@@ -1,14 +1,14 @@
-import React, { useState, useEffect, useContext, useCallback } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Container, Card, CardBody, CardHeader, Button, FormGroup, Label, Input, Badge, Table, Spinner, Row, Col } from 'reactstrap';
-import { UserContext } from '../../../Context/UserContext';
-import { encryptData } from '../../../Helper/EssentilaMethods/Encryption';
-import { decryptData } from '../../../Helper/EssentilaMethods/Decryption';
 import axios from 'axios';
+import { useCallback, useContext, useEffect, useState } from 'react';
+import { CheckCircle, Clock, Copy, Plus, Shield, XCircle } from 'react-feather';
+import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
-import { Plus, CheckCircle, Clock, XCircle, Copy, ArrowLeft, Shield, DollarSign } from 'react-feather';
-import TopRight from '../../topRight';
+import { Badge, Button, Card, CardBody, CardHeader, Col, FormGroup, Input, Label, Row, Spinner, Table } from 'reactstrap';
+import { UserContext } from '../../../Context/UserContext';
+import { decryptData } from '../../../Helper/EssentilaMethods/Decryption';
+import { encryptData } from '../../../Helper/EssentilaMethods/Encryption';
 import useWindowWidth from '../../../utils/useWindowWidth';
+import TopRight from '../../topRight';
 import styles from '../styles/index.module.css';
 
 const DEFAULT_FEE_ITEMS = [
@@ -28,7 +28,7 @@ const FeeModelRequests = () => {
     const width = useWindowWidth();
     const { userDetails, authHeader } = useContext(UserContext);
 
-    const [activeTab, setActiveTab] = useState('list'); // 'list' | 'create'
+    const [activeTab, setActiveTab] = useState('list'); 
     const [title, setTitle] = useState('');
     const [revenueModel, setRevenueModel] = useState('markup');
     const [feeSchedule, setFeeSchedule] = useState(DEFAULT_FEE_ITEMS);

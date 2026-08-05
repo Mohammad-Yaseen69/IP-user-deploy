@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import styles from "./styles/index.module.css";
 import useWindowWidth from '../../utils/useWindowWidth';
 import TopRight from '../topRight';
-import LeadModal from './Leads/LeadModal';
 import FeeModelRequestModal from './FeeModelRequestModal';
+import LeadModal from './Leads/LeadModal';
+import styles from "./styles/index.module.css";
 
 const AgentCommission = () => {
     const { t } = useTranslation();
@@ -230,4 +230,4 @@ const AgentCommission = () => {
     );
 };
 
-export default AgentCommission;
+export default AgentCommission;
