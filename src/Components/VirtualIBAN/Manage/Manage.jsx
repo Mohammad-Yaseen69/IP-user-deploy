@@ -24,7 +24,7 @@ const Manage = () => {
                     </div>
                 </div>
 
-                <div className={styles.inputs}>
+                {/* <div className={styles.inputs}>
                     <div className={styles.inputGroup}>
                         <label>{t("Daily outgoing limit")}</label>
                         <input type="text" value={t("€0.00")} readOnly />
@@ -39,7 +39,7 @@ const Manage = () => {
                         <label>{t("Monthly volume threshold")}</label>
                         <input type="text" value={t("€0.00")} readOnly />
                     </div>
-                </div>
+                </div> */}
             </div>
 
             <div className={styles.row}>

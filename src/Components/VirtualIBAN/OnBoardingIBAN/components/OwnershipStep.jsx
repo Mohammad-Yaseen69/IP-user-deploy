@@ -313,6 +313,8 @@ const OwnershipStep = ({ onNext, onBack, userType, data = {}, userDetails }) => 
                                 type="text"
                                 className="form-control"
                                 required
+                                minLength={2}
+                                maxLength={255}
                                 value={formData.fullName}
                                 onChange={(e) => setFormData(prev => ({ ...prev, fullName: e.target.value }))}
                                 placeholder="John Doe"

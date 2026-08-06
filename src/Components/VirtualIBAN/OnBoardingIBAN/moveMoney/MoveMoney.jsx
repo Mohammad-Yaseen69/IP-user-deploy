@@ -111,14 +111,14 @@ const MoveMoney = () => {
                                 <h1>{t("How would you like to move money?")}</h1>
                                 <p>{t("Six ways to pay, get paid and manage your balances — pick one to begin.")}</p>
 
-                                <div className={styles.searchContainer}>
+                                {/* <div className={styles.searchContainer}>
                                     <Search size={18} className={styles.searchIcon} />
                                     <input
                                         type="text"
                                         className={styles.searchInput}
                                         placeholder={t("Search — e.g. Europe, crypto, cash, instant_")}
                                     />
-                                </div>
+                                </div> */}
                             </div>
                             <div className={styles.sectionBlock}>
                                 <div className={styles.sectionLabel}>{t("Send money out")} <span>{t("Instant, free transfers between InstaPay accounts")}</span></div>

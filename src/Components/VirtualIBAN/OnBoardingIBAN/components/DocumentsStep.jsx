@@ -5,13 +5,7 @@ import { toast } from 'react-toastify'
 import styles from '../style/onboardingSteps.module.css'
 import SidebarProgress from './SidebarProgress'
 
-const REQUIRED_DOCS = [
-    { key: 'certificate', label: 'Certificate of Incorporation' },
-    { key: 'memorandum', label: 'Memorandum & Articles of Association' },
-    { key: 'ownership_chart', label: 'Ownership / Structure Chart' },
-    { key: 'id_directors', label: 'ID Documents (All Directors/UBOs)' },
-    { key: 'proof_address', label: 'Proof of Registered Address' }
-]
+
 
 const DocumentsStep = ({ onNext, onBack, userType, data = {}, userDetails, companyDetails }) => {
     const { t } = useTranslation()
