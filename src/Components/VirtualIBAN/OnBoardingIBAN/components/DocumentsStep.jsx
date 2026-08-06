@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react'
 import { ArrowLeft, ArrowRight, Upload } from 'react-feather'
 import { useTranslation } from 'react-i18next'
+import { toast } from 'react-toastify'
 import styles from '../style/onboardingSteps.module.css'
 import SidebarProgress from './SidebarProgress'
 
@@ -35,6 +36,11 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {}, userDetails, compa
     const handleFileChange = (key, e) => {
         const file = e.target.files?.[0]
         if (!file) return
+        if (file.size > 5 * 1024 * 1024) {
+            toast.error(t("File size cannot exceed 5MB"))
+            e.target.value = ''
+            return
+        }
         setFiles(prev => ({ ...prev, [key]: file }))
         e.target.value = ''
     }
