@@ -196,12 +196,14 @@ const ActivityStep = ({ onNext, onBack, userType, data = {} }) => {
                                 <textarea
                                     className={styles.textArea}
                                     rows={4}
+                                    maxLength={1000}
                                     value={form.businessDescription}
                                     onChange={set("businessDescription")}
                                     placeholder={t(
                                         "Cross-border payment orchestration and multi-currency treasury..."
                                     )}
                                 />
+                                < span className={styles.charCount}>{form.businessDescription.length}/1000</span>
                             </div>
 
 

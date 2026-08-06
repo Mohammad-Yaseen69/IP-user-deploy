@@ -317,7 +317,6 @@
 .chip:hover,
 .addChip:hover {
     border-color: #4A32E3;
-    color: #4A32E3;
 }
 
 .activeChip {
