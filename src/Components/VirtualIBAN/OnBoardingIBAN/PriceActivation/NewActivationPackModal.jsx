@@ -9,8 +9,7 @@ const NewActivationPackModal = ({ open, handleClose }) => {
     const [setBy, setSetBy] = useState('agent');
     const { t } = useTranslation()
     const [services, setServices] = useState([
-        { id: 'opening', label: 'Opening fee (one-time)', active: true },
-        { id: 'iban', label: 'IBAN activation (one-time)', active: false },
+        { id: 'iban', label: 'Activation fee (one-time)', active: true },
         { id: 'monthly', label: 'Monthly IBAN fee', active: false },
         { id: 'sepa_in', label: 'SEPA inward', active: false },
         { id: 'sepa_out', label: 'SEPA outward', active: false },
@@ -19,24 +18,22 @@ const NewActivationPackModal = ({ open, handleClose }) => {
         { id: 'crypto', label: 'Crypto on/off-ramp', active: false },
     ]);
     const [fees, setFees] = useState([
-        { id: 1, name: 'Opening fee (one-time)', flat: '0', percent: '0' },
-        { id: 2, name: 'IBAN activation (one-time)', flat: '0', percent: '0' },
-        { id: 3, name: 'Monthly IBAN fee', flat: '0', percent: '0' },
-        { id: 4, name: 'SEPA inward', flat: '0', percent: '0' },
-        { id: 5, name: 'SEPA outward', flat: '0', percent: '0' },
-        { id: 6, name: 'SWIFT inward', flat: '0', percent: '0' },
-        { id: 7, name: 'SWIFT outward', flat: '0', percent: '0' },
-        { id: 8, name: 'Crypto on/off-ramp', flat: '0', percent: '0' },
+        { id: 1, name: 'Activation fee (one-time)', flat: '0', percent: '0' },
+        { id: 2, name: 'Monthly IBAN fee', flat: '0', percent: '0' },
+        { id: 3, name: 'SEPA inward', flat: '0', percent: '0' },
+        { id: 4, name: 'SEPA outward', flat: '0', percent: '0' },
+        { id: 5, name: 'SWIFT inward', flat: '0', percent: '0' },
+        { id: 6, name: 'SWIFT outward', flat: '0', percent: '0' },
+        { id: 7, name: 'Crypto on/off-ramp', flat: '0', percent: '0' },
     ]);
 
     const handleInputChange = (id, field, value) => {
         setFees(prev => prev.map(row => row.id === id ? { ...row, [field]: value } : row));
     };
     const [step1Fees, setStep1Fees] = useState([
-        { id: 1, name: 'Opening fee (one-time)', flat: '0', percent: '0' },
-        { id: 2, name: 'IBAN activation (one-time)', flat: '0', percent: '0' },
-        { id: 3, name: 'Monthly IBAN fee', flat: '0', percent: '0' },
-        { id: 4, name: 'SEPA inward', flat: '0', percent: '0' },
+        { id: 1, name: 'Activation fee (one-time)', flat: '0', percent: '0' },
+        { id: 2, name: 'Monthly IBAN fee', flat: '0', percent: '0' },
+        { id: 3, name: 'SEPA inward', flat: '0', percent: '0' },
     ]);
 
     const toggleService = (id) => {
