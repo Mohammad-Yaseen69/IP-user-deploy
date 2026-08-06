@@ -283,6 +283,7 @@ const OnboardingIBAN = ({ onCreated }) => {
         }
     }
 
+    
     const handleStatusAction = () => {
         if (state.status === 'approved' && onCreated) {
             onCreated()
