@@ -376,6 +376,7 @@ const ActivityStep = ({ onNext, onBack, userType, data = {} }) => {
                                     </label>
 
                                     <input
+                                        style={{ padding: "14.5px 14px 14.5px 12.5px" }}
                                         className={styles.textInput}
                                         value={form.purpose}
                                         onChange={set("purpose")}
@@ -388,6 +389,8 @@ const ActivityStep = ({ onNext, onBack, userType, data = {} }) => {
                                     </label>
 
                                     <input
+                                        style={{ padding: "14.5px 14px 14.5px 12.5px" }}
+
                                         className={styles.textInput}
                                         value={form.paymentNature}
                                         onChange={set("paymentNature")}
@@ -472,6 +475,8 @@ const ActivityStep = ({ onNext, onBack, userType, data = {} }) => {
                                     </label>
 
                                     <input
+                                        style={{ padding: "14.5px 14px 14.5px 12.5px" }}
+
                                         className={styles.textInput}
                                         value={form.averageTransaction}
                                         onChange={set("averageTransaction")}
@@ -484,6 +489,7 @@ const ActivityStep = ({ onNext, onBack, userType, data = {} }) => {
                                     </label>
 
                                     <input
+                                        style={{ padding: "14.5px 14px 14.5px 12.5px" }}
                                         className={styles.textInput}
                                         value={form.maximumTransaction}
                                         onChange={set("maximumTransaction")}
@@ -498,6 +504,8 @@ const ActivityStep = ({ onNext, onBack, userType, data = {} }) => {
                                     </label>
 
                                     <input
+                                        style={{ padding: "14.5px 14px 14.5px 12.5px" }}
+
                                         className={styles.textInput}
                                         value={form.averageBalance}
                                         onChange={set("averageBalance")}
@@ -510,6 +518,8 @@ const ActivityStep = ({ onNext, onBack, userType, data = {} }) => {
                                     </label>
 
                                     <input
+                                        style={{ padding: "14.5px 14px 14.5px 12.5px" }}
+
                                         className={styles.textInput}
                                         value={form.incomingPayments}
                                         onChange={set("incomingPayments")}
@@ -522,6 +532,8 @@ const ActivityStep = ({ onNext, onBack, userType, data = {} }) => {
                                     </label>
 
                                     <input
+                                        style={{ padding: "14.5px 14px 14.5px 12.5px" }}
+
                                         className={styles.textInput}
                                         value={form.outgoingPayments}
                                         onChange={set("outgoingPayments")}

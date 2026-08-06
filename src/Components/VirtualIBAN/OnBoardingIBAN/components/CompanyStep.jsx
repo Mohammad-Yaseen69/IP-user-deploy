@@ -91,8 +91,20 @@ const CompanyStep = ({ onNext, onBack, userType, data = {} }) => {
 
     console.log(form, "form")
 
-    const set = (key) => (e) => setForm(prev => ({ ...prev, [key]: e.target.value }))
+    const set = (key) => (e) => {
+        let value = e.target.value;
 
+        if (key === "registrationNumber") {
+            if (!/^[a-zA-Z0-9\u00C0-\u024F\s-]*$/.test(value)) {
+                return;
+            }
+        }
+
+        setForm((prev) => ({
+            ...prev,
+            [key]: value,
+        }));
+    };
     const handleContinue = () => {
         onNext(form, 'company')
     }
@@ -212,11 +224,12 @@ const CompanyStep = ({ onNext, onBack, userType, data = {} }) => {
 
                                     <input
                                         type="text"
-                                        pattern="[a-zA-Z0-9\u00C0-\u024F\s-]+"
                                         className={styles.textInput}
                                         value={form.registrationNumber}
                                         onChange={set("registrationNumber")}
                                         placeholder="CHE-105.837.234"
+                                        pattern="^[a-zA-Z0-9\u00C0-\u024F\s-]+$"
+                                        title="Only letters, numbers, spaces, and dashes are allowed."
                                         disabled={Boolean(userDetails?.company?.registration_number)}
                                         readOnly={Boolean(userDetails?.company?.registration_number)}
                                     />
@@ -293,6 +306,7 @@ const CompanyStep = ({ onNext, onBack, userType, data = {} }) => {
                                 </label>
 
                                 <input
+                                    style={{ padding: "14.5px 14px 14.5px 12.5px" }}
                                     className={styles.textInput}
                                     value={form.legalForm}
                                     onChange={set("legalForm")}
@@ -308,10 +322,12 @@ const CompanyStep = ({ onNext, onBack, userType, data = {} }) => {
                                 </label>
 
                                 <input
+                                    style={{ padding: "14.5px 14px 14.5px 12.5px" }}
                                     type="date"
                                     className={styles.textInput}
-                                    value={form.dateOfIncorporation || ''}
+                                    value={form.dateOfIncorporation || ""}
                                     onChange={set("dateOfIncorporation")}
+                                    max={new Date().toISOString().split("T")[0]}
                                     disabled={Boolean(userDetails?.company?.date_of_incorporation)}
                                     readOnly={Boolean(userDetails?.company?.date_of_incorporation)}
                                 />
@@ -326,6 +342,7 @@ const CompanyStep = ({ onNext, onBack, userType, data = {} }) => {
                                 </label>
 
                                 <input
+                                    style={{ padding: "14.5px 14px 14.5px 12.5px" }}
                                     className={styles.textInput}
                                     value={form.taxNumber}
                                     onChange={set("taxNumber")}
@@ -381,6 +398,7 @@ const CompanyStep = ({ onNext, onBack, userType, data = {} }) => {
                                 </label>
 
                                 <input
+                                    style={{ padding: "14.5px 14px 14.5px 12.5px" }}
                                     className={styles.textInput}
                                     value={form.mainContact}
                                     onChange={set("mainContact")}

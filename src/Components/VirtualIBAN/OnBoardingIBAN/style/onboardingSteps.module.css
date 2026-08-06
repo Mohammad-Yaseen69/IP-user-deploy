@@ -977,8 +977,8 @@
 }
 
 .uploadBtn {
-    height: 30px;
-    padding: 0 14px;
+    height: auto;
+    padding: 5px 12px;
     border: 1px solid #e5e5e5;
     background: #fff;
     border-radius: 8px;
