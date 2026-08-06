@@ -131,7 +131,6 @@ const StatusScreen = ({ status = 'submitted', ibanNumber, companyName, onAction,
 
     return (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', width: '100%' }}>
-            {/* Top Status Card */}
             <div style={{
                 width: '100%',
                 background: '#FFFFFF',
@@ -145,9 +144,7 @@ const StatusScreen = ({ status = 'submitted', ibanNumber, companyName, onAction,
                 border: '1px solid #ECECF2',
                 marginTop: '20px'
             }}>
-                {/* Left Content */}
                 <div style={{ flex: '1 1 55%', maxWidth: '600px' }}>
-                    {/* Globe Icon */}
                     <div style={{
                         width: '52px',
                         height: '52px',
@@ -161,7 +158,6 @@ const StatusScreen = ({ status = 'submitted', ibanNumber, companyName, onAction,
                         <Globe size={26} color="#FFFFFF" />
                     </div>
 
-                    {/* Status Badge */}
                     <div style={{
                         display: 'inline-block',
                         background: '#FEF3C7',
@@ -175,7 +171,6 @@ const StatusScreen = ({ status = 'submitted', ibanNumber, companyName, onAction,
                         {t(cfg.badge)}
                     </div>
 
-                    {/* Title */}
                     <h1 style={{
                         fontSize: '32px',
                         fontWeight: 700,
@@ -186,7 +181,6 @@ const StatusScreen = ({ status = 'submitted', ibanNumber, companyName, onAction,
                         {t(cfg.title)}
                     </h1>
 
-                    {/* Description */}
                     <p style={{
                         fontSize: '15px',
                         color: '#6B7280',
@@ -197,7 +191,6 @@ const StatusScreen = ({ status = 'submitted', ibanNumber, companyName, onAction,
                         {t(cfg.description)}
                     </p>
 
-                    {/* Footer section: Need Help & Action Buttons */}
                     <div style={{
                         display: 'flex',
                         justifyContent: 'space-between',
@@ -244,7 +237,6 @@ const StatusScreen = ({ status = 'submitted', ibanNumber, companyName, onAction,
                     </div>
                 </div>
 
-                {/* Right Graphic Section */}
                 <div style={{
                     flex: '1 1 40%',
                     display: 'flex',
@@ -263,7 +255,6 @@ const StatusScreen = ({ status = 'submitted', ibanNumber, companyName, onAction,
                 </div>
             </div>
 
-            {/* Bottom Submitted Information Block */}
             <div style={{
                 width: '100%',
                 background: '#FFFFFF',
