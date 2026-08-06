@@ -454,18 +454,15 @@ const ActivityStep = ({ onNext, onBack, data = {} }) => {
                                         {t("COUNTRIES OF ORIGIN OF FUNDS")}
                                     </label>
 
-                                    <select
-                                        className={styles.selectInput}
-                                        value=""
-                                        onChange={(e) => {
-                                            if (e.target.value) toggleArrayItem("originCountries", e.target.value)
+                                    <CountryDropDown
+                                        onSelect={(country) => {
+                                            if (country?.name) {
+                                                toggleArrayItem("originCountries", country.name);
+                                            }
                                         }}
-                                    >
-                                        <option value="">{t("Add country...")}</option>
-                                        {COUNTRY_LIST.filter(c => !form.originCountries?.includes(c)).map(c => (
-                                            <option key={c} value={c}>{c}</option>
-                                        ))}
-                                    </select>
+                                        country=""
+                                        background="#fff"
+                                    />
 
                                     <div className={styles.chips}>
                                         {form.originCountries?.map((c) => (
@@ -488,18 +485,15 @@ const ActivityStep = ({ onNext, onBack, data = {} }) => {
                                         {t("COUNTRIES OF DESTINATION")}
                                     </label>
 
-                                    <select
-                                        className={styles.selectInput}
-                                        value=""
-                                        onChange={(e) => {
-                                            if (e.target.value) toggleArrayItem("destinationCountries", e.target.value)
+                                    <CountryDropDown
+                                        onSelect={(country) => {
+                                            if (country?.name) {
+                                                toggleArrayItem("destinationCountries", country.name);
+                                            }
                                         }}
-                                    >
-                                        <option value="">{t("Add Cities...")}</option>
-                                        {COUNTRY_LIST.filter(c => !form.destinationCountries?.includes(c)).map(c => (
-                                            <option key={c} value={c}>{c}</option>
-                                        ))}
-                                    </select>
+                                        country=""
+                                        background="#fff"
+                                    />
 
                                     <div className={styles.chips}>
                                         {form.destinationCountries?.map((c) => (
