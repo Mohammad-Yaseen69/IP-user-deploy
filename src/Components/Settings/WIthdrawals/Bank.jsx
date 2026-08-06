@@ -82,7 +82,7 @@ const Bank = ({ country, states, values, changeHandler, isEditMode, setBankDetai
                                             states.setAccNumType(e.target.value)
                                             getBankDetails({ target: { name: "bank_iban", value: "" } })
                                         }}>
-                                            <option value="IBAN">IBAN</option>
+                                            <option value="IBAN">{t("IBAN")}</option>
                                             <option value="Swift">{t("Swift/BIC Code")}</option>
                                         </Input>
                                     </FormGroup>
@@ -201,7 +201,7 @@ const Bank = ({ country, states, values, changeHandler, isEditMode, setBankDetai
                         </>
             }
         </>
-    )
+    );
 }
 
 export default Bank

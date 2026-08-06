@@ -22,7 +22,7 @@ const CryptoWalletAddress = ({ setWallet, setSubStep, wallet }) => {
                 paddingBottom: 0,
                 boxShadow: "0px 18px 15.348464965820312px -15px rgba(89, 38, 240, 0.16)"
             }}>
-                <p style={{ fontSize: "1rem", color: "#7d7d7d", marginBottom: 0 }}>Enter the Wallet Address</p>
+                <p style={{ fontSize: "1rem", color: "#7d7d7d", marginBottom: 0 }}>{t("Enter the Wallet Address")}</p>
                 <Input placeholder="Enter the Wallet Address" onChange={e => setWallet(e.target.value)} style={{ padding: "16px", fontSize: "18px", borderRadius: "10px" }} />
             </CardBody>
             <div style={{
@@ -58,7 +58,7 @@ const CryptoWalletAddress = ({ setWallet, setSubStep, wallet }) => {
                 </Button>
             </div>
         </Card>
-    )
+    );
 }
 
 export default CryptoWalletAddress;

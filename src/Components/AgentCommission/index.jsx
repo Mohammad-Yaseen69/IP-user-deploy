@@ -157,8 +157,8 @@ const AgentCommission = () => {
 
                                 <div className={styles.tableDataRow}>
                                     <div className={styles.colAgentName}>
-                                        <div className={`${styles.avatar} ${styles.avatarPurple}`}>BO</div>
-                                        <span className={styles.agentName}>Broker One</span>
+                                        <div className={`${styles.avatar} ${styles.avatarPurple}`}>{t("BO")}</div>
+                                        <span className={styles.agentName}>{t("Broker One")}</span>
                                     </div>
                                     <div className={styles.colActive}>5</div>
                                     <div className={styles.colConv}>50%</div>
@@ -166,8 +166,8 @@ const AgentCommission = () => {
 
                                 <div className={styles.tableDataRow}>
                                     <div className={styles.colAgentName}>
-                                        <div className={`${styles.avatar} ${styles.avatarBlue}`}>TL</div>
-                                        <span className={styles.agentName}>TradeBridge Ltd</span>
+                                        <div className={`${styles.avatar} ${styles.avatarBlue}`}>{t("TL")}</div>
+                                        <span className={styles.agentName}>{t("TradeBridge Ltd")}</span>
                                     </div>
                                     <div className={styles.colActive}>11</div>
                                     <div className={styles.colConv}>58%</div>
@@ -175,8 +175,8 @@ const AgentCommission = () => {
 
                                 <div className={styles.tableDataRow}>
                                     <div className={styles.colAgentName}>
-                                        <div className={`${styles.avatar} ${styles.avatarPink}`}>AN</div>
-                                        <span className={styles.agentName}>Aicha Ndiaye</span>
+                                        <div className={`${styles.avatar} ${styles.avatarPink}`}>{t("AN")}</div>
+                                        <span className={styles.agentName}>{t("Aicha Ndiaye")}</span>
                                     </div>
                                     <div className={styles.colActive}>2</div>
                                     <div className={styles.colConv}>20%</div>

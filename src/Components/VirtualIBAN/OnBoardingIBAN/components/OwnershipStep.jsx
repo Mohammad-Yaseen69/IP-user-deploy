@@ -200,27 +200,23 @@ const OwnershipStep = ({ onNext, onBack, userType, data = {}, userDetails }) => 
 
                                     {!isKybDone && !owner.isImportedPartner ? (
                                         <div className={styles.actions} style={{ display: "flex", gap: "8px" }}>
-                                            <span style={{ fontSize: "12px", background: owner.isPep ? "#fef2f2" : "#f3f4f6", color: owner.isPep ? "#dc2626" : "#4b5563", padding: "2px 8px", borderRadius: "4px", fontWeight: 500 }}>
-                                                PEP: {owner.isPep ? 'Yes' : 'No'}
+                                            <span style={{ fontSize: "12px", background: owner.isPep ? "#fef2f2" : "#f3f4f6", color: owner.isPep ? "#dc2626" : "#4b5563", padding: "2px 8px", borderRadius: "4px", fontWeight: 500 }}>{t("PEP:")}{owner.isPep ? 'Yes' : 'No'}
                                             </span>
                                             <button
                                                 type="button"
                                                 onClick={() => openEditModal(owner)}
                                                 style={{ border: "none", background: "none", color: "#2563eb", cursor: "pointer", fontSize: "13px", display: "flex", alignItems: "center", gap: "4px" }}
                                             >
-                                                <Edit2 size={13} /> Edit
-                                            </button>
+                                                <Edit2 size={13} />{t("Edit")}</button>
                                             <button
                                                 type="button"
                                                 onClick={() => handleDeleteOwner(owner.id)}
                                                 style={{ border: "none", background: "none", color: "#dc2626", cursor: "pointer", fontSize: "13px", display: "flex", alignItems: "center", gap: "4px" }}
                                             >
-                                                <Trash2 size={13} /> Remove
-                                            </button>
+                                                <Trash2 size={13} />{t("Remove")}</button>
                                         </div>
                                     ) : (
-                                        <span style={{ fontSize: "12px", background: owner.isPep ? "#fef2f2" : "#f3f4f6", color: owner.isPep ? "#dc2626" : "#4b5563", padding: "2px 8px", borderRadius: "4px", fontWeight: 500 }}>
-                                            PEP: {owner.isPep ? 'Yes' : 'No'}
+                                        <span style={{ fontSize: "12px", background: owner.isPep ? "#fef2f2" : "#f3f4f6", color: owner.isPep ? "#dc2626" : "#4b5563", padding: "2px 8px", borderRadius: "4px", fontWeight: 500 }}>{t("PEP:")}{owner.isPep ? 'Yes' : 'No'}
                                         </span>
                                     )}
                                 </div>
@@ -229,19 +225,16 @@ const OwnershipStep = ({ onNext, onBack, userType, data = {}, userDetails }) => 
                             <div className={`${styles.badge} `}
 
                             >
-                                <CheckCircle size={14} /> Recorded
-                            </div>
+                                <CheckCircle size={14} />{t("Recorded")}</div>
                         </div>
                     ))}
 
                     {!isKybDone ? (
                         <div className={styles.footer} style={{ display: "flex", gap: "12px", marginTop: "20px" }}>
                             <button type="button" onClick={() => openAddModal('individual')} className={styles.addBtn} style={{ padding: "10px 16px", borderRadius: "8px", background: "#f3f4f6", border: "1px solid #d1d5db", fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", gap: "6px" }}>
-                                <Plus size={16} /> Add Individual (UBO)
-                            </button>
+                                <Plus size={16} />{t("Add Individual (UBO)")}</button>
                             <button type="button" disabled title="Corporate entity UBO is disabled for now" className={styles.addBtn} style={{ padding: "10px 16px", borderRadius: "8px", background: "#f3f4f6", border: "1px solid #e5e7eb", fontWeight: 600, opacity: 0.5, cursor: "not-allowed", display: "flex", alignItems: "center", gap: "6px" }}>
-                                <Plus size={16} /> Add Entity / Company (Disabled)
-                            </button>
+                                <Plus size={16} />{t("Add Entity / Company (Disabled)")}</button>
                         </div>
                     ) : (
                         <div style={{ marginTop: '16px', padding: '12px 16px', background: '#F0FDF4', border: '1px solid #BBF7D0', borderRadius: '8px', color: '#166534', fontSize: '13px', fontWeight: 500 }}>
@@ -290,9 +283,7 @@ const OwnershipStep = ({ onNext, onBack, userType, data = {}, userDetails }) => 
                                     value="individual"
                                     checked={formData.type === 'individual'}
                                     onChange={() => setFormData(prev => ({ ...prev, type: 'individual' }))}
-                                />
-                                Individual
-                            </label>
+                                />{t("Individual")}</label>
                             <label style={{ display: "flex", alignItems: "center", gap: "6px", cursor: "not-allowed", opacity: 0.5, fontWeight: 600 }} title="Disabled for now">
                                 <input
                                     type="radio"
@@ -300,15 +291,11 @@ const OwnershipStep = ({ onNext, onBack, userType, data = {}, userDetails }) => 
                                     value="entity"
                                     disabled
                                     checked={formData.type === 'entity'}
-                                />
-                                Corporate Entity (Disabled)
-                            </label>
+                                />{t("Corporate Entity (Disabled)")}</label>
                         </div>
 
                         <div>
-                            <label style={{ fontSize: "13px", fontWeight: 600, color: "#374151", marginBottom: "4px", display: "block" }}>
-                                Full Name *
-                            </label>
+                            <label style={{ fontSize: "13px", fontWeight: 600, color: "#374151", marginBottom: "4px", display: "block" }}>{t("Full Name *")}</label>
                             <input
                                 type="text"
                                 className="form-control"
@@ -320,9 +307,7 @@ const OwnershipStep = ({ onNext, onBack, userType, data = {}, userDetails }) => 
                         </div>
 
                         <div>
-                            <label style={{ fontSize: "13px", fontWeight: 600, color: "#374151", marginBottom: "4px", display: "block" }}>
-                                Email Address *
-                            </label>
+                            <label style={{ fontSize: "13px", fontWeight: 600, color: "#374151", marginBottom: "4px", display: "block" }}>{t("Email Address *")}</label>
                             <input
                                 type="email"
                                 className="form-control"
@@ -335,9 +320,7 @@ const OwnershipStep = ({ onNext, onBack, userType, data = {}, userDetails }) => 
 
                         <div style={{ display: "flex", gap: "12px" }}>
                             <div style={{ flex: 1 }}>
-                                <label style={{ fontSize: "13px", fontWeight: 600, color: "#374151", marginBottom: "4px", display: "block" }}>
-                                    Role / Designation *
-                                </label>
+                                <label style={{ fontSize: "13px", fontWeight: 600, color: "#374151", marginBottom: "4px", display: "block" }}>{t("Role / Designation *")}</label>
                                 <input
                                     type="text"
                                     className="form-control"
@@ -349,9 +332,7 @@ const OwnershipStep = ({ onNext, onBack, userType, data = {}, userDetails }) => 
                             </div>
 
                             <div style={{ flex: 1 }}>
-                                <label style={{ fontSize: "13px", fontWeight: 600, color: "#374151", marginBottom: "4px", display: "block" }}>
-                                    Ownership %
-                                </label>
+                                <label style={{ fontSize: "13px", fontWeight: 600, color: "#374151", marginBottom: "4px", display: "block" }}>{t("Ownership %")}</label>
                                 <input
                                     type="number"
                                     className="form-control"
@@ -370,16 +351,12 @@ const OwnershipStep = ({ onNext, onBack, userType, data = {}, userDetails }) => 
                                     type="checkbox"
                                     checked={formData.isPep}
                                     onChange={(e) => setFormData(prev => ({ ...prev, isPep: e.target.checked }))}
-                                />
-                                Politically Exposed Person (PEP)
-                            </label>
+                                />{t("Politically Exposed Person (PEP)")}</label>
                         </div>
                     </ModalBody>
 
                     <ModalFooter>
-                        <Button color="secondary" onClick={() => setIsModalOpen(false)}>
-                            Cancel
-                        </Button>
+                        <Button color="secondary" onClick={() => setIsModalOpen(false)}>{t("Cancel")}</Button>
                         <Button color="primary" type="submit">
                             {isEditing ? 'Save Changes' : 'Add Beneficial Owner'}
                         </Button>
@@ -387,7 +364,7 @@ const OwnershipStep = ({ onNext, onBack, userType, data = {}, userDetails }) => 
                 </form>
             </Modal>
         </div>
-    )
+    );
 }
 
 export default OwnershipStep

@@ -635,7 +635,7 @@ const Basic = ({ setCurrentTab }) => {
                                 <div style={{ position: "absolute", right: "7px", top: "7px" }}>
                                     <div className="d-flex justify-content-center">
                                         <div className="spinner-border" color='primary' role="status">
-                                            <span className="sr-only">Loading...</span>
+                                            <span className="sr-only">{t("Loading...")}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -1086,7 +1086,7 @@ const Basic = ({ setCurrentTab }) => {
                 </CardFooter>
             </Card>
         </MuiPickersUtilsProvider>
-    )
+    );
 }
 
 export default Basic

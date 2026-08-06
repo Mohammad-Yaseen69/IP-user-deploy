@@ -64,12 +64,12 @@ const Profile = () => {
                             <div className={styles.infoRowsList}>
                                 <div className={styles.infoRow}>
                                     <span className={styles.label}>{t("Company")}</span>
-                                    <span className={styles.value}>Mensah Trade Partners Ltd</span>
+                                    <span className={styles.value}>{t("Mensah Trade Partners Ltd")}</span>
                                 </div>
 
                                 <div className={styles.infoRow}>
                                     <span className={styles.label}>{t("Country")}</span>
-                                    <span className={styles.value}>Ghana</span>
+                                    <span className={styles.value}>{t("Ghana")}</span>
                                 </div>
 
                                 <div className={styles.infoRow}>
@@ -87,7 +87,7 @@ const Profile = () => {
 
                                 <div className={styles.infoRow}>
                                     <span className={styles.label}>{t("Since")}</span>
-                                    <span className={styles.value}>Jan 2025</span>
+                                    <span className={styles.value}>{t("Jan 2025")}</span>
                                 </div>
                             </div>
                         </div>
@@ -110,8 +110,8 @@ const Profile = () => {
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td>Akosua Mensah</td>
-                                            <td>Director · UBO 70%</td>
+                                            <td>{t("Akosua Mensah")}</td>
+                                            <td>{t("Director · UBO 70%")}</td>
                                             <td>
                                                 <span className={styles.badgeVerified}>
                                                     <CheckCircle size={12} />
@@ -120,8 +120,8 @@ const Profile = () => {
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td>Kofi Mensah</td>
-                                            <td>UBO 30%</td>
+                                            <td>{t("Kofi Mensah")}</td>
+                                            <td>{t("UBO 30%")}</td>
                                             <td>
                                                 <span className={styles.badgeVerified}>
                                                     <CheckCircle size={12} />
@@ -144,12 +144,12 @@ const Profile = () => {
                             <div className={styles.infoRowsList}>
                                 <div className={styles.infoRow}>
                                     <span className={styles.label}>{t("Commission payout account")}</span>
-                                    <span className={styles.value}>MT84 SYPL 3948 6011 •••• ••••</span>
+                                    <span className={styles.value}>{t("MT84 SYPL 3948 6011 •••• ••••")}</span>
                                 </div>
 
                                 <div className={styles.infoRow}>
                                     <span className={styles.label}>{t("Currency")}</span>
-                                    <span className={styles.value}>EUR</span>
+                                    <span className={styles.value}>{t("EUR")}</span>
                                 </div>
 
                                 <div className={styles.infoRow}>

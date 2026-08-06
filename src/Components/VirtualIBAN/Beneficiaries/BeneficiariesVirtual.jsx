@@ -75,26 +75,26 @@ const BeneficiariesVirtual = () => {
 
                             <div className={styles.beneficiariesList}>
                                 <div className={`${styles.beneficiaryItem} ${styles.activeItem}`}>
-                                    <div className={styles.avatarCircle} style={{ background: '#F59E0B' }}>AM</div>
+                                    <div className={styles.avatarCircle} style={{ background: '#F59E0B' }}>{t("AM")}</div>
                                     <div className={styles.itemMeta}>
-                                        <h4>Arnold Mbuka</h4>
-                                        <p>Individual • TRON network</p>
+                                        <h4>{t("Arnold Mbuka")}</h4>
+                                        <p>{t("Individual • TRON network")}</p>
                                     </div>
                                 </div>
 
                                 <div className={styles.beneficiaryItem}>
-                                    <div className={styles.avatarCircle} style={{ background: '#4F46E5' }}>SS</div>
+                                    <div className={styles.avatarCircle} style={{ background: '#4F46E5' }}>{t("SS")}</div>
                                     <div className={styles.itemMeta}>
-                                        <h4>System Pay Services Solutions Spain</h4>
-                                        <p>Company • ERC-20 network</p>
+                                        <h4>{t("System Pay Services Solutions Spain")}</h4>
+                                        <p>{t("Company • ERC-20 network")}</p>
                                     </div>
                                 </div>
 
                                 <div className={styles.beneficiaryItem}>
-                                    <div className={styles.avatarCircle} style={{ background: '#10B981' }}>AM</div>
+                                    <div className={styles.avatarCircle} style={{ background: '#10B981' }}>{t("AM")}</div>
                                     <div className={styles.itemMeta}>
-                                        <h4>Anat Moula</h4>
-                                        <p>Individual • Sol Network</p>
+                                        <h4>{t("Anat Moula")}</h4>
+                                        <p>{t("Individual • Sol Network")}</p>
                                     </div>
                                 </div>
                             </div>

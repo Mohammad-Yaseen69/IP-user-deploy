@@ -132,9 +132,9 @@ const MoveMoney = () => {
                                                 {t("European bank transfers in euro — fast, and low-cost across 30+ SEPA countries.")}
                                             </p>
                                             <div className={styles.badgeRow}>
-                                                <span className={`${styles.tag} ${styles.tagBlue}`}>Euro</span>
-                                                <span className={`${styles.tag} ${styles.tagGray}`}>1-3 Days</span>
-                                                <span className={`${styles.tag} ${styles.tagGray}`}>Low-cost</span>
+                                                <span className={`${styles.tag} ${styles.tagBlue}`}>{t("Euro")}</span>
+                                                <span className={`${styles.tag} ${styles.tagGray}`}>{t("1-3 Days")}</span>
+                                                <span className={`${styles.tag} ${styles.tagGray}`}>{t("Low-cost")}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -151,9 +151,9 @@ const MoveMoney = () => {
                                                     {t("Worldwide bank transfers in USD, EUR, GBP, CHF and more, with country-specific routing.")}
                                                 </p>
                                                 <div className={styles.badgeRow}>
-                                                    <span className={`${styles.tag} ${styles.tagBlue}`}>USD, EUR, GBP</span>
-                                                    <span className={`${styles.tag} ${styles.tagGray}`}>1-5 Days</span>
-                                                    <span className={`${styles.tag} ${styles.tagGray}`}>Worldwide</span>
+                                                    <span className={`${styles.tag} ${styles.tagBlue}`}>{t("USD, EUR, GBP")}</span>
+                                                    <span className={`${styles.tag} ${styles.tagGray}`}>{t("1-5 Days")}</span>
+                                                    <span className={`${styles.tag} ${styles.tagGray}`}>{t("Worldwide")}</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -170,9 +170,9 @@ const MoveMoney = () => {
                                                     {t("Pay to bank account, mobile money, wallet or cash pickup — country-adaptive, powered by Thunes.")}
                                                 </p>
                                                 <div className={styles.badgeRow}>
-                                                    <span className={`${styles.tag} ${styles.tagWhite}`}>Worldwide</span>
-                                                    <span className={`${styles.tag} ${styles.tagWhite}`}>Fast lookup</span>
-                                                    <span className={`${styles.tag} ${styles.tagWhite}`}>Country-adaptive</span>
+                                                    <span className={`${styles.tag} ${styles.tagWhite}`}>{t("Worldwide")}</span>
+                                                    <span className={`${styles.tag} ${styles.tagWhite}`}>{t("Fast lookup")}</span>
+                                                    <span className={`${styles.tag} ${styles.tagWhite}`}>{t("Country-adaptive")}</span>
                                                 </div>
                                             </div>
                                         </div>
