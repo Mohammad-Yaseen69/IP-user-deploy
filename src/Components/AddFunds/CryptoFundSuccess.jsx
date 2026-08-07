@@ -2,13 +2,14 @@ import { DotLottieReact } from '@lottiefiles/dotlottie-react'
 import { useEffect, useState } from "react"
 import { Check, Info } from "react-feather"
 import { useTranslation } from "react-i18next"
-import { useNavigate, useSearchParams } from "react-router"
+import { useNavigate } from "react-router"
 import SocialModal from "../ShareBtn/SocialModal"
 import share from "../PaymentsNewer/files/share.png"
 import w from "../PaymentsNewer/files/where.png"
 import help from "../PaymentsNewer/InternationalFlow/files/help.svg"
 import logo from "../PaymentsNewer/InternationalFlow/files/ins_logo.svg"
 import styles from "../PaymentsNewer/InternationalFlow/styles/receipt.module.css"
+import { useSearchParams } from 'react-router-dom'
 
 const CryptoFundSuccess = () => {
     const { t } = useTranslation()
