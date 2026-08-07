@@ -316,7 +316,14 @@ const OwnershipStep = ({ onNext, onBack, userType, data = {}, userDetails }) => 
                                 minLength={2}
                                 maxLength={255}
                                 value={formData.fullName}
-                                onChange={(e) => setFormData(prev => ({ ...prev, fullName: e.target.value }))}
+                                onChange={(e) => {
+                                    const value = e.target.value.replace(/[^a-zA-Z\s]/g, "");
+
+                                    setFormData((prev) => ({
+                                        ...prev,
+                                        fullName: value,
+                                    }));
+                                }}
                                 placeholder="John Doe"
                             />
                         </div>

@@ -1,3 +1,4 @@
+import { Tooltip } from '@mui/material'
 import { useMemo, useState } from 'react'
 import { ArrowLeft, ArrowRight, X } from 'react-feather'
 import { useTranslation } from 'react-i18next'
@@ -225,7 +226,7 @@ const ActivityStep = ({ onNext, onBack, data = {} }) => {
 
                                 <div className={styles.chips} style={{
                                     display: "flex",
-                                    flexWrap: "nowrap",
+                                    flexWrap: "wrap",
                                     gap: "8px",
                                     whiteSpace: "nowrap",
                                     overflowX: "auto",
@@ -349,25 +350,35 @@ const ActivityStep = ({ onNext, onBack, data = {} }) => {
                                 <label className={styles.inputLabel}>
                                     {t("SERVICES REQUESTED")}
                                 </label>
-
                                 <div className={styles.chips}>
                                     {[
-                                        "SEPA & SWIFT",
-                                        "Crypto to Fiat",
-                                        "Mass payouts",
-                                        "Cards",
-                                    ].map((item) => (
-                                        <button
-                                            key={item}
-                                            type="button"
-                                            className={`${styles.chip} ${form.services?.includes(item)
-                                                ? styles.activeChip
-                                                : ""
-                                                }`}
-                                            onClick={() => toggleArrayItem('services', item)}
+                                        { label: "SEPA & SWIFT", comingSoon: false },
+                                        { label: "Crypto to Fiat", comingSoon: true },
+                                        { label: "Mass payouts", comingSoon: true },
+                                        { label: "Cards", comingSoon: true },
+                                    ].map(({ label, comingSoon }) => (
+                                        <Tooltip
+                                            key={label}
+                                            title={comingSoon ? "Coming Soon" : ""}
+                                            arrow
+                                            placement="top"
                                         >
-                                            {item}
-                                        </button>
+                                            <span>
+                                                <button
+                                                    type="button"
+                                                    disabled={comingSoon}
+                                                    className={`${styles.chip} ${form.services?.includes(label)
+                                                            ? styles.activeChip
+                                                            : ""
+                                                        }`}
+                                                    onClick={() =>
+                                                        !comingSoon && toggleArrayItem("services", label)
+                                                    }
+                                                >
+                                                    {label}
+                                                </button>
+                                            </span>
+                                        </Tooltip>
                                     ))}
                                 </div>
                             </div>
@@ -584,7 +595,8 @@ const ActivityStep = ({ onNext, onBack, data = {} }) => {
 
                                     <input
                                         style={{ padding: "14.5px 14px 14.5px 12.5px" }}
-
+                                        type="number"
+                                        min="0"
                                         className={styles.textInput}
                                         value={form.outgoingPayments}
                                         onChange={set("outgoingPayments")}
