@@ -71,6 +71,12 @@ const UploadAdditionalKYB = ({ isOpen, toggle, files, user_id, type = "kyb", par
         const file = e.target.files[0];
         if (!file) return;
 
+        if (file.size > 5 * 1024 * 1024) {
+            toast.error(t("File size cannot exceed 5MB"));
+            e.target.value = '';
+            return;
+        }
+
         if (currentItem?.file_type) {
             const isValid = validateFileType(file, currentItem.file_type);
             if (!isValid) {
