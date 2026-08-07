@@ -324,7 +324,7 @@ const OwnershipStep = ({ onNext, onBack, userType, data = {}, userDetails }) => 
                                         fullName: value,
                                     }));
                                 }}
-                                 placeholder="John Doe"
+                                placeholder="John Doe"
                             />
                         </div>
 
