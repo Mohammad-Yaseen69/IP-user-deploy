@@ -1,6 +1,5 @@
 import { useContext, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { useNavigate } from "react-router-dom";
 import { UserContext } from "../Context/UserContext";
 import { apiWrapper } from "../utils/Functions/apiWrapper";
 import { openInNewTab } from "../utils/Functions";
@@ -8,8 +7,10 @@ import instapyLogo from "../assets/images/logo/sidebarnewManulogo.svg";
 import logo_white from "../assets/images/logo/logoWhite2.svg";
 import InstaMedia from "../assets/images/logo/InstaMedia.svg";
 import InstaFolio from "../assets/images/logo/InstaFolio.svg";
+import agentIcon from "../assets/images/logo/agentIcon.svg";
+import agentIcon2 from "../assets/images/logo/agent2.svg";
 import bgImg from "../assets/images/logo/Vector.png";
-
+import { useNavigate, useLocation } from "react-router-dom";
 const ShopActiveIcon = () => (
     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 17 14" fill="none">
         <path d="M15 0H1.25C0.918479 0 0.600537 0.131696 0.366116 0.366116C0.131696 0.600537 0 0.918479 0 1.25V12.5C0 12.8315 0.131696 13.1495 0.366116 13.3839C0.600537 13.6183 0.918479 13.75 1.25 13.75H15C15.3315 13.75 15.6495 13.6183 15.8839 13.3839C16.1183 13.1495 16.25 12.8315 16.25 12.5V1.25C16.25 0.918479 16.1183 0.600537 15.8839 0.366116C15.6495 0.131696 15.3315 0 15 0ZM8.125 7.5C7.13076 7.49897 6.17753 7.10355 5.47449 6.40051C4.77145 5.69747 4.37603 4.74424 4.375 3.75C4.375 3.58424 4.44085 3.42527 4.55806 3.30806C4.67527 3.19085 4.83424 3.125 5 3.125C5.16576 3.125 5.32473 3.19085 5.44194 3.30806C5.55915 3.42527 5.625 3.58424 5.625 3.75C5.625 4.41304 5.88839 5.04893 6.35723 5.51777C6.82607 5.98661 7.46196 6.25 8.125 6.25C8.78804 6.25 9.42393 5.98661 9.89277 5.51777C10.3616 5.04893 10.625 4.41304 10.625 3.75C10.625 3.58424 10.6908 3.42527 10.8081 3.30806C10.9253 3.19085 11.0842 3.125 11.25 3.125C11.4158 3.125 11.5747 3.19085 11.6919 3.30806C11.8092 3.42527 11.875 3.58424 11.875 3.75C11.874 4.74424 11.4785 5.69747 10.7755 6.40051C10.0725 7.10355 9.11924 7.49897 8.125 7.5Z" fill="url(#shop-active-gradient)" />
@@ -23,10 +24,11 @@ const ShopActiveIcon = () => (
     </svg>
 )
 
+
 const NewMenu = () => {
     const navigate = useNavigate()
+    const location = useLocation();
     const { userDetails } = useContext(UserContext)
-    const [activeItem, setActiveItem] = useState("instapay")
 
     const { data, isError } = useQuery({
         queryKey: ['UserStore'],
@@ -40,7 +42,6 @@ const NewMenu = () => {
 
     const handleEshopClick = () => {
         const eShopUrl = `${import.meta.env.VITE_IP_ECOM_URL}/dashboard/seller?fromMain=true`
-        setActiveItem("shop")
 
         if (data?.data && !isError) {
             openInNewTab(eShopUrl)
@@ -48,7 +49,14 @@ const NewMenu = () => {
             navigate("/store-create")
         }
     }
-
+    const activeItem =
+        location.pathname === "/agent-commission"
+            ? "agent"
+            : location.pathname === "/Insta-media"
+                ? "media"
+                : location.pathname === "/store-create"
+                    ? "shop"
+                    : "instapay";
     const containerStyle = {
         padding: "5px",
         display: "flex",
@@ -97,7 +105,6 @@ const NewMenu = () => {
                     }),
                 }}
                 onClick={() => {
-                    setActiveItem("instapay")
                     navigate("/")
                 }}
             >     {activeItem === "instapay" ?
@@ -139,7 +146,6 @@ const NewMenu = () => {
 
             <div
                 onClick={() => {
-                    setActiveItem("media")
                     navigate("/Insta-media")
                 }}
                 style={{
@@ -160,24 +166,32 @@ const NewMenu = () => {
             </div>
             <div
                 onClick={() => {
-                    setActiveItem("agent")
                     navigate("/agent-commission")
                 }}
                 style={{
                     ...(activeItem === "agent" ? activeStyle : itemStyle),
-                    ...(activeItem !== "media" && {
+                    ...(activeItem !== "agent" && {
                         border: "0.25px solid rgba(255, 255, 255, 0.28)",
                         background: "#4c29b5",
 
                     }),
                 }}
             >
-                <img
-                    src={InstaMedia}
-                    alt="agent"
-                    width={20}
-                    height={20}
-                />
+                {activeItem === "agent" ? (
+                    <img
+                        src={agentIcon}
+                        alt="agent"
+                        width={20}
+                        height={20}
+                    />
+                ) : (
+                    <img
+                        src={agentIcon2}
+                        alt="agent"
+                        width={20}
+                        height={20}
+                    />
+                )}
             </div>
         </div>
     );
