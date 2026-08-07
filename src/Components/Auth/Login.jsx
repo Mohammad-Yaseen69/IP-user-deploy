@@ -683,7 +683,31 @@ const Login = ({ country, setIsLoginForm, }) => {
             return
         }
         if (numericValue.length > 1) {
-            numericValue = numericValue.slice(-1);
+            const newOTPValues = [...otpValues];
+
+            numericValue
+                .slice(0, numberOfFields)
+                .split("")
+                .forEach((char, i) => {
+                    newOTPValues[i] = char;
+                });
+
+            setOTPValues(newOTPValues);
+            setCurrentActiveInput(
+                Math.min(numericValue.length, numberOfFields)
+            );
+
+            const isEmpty = newOTPValues.some((val) => val === "");
+            setIsAnyFieldEmpty(isEmpty);
+
+            if (!isEmpty) {
+                verifyOTpHandler(
+                    { preventDefault: () => { } },
+                    newOTPValues.join("")
+                );
+            }
+
+            return;
         }
         let newOTPValues = [...otpValues];
         newOTPValues[index] = numericValue;
@@ -778,22 +802,36 @@ const Login = ({ country, setIsLoginForm, }) => {
 
     const handlePaste = (event) => {
         event.preventDefault();
-        console.log(event)
-        const pasteData = event?.clipboardData?.getData('text')?.replace(/[^0-9]/g, '')?.slice(0, numberOfFields);
-        let newOTPValues = [...otpValues];
 
-        pasteData.split('').forEach((char, index) => {
+        const pasteData = event.clipboardData
+            ?.getData("text")
+            ?.replace(/\D/g, "")
+            ?.slice(0, numberOfFields);
+
+        if (!pasteData) return;
+
+        const newOTPValues = Array(numberOfFields).fill("");
+
+        pasteData.split("").forEach((char, index) => {
             newOTPValues[index] = char;
         });
-        setCurrentActiveInput(6)
+
         setOTPValues(newOTPValues);
-        const isEmpty = newOTPValues.some(val => val === '');
+
+        const isEmpty = newOTPValues.some((val) => val === "");
         setIsAnyFieldEmpty(isEmpty);
+
+        setCurrentActiveInput(
+            Math.min(pasteData.length, numberOfFields)
+        );
+
         if (!isEmpty) {
-            verifyOTpHandler({ preventDefault: () => { } }, newOTPValues.join(""))
+            verifyOTpHandler(
+                { preventDefault: () => { } },
+                newOTPValues.join("")
+            );
         }
     };
-
     const handleOtpMethod = (method) => {
         setOTPValues(Array(numberOfFields).fill(''))
         inputRefs?.current?.[0]?.focus()
@@ -1500,8 +1538,7 @@ const Login = ({ country, setIsLoginForm, }) => {
                                                                         src={method.icon}
                                                                         alt=""
                                                                     />
-                                                                    <span style={{ marginBottom: "0", textDecoration: "underline", textDecorationColor: "white", color: 'black', whiteSpace: 'nowrap' }}
-                                                                    >
+                                                                    <span className={styles.otpMethodText}>
                                                                         {t(method.text)}
                                                                     </span>
                                                                 </button>
