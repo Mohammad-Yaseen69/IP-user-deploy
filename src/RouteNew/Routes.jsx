@@ -94,6 +94,7 @@ const Reports = lazy(() => import("../Components/AgentCommission/Reports/Reports
 const Support = lazy(() => import("../Components/AgentCommission/Support/Support.jsx"))
 const AgentProfile = lazy(() => import("../Components/AgentCommission/Profile/Profile.jsx"))
 const FeeModelRequests = lazy(() => import("../Components/AgentCommission/FeeRequests/FeeModelRequests.jsx"))
+const LeadClaimConfirm = lazy(() => import("../Components/Auth/LeadClaimConfirm.jsx"))
 
 
 const PermissionRoute = ({ permission, children }) => {
@@ -199,6 +200,8 @@ export const routes = [
     { path: "/third-party-senders", component: <PermissionRoute permission="payments.send-as-third-party.view"><ThirdPartySenders /></PermissionRoute> },
     { path: "*", component: <NotFound type='Page' /> }
 ]
+
+
 export const publicRoutes = [
     { path: "/qr-test", component: <QrCode /> },
     { path: "/q/:wallet_id", component: <QRScan /> },
@@ -235,6 +238,7 @@ export const publicRoutes = [
     // { path: "/KYBOnboarding", component: <KYBOnboarding /> },
     { path: "/validate-iban/:ibanId", component: <IbanValidationPage /> },
     { path: "/Insta-media", component: <InstaMedia /> },
+    { path: "/lead-claim-confirm", component: <LeadClaimConfirm /> },
     { path: "*", component: <NotFound type='Page' /> }
 ]
 export const authRoutes = [

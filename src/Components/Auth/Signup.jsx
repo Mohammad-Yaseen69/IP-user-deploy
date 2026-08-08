@@ -2,7 +2,7 @@ import styles from "./styles/index.module.css"
 import LanguagePicker from '../LanguagePicker'
 import { useTranslation } from 'react-i18next'
 import { useContext, useEffect, useMemo, useReducer } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { ChevronRight } from "react-feather";
 import Stepone from "./Signup/Stepone";
 import gs from "./files/gs.svg"
@@ -15,6 +15,7 @@ import Stepfive from "./Signup/Stepfive";
 import ErrorModal from "../PaymentsNewer/InternationalFlow/ErrorModal";
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
+import { apiWrapper } from "../../utils/Functions/apiWrapper";
 import axios from "axios";
 import { UserContext } from "../../Context/UserContext";
 import OtpConfirmation from "./Signup/OtpConfirmation";
@@ -70,6 +71,8 @@ const Signup = ({ country, setIsLoginForm, setHideLogo }) => {
     const { t } = useTranslation()
     const [data, dispatch] = useReducer(reducer, initialState);
     const { code } = useParams()
+    const [searchParams] = useSearchParams();
+    const agentReferralTokenId = searchParams.get("agentReferralTokenId");
     const { allowedCountries } = useContext(UserContext)
 
     const dataHandler = (field, value) => {
@@ -80,6 +83,53 @@ const Signup = ({ country, setIsLoginForm, setHideLogo }) => {
         console.log(country)
         dataHandler("country", country)
     }, [country])
+
+    useEffect(() => {
+        const fetchLeadTokenData = async () => {
+            if (!agentReferralTokenId) return;
+            try {
+                const res = await apiWrapper({
+                    endpoint: `/api/agent-leads/token/${agentReferralTokenId}`,
+                    method: "GET",
+                    isPublic: true,
+                    isDecrypted: true
+                });
+                const dec = res?.data || res;
+                if (dec && (dec.account_type || dec.email || dec.phone || dec.company_name)) {
+                    if (dec.account_type) dataHandler("account_type", dec.account_type);
+                    if (dec.email) dataHandler("email", dec.email);
+                    if (dec.phone) dataHandler("phone", dec.phone);
+                    if (dec.first_name) dataHandler("first_name", dec.first_name);
+                    if (dec.last_name) dataHandler("last_name", dec.last_name);
+                    if (dec.company_name) dataHandler("company_name", dec.company_name);
+                    if (dec.fee_pack_code) dataHandler("referral_code", dec.fee_pack_code);
+
+                    const targetCountryStr = dec.country_iso3 || dec.country_iso2 || dec.country;
+                    if (targetCountryStr) {
+                        if (allowedCountries?.length > 0) {
+                            const matched = allowedCountries.find(c =>
+                                c.country_iso_code?.toLowerCase() === targetCountryStr.toLowerCase() ||
+                                c.alpha3?.toLowerCase() === targetCountryStr.toLowerCase() ||
+                                c.country_name?.toLowerCase() === targetCountryStr.toLowerCase() ||
+                                c.name?.toLowerCase() === targetCountryStr.toLowerCase()
+                            );
+                            if (matched) {
+                                dataHandler("country", matched);
+                            } else {
+                                dataHandler("country", targetCountryStr);
+                            }
+                        } else {
+                            dataHandler("country", targetCountryStr);
+                        }
+                    }
+                }
+            } catch (err) {
+                console.error("Failed to fetch lead token prefill details:", err);
+            }
+        };
+
+        fetchLeadTokenData();
+    }, [agentReferralTokenId, allowedCountries]);
 
 
     const isWhatsappDefault = useMemo(() => {

@@ -3,17 +3,24 @@ import useWindowWidth from '../../../utils/useWindowWidth';
 import { useTranslation } from 'react-i18next';
 import styles from "../styles/leads.module.css";
 import TopRight from '../../topRight';
-import { Search } from 'react-feather';
+import { Search, Send } from 'react-feather';
 import LeadModal from './LeadModal';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { apiWrapper } from '../../../utils/Functions/apiWrapper';
 
 const Leads = () => {
     const { t } = useTranslation();
     const width = useWindowWidth();
+    const queryClient = useQueryClient();
 
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [initialEntityType, setInitialEntityType] = useState('corporate');
+    const [initialEntityType, setInitialEntityType] = useState('business');
 
-    const handleOpenModal = (type = 'corporate') => {
+    const [search, setSearch] = useState('');
+    const [selectedStage, setSelectedStage] = useState('all');
+    const [page, setPage] = useState(1);
+
+    const handleOpenModal = (type = 'business') => {
         setInitialEntityType(type);
         setIsModalOpen(true);
     };
@@ -22,101 +29,73 @@ const Leads = () => {
         setIsModalOpen(false);
     };
 
-    const handleLeadSubmit = (leadData) => {
-        console.log('Submitted lead data:', leadData);
+    const { data: leadsData = { leads: [], totalPages: 1 }, isLoading: loading } = useQuery({
+        queryKey: ['agentLeads', search, selectedStage, page],
+        queryFn: async () => {
+            const queryParams = new URLSearchParams({
+                search,
+                stage: selectedStage,
+                page: String(page),
+                limit: '10'
+            }).toString();
+
+            const dec = await apiWrapper({
+                endpoint: `/api/agent-leads?${queryParams}`,
+                method: 'GET',
+                isDecrypted: true
+            });
+
+            return dec?.data || dec || { leads: [], totalPages: 1 };
+        }
+    });
+
+    const resendInviteMutation = useMutation({
+        mutationFn: async (leadId) => {
+            return await apiWrapper({
+                endpoint: `/api/agent-leads/resend-invite/${leadId}`,
+                method: 'POST',
+                isDecrypted: true
+            });
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['agentLeads'] });
+        }
+    });
+
+    const stageTabs = [
+        { label: "All", value: "all" },
+        { label: "Not Registered", value: "not-registered" },
+        { label: "Onboarding Pending", value: "iban-onboarding-pending" },
+        { label: "IBAN in Review", value: "iban-in-review" },
+        { label: "KYC/KYB in Review", value: "kyc-kyb-in-review" },
+        { label: "IBAN Generated", value: "iban-generated" },
+        { label: "Registered (Lost)", value: "registered-lost" }
+    ];
+
+    const getStageBadgeClass = (stageKey) => {
+        switch (stageKey) {
+            case 'iban-generated': return styles.stageBlue;
+            case 'kyc-kyb-in-review': return styles.stagePurple;
+            case 'iban-in-review': return styles.stageOrange;
+            case 'iban-onboarding-pending': return styles.stageOrange;
+            case 'registered-lost': return styles.statusOrange;
+            case 'not-registered': default: return styles.statusGray;
+        }
     };
 
-    const buttons = [
-        { label: "All" },
-        { label: "KYB In Review" },
-        { label: "Pricing Pending" },
-        { label: "Activation Fee Pending" },
-        { label: "IBAN Generated" },
-        { label: "Active" }
-    ];
-
-    const tableData = [
-        {
-            id: 1,
-            name: "Anna Petrova",
-            avatarText: "AP",
-            avatarColor: styles.avatarPurple,
-            type: "Individual",
-            stage: "Pricing Pending",
-            stageClass: styles.stageOrange,
-            kyc: "Docs pending",
-            kycClass: styles.statusOrange,
-            compliance: "Clear",
-            complianceClass: styles.statusGreen,
-            pricing: "Sent",
-            pricingClass: styles.statusPurple,
-            commission: "—"
-        },
-        {
-            id: 2,
-            name: "Apex Platinum Co.",
-            avatarText: "AP",
-            avatarColor: styles.avatarBlue,
-            type: "Business",
-            stage: "Activation Fee Pending",
-            stageClass: styles.stageOrange,
-            kyc: "Verified",
-            kycClass: styles.statusGreen,
-            compliance: "Clear",
-            complianceClass: styles.statusGreen,
-            pricing: "Approved",
-            pricingClass: styles.statusGreen,
-            commission: "€1,120 (pending)"
-        },
-        {
-            id: 3,
-            name: "Regal Goldsmiths",
-            avatarText: "RG",
-            avatarColor: styles.avatarLightBlue,
-            type: "Business",
-            stage: "IBAN Generated",
-            stageClass: styles.stageBlue,
-            kyc: "Verified",
-            kycClass: styles.statusGreen,
-            compliance: "Clear",
-            complianceClass: styles.statusGreen,
-            pricing: "Approved",
-            pricingClass: styles.statusGreen,
-            commission: "€1,400"
-        },
-        {
-            id: 4,
-            name: "Summit Metals Inc.",
-            avatarText: "SM",
-            avatarColor: styles.avatarDeepPurple,
-            type: "Business",
-            stage: "KYB in Review",
-            stageClass: styles.stagePurple,
-            kyc: "Docs pending",
-            kycClass: styles.statusOrange,
-            compliance: "Open",
-            complianceClass: styles.statusOrange,
-            pricing: "N/A",
-            pricingClass: styles.statusGray,
-            commission: "—"
-        },
-        {
-            id: 5,
-            name: "BlueLine Button Traders",
-            avatarText: "BB",
-            avatarColor: styles.avatarGreen,
-            type: "Business",
-            stage: "KYB in Review",
-            stageClass: styles.stagePurple,
-            kyc: "Docs pending",
-            kycClass: styles.statusOrange,
-            compliance: "Open",
-            complianceClass: styles.statusOrange,
-            pricing: "N/A",
-            pricingClass: styles.statusGray,
-            commission: "—"
+    const getStageLabel = (stageKey) => {
+        switch (stageKey) {
+            case 'iban-generated': return t('IBAN Generated');
+            case 'kyc-kyb-in-review': return t('KYC/KYB in Review');
+            case 'iban-in-review': return t('IBAN in Review');
+            case 'iban-onboarding-pending': return t('Onboarding Pending');
+            case 'registered-lost': return t('Registered (Lost)');
+            case 'not-registered': default: return t('Not Registered');
         }
-    ];
+    };
+
+    const leads = leadsData.leads || [];
+    const totalPages = leadsData.totalPages || 1;
 
     return (
         <div className={styles.container}>
@@ -136,36 +115,31 @@ const Leads = () => {
                 </div>
 
                 <div className={styles.buttons}>
-                    {buttons.map((button, index) => (
-                        <button key={index} className={styles.button}>{t(button.label)}</button>
+                    {stageTabs.map((tab) => (
+                        <button
+                            key={tab.value}
+                            className={`${styles.button} ${selectedStage === tab.value ? styles.pageActive : ''}`}
+                            onClick={() => { setSelectedStage(tab.value); setPage(1); }}
+                        >
+                            {t(tab.label)}
+                        </button>
                     ))}
                 </div>
 
                 <div className={styles.controlsRow}>
                     <div className={styles.searchWrapper}>
                         <Search className={styles.searchIcon} size={16} />
-                        <input type="text" placeholder={t("Search...")} className={styles.searchInput} />
+                        <input
+                            type="text"
+                            placeholder={t("Search by name, email, phone...")}
+                            value={search}
+                            onChange={(e) => { setSearch(e.target.value); setPage(1); }}
+                            className={styles.searchInput}
+                        />
                     </div>
 
                     <div className={styles.actionGroup}>
-                        <button className={styles.secondaryBtn}>
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#344054" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
-                            </svg>
-                            {t("Filter")}
-                        </button>
-
-                        <button className={styles.secondaryBtn}>
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#344054" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                <path d="M11 5L6 10L1 5"></path>
-                                <path d="M6 19V6"></path>
-                                <path d="M13 19L18 14L23 19"></path>
-                                <path d="M18 5V18"></path>
-                            </svg>
-                            {t("Sort By")}
-                        </button>
-
-                        <button className={styles.primaryBtn} onClick={() => handleOpenModal('corporate')}>
+                        <button className={styles.primaryBtn} onClick={() => handleOpenModal('business')}>
                             <span>+ {t("Add new lead")}</span>
                         </button>
                     </div>
@@ -174,66 +148,99 @@ const Leads = () => {
                 <div className={styles.tableContainer}>
                     <div className={styles.tableWrapper}>
                         <div className={styles.tableHeaderRow}>
-                            <div className={styles.thCell}>{t("Client")}</div>
+                            <div className={styles.thCell}>{t("Client / Lead")}</div>
                             <div className={styles.thCell}>{t("Type")}</div>
+                            <div className={styles.thCell}>{t("Country")}</div>
                             <div className={styles.thCell}>{t("Stage")}</div>
-                            <div className={styles.thCell}>{t("KYC/KYB")}</div>
-                            <div className={styles.thCell}>{t("Compliance")}</div>
-                            <div className={styles.thCell}>{t("Pricing")}</div>
-                            <div className={styles.thCell}>{t("Commission")}</div>
+                            <div className={styles.thCell}>{t("Contact")}</div>
+                            <div className={styles.thCell}>{t("Fee Pack")}</div>
+                            <div className={styles.thCell}>{t("Actions")}</div>
                         </div>
 
                         <div className={styles.tableBody}>
-                            {tableData.map((row) => (
-                                <div key={row.id} className={styles.tableDataRow}>
-                                    <div className={`${styles.tdCell} ${styles.clientCell}`}>
-                                        <div className={`${styles.avatar} ${row.avatarColor}`}>
-                                            {row.avatarText}
+                            {loading ? (
+                                <div style={{ padding: '24px', textAlign: 'center', color: '#666' }}>{t("Loading leads...")}</div>
+                            ) : leads.length === 0 ? (
+                                <div style={{ padding: '24px', textAlign: 'center', color: '#888' }}>{t("No leads found.")}</div>
+                            ) : (
+                                leads.map((row) => {
+                                    const displayName = row.company_name || `${row.first_name || ''} ${row.last_name || ''}`.trim() || t("Unnamed Lead");
+                                    const avatarText = displayName.substring(0, 2).toUpperCase();
+
+                                    return (
+                                        <div key={row._id} className={styles.tableDataRow}>
+                                            <div className={`${styles.tdCell} ${styles.clientCell}`}>
+                                                <div className={`${styles.avatar} ${styles.avatarBlue}`}>
+                                                    {avatarText}
+                                                </div>
+                                                <span className={styles.clientName}>{displayName}</span>
+                                            </div>
+
+                                            <div className={styles.tdCell}>
+                                                <span style={{ textTransform: 'capitalize' }}>{t(row.leadType)}</span>
+                                            </div>
+
+                                            <div className={styles.tdCell}>{row.country || '—'}</div>
+
+                                            <div className={styles.tdCell}>
+                                                <span className={`${styles.badge} ${getStageBadgeClass(row.stage)}`}>
+                                                    {getStageLabel(row.stage)}
+                                                </span>
+                                            </div>
+
+                                            <div className={styles.tdCell}>
+                                                <span style={{ fontSize: '13px', color: '#555' }}>
+                                                    {row.email || row.phone || '—'}
+                                                </span>
+                                            </div>
+
+                                            <div className={styles.tdCell}>
+                                                <span className={`${styles.textIndicator} ${styles.statusGreen}`}>
+                                                    {row.fee_pack?.name || 'Standard'}
+                                                </span>
+                                            </div>
+
+                                            <div className={styles.tdCell}>
+                                                {row.stage === 'not-registered' ? (
+                                                    <button
+                                                        onClick={() => resendInviteMutation.mutate(row._id)}
+                                                        disabled={resendInviteMutation.isPending}
+                                                        className={styles.secondaryBtn}
+                                                        style={{ padding: '4px 8px', fontSize: '12px', display: 'flex', alignItems: 'center', gap: '4px' }}
+                                                    >
+                                                        <Send size={12} />
+                                                        {resendInviteMutation.isPending ? t("Sending...") : t("Resend Invite")}
+                                                    </button>
+                                                ) : (
+                                                    <span style={{ color: '#888', fontSize: '12px' }}>—</span>
+                                                )}
+                                            </div>
                                         </div>
-                                        <span className={styles.clientName}>{t(row.name)}</span>
-                                    </div>
-                                    <div className={styles.tdCell}>{t(row.type)}</div>
-                                    <div className={styles.tdCell}>
-                                        <span className={`${styles.badge} ${row.stageClass}`}>
-                                            {t(row.stage)}
-                                        </span>
-                                    </div>
-                                    <div className={styles.tdCell}>
-                                        <span className={`${styles.textIndicator} ${row.kycClass}`}>
-                                            {t(row.kyc)}
-                                        </span>
-                                    </div>
-                                    <div className={styles.tdCell}>
-                                        <span className={`${styles.textIndicator} ${row.complianceClass}`}>
-                                            {t(row.compliance)}
-                                        </span>
-                                    </div>
-                                    <div className={styles.tdCell}>
-                                        <span className={`${styles.textIndicator} ${row.pricingClass}`}>
-                                            {t(row.pricing)}
-                                        </span>
-                                    </div>
-                                    <div className={styles.tdCell}>{t(row.commission)}</div>
-                                </div>
-                            ))}
+                                    );
+                                })
+                            )}
                         </div>
                     </div>
 
                     <div className={styles.paginationRow}>
                         <div className={styles.paginationPages}>
-                            <button className={styles.pageArrow}>&lt;</button>
-                            <button className={`${styles.pageNumber} ${styles.pageActive}`}>1</button>
-                            <button className={styles.pageNumber}>2</button>
-                            <button className={styles.pageNumber}>3</button>
-                            <button className={styles.pageNumber}>4</button>
-                            <button className={styles.pageNumber}>5</button>
-                            <button className={styles.pageNumber}>6</button>
-                            <button className={styles.pageNumber}>7</button>
-                            <button className={styles.pageNumber}>8</button>
-                            <button className={styles.pageNumber}>9</button>
-                            <span className={styles.pageEllipsis}>...</span>
-                            <button className={styles.pageNumber}>20</button>
-                            <button className={styles.pageArrow}>&gt;</button>
+                            <button
+                                className={styles.pageArrow}
+                                onClick={() => setPage(p => Math.max(1, p - 1))}
+                                disabled={page === 1}
+                            >
+                                &lt;
+                            </button>
+                            <span className={styles.pageNumber} style={{ padding: '0 8px', fontSize: '14px' }}>
+                                {t("Page")} {page} {t("of")} {totalPages}
+                            </span>
+                            <button
+                                className={styles.pageArrow}
+                                onClick={() => setPage(p => Math.min(totalPages, p + 1))}
+                                disabled={page === totalPages}
+                            >
+                                &gt;
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -242,7 +249,6 @@ const Leads = () => {
             <LeadModal
                 open={isModalOpen}
                 onClose={handleCloseModal}
-                onSubmit={handleLeadSubmit}
                 initialEntityType={initialEntityType}
             />
         </div>
