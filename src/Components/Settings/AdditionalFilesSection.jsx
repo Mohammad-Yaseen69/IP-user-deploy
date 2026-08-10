@@ -90,6 +90,15 @@ const AdditionalFilesSection = ({ files, uploadEndpoint }) => {
     const handleFileChange = (itemId, file, allowedType) => {
         if (!file) return;
 
+        if (file.size > 5 * 1024 * 1024) {
+            toast.error(t("File size cannot exceed 5MB"));
+            const inputEl = document.getElementById(`file-input-${itemId}`);
+            if (inputEl) {
+                inputEl.value = '';
+            }
+            return;
+        }
+
         if (allowedType) {
             const isValid = validateFileType(file, allowedType);
             if (!isValid) {

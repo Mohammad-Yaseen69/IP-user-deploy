@@ -1,7 +1,9 @@
+import { Tooltip } from '@mui/material'
 import { useMemo, useState } from 'react'
 import { ArrowLeft, ArrowRight, X } from 'react-feather'
 import { useTranslation } from 'react-i18next'
 import bvnkIndustryReference from '../../../../utils/Data/bvnkIndustryReference.json'
+import CountryDropDown from '../../../AddBeneficiary/CountryDropDown'
 import styles from '../style/onboardingSteps.module.css'
 import SidebarProgress from './SidebarProgress'
 
@@ -19,24 +21,18 @@ const parseIndustryReference = (industryReference) => {
     return industryReference
 }
 
-const MONTHLY_VOLUMES = [
-    'Under €10,000', '€10,000 – €50,000', '€50,000 – €250,000',
-    '€250,000 – €1M', '€1M – €5M', 'Over €5M'
-]
-
-const TRANSACTION_TYPES = [
-    { key: 'sepa', label: 'SEPA Transfers' },
-    { key: 'swift', label: 'SWIFT / International' },
-    { key: 'crypto', label: 'Crypto ↔ Fiat' },
-    { key: 'cards', label: 'Card Payments' },
-    { key: 'fx', label: 'FX / Currency Exchange' },
-    { key: 'treasury', label: 'Treasury & Liquidity' }
+const MAIN_COUNTRY_OPTIONS = [
+    'Switzerland',
+    'France',
+    'Senegal',
+    'Germany',
 ]
 
 const COUNTRY_LIST = ['Switzerland', 'France', 'Germany', 'United Kingdom', 'Netherlands', 'Luxembourg', 'Ireland', 'Malta', 'United Arab Emirates', 'United States', 'Senegal', 'Pakistan', 'India', 'China', 'Brazil', 'Canada', 'Japan', 'Australia', 'Saudi Arabia', 'South Africa']
 
-const ActivityStep = ({ onNext, onBack, userType, data = {} }) => {
+const ActivityStep = ({ onNext, onBack, data = {} }) => {
     const { t } = useTranslation()
+    const [showCountryDropdown, setShowCountryDropdown] = useState(false)
     const [form, setForm] = useState({
         industry: data.industry || '',
         industryReference: data.industryReference || parseIndustryReference(data.industry),
@@ -96,22 +92,33 @@ const ActivityStep = ({ onNext, onBack, userType, data = {} }) => {
 
     const set = (key) => (e) => setForm(prev => ({ ...prev, [key]: e.target.value }))
 
+    const handleCountrySelect = (selectedCountry) => {
+        const countryName = selectedCountry?.name?.trim()
+
+        if (!countryName) return
+
+        setForm(prev => {
+            const countryExists = prev.countries?.some(
+                country => country?.toLowerCase() === countryName.toLowerCase()
+            )
+
+            if (countryExists) {
+                return prev
+            }
+
+            return {
+                ...prev,
+                countries: [...(prev.countries || []), countryName],
+            }
+        })
+
+        setShowCountryDropdown(false)
+    }
+
     const toggleArrayItem = (key, item) => {
         setForm(prev => {
             const current = prev[key] || []
             return { ...prev, [key]: current.includes(item) ? current.filter(i => i !== item) : [...current, item] }
-        })
-    }
-
-    const toggleTxType = (key) => {
-        setForm(prev => {
-            const current = prev.transactionTypes
-            return {
-                ...prev,
-                transactionTypes: current.includes(key)
-                    ? current.filter(k => k !== key)
-                    : [...current, key]
-            }
         })
     }
 
@@ -196,47 +203,90 @@ const ActivityStep = ({ onNext, onBack, userType, data = {} }) => {
                                 <textarea
                                     className={styles.textArea}
                                     rows={4}
+                                    maxLength={1000}
                                     value={form.businessDescription}
                                     onChange={set("businessDescription")}
                                     placeholder={t(
                                         "Cross-border payment orchestration and multi-currency treasury..."
                                     )}
                                 />
+                                < span className={styles.charCount}>{form.businessDescription.length}/1000</span>
                             </div>
 
 
-                            <div className={styles.inputGroup}>
+                            <div className={styles.inputGroup}
+                                style={{
+                                    width: "100%",
+                                    maxWidth: "604px",
+                                }}
+                            >
                                 <label className={styles.inputLabel}>
                                     {t("MAIN COUNTRIES OF OPERATION")}
                                 </label>
 
-                                <div className={styles.chips}>
-                                    {[
-                                        "Switzerland",
-                                        "France",
-                                        "Senegal",
-                                        "Germany",
-                                    ].map((country) => (
-                                        <button
-                                            key={country}
-                                            type="button"
-                                            className={`${styles.chip} ${form.countries?.includes(country)
-                                                ? styles.activeChip
-                                                : ""
-                                                }`}
-                                            onClick={() => toggleArrayItem('countries', country)}
-                                        >
-                                            {country}
-                                        </button>
-                                    ))}
+                                <div className={styles.chips} style={{
+                                    display: "flex",
+                                    flexWrap: "wrap",
+                                    gap: "8px",
+                                    whiteSpace: "nowrap",
+                                    overflowX: "auto",
+                                    overflowY: "hidden",
+                                }}>
+                                    {MAIN_COUNTRY_OPTIONS.map((country) => {
+                                        const isSelected = form.countries?.some(
+                                            item => item?.toLowerCase() === country.toLowerCase()
+                                        )
 
-                                    <button
-                                        type="button"
-                                        className={styles.addChip}
-                                    >
-                                        + {t("Add another country...")}
-                                    </button>
+                                        return (
+                                            <button
+                                                key={country}
+                                                type="button"
+                                                className={isSelected ? styles.activeChip : styles.chip}
+                                                onClick={() => toggleArrayItem('countries', country)}
+                                                style={isSelected ? { gap: '6px', marginBottom: 0 } : undefined}
+                                            >
+                                                <span>{t(country)}</span>
+                                                {isSelected ? <X size={15} /> : null}
+                                            </button>
+                                        )
+                                    })}
+
+                                    {form.countries
+                                        ?.filter(country => !MAIN_COUNTRY_OPTIONS.some(item => item.toLowerCase() === country.toLowerCase()))
+                                        ?.map((country) => (
+                                            <button
+                                                key={country}
+                                                type="button"
+                                                className={styles.activeChip}
+                                                onClick={() => toggleArrayItem('countries', country)}
+                                                style={{ gap: '6px', marginBottom: 0 }}
+                                            >
+                                                <span>{t(country)}</span>
+                                                <X size={15} />
+                                            </button>
+                                        ))}
+
+                                    {!showCountryDropdown && (
+                                        <button
+                                            type="button"
+                                            className={styles.addChip}
+                                            onClick={() => setShowCountryDropdown(true)}
+                                            style={{ flex: '0 0 auto' }}
+                                        >
+                                            + {t("Add another country...")}
+                                        </button>
+                                    )}
                                 </div>
+
+                                {showCountryDropdown && (
+                                    <div style={{ marginTop: '12px', maxWidth: '420px', width: '100%' }}>
+                                        <CountryDropDown
+                                            onSelect={handleCountrySelect}
+                                            country={''}
+                                            background="#fff"
+                                        />
+                                    </div>
+                                )}
                             </div>
 
 
@@ -300,25 +350,35 @@ const ActivityStep = ({ onNext, onBack, userType, data = {} }) => {
                                 <label className={styles.inputLabel}>
                                     {t("SERVICES REQUESTED")}
                                 </label>
-
                                 <div className={styles.chips}>
                                     {[
-                                        "SEPA & SWIFT",
-                                        "Crypto to Fiat",
-                                        "Mass payouts",
-                                        "Cards",
-                                    ].map((item) => (
-                                        <button
-                                            key={item}
-                                            type="button"
-                                            className={`${styles.chip} ${form.services?.includes(item)
-                                                ? styles.activeChip
-                                                : ""
-                                                }`}
-                                            onClick={() => toggleArrayItem('services', item)}
+                                        { label: "SEPA & SWIFT", comingSoon: false },
+                                        { label: "Crypto to Fiat", comingSoon: true },
+                                        { label: "Mass payouts", comingSoon: true },
+                                        { label: "Cards", comingSoon: true },
+                                    ].map(({ label, comingSoon }) => (
+                                        <Tooltip
+                                            key={label}
+                                            title={comingSoon ? "Coming Soon" : ""}
+                                            arrow
+                                            placement="top"
                                         >
-                                            {item}
-                                        </button>
+                                            <span>
+                                                <button
+                                                    type="button"
+                                                    disabled={comingSoon}
+                                                    className={`${styles.chip} ${form.services?.includes(label)
+                                                            ? styles.activeChip
+                                                            : ""
+                                                        }`}
+                                                    onClick={() =>
+                                                        !comingSoon && toggleArrayItem("services", label)
+                                                    }
+                                                >
+                                                    {label}
+                                                </button>
+                                            </span>
+                                        </Tooltip>
                                     ))}
                                 </div>
                             </div>
@@ -376,6 +436,7 @@ const ActivityStep = ({ onNext, onBack, userType, data = {} }) => {
                                     </label>
 
                                     <input
+                                        style={{ padding: "14.5px 14px 14.5px 12.5px" }}
                                         className={styles.textInput}
                                         value={form.purpose}
                                         onChange={set("purpose")}
@@ -388,6 +449,9 @@ const ActivityStep = ({ onNext, onBack, userType, data = {} }) => {
                                     </label>
 
                                     <input
+                                        style={{ padding: "14.5px 14px 14.5px 12.5px" }}
+                                        type="number"
+                                        min="0"
                                         className={styles.textInput}
                                         value={form.paymentNature}
                                         onChange={set("paymentNature")}
@@ -401,18 +465,15 @@ const ActivityStep = ({ onNext, onBack, userType, data = {} }) => {
                                         {t("COUNTRIES OF ORIGIN OF FUNDS")}
                                     </label>
 
-                                    <select
-                                        className={styles.selectInput}
-                                        value=""
-                                        onChange={(e) => {
-                                            if (e.target.value) toggleArrayItem("originCountries", e.target.value)
+                                    <CountryDropDown
+                                        onSelect={(country) => {
+                                            if (country?.name) {
+                                                toggleArrayItem("originCountries", country.name);
+                                            }
                                         }}
-                                    >
-                                        <option value="">{t("Add country...")}</option>
-                                        {COUNTRY_LIST.filter(c => !form.originCountries?.includes(c)).map(c => (
-                                            <option key={c} value={c}>{c}</option>
-                                        ))}
-                                    </select>
+                                        country=""
+                                        background="#fff"
+                                    />
 
                                     <div className={styles.chips}>
                                         {form.originCountries?.map((c) => (
@@ -435,18 +496,15 @@ const ActivityStep = ({ onNext, onBack, userType, data = {} }) => {
                                         {t("COUNTRIES OF DESTINATION")}
                                     </label>
 
-                                    <select
-                                        className={styles.selectInput}
-                                        value=""
-                                        onChange={(e) => {
-                                            if (e.target.value) toggleArrayItem("destinationCountries", e.target.value)
+                                    <CountryDropDown
+                                        onSelect={(country) => {
+                                            if (country?.name) {
+                                                toggleArrayItem("destinationCountries", country.name);
+                                            }
                                         }}
-                                    >
-                                        <option value="">{t("Add Cities...")}</option>
-                                        {COUNTRY_LIST.filter(c => !form.destinationCountries?.includes(c)).map(c => (
-                                            <option key={c} value={c}>{c}</option>
-                                        ))}
-                                    </select>
+                                        country=""
+                                        background="#fff"
+                                    />
 
                                     <div className={styles.chips}>
                                         {form.destinationCountries?.map((c) => (
@@ -472,6 +530,9 @@ const ActivityStep = ({ onNext, onBack, userType, data = {} }) => {
                                     </label>
 
                                     <input
+                                        style={{ padding: "14.5px 14px 14.5px 12.5px" }}
+                                        type="number"
+                                        min="0"
                                         className={styles.textInput}
                                         value={form.averageTransaction}
                                         onChange={set("averageTransaction")}
@@ -484,6 +545,10 @@ const ActivityStep = ({ onNext, onBack, userType, data = {} }) => {
                                     </label>
 
                                     <input
+                                        type="number"
+                                        min="0"
+
+                                        style={{ padding: "14.5px 14px 14.5px 12.5px" }}
                                         className={styles.textInput}
                                         value={form.maximumTransaction}
                                         onChange={set("maximumTransaction")}
@@ -498,6 +563,10 @@ const ActivityStep = ({ onNext, onBack, userType, data = {} }) => {
                                     </label>
 
                                     <input
+                                        style={{ padding: "14.5px 14px 14.5px 12.5px" }}
+                                        type="number"
+                                        min="0"
+
                                         className={styles.textInput}
                                         value={form.averageBalance}
                                         onChange={set("averageBalance")}
@@ -510,6 +579,9 @@ const ActivityStep = ({ onNext, onBack, userType, data = {} }) => {
                                     </label>
 
                                     <input
+                                        style={{ padding: "14.5px 14px 14.5px 12.5px" }}
+                                        type="number"
+                                        min="0"
                                         className={styles.textInput}
                                         value={form.incomingPayments}
                                         onChange={set("incomingPayments")}
@@ -522,6 +594,9 @@ const ActivityStep = ({ onNext, onBack, userType, data = {} }) => {
                                     </label>
 
                                     <input
+                                        style={{ padding: "14.5px 14px 14.5px 12.5px" }}
+                                        type="number"
+                                        min="0"
                                         className={styles.textInput}
                                         value={form.outgoingPayments}
                                         onChange={set("outgoingPayments")}

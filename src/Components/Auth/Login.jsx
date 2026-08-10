@@ -683,7 +683,31 @@ const Login = ({ country, setIsLoginForm, }) => {
             return
         }
         if (numericValue.length > 1) {
-            numericValue = numericValue.slice(-1);
+            const newOTPValues = [...otpValues];
+
+            numericValue
+                .slice(0, numberOfFields)
+                .split("")
+                .forEach((char, i) => {
+                    newOTPValues[i] = char;
+                });
+
+            setOTPValues(newOTPValues);
+            setCurrentActiveInput(
+                Math.min(numericValue.length, numberOfFields)
+            );
+
+            const isEmpty = newOTPValues.some((val) => val === "");
+            setIsAnyFieldEmpty(isEmpty);
+
+            if (!isEmpty) {
+                verifyOTpHandler(
+                    { preventDefault: () => { } },
+                    newOTPValues.join("")
+                );
+            }
+
+            return;
         }
         let newOTPValues = [...otpValues];
         newOTPValues[index] = numericValue;
@@ -778,22 +802,36 @@ const Login = ({ country, setIsLoginForm, }) => {
 
     const handlePaste = (event) => {
         event.preventDefault();
-        console.log(event)
-        const pasteData = event?.clipboardData?.getData('text')?.replace(/[^0-9]/g, '')?.slice(0, numberOfFields);
-        let newOTPValues = [...otpValues];
 
-        pasteData.split('').forEach((char, index) => {
+        const pasteData = event.clipboardData
+            ?.getData("text")
+            ?.replace(/\D/g, "")
+            ?.slice(0, numberOfFields);
+
+        if (!pasteData) return;
+
+        const newOTPValues = Array(numberOfFields).fill("");
+
+        pasteData.split("").forEach((char, index) => {
             newOTPValues[index] = char;
         });
-        setCurrentActiveInput(6)
+
         setOTPValues(newOTPValues);
-        const isEmpty = newOTPValues.some(val => val === '');
+
+        const isEmpty = newOTPValues.some((val) => val === "");
         setIsAnyFieldEmpty(isEmpty);
+
+        setCurrentActiveInput(
+            Math.min(pasteData.length, numberOfFields)
+        );
+
         if (!isEmpty) {
-            verifyOTpHandler({ preventDefault: () => { } }, newOTPValues.join(""))
+            verifyOTpHandler(
+                { preventDefault: () => { } },
+                newOTPValues.join("")
+            );
         }
     };
-
     const handleOtpMethod = (method) => {
         setOTPValues(Array(numberOfFields).fill(''))
         inputRefs?.current?.[0]?.focus()
@@ -991,11 +1029,27 @@ const Login = ({ country, setIsLoginForm, }) => {
 
     const getOtpLabel = () => {
         const maskValue = (value) => {
-            const str = String(value ?? "")
-            if (!str) return ""
-            if (str.length <= 4) return str.replace(/./g, "*")
-            return `${str.slice(0, str.length - 4).replace(/./g, "*")}${str.slice(-4)}`
-        }
+            const str = String(value ?? "");
+            if (!str) return "";
+
+            if (str.includes("@")) {
+                const [username, domain] = str.split("@");
+
+                if (!username || !domain) return str;
+
+                if (username.length <= 4) {
+                    return `${username[0]}***@${domain}`;
+                }
+
+                return `${username.slice(0, 6)}********${username.slice(-2)}@${domain}`;
+            }
+
+            if (str.length <= 4) {
+                return str.replace(/./g, "*");
+            }
+
+            return `${str.slice(0, str.length - 4).replace(/./g, "*")}${str.slice(-4)}`;
+        };
 
         const maskedEmail = maskValue(otpDeliveryInfo.email)
         const maskedPhone = maskValue(otpDeliveryInfo.phone)
@@ -1005,7 +1059,13 @@ const Login = ({ country, setIsLoginForm, }) => {
             case "auth": return t("Google Authenticator Code")
             case "insta": return t("Enter the code sent to your Instagram Account")
             case "wp": return t("Enter the code sent to your Whatsapp on {{phone}}", { phone: `\u200E${maskedPhone}\u200E` })
-            case "email": return t("Enter the code sent to {{email}} via Email", { email: `\u200E${maskedEmail}\u200E` })
+            case "email":
+                return t(
+                    "Enter the code sent to {{email}} via Email",
+                    {
+                        email: `\u200E${maskedEmail}\u200E`
+                    }
+                );
             default: return t("Enter the code sent to {{phone}} via {{service}}", { phone: `\u200E${maskedPhone}\u200E`, service })
         }
     };
@@ -1478,8 +1538,7 @@ const Login = ({ country, setIsLoginForm, }) => {
                                                                         src={method.icon}
                                                                         alt=""
                                                                     />
-                                                                    <span style={{ marginBottom: "0", textDecoration: "underline", textDecorationColor: "white", color: 'black', whiteSpace: 'nowrap' }}
-                                                                    >
+                                                                    <span className={styles.otpMethodText}>
                                                                         {t(method.text)}
                                                                     </span>
                                                                 </button>

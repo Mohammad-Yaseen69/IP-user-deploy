@@ -1,8 +1,11 @@
 import { Button, Divider, ListItemText, Menu, MenuItem } from '@mui/material';
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { ChevronDown, Download, Filter, Search } from "react-feather";
 import { useTranslation } from 'react-i18next';
+import { toast } from "react-toastify";
 import Paginations from '../../../Common/Component/Paginations';
+import { UserContext } from "../../../Context/UserContext";
+import { generateProofOfPaymentPDF, isOutgoingTransaction } from "../../../utils/Functions/proofOfPayment";
 import StatementModal from "../StatementModal";
 import styles from "../styles/RecentTransactions.module.css";
 
@@ -26,9 +29,25 @@ const normalizeStatus = (raw) => {
   return raw === "COMMPLETED" ? "COMPLETED" : raw;
 };
 
-const TransactionRow = ({ tx }) => {
+const TransactionRow = ({ tx, selectedIban }) => {
   const { t } = useTranslation();
+  const { userDetails } = useContext(UserContext);
   const [open, setOpen] = useState(false);
+  const [downloadingProof, setDownloadingProof] = useState(false);
+  const isOutgoing = isOutgoingTransaction(tx.type);
+
+  const handleDownloadProof = async () => {
+    setDownloadingProof(true);
+    try {
+      await generateProofOfPaymentPDF(tx, selectedIban, userDetails);
+      toast.success(t("Proof of payment downloaded!"));
+    } catch (err) {
+      console.error("Proof of payment download failed:", err);
+      toast.error(t("Failed to download proof of payment."));
+    } finally {
+      setDownloadingProof(false);
+    }
+  };
 
   const rawStatus =
     tx.status || tx.bvnk_status || tx.ledger_transaction?.status || "PENDING";
@@ -53,7 +72,7 @@ const TransactionRow = ({ tx }) => {
 
         <td className={styles.txId}>{tx.reference_id || tx.external_reference || "N/A"}</td>
 
-        <td>{tx.virtual_iban?.account_holder_name || "N/A"}</td>
+        <td>{tx?.beneficiary?.name || tx.virtual_iban?.account_holder_name || "N/A"}</td>
 
         <td className={styles.amount}>
           {tx.currency} {tx.amount?.toFixed(2)}
@@ -109,6 +128,17 @@ const TransactionRow = ({ tx }) => {
                   value={t(formatType(tx.type || "N/A"))} />
 
               </div>
+
+              {isOutgoing && (
+                <button
+                  className={styles.proofBtn}
+                  onClick={handleDownloadProof}
+                  disabled={downloadingProof}
+                >
+                  <Download size={13} />
+                  {downloadingProof ? t("Preparing...") : t("Download Proof of Payment")}
+                </button>
+              )}
 
             </div>
           </td>
@@ -213,11 +243,11 @@ const RecentTransactions = ({
                 onClick={(e) => setAnchorSort(e.currentTarget)}
                 startIcon={
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
-                    <path d="M3 8H7.5" stroke="#1B1F2A" stroke-linecap="round" stroke-linejoin="round" />
-                    <path d="M3 4H6.5" stroke="#1B1F2A" stroke-linecap="round" stroke-linejoin="round" />
-                    <path d="M3 12H11.5" stroke="#1B1F2A" stroke-linecap="round" stroke-linejoin="round" />
-                    <path d="M9 5.5L11.5 3L14 5.5" stroke="#1B1F2A" stroke-linecap="round" stroke-linejoin="round" />
-                    <path d="M11.5 3V9" stroke="#1B1F2A" stroke-linecap="round" stroke-linejoin="round" />
+                    <path d="M3 8H7.5" stroke="#1B1F2A" strokeLinecap="round" strokeLinejoin="round" />
+                    <path d="M3 4H6.5" stroke="#1B1F2A" strokeLinecap="round" strokeLinejoin="round" />
+                    <path d="M3 12H11.5" stroke="#1B1F2A" strokeLinecap="round" strokeLinejoin="round" />
+                    <path d="M9 5.5L11.5 3L14 5.5" stroke="#1B1F2A" strokeLinecap="round" strokeLinejoin="round" />
+                    <path d="M11.5 3V9" stroke="#1B1F2A" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
                 }
               >
@@ -256,7 +286,7 @@ const RecentTransactions = ({
             <tbody>
               {
                 transactions?.map((tx) => (
-                  <TransactionRow key={tx._id} tx={tx} />
+                  <TransactionRow key={tx._id} tx={tx} selectedIban={selectedIban} />
                 ))
               }
             </tbody>

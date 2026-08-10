@@ -221,6 +221,7 @@ const VirtualBank = () => {
                                                         setStatusFilter={setStatusFilter}
                                                         setTypeFilter={setTypeFilter}
                                                         setQ={setQ}
+                                                        selectedIban={selectedIban}
                                                         setOrder={setOrder}
                                                     />
                                                 </div>

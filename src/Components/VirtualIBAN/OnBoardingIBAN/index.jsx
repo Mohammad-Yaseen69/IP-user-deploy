@@ -270,6 +270,7 @@ const OnboardingIBAN = ({ onCreated }) => {
             if (dec?.status) {
                 setVerified(true)
                 setShowOtpModal(false)
+                await checkRequestStatus();
                 dispatch({ type: 'SET_STATUS', payload: 'submitted' })
                 dispatch({ type: 'SET_STEP', payload: 'status' })
                 toast.success(t("IBAN Activation request and payment completed successfully!"))
@@ -282,6 +283,7 @@ const OnboardingIBAN = ({ onCreated }) => {
         }
     }
 
+    
     const handleStatusAction = () => {
         if (state.status === 'approved' && onCreated) {
             onCreated()

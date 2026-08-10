@@ -415,31 +415,29 @@ const ActivateAccount = ({
               {isInsufficient && (
                 <div
                   style={{
-                    background: "#FEF2F2",
-                    border: "1px solid #FCA5A5",
+                    background: "#FEF3C7",
+                    border: "1px solid #FCD34D",
                     borderRadius: "10px",
                     padding: "14px",
                     display: "flex",
                     gap: "10px",
-                    alignItems: "flex-start",
+                    alignItems: "center",
                   }}
                 >
                   <AlertTriangle
-                    color="#DC2626"
+                    color="#D97706"
                     size={18}
-                    style={{ flexShrink: 0, marginTop: "2px" }}
+                    style={{ flexShrink: 0 }}
                   />
                   <span
                     style={{
-                      color: "#991B1B",
+                      color: "#92400E",
                       fontSize: "13px",
                       fontWeight: 600,
                       lineHeight: 1.4,
                     }}
                   >
-                    {t(
-                      "Insufficient wallet balance. Please select a wallet with enough balance or add funds.",
-                    )}
+                    {t("Amount will be deducted later")}
                   </span>
                 </div>
               )}
@@ -480,19 +478,17 @@ const ActivateAccount = ({
 
         <button
           onClick={onSubmitPayment}
-          disabled={isInsufficient || !selectedWallet?._id || loadingRates}
+          disabled={!selectedWallet?._id || loadingRates}
           className={styles.continueButton}
           style={{
-            opacity:
-              isInsufficient || !selectedWallet?._id || loadingRates ? 0.5 : 1,
-            cursor:
-              isInsufficient || !selectedWallet?._id || loadingRates
-                ? "not-allowed"
-                : "pointer",
+            opacity: !selectedWallet?._id || loadingRates ? 0.5 : 1,
+            cursor: !selectedWallet?._id || loadingRates ? "not-allowed" : "pointer",
           }}
         >
           {loadingRates
             ? t("Calculating...")
+            : isInsufficient
+            ? t("Confirm & Activate IBAN")
             : `${t("Pay")} ${feeDetails?.currency !== "EUR" ? `${feeDetails?.convertedAmount} ${feeDetails?.currency}` : `€${feeDetails?.baseAmount || 500}.00`}`}
         </button>
       </div>

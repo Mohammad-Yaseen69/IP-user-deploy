@@ -218,6 +218,40 @@ export const useVirtualIbanPayoutDirect = () => {
 }
 
 
+export const useVirtualIbanCryptoTopupFee = () =>
+    useMutation({
+        mutationFn: (payload) =>
+            apiWrapper({
+                endpoint: "/api/virtual-iban/topup/crypto/fee",
+                method: "POST",
+                payload,
+                isEncrypted: true,
+                isDecrypted: true,
+            }),
+    })
+
+export const useExecuteVirtualIbanCryptoTopup = () => {
+    const queryClient = useQueryClient()
+
+    return useMutation({
+        mutationFn: (payload) =>
+            apiWrapper({
+                endpoint: "/api/virtual-iban/topup/crypto",
+                method: "POST",
+                payload,
+                isEncrypted: true,
+                isDecrypted: true,
+            }),
+        onSuccess: (_, variables) => {
+            queryClient.invalidateQueries({ queryKey: virtualIbanQueryKeys.list() })
+            if (variables?.iban_id) {
+                queryClient.invalidateQueries({ queryKey: virtualIbanQueryKeys.detail(variables?.iban_id) })
+                queryClient.invalidateQueries({ queryKey: virtualIbanQueryKeys.balance(variables?.iban_id) })
+            }
+        },
+    })
+}
+
 const useVirtualIbanGraphData = (filter = "this_year") =>
     useQuery({
         queryKey: [...virtualIbanQueryKeys.all, "graph-data", filter],
@@ -234,3 +268,4 @@ const useVirtualIbanGraphData = (filter = "this_year") =>
         staleTime: 0,
     })
 export default useVirtualIbanGraphData
+

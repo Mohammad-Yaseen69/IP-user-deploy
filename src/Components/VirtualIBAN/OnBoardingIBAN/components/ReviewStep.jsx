@@ -1,26 +1,65 @@
 import { useState } from 'react'
-import { ArrowLeft } from 'react-feather'
+import { ArrowLeft, FileText } from 'react-feather'
 import { useTranslation } from 'react-i18next'
 import styles from '../style/onboardingSteps.module.css'
 
-const ReviewStep = ({ onSubmit, onBack, allData = {}, onNext }) => {
+const DOC_TITLE_MAP = {
+    commercial_register: "Commercial Register Extract / Certificate of Incorporation",
+    articles_association: "Articles of Association",
+    authority_letter: "Proof of Legal Representative's Authority",
+    good_standing: "Certificate of Good Standing",
+    registered_extract: "Register Extract (Proof of Address)",
+    domiciliation_certificate: "Certificate of Domiciliation",
+    lease_agreement: "Professional Lease Agreement",
+    utility_bill: "Utility Bill",
+    bank_statement: "Recent Business Bank Statement",
+    shareholders_register: "Register of Shareholders / Members",
+    ownership_chart: "Group Ownership Structure Chart",
+    ubo_declaration: "Signed UBO Declaration Form",
+    ubo_passport: "UBO Passport / ID",
+    ubo_address_proof: "UBO Proof of Residential Address",
+    source_of_funds: "Proof of Source of Funds / Wealth",
+    aml_policy: "AML & Compliance Policy Document"
+}
+
+const ReviewStep = ({ onSubmit, onBack, allData = {}, onNext, userType }) => {
     const { t } = useTranslation()
     const [agreed, setAgreed] = useState(false)
     const [submitting, setSubmitting] = useState(false)
 
-    const { company = {}, activity = {}, owners = [], documents = {} } = allData
+    const company = allData.company || allData.companyDetails || {}
+    const activity = allData.activity || {}
+    const owners = allData.owners || allData.ownership?.owners || []
+    const rawDocs = allData.documents?.files || allData.documents || {}
+
+    const providedDocs = Object.entries(rawDocs).filter(([_, file]) => {
+        if (!file) return false
+        if (typeof file === 'object' && (file.name || file instanceof File || file instanceof Blob)) return true
+        if (typeof file === 'string' && file.trim().length > 0) return true
+        return false
+    })
 
     const handleSubmit = async () => {
-        if (!agreed) return
+        if (!agreed || submitting) return
         setSubmitting(true)
-        // Simulate API call
-        await new Promise(res => setTimeout(res, 1500))
-        onSubmit(allData)
+        try {
+            if (onSubmit) {
+                await onSubmit(allData)
+            } else if (onNext) {
+                await onNext(allData)
+            }
+        } finally {
+            setSubmitting(false)
+        }
     }
 
-    const docCount = Object.keys(documents).length
+    const isIndividual = userType === 'individual'
 
-    const steps = [
+    const steps = isIndividual ? [
+        { num: '01', label: t('Account'), completed: true },
+        { num: '02', label: t('Type'), completed: true },
+        { num: '03', label: t('Review'), active: true }
+    ] : [
         { num: '01', label: t('Account'), completed: true },
         { num: '02', label: t('Company'), completed: true },
         { num: '03', label: t('Activity'), completed: true },
@@ -29,17 +68,26 @@ const ReviewStep = ({ onSubmit, onBack, allData = {}, onNext }) => {
         { num: '06', label: t('Review'), active: true }
     ]
 
+    const formatVal = (val) => {
+        if (!val) return '—'
+        if (Array.isArray(val)) {
+            return val.length > 0 ? val.join(', ') : '—'
+        }
+        if (typeof val === 'object') {
+            return val.name || val.label || JSON.stringify(val)
+        }
+        return String(val)
+    }
+
     return (
         <div className={styles.onboardingLayout}>
             <div className={styles.wizardSteps}>
                 {steps.map((step, index) => (
                     <div
                         key={index}
-                        className={`${styles.step} ${step.active ? styles.active : ""
-                            } ${step.completed ? styles.completed : ""}`}
+                        className={`${styles.step} ${step.active ? styles.active : ""} ${step.completed ? styles.completed : ""}`}
                     >
                         <div className={styles.stepLine}></div>
-
                         <div className={styles.stepContent}>
                             <span className={styles.stepNumber}>{step.num}</span>
                             <span className={styles.stepLabel}>{step.label}</span>
@@ -47,154 +95,347 @@ const ReviewStep = ({ onSubmit, onBack, allData = {}, onNext }) => {
                     </div>
                 ))}
             </div>
-            <div
-                style={{
-                    width: "100%"
-                }}>
+
+            <div style={{ width: "100%" }}>
                 <h2 className={styles.formHeading}>{t("Review your activation request")}</h2>
                 <p className={styles.formSubheading}>
                     {t("Check everything below before you submit. You can jump back to any step to make changes.")}
                 </p>
             </div>
+
             <div className={styles.mainArea}>
+                <div className={styles.summaryWrapper} style={{ width: "100%" }}>
 
-                <div className={styles.summaryWrapper}>
-
+                    {/* COMPANY DETAILS CARD */}
                     <div className={styles.summaryCard}>
                         <div className={styles.cardHeader}>
-                            <h4>{t('Company details')}</h4>
-                            <span className={styles.edit}>{t('Edit')}</span>
+                            <h4>{t("Company details")}</h4>
+                            <span className={styles.edit} onClick={() => onBack && onBack('company')}>
+                                {t("Edit")}
+                            </span>
                         </div>
 
                         <div className={styles.grid}>
                             <div className={styles.item}>
-                                <label>{t('Legal name')}</label>
-                                <span>{t('Exadel Trade Solutions SA')}</span>
+                                <label>{t("Legal name")}</label>
+                                <span>{formatVal(company.legalName)}</span>
+                            </div>
+
+                            {company.tradingName && (
+                                <div className={styles.item}>
+                                    <label>{t("Trading / Brand name")}</label>
+                                    <span>{formatVal(company.tradingName)}</span>
+                                </div>
+                            )}
+
+                            <div className={styles.item}>
+                                <label>{t("Registration number")}</label>
+                                <span>{formatVal(company.registrationNumber)}</span>
                             </div>
 
                             <div className={styles.item}>
-                                <label>{t('Registration')}</label>
-                                <span>{t('CHE-106.327.324')}</span>
+                                <label>{t("Jurisdiction / Country")}</label>
+                                <span>{formatVal(company.countryOfIncorporation)}</span>
                             </div>
 
-                            <div className={styles.item}>
-                                <label>{t('Jurisdiction')}</label>
-                                <span>{t('Switzerland')}</span>
-                            </div>
+                            {(company.legalStructure || company.legalForm) && (
+                                <div className={styles.item}>
+                                    <label>{t("Legal form")}</label>
+                                    <span>{formatVal(company.legalStructure || company.legalForm)}</span>
+                                </div>
+                            )}
 
-                            <div className={styles.item}>
-                                <label>{t('Agent')}</label>
-                                <span>{t('Trays SA Switzerland')}</span>
-                            </div>
+                            {company.dateOfIncorporation && (
+                                <div className={styles.item}>
+                                    <label>{t("Date of incorporation")}</label>
+                                    <span>{formatVal(company.dateOfIncorporation)}</span>
+                                </div>
+                            )}
+
+                            {company.taxNumber && (
+                                <div className={styles.item}>
+                                    <label>{t("Tax ID / Number")}</label>
+                                    <span>{formatVal(company.taxNumber)}</span>
+                                </div>
+                            )}
+
+                            {company.registeredAddress && (
+                                <div className={styles.item}>
+                                    <label>{t("Registered address")}</label>
+                                    <span>{formatVal(company.registeredAddress)}</span>
+                                </div>
+                            )}
+
+                            {company.website && (
+                                <div className={styles.item}>
+                                    <label>{t("Website")}</label>
+                                    <span>{formatVal(company.website)}</span>
+                                </div>
+                            )}
+
+                            {company.agent && (
+                                <div className={styles.item}>
+                                    <label>{t("Agent")}</label>
+                                    <span>{formatVal(company.agent)}</span>
+                                </div>
+                            )}
                         </div>
                     </div>
 
-
+                    {/* ACTIVITY & INTENDED USE CARD */}
                     <div className={styles.summaryCard}>
                         <div className={styles.cardHeader}>
-                            <h4>{t('Ownership & control')}</h4>
+                            <h4>{t("Activity & intended use")}</h4>
+                            <span className={styles.edit} onClick={() => onBack && onBack('activity')}>
+                                {t("Edit")}
+                            </span>
                         </div>
 
                         <div className={styles.grid}>
                             <div className={styles.item}>
-                                <label>{t('Owners')}</label>
-                                <span>
-                                    {owners.length > 0
-                                        ? owners.map(o => `${o.fullName || o.name || t('Owner')} (${o.ownershipPercent ? o.ownershipPercent + '%' : ''} ${o.role || t('UBO')})`).join(' • ')
-                                        : t('None')}
-                                </span>
+                                <label>{t("Sector / Industry")}</label>
+                                <span>{formatVal(activity.industry || activity.industryReference?.name)}</span>
+                            </div>
+
+                            {activity.businessDescription && (
+                                <div className={styles.item}>
+                                    <label>{t("Business description")}</label>
+                                    <span>{formatVal(activity.businessDescription)}</span>
+                                </div>
+                            )}
+
+                            <div className={styles.item}>
+                                <label>{t("Expected inflow / volume")}</label>
+                                <span>{formatVal(activity.monthlyVolume)}</span>
                             </div>
 
                             <div className={styles.item}>
-                                <label>{t('Criteria')}</label>
-                                <span>{t('Entity / Individual')}</span>
+                                <label>{t("Operating countries")}</label>
+                                <span>{formatVal(activity.countries)}</span>
                             </div>
+
+                            {activity.currencies && (
+                                <div className={styles.item}>
+                                    <label>{t("Currencies")}</label>
+                                    <span>{formatVal(activity.currencies)}</span>
+                                </div>
+                            )}
+
+                            {activity.services && (
+                                <div className={styles.item}>
+                                    <label>{t("Services required")}</label>
+                                    <span>{formatVal(activity.services)}</span>
+                                </div>
+                            )}
+
+                            {activity.paymentRails && (
+                                <div className={styles.item}>
+                                    <label>{t("Payment rails")}</label>
+                                    <span>{formatVal(activity.paymentRails)}</span>
+                                </div>
+                            )}
+
+                            {activity.purpose && (
+                                <div className={styles.item}>
+                                    <label>{t("Account purpose")}</label>
+                                    <span>{formatVal(activity.purpose)}</span>
+                                </div>
+                            )}
+
+                            {activity.paymentNature && (
+                                <div className={styles.item}>
+                                    <label>{t("Payment nature")}</label>
+                                    <span>{formatVal(activity.paymentNature)}</span>
+                                </div>
+                            )}
+
+                            {activity.averageTransaction && (
+                                <div className={styles.item}>
+                                    <label>{t("Average transaction")}</label>
+                                    <span>{formatVal(activity.averageTransaction)}</span>
+                                </div>
+                            )}
+
+                            {activity.maximumTransaction && (
+                                <div className={styles.item}>
+                                    <label>{t("Maximum transaction")}</label>
+                                    <span>{formatVal(activity.maximumTransaction)}</span>
+                                </div>
+                            )}
+
+                            {activity.averageBalance && (
+                                <div className={styles.item}>
+                                    <label>{t("Average balance")}</label>
+                                    <span>{formatVal(activity.averageBalance)}</span>
+                                </div>
+                            )}
+
+                            {activity.originCountries && (
+                                <div className={styles.item}>
+                                    <label>{t("Origin countries")}</label>
+                                    <span>{formatVal(activity.originCountries)}</span>
+                                </div>
+                            )}
+
+                            {activity.destinationCountries && (
+                                <div className={styles.item}>
+                                    <label>{t("Destination countries")}</label>
+                                    <span>{formatVal(activity.destinationCountries)}</span>
+                                </div>
+                            )}
                         </div>
                     </div>
-
 
                     <div className={styles.summaryCard}>
                         <div className={styles.cardHeader}>
-                            <h4>{t('Activity & intended use')}</h4>
-                            <span className={styles.edit}>{t('Edit')}</span>
+                            <h4>{t("Ownership & control")}</h4>
+                            <span className={styles.edit} onClick={() => onBack && onBack('ownership')}>
+                                {t("Edit")}
+                            </span>
                         </div>
 
-                        <div className={styles.grid}>
-                            <div className={styles.item}>
-                                <label>{t('Sector')}</label>
-                                <span>{t('FinTech & payments')}</span>
+                        {owners && owners.length > 0 ? (
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                                {owners.map((o, idx) => (
+                                    <div
+                                        key={o.id || idx}
+                                        style={{
+                                            padding: '12px 14px',
+                                            background: '#F9FAFB',
+                                            border: '1px solid #E5E7EB',
+                                            borderRadius: '8px'
+                                        }}
+                                    >
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+                                            <strong style={{ fontSize: '13px', color: '#111827' }}>
+                                                {o.fullName || o.name || t('Partner / Owner')}
+                                            </strong>
+                                            <span style={{ fontSize: '11px', background: '#EEF2FF', color: '#4F46E5', padding: '2px 8px', borderRadius: '12px', fontWeight: 600 }}>
+                                                {o.ownershipPercent ? `${o.ownershipPercent}% ${t('Ownership')}` : t('Signatory')}
+                                            </span>
+                                        </div>
+                                        <div className={styles.grid} style={{ columnGap: '24px', rowGap: '8px' }}>
+                                            <div className={styles.item}>
+                                                <label>{t("Role")}</label>
+                                                <span>{o.role || 'Director / UBO'}</span>
+                                            </div>
+                                            {o.email && (
+                                                <div className={styles.item}>
+                                                    <label>{t("Email")}</label>
+                                                    <span>{o.email}</span>
+                                                </div>
+                                            )}
+                                            <div className={styles.item}>
+                                                <label>{t("PEP Status")}</label>
+                                                <span>{o.isPep || o.pep ? t('Yes (PEP)') : t('No')}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
                             </div>
-
-                            <div className={styles.item}>
-                                <label>{t('Countries')}</label>
-                                <span>{t('Switzerland, France, Senegal')}</span>
+                        ) : (
+                            <div className={styles.grid}>
+                                <div className={styles.item}>
+                                    <label>{t("Owners")}</label>
+                                    <span>{t("None specified")}</span>
+                                </div>
                             </div>
-
-                            <div className={styles.item}>
-                                <label>{t('Expected inflow')}</label>
-                                <span>{t('<250,000 / month')}</span>
-                            </div>
-
-                            <div className={styles.item}>
-                                <label>{t('Currencies')}</label>
-                                <span>{t('EUR, USD, XOF')}</span>
-                            </div>
-
-                            <div className={styles.item}>
-                                <label>{t('Services')}</label>
-                                <span>{t('SEPA & SWIFT, Crypto to fiat')}</span>
-                            </div>
-                        </div>
+                        )}
                     </div>
-
 
                     <div className={styles.summaryCard}>
                         <div className={styles.cardHeader}>
-                            <h4>{t('Documents')}</h4>
-                            <span className={styles.edit}>{t('Edit')}</span>
+                            <h4>{t("Documents")}</h4>
+                            <span className={styles.edit} onClick={() => onBack && onBack('documents')}>
+                                {t("Edit")}
+                            </span>
                         </div>
 
-                        <div className={styles.grid}>
-                            <div className={styles.item}>
-                                <label>{t('Provided')}</label>
-                                <span>{t('{{count}} documents', { count: docCount })}</span>
+                        {providedDocs.length > 0 ? (
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                                <div className={styles.item} style={{ marginBottom: '6px' }}>
+                                    <label>{t("Provided documents")}</label>
+                                    <span style={{ fontWeight: 600 }}>
+                                        {providedDocs.length} {t("document(s) attached")}
+                                    </span>
+                                </div>
+                                {providedDocs.map(([key, file]) => {
+                                    const title = DOC_TITLE_MAP[key] || t(key.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase()))
+                                    const fileName = typeof file === 'object' && file?.name ? file.name : String(file)
+                                    return (
+                                        <div
+                                            key={key}
+                                            style={{
+                                                display: 'flex',
+                                                justifyContent: 'space-between',
+                                                alignItems: 'center',
+                                                padding: '8px 12px',
+                                                background: '#F9FAFB',
+                                                borderRadius: '6px',
+                                                border: '1px solid #F3F4F6'
+                                            }}
+                                        >
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                                <FileText size={14} color="#6D4EFF" />
+                                                <span style={{ fontSize: '12px', color: '#374151', fontWeight: 500 }}>{title}</span>
+                                            </div>
+                                            <span style={{ fontSize: '11px', color: '#059669', background: '#ECFDF5', padding: '2px 8px', borderRadius: '10px', fontWeight: 500 }}>
+                                                {fileName}
+                                            </span>
+                                        </div>
+                                    )
+                                })}
                             </div>
-                        </div>
+                        ) : (
+                            <div className={styles.grid}>
+                                <div className={styles.item}>
+                                    <label>{t("Provided")}</label>
+                                    <span>{t("0 documents attached")}</span>
+                                </div>
+                            </div>
+                        )}
                     </div>
-
 
                     <div className={styles.infoBox}>
-                        <span className={styles.infoIcon}>{t('ⓘ')}</span>
-
+                        <span className={styles.infoIcon}>ⓘ</span>
                         <p>
                             {t("You won't be charged now. There's no pricing to accept at this stage, our team confirms your eligibility and sends a personalized offer with the applicable terms and next steps.")}
                         </p>
                     </div>
 
-
-                    <div className={styles.infoBox}>
-                        <input type="checkbox" style={{
-                            marginTop: "3px"
-                        }} />
-
+                    <div className={styles.confirmRow} onClick={() => setAgreed(!agreed)}>
+                        <input
+                            type="checkbox"
+                            checked={agreed}
+                            onChange={(e) => setAgreed(e.target.checked)}
+                            onClick={(e) => e.stopPropagation()}
+                        />
                         <span>
                             {t("I confirm the information provided is true and complete, and I authorise InstaPay to carry out KYB, AML, sanctions, PEP and adverse-media checks. I understand submission does not guarantee approval.")}
                         </span>
                     </div>
-                </div>
 
+                </div>
             </div>
+
             <div className={styles.navigationFooter}>
-                <button onClick={() => onBack()} className={styles.backButton}>
+                <button onClick={() => onBack && onBack()} className={styles.backButton}>
                     <ArrowLeft size={16} />
                     {t("Back")}
                 </button>
-                <button className={styles.continueButton} onClick={() => onNext()}>
-                    {t("Request IBAN activation")}
+                <button
+                    className={styles.continueButton}
+                    disabled={!agreed || submitting}
+                    onClick={handleSubmit}
+                    style={{
+                        opacity: agreed && !submitting ? 1 : 0.6,
+                        cursor: agreed && !submitting ? 'pointer' : 'not-allowed'
+                    }}
+                >
+                    {submitting ? t("Submitting...") : t("Request IBAN activation")}
                 </button>
             </div>
-
-        </div>
+        </div >
     )
 }
 

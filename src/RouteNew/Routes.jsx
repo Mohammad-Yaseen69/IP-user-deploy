@@ -4,6 +4,7 @@ import BusinessAccount from '../Components/AddBeneficiary/BusinessAccount';
 import { usePermission } from "../hooks/GeneralUse/usePermission";
 import { MENU } from '../Layout/SidebarNew/SbNMenu';
 import { BusinessRoute } from '../hooks/GeneralUse/useBusiness';
+import { AgentRoute } from '../hooks/GeneralUse/useAgent';
 const QrCode = lazy(() => import("../Components/QrCode"));
 const QRScan = lazy(() => import("../Components/QrScan"));
 const ChatbotQrCode = lazy(() => import("../Components/ChatbotQrCode"));
@@ -252,15 +253,15 @@ export const guestRoutes = [
     { path: "*", component: <NotFound type='Page' /> }
 ]
 export const AgentCommissionRoutes = [
-    { path: "/agent-commission", component: <PermissionRoute permission="agent-commission.view"><AgentCommission /></PermissionRoute> },
-    { path: "/leads", component: <PermissionRoute permission="leads.view"><Leads /></PermissionRoute> },
-    { path: "/sub-agents", component: <PermissionRoute permission="sub-agents.view"><SubAgents /></PermissionRoute> },
-    { path: "/commissions", component: <PermissionRoute permission="commissions.view"><Commissions /></PermissionRoute> },
-    { path: "/clients", component: <PermissionRoute permission="clients.view"><Clients /></PermissionRoute> },
-    { path: "/documents", component: <PermissionRoute permission="documents.view"><Documents /></PermissionRoute> },
-    { path: "/reports", component: <PermissionRoute permission="reports.view"><Reports /></PermissionRoute> },
-    { path: "/support", component: <PermissionRoute permission="support.view"><Support /></PermissionRoute> },
-    { path: "/agent-profile", component: <PermissionRoute permission="agent-profile.view"><AgentProfile /></PermissionRoute> },
-    { path: "/fee-model-requests", component: <FeeModelRequests /> },
+    { path: "/agent-commission", component: <AgentRoute><PermissionRoute permission="agent-commission.view"><AgentCommission /></PermissionRoute></AgentRoute> },
+    { path: "/leads", component: <AgentRoute><PermissionRoute permission="leads.view"><Leads /></PermissionRoute></AgentRoute> },
+    { path: "/sub-agents", component: <AgentRoute><PermissionRoute permission="sub-agents.view"><SubAgents /></PermissionRoute></AgentRoute> },
+    { path: "/commissions", component: <AgentRoute><PermissionRoute permission="commissions.view"><Commissions /></PermissionRoute></AgentRoute> },
+    { path: "/clients", component: <AgentRoute><PermissionRoute permission="clients.view"><Clients /></PermissionRoute></AgentRoute> },
+    { path: "/documents", component: <AgentRoute><PermissionRoute permission="documents.view"><Documents /></PermissionRoute></AgentRoute> },
+    { path: "/reports", component: <AgentRoute><PermissionRoute permission="reports.view"><Reports /></PermissionRoute></AgentRoute> },
+    { path: "/support", component: <AgentRoute><PermissionRoute permission="support.view"><Support /></PermissionRoute></AgentRoute> },
+    { path: "/agent-profile", component: <AgentRoute><PermissionRoute permission="agent-profile.view"><AgentProfile /></PermissionRoute></AgentRoute> },
+    { path: "/fee-model-requests", component: <AgentRoute><FeeModelRequests /></AgentRoute> },
     { path: "*", component: <NotFound type='Page' /> }
 ]
