@@ -419,7 +419,7 @@ const KYB = () => {
             <CardHeader style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                 <h4>{t("KYB Verification")}</h4>
                 <div className="card-options" style={{ display: 'flex', gap: "10px", alignItems: "center" }}>
-                    <Badge color={(userDetails?.company?.kyb_status === "verified" || userDetails?.company?.kyb_status === "approved") ? "success" : userDetails?.company?.kyb_status === "declined" ? "danger" : "warning"}>{userDetails?.company?.kyb_status?.toUpperCase()}</Badge>
+                    <Badge color={(userDetails?.company?.kyb_status === "verified" || userDetails?.company?.kyb_status === "approved") ? "success" : userDetails?.company?.kyb_status === "declined" ? "danger" : "warning"}>{t(userDetails?.company?.kyb_status?.toUpperCase())}</Badge>
                 </div>
             </CardHeader>
             <CardBody style={{ display: "flex", flexDirection: "column" }}>
@@ -685,19 +685,13 @@ const KYB = () => {
                     <ModalBody>
                         {status === "processing" ? (
                             <h5 className='modal-title ' style={{ display: "flex", flexDirection: "column", alignItems: "center", marginBottom: '2rem' }}>
-                                <AiOutlineClockCircle size={64} className="text-warning" />
-                                Payment is in Processing!
-                            </h5>
+                                <AiOutlineClockCircle size={64} className="text-warning" />{t("Payment is in Processing!")}</h5>
                         ) : status === "success" ? (
                             <h5 className='modal-title ' style={{ display: "flex", flexDirection: "column", alignItems: "center", marginBottom: '2rem' }}>
-                                <CheckCircle size={64} className="text-success" />
-                                Payment Successful!
-                            </h5>
+                                <CheckCircle size={64} className="text-success" />{t("Payment Successful!")}</h5>
                         ) : (
                             <h5 className='modal-title ' style={{ display: "flex", flexDirection: "column", alignItems: "center", marginBottom: '2rem' }}>
-                                <XCircle size={64} className="text-danger" />
-                                Payment Failed!
-                            </h5>
+                                <XCircle size={64} className="text-danger" />{t("Payment Failed!")}</h5>
                         )}
 
                         <div className="text-center mt-3">
@@ -752,7 +746,7 @@ const KYB = () => {
             )}
 
         </Card >
-    )
+    );
 }
 
 export default KYB

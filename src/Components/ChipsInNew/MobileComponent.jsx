@@ -107,7 +107,7 @@ const MobileComponent = ({ wallet, current }) => {
                             <input type="text" id="title" placeholder={t("Title")} value={title} onChange={e => setTitle(e.target.value)} />
                         </div>
                         <div className={styles.inp_con}>
-                            <label htmlFor="description">{t("QR Code Description")} (<span style={{ fontSize: "80%" }}>{description?.length}/180 characters</span>)</label>
+                            <label htmlFor="description">{t("QR Code Description")} (<span style={{ fontSize: "80%" }}>{description?.length}{t("/180 characters")}</span>)</label>
                             <textarea id="description" placeholder={t("Description")} value={description} onChange={e => e.target.value?.length >= 180 ? "" : setDescription(e.target.value)} />
                         </div>
                         <button disabled={saving || !description || !title}>{t("Save")}</button>
@@ -169,7 +169,7 @@ const MobileComponent = ({ wallet, current }) => {
                 toggle={() => setShowShareModal(!showShareModal)}
             />
         </div>
-    )
+    );
 }
 
 export default MobileComponent

@@ -1327,7 +1327,7 @@ const Login = ({ country, setIsLoginForm, }) => {
                                             </Link>
 
                                             <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                                                <span style={{ color: "#888", fontWeight: 600 }}>OR</span>
+                                                <span style={{ color: "#888", fontWeight: 600 }}>{t("OR")}</span>
                                             </div>
 
                                             <Link style={linkStyle} to="/agent-login">
@@ -1675,7 +1675,7 @@ const Login = ({ country, setIsLoginForm, }) => {
                                                     </Link>
 
                                                     <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                                                        <span style={{ color: "#888", fontWeight: 600 }}>OR</span>
+                                                        <span style={{ color: "#888", fontWeight: 600 }}>{t("OR")}</span>
                                                     </div>
 
                                                     <Link style={linkStyle} to="/agent-login">
@@ -1714,7 +1714,7 @@ const Login = ({ country, setIsLoginForm, }) => {
                     </form >
             }
         </>
-    )
+    );
 }
 
 export default Login

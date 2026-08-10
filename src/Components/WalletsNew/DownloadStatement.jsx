@@ -308,8 +308,8 @@ const DownloadStatement = ({ showModal, setShowModal, wallet, isTransection }) =
                 }
                 <Input type='select' value={fileType} onChange={e => setFileType(e.target.value)}>
                     <option value="">{t("-Select-File-Type-")}</option>
-                    <option value="PDF">PDF</option>
-                    <option value="CSV">CSV</option>
+                    <option value="PDF">{t("PDF")}</option>
+                    <option value="CSV">{t("CSV")}</option>
                 </Input>
             </ModalBody>
             <ModalFooter>
@@ -335,7 +335,7 @@ const DownloadStatement = ({ showModal, setShowModal, wallet, isTransection }) =
                 >{downlaoding ? t("Downloading") + "..." : t("Download Now")}</Button>
             </ModalFooter>
         </Modal>
-    )
+    );
 }
 
 export default DownloadStatement

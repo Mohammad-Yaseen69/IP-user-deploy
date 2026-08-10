@@ -62,7 +62,7 @@ const Sessions = () => {
             <CardBody style={{ maxHeight: "700px", overflowY: "auto" }}>
 
                 {isLoading && (
-                    <p style={{ textAlign: "center", color: "#888" }}>Loading...</p>
+                    <p style={{ textAlign: "center", color: "#888" }}>{t("Loading...")}</p>
                 )}
 
                 {sessions.map((session, index) => (
@@ -95,7 +95,7 @@ const Sessions = () => {
 
             </CardBody>
         </Card>
-    )
+    );
 }
 
 export default Sessions

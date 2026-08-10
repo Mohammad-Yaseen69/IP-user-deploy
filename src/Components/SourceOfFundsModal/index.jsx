@@ -48,7 +48,7 @@ const SourceOfFunds = ({ isOpen, toggle }) => {
                 <FormGroup>
                     <Label>{t("Select your source of funds")}</Label>
                     <Input type="select" className="form-control" value={source} onChange={e => setSource(e.target.value)}>
-                        <option value="" disabled="">Select</option>
+                        <option value="" disabled="">{t("Select")}</option>
                         {
                             sourceOfFunds.map(item => (
                                 <option value={item.toUpperCase()}>{t(item)}</option>
@@ -63,7 +63,7 @@ const SourceOfFunds = ({ isOpen, toggle }) => {
                 </Button>
             </ModalFooter>
         </Modal>
-    )
+    );
 }
 
 export default SourceOfFunds

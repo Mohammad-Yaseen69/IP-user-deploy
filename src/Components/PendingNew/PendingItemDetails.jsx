@@ -106,7 +106,7 @@ const PendingItemDetails = ({ item, allRating, allReviews, badgeColor, type = "r
                                                 `${item?.receiver?.user?.first_name || item?.receiver?.user?.company_name} ${item?.receiver?.user?.last_name}`.slice(0, 24)
                                         }
                                     </h5>
-                                    <p>INSTA-{item?.currency?.code} </p>
+                                    <p>{t("INSTA-")}{item?.currency?.code} </p>
                                 </div>
                             </div>
                         </div>
@@ -201,7 +201,7 @@ const PendingItemDetails = ({ item, allRating, allReviews, badgeColor, type = "r
                 }
             </div>
         </div>
-    )
+    );
 }
 
 export default PendingItemDetails

@@ -164,7 +164,7 @@ const ConfirmSendWallet = ({ amount, currency, setConfirmed, setSubStep, payment
                 boxShadow: "0px 18px 15.348464965820312px -15px rgba(89, 38, 240, 0.16)"
             }}>
                 <div style={{ display: "flex", flexDirection: "column", }} className="conf_cont">
-                    <h4 className="text-center">You Have Selected Wallet to Wallet Transfer</h4>
+                    <h4 className="text-center">{t("You Have Selected Wallet to Wallet Transfer")}</h4>
                     <SelectedPaymentType paymentType={paymentType} setSubStep={setSubStep} step={3} setter={setPaymentType} scheduleDate={`To: ${scheduleDate} ${scheduleTime}`} subscriptionDate={`Starts: ${recStartDate} For: ${recCycle} times`} setNotInstant={setNotInstant} />
                     <SelectedAmountAndCurrency amount={amount} currency={currency} setSubStep={setSubStep} step={2} />
                     <SelectedWallet wallet={wallet} setSubStep={setSubStep} />

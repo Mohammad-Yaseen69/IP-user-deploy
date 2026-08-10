@@ -48,11 +48,11 @@ const StepFive = ({ data, dataHandler, createTransaction }) => {
                             {t("TOP-UP SUMMARY")}
                         </div>
                         <div className={styles.recipient}>
-                            <span>Recipient Mobile Number</span>
+                            <span>{t("Recipient Mobile Number")}</span>
                             <h4>+{data.recipient}</h4>
                         </div>
                         <div className={styles.amount}>
-                            <span>Amount</span>
+                            <span>{t("Amount")}</span>
                             <h4>
                                 {Number(data.package_details?.data?.sending?.value)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} {data.package_details?.data?.sending?.currency}
                             </h4>
@@ -79,7 +79,7 @@ const StepFive = ({ data, dataHandler, createTransaction }) => {
                             <div className={styles.voucher_dets}>
                                 <h3>{t("Voucher Information")}</h3>
                                 <div className={styles.vd_guide}>
-                                    <span>Usage info:</span>
+                                    <span>{t("Usage info:")}</span>
                                     <p>{data.package?.message}</p>
                                 </div>
                             </div>
@@ -140,8 +140,7 @@ const StepFive = ({ data, dataHandler, createTransaction }) => {
                                             lineHeight: 1.3,
                                             letterSpacing: '-0.28px'
                                         }}>
-                                            <strong>{data?.package_details?.data?.paypal?.fee?.currency}</strong> is not supported by Paypal, <strong>USD</strong> will be used as the default currency.
-                                        </span>
+                                            <strong>{data?.package_details?.data?.paypal?.fee?.currency}</strong>{t("is not supported by Paypal,")}<strong>{t("USD")}</strong>{t("will be used as the default currency.")}</span>
                                     </div>
                                     <div style={{
                                         display: "flex",
@@ -175,7 +174,7 @@ const StepFive = ({ data, dataHandler, createTransaction }) => {
                                                     fontStyle: 'normal',
                                                     lineHeight: 1.5,
                                                     letterSpacing: '-0.14px'
-                                                }}>1.00 {data?.package_details?.data?.paypal?.fee?.currency} = {Number(data?.package_details?.data?.paypal?.paypal_rate?.value)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 4 })} USD</strong>
+                                                }}>1.00 {data?.package_details?.data?.paypal?.fee?.currency} = {Number(data?.package_details?.data?.paypal?.paypal_rate?.value)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 4 })}{t("USD")}</strong>
                                         </div>
                                         <div style={{
                                             display: "flex",
@@ -200,7 +199,7 @@ const StepFive = ({ data, dataHandler, createTransaction }) => {
                                                 fontWeight: 700,
                                                 lineHeight: 1.7,
                                                 letterSpacing: '-0.8px'
-                                            }}>{Number(data?.package_details?.data?.paypal?.paypal_converted?.value)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} USD</strong>
+                                            }}>{Number(data?.package_details?.data?.paypal?.paypal_converted?.value)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}{t("USD")}</strong>
                                         </div>
                                     </div>
                                 </>
@@ -231,7 +230,7 @@ const StepFive = ({ data, dataHandler, createTransaction }) => {
                 </button>
             </div>
         </div>
-    )
+    );
 }
 
 export default StepFive
