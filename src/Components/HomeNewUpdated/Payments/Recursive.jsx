@@ -84,7 +84,7 @@ const Recursive = (props) => {
                                     objectFit: "contain"
                                 }} />
                             </div>
-                            <h5>Subscription Payment</h5>
+                            <h5>{t("Subscription Payment")}</h5>
                         </div>
                     </CardBody>
                 </Card>
@@ -255,7 +255,7 @@ const Recursive = (props) => {
                 </Button>
             </CardBody>
         </Card >
-    )
+    );
 }
 
 export default Recursive;

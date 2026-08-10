@@ -118,13 +118,11 @@ const KYCModal = ({ showModal, setShowModal, KYCComments, KYCStatus }) => {
                 return (
                     <div key={index} style={{ marginLeft: "34px", marginBottom: "6px" }}>
                         {item?.score && (
-                            <span style={{ color: "#28a745", fontSize: "13px", fontWeight: "500" }}>
-                                Score: {item.score}%
+                            <span style={{ color: "#28a745", fontSize: "13px", fontWeight: "500" }}>{t("Score:")}{item.score}%
                             </span>
                         )}
                         {item?.method && (
-                            <p style={{ fontSize: "13px", color: "#555", marginBottom: 0 }}>
-                                Method: {item.method}
+                            <p style={{ fontSize: "13px", color: "#555", marginBottom: 0 }}>{t("Method:")}{item.method}
                             </p>
                         )}
                     </div>
@@ -134,8 +132,7 @@ const KYCModal = ({ showModal, setShowModal, KYCComments, KYCStatus }) => {
             if (item?.ip_address) {
                 return (
                     <div key={index} style={{ marginLeft: "34px", marginBottom: "6px" }}>
-                        <span style={{ fontSize: "13px", color: "#555" }}>
-                            IP: {item.ip_address} | {item.ip_city}, {item.ip_country}
+                        <span style={{ fontSize: "13px", color: "#555" }}>{t("IP:")}{item.ip_address} | {item.ip_city}, {item.ip_country}
                         </span>
                         {item?.is_vpn_or_tor && (
                             <p style={{ fontSize: "13px", color: "#dc3545", marginBottom: 0 }}>

@@ -19,7 +19,7 @@ const PrivateCompanyDocs = () => {
                     <Input type='file' />
                 </FormGroup>
                 <Modal isOpen={modalOne} toggle={() => setModalOne(!modalOne)} style={{ minWidth: "60vw" }}>
-                    <ModalHeader toggle={() => setModalOne(!modalOne)}>Details</ModalHeader>
+                    <ModalHeader toggle={() => setModalOne(!modalOne)}>{t("Details")}</ModalHeader>
                     <ModalBody>
                         <div className={styles.content}>
                             <p>
@@ -140,7 +140,7 @@ const PrivateCompanyDocs = () => {
                     </ModalBody></Modal>
             </div>
         </div>
-    )
+    );
 }
 
 export default PrivateCompanyDocs

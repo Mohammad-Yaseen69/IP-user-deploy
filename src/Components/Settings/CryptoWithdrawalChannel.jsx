@@ -327,7 +327,7 @@ const CryptoWithdrawalChannel = () => {
                             <div className={styles.walletTop}>
                                 <div>
                                     <span>{t("Currency")}</span>
-                                    <strong>USDT</strong>
+                                    <strong>{t("USDT")}</strong>
                                 </div>
                                 <div className={styles.actions}>
                                     <button type="button" title={t("Edit")} aria-label={t("Edit")} disabled={!canAdd || isSaving} onClick={() => openEditForm(account)}>
@@ -430,7 +430,7 @@ const CryptoWithdrawalChannel = () => {
                 </ModalFooter>
             </Modal>
         </div>
-    )
+    );
 }
 
 export default CryptoWithdrawalChannel

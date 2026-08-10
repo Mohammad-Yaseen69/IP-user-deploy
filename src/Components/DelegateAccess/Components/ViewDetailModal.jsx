@@ -35,7 +35,7 @@ const ViewDetailModal = ({ isOpen, toggle, item, isRole }) => {
           </div>
           <div className="ms-3">
             <h5 className="mb-0 fw-bold">{isRole ? item.title : `${item.first_name} ${item.last_name}`}</h5>
-            <small className="text-muted">ID: {item._id}</small>
+            <small className="text-muted">{t("ID:")}{item._id}</small>
           </div>
         </div>
       </ModalHeader>

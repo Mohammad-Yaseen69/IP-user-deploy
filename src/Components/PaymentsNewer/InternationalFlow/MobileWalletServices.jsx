@@ -49,11 +49,11 @@ const MobileWalletServices = ({ data, dataHandler, loading, error = "" }) => {
                             </div>
                         ))
                         :
-                        <div style={{ margin: "1rem auto", fontSize: "1rem", fontWeight: "700" }}>No Services Available.</div>
+                        <div style={{ margin: "1rem auto", fontSize: "1rem", fontWeight: "700" }}>{t("No Services Available.")}</div>
                 }
             </div>
         </>
-    )
+    );
 }
 
 export default MobileWalletServices

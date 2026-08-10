@@ -75,7 +75,7 @@ const SessionItem = ({ session, index }) => {
                     session?.platform === "Windows" ? <Monitor /> : <Smartphone />
                 }
                 <p>
-                    <span>{session?.browser_name} <span>v{session?.browser_version}</span> on {session?.platform === "Linux" ? "Mobile" : session?.platform}</span>
+                    <span>{session?.browser_name} <span>v{session?.browser_version}</span>{t("on")}{session?.platform === "Linux" ? "Mobile" : session?.platform}</span>
                     {/* <span>{session?.isActive ? "Your current session" : ""}</span> */}
                     <span>{t("IP Address")}: {session?.location?.IPv4}</span>
                 </p>
@@ -95,7 +95,7 @@ const SessionItem = ({ session, index }) => {
                 }} onClick={() => setShowModal(true)}>{t("See More")} &rarr;</p>
             </div>
         </div>
-    )
+    );
 }
 
 export default SessionItem

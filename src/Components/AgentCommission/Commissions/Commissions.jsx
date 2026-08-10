@@ -120,9 +120,7 @@ const Commissions = () => {
 
                     <div className={styles.statCard}>
                         <div className={styles.statTop}>
-                            <span className={styles.statTitle}>
-                                Total Earned
-                            </span>
+                            <span className={styles.statTitle}>{t("Total Earned")}</span>
                             <div className={`${styles.statIcon} ${styles.iconPurple}`}>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
                                     <path d="M22.5 17.5115C13.9088 21.7087 10.0912 13.5412 1.5 17.7383V6.48834C10.0912 2.29115 13.9088 10.4587 22.5 6.26147V17.5115Z" stroke="#5926F0" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
@@ -139,9 +137,7 @@ const Commissions = () => {
 
                     <div className={styles.statCard}>
                         <div className={styles.statTop}>
-                            <span className={styles.statTitle}>
-                                Paid
-                            </span>
+                            <span className={styles.statTitle}>{t("Paid")}</span>
                             <div className={`${styles.statIcon} ${styles.iconGreen}`}>
                                 <CheckCircle size={16} color="#16a34a" />
                             </div>
@@ -153,9 +149,7 @@ const Commissions = () => {
 
                     <div className={styles.statCard}>
                         <div className={styles.statTop}>
-                            <span className={styles.statTitle}>
-                                Pending
-                            </span>
+                            <span className={styles.statTitle}>{t("Pending")}</span>
                             <div className={`${styles.statIcon} ${styles.iconYellow}`}>
                                 <AlertCircle size={16} color="#c2410c" />
                             </div>
@@ -167,9 +161,7 @@ const Commissions = () => {
 
                     <div className={styles.statCard}>
                         <div className={styles.statTop}>
-                            <span className={styles.statTitle}>
-                                Avg per Client
-                            </span>
+                            <span className={styles.statTitle}>{t("Avg per Client")}</span>
                             <div className={`${styles.statIcon} ${styles.iconPurple}`}>
                                 <BarChart size={16} />
                             </div>
@@ -184,7 +176,7 @@ const Commissions = () => {
 
                 <div className={styles.sectionCard}>
                     <div className={styles.sectionHeader}>
-                        <h2>Commission rules</h2>
+                        <h2>{t("Commission rules")}</h2>
                     </div>
                     <div className={styles.rulesGrid}>
                         {commissionRules.map((rule) => (
@@ -199,16 +191,16 @@ const Commissions = () => {
 
                 <div className={styles.sectionCard}>
                     <div className={styles.statementHeader}>
-                        <h2>Commission Statement</h2>
+                        <h2>{t("Commission Statement")}</h2>
                     </div>
 
                     <div className={styles.tableContainer}>
                         <div className={styles.tableHeaderRow}>
-                            <div>Client</div>
-                            <div>Service</div>
-                            <div>Status</div>
-                            <div>Amount</div>
-                            <div>Date</div>
+                            <div>{t("Client")}</div>
+                            <div>{t("Service")}</div>
+                            <div>{t("Status")}</div>
+                            <div>{t("Amount")}</div>
+                            <div>{t("Date")}</div>
                         </div>
 
                         {commissionsList.length > 0 ? (

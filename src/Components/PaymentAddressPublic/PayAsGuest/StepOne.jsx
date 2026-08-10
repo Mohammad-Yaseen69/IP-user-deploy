@@ -105,7 +105,6 @@ const StepOne = ({ data, dataHandler, allowed, wallet }) => {
                     </div>
             }
 
-
             {data?.payment_type?.value
                 ?
                 data.loading
@@ -170,7 +169,7 @@ const StepOne = ({ data, dataHandler, allowed, wallet }) => {
                                             lineHeight: 1.3,
                                             letterSpacing: '-0.28px'
                                         }}>
-                                            <strong>{wallet?.currency?.code} </strong> {t("is not supported by Paypal,")} <strong>USD</strong> {t("will be used as the default currency.")}
+                                            <strong>{wallet?.currency?.code} </strong> {t("is not supported by Paypal,")} <strong>{t("USD")}</strong> {t("will be used as the default currency.")}
                                         </span>
                                     </div>
                                     <div style={{
@@ -205,7 +204,7 @@ const StepOne = ({ data, dataHandler, allowed, wallet }) => {
                                                     fontStyle: 'normal',
                                                     lineHeight: 1.5,
                                                     letterSpacing: '-0.14px'
-                                                }}>1.00 {wallet?.currency?.code}  = {Number(data.paypal_fx?.exchange_rate)} USD</strong>
+                                                }}>1.00 {wallet?.currency?.code}  = {Number(data.paypal_fx?.exchange_rate)}{t("USD")}</strong>
                                         </div>
                                         <div style={{
                                             display: "flex",
@@ -230,7 +229,7 @@ const StepOne = ({ data, dataHandler, allowed, wallet }) => {
                                                 fontWeight: 700,
                                                 lineHeight: 1.7,
                                                 letterSpacing: '-0.8px'
-                                            }}>{Number(data.paypal_fx?.amount)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} USD</strong>
+                                            }}>{Number(data.paypal_fx?.amount)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}{t("USD")}</strong>
                                         </div>
                                     </div>
                                 </>
@@ -243,7 +242,7 @@ const StepOne = ({ data, dataHandler, allowed, wallet }) => {
             }
 
         </div>
-    )
+    );
 }
 
 export default StepOne
