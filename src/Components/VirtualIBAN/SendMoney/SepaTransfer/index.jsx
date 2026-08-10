@@ -35,6 +35,7 @@ import { useVirtualIbanPayoutDirect, useVirtualIbanPayoutFee } from "../../../..
 import { handlePaymentApiError } from "../../../../utils/Functions/handlePaymentApiError"
 import OTPConfirmation from "../../../UserSettingsNew/OTPConfirmation"
 import sepaCountries from "./sepaCountries.json"
+import { Tooltip } from "@mui/material"
 
 const DEFAULT_BENEFICIARY_FORM = {
     type: "individual",
@@ -136,18 +137,75 @@ const SepaAmountStep = ({ amount, setAmount, availableBalance, currencyCode, sou
 
             <div>
                 <div className={styles.sectionLabel}>{t("Delivery speed")}</div>
+
                 <div className={styles.speedGrid}>
-                    {SEPA_TRANSFER_SPEEDS.map((speed) => (
-                        <button type="button" key={speed.id} className={`${styles.speedCard} ${selectedSpeed.id === speed.id ? styles.selectedSpeedCard : ""}`} onClick={() => setTransferSpeed(speed.id)}>
-                            <div className={styles.speedCardTop}>
-                                <span className={styles.railPill}>{speed.rail}</span>
-                                {speed.default && <span className={styles.defaultPill}>{t("Default")}</span>}
-                            </div>
-                            <div><h4>{t(speed.label)}</h4><p>{t(speed.description)}</p><strong className={speed.feeAmount === 0 ? styles.freeFeeText : styles.feeText}>{t(speed.feeLabel)}</strong></div>
-                        </button>
-                    ))}
+                    {SEPA_TRANSFER_SPEEDS.map((speed) => {
+                        const isComingSoon = speed.id === "instant";
+
+                        return (
+                            <Tooltip
+                                key={speed.id}
+                                title={isComingSoon ? t("Coming soon") : ""}
+                                arrow
+                            >
+                                <span style={{ display: "block" }}>
+                                    <button
+                                        type="button"
+                                        className={`${styles.speedCard} ${selectedSpeed.id === speed.id
+                                            ? styles.selectedSpeedCard
+                                            : ""
+                                            }`}
+                                        onClick={() =>
+                                            !isComingSoon && setTransferSpeed(speed.id)
+                                        }
+                                        disabled={isComingSoon}
+                                        style={{
+                                            cursor: isComingSoon
+                                                ? "not-allowed"
+                                                : "pointer",
+                                            opacity: isComingSoon ? 0.6 : 1,
+                                        }}
+                                    >
+                                        <div className={styles.speedCardTop}>
+                                            <span className={styles.railPill}>
+                                                {speed.rail}
+                                            </span>
+
+                                            {speed.default && (
+                                                <span className={styles.defaultPill}>
+                                                    {t("Default")}
+                                                </span>
+                                            )}
+                                        </div>
+
+                                        <div>
+                                            <h4>{t(speed.label)}</h4>
+                                            <p>{t(speed.description)}</p>
+
+                                            <strong
+                                                className={
+                                                    speed.feeAmount === 0
+                                                        ? styles.freeFeeText
+                                                        : styles.feeText
+                                                }
+                                            >
+                                                {t(speed.feeLabel)}
+                                            </strong>
+                                        </div>
+                                    </button>
+                                </span>
+                            </Tooltip>
+                        );
+                    })}
                 </div>
-                <div className={styles.infoStrip}>{t("The recipient receives")} <strong>{formatMoney(numericAmount, currencyCode)}</strong> {t("in full - no correspondent-bank deductions in SEPA.")}</div>
+
+                <div className={styles.infoStrip}>
+                    {t("The recipient receives")}{" "}
+                    <strong>
+                        {formatMoney(numericAmount, currencyCode)}
+                    </strong>{" "}
+                    {t("in full - no correspondent-bank deductions in SEPA.")}
+                </div>
             </div>
         </div>
     )
@@ -270,7 +328,7 @@ const DoneStep = ({ amount, currencyCode, selectedBeneficiary, transferSpeed, fe
     const recipientAmount = feeDetails?.recipient
     const trackingReference = payoutResult?.transaction_id || payoutResult?.reference_id || payoutResult?.reference || payoutResult?._id || "-"
     const status = payoutResult?.status || "Initiated"
-
+    const navigate = useNavigate()
     return (
         <div className={styles.doneStep}>
             <div className={styles.doneHero}><img src={success} alt="" /><h3>{t("Payment sent")}</h3><p>{t("You sent")} {formatMoney(amount, currencyCode)} {t("to")} {getBeneficiaryName(selectedBeneficiary)}</p></div>
@@ -283,7 +341,7 @@ const DoneStep = ({ amount, currencyCode, selectedBeneficiary, transferSpeed, fe
             </div>
             <div className={styles.doneActions}>
                 <button type="button" className={styles.backBtn} onClick={onSendAgain}><Send size={15} />{t("Send again")}</button>
-                <div><button type="button" className={styles.backBtn}><Download size={15} />{t("Download receipt")}</button><button type="button" className={styles.nextBtn} onClick={onClose}><Home size={15} />{t("Back to dashboard")}</button></div>
+                <div><button type="button" className={styles.backBtn}><Download size={15} />{t("Download receipt")}</button><button type="button" className={styles.nextBtn} onClick={() => navigate('/virtual-IBAN')}><Home size={15} />{t("Back to dashboard")}</button></div>
             </div>
         </div>
     )
