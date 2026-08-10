@@ -3142,6 +3142,46 @@
   }
 }
 
-/**=====================
-    35. Sidebar CSS Ends
-==========================**/
+
+.sidebar-main .sidebar-links .sidebar-link {
+  display: flex !important;
+  align-items: center !important;
+  flex-wrap: nowrap !important;
+
+  svg {
+    flex-shrink: 0;
+  }
+
+  span {
+    white-space: nowrap !important;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
+    max-width: 100%;
+  }
+}
+
+
+
+.sidebar-main .sidebar-links .sidebar-link {
+  display: flex !important;
+  align-items: center !important;
+  flex-wrap: nowrap !important;
+  width: 100%;
+  
+  svg {
+    flex-shrink: 0;
+  }
+}
+
+.sidebar-title {
+  text-overflow: clip !important;
+}
+
+.sidebar-title .marquee-container {
+  text-overflow: clip !important;
+}
+
+.sidebar-title .marquee-text {
+  text-overflow: clip !important;
+}

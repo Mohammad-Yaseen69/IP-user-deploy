@@ -10,6 +10,7 @@ import { useQuery } from "@tanstack/react-query";
 import { apiWrapper } from "../../utils/Functions/apiWrapper";
 import { openInNewTab } from "../../utils/Functions";
 import { usePermission } from "../../hooks/GeneralUse/usePermission";
+import MarqueeText from "../../Common/Marqueetext";
 
 const SidebarSubMenu = ({ menu, className, setIsOpen, isOpen, level, showModal, setShowModal, profileCompletedPercentage, inheritSize }) => {
     const { togglSidebar } = useContext(CustomizerContext)
@@ -136,7 +137,20 @@ const SidebarSubMenu = ({ menu, className, setIsOpen, isOpen, level, showModal, 
                                         }}
                                     >
                                         <Link
-                                            className={`${className ? "" : "sidebar-link sidebar-title"}  ${(item.menu ? item.menu.map((innerItem) => ActiveNavLinkUrl(innerItem.url)).includes(true) : ActiveNavLinkUrl(item.url)) || isOpen[level] === item.title ? "active" : ""}`}
+                                            className={`${className ? "" : "sidebar-link sidebar-title"} ${(item.menu
+                                                ? item.menu.map((innerItem) => ActiveNavLinkUrl(innerItem.url)).includes(true)
+                                                : ActiveNavLinkUrl(item.url)) || isOpen[level] === item.title
+                                                ? "active"
+                                                : ""
+                                                }`} style={{
+                                                    display: "flex",
+                                                    alignItems: "center",
+                                                    minWidth: 0,
+                                                    width: "100%",
+                                                    overflow: "visible",
+                                                    textOverflow: "clip",
+                                                    whiteSpace: "nowrap",
+                                                }}
                                             to={item?.type === "external_eshop" ? "#" : (item.url ? item.url : Href)}
                                             onClick={(e) => {
                                                 if (item?.type === "external_eshop") {
@@ -150,11 +164,7 @@ const SidebarSubMenu = ({ menu, className, setIsOpen, isOpen, level, showModal, 
                                             {
                                                 item.menu ? item.menu.map((innerItem) => ActiveNavLinkUrl(innerItem.url)).includes(true) : ActiveNavLinkUrl(item.url) || isOpen[level] === item.title ? item?.activeIcon : item?.icon
                                             }
-                                            <span className={`${item.class ? item.class : ""}`}
-                                                style={{ color: "#848484", }}
-                                            >
-                                                {t(item.title)}
-                                            </span>
+                                            <MarqueeText text={t(item.title)} />
                                             {item.menu && (<div className="according-menu"><i className="fa fa-angle-right"></i></div>)}
                                         </Link>
                                         {item.menu && (
