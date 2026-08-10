@@ -254,7 +254,7 @@ const StatementModal = ({ isOpen, toggle, selectedIban }) => {
                             new Date(item?.createdAt || item?.date)?.toLocaleString(),
                             item?.reference_id || item?.external_reference || item?._id || "N/A",
                             renderPaymentType(item),
-                            renderRecipientName(item),
+                            item?.beneficiary?.name || renderRecipientName(item),
                             (item?.transaction_type || "TRANSFER").toUpperCase(),
                             amtStr,
                             feeStr,
