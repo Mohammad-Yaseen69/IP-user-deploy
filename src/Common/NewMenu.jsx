@@ -173,8 +173,8 @@ const NewMenu = () => {
                 <img
                     src={InstaMedia}
                     alt="media"
-                    width={20}
-                    height={20}
+                    width={18}
+                    height={18}
                 />
             </div>
             {userDetails?.isInstapayAgent &&
