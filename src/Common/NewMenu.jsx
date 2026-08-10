@@ -49,8 +49,21 @@ const NewMenu = () => {
             navigate("/store-create")
         }
     }
+    const agentPaths = [
+        "/agent-commission",
+        "/leads",
+        "/sub-agents",
+        "/commissions",
+        "/clients",
+        "/documents",
+        "/reports",
+        "/support",
+        "/agent-profile",
+        "/fee-model-requests"
+    ];
+
     const activeItem =
-        location.pathname === "/agent-commission"
+        agentPaths.includes(location.pathname)
             ? "agent"
             : location.pathname === "/Insta-media"
                 ? "media"
@@ -164,35 +177,37 @@ const NewMenu = () => {
                     height={20}
                 />
             </div>
-            <div
-                onClick={() => {
-                    navigate("/agent-commission")
-                }}
-                style={{
-                    ...(activeItem === "agent" ? activeStyle : itemStyle),
-                    ...(activeItem !== "agent" && {
-                        border: "0.25px solid rgba(255, 255, 255, 0.28)",
-                        background: "#4c29b5",
+            {userDetails?.isInstapayAgent &&
+                <div
+                    onClick={() => {
+                        navigate("/agent-commission")
+                    }}
+                    style={{
+                        ...(activeItem === "agent" ? activeStyle : itemStyle),
+                        ...(activeItem !== "agent" && {
+                            border: "0.25px solid rgba(255, 255, 255, 0.28)",
+                            background: "#4c29b5",
 
-                    }),
-                }}
-            >
-                {activeItem === "agent" ? (
-                    <img
-                        src={agentIcon}
-                        alt="agent"
-                        width={20}
-                        height={20}
-                    />
-                ) : (
-                    <img
-                        src={agentIcon2}
-                        alt="agent"
-                        width={20}
-                        height={20}
-                    />
-                )}
-            </div>
+                        }),
+                    }}
+                >
+                    {activeItem === "agent" ? (
+                        <img
+                            src={agentIcon}
+                            alt="agent"
+                            width={20}
+                            height={20}
+                        />
+                    ) : (
+                        <img
+                            src={agentIcon2}
+                            alt="agent"
+                            width={20}
+                            height={20}
+                        />
+                    )}
+                </div>
+            }
         </div>
     );
 };
