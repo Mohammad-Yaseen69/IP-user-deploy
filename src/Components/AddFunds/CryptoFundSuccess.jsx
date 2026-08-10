@@ -9,12 +9,17 @@ import w from "../PaymentsNewer/files/where.png"
 import help from "../PaymentsNewer/InternationalFlow/files/help.svg"
 import logo from "../PaymentsNewer/InternationalFlow/files/ins_logo.svg"
 import styles from "../PaymentsNewer/InternationalFlow/styles/receipt.module.css"
+import { useSearchParams } from 'react-router-dom'
 
 const CryptoFundSuccess = () => {
     const { t } = useTranslation()
     const [showShare, setShowShare] = useState(false)
     const navigate = useNavigate()
+    const [searchParams] = useSearchParams()
     const [countdown, setCountdown] = useState(10)
+
+    const isFromIban = searchParams.get("isIban") === "true"
+    const redirectPath = isFromIban ? "/virtual-IBAN" : "/wallets"
 
     const shareUrl = `${window.location.origin}${window.location.pathname}${window.location.search}`
     const base_url = shareUrl
@@ -24,7 +29,7 @@ const CryptoFundSuccess = () => {
             setCountdown((prev) => {
                 if (prev <= 1) {
                     clearInterval(timer)
-                    navigate("/wallets")
+                    navigate(redirectPath)
                     return 0
                 }
                 return prev - 1
@@ -65,7 +70,7 @@ const CryptoFundSuccess = () => {
                         border: "1px solid rgba(89, 38, 240, 0.1)",
                         fontWeight: 500
                     }}>
-                        {t("Redirecting to wallets in")}
+                        {isFromIban ? t("Redirecting to IBAN in") : t("Redirecting to wallets in")}
                         <span style={{
                             fontWeight: 800,
                             color: "#5926F0",
@@ -100,9 +105,9 @@ const CryptoFundSuccess = () => {
                             <img src={share} alt="" />
                             <span>{t("Share")}</span>
                         </button>
-                        <button onClick={() => navigate("/wallets")}>
+                        <button onClick={() => navigate(redirectPath)}>
                             <img src={w} alt="" />
-                            <span>{t("Go to Wallets")}</span>
+                            <span>{isFromIban ? t("Go to IBAN") : t("Go to Wallets")}</span>
                         </button>
                     </div>
                 </div>

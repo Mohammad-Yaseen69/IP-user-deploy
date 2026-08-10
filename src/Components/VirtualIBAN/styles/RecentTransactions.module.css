@@ -435,6 +435,31 @@
     color: #111827;
 }
 
+.proofBtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 16px;
+    margin-top: 12px;
+    border: none;
+    border-radius: 6px;
+    background: #5926F0;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s ease, opacity 0.15s ease;
+}
+
+.proofBtn:hover {
+    background: #4a1ed4;
+}
+
+.proofBtn:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+
 @media (max-width: 768px) {
     .modalContent {
         max-width: 100%;

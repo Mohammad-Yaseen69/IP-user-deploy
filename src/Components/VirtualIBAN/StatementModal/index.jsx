@@ -112,7 +112,7 @@ const StatementModal = ({ isOpen, toggle, selectedIban }) => {
         return normalizeVirtualIban(found)
     }, [selectedIban, rawIbans, selectedAccount])
 
-    const [period, setPeriod] = useState("Last month")
+    const [period, setPeriod] = useState("This month")
     const [format, setFormat] = useState("pdf")
     const [customFrom, setCustomFrom] = useState("")
     const [customTo, setCustomTo] = useState("")

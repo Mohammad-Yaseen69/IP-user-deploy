@@ -142,7 +142,7 @@ const CryptoTopupModal = ({ isOpen, toggle, selectedIban }) => {
         const res = await confirmMutation.mutateAsync({
             iban_id: ibanId,
             token: feeDetails.token,
-            returnUrl: `${base_url}/add-funds/crypto-success`
+            returnUrl: `${base_url}/add-funds/crypto-success?isIban=true`
         })
 
         const checkoutUrl = res?.data?.checkout_url || res?.data?.data?.checkout_url
