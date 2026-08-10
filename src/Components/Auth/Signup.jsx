@@ -256,10 +256,9 @@ const Signup = ({ country, setIsLoginForm, setHideLogo }) => {
                 delete payload.first_name
                 delete payload.last_name
                 delete payload.phone
-                delete payload.country_iso_code
                 payload.category_id = data.category_id
                 payload.company_name = data.company_name
-                payload.country_iso_code = data.country?.alpha3
+                payload.country_iso_code = data.country?.alpha3 ||data.country?.country_iso_code
                 payload.country = data.country?._id
                 payload.country_name = data.country?.country_name
 

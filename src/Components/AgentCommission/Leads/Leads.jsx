@@ -3,8 +3,9 @@ import useWindowWidth from '../../../utils/useWindowWidth';
 import { useTranslation } from 'react-i18next';
 import styles from "../styles/leads.module.css";
 import TopRight from '../../topRight';
-import { Search, Send } from 'react-feather';
+import { AlertTriangle, Search, Send, Trash2, X } from 'react-feather';
 import LeadModal from './LeadModal';
+import { Modal, ModalBody } from 'reactstrap';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiWrapper } from '../../../utils/Functions/apiWrapper';
 
@@ -19,6 +20,7 @@ const Leads = () => {
     const [search, setSearch] = useState('');
     const [selectedStage, setSelectedStage] = useState('all');
     const [page, setPage] = useState(1);
+    const [deleteConfirmLead, setDeleteConfirmLead] = useState(null);
 
     const handleOpenModal = (type = 'business') => {
         setInitialEntityType(type);
@@ -54,6 +56,19 @@ const Leads = () => {
             return await apiWrapper({
                 endpoint: `/api/agent-leads/resend-invite/${leadId}`,
                 method: 'POST',
+                isDecrypted: true
+            });
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['agentLeads'] });
+        }
+    });
+
+    const deleteLeadMutation = useMutation({
+        mutationFn: async (leadId) => {
+            return await apiWrapper({
+                endpoint: `/api/agent-leads/${leadId}`,
+                method: 'DELETE',
                 isDecrypted: true
             });
         },
@@ -200,20 +215,28 @@ const Leads = () => {
                                                 </span>
                                             </div>
 
-                                            <div className={styles.tdCell}>
-                                                {row.stage === 'not-registered' ? (
+                                            <div className={styles.tdCell} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                                {(row.stage === 'not-registered' || row.stage === 'claim-pending') && (
                                                     <button
                                                         onClick={() => resendInviteMutation.mutate(row._id)}
                                                         disabled={resendInviteMutation.isPending}
                                                         className={styles.secondaryBtn}
                                                         style={{ padding: '4px 8px', fontSize: '12px', display: 'flex', alignItems: 'center', gap: '4px' }}
+                                                        title={t("Resend Invitation")}
                                                     >
                                                         <Send size={12} />
-                                                        {resendInviteMutation.isPending ? t("Sending...") : t("Resend Invite")}
+                                                        {resendInviteMutation.isPending ? t("Sending...") : t("Resend")}
                                                     </button>
-                                                ) : (
-                                                    <span style={{ color: '#888', fontSize: '12px' }}>—</span>
                                                 )}
+                                                <button
+                                                    onClick={() => setDeleteConfirmLead(row)}
+                                                    disabled={deleteLeadMutation.isPending}
+                                                    className={styles.secondaryBtn}
+                                                    style={{ padding: '4px 8px', fontSize: '12px', color: '#d32f2f', borderColor: '#ffcdd2', display: 'flex', alignItems: 'center', gap: '4px' }}
+                                                    title={t("Delete Lead")}
+                                                >
+                                                    <Trash2 size={12} />
+                                                </button>
                                             </div>
                                         </div>
                                     );
@@ -251,6 +274,90 @@ const Leads = () => {
                 onClose={handleCloseModal}
                 initialEntityType={initialEntityType}
             />
+
+            <Modal
+                isOpen={!!deleteConfirmLead}
+                toggle={() => setDeleteConfirmLead(null)}
+                centered
+            >
+                <ModalBody style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px', borderRadius: '16px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                        <div style={{
+                            width: '44px',
+                            height: '44px',
+                            borderRadius: '12px',
+                            backgroundColor: '#FEE2E2',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            color: '#DC2626'
+                        }}>
+                            <AlertTriangle size={24} />
+                        </div>
+                        <button
+                            onClick={() => setDeleteConfirmLead(null)}
+                            style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#6B7280', padding: '4px' }}
+                            type="button"
+                        >
+                            <X size={20} />
+                        </button>
+                    </div>
+
+                    <div>
+                        <h3 style={{ fontSize: '18px', fontWeight: 600, color: '#111827', margin: '0 0 8px 0' }}>
+                            {t("Delete Lead")}
+                        </h3>
+                        <p style={{ fontSize: '14px', color: '#4B5563', margin: 0, lineHeight: '1.5' }}>
+                            {t("Are you sure you want to delete")} <strong>{deleteConfirmLead?.company_name || `${deleteConfirmLead?.first_name || ''} ${deleteConfirmLead?.last_name || ''}`.trim() || t("this lead")}</strong>? {t("This action cannot be undone.")}
+                        </p>
+                    </div>
+
+                    <div style={{ display: 'flex', gap: '12px', marginTop: '8px' }}>
+                        <button
+                            onClick={() => setDeleteConfirmLead(null)}
+                            disabled={deleteLeadMutation.isPending}
+                            style={{
+                                flex: 1,
+                                height: '42px',
+                                borderRadius: '8px',
+                                border: '1px solid #D1D5DB',
+                                backgroundColor: '#FFFFFF',
+                                color: '#374151',
+                                fontSize: '14px',
+                                fontWeight: 500,
+                                cursor: 'pointer'
+                            }}
+                            type="button"
+                        >
+                            {t("Cancel")}
+                        </button>
+                        <button
+                            onClick={() => {
+                                if (deleteConfirmLead) {
+                                    deleteLeadMutation.mutate(deleteConfirmLead._id, {
+                                        onSettled: () => setDeleteConfirmLead(null)
+                                    });
+                                }
+                            }}
+                            disabled={deleteLeadMutation.isPending}
+                            style={{
+                                flex: 1,
+                                height: '42px',
+                                borderRadius: '8px',
+                                border: 'none',
+                                backgroundColor: '#DC2626',
+                                color: '#FFFFFF',
+                                fontSize: '14px',
+                                fontWeight: 600,
+                                cursor: 'pointer'
+                            }}
+                            type="button"
+                        >
+                            {deleteLeadMutation.isPending ? t("Deleting...") : t("Delete")}
+                        </button>
+                    </div>
+                </ModalBody>
+            </Modal>
         </div>
     );
 };

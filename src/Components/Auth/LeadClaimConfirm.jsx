@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { apiWrapper } from '../../utils/Functions/apiWrapper';
-import { CheckCircle, XCircle, UserCheck, ShieldCheck } from 'react-feather';
+import { CheckCircle, XCircle, UserCheck, Shield } from 'react-feather';
 import logo from '../../logo.svg';
 
 const LeadClaimConfirm = () => {
@@ -64,7 +64,6 @@ const LeadClaimConfirm = () => {
         return (
             <div style={containerStyle}>
                 <div style={cardStyle}>
-                    <img src={logo} alt="InstaPay" style={logoStyle} />
                     <h2 style={{ color: '#d32f2f', marginBottom: '12px' }}>Invalid Request</h2>
                     <p style={{ color: '#666' }}>No confirmation token was provided in the URL.</p>
                 </div>
@@ -76,7 +75,6 @@ const LeadClaimConfirm = () => {
         return (
             <div style={containerStyle}>
                 <div style={cardStyle}>
-                    <img src={logo} alt="InstaPay" style={logoStyle} />
                     <p style={{ color: '#555' }}>Loading agent assignment details...</p>
                 </div>
             </div>
@@ -87,7 +85,6 @@ const LeadClaimConfirm = () => {
         return (
             <div style={containerStyle}>
                 <div style={cardStyle}>
-                    <img src={logo} alt="InstaPay" style={logoStyle} />
                     <XCircle size={48} color="#d32f2f" style={{ marginBottom: '16px' }} />
                     <h2 style={{ color: '#333', marginBottom: '12px' }}>Link Expired or Invalid</h2>
                     <p style={{ color: '#666' }}>This confirmation request link is invalid or has expired.</p>
@@ -100,11 +97,10 @@ const LeadClaimConfirm = () => {
         return (
             <div style={containerStyle}>
                 <div style={cardStyle}>
-                    <img src={logo} alt="InstaPay" style={logoStyle} />
                     {statusMessage.type === 'success' ? (
                         <CheckCircle size={56} color="#10B981" style={{ marginBottom: '16px' }} />
                     ) : (
-                        <ShieldCheck size={56} color="#6366F1" style={{ marginBottom: '16px' }} />
+                        <Shield size={56} color="#6366F1" style={{ marginBottom: '16px' }} />
                     )}
                     <h2 style={{ color: '#111827', fontSize: '22px', fontWeight: 600, marginBottom: '12px' }}>
                         {statusMessage.title}
@@ -126,7 +122,6 @@ const LeadClaimConfirm = () => {
     return (
         <div style={containerStyle}>
             <div style={cardStyle}>
-                <img src={logo} alt="InstaPay" style={logoStyle} />
 
                 <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: '#EEF2FF', color: '#4F46E5', padding: '6px 14px', borderRadius: '20px', fontSize: '13px', fontWeight: 500, marginBottom: '16px' }}>
                     <UserCheck size={16} />
