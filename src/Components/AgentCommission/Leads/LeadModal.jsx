@@ -6,17 +6,22 @@ import {
     MenuItem,
     TextField
 } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { ArrowRight, ChevronDown, X } from 'react-feather';
 import { useTranslation } from 'react-i18next';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiWrapper } from '../../../utils/Functions/apiWrapper';
 import CountryDropDown from '../../AddBeneficiary/CountryDropDown';
+import PhoneInput from '../../PhoneInput';
+import { decryptData } from '../../../Helper/EssentilaMethods/Decryption';
 import styles from '../styles/leadModal.module.css';
+import { UserContext } from '../../../Context/UserContext';
+import citiesData from "../../CitiesDropDown/CitiesData.json"
 
 const LeadModal = ({ open, onClose, onSubmit, initialEntityType = 'corporate' }) => {
     const { t } = useTranslation();
     const queryClient = useQueryClient();
+    const { userDetails } = useContext(UserContext)
 
     const [entityType, setEntityType] = useState(initialEntityType === 'corporate' ? 'business' : initialEntityType);
     const [errorMsg, setErrorMsg] = useState('');
@@ -25,7 +30,7 @@ const LeadModal = ({ open, onClose, onSubmit, initialEntityType = 'corporate' })
         company_name: '',
         first_name: '',
         last_name: '',
-        country: 'Switzerland',
+        country: userDetails?.country?.country_name ? userDetails.country.country_name : 'Switzerland',
         email: '',
         phone: '',
         fee_pack: '',
@@ -61,7 +66,7 @@ const LeadModal = ({ open, onClose, onSubmit, initialEntityType = 'corporate' })
                 company_name: '',
                 first_name: '',
                 last_name: '',
-                country: 'Switzerland',
+                country: userDetails?.country?.country_name ? userDetails.country.country_name : 'Switzerland',
                 email: '',
                 phone: '',
                 fee_pack: feePacks.length > 0 ? feePacks[0]._id : '',
@@ -95,8 +100,17 @@ const LeadModal = ({ open, onClose, onSubmit, initialEntityType = 'corporate' })
             onClose();
         },
         onError: (err) => {
-            const decErr = err?.response?.data?.data ? err?.response?.data?.data : err?.message;
-            setErrorMsg(decErr || t('Failed to create lead. Please try again.'));
+            let msg = '';
+            const rawData = err?.response?.data?.data;
+            if (rawData) {
+                try {
+                    const dec = decryptData(rawData);
+                    msg = typeof dec === 'string' ? dec : dec?.message || dec?.info;
+                } catch {
+                    msg = typeof rawData === 'string' ? rawData : err?.message;
+                }
+            }
+            setErrorMsg(msg || err?.message || t('Failed to create lead. Please try again.'));
         }
     });
 
@@ -147,18 +161,8 @@ const LeadModal = ({ open, onClose, onSubmit, initialEntityType = 'corporate' })
 
         createLeadMutation.mutate(payload);
     };
-
-    const countryOptions = [
-        { code: 'CH', name: 'Switzerland', flag: '🇨🇭' },
-        { code: 'GB', name: 'United Kingdom', flag: '🇬🇧' },
-        { code: 'US', name: 'United States', flag: '🇺🇸' },
-        { code: 'DE', name: 'Germany', flag: '🇩🇪' },
-        { code: 'AE', name: 'United Arab Emirates', flag: '🇦🇪' },
-        { code: 'SG', name: 'Singapore', flag: '🇸🇬' },
-        { code: 'FR', name: 'France', flag: '🇫🇷' },
-        { code: 'ET', name: 'Ethiopia', flag: '🇪🇹' }
-    ];
-
+    
+    console.log(formData.country,'countr')
     return (
         <Dialog
             open={open}
@@ -243,43 +247,45 @@ const LeadModal = ({ open, onClose, onSubmit, initialEntityType = 'corporate' })
                         </>
                     )}
 
-                    <div className={styles.fieldGroup}>
-                        <label className={styles.fieldLabel}>{t('Country')}</label>
-                        <CountryDropDown
-                            country={formData.country}
-                            onSelect={(selected) => {
-                                handleChange('country', selected?.name || selected?.country_name || selected?.alpha3 || '');
-                            }}
-                        />
-                    </div>
-
                     {entityType === 'business' ? (
-                        <div className={styles.fieldGroup}>
-                            <label className={styles.fieldLabel}>{t('Company Email')}</label>
-                            <TextField
-                                fullWidth
-                                size="small"
-                                type="email"
-                                placeholder="contact@client.com"
-                                value={formData.email}
-                                onChange={(e) => handleChange('email', e.target.value)}
-                                className={styles.inputControl}
-                            />
-                        </div>
+                        <>
+                            <div className={styles.fieldGroup}>
+                                <label className={styles.fieldLabel}>{t('Country')}</label>
+                                <CountryDropDown
+                                    country={formData.country}
+                                    onSelect={(selected) => {
+                                        handleChange('country', selected?.country_name || selected?.name || selected?.alpha3 || '');
+                                    }}
+                                />
+                            </div>
+                            <div className={styles.fieldGroup}>
+                                <label className={styles.fieldLabel}>{t('Company Email')}</label>
+                                <TextField
+                                    fullWidth
+                                    size="small"
+                                    type="email"
+                                    placeholder="contact@client.com"
+                                    value={formData.email}
+                                    onChange={(e) => handleChange('email', e.target.value)}
+                                    className={styles.inputControl}
+                                />
+                            </div>
+                        </>
                     ) : (
                         <>
                             <div className={styles.fieldGroup}>
                                 <label className={styles.fieldLabel}>{t('Phone Number')}</label>
-                                <TextField
-                                    fullWidth
-                                    size="small"
-                                    placeholder="+41791234567"
-                                    value={formData.phone}
-                                    onChange={(e) => handleChange('phone', e.target.value)}
-                                    className={styles.inputControl}
+                                <PhoneInput
+                                    country={citiesData.find(c => c.name === formData.country)?.iso3 || 'USA'}
+                                    phone={formData.phone}
+                                    setPhone={(val) => handleChange('phone', val)}
+                                    setCountry={(selected) => {
+                                        const cName = selected?.country_name || selected?.name || selected?.alpha3 || selected?.country_iso_code || '';
+                                        handleChange('country', cName);
+                                    }}
                                 />
                             </div>
-                            <div className={styles.fieldGroup}>
+                            {/* <div className={styles.fieldGroup}>
                                 <label className={styles.fieldLabel}>{t('Email (Optional)')}</label>
                                 <TextField
                                     fullWidth
@@ -290,7 +296,7 @@ const LeadModal = ({ open, onClose, onSubmit, initialEntityType = 'corporate' })
                                     onChange={(e) => handleChange('email', e.target.value)}
                                     className={styles.inputControl}
                                 />
-                            </div>
+                            </div> */}
                         </>
                     )}
 

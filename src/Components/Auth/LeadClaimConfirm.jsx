@@ -119,6 +119,8 @@ const LeadClaimConfirm = () => {
         );
     }
 
+    const details = claimDetails?.data || claimDetails || {};
+
     return (
         <div style={containerStyle}>
             <div style={cardStyle}>
@@ -133,26 +135,26 @@ const LeadClaimConfirm = () => {
                 </h1>
 
                 <p style={{ color: '#4B5563', fontSize: '14px', lineHeight: '1.5', marginBottom: '24px' }}>
-                    Agent <strong>{claimDetails.agent_name}</strong> is requesting to add your account to their introduced client group on InstaPay with custom pricing.
+                    Agent <strong>{details.agent_name || 'Your Agent'}</strong> is requesting to add your account to their introduced client group on InstaPay with custom pricing.
                 </p>
 
                 <div style={detailsBoxStyle}>
                     <div style={detailRowStyle}>
                         <span style={detailLabelStyle}>Agent Name:</span>
-                        <span style={detailValueStyle}>{claimDetails.agent_name}</span>
+                        <span style={detailValueStyle}>{details.agent_name || '—'}</span>
                     </div>
                     <div style={detailRowStyle}>
                         <span style={detailLabelStyle}>Client Name:</span>
-                        <span style={detailValueStyle}>{claimDetails.client_name || claimDetails.company_name}</span>
+                        <span style={detailValueStyle}>{details.client_name || details.company_name || '—'}</span>
                     </div>
                     <div style={detailRowStyle}>
                         <span style={detailLabelStyle}>Contact Email:</span>
-                        <span style={detailValueStyle}>{claimDetails.email || '—'}</span>
+                        <span style={detailValueStyle}>{details.email || '—'}</span>
                     </div>
                     <div style={{ ...detailRowStyle, borderBottom: 'none' }}>
                         <span style={detailLabelStyle}>Proposed Fee Pack:</span>
                         <span style={{ ...detailValueStyle, color: '#4F46E5', fontWeight: 600 }}>
-                            {claimDetails.fee_pack_name} ({claimDetails.fee_pack_summary || 'Custom Schedule'})
+                            {details.fee_pack_name || 'Custom Fee Pack'} {details.fee_pack_summary ? `(${details.fee_pack_summary})` : ''}
                         </span>
                     </div>
                 </div>
