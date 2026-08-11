@@ -80,9 +80,10 @@ const Signup = ({ country, setIsLoginForm, setHideLogo }) => {
     };
 
     useEffect(() => {
-        console.log(country)
-        dataHandler("country", country)
-    }, [country])
+        if (!agentReferralTokenId && country) {
+            dataHandler("country", country)
+        }
+    }, [country, agentReferralTokenId])
 
     useEffect(() => {
         const fetchLeadTokenData = async () => {
@@ -152,10 +153,17 @@ const Signup = ({ country, setIsLoginForm, setHideLogo }) => {
         switch (data.step) {
             case 1:
                 return !data.account_type
-            case 2:
+            case 2: {
+                const hasValidCountry = Boolean(
+                    data.country?._id ||
+                    data.country?.alpha3 ||
+                    data.country?.country_iso_code ||
+                    (typeof data.country === 'string' && data.country.trim())
+                );
                 return data.account_type === "individual"
                     ? !data.first_name?.trim() || !data.last_name?.trim() || !individualNameRegex.test(data.first_name) || !individualNameRegex.test(data.last_name)
-                    : !data.category_id || !data.company_name?.trim() || !data.country?._id || !companyNameRegex.test(data.company_name)
+                    : !data.category_id || !data.company_name?.trim() || !hasValidCountry || !companyNameRegex.test(data.company_name);
+            }
             case 3:
                 return data.account_type === "individual" ? !data.phone || data.phone.length < 9 || !/^\d{9,20}$/g.test(data.phone) : (!emailRegex.test(data.email))
             case 4:
