@@ -18,6 +18,7 @@ import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
 import InstaPayLoader from "../Loader";
+import { handlePaymentApiError } from "../../utils/Functions/handlePaymentApiError";
 
 const ConfirmSend = ({ beneficiary, amount, currency, country, payoutChannel, setConfirmed, setSubStep, isExternalWithdrawal, externalWithdrawalPayload, recCycle, recStartDate, reason, quotationDetails, setCreatedTransaction, createdQuotation, setBeneficiary, comment, userWithdrawals = null, vendor }) => {
     const { t } = useTranslation()
@@ -27,11 +28,12 @@ const ConfirmSend = ({ beneficiary, amount, currency, country, payoutChannel, se
     const divRef = useRef(null)
     const svgRef = useRef(null)
     const chevRef = useRef(null)
-    const { userDetails, userWallets, profileCompleted, authHeader } = useContext(UserContext)
+    const { userDetails, userWallets, profileCompleted, authHeader, setProfileLockTime } = useContext(UserContext)
     const [isSlided, setIsSlided] = useState(false)
     const [showCompletionModal, setShowCompletionModal] = useState(false)
     const [showVerificationModal, setShowVerificationModal] = useState(false)
     const [showError, setShowError] = useState(false)
+    const [errorMessage, setErrorMessage] = useState("")
     const [loading, setLoading] = useState(false)
 
     const isMounted = useRef(true);
@@ -152,8 +154,12 @@ const ConfirmSend = ({ beneficiary, amount, currency, country, payoutChannel, se
                 })
                 .catch(err => {
                     // console.log(err)
-                    const decrypted = decryptData(err?.response?.data?.data)
-                    console.log(decrypted)
+                    handlePaymentApiError({
+                        error: err,
+                        navigate,
+                        setError: setErrorMessage,
+                        setProfileLockTime
+                    })
                     setShowError(true)
                 })
                 .finally(() => {
@@ -214,8 +220,8 @@ const ConfirmSend = ({ beneficiary, amount, currency, country, payoutChannel, se
             <Modal isOpen={showError}>
                 <ModalBody style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
                     <XCircle size={70} color="red" />
-                    <p color="red" style={{ fontSize: "1.1rem", fontWeight: "600", color: "red", marginTop: ".3rem" }}>{t("Oops! Something went wrong.")}</p>
-                    <p style={{ fontSize: ".6rem", marginTop: ".5rem" }}>{t("We're sorry about that.")} <Link to={"/payments"} style={{ textDecoration: "underline" }}>{t("Go back to Payments Page.")}</Link></p>
+                    <p color="red" style={{ fontSize: "1.1rem", fontWeight: "600", color: "red", marginTop: ".3rem" }}>{t(errorMessage || "Oops! Something went wrong.")}</p>
+                    <p style={{ fontSize: ".6rem", marginTop: ".5rem" }}>{t("We're sorry about that.")} <Link to={userWithdrawals?._id ? "/wallets" : "/payments"} style={{ textDecoration: "underline" }}>{t(userWithdrawals?._id ? "Go back to Wallet Page." : "Go back to Payments Page.")}</Link></p>
                 </ModalBody>
             </Modal>
 
