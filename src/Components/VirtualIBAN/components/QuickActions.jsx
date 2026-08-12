@@ -79,10 +79,11 @@ const QuickActions = ({ selectedIban }) => {
                 return;
 
             case 5:
+            case 4:
                 return;
 
             case 7:
-                navigate("/virtual-IBAN/beneficiaries-virtual");
+                navigate("/beneficiaries");
                 return;
             case 2:
                 navigate("/onboarding-IBAN/moneymove");
@@ -122,15 +123,17 @@ const QuickActions = ({ selectedIban }) => {
                 return !permission || can(permission)
             }).map((action) => {
                 const disabledByBlockedIban = isBlocked && BLOCKED_DISABLED_ACTIONS.has(action.id)
+                const isComingSoon = action.id === 4 || action.id === 5
+                const isDisabled = disabledByBlockedIban || isComingSoon
                 const actionLabel = action.id === 4 && isBlocked ? "Reactivate" : action.label
                 const actionSub = action.id === 4 && isBlocked ? "Resume virtual account" : action.sub
                 const actionColor = action.id === 4 && isBlocked ? "#5926F0" : action.color
                 const card = (
                     <button
                         key={action.id}
-                        className={`${styles.card} ${disabledByBlockedIban ? styles.disabledCard : ""}`}
+                        className={`${styles.card} ${isDisabled ? styles.disabledCard : ""}`}
                         onClick={() => handleActionClick(action.id)}
-                        disabled={disabledByBlockedIban}
+                        disabled={isDisabled}
                     >
                         <div
                             className={styles.iconWrap}
@@ -144,29 +147,28 @@ const QuickActions = ({ selectedIban }) => {
 
                         <div className={styles.text}>
                             <span className={styles.label}>{t(actionLabel)}</span>
-                            <span className={styles.sub}>{disabledByBlockedIban ? "Paused IBAN" : t(actionSub)}</span>
+                            <span className={styles.sub}>
+                                {disabledByBlockedIban
+                                    ? t("Paused IBAN")
+                                    : isComingSoon
+                                        ? t("Coming Soon")
+                                        : t(actionSub)}
+                            </span>
                         </div>
                     </button>
                 );
 
-                if (disabledByBlockedIban) {
-                    return (
-                        <Tooltip
-                            key={action.id}
-                            title={t(BLOCKED_ACTION_TOOLTIP)}
-                            arrow
-                            placement="top"
-                        >
-                            <span className={styles.tooltipWrap}>{card}</span>
-                        </Tooltip>
-                    )
-                }
+                if (isDisabled) {
+                    const tooltipTitle = disabledByBlockedIban
+                        ? t(BLOCKED_ACTION_TOOLTIP)
+                        : isComingSoon
+                            ? t("Coming Soon")
+                            : "";
 
-                if (action.id === 5) {
                     return (
                         <Tooltip
                             key={action.id}
-                            title="Coming Soon"
+                            title={tooltipTitle}
                             arrow
                             placement="top"
                         >
