@@ -371,7 +371,7 @@ const AmountAndCurrency = ({ amount, setAmount, currency, subService = "", setQu
                 }
             </div>
         </CardBody>
-    )
+    );
 }
 
 export default AmountAndCurrency;

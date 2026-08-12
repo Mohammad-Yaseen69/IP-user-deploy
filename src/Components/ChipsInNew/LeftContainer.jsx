@@ -173,7 +173,7 @@ const LeftContainer = ({ currentWallet, currency, setCurrency, setWalletRefresh,
                     <div className={styles.br_top}>
                         <Label>{t("Share your Insta-Pay unique payment link")}</Label>
                         <div className={styles.link}>
-                            <span>{base_url}/q/{currentWallet?.wallet_id}</span>
+                            <span>{base_url}{t("/q/")}{currentWallet?.wallet_id}</span>
                             <img alt="" src={copy} onClick={copyHandler} />
                         </div>
                     </div>
@@ -191,7 +191,7 @@ const LeftContainer = ({ currentWallet, currency, setCurrency, setWalletRefresh,
                 </div>
             </div>
         </div>
-    )
+    );
 }
 
 export default LeftContainer

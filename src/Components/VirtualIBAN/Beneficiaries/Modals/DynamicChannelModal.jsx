@@ -193,9 +193,9 @@ const DynamicChannelModal = ({ open, handleClose, beneficiaryData, onSave }) => 
                                     size="small"
                                     sx={{ ...commonInputStyles, padding: 0 }}
                                 >
-                                    <MenuItem value="ethereum">Ethereum (ERC-20)</MenuItem>
-                                    <MenuItem value="tron">Tron (TRC-20)</MenuItem>
-                                    <MenuItem value="bitcoin">Bitcoin (BTC)</MenuItem>
+                                    <MenuItem value="ethereum">{t("Ethereum (ERC-20)")}</MenuItem>
+                                    <MenuItem value="tron">{t("Tron (TRC-20)")}</MenuItem>
+                                    <MenuItem value="bitcoin">{t("Bitcoin (BTC)")}</MenuItem>
                                 </Select>
                             </div>
 
@@ -222,9 +222,9 @@ const DynamicChannelModal = ({ open, handleClose, beneficiaryData, onSave }) => 
                                     size="small"
                                     sx={{ ...commonInputStyles, padding: 0 }}
                                 >
-                                    <MenuItem value="mpesa">M-Pesa</MenuItem>
-                                    <MenuItem value="mtn">MTN Mobile Money</MenuItem>
-                                    <MenuItem value="orange">Orange Money</MenuItem>
+                                    <MenuItem value="mpesa">{t("M-Pesa")}</MenuItem>
+                                    <MenuItem value="mtn">{t("MTN Mobile Money")}</MenuItem>
+                                    <MenuItem value="orange">{t("Orange Money")}</MenuItem>
                                 </Select>
                             </div>
 

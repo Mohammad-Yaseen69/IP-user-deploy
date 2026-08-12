@@ -949,7 +949,7 @@ const EditBeneficiary = () => {
 
                                                         {saveloading && <div class="d-flex justify-content-center">
                                                             <div class="spinner-border" color='primary' role="status">
-                                                                <span class="sr-only">Loading...</span>
+                                                                <span class="sr-only">{t("Loading...")}</span>
                                                             </div>
                                                         </div>}
                                                     </div>
@@ -964,7 +964,7 @@ const EditBeneficiary = () => {
                 }
             </div >
         </LocalizationProvider>
-    )
+    );
 }
 
 export default EditBeneficiary;

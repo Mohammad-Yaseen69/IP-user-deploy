@@ -207,9 +207,7 @@ const StatusScreen = ({ status = 'submitted', ibanNumber, companyName, onAction,
                                 <a
                                     href="mailto:help@insta-pay.ch"
                                     style={{ color: '#5B3DF5', fontWeight: 600, textDecoration: 'none' }}
-                                >
-                                    help@insta-pay.ch
-                                </a>
+                                >{t("help@insta-pay.ch")}</a>
                             </p>
                         </div>
 
@@ -447,7 +445,7 @@ const StatusScreen = ({ status = 'submitted', ibanNumber, companyName, onAction,
                 </div>
             )}
         </div>
-    )
+    );
 }
 
 export default StatusScreen

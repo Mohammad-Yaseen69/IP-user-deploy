@@ -153,7 +153,7 @@ const SearchComponent = ({ showS = false, showOthers = true }) => {
                                                                         }
                                                                         <div style={{ display: "flex", flexDirection: "column", gap: "1px" }}>
                                                                             <span style={{ color: "#111", overflow: "hidden", textOverflow: "ellipsis", fontWeight: 600 }}>{user?.account_type === "individual" ? `${user?.first_name} ${user?.last_name}` : user?.company_name}</span>
-                                                                            <Badge color="success" style={{ padding: "4px 10px", borderRadius: "3px", fontSize: ".45rem", width: "fit-content", textTransform: "uppercase" }}>{user?.account_type ?? "Individual"} Account</Badge>
+                                                                            <Badge color="success" style={{ padding: "4px 10px", borderRadius: "3px", fontSize: ".45rem", width: "fit-content", textTransform: "uppercase" }}>{user?.account_type ?? "Individual"}{t("Account")}</Badge>
                                                                         </div>
                                                                     </Link>
                                                                 ))
@@ -213,7 +213,7 @@ const SearchComponent = ({ showS = false, showOthers = true }) => {
                     </>
             }
         </div>
-    )
+    );
 }
 
 export default SearchComponent;

@@ -199,7 +199,7 @@ const AcceptModal = ({ isOpen, toggle, item }) => {
                             <ModalBody>
                                 <Label>{t("Choose Your Wallet")}</Label>
                                 <Input type='select' value={currentWallet} onChange={e => setCurrentWallet(e.target.value)}>
-                                    <option value="" disabled>--SELECT-WALLET--</option>
+                                    <option value="" disabled>{t("--SELECT-WALLET--")}</option>
                                     {
                                         userWallets?.filter(item => item?.wallet_type === "insta" && !item?.blocked && !item?.admin_blocked && !item?.blocked && !item?.admin_blocked && item?.status === "active")?.map(item => (
                                             <option value={item?._id} key={item?._id}>{item?.wallet_id} ({item?.currency?.code} )</option>
@@ -287,7 +287,7 @@ const AcceptModal = ({ isOpen, toggle, item }) => {
                 }
             </Modal>
         </>
-    )
+    );
 }
 
 export default AcceptModal

@@ -76,7 +76,7 @@ const UploadAdditionalKYB = ({ isOpen, toggle, files, user_id, type = "kyb", par
 
     return (
         <Modal isOpen={isOpen} toggle={toggle}>
-            <ModalHeader toggle={toggle}>Upload Requested Files</ModalHeader>
+            <ModalHeader toggle={toggle}>{t("Upload Requested Files")}</ModalHeader>
             <ModalBody>
                 {files?.map((item) => {
                     if (item?.status === 'requested') {

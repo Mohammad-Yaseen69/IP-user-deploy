@@ -261,7 +261,7 @@ const CreateAgentPassword = () => {
                 </div>
                 <div className={styles2.footer}>
                     <LanguagePicker />
-                    <span>© 2024 Instapay. {t("All rights reserved.")}</span>
+                    <span>{t("© 2024 Instapay.")}{t("All rights reserved.")}</span>
                     <span><FlagSvg /> {t("A Swiss Company")}</span>
                 </div>
             </div>
@@ -364,7 +364,7 @@ const CreateAgentPassword = () => {
                 </div>
                 <div className={styles.footer}>
                     <LanguagePicker />
-                    <span>© 2024 Instapay. {t("All rights reserved.")}</span>
+                    <span>{t("© 2024 Instapay.")}{t("All rights reserved.")}</span>
                     <span><FlagSvg /> {t("A Swiss Company")}</span>
                 </div>
             </div>
