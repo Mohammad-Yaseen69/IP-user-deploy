@@ -7,6 +7,7 @@ import {
 } from "../Components/VirtualIBAN/utils/virtualIban"
 import { useContext } from "react"
 import { UserContext } from "../Context/UserContext"
+import { useIdempotency } from "./Payments/useIdempotency"
 
 export const virtualIbanQueryKeys = {
     all: ["virtual-iban"],
@@ -232,6 +233,7 @@ export const useVirtualIbanCryptoTopupFee = () =>
 
 export const useExecuteVirtualIbanCryptoTopup = () => {
     const queryClient = useQueryClient()
+    const { getKey } = useIdempotency()
 
     return useMutation({
         mutationFn: (payload) =>
@@ -241,6 +243,7 @@ export const useExecuteVirtualIbanCryptoTopup = () => {
                 payload,
                 isEncrypted: true,
                 isDecrypted: true,
+                idempotencyKey: getKey(),
             }),
         onSuccess: (_, variables) => {
             queryClient.invalidateQueries({ queryKey: virtualIbanQueryKeys.list() })
