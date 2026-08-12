@@ -284,11 +284,21 @@ const RecentTransactions = ({
               </tr>
             </thead>
             <tbody>
-              {
-                transactions?.map((tx) => (
-                  <TransactionRow key={tx._id} tx={tx} selectedIban={selectedIban} />
+              {(transactions?.length ?? 0) === 0 ? (
+                <tr>
+                  <td colSpan={7}>
+                    <Empty selectedIban={selectedIban} />
+                  </td>
+                </tr>
+              ) : (
+                transactions.map((tx) => (
+                  <TransactionRow
+                    key={tx._id}
+                    tx={tx}
+                    selectedIban={selectedIban}
+                  />
                 ))
-              }
+              )}
             </tbody>
           </table>
         </div>

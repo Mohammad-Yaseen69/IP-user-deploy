@@ -23,6 +23,7 @@ import styles from "../ConvertFundsModal/convertFunds.module.scss"
 import SidebarProgress from "../VirtualIbanModal/SidebarProgress"
 import { useVirtualIbanCryptoTopupFee, useExecuteVirtualIbanCryptoTopup } from "../../../hooks/useVirtualIban"
 import { getErrorMessage } from "../../../Helper/getErrorMessage"
+import { useIdempotency } from "../../../hooks/Payments/useIdempotency"
 
 const CoinsIcon = () => (
     <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
@@ -84,6 +85,7 @@ const CryptoTopupModal = ({ isOpen, toggle, selectedIban }) => {
     const [amount, setAmount] = useState("")
     const [feeDetails, setFeeDetails] = useState(null)
     const [confirmData, setConfirmData] = useState(null)
+    const { reset } = useIdempotency();
 
     const feeMutation = useVirtualIbanCryptoTopupFee()
     const confirmMutation = useExecuteVirtualIbanCryptoTopup()
@@ -187,6 +189,7 @@ const CryptoTopupModal = ({ isOpen, toggle, selectedIban }) => {
     }
 
     const handleBack = () => {
+        reset()
         const { prevStep } = goBack(currentStep, machineData)
         if (prevStep === null) handleClose()
         else setCurrentStep(prevStep)
