@@ -64,14 +64,26 @@ const AddBeneficiaryModal = ({ open, handleClose, onSaveSuccess, beneficiaryToEd
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (beneficiaryType === 'individual' && (!formData.first_name || !formData.first_name.trim())) {
-            toast.error(t("First name is required for individual beneficiaries"));
-            return;
+        if (beneficiaryType === 'individual') {
+            if (!formData.first_name || !formData.first_name.trim()) {
+                toast.error(t("First name is required for individual beneficiaries"));
+                return;
+            }
+            if (!formData.phone || !formData.phone.trim()) {
+                toast.error(t("Phone number is required for individual beneficiaries"));
+                return;
+            }
         }
 
-        if (beneficiaryType === 'business' && (!formData.company_name || !formData.company_name.trim())) {
-            toast.error(t("Company name is required for business beneficiaries"));
-            return;
+        if (beneficiaryType === 'business') {
+            if (!formData.company_name || !formData.company_name.trim()) {
+                toast.error(t("Company name is required for business beneficiaries"));
+                return;
+            }
+            if (!formData.email || !formData.email.trim()) {
+                toast.error(t("Email address is required for business beneficiaries"));
+                return;
+            }
         }
 
         setLoading(true);
@@ -179,9 +191,10 @@ const AddBeneficiaryModal = ({ open, handleClose, onSaveSuccess, beneficiaryToEd
 
                 <form onSubmit={handleSubmit} style={{ padding: '24px' }}>
                     {/* Type Selector */}
-                    <div style={{ display: 'flex', gap: '8px', background: '#F3F4F6', padding: '4px', borderRadius: '12px', marginBottom: '20px' }}>
+                    <div style={{ display: 'flex', gap: '8px', background: '#F3F4F6', padding: '4px', borderRadius: '12px', marginBottom: '20px', opacity: beneficiaryToEdit ? 0.6 : 1, pointerEvents: beneficiaryToEdit ? 'none' : 'auto' }}>
                         <button
                             type="button"
+                            disabled={!!beneficiaryToEdit}
                             onClick={() => setBeneficiaryType('individual')}
                             style={{
                                 flex: 1,
@@ -192,7 +205,7 @@ const AddBeneficiaryModal = ({ open, handleClose, onSaveSuccess, beneficiaryToEd
                                 color: beneficiaryType === 'individual' ? '#4F46E5' : '#6B7280',
                                 fontWeight: beneficiaryType === 'individual' ? 600 : 500,
                                 fontSize: '14px',
-                                cursor: 'pointer',
+                                cursor: beneficiaryToEdit ? 'not-allowed' : 'pointer',
                                 boxShadow: beneficiaryType === 'individual' ? '0 1px 3px rgba(0,0,0,0.1)' : 'none',
                                 display: 'flex',
                                 alignItems: 'center',
@@ -206,6 +219,7 @@ const AddBeneficiaryModal = ({ open, handleClose, onSaveSuccess, beneficiaryToEd
                         </button>
                         <button
                             type="button"
+                            disabled={!!beneficiaryToEdit}
                             onClick={() => setBeneficiaryType('business')}
                             style={{
                                 flex: 1,
@@ -216,7 +230,7 @@ const AddBeneficiaryModal = ({ open, handleClose, onSaveSuccess, beneficiaryToEd
                                 color: beneficiaryType === 'business' ? '#4F46E5' : '#6B7280',
                                 fontWeight: beneficiaryType === 'business' ? 600 : 500,
                                 fontSize: '14px',
-                                cursor: 'pointer',
+                                cursor: beneficiaryToEdit ? 'not-allowed' : 'pointer',
                                 boxShadow: beneficiaryType === 'business' ? '0 1px 3px rgba(0,0,0,0.1)' : 'none',
                                 display: 'flex',
                                 alignItems: 'center',
@@ -296,9 +310,12 @@ const AddBeneficiaryModal = ({ open, handleClose, onSaveSuccess, beneficiaryToEd
                         </div>
 
                         <div>
-                            <label style={{ display: 'block', fontSize: '13px', fontWeight: 500, color: '#374151', marginBottom: '6px' }}>{t("Email")}</label>
+                            <label style={{ display: 'block', fontSize: '13px', fontWeight: 500, color: '#374151', marginBottom: '6px' }}>
+                                {t("Email")} {beneficiaryType === 'business' ? '*' : ''}
+                            </label>
                             <TextField
                                 fullWidth size="small" variant="outlined" type="email"
+                                required={beneficiaryType === 'business'}
                                 placeholder="name@example.com"
                                 value={formData.email}
                                 onChange={(e) => handleChange('email', e.target.value)}
@@ -309,8 +326,11 @@ const AddBeneficiaryModal = ({ open, handleClose, onSaveSuccess, beneficiaryToEd
 
                     {/* PHONE INPUT WITH HOVER TOOLTIP & DISABLED STATE */}
                     <div title={isCountryDisabled ? t("Please select country first") : ""} style={{ marginBottom: '14px' }}>
-                        <label style={{ display: 'block', fontSize: '13px', fontWeight: 500, color: isCountryDisabled ? '#9CA3AF' : '#374151', marginBottom: '6px' }}>{t("Phone Number")}</label>
+                        <label style={{ display: 'block', fontSize: '13px', fontWeight: 500, color: isCountryDisabled ? '#9CA3AF' : '#374151', marginBottom: '6px' }}>
+                            {t("Phone Number")} {beneficiaryType === 'individual' ? '*' : ''}
+                        </label>
                         <PhoneInput
+                            key={`${beneficiaryToEdit?._id || 'new'}-${formData.phone || 'empty'}`}
                             country={formData.country_iso_code || formData.country_name}
                             phone={formData.phone}
                             disabled={isCountryDisabled}
