@@ -47,12 +47,84 @@ hard guarantee; the two rules above are the ones enforced in code.
 
 ## Files
 
+## Voice input
+
+ChatKit's own dictation stays off (`VOICE_INPUT_ENABLED = false`): it does not
+work on the hosted Agent Builder backend, where the transcription request
+returns 500 with no CORS headers, so the user only ever saw "Transcription
+failed". Open, unanswered: <https://github.com/openai/chatkit-js/issues/179>
+
+We run our own instead:
+
+```
+mic button (panel header, outside the iframe)
+  └─ useVoiceInput — MediaRecorder
+       └─ POST /api/transcribe ──► OpenAI /v1/audio/transcriptions
+            └─ setComposerValue(text) ──► ChatKit composer
+```
+
+Three decisions worth keeping:
+
+- **The transcript lands in the composer, not straight into the conversation.**
+  The user can fix a misheard word before the agent sees it — worth it in a
+  fintech, and more so for the mixed-language input these users write.
+- **The container is negotiated, not hardcoded.** `useVoiceInput` picks the
+  first format the browser actually supports. Hardcoding webm is exactly what
+  breaks ChatKit's own dictation on Safari
+  (<https://github.com/openai/chatkit-js/issues/198>); Safari gets `audio/mp4`
+  here.
+- **No `language` hint is sent.** Pinning one language makes the other
+  transcribe badly, and these users mix them.
+
+**Where the button lives.** In a bar directly beneath the ChatKit frame, flush
+against the composer. It cannot go *inside* the composer — that is in a
+cross-origin iframe, so its DOM is unreachable and its internal layout is not
+ours to measure; an absolutely-positioned overlay would be guesswork that lands
+on ChatKit's send button the first time they change their padding.
+
+ChatKit's own `disclaimer` is switched off and that warning moved into this bar,
+so nothing sits between the input and the mic. The bar doubles as the status
+line: it shows "Listening…", "Transcribing…", or the error, in place of the
+warning.
+
+Model defaults to `gpt-4o-mini-transcribe` (~$0.003/min); override with
+`TRANSCRIBE_MODEL` if accuracy matters more than cost. Recording is capped at
+60s to stay inside the serverless body limit.
+
+Microphone access needs HTTPS or localhost. If `isVoiceInputSupported()` is
+false — no `MediaRecorder`, no `getUserMedia` — the button simply isn't
+rendered.
+
+## Conversation lifetime
+
+The thread has to survive three things, each handled differently:
+
+- **Closing the panel.** The panel is hidden with CSS, never unmounted —
+  unmounting `<ChatKit>` destroys its iframe and the conversation with it.
+- **Navigating.** React Router keeps `Layout` mounted across route changes, so
+  the panel simply stays open. The navigation tool deliberately does *not* close
+  it.
+- **A full page load.** The sidebar uses absolute URLs, so real reloads happen.
+  `onThreadChange` stores the thread id per user and `initialThread` restores it
+  on the next mount.
+
+It ends at **logout**: `clearAllThreadIds()` runs when the token disappears.
+`token` is read straight from localStorage, so its absence means signed out
+rather than still loading — which `userDetails` alone could not distinguish.
+
+## Files
+
 | File | Role |
 | --- | --- |
 | `knowledge/pages.js` | Page registry — the allowlist *and* the source of the agent's page list |
 | `useNavigationTool.js` | Client tool handler: allowlist + permission checks, then navigate |
-| `index.jsx` | Launcher, panel, session handshake, ChatKit config |
-| `Icons.jsx` | Launcher icons |
+| `index.jsx` | Launcher, signed-in gate, conversation lifetime |
+| `AssistantPanel.jsx` | Session handshake, ChatKit config, thread persistence, mic button |
+| `useVoiceInput.js` | Recording, container negotiation, transcription |
+| `threadStorage.js` | Per-user thread id storage |
+| `Icons.jsx` | Launcher and mic icons |
+| `../../../api/transcribe.js` | Transcription endpoint (Vercel function) |
+| `../../../api/_lib/auth.js` | Shared caller verification for both endpoints |
 | `styles.module.css` | Launcher and panel styles (ChatKit styles itself) |
 | `../../../api/chatkit/session.js` | Vercel function that mints the session |
 | `../../../scripts/generateAgentConfig.js` | Renders the dashboard config from `pages.js` |

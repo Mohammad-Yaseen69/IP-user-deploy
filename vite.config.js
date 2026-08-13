@@ -8,7 +8,6 @@ import { vercelApiDevPlugin } from './scripts/viteApiPlugin'
 export default defineConfig({
   plugins: [
     react(),
-    // Serves api/** locally; on Vercel the platform runs them instead.
     vercelApiDevPlugin(),
     visualizer({
       open: true,

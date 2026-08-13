@@ -9,8 +9,6 @@ vi.mock('react-i18next', () => ({
     useTranslation: () => ({ t: (key) => key, i18n: { language: 'en' } }),
 }))
 
-// UserContext sets `axios.defaults.withCredentials` at import time, which the
-// shared setup mock does not provide.
 vi.mock('axios', () => ({
     default: {
         defaults: {},
@@ -19,19 +17,53 @@ vi.mock('axios', () => ({
     },
 }))
 
-// ChatKit renders a custom element backed by an iframe, which jsdom cannot run.
-// The stub keeps the last options so the session handshake stays assertable.
 const chatKitOptions = { current: null }
+
+const chatKitMethods = {
+    setComposerValue: vi.fn(),
+    focusComposer: vi.fn(),
+}
 
 vi.mock('@openai/chatkit-react', () => ({
     useChatKit: (options) => {
         chatKitOptions.current = options
-        return { control: { options } }
+        return { control: { options }, ...chatKitMethods }
     },
     ChatKit: (props) => <div data-testid="chatkit" className={props.className} />,
 }))
 
+const voice = { onTranscript: null, status: 'idle', error: null }
+
+vi.mock('../../Components/AssistantWidget/useVoiceInput', () => ({
+    isVoiceInputSupported: () => true,
+    useVoiceInput: ({ onTranscript }) => {
+        voice.onTranscript = onTranscript
+        return { status: voice.status, error: voice.error, toggle: vi.fn(), dismissError: vi.fn() }
+    },
+}))
+
 const SIGNED_IN = { userDetails: { _id: 'user-123' }, token: 'jwt-abc' }
+const THREAD_KEY = 'instapay.assistant.thread:user-123'
+
+const installLocalStorage = () => {
+    const store = new Map()
+    Object.defineProperty(window, 'localStorage', {
+        configurable: true,
+        value: {
+            getItem: (key) => (store.has(key) ? store.get(key) : null),
+            setItem: (key, value) => store.set(key, String(value)),
+            removeItem: (key) => store.delete(key),
+            clear: () => store.clear(),
+            key: (index) => [...store.keys()][index] ?? null,
+            get length() {
+                return store.size
+            },
+        },
+    })
+    return store
+}
+
+let store
 
 const renderWidget = (userValue = SIGNED_IN) =>
     render(
@@ -42,8 +74,16 @@ const renderWidget = (userValue = SIGNED_IN) =>
         </MemoryRouter>
     )
 
+const openPanel = (user) => user.click(screen.getByRole('button', { name: 'Open assistant' }))
+
 beforeEach(() => {
     chatKitOptions.current = null
+    voice.onTranscript = null
+    voice.status = 'idle'
+    voice.error = null
+    chatKitMethods.setComposerValue.mockClear()
+    chatKitMethods.focusComposer.mockClear()
+    store = installLocalStorage()
     globalThis.fetch = vi.fn()
 })
 
@@ -70,31 +110,163 @@ describe('AssistantWidget', () => {
         })
     })
 
-    describe('panel', () => {
-        it('stays closed until the launcher is clicked', () => {
+    describe('panel visibility', () => {
+        it('does not expose the dialog until opened', () => {
             renderWidget()
 
             expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
         })
 
-        it('mounts ChatKit when opened', async () => {
-            const user = userEvent.setup()
+        it('keeps ChatKit mounted while closed', () => {
             renderWidget()
 
-            await user.click(screen.getByRole('button', { name: 'Open assistant' }))
-
-            expect(screen.getByRole('dialog')).toBeInTheDocument()
             expect(screen.getByTestId('chatkit')).toBeInTheDocument()
         })
 
-        it('closes on Escape', async () => {
+        it('exposes the dialog when opened', async () => {
             const user = userEvent.setup()
             renderWidget()
-            await user.click(screen.getByRole('button', { name: 'Open assistant' }))
+
+            await openPanel(user)
+
+            expect(screen.getByRole('dialog')).toBeInTheDocument()
+        })
+
+        it('hides the dialog on Escape but keeps the conversation mounted', async () => {
+            const user = userEvent.setup()
+            renderWidget()
+            await openPanel(user)
 
             await user.keyboard('{Escape}')
 
             await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument())
+            expect(screen.getByTestId('chatkit')).toBeInTheDocument()
+        })
+
+        it('keeps the same ChatKit instance across open and close', async () => {
+            const user = userEvent.setup()
+            renderWidget()
+            const before = screen.getByTestId('chatkit')
+
+            await openPanel(user)
+            await user.click(screen.getByRole('button', { name: 'Close' }))
+
+            expect(screen.getByTestId('chatkit')).toBe(before)
+        })
+    })
+
+    describe('thread persistence', () => {
+        it('starts a new thread when nothing is stored', () => {
+            renderWidget()
+
+            expect(chatKitOptions.current.initialThread).toBeNull()
+        })
+
+        it('resumes the stored thread for this user', () => {
+            store.set(THREAD_KEY, 'thr_existing')
+
+            renderWidget()
+
+            expect(chatKitOptions.current.initialThread).toBe('thr_existing')
+        })
+
+        it('ignores a thread stored against a different user', () => {
+            store.set('instapay.assistant.thread:someone-else', 'thr_theirs')
+
+            renderWidget()
+
+            expect(chatKitOptions.current.initialThread).toBeNull()
+        })
+
+        it('stores the thread id when ChatKit reports a change', () => {
+            renderWidget()
+
+            act(() => chatKitOptions.current.onThreadChange({ threadId: 'thr_new' }))
+
+            expect(store.get(THREAD_KEY)).toBe('thr_new')
+        })
+
+        it('forgets the thread when ChatKit reports a new one', () => {
+            store.set(THREAD_KEY, 'thr_old')
+            renderWidget()
+
+            act(() => chatKitOptions.current.onThreadChange({ threadId: null }))
+
+            expect(store.has(THREAD_KEY)).toBe(false)
+        })
+    })
+
+    describe('logout', () => {
+        it('clears every stored thread when the token is gone', () => {
+            store.set(THREAD_KEY, 'thr_mine')
+            store.set('instapay.assistant.thread:other', 'thr_other')
+            store.set('unrelated-key', 'keep-me')
+
+            renderWidget({ userDetails: null, token: '' })
+
+            expect(store.has(THREAD_KEY)).toBe(false)
+            expect(store.has('instapay.assistant.thread:other')).toBe(false)
+            expect(store.get('unrelated-key')).toBe('keep-me')
+        })
+
+        it('leaves stored threads alone while signed in', () => {
+            store.set(THREAD_KEY, 'thr_mine')
+
+            renderWidget()
+
+            expect(store.get(THREAD_KEY)).toBe('thr_mine')
+        })
+    })
+
+    describe('voice input', () => {
+        it('offers a mic button when the browser supports recording', async () => {
+            const user = userEvent.setup()
+            renderWidget()
+
+            await openPanel(user)
+
+            expect(screen.getByRole('button', { name: 'Record a voice message' })).toBeInTheDocument()
+        })
+
+        it('places the mic below the conversation, next to the input', async () => {
+            const user = userEvent.setup()
+            renderWidget()
+            await openPanel(user)
+
+            const chat = screen.getByTestId('chatkit')
+            const mic = screen.getByRole('button', { name: 'Record a voice message' })
+
+            const micComesAfterChat = chat.compareDocumentPosition(mic) & Node.DOCUMENT_POSITION_FOLLOWING
+            expect(Boolean(micComesAfterChat)).toBe(true)
+        })
+
+        it('hands the transcript to ChatKit as a params object', () => {
+            renderWidget()
+
+            act(() => voice.onTranscript('I want to send money'))
+
+            expect(chatKitMethods.setComposerValue).toHaveBeenCalledWith({
+                text: 'I want to send money',
+            })
+        })
+
+        it('puts the transcript in the composer rather than sending it', () => {
+            renderWidget()
+
+            act(() => voice.onTranscript('send money to Ali'))
+
+            expect(chatKitMethods.setComposerValue).toHaveBeenCalled()
+            expect(chatKitMethods.focusComposer).toHaveBeenCalled()
+        })
+
+        it('surfaces a voice error to the user', async () => {
+            const user = userEvent.setup()
+            voice.error = 'permission_denied'
+            renderWidget()
+
+            await openPanel(user)
+
+            expect(screen.getByText(/Microphone access was blocked/)).toBeInTheDocument()
         })
     })
 
@@ -117,8 +289,12 @@ describe('AssistantWidget', () => {
             expect(chatKitOptions.current.startScreen.prompts.length).toBeGreaterThan(0)
         })
 
-        // On <ChatKit> this would be a DOM error attribute, not the
-        // `chatkit.error` event, and the panel's error state would never show.
+        it('leaves ChatKit dictation off in favour of our own mic', () => {
+            renderWidget()
+
+            expect(chatKitOptions.current.composer.dictation.enabled).toBe(false)
+        })
+
         it('registers onError as a hook option rather than a component prop', () => {
             renderWidget()
 
@@ -129,7 +305,7 @@ describe('AssistantWidget', () => {
     it('shows an error state when ChatKit reports a failure', async () => {
         const user = userEvent.setup()
         renderWidget()
-        await user.click(screen.getByRole('button', { name: 'Open assistant' }))
+        await openPanel(user)
         vi.spyOn(console, 'error').mockImplementation(() => { })
 
         await act(async () => {
@@ -137,7 +313,6 @@ describe('AssistantWidget', () => {
         })
 
         expect(screen.getByText('The assistant is unavailable right now.')).toBeInTheDocument()
-        expect(screen.queryByTestId('chatkit')).not.toBeInTheDocument()
     })
 
     describe('session handshake', () => {

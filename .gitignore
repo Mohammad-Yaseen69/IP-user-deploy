@@ -25,5 +25,4 @@ mcp_config.json
 .env.*
 !.env.example
 *.sw?
-# Root-level scratch files only — an unanchored `test*` also swallows src/test/
 /test*

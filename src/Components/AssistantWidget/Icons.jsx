@@ -1,5 +1,3 @@
-/* Inline icons so the launcher stays self-contained and adds no image requests. */
-
 const base = {
     viewBox: "0 0 24 24",
     fill: "none",
@@ -19,5 +17,18 @@ export const ChatIcon = () => (
 export const CloseIcon = () => (
     <svg {...base}>
         <path d="M18 6 6 18M6 6l12 12" />
+    </svg>
+);
+
+export const MicIcon = () => (
+    <svg {...base}>
+        <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z" />
+        <path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v3" />
+    </svg>
+);
+
+export const StopIcon = () => (
+    <svg {...base}>
+        <rect x="6" y="6" width="12" height="12" rx="2" />
     </svg>
 );
