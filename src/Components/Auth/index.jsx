@@ -113,7 +113,7 @@ const Auth = () => {
                                     />
                                     :
                                     <Signup
-                                        country={country}
+                                        // country={country}
                                         setIsLoginForm={setIsLoginForm}
                                         setHideLogo={setHideLogo}
                                     />
