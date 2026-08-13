@@ -3,36 +3,83 @@ import { useEffect, useState } from 'react';
 import { ArrowLeft, Info, X } from 'react-feather';
 import { useTranslation } from 'react-i18next';
 import styles from './DynamicChannelModal.module.css';
+import useBankDetails from '../../../../hooks/BeneficiaryHooks/useBankDetails';
+import useChannels from '../../../../hooks/BeneficiaryHooks/useChannels';
+import { apiWrapper } from '../../../../utils/Functions/apiWrapper';
+import { toast } from 'react-toastify';
 
-const DynamicChannelModal = ({ open, handleClose, beneficiaryData, onSave }) => {
+const DynamicChannelModal = ({ open, handleClose, beneficiaryData, onSaveSuccess }) => {
     const { t } = useTranslation();
 
-    const countryConfigs = {
-        spain: { label: 'Spain, Germany, France', swiftRequired: false, placeholder: 'ES65 6849 0001 5900 0113 6464' },
-        senegal: { label: 'Senegal, Morocco', swiftRequired: true, placeholder: 'SN65 7849 0001 5900 0113 1122' },
-        uk: { label: 'United Kingdom', swiftRequired: false, placeholder: 'GB29 UKBU 6016 1331 9268 11' },
-        usa: { label: 'United States', swiftRequired: true, placeholder: 'Routing / Account Number combo' }
-    };
+    const [channelType, setChannelType] = useState('bank');
+    const [submitting, setSubmitting] = useState(false);
 
-    const [channelType, setChannelType] = useState('bank_account');
-    const [selectedCountry, setSelectedCountry] = useState('spain');
-
-    // Form States
+    // Bank States
     const [iban, setIban] = useState('');
     const [swift, setSwift] = useState('');
+    const [accountNumber, setAccountNumber] = useState('');
+    const [bankName, setBankName] = useState('');
+    const [branchName, setBranchName] = useState('');
+    const [accountHolderName, setAccountHolderName] = useState('');
+    const [bankFormState, setBankFormState] = useState({
+        bank_name: '',
+        branch_name: '',
+        bank_branch_street: '',
+        bank_city: '',
+        bank_province: '',
+        bank_postal_code: '',
+        bank_account_number: ''
+    });
+
+    // Crypto States
     const [cryptoNetwork, setCryptoNetwork] = useState('ethereum');
     const [walletAddress, setWalletAddress] = useState('');
-    const [mobileProvider, setMobileProvider] = useState('mpesa');
+
+    // Mobile Wallet States
+    const [mobileProvider, setMobileProvider] = useState('');
+    const [walletName, setWalletName] = useState('');
     const [mobileNumber, setMobileNumber] = useState('');
+
+    // Wire useBankDetails hook
+    const { bankDetailsError } = useBankDetails({
+        accNumType: 'IBAN',
+        setFormData: setBankFormState,
+        alpha3: beneficiaryData?.country_iso_code,
+        countryName: beneficiaryData?.country_name,
+        debounceMs: 1000
+    });
+
+    // Wire useChannels for Mobile Wallet payers
+    const { mobileProviders, loading: channelsLoading } = useChannels({
+        setLoading: () => {},
+        countryIsoCode: beneficiaryData?.country_iso_code
+    });
 
     useEffect(() => {
         setIban('');
         setSwift('');
+        setAccountNumber('');
+        setBankName('');
+        setBranchName('');
+        setAccountHolderName('');
         setWalletAddress('');
         setMobileNumber('');
-    }, [selectedCountry, channelType]);
+        setMobileProvider('');
+        setWalletName('');
+    }, [channelType, open, beneficiaryData]);
 
-    const currentConfig = countryConfigs[selectedCountry] || countryConfigs.spain;
+    useEffect(() => {
+        if (bankFormState.bank_name) setBankName(bankFormState.bank_name);
+        if (bankFormState.branch_name) setBranchName(bankFormState.branch_name);
+        if (bankFormState.bank_account_number) setAccountNumber(bankFormState.bank_account_number);
+    }, [bankFormState]);
+
+    useEffect(() => {
+        if (mobileProviders && mobileProviders.length > 0 && !mobileProvider) {
+            setMobileProvider(mobileProviders[0]?.id || mobileProviders[0]?.name || '');
+            setWalletName(mobileProviders[0]?.name || '');
+        }
+    }, [mobileProviders]);
 
     const commonInputStyles = {
         "& .MuiOutlinedInput-root": {
@@ -51,27 +98,65 @@ const DynamicChannelModal = ({ open, handleClose, beneficiaryData, onSave }) => 
         },
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
-        let payload = { channelType, region: currentConfig.label };
-
-        if (channelType === 'bank_account') {
-            if (currentConfig.swiftRequired && !swift) {
-                alert(t("SWIFT/BIC is required for this region"));
-                return;
-            }
-            payload = { ...payload, iban, swift };
-        } else if (channelType === 'crypto') {
-            if (!walletAddress) return alert(t("Wallet address is required"));
-            payload = { ...payload, cryptoNetwork, walletAddress };
-        } else if (channelType === 'mobile_wallet') {
-            if (!mobileNumber) return alert(t("Mobile number is required"));
-            payload = { ...payload, mobileProvider, mobileNumber };
+        if (!beneficiaryData?._id) {
+            toast.error(t("No beneficiary selected"));
+            return;
         }
 
-        onSave(payload);
-        handleClose();
+        let channelPayload = { channel_type: channelType };
+
+        if (channelType === 'bank') {
+            if (!iban && !accountNumber) {
+                toast.error(t("IBAN or Account Number is required"));
+                return;
+            }
+            channelPayload.bank_details = {
+                iban,
+                swift_code: swift,
+                account_number: accountNumber || iban,
+                name: bankName || bankFormState.bank_name || 'Bank',
+                branch_name: branchName || bankFormState.branch_name || '',
+                account_holder_name: accountHolderName || `${beneficiaryData.first_name || ''} ${beneficiaryData.last_name || ''}`.trim() || beneficiaryData.company_name
+            };
+        } else if (channelType === 'crypto') {
+            if (!walletAddress) return toast.error(t("Wallet address is required"));
+            channelPayload.crypto = {
+                currency: cryptoNetwork,
+                wallet_address: walletAddress
+            };
+        } else if (channelType === 'mobile_wallet') {
+            if (!mobileNumber) return toast.error(t("Mobile number is required"));
+            channelPayload.mobile_wallet = {
+                money_provider: mobileProvider || 'Mobile Provider',
+                wallet_name: walletName || mobileProvider || 'Mobile Wallet',
+                wallet_account_number: mobileNumber
+            };
+        }
+
+        setSubmitting(true);
+
+        try {
+            const res = await apiWrapper({
+                endpoint: `/api/beneficiary/v2/${beneficiaryData._id}/channel`,
+                method: 'POST',
+                payload: channelPayload,
+                isEncrypted: true,
+                isDecrypted: true
+            });
+
+            toast.success(t("Payout channel added successfully"));
+            if (onSaveSuccess) onSaveSuccess(res);
+            handleClose();
+        } catch (err) {
+            console.error("Add channel error:", err);
+            const msg = err?.response?.data?.message || err?.message || t("Failed to add payout channel");
+            toast.error(msg);
+        } finally {
+            setSubmitting(false);
+        }
     };
 
     return (
@@ -86,7 +171,7 @@ const DynamicChannelModal = ({ open, handleClose, beneficiaryData, onSave }) => 
                         </div>
                         <div className={styles.headerTitles}>
                             <h2>{t("Add payout channel")}</h2>
-                            <p>{t("Sample beneficiary")} • {selectedCountry.toUpperCase()}</p>
+                            <p>{beneficiaryData ? `${beneficiaryData.first_name || ''} ${beneficiaryData.last_name || ''}`.trim() || beneficiaryData.company_name : t("Beneficiary")} • {beneficiaryData?.country_name || beneficiaryData?.country_iso_code || ''}</p>
                         </div>
                     </div>
                     <IconButton onClick={handleClose} className={styles.closeBtn}>
@@ -95,7 +180,7 @@ const DynamicChannelModal = ({ open, handleClose, beneficiaryData, onSave }) => 
                 </div>
 
                 <form onSubmit={handleSubmit} className={styles.modalForm}>
-                    {/* Main Dropdown - Always visible */}
+                    {/* Main Dropdown */}
                     <div className={styles.inputGroup}>
                         <label className={styles.fieldLabel}>{t("Channel type")}</label>
                         <FormControl fullWidth size="small">
@@ -105,13 +190,9 @@ const DynamicChannelModal = ({ open, handleClose, beneficiaryData, onSave }) => 
                                 className={styles.muiSelect}
                                 displayEmpty
                                 renderValue={(selected) => {
-                                    if (selected === "bank_account") return (<div className={styles.selectRenderValue}>
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="10" viewBox="0 0 13 10" fill="none">
-                                            <path d="M0.8125 4.0625H2.03125V7.3125H1.21875C1.10872 7.3125 1.01351 7.3527 0.933105 7.43311C0.852702 7.51351 0.8125 7.60872 0.8125 7.71875C0.8125 7.82878 0.852702 7.92399 0.933105 8.00439C1.01351 8.0848 1.10872 8.125 1.21875 8.125H10.9688C11.0788 8.125 11.174 8.0848 11.2544 8.00439C11.3348 7.92399 11.375 7.82878 11.375 7.71875C11.375 7.60872 11.3348 7.51351 11.2544 7.43311C11.174 7.3527 11.0788 7.3125 10.9688 7.3125H10.1562V4.0625H11.375C11.485 4.0625 11.5802 4.0223 11.6606 3.94189C11.741 3.86149 11.7812 3.76628 11.7812 3.65625C11.7812 3.58008 11.7643 3.51237 11.7305 3.45312C11.6966 3.39388 11.6501 3.34733 11.5908 3.31348L6.30957 0.0634766C6.27572 0.0465498 6.24186 0.0317383 6.20801 0.019043C6.17415 0.00634766 6.13607 0 6.09375 0C6.05143 0 6.01335 0.00634766 5.97949 0.019043C5.94564 0.0317383 5.91178 0.0465498 5.87793 0.0634766L0.59668 3.31348C0.537435 3.34733 0.490885 3.39388 0.457031 3.45312C0.423177 3.51237 0.40625 3.58008 0.40625 3.65625C0.40625 3.76628 0.446452 3.86149 0.526855 3.94189C0.607259 4.0223 0.702474 4.0625 0.8125 4.0625ZM2.84375 4.0625H4.46875V7.3125H2.84375V4.0625ZM6.90625 4.0625V7.3125H5.28125V4.0625H6.90625ZM9.34375 7.3125H7.71875V4.0625H9.34375V7.3125ZM6.09375 0.888672L9.94043 3.25H2.24707L6.09375 0.888672ZM12.1875 9.34375C12.1875 9.45378 12.1473 9.54899 12.0669 9.62939C11.9865 9.7098 11.8913 9.75 11.7812 9.75H0.40625C0.296224 9.75 0.201009 9.7098 0.120605 9.62939C0.0402018 9.54899 0 9.45378 0 9.34375C0 9.23372 0.0402018 9.13851 0.120605 9.05811C0.201009 8.9777 0.296224 8.9375 0.40625 8.9375H11.7812C11.8913 8.9375 11.9865 8.9777 12.0669 9.05811C12.1473 9.13851 12.1875 9.23372 12.1875 9.34375Z" fill="#4A32E3" />
-                                        </svg>
-                                        <span>{t("Bank account")}</span></div>);
-                                    if (selected === "crypto") return (<div className={styles.selectRenderValue}><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6366F1" strokeWidth="2" className={styles.menuIcon}><path d="M21 12V7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-3a2 2 0 0 0 0-4z"></path><circle cx="18" cy="12" r="1"></circle></svg><span>{t("Crypto wallet")}</span></div>);
-                                    if (selected === "mobile_wallet") return (<div className={styles.selectRenderValue}><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10B981" strokeWidth="2" className={styles.menuIcon}><rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12" y2="18"></line></svg><span>{t("Mobile wallet")}</span></div>);
+                                    if (selected === "bank") return (<div className={styles.selectRenderValue}><span>{t("Bank account")}</span></div>);
+                                    if (selected === "crypto") return (<div className={styles.selectRenderValue}><span>{t("Crypto wallet")}</span></div>);
+                                    if (selected === "mobile_wallet") return (<div className={styles.selectRenderValue}><span>{t("Mobile wallet")}</span></div>);
                                     return selected;
                                 }}
                                 sx={{
@@ -129,60 +210,54 @@ const DynamicChannelModal = ({ open, handleClose, beneficiaryData, onSave }) => 
                                     }
                                 }}
                             >
-                                <MenuItem value="bank_account" className={styles.customMenuItem}>
-                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4F46E5" strokeWidth="2" className={styles.menuIcon}><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="21" x2="9" y2="9"></line><line x1="15" y1="21" x2="15" y2="9"></line><line x1="3" y1="9" x2="21" y2="9"></line></svg>
-                                    {t("Bank account")}
-                                </MenuItem>
-                                <MenuItem value="crypto" className={styles.customMenuItem}>
-                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6366F1" strokeWidth="2" className={styles.menuIcon}><path d="M21 12V7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-3a2 2 0 0 0 0-4z"></path><circle cx="18" cy="12" r="1"></circle></svg>
-                                    {t("Crypto wallet")}
-                                </MenuItem>
-                                <MenuItem value="mobile_wallet" className={styles.customMenuItem}>
-                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10B981" strokeWidth="2" className={styles.menuIcon}><rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12" y2="18"></line></svg>
-                                    {t("Mobile wallet")}
-                                </MenuItem>
+                                <MenuItem value="bank" className={styles.customMenuItem}>{t("Bank account")}</MenuItem>
+                                <MenuItem value="crypto" className={styles.customMenuItem}>{t("Crypto wallet")}</MenuItem>
+                                <MenuItem value="mobile_wallet" className={styles.customMenuItem}>{t("Mobile wallet")}</MenuItem>
                             </Select>
                         </FormControl>
                     </div>
 
-                    {/* ------------- DYNAMIC FIELDS SECTION ------------- */}
-
-                    {/* 1. BANK ACCOUNT FIELDS */}
-                    {channelType === 'bank_account' && (
+                    {/* DYNAMIC FIELDS */}
+                    {channelType === 'bank' && (
                         <>
                             <div className={styles.infoBanner}>
                                 <Info size={16} className={styles.infoIcon} />
-                                <span>{t("Fields adapt automatically to")} <strong>{currentConfig.label}</strong>.</span>
+                                <span>{t("Bank fields auto-complete using IBAN or BIC lookup.")}</span>
                             </div>
 
                             <div className={styles.inputGroup}>
                                 <label className={styles.fieldLabel}>{t("IBAN / Account Number")}</label>
                                 <TextField
                                     fullWidth size="small" variant="outlined" required
-                                    placeholder={currentConfig.placeholder}
+                                    placeholder="ES65 6849 0001 5900 0113 6464"
                                     value={iban} onChange={(e) => setIban(e.target.value)}
                                     sx={commonInputStyles}
                                 />
                             </div>
 
                             <div className={styles.inputGroup}>
-                                <label className={styles.fieldLabel}>
-                                    {t("SWIFT / BIC")}{" "}
-                                    <span className={styles.optionalText}>
-                                        {currentConfig.swiftRequired ? t("(required)") : t("(optional)")}
-                                    </span>
-                                </label>
+                                <label className={styles.fieldLabel}>{t("SWIFT / BIC")}</label>
                                 <TextField
-                                    fullWidth size="small" variant="outlined" required={currentConfig.swiftRequired}
-                                    placeholder={currentConfig.swiftRequired ? "SCBLPKKX" : t("Optional")}
+                                    fullWidth size="small" variant="outlined"
+                                    placeholder={t("Optional")}
                                     value={swift} onChange={(e) => setSwift(e.target.value)}
                                     sx={commonInputStyles}
                                 />
                             </div>
+
+                            {bankName && (
+                                <div className={styles.inputGroup}>
+                                    <label className={styles.fieldLabel}>{t("Bank Name")}</label>
+                                    <TextField
+                                        fullWidth size="small" variant="outlined"
+                                        value={bankName} onChange={(e) => setBankName(e.target.value)}
+                                        sx={commonInputStyles}
+                                    />
+                                </div>
+                            )}
                         </>
                     )}
 
-                    {/* 2. CRYPTO WALLET FIELDS */}
                     {channelType === 'crypto' && (
                         <>
                             <div className={styles.inputGroup}>
@@ -196,6 +271,7 @@ const DynamicChannelModal = ({ open, handleClose, beneficiaryData, onSave }) => 
                                     <MenuItem value="ethereum">Ethereum (ERC-20)</MenuItem>
                                     <MenuItem value="tron">Tron (TRC-20)</MenuItem>
                                     <MenuItem value="bitcoin">Bitcoin (BTC)</MenuItem>
+                                    <MenuItem value="solana">Solana (SOL)</MenuItem>
                                 </Select>
                             </div>
 
@@ -203,7 +279,7 @@ const DynamicChannelModal = ({ open, handleClose, beneficiaryData, onSave }) => 
                                 <label className={styles.fieldLabel}>{t("Wallet Address")}</label>
                                 <TextField
                                     fullWidth size="small" variant="outlined" required
-                                    placeholder="0x1234...abcd"
+                                    placeholder="0x1234...abcd or TL3sP2pX..."
                                     value={walletAddress} onChange={(e) => setWalletAddress(e.target.value)}
                                     sx={commonInputStyles}
                                 />
@@ -211,25 +287,38 @@ const DynamicChannelModal = ({ open, handleClose, beneficiaryData, onSave }) => 
                         </>
                     )}
 
-                    {/* 3. MOBILE WALLET FIELDS */}
                     {channelType === 'mobile_wallet' && (
                         <>
                             <div className={styles.inputGroup}>
                                 <label className={styles.fieldLabel}>{t("Mobile Provider")}</label>
                                 <Select
                                     value={mobileProvider}
-                                    onChange={(e) => setMobileProvider(e.target.value)}
+                                    onChange={(e) => {
+                                        setMobileProvider(e.target.value);
+                                        const match = mobileProviders?.find(p => p.id === e.target.value || p.name === e.target.value);
+                                        if (match) setWalletName(match.name);
+                                    }}
                                     size="small"
                                     sx={{ ...commonInputStyles, padding: 0 }}
                                 >
-                                    <MenuItem value="mpesa">M-Pesa</MenuItem>
-                                    <MenuItem value="mtn">MTN Mobile Money</MenuItem>
-                                    <MenuItem value="orange">Orange Money</MenuItem>
+                                    {mobileProviders && mobileProviders.length > 0 ? (
+                                        mobileProviders.map((p, idx) => (
+                                            <MenuItem key={idx} value={p.id || p.name}>
+                                                {p.name || p.id}
+                                            </MenuItem>
+                                        ))
+                                    ) : (
+                                        <>
+                                            <MenuItem value="mpesa">M-Pesa</MenuItem>
+                                            <MenuItem value="mtn">MTN Mobile Money</MenuItem>
+                                            <MenuItem value="orange">Orange Money</MenuItem>
+                                        </>
+                                    )}
                                 </Select>
                             </div>
 
                             <div className={styles.inputGroup}>
-                                <label className={styles.fieldLabel}>{t("Mobile Number")}</label>
+                                <label className={styles.fieldLabel}>{t("Mobile Number / Wallet Account")}</label>
                                 <TextField
                                     fullWidth size="small" variant="outlined" required type="tel"
                                     placeholder="+1 234 567 8900"
@@ -246,8 +335,8 @@ const DynamicChannelModal = ({ open, handleClose, beneficiaryData, onSave }) => 
                             <ArrowLeft size={16} style={{ marginRight: '6px' }} />
                             {t("Back")}
                         </button>
-                        <button type="submit" className={styles.saveButton}>
-                            {t("Save channel")}
+                        <button type="submit" disabled={submitting} className={styles.saveButton}>
+                            {submitting ? t("Saving...") : t("Save channel")}
                         </button>
                     </div>
 
