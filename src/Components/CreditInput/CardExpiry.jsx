@@ -101,7 +101,7 @@ const CardExpiry = ({ content, setContent, isinVVC = false, guest }) => {
                 </div>
                 {
                     content.length < 1 &&
-                    <span style={{ display: isinVVC && "none" }} className={styles.placeholder}>MM / YY</span>
+                    <span style={{ display: isinVVC && "none" }} className={styles.placeholder}>{t("MM / YY")}</span>
                 }
                 {
                     error && content.length > 3

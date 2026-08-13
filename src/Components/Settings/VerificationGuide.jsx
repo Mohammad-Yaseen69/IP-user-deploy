@@ -228,7 +228,7 @@ const VerificationGuide = ({ setShowGuide }) => {
                     </div>
 
                     <p>{t(content)?.split("\n\n")?.[5]}</p>
-                    <p>{t(content)?.split("\n\n")?.[6].replace(" support@insta-pay.ch.", "")} <Link to={"mailto:support@insta-pay.ch"}>support@insta-pay.ch</Link></p>
+                    <p>{t(content)?.split("\n\n")?.[6].replace(" support@insta-pay.ch.", "")} <Link to={"mailto:support@insta-pay.ch"}>{t("support@insta-pay.ch")}</Link></p>
 
                     <div className={styles.buttons}>
                         <button
@@ -255,7 +255,7 @@ const VerificationGuide = ({ setShowGuide }) => {
                 </CardBody>
             }
         </Card>
-    )
+    );
 }
 
 export default VerificationGuide

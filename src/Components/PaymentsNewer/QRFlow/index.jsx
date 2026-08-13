@@ -870,7 +870,7 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
                                                                                     lineHeight: 1.3,
                                                                                     letterSpacing: '-0.28px'
                                                                                 }}>
-                                                                                    <strong>{data?.exchange_rate?.paypal?.fee?.currency}</strong> {t("is not supported by Paypal,")} <strong>USD</strong> {t("will be used as the default currency.")}
+                                                                                    <strong>{data?.exchange_rate?.paypal?.fee?.currency}</strong> {t("is not supported by Paypal,")} <strong>{t("USD")}</strong> {t("will be used as the default currency.")}
                                                                                 </span>
                                                                             </div>
                                                                             <div style={{
@@ -905,7 +905,7 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
                                                                                             fontStyle: 'normal',
                                                                                             lineHeight: 1.5,
                                                                                             letterSpacing: '-0.14px'
-                                                                                        }}>1.00 {data?.exchange_rate?.paypal?.fee?.currency} = {Number(data?.exchange_rate?.paypal?.paypal_rate?.value)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 4 })} USD</strong>
+                                                                                        }}>1.00 {data?.exchange_rate?.paypal?.fee?.currency} = {Number(data?.exchange_rate?.paypal?.paypal_rate?.value)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 4 })}{t("USD")}</strong>
                                                                                 </div>
                                                                                 <div style={{
                                                                                     display: "flex",
@@ -930,7 +930,7 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
                                                                                         fontWeight: 700,
                                                                                         lineHeight: 1.7,
                                                                                         letterSpacing: '-0.8px'
-                                                                                    }}>{Number(data?.exchange_rate?.paypal?.paypal_converted?.value)} USD</strong>
+                                                                                    }}>{Number(data?.exchange_rate?.paypal?.paypal_converted?.value)}{t("USD")}</strong>
                                                                                 </div>
                                                                             </div>
                                                                         </>
@@ -1408,7 +1408,7 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
                     </div>
             }
         </>
-    )
+    );
 }
 
 export default QRFlow

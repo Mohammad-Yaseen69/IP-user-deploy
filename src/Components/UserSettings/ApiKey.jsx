@@ -176,7 +176,9 @@ const ApiKey = ({ isCollapsed, setIsCollapsed }) => {
                                         }
                                     </Button>
                                 </div>
-                                <p style={{ marginBottom: "0", color: "#afafaf", fontSize: ".65rem", flex: 1 }}>To harness the full potential of InstaPay's seamless transactions, follow these quick steps to generate your API key. First, sign up for an account at [your registration URL] and access the Developer Dashboard. Navigate to the "API Keys" section, generate a new key, and ensure its secure storage.</p>
+                                <p style={{ marginBottom: "0", color: "#afafaf", fontSize: ".65rem", flex: 1 }}>{t(
+                                    "To harness the full potential of InstaPay's seamless transactions, follow these quick steps to generate your API key. First, sign up for an account at [your registration URL] and access the Developer Dashboard. Navigate to the \"API Keys\" section, generate a new key, and ensure its secure storage."
+                                )}</p>
                             </Col>
                             <Col md="12" style={{
                                 display: "flex",
@@ -188,7 +190,9 @@ const ApiKey = ({ isCollapsed, setIsCollapsed }) => {
                                 <div style={{ display: "flex", flexDirection: "column", gap: ".65rem", flex: 1 }}>
                                     <Button color='danger' style={{ borderRadius: "5px" }}>{t("Delete API Key")}</Button>
                                 </div>
-                                <p style={{ marginBottom: "0", color: "#afafaf", fontSize: ".65rem", flex: 1 }}>To harness the full potential of InstaPay's seamless transactions, follow these quick steps to generate your API key. First, sign up for an account at [your registration URL] and access the Developer Dashboard. Navigate to the "API Keys" section, generate a new key, and ensure its secure storage.</p>
+                                <p style={{ marginBottom: "0", color: "#afafaf", fontSize: ".65rem", flex: 1 }}>{t(
+                                    "To harness the full potential of InstaPay's seamless transactions, follow these quick steps to generate your API key. First, sign up for an account at [your registration URL] and access the Developer Dashboard. Navigate to the \"API Keys\" section, generate a new key, and ensure its secure storage."
+                                )}</p>
                             </Col>
                             <Col md="12">
                                 <FormGroup className="mb-3">
@@ -215,7 +219,7 @@ const ApiKey = ({ isCollapsed, setIsCollapsed }) => {
                 }
             </div>
         </Card>
-    )
+    );
 }
 
 export default ApiKey

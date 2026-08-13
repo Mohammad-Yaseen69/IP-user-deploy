@@ -23,7 +23,6 @@ import { useQuery } from '@tanstack/react-query';
 import { apiWrapper } from '../../utils/Functions/apiWrapper';
 
 
-// dates
 export const currentDate = new Date();
 export const minDate = new Date(currentDate.getFullYear() - 15, currentDate.getMonth(), currentDate.getDate());
 let timeout;
@@ -636,7 +635,7 @@ const Basic = ({ setCurrentTab }) => {
                                 <div style={{ position: "absolute", right: "7px", top: "7px" }}>
                                     <div className="d-flex justify-content-center">
                                         <div className="spinner-border" color='primary' role="status">
-                                            <span className="sr-only">Loading...</span>
+                                            <span className="sr-only">{t("Loading...")}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -841,7 +840,7 @@ const Basic = ({ setCurrentTab }) => {
                             <Input disabled={!isEditMode || isVerified} readOnly={!isEditMode || isVerified} value={address} onChange={e => setAddress(e.target.value)} />
                         </FormGroup>
                     }
-                  
+
                     <FormGroup style={{ position: "relative" }}>
                         {
                             !country
@@ -904,7 +903,7 @@ const Basic = ({ setCurrentTab }) => {
                             </Input>
                         </FormGroup>
                     )}
-                      <FormGroup style={{ position: "relative" }}>
+                    <FormGroup style={{ position: "relative" }}>
                         {
                             !city
                             &&
@@ -1089,7 +1088,7 @@ const Basic = ({ setCurrentTab }) => {
                 </CardFooter>
             </Card>
         </MuiPickersUtilsProvider>
-    )
+    );
 }
 
 export default Basic

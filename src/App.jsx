@@ -14,6 +14,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import DateMomentUtils from '@date-io/moment';
 import AdBlockCheck from './Components/AdBlockCheck/AdBlockCheck'
+import LanguageAttributeSync from './Common/LanguageAttributeSync'
 
 
 
@@ -128,7 +129,7 @@ const App = () => {
 
   return (
     <div className='App' id='main_app'>
-      <AdBlockCheck/>
+      <AdBlockCheck />
       {
         showOtherTabError
           ?
@@ -137,21 +138,24 @@ const App = () => {
           <ErrorBoundary>
             <Suspense fallback={<InstaPayLoader opacity={1} fallback={true} />}>
               <TimezonesProvider>
-                <QueryClientProvider client={client}>
-                  <UserState>
-                    <InactivityWrapper>
-                      <CustomizerProvider>
-                        <AnimationThemeProvider>
-                          <MuiPickersUtilsProvider utils={DateMomentUtils}>
-                            {" "}
-                            <Routers />
-                            {" "}
-                          </MuiPickersUtilsProvider>
-                        </AnimationThemeProvider>
-                      </CustomizerProvider>
-                    </InactivityWrapper>
-                  </UserState>
-                </QueryClientProvider>
+                <LanguageAttributeSync>
+                  <QueryClientProvider client={client}>
+                    <UserState>
+                      <InactivityWrapper>
+                        <CustomizerProvider>
+                          <AnimationThemeProvider>
+                            <MuiPickersUtilsProvider utils={DateMomentUtils}>
+                              {" "}
+                              <Routers />
+                              {" "}
+                            </MuiPickersUtilsProvider>
+                          </AnimationThemeProvider>
+                        </CustomizerProvider>
+                      </InactivityWrapper>
+                    </UserState>
+                  </QueryClientProvider>
+                </LanguageAttributeSync>
+
               </TimezonesProvider>
             </Suspense>
           </ErrorBoundary>

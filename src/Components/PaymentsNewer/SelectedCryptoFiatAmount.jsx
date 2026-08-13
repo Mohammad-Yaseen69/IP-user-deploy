@@ -23,7 +23,7 @@ const SelectedCryptoFiatAmount = ({ amount, setSubStep, cryptoCurrency }) => {
                     >{t("edit")}</span>
                 </div>
                 <div style={{ display: "flex", alignItems: "center", gap: ".6rem" }}>
-                    <span style={{ fontWeight: 700, fontSize: "1.4rem" }}>{amount} USD</span>
+                    <span style={{ fontWeight: 700, fontSize: "1.4rem" }}>{amount}{t("USD")}</span>
                 </div>
             </div>
             <div style={{
@@ -50,7 +50,7 @@ const SelectedCryptoFiatAmount = ({ amount, setSubStep, cryptoCurrency }) => {
                 </div>
             </div>
         </div>
-    )
+    );
 }
 
 export default SelectedCryptoFiatAmount;

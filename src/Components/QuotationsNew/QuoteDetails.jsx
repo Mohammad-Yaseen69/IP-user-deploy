@@ -127,7 +127,9 @@ const QuoteDetails = ({ item, type = "receive" }) => {
                                 </div>
                                 <div className={styles.address}>
                                     <img src={location} alt="" />
-                                    <span>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quo molestiae laboriosam perspiciatis</span>
+                                    <span>{t(
+                                        "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quo molestiae laboriosam perspiciatis"
+                                    )}</span>
                                 </div>
                                 <img src={"https://www.pakimag.com/files/2013/02/Map-Sukkur-District.jpg"} alt="" className={styles.map_img} />
                             </div>
@@ -163,7 +165,7 @@ const QuoteDetails = ({ item, type = "receive" }) => {
                 </div>
             </div>
         </div >
-    )
+    );
 }
 
 export default QuoteDetails

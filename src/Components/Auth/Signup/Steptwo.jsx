@@ -80,7 +80,7 @@ const Steptwo = ({ data, dataHandler }) => {
                     <div className={styles.inp}>
                         <label>{t("Select Country")}:</label>
                         <CountryDropDown
-                            country={data.country?.alpha3}
+                            country={data.country?.alpha3 || data.country?.iso3 || data.country?.country_iso_code || (typeof data.country === 'string' ? data.country : '')}
                             onSelect={(item) => {
                                 console.log(item)
                                 dataHandler("country", item)
