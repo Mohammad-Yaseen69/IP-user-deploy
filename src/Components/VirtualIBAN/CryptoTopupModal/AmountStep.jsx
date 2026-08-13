@@ -12,10 +12,16 @@ import {
 import styles from "../ConvertFundsModal/convertFunds.module.scss"
 
 const QUICK_USDT_AMOUNTS = [20, 50, 100, 250, 500]
+const MIN_USDT_AMOUNT = 5
+const MAX_USDT_AMOUNT = 50000
 
 const AmountStep = ({ amount, setAmount, selectedIban }) => {
     const { t } = useTranslation()
     const numericAmount = getAmountNumber(amount)
+    const hasAmount = !!String(amount ?? "").trim()
+    const isBelowMinimum = hasAmount && numericAmount < MIN_USDT_AMOUNT
+    const isAboveMaximum = hasAmount && numericAmount > MAX_USDT_AMOUNT
+    const showAmountError = isBelowMinimum || isAboveMaximum
 
     const handleQuickSelect = (val) => {
         setAmount(formatAmountValue(val))
@@ -40,6 +46,13 @@ const AmountStep = ({ amount, setAmount, selectedIban }) => {
                         autoFocus
                     />
                 </div>
+                {showAmountError && (
+                    <div className={styles.balanceError}>
+                        {isBelowMinimum
+                            ? t("Minimum deposit is $5 USDT.")
+                            : t("Maximum deposit is $50,000 USDT.")}
+                    </div>
+                )}
                 <div className={styles.availableText}>
                     {/* {t("Currency")}: <strong>USDT</strong> &middot; {t("Destination")}: <strong>{selectedIban?.iban || "Virtual IBAN"} ({selectedIban?.currency || "EUR"})</strong> */}
                 </div>

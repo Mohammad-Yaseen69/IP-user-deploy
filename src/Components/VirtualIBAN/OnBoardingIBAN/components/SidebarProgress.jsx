@@ -1,8 +1,7 @@
 import { ArrowRight, Check, File, MessageSquare } from 'react-feather'
 import { useTranslation } from 'react-i18next'
-import styles from '../style/onboardingSteps.module.css'
 import Magicsvg from '../magicsvg'
-import { CircularProgress } from '@mui/material'
+import styles from '../style/onboardingSteps.module.css'
 const SidebarProgress = ({
     percent = 15,
     stepsLeft = 5,

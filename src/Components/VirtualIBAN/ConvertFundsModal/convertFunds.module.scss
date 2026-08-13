@@ -384,12 +384,11 @@
     color: #0c0a20;
 }
 
-/* ---- Done Step ---- */
 .doneContainer {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: start;
     min-height: 300px;
 }
 

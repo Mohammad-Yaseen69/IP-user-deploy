@@ -1430,15 +1430,19 @@ const Login = ({ country, setIsLoginForm, }) => {
                                         ) : (
                                             <button
                                                 onClick={handleBiometricVerification}
-                                                className={styles.otpMethodButton}
+                                                // className={styles.otpMethodButton}
                                                 type="button"
                                                 style={{
-                                                    border: "none",
-                                                    outline: "none",
-                                                    backgroundColor: "#f5f5f5",
-                                                    padding: "10px 1.5rem",
-                                                    borderRadius: "5px",
-                                                    width: "100%"
+                                                    display: "flex",
+                                                    padding: "22px 8px",
+                                                    alignItems: "center",
+                                                    gap: "6px",
+                                                    flex: "1 0 0",
+                                                    borderRadius: "8px",
+                                                    border: "1px solid rgba(18, 18, 18, 0.20)",
+                                                    background: "#FFF",
+                                                    overflow: "hidden",
+                                                    minWidth: 0,
                                                 }}
                                                 disabled={biometricLoading}
                                             >

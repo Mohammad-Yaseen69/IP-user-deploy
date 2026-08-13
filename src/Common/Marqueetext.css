@@ -1,0 +1,34 @@
+.marquee-container {
+  display: block;
+  flex: 1 1 0%;
+  min-width: 0;
+  width: auto;
+  max-width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: clip;
+  position: relative;
+}
+
+.marquee-text {
+  display: inline-block;
+  width: max-content;
+  max-width: none;
+  white-space: nowrap;
+  text-overflow: clip;
+  will-change: transform;
+}
+
+.marquee-container .marquee-text.marquee-can-scroll {
+  animation: marquee-scroll 3.5s ease-in-out infinite alternate;
+}
+
+@keyframes marquee-scroll {
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(calc(-1 * var(--marquee-distance, 0px)));
+  }
+}
