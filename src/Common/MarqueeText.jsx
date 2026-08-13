@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import "./MarqueeText.css";
+import "./marqueeStyle.css";
 
 
 const MarqueeText = ({ text, className = "" }) => {
