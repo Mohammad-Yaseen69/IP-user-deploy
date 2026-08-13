@@ -10,7 +10,7 @@ import { useQuery } from "@tanstack/react-query";
 import { apiWrapper } from "../../utils/Functions/apiWrapper";
 import { openInNewTab } from "../../utils/Functions";
 import { usePermission } from "../../hooks/GeneralUse/usePermission";
-import MarqueeText from "../../Common/Marqueetext";
+import MarqueeText from "../../Common/MarqueeText";
 
 const SidebarSubMenu = ({ menu, className, setIsOpen, isOpen, level, showModal, setShowModal, profileCompletedPercentage, inheritSize }) => {
     const { togglSidebar } = useContext(CustomizerContext)
