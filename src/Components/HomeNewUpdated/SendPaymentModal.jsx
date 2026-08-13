@@ -487,9 +487,9 @@ const SendPaymentModal = ({ item, showModal, toggle }) => {
                                                 outline: "none"
 
                                             }} value={currency} onChange={(e) => setCurrency(e.target.value)}>
-                                                <option value="USD">USD</option>
-                                                <option value="GBP">GBP</option>
-                                                <option value="EUR">EUR</option>
+                                                <option value="USD">{t("USD")}</option>
+                                                <option value="GBP">{t("GBP")}</option>
+                                                <option value="EUR">{t("EUR")}</option>
                                             </Input>
                                         </div>
                                         <Input type="select" value={reason} onChange={(e) => setReason(e.target.value)} className="mb-2"
@@ -1058,7 +1058,7 @@ const SendPaymentModal = ({ item, showModal, toggle }) => {
                 }
             </ModalBody>
         </Modal>
-    )
+    );
 }
 
 export default SendPaymentModal

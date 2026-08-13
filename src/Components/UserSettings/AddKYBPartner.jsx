@@ -91,9 +91,7 @@ const AddKYBPartner = ({ setPartners }) => {
                     {
                         !search
                             ?
-                            <div style={{ padding: "1rem 3.5rem", background: "white", fontSize: "15px", fontWeight: "600" }}>
-                                Search users here
-                            </div>
+                            <div style={{ padding: "1rem 3.5rem", background: "white", fontSize: "15px", fontWeight: "600" }}>{t("Search users here")}</div>
                             :
                             <>
                                 {
@@ -111,9 +109,7 @@ const AddKYBPartner = ({ setPartners }) => {
                                                         <SearchedUserCard key={user?._id} setPartners={setPartners} user={user} userDetails={userDetails} setSearchInFocus={setSearchInFocus} authHeader={authHeader} />
                                                     ))
                                                     :
-                                                    <div style={{ padding: "1rem 3.5rem", background: "white", fontSize: "15px", fontWeight: "600" }}>
-                                                        No User Found
-                                                    </div>
+                                                    <div style={{ padding: "1rem 3.5rem", background: "white", fontSize: "15px", fontWeight: "600" }}>{t("No User Found")}</div>
                                             }
                                         </>
                                 }
@@ -122,7 +118,7 @@ const AddKYBPartner = ({ setPartners }) => {
                 </div>
             }
         </div>
-    )
+    );
 }
 
 export default AddKYBPartner

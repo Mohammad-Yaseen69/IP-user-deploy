@@ -1233,7 +1233,7 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, show
                                                                                     lineHeight: 1.3,
                                                                                     letterSpacing: '-0.28px'
                                                                                 }}>
-                                                                                    <strong>{data?.exchange_rate?.paypal?.fee?.currency}</strong> {t("is not supported by Paypal,")} <strong>USD</strong> {t("will be used as the default currency.")}
+                                                                                    <strong>{data?.exchange_rate?.paypal?.fee?.currency}</strong> {t("is not supported by Paypal,")} <strong>{t("USD")}</strong> {t("will be used as the default currency.")}
                                                                                 </span>
                                                                             </div>
                                                                             <div style={{
@@ -1272,8 +1272,7 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, show
                                                                                         1.00 {data?.exchange_rate?.paypal?.fee?.currency} =
                                                                                         {(data?.exchange_rate?.paypal?.paypal_rate?.value >= 0.01 ?
                                                                                             Number(data?.exchange_rate?.paypal?.paypal_rate?.value).toFixed(2) :
-                                                                                            Number(data?.exchange_rate?.paypal?.paypal_rate?.value))} USD
-                                                                                    </strong>
+                                                                                            Number(data?.exchange_rate?.paypal?.paypal_rate?.value))}{t("USD")}</strong>
                                                                                 </div>
                                                                                 <div style={{
                                                                                     display: "flex",
@@ -1299,8 +1298,7 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, show
                                                                                         lineHeight: 1.7,
                                                                                         letterSpacing: '-0.8px'
                                                                                     }}>
-                                                                                        {Number(data?.exchange_rate?.paypal?.paypal_converted?.value) >= 0.01 ? Number(data?.exchange_rate?.paypal?.paypal_converted?.value).toFixed(2) : Number(data?.exchange_rate?.paypal?.paypal_converted?.value)}
-                                                                                        USD</strong>
+                                                                                        {Number(data?.exchange_rate?.paypal?.paypal_converted?.value) >= 0.01 ? Number(data?.exchange_rate?.paypal?.paypal_converted?.value).toFixed(2) : Number(data?.exchange_rate?.paypal?.paypal_converted?.value)}{t("USD")}</strong>
                                                                                 </div>
                                                                             </div>
                                                                         </>
@@ -1775,7 +1773,7 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, show
                     </div>
             }
         </>
-    )
+    );
 }
 
 export default WalletToWalletFlow

@@ -178,7 +178,6 @@ const StatementsLetters = () => {
                             <span className={styles.sectionHeadingTitle}>{t("Documents & Statements")}</span>
                             <p className={styles.sectionHeadingSub}>{t("Choose official ownership confirmation letter or transaction activity statement.")}</p>
 
-                            {/* Section 1: IBAN Confirmation Letter */}
                             <div className={styles.docBlock}>
                                 <div className={styles.actionCard}>
                                     <div className={styles.iconCircleWrapper}>
@@ -222,7 +221,6 @@ const StatementsLetters = () => {
 
                             <div className={styles.divider} />
 
-                            {/* Section 2: Account Statement (Transactions) */}
                             <div className={styles.docBlock}>
                                 <div className={styles.actionCard}>
                                     <div className={styles.iconCircleWrapperGreen}>
@@ -288,7 +286,7 @@ const StatementsLetters = () => {
                                     </tr>
                                     <tr>
                                         <td className={styles.metaLabel}>{t("Account Type")}</td>
-                                        <td className={styles.metaValue}>E-money payment account (Virtual IBAN)</td>
+                                        <td className={styles.metaValue}>{t("E-money payment account (Virtual IBAN)")}</td>
                                     </tr>
                                     <tr>
                                         <td className={styles.metaLabel}>{t("Status")}</td>

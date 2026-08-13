@@ -418,7 +418,6 @@ const ReviewStep = ({ onSubmit, onBack, allData = {}, onNext, userType }) => {
                 </div>
             </div>
 
-            {/* NAVIGATION FOOTER */}
             <div className={styles.navigationFooter}>
                 <button onClick={() => onBack && onBack()} className={styles.backButton}>
                     <ArrowLeft size={16} />

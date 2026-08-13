@@ -388,7 +388,7 @@ const ForgotPassword = ({ setIsLoginForm, setIsForgot, country }) => {
                                                 </span>
                                             </span>
 
-                                            {showToolTip && <span style={{ fontWeight: 600, fontSize: '10px', backgroundColor: "gray", padding: '1px 3px', borderRadius: "3px", color: 'white', position: "absolute", bottom: "-20px", right: '-40px' }}>Wait For the Timer</span>}
+                                            {showToolTip && <span style={{ fontWeight: 600, fontSize: '10px', backgroundColor: "gray", padding: '1px 3px', borderRadius: "3px", color: 'white', position: "absolute", bottom: "-20px", right: '-40px' }}>{t("Wait For the Timer")}</span>}
                                         </div>
                                         <span style={{ fontSize: "12px", color: "#aeaeae", fontWeight: 600 }}
                                             className={styles.resend_text}
@@ -595,7 +595,7 @@ const ForgotPassword = ({ setIsLoginForm, setIsForgot, country }) => {
                 </>
             }
         </form>
-    )
+    );
 }
 
 export default ForgotPassword

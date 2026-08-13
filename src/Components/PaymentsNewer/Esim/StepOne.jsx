@@ -116,7 +116,6 @@ const Stepone = ({ data, dataHandler, dataEsimHandler, loadingCountries, setShow
                 )
             }
 
-
             {showCompatibleModal && (
                 <Modal
                     isOpen={showCompatibleModal}
@@ -137,7 +136,7 @@ const Stepone = ({ data, dataHandler, dataEsimHandler, loadingCountries, setShow
                                     fontSize: 32,
                                     lineHeight: 1,
                                     marginRight: 8
-                                }}>📱</span>
+                                }}>{t("📱")}</span>
                                 <span style={{
                                     fontWeight: 700,
                                     fontSize: 22,
@@ -234,7 +233,7 @@ const Stepone = ({ data, dataHandler, dataEsimHandler, loadingCountries, setShow
             )}
 
         </div>
-    )
+    );
 }
 
 export default Stepone

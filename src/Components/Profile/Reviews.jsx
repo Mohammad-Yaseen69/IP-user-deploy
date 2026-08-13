@@ -108,7 +108,7 @@ const Reviews = ({ currentRevTab, setCurrentRevTab, userReviewsAsBuyer, userRevi
                                                     <div className={styles.rc_top}>
                                                         <div className={styles.rct_left}>
                                                             <div className={styles.rctl_top}>
-                                                                <span>Replied to </span>
+                                                                <span>{t("Replied to")}</span>
                                                                 <div style={{ cursor: "pointer" }} onClick={() => navigate(`/profile/${item?.buyer?.username}`)}>{item?.buyer?.user?.first_name} {item?.buyer?.user?.last_name}</div>
                                                             </div>
                                                             <div className={styles.rctl_bottom} style={{ cursor: "pointer" }} onClick={() => navigate(`/profile/${userDetails?.username}`)}>
@@ -120,9 +120,7 @@ const Reviews = ({ currentRevTab, setCurrentRevTab, userReviewsAsBuyer, userRevi
                                                                         <div className={styles.rctl_dp}>{userDetails?.user?.first_name?.[0] || userDetails?.company?.company_name?.[0]}</div>
                                                                 }
                                                                 <div className={styles.rctl_dets}>
-                                                                    <div className={styles.seller_res_badge}>
-                                                                        Seller Response
-                                                                    </div>
+                                                                    <div className={styles.seller_res_badge}>{t("Seller Response")}</div>
                                                                     <h5 style={{ cursor: "pointer" }} onClick={() => navigate(`/profile/${userDetails?.username}`)}>{userDetails?.user?.first_name || userDetails?.company?.company_name} {userDetails?.user?.last_name || ''}</h5>
                                                                     <span>{userDetails?.account_type}</span>
                                                                 </div>
@@ -171,7 +169,7 @@ const Reviews = ({ currentRevTab, setCurrentRevTab, userReviewsAsBuyer, userRevi
                 }
             </div>
         </div>
-    )
+    );
 }
 
 export default Reviews

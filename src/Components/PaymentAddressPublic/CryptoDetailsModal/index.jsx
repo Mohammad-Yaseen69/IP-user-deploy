@@ -136,7 +136,7 @@ const CryptoDetailsModal = ({ isOpen, toggle, amount, currency, paymentReference
 
                     <div className={styles.importantNote}>
                         <WarningIcon />
-                        <p>{t("After sending the Exact amount USDT plus network fee, please email the transaction hash (TXID) and the reference code above to")} <a href="mailto:support@insta-pay.ch" style={{ color: '#5926F0', fontWeight: 700, textDecoration: 'none' }}>support@insta-pay.ch</a> {t("for verification.")}</p>
+                        <p>{t("After sending the Exact amount USDT plus network fee, please email the transaction hash (TXID) and the reference code above to")} <a href="mailto:support@insta-pay.ch" style={{ color: '#5926F0', fontWeight: 700, textDecoration: 'none' }}>{t("support@insta-pay.ch")}</a> {t("for verification.")}</p>
                     </div>
 
                     <button className={styles.closeBtn} onClick={toggle}>
@@ -145,7 +145,7 @@ const CryptoDetailsModal = ({ isOpen, toggle, amount, currency, paymentReference
                 </div>
             </ModalBody>
         </Modal>
-    )
+    );
 }
 
 export default CryptoDetailsModal
