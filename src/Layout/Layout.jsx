@@ -28,6 +28,7 @@ import { useTranslation } from "react-i18next";
 import { useQueryClient } from "@tanstack/react-query";
 import AdditionalDocumentModal from "./AdditionalDocumentModal";
 import NewMenu from "../Common/NewMenu";
+import AssistantWidget from "../Components/AssistantWidget";
 import { useVirtualIbans } from "../hooks/useVirtualIban";
 
 
@@ -428,6 +429,7 @@ const Layout = ({ children, classNames, ...rest }) => {
             toggle={() => setShowAnotherLoginModal(false)}
           />
         }
+        <AssistantWidget />
       </MobileSbContextProvider>
     </Fragment>
   );
