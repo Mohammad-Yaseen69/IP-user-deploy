@@ -21,5 +21,9 @@ mcp_config.json
 *.ntvs*
 *.njsproj
 *.sln
-.env.local
+.env
+.env.*
+!.env.example
 *.sw?
+# Root-level scratch files only — an unanchored `test*` also swallows src/test/
+/test*

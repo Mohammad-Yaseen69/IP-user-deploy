@@ -4,6 +4,7 @@ import styles from "./AgentLayout.module.css";
 import { AgentSidebar } from "../Common/Component/agentSidebar/AgentSidebar";
 import NewMenu from "../Common/NewMenu";
 import { UserContext } from "../Context/UserContext";
+import AssistantWidget from "../Components/AssistantWidget";
 
 const AgentLayout = () => {
     const { userDetails } = useContext(UserContext) || {};
@@ -27,6 +28,8 @@ const AgentLayout = () => {
                     <Outlet />
                 </div>
             </main>
+
+            <AssistantWidget />
         </div>
     );
 };

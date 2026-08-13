@@ -2,11 +2,14 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { visualizer } from 'rollup-plugin-visualizer'
 import { sentryVitePlugin } from '@sentry/vite-plugin'
+import { vercelApiDevPlugin } from './scripts/viteApiPlugin'
 
 
 export default defineConfig({
   plugins: [
     react(),
+    // Serves api/** locally; on Vercel the platform runs them instead.
+    vercelApiDevPlugin(),
     visualizer({
       open: true,
       gzipSize: true,
