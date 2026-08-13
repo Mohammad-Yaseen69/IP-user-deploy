@@ -65,6 +65,13 @@ const ReviewStep = ({ amount, feeDetails, selectedIban }) => {
                 <span className={styles.rateText}>
                     {t("Upon confirmation, a crypto payment checkout link and deposit address will be generated.")}
                 </span>
+
+            </div>
+            <div className={styles.rateBox} >
+                <span className={styles.rateText} style={{ marginTop: "16px", color: "orange" }}>
+                    {t("The Fee And The Received Amount May Vary a Little Depending Upon The Change in Exchange Rate at the Time of Execution.")}
+                </span>
+
             </div>
         </div>
     )

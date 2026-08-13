@@ -41,12 +41,15 @@ export const getAmountNumber = (amount) => {
     return Number.isFinite(value) ? value : 0
 }
 
+const MIN_CRYPTO_TOPUP_AMOUNT = 5
+const MAX_CRYPTO_TOPUP_AMOUNT = 50000
+
 export const getDisabledState = (stepName, data) => {
     const amount = getAmountNumber(data.amount)
 
     switch (stepName) {
         case STEPS.AMOUNT:
-            return !data.amount || amount <= 0
+            return !data.amount || amount <= 0 || amount < MIN_CRYPTO_TOPUP_AMOUNT || amount > MAX_CRYPTO_TOPUP_AMOUNT
         case STEPS.REVIEW:
             return !data.feeDetails?.token
         case STEPS.DONE:

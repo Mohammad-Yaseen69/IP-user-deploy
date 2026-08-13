@@ -35,6 +35,9 @@ import { useVirtualIbanPayoutDirect, useVirtualIbanPayoutFee } from "../../../..
 import { handlePaymentApiError } from "../../../../utils/Functions/handlePaymentApiError"
 import OTPConfirmation from "../../../UserSettingsNew/OTPConfirmation"
 import sepaCountries from "./sepaCountries.json"
+import { Tooltip } from "@mui/material"
+import jsPDF from "jspdf"
+import autoTable from "jspdf-autotable"
 
 const DEFAULT_BENEFICIARY_FORM = {
     type: "individual",
@@ -136,18 +139,75 @@ const SepaAmountStep = ({ amount, setAmount, availableBalance, currencyCode, sou
 
             <div>
                 <div className={styles.sectionLabel}>{t("Delivery speed")}</div>
+
                 <div className={styles.speedGrid}>
-                    {SEPA_TRANSFER_SPEEDS.map((speed) => (
-                        <button type="button" key={speed.id} className={`${styles.speedCard} ${selectedSpeed.id === speed.id ? styles.selectedSpeedCard : ""}`} onClick={() => setTransferSpeed(speed.id)}>
-                            <div className={styles.speedCardTop}>
-                                <span className={styles.railPill}>{speed.rail}</span>
-                                {speed.default && <span className={styles.defaultPill}>{t("Default")}</span>}
-                            </div>
-                            <div><h4>{t(speed.label)}</h4><p>{t(speed.description)}</p><strong className={speed.feeAmount === 0 ? styles.freeFeeText : styles.feeText}>{t(speed.feeLabel)}</strong></div>
-                        </button>
-                    ))}
+                    {SEPA_TRANSFER_SPEEDS.map((speed) => {
+                        const isComingSoon = speed.id === "instant";
+
+                        return (
+                            <Tooltip
+                                key={speed.id}
+                                title={isComingSoon ? t("Coming soon") : ""}
+                                arrow
+                            >
+                                <span style={{ display: "block" }}>
+                                    <button
+                                        type="button"
+                                        className={`${styles.speedCard} ${selectedSpeed.id === speed.id
+                                            ? styles.selectedSpeedCard
+                                            : ""
+                                            }`}
+                                        onClick={() =>
+                                            !isComingSoon && setTransferSpeed(speed.id)
+                                        }
+                                        disabled={isComingSoon}
+                                        style={{
+                                            cursor: isComingSoon
+                                                ? "not-allowed"
+                                                : "pointer",
+                                            opacity: isComingSoon ? 0.6 : 1,
+                                        }}
+                                    >
+                                        <div className={styles.speedCardTop}>
+                                            <span className={styles.railPill}>
+                                                {speed.rail}
+                                            </span>
+
+                                            {speed.default && (
+                                                <span className={styles.defaultPill}>
+                                                    {t("Default")}
+                                                </span>
+                                            )}
+                                        </div>
+
+                                        <div>
+                                            <h4>{t(speed.label)}</h4>
+                                            <p>{t(speed.description)}</p>
+
+                                            <strong
+                                                className={
+                                                    speed.feeAmount === 0
+                                                        ? styles.freeFeeText
+                                                        : styles.feeText
+                                                }
+                                            >
+                                                {t(speed.feeLabel)}
+                                            </strong>
+                                        </div>
+                                    </button>
+                                </span>
+                            </Tooltip>
+                        );
+                    })}
                 </div>
-                <div className={styles.infoStrip}>{t("The recipient receives")} <strong>{formatMoney(numericAmount, currencyCode)}</strong> {t("in full - no correspondent-bank deductions in SEPA.")}</div>
+
+                <div className={styles.infoStrip}>
+                    {t("The recipient receives")}{" "}
+                    <strong>
+                        {formatMoney(numericAmount, currencyCode)}
+                    </strong>{" "}
+                    {t("in full - no correspondent-bank deductions in SEPA.")}
+                </div>
             </div>
         </div>
     )
@@ -262,14 +322,159 @@ const ReviewStep = ({ amount, currencyCode, transferSpeed, selectedBeneficiary, 
         </div>
     )
 }
+const downloadSepaReceipt = ({
+    amount,
+    currencyCode,
+    transferSpeed,
+    selectedBeneficiary,
+    purpose,
+    additionalInfo,
+    feeDetails,
+    payoutResult,
+    t,
+}) => {
+    const doc = new jsPDF()
 
-const DoneStep = ({ amount, currencyCode, selectedBeneficiary, transferSpeed, feeDetails, payoutResult, onSendAgain, onClose }) => {
+    const speed =
+        SEPA_TRANSFER_SPEEDS.find(
+            (item) => item.id === transferSpeed
+        ) || SEPA_TRANSFER_SPEEDS[0]
+
+    const feeAmount = feeDetails?.fee
+    const recipientAmount = feeDetails?.recipient
+    const totalAmount = feeDetails?.total
+
+    const trackingReference =
+        payoutResult?.transaction_id ||
+        payoutResult?.reference_id ||
+        payoutResult?.reference ||
+        payoutResult?._id ||
+        "-"
+
+    const status = payoutResult?.status || "Initiated"
+
+    const rows = [
+        ["Recipient", getBeneficiaryName(selectedBeneficiary)],
+        ["Beneficiary type", getBeneficiaryTypeLabel(selectedBeneficiary)],
+        ["IBAN", getBeneficiaryIban(selectedBeneficiary)],
+        ["Bank country", getBeneficiaryCountry(selectedBeneficiary)],
+        ["BIC", getBeneficiaryBic(selectedBeneficiary)],
+        ["Bank", getBeneficiaryBankName(selectedBeneficiary)],
+        ["Speed", `${speed.label} - ${speed.description}`],
+        ["Purpose", purpose || "-"],
+        ["Additional info", additionalInfo || "-"],
+        ["Amount", formatMoney(amount, currencyCode)],
+        [
+            "Fee",
+            feeAmount
+                ? formatMoney(
+                    feeAmount.value,
+                    feeAmount.currency || currencyCode
+                )
+                : "Free",
+        ],
+        [
+            "Recipient gets",
+            `${formatMoney(
+                recipientAmount?.value ?? amount,
+                currencyCode
+            )} in full`,
+        ],
+        [
+            "Total to be debited",
+            totalAmount
+                ? formatMoney(
+                    totalAmount.value,
+                    totalAmount.currency || currencyCode
+                )
+                : formatMoney(amount, currencyCode),
+        ],
+        [
+            "Estimated arrival",
+            speed.id === "instant"
+                ? "Seconds"
+                : "1-2 business days",
+        ],
+        ["Tracking reference", trackingReference],
+        ["Status", status],
+    ]
+
+    doc.setFontSize(20)
+    doc.setFont("helvetica", "bold")
+    doc.text("SEPA Transfer Receipt", 14, 20)
+
+    doc.setFontSize(10)
+    doc.setFont("helvetica", "normal")
+    doc.text(
+        `Generated: ${new Date().toLocaleString()}`,
+        14,
+        28
+    )
+
+    autoTable(doc, {
+        startY: 36,
+        head: [["Details", "Information"]],
+        body: rows,
+        theme: "grid",
+        styles: {
+            fontSize: 9,
+            cellPadding: 4,
+        },
+        headStyles: {
+            fontStyle: "bold",
+        },
+        columnStyles: {
+            0: {
+                cellWidth: 55,
+                fontStyle: "bold",
+            },
+            1: {
+                cellWidth: 125,
+            },
+        },
+    })
+
+    const finalY = doc.lastAutoTable.finalY + 12
+
+    doc.setFontSize(9)
+    doc.setFont("helvetica", "normal")
+
+    doc.text(
+        "The recipient receives the full amount - no correspondent-bank deductions in SEPA.",
+        14,
+        finalY
+    )
+
+    doc.setFontSize(8)
+    doc.text(
+        "This receipt is generated electronically.",
+        14,
+        finalY + 8
+    )
+
+    doc.save(
+        `SEPA-Transfer-Receipt-${trackingReference}.pdf`
+    )
+}
+const DoneStep = ({
+    amount,
+    currencyCode,
+    selectedBeneficiary,
+    transferSpeed,
+    feeDetails,
+    payoutResult,
+    purpose,
+    additionalInfo,
+    onSendAgain,
+    onClose,
+}) => {
     const { t } = useTranslation()
     const speed = SEPA_TRANSFER_SPEEDS.find((item) => item.id === transferSpeed) || SEPA_TRANSFER_SPEEDS[0]
     const feeAmount = feeDetails?.fee
     const recipientAmount = feeDetails?.recipient
     const trackingReference = payoutResult?.transaction_id || payoutResult?.reference_id || payoutResult?.reference || payoutResult?._id || "-"
     const status = payoutResult?.status || "Initiated"
+    const navigate = useNavigate()
 
     return (
         <div className={styles.doneStep}>
@@ -283,7 +488,7 @@ const DoneStep = ({ amount, currencyCode, selectedBeneficiary, transferSpeed, fe
             </div>
             <div className={styles.doneActions}>
                 <button type="button" className={styles.backBtn} onClick={onSendAgain}><Send size={15} />{t("Send again")}</button>
-                <div><button type="button" className={styles.backBtn}><Download size={15} />{t("Download receipt")}</button><button type="button" className={styles.nextBtn} onClick={onClose}><Home size={15} />{t("Back to dashboard")}</button></div>
+                <div><button type="button" className={styles.backBtn} onClick={() => downloadSepaReceipt({ amount, currencyCode, transferSpeed, selectedBeneficiary, purpose, additionalInfo, feeDetails, payoutResult, t })}><Download size={15} />{t("Download receipt")}</button><button type="button" className={styles.nextBtn} onClick={() => navigate('/virtual-IBAN')}><Home size={15} />{t("Back to dashboard")}</button></div>
             </div>
         </div>
     )

@@ -236,8 +236,6 @@ const VirtualBank = () => {
                                     <div className={styles.section}>
                                         {transactionsLoading ? (
                                             <InstaPayLoader />
-                                        ) : (transactions?.items?.length ?? 0) === 0 ? (
-                                            <Empty selectedIban={selectedIban} />
                                         ) : (
                                             <RecentTransactions
                                                 transactions={transactions.items ?? []}
