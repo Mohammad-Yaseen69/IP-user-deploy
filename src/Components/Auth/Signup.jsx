@@ -2,7 +2,7 @@ import styles from "./styles/index.module.css"
 import LanguagePicker from '../LanguagePicker'
 import { useTranslation } from 'react-i18next'
 import { useContext, useEffect, useMemo, useReducer } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { ChevronRight } from "react-feather";
 import Stepone from "./Signup/Stepone";
 import gs from "./files/gs.svg"
@@ -15,6 +15,7 @@ import Stepfive from "./Signup/Stepfive";
 import ErrorModal from "../PaymentsNewer/InternationalFlow/ErrorModal";
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
+import { apiWrapper } from "../../utils/Functions/apiWrapper";
 import axios from "axios";
 import { UserContext } from "../../Context/UserContext";
 import OtpConfirmation from "./Signup/OtpConfirmation";
@@ -70,6 +71,8 @@ const Signup = ({ country, setIsLoginForm, setHideLogo }) => {
     const { t } = useTranslation()
     const [data, dispatch] = useReducer(reducer, initialState);
     const { code } = useParams()
+    const [searchParams] = useSearchParams();
+    const agentReferralTokenId = searchParams.get("agentReferralTokenId");
     const { allowedCountries } = useContext(UserContext)
 
     const dataHandler = (field, value) => {
@@ -77,9 +80,57 @@ const Signup = ({ country, setIsLoginForm, setHideLogo }) => {
     };
 
     useEffect(() => {
-        console.log(country)
-        dataHandler("country", country)
-    }, [country])
+        if (!agentReferralTokenId && country) {
+            dataHandler("country", country)
+        }
+    }, [country, agentReferralTokenId])
+
+    useEffect(() => {
+        const fetchLeadTokenData = async () => {
+            if (!agentReferralTokenId) return;
+            try {
+                const res = await apiWrapper({
+                    endpoint: `/api/agent-leads/token/${agentReferralTokenId}`,
+                    method: "GET",
+                    isPublic: true,
+                    isDecrypted: true
+                });
+                const dec = res?.data || res;
+                if (dec && (dec.account_type || dec.email || dec.phone || dec.company_name)) {
+                    if (dec.account_type) dataHandler("account_type", dec.account_type);
+                    if (dec.email) dataHandler("email", dec.email);
+                    if (dec.phone) dataHandler("phone", dec.phone);
+                    if (dec.first_name) dataHandler("first_name", dec.first_name);
+                    if (dec.last_name) dataHandler("last_name", dec.last_name);
+                    if (dec.company_name) dataHandler("company_name", dec.company_name);
+                    if (dec.fee_pack_code) dataHandler("referral_code", dec.fee_pack_code);
+
+                    const targetCountryStr = dec.country_iso3 || dec.country_iso2 || dec.country;
+                    if (targetCountryStr) {
+                        if (allowedCountries?.length > 0) {
+                            const matched = allowedCountries.find(c =>
+                                c.country_iso_code?.toLowerCase() === targetCountryStr.toLowerCase() ||
+                                c.alpha3?.toLowerCase() === targetCountryStr.toLowerCase() ||
+                                c.country_name?.toLowerCase() === targetCountryStr.toLowerCase() ||
+                                c.name?.toLowerCase() === targetCountryStr.toLowerCase()
+                            );
+                            if (matched) {
+                                dataHandler("country", matched);
+                            } else {
+                                dataHandler("country", targetCountryStr);
+                            }
+                        } else {
+                            dataHandler("country", targetCountryStr);
+                        }
+                    }
+                }
+            } catch (err) {
+                console.error("Failed to fetch lead token prefill details:", err);
+            }
+        };
+
+        fetchLeadTokenData();
+    }, [agentReferralTokenId, allowedCountries]);
 
 
     const isWhatsappDefault = useMemo(() => {
@@ -102,10 +153,17 @@ const Signup = ({ country, setIsLoginForm, setHideLogo }) => {
         switch (data.step) {
             case 1:
                 return !data.account_type
-            case 2:
+            case 2: {
+                const hasValidCountry = Boolean(
+                    data.country?._id ||
+                    data.country?.alpha3 ||
+                    data.country?.country_iso_code ||
+                    (typeof data.country === 'string' && data.country.trim())
+                );
                 return data.account_type === "individual"
                     ? !data.first_name?.trim() || !data.last_name?.trim() || !individualNameRegex.test(data.first_name) || !individualNameRegex.test(data.last_name)
-                    : !data.category_id || !data.company_name?.trim() || !data.country?._id || !companyNameRegex.test(data.company_name)
+                    : !data.category_id || !data.company_name?.trim() || !hasValidCountry || !companyNameRegex.test(data.company_name);
+            }
             case 3:
                 return data.account_type === "individual" ? !data.phone || data.phone.length < 9 || !/^\d{9,20}$/g.test(data.phone) : (!emailRegex.test(data.email))
             case 4:
@@ -206,10 +264,9 @@ const Signup = ({ country, setIsLoginForm, setHideLogo }) => {
                 delete payload.first_name
                 delete payload.last_name
                 delete payload.phone
-                delete payload.country_iso_code
                 payload.category_id = data.category_id
                 payload.company_name = data.company_name
-                payload.country_iso_code = data.country?.alpha3
+                payload.country_iso_code = data.country?.alpha3 ||data.country?.country_iso_code
                 payload.country = data.country?._id
                 payload.country_name = data.country?.country_name
 
