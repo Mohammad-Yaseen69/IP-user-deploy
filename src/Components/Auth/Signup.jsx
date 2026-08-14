@@ -80,6 +80,12 @@ const Signup = ({ country, setIsLoginForm, setHideLogo }) => {
     };
 
     useEffect(() => {
+        if (code) {
+            dataHandler("referral_code", code.toLowerCase());
+        }
+    }, [code]);
+
+    useEffect(() => {
         if (!agentReferralTokenId && country) {
             dataHandler("country", country)
         }
