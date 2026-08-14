@@ -16,21 +16,21 @@ import imageCard from '../../files/images/Frame_2147236087.png'
 
 const STATUS_CONFIG = {
     pending: {
-        badge: 'In review · Submitted today, 09:42',
+        badgePrefix: 'In review',
         title: 'Your request is in review',
         description: 'Your IBAN activation request has been submitted. Our team will review your KYB status and commercial terms. You will receive your personalized activation pack shortly.',
         primaryLabel: 'View submitted info',
         secondaryLabel: 'Cancel application',
     },
     submitted: {
-        badge: 'In review · Submitted today, 09:42',
+        badgePrefix: 'In review',
         title: 'Your request is in review',
         description: 'Your IBAN activation request has been submitted. Our team will review your KYB status and commercial terms. You will receive your personalized activation pack shortly.',
         primaryLabel: 'View submitted info',
         secondaryLabel: 'Cancel application',
     },
     in_review: {
-        badge: 'In review · Submitted today, 09:42',
+        badgePrefix: 'In review',
         title: 'Your request is in review',
         description: 'Your IBAN activation request has been submitted. Our team will review your KYB status and commercial terms. You will receive your personalized activation pack shortly.',
         primaryLabel: 'View submitted info',
@@ -57,6 +57,42 @@ const STATUS_CONFIG = {
         primaryLabel: 'Resubmit application',
         secondaryLabel: 'Contact support',
     },
+}
+
+const formatSubmissionTime = (dateInput) => {
+    const date = dateInput ? new Date(dateInput) : new Date()
+    const validDate = isNaN(date.getTime()) ? new Date() : date
+    const now = new Date()
+
+    const isToday =
+        validDate.getDate() === now.getDate() &&
+        validDate.getMonth() === now.getMonth() &&
+        validDate.getFullYear() === now.getFullYear()
+
+    const yesterday = new Date(now)
+    yesterday.setDate(now.getDate() - 1)
+    const isYesterday =
+        validDate.getDate() === yesterday.getDate() &&
+        validDate.getMonth() === yesterday.getMonth() &&
+        validDate.getFullYear() === yesterday.getFullYear()
+
+    const timeString = validDate.toLocaleTimeString(undefined, {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true,
+    })
+
+    if (isToday) {
+        return `today, ${timeString}`
+    } else if (isYesterday) {
+        return `yesterday, ${timeString}`
+    } else {
+        const dateString = validDate.toLocaleDateString(undefined, {
+            day: 'numeric',
+            month: 'short',
+        })
+        return `${dateString}, ${timeString}`
+    }
 }
 
 const getFeeAmount = async ({ payload, authHeader }) => {
@@ -128,6 +164,13 @@ const StatusScreen = ({ status = 'submitted', ibanNumber, companyName, onAction,
     }
 
     const cfg = STATUS_CONFIG[status] || STATUS_CONFIG.submitted
+    const createdAtRaw = activationData?.createdAt || activationData?.created_at || activationData?.submittedAt || activationData?.updatedAt || activationData?.date
+    const formattedTime = formatSubmissionTime(createdAtRaw)
+
+    let badgeText = cfg.badge ? t(cfg.badge) : ""
+    if (cfg.badgePrefix) {
+        badgeText = `${t(cfg.badgePrefix)} · ${t("Submitted")} ${formattedTime}`
+    }
 
     return (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', width: '100%' }}>
@@ -168,7 +211,7 @@ const StatusScreen = ({ status = 'submitted', ibanNumber, companyName, onAction,
                         fontWeight: 600,
                         marginBottom: '14px'
                     }}>
-                        {t(cfg.badge)}
+                        {badgeText}
                     </div>
 
                     <h1 style={{

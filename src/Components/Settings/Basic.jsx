@@ -12,6 +12,7 @@ import { encryptData } from '../../Helper/EssentilaMethods/Encryption';
 import SuccessModal from '../AddBeneficiary/SuccessModal';
 import CitiesDropDown from '../CitiesDropDown';
 import citiesData from "../CitiesDropDown/CitiesData.json";
+import countryAlpha2Map from "../AddFunds/WalletFund/countries_iso2.json";
 import countriesData from "../PaymentsNewer/CountriesData.json";
 import PhoneInput from '../PhoneInput';
 import CountryBasedPhone from "../PhoneInput/PhoneNumberBasedOnCountry.json";
@@ -21,6 +22,7 @@ import QrGenerate from './QrGenerate';
 import { usePermission } from '../../hooks/GeneralUse/usePermission';
 import { useQuery } from '@tanstack/react-query';
 import { apiWrapper } from '../../utils/Functions/apiWrapper';
+import { POSTAL_CODE_FORMATS, postalCodeRegex } from '../../Data/CountriesWithTranslations/PostalCode';
 
 
 export const currentDate = new Date();
@@ -218,10 +220,6 @@ const Basic = ({ setCurrentTab }) => {
                 })
         }
     }
-
-
-
-
 
     const [otpToken, setOtpToken] = useState("")
     const sendOtp = async (type = "") => {
@@ -423,7 +421,6 @@ const Basic = ({ setCurrentTab }) => {
         setIsEditMode(editmode)
     }, [editmode])
 
-
     const handleUsernameChange = (e) => {
         const value = e.target.value;
         if (value.length > 30) return;
@@ -468,13 +465,81 @@ const Basic = ({ setCurrentTab }) => {
         }
     }
 
-
     const isAfricanCountry = useMemo(() => {
-        if (country) {
-            return citiesData.find(item => item.iso3 === country).region === "Africa"
-        }
-    }, [country])
+        if (!country) return false;
 
+        const countryData = citiesData.find(
+            item =>
+                item.iso3 === country ||
+                item.alpha3 === country ||
+                item.alpha2 === country
+        );
+
+        return countryData?.region === "Africa";
+    }, [country]);
+
+
+
+    const selectedCountry = useMemo(() => {
+        return countriesData.find(
+            item =>
+                item.alpha3 === country ||
+                item.alpha2 === country ||
+                item.iso3 === country
+        );
+    }, [country]);
+
+    const countryAlpha2 = useMemo(() => {
+        if (!country) return undefined;
+
+        const normalized = String(country).toUpperCase();
+
+        if (countryAlpha2Map[normalized]) {
+            return countryAlpha2Map[normalized];
+        }
+
+        if (selectedCountry?.alpha2) {
+            return selectedCountry.alpha2;
+        }
+
+        if (normalized.length === 2) {
+            return normalized;
+        }
+
+        return undefined;
+    }, [country, selectedCountry]);
+
+    const getPostalCodeRegex = (countryCode) => {
+        if (!countryCode) return null;
+
+        return postalCodeRegex[countryCode.toUpperCase()] || null;
+    };
+
+    const isPostalCodeValid = useMemo(() => {
+        if (!postalCode?.trim()) {
+            return isAfricanCountry;
+        }
+
+        if (!countryAlpha2) {
+            return false;
+        }
+
+        const regex = getPostalCodeRegex(countryAlpha2);
+
+        if (!regex) {
+            return false;
+        }
+
+        return regex.test(postalCode.trim());
+    }, [postalCode, countryAlpha2, isAfricanCountry]);
+
+    console.log({
+        country,
+        selectedCountry,
+        countryAlpha2,
+        postalCode,
+        isPostalCodeValid
+    });
     return (
         <MuiPickersUtilsProvider utils={DateMomentUtils}>
             <Card>
@@ -1011,27 +1076,29 @@ const Basic = ({ setCurrentTab }) => {
                             {t("Postal Code")}
                             {(!userDetails?.postal_code && !isAfricanCountry) && <span style={{ color: "red" }}>{t("(Required)")}</span>}
                         </Label>
-                        <Input disabled={!isEditMode || isVerified}
+                        <Input
+                            disabled={!isEditMode || isVerified}
                             readOnly={!isEditMode || isVerified}
-                            value={postalCode} onChange={(e) => {
-                                const value = e.target.value;
-
-                                if (/^\d{0,5}(-\d{0,4})?$/.test(value)) {
-                                    setPostalCode(value);
-                                }
+                            value={postalCode || ""}
+                            onChange={(e) => {
+                                setPostalCode(e.target.value);
                             }}
-                            placeholder="55555 or 55555-5555"
-                            maxLength={10}
-                            pattern="\d{5}(-\d{4})?"
+                            placeholder={
+                                countryAlpha2
+                                    ? POSTAL_CODE_FORMATS[countryAlpha2] || ""
+                                    : ""
+                            }
                         />
-                        {postalCode && !/^\d{5}(-\d{4})?$/.test(postalCode) && (
-                            <div style={{
-                                color: "red",
-                                fontSize: "0.8rem",
-                                fontWeight: 600,
-                                marginTop: "5px"
-                            }}>
-                                {t("Postal code must be 55555 or 55555-5555.")}
+                        {postalCode && !isPostalCodeValid && (
+                            <div
+                                style={{
+                                    color: "red",
+                                    fontSize: "0.8rem",
+                                    fontWeight: 600,
+                                    marginTop: "5px"
+                                }}
+                            >
+                                {t("Invalid postal code format.")}
                             </div>
                         )}
                     </FormGroup>
@@ -1065,7 +1132,7 @@ const Basic = ({ setCurrentTab }) => {
                                             (country === "USA" && !state?.trim()) ||
                                             (userDetails?.account_type === "business" && !company?.trim()) ||
                                             (!isAfricanCountry && !postalCode?.trim()) ||
-                                            (!isAfricanCountry && !/^\d{5}(-\d{4})?$/.test(postalCode || ""))
+                                            !isPostalCodeValid
                                         ))
                                     }>
                                     {

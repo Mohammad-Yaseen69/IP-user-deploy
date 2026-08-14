@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react"
+import { useCallback, useMemo, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { Modal, ModalBody } from "reactstrap"
 import { toast } from "react-toastify"
@@ -135,6 +135,23 @@ const CryptoTopupModal = ({ isOpen, toggle, selectedIban }) => {
         }
     }
 
+    const refreshFeeDetails = useCallback(async () => {
+        if (!ibanId || !amount) return
+        try {
+            const res = await feeMutation.mutateAsync({
+                iban_id: ibanId,
+                amount: getAmountNumber(amount),
+            })
+            if (res?.data) {
+                setFeeDetails(res.data)
+            } else if (res?.message) {
+                toast.error(res.message)
+            }
+        } catch (error) {
+            console.error("Failed to refresh fee details:", error)
+        }
+    }, [ibanId, amount, feeMutation, t])
+
     const confirmTopup = async () => {
         if (!ibanId || !feeDetails?.token) {
             toast.error(t("Invalid quote details"))
@@ -211,6 +228,8 @@ const CryptoTopupModal = ({ isOpen, toggle, selectedIban }) => {
                         amount={amount}
                         feeDetails={feeDetails}
                         selectedIban={selectedIban}
+                        onRefreshFee={refreshFeeDetails}
+                        isRefreshing={feeMutation.isPending}
                     />
                 )
             case STEPS.DONE:

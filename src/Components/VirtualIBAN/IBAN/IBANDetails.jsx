@@ -76,13 +76,28 @@ const IBANDetails = ({ ibanId, fallbackIban }) => {
         [data, fallbackIban]
     )
     const bankAddress = iban?.bankAddress || iban?.bank?.formattedAddress || ""
-    const allText = [
-        `${t("Account holder name")}: ${iban?.account_holder_name || ""}`,
-        `${t("IBAN")}: ${iban?.iban || ""}`,
-        `${t("BIC / Bank Code")}: ${iban?.bank?.bic || ""}`,
-        `${t("Bank name")}: ${iban?.bank?.name || ""}`,
-        `${t("Bank address")}: ${bankAddress}`,
-    ].filter((line) => !line.endsWith(": ")).join("\n")
+    const allText = useMemo(() => {
+        if (depositing === "eu") {
+            return [
+                `${t("Account holder name")}: ${iban?.account_holder_name || ""}`,
+                `${t("IBAN")}: ${iban?.iban || ""}`,
+                `${t("BIC / Bank Code")}: ${iban?.bank?.bic || ""}`,
+                `${t("Bank name")}: ${iban?.bank?.name || ""}`,
+                `${t("Bank address")}: ${bankAddress}`,
+            ].filter((line) => !line.endsWith(": ")).join("\n")
+        } else {
+            const intl = INTL_DATA[intlCurrency] || {}
+            return [
+                `${t("Beneficiary name")}: ${intl.beneficiaryName || ""}`,
+                `${t("Beneficiary address")}: ${intl.beneficiaryAddress || ""}`,
+                `${t("Account number")}: ${intl.accountNumber || ""}`,
+                `${t("Bank Code")}: ${intl.bankCode || ""}`,
+                `${t("Bank name")}: ${intl.bankName || ""}`,
+                `${t("Bank address")}: ${intl.bankAddress || ""}`,
+                `${t("Payment reference")}: ${intl.paymentReference || ""}`,
+            ].filter((line) => !line.endsWith(": ")).join("\n")
+        }
+    }, [depositing, intlCurrency, iban, bankAddress, t])
 
     if (!canViewDetails) return null
 
