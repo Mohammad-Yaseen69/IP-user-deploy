@@ -58,6 +58,8 @@ const QuickActions = ({ selectedIban }) => {
         "hunain",
         "yousuf_",
         "khalid222",
+        "business_ininin",
+        "businessify"
     ];
 
     const isCryptoTopupAllowed = allowedUsernames.includes(
