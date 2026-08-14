@@ -142,7 +142,7 @@ const SepaAmountStep = ({ amount, setAmount, availableBalance, currencyCode, sou
 
                 <div className={styles.speedGrid}>
                     {SEPA_TRANSFER_SPEEDS.map((speed) => {
-                        const isComingSoon = speed.id === "instant";
+                        const isComingSoon = false;
 
                         return (
                             <Tooltip
