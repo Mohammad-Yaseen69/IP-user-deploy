@@ -731,6 +731,7 @@ const VirtualIbanModal = ({
                         styling={{ marginTop: "1rem" }}
                         paymentType={paymentType}
                         setPaymentType={setPaymentType}
+                        isInIban
                     />
                 )
             case STEPS.PAYMENT_DETAILS:

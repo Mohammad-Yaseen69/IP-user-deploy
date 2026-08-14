@@ -221,7 +221,7 @@ const ConfirmSend = ({ beneficiary, amount, currency, country, payoutChannel, se
                 <ModalBody style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
                     <XCircle size={70} color="red" />
                     <p color="red" style={{ fontSize: "1.1rem", fontWeight: "600", color: "red", marginTop: ".3rem" }}>{t(errorMessage || "Oops! Something went wrong.")}</p>
-                    <p style={{ fontSize: ".6rem", marginTop: ".5rem" }}>{t("We're sorry about that.")} <Link to={"/wallets"} style={{ textDecoration: "underline" }}>{t("Go back to Payments Page.")}</Link></p>
+                    <p style={{ fontSize: ".6rem", marginTop: ".5rem" }}>{t("We're sorry about that.")} <Link to={userWithdrawals?._id ? "/wallets" : "/payments"} style={{ textDecoration: "underline" }}>{t(userWithdrawals?._id ? "Go back to Wallet Page." : "Go back to Payments Page.")}</Link></p>
                 </ModalBody>
             </Modal>
 

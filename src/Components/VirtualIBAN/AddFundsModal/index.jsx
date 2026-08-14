@@ -216,6 +216,7 @@ const AddFundsModal = ({ isOpen, toggle }) => {
                         styling={{ marginTop: "1rem" }}
                         paymentType={fundingMethod}
                         setPaymentType={setFundingMethod}
+                        isInIban
                     />
                 )
             case STEPS.PAYMENT_DETAILS:
