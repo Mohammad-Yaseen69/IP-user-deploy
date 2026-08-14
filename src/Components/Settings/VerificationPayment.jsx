@@ -302,7 +302,7 @@ const VerificationPayment = ({ isOpen, toggle, verify, desc, occupation, loading
                                         paymentChannels
                                             .filter(item => item?.value === "wallet" ? wallets.length > 0 : methods?.includes(item?.value))
                                             .map(item => {
-                                                const isPaypalDisabled = isKYB && item?.value === "paypal";
+                                                const isPaypalDisabled = isKYB && item?.value === "paypal" || item.value === "card";
                                                 return (
                                                     <Card
                                                         key={item.name}
