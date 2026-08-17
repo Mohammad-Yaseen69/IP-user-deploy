@@ -1,5 +1,5 @@
 import { Box, FormControl, IconButton, MenuItem, Modal, Select, TextField } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ArrowLeft, Info, X } from 'react-feather';
 import { useTranslation } from 'react-i18next';
 import styles from './DynamicChannelModal.module.css';
@@ -7,6 +7,7 @@ import useBankDetails from '../../../../hooks/BeneficiaryHooks/useBankDetails';
 import useChannels from '../../../../hooks/BeneficiaryHooks/useChannels';
 import { apiWrapper } from '../../../../utils/Functions/apiWrapper';
 import { toast } from 'react-toastify';
+import PhoneInput from '../../../PhoneInput';
 
 const DynamicChannelModal = ({ open, handleClose, beneficiaryData, onSaveSuccess }) => {
     const { t } = useTranslation();
@@ -47,6 +48,8 @@ const DynamicChannelModal = ({ open, handleClose, beneficiaryData, onSaveSuccess
     const [mobileProvider, setMobileProvider] = useState('');
     const [walletName, setWalletName] = useState('');
     const [mobileNumber, setMobileNumber] = useState('');
+    const [mobilePhoneKey, setMobilePhoneKey] = useState(0);
+    const mobilePhonePrefillRef = useRef('');
 
     // Wire useChannels for Mobile Wallet payers
     const { mobileProviders } = useChannels({
@@ -70,11 +73,14 @@ const DynamicChannelModal = ({ open, handleClose, beneficiaryData, onSaveSuccess
         setMobileNumber('');
         setMobileProvider('');
         setWalletName('');
+        mobilePhonePrefillRef.current = '';
+        setMobilePhoneKey(prev => prev + 1);
     }, [channelType, open, beneficiaryData]);
 
     useEffect(() => {
         if (mobileProviders && mobileProviders.length > 0 && !mobileProvider) {
-            setMobileProvider(mobileProviders[0]?.id || mobileProviders[0]?.name || '');
+            // Force id to string — backend expects string, p.id may be a number
+            setMobileProvider(String(mobileProviders[0]?.id || mobileProviders[0]?.name || ''));
             setWalletName(mobileProviders[0]?.name || '');
         }
     }, [mobileProviders]);
@@ -135,8 +141,9 @@ const DynamicChannelModal = ({ open, handleClose, beneficiaryData, onSaveSuccess
         } else if (channelType === 'mobile_wallet') {
             if (!mobileNumber || !mobileNumber.trim()) return toast.error(t("Mobile number is required"));
             channelPayload.mobile_wallet = {
-                money_provider: mobileProvider || 'Mobile Provider',
-                wallet_name: walletName || mobileProvider || 'Mobile Wallet',
+                // Ensure string — API validation rejects numbers
+                money_provider: String(mobileProvider || 'Mobile Provider'),
+                wallet_name: walletName || String(mobileProvider) || 'Mobile Wallet',
                 wallet_account_number: mobileNumber.trim()
             };
         }
@@ -185,8 +192,9 @@ const DynamicChannelModal = ({ open, handleClose, beneficiaryData, onSaveSuccess
                     </div>
 
                     <form onSubmit={handleSubmit} className={styles.modalForm}>
-                        {/* Main Dropdown */}
-                        <div className={styles.inputGroup}>
+                        <div className={styles.modalBody}>
+                            {/* Main Dropdown */}
+                            <div className={styles.inputGroup}>
                             <label className={styles.fieldLabel}>{t("Channel type")}</label>
                             <FormControl fullWidth size="small">
                                 <Select
@@ -414,8 +422,9 @@ const DynamicChannelModal = ({ open, handleClose, beneficiaryData, onSaveSuccess
                                     <Select
                                         value={mobileProvider}
                                         onChange={(e) => {
-                                            setMobileProvider(e.target.value);
-                                            const match = mobileProviders?.find(p => p.id === e.target.value || p.name === e.target.value);
+                                            const val = String(e.target.value);
+                                            setMobileProvider(val);
+                                            const match = mobileProviders?.find(p => String(p.id) === val || p.name === val);
                                             if (match) setWalletName(match.name);
                                         }}
                                         size="small"
@@ -423,7 +432,7 @@ const DynamicChannelModal = ({ open, handleClose, beneficiaryData, onSaveSuccess
                                     >
                                         {mobileProviders && mobileProviders.length > 0 ? (
                                             mobileProviders.map((p, idx) => (
-                                                <MenuItem key={idx} value={p.id || p.name}>
+                                                <MenuItem key={idx} value={String(p.id || p.name)}>
                                                     {p.name || p.id}
                                                 </MenuItem>
                                             ))
@@ -439,15 +448,17 @@ const DynamicChannelModal = ({ open, handleClose, beneficiaryData, onSaveSuccess
 
                                 <div className={styles.inputGroup}>
                                     <label className={styles.fieldLabel}>{t("Mobile Number / Wallet Account")}</label>
-                                    <TextField
-                                        fullWidth size="small" variant="outlined" required type="tel"
-                                        placeholder="+1 234 567 8900"
-                                        value={mobileNumber} onChange={(e) => setMobileNumber(e.target.value)}
-                                        sx={commonInputStyles}
+                                    <PhoneInput
+                                        key={mobilePhoneKey}
+                                        country={beneficiaryData?.country_iso_code || beneficiaryData?.country_name}
+                                        phone={mobilePhonePrefillRef.current}
+                                        setPhone={(val) => setMobileNumber(val)}
+                                        setCountry={() => {}}
                                     />
                                 </div>
                             </>
                         )}
+                        </div>
 
                         {/* Footer Buttons */}
                         <div className={styles.modalFooter}>
