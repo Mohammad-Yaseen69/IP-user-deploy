@@ -571,6 +571,7 @@ const WithdrawOldFlow = ({
                             const amt = Number(String(amount)?.replaceAll(",", ""))
                             if (vendorBalanceInUSD < 4 || amt > vendorBalance) {
                                 setShowBalanceModal(true)
+                                setConfirmed(false)
                                 return false
                             }
                             return true

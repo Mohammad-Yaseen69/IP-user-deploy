@@ -801,6 +801,8 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
             if (!balanceOk) {
                 setShowBalanceModal(true)
                 setLoading(false)
+                reset()
+                updateInternationalData("showOtpModal", false)
                 return
             }
 
@@ -868,6 +870,8 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
             if (!balanceOk) {
                 setShowBalanceModal(true)
                 setLoading(false)
+                reset()
+                updateInternationalData("showOtpModal", false)
                 return
             }
 
@@ -920,6 +924,8 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
             if (!balanceOk) {
                 setShowBalanceModal(true)
                 setLoading(false)
+                reset()
+                updateInternationalData("showOtpModal", false)
                 return
             }
 
@@ -1157,6 +1163,8 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
             if (!balanceOk) {
                 setShowBalanceModal(true)
                 setLoading(false)
+                reset()
+                updateInternationalData("showOtpModal", false)
                 return
             }
 
