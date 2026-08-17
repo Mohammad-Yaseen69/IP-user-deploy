@@ -175,7 +175,7 @@ const AddCSVModal = ({ isOpen, toggleModal, srr, showInfo, setShowInfo }) => {
                             <div style={{
                                 display: "flex", justifyContent: "space-between", fontWeight: "600", fontSize: ".8rem"
                             }}>
-                                <span>{t("Supported Extensions")}: CSV, JSON, XML, TXT, XLS, XLSX.</span>
+                                <span>{t("Supported Extensions")}{t(": CSV, JSON, XML, TXT, XLS, XLSX.")}</span>
                                 <span style={{ textDecoration: "underline", color: "var(--theme-default)", cursor: "pointer" }}
                                     onClick={_ => setShowInfo(true)}
                                 >{t("View Info")}</span>

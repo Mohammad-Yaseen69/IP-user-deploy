@@ -265,7 +265,7 @@ const CryptoFund = ({ setAction }) => {
                                                 marginTop: "-.6rem",
                                                 maxWidth: "320px"
                                             }} className="confirm_container">
-                                                <h4 style={{ color: "#5936f0", wordBreak: "normal" }} className="head_confirm">Your payment is confirmed</h4>
+                                                <h4 style={{ color: "#5936f0", wordBreak: "normal" }} className="head_confirm">{t("Your payment is confirmed")}</h4>
                                                 <video src={c_vid} autoPlay loop="true" style={{ height: "100%", width: "100%", objectFit: "cover", mixBlendMode: "multiply" }}></video>
                                                 <p>{t("Thanks for using InstaPay")}</p>
                                             </div>
@@ -507,7 +507,7 @@ const CryptoFund = ({ setAction }) => {
                 paymentReference={cryptoPaymentRef}
             />
         </>
-    )
+    );
 }
 
 export default CryptoFund

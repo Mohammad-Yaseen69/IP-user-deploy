@@ -1327,7 +1327,7 @@ const Login = ({ country, setIsLoginForm, }) => {
                                             </Link>
 
                                             <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                                                <span style={{ color: "#888", fontWeight: 600 }}>OR</span>
+                                                <span style={{ color: "#888", fontWeight: 600 }}>{t("OR")}</span>
                                             </div>
 
                                             <Link style={linkStyle} to="/agent-login">
@@ -1442,7 +1442,7 @@ const Login = ({ country, setIsLoginForm, }) => {
                                                     border: "1px solid rgba(18, 18, 18, 0.20)",
                                                     background: "#FFF",
                                                     overflow: "hidden",
-                                                    minWidth: 0,
+                                                    width: "100%",
                                                 }}
                                                 disabled={biometricLoading}
                                             >
@@ -1679,7 +1679,7 @@ const Login = ({ country, setIsLoginForm, }) => {
                                                     </Link>
 
                                                     <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                                                        <span style={{ color: "#888", fontWeight: 600 }}>OR</span>
+                                                        <span style={{ color: "#888", fontWeight: 600 }}>{t("OR")}</span>
                                                     </div>
 
                                                     <Link style={linkStyle} to="/agent-login">
@@ -1718,7 +1718,7 @@ const Login = ({ country, setIsLoginForm, }) => {
                     </form >
             }
         </>
-    )
+    );
 }
 
 export default Login

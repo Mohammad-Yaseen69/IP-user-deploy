@@ -24,7 +24,7 @@ const ReviewStep = ({ amount, wallet, feeDetails, iban }) => {
             <div className={styles.reviewTable}>
                 <div className={styles.reviewRow}>
                     <span className={styles.reviewRowLabel}>{t("From")}</span>
-                    <span className={styles.reviewRowValue}>{iban?.currency} IBAN</span>
+                    <span className={styles.reviewRowValue}>{iban?.currency}{t("IBAN")}</span>
                 </div>
 
                 <div className={styles.reviewRow}>
@@ -73,7 +73,7 @@ const ReviewStep = ({ amount, wallet, feeDetails, iban }) => {
                 </div>
             </div>
         </div>
-    )
+    );
 }
 
 export default ReviewStep

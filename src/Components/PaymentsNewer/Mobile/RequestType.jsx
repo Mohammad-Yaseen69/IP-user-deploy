@@ -85,7 +85,7 @@ const RequestType = ({ setStep, paymentMethod, setPaymentMethod, setNotInstant }
                             </div>
                         ))
                         :
-                        <div>No Available Payout channels</div>
+                        <div>{t("No Available Payout channels")}</div>
                 }
             </div>
             <Button className={styles.button} disabled={!paymentMethod} onClick={() => {
@@ -99,7 +99,7 @@ const RequestType = ({ setStep, paymentMethod, setPaymentMethod, setNotInstant }
                 {t("Continue")}
             </Button>
         </div>
-    )
+    );
 }
 
 export default RequestType;

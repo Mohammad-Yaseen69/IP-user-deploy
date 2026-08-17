@@ -19,11 +19,11 @@ const VerificationStep = ({ jurisdiction }) => {
                     {t(info.header)}
                 </h4>
                 <div className={styles.badges}>
-                    <span className={styles.badge}>SEPA</span>
-                    <span className={styles.badge}>SWIFT</span>
+                    <span className={styles.badge}>{t("SEPA")}</span>
+                    <span className={styles.badge}>{t("SWIFT")}</span>
                 </div>
             </div>
-            
+
             <div className={styles.verification}>
 
                 <div className={styles.verificationRing}>
@@ -37,7 +37,7 @@ const VerificationStep = ({ jurisdiction }) => {
                 </p>
             </div>
         </>
-    )
+    );
 }
 
 export default VerificationStep

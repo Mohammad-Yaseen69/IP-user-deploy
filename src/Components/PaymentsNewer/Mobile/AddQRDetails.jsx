@@ -152,7 +152,7 @@ const AddQRDetails = ({ setSubStep, dataHandler, sendPaymentType }) => {
                             top: "29%",
                             left: "13px",
                             width: "fit-content"
-                        }}>#INSTAPAY-</h5>
+                        }}>{t("#INSTAPAY-")}</h5>
                     </div>
                     <div style={{ display: "flex", alignItems: "center", gap: "18px" }}>
                         <div style={{ display: "flex", alignItems: "center", gap: "5px" }}>
@@ -172,7 +172,7 @@ const AddQRDetails = ({ setSubStep, dataHandler, sendPaymentType }) => {
                 toggle={() => setIsOpen(false)}
             />
         </div>
-    )
+    );
 }
 
 export default AddQRDetails

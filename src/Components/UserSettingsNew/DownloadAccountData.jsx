@@ -528,7 +528,7 @@ const DownloadData = ({ isCollapsed, setIsCollapsed }) => {
                                 {t("Select file type")}
                             </Label>
                             <Input type="select" className="mb-1" value={type} onChange={e => setType(e.target.value)}>
-                                <option value="" disabled>Select File Type</option>
+                                <option value="" disabled>{t("Select File Type")}</option>
                                 {options.map(item => (
                                     <option value={item.value} key={item.value}>{item.label}</option>
                                 ))}

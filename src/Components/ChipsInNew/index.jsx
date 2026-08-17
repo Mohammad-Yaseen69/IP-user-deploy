@@ -147,12 +147,12 @@ const ChipsInNew = () => {
                     :
                     <Card style={{ maxWidth: "fit-content", margin: "5rem auto 0" }}>
                         <CardBody>
-                            <CardText>{t("Not supported on this level.")}<Link to={"/"} style={{ textDecoration: "underline", fontWeight: 600 }}>Go back to Home.</Link></CardText>
+                            <CardText>{t("Not supported on this level.")}<Link to={"/"} style={{ textDecoration: "underline", fontWeight: 600 }}>{t("Go back to Home.")}</Link></CardText>
                         </CardBody>
                     </Card>
             }
         </>
-    )
+    );
 }
 
 export default ChipsInNew;

@@ -65,7 +65,7 @@ const CryptoFundReceipt = ({ cryptoCurrency, amount }) => {
                         alignItems: "center",
                         flex: "1"
                     }}>
-                        <span style={{ color: "#808080", fontWeight: 500, whiteSpace: "nowrap" }}>{t("Estimated Price: 1")} {cryptoCurrency.value.toUpperCase()} = {cryptoCurrency.price} USD</span>
+                        <span style={{ color: "#808080", fontWeight: 500, whiteSpace: "nowrap" }}>{t("Estimated Price: 1")} {cryptoCurrency.value.toUpperCase()} = {cryptoCurrency.price}{t("USD")}</span>
                     </div>
                     <div style={{
                         display: "flex",
@@ -76,7 +76,7 @@ const CryptoFundReceipt = ({ cryptoCurrency, amount }) => {
                         alignItems: "center",
                         flex: "1"
                     }}>
-                        <span style={{ color: "#808080", fontWeight: 500 }}>{t("Transaction Fee")}: $1.32</span>
+                        <span style={{ color: "#808080", fontWeight: 500 }}>{t("Transaction Fee")}{t(": $1.32")}</span>
                     </div>
                 </div>
 
