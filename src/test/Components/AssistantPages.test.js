@@ -1,11 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { PAGES, getPageById } from '../../Components/AssistantWidget/knowledge/pages'
 
-/**
- * The page registry is the contract between the code and the Agent Builder
- * workflow: it becomes the tool's `enum` and the agent's page list. A break here
- * shows up as the agent offering a destination that cannot resolve.
- */
 describe('assistant page registry', () => {
     it('has a unique id for every page', () => {
         const ids = PAGES.map((page) => page.id)

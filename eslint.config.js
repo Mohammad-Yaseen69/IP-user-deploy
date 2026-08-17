@@ -59,8 +59,6 @@ export default defineConfig([
     },
   },
   {
-    // Server-side code: Vercel functions and build scripts run in Node, not the
-    // browser, so they need Node globals rather than `window` and friends.
     files: ["api/**/*.js", "scripts/**/*.js"],
     languageOptions: {
       globals: globals.node,

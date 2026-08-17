@@ -1,16 +1,3 @@
-/**
- * Renders the Agent Builder configuration from `PAGES`.
- *
- * The workflow lives in OpenAI's dashboard, outside this repo, so nothing stops
- * the two from drifting apart — a page renamed here would leave the agent
- * offering a destination that no longer resolves. Run this after touching
- * `pages.js` and paste the output back into the workflow:
- *
- *   npm run agent:config
- *
- * Writes to stdout; add `> agent-config.txt` if you'd rather have a file.
- */
-
 import { PAGES } from "../src/Components/AssistantWidget/knowledge/pages.js";
 
 const pageList = PAGES.map((page) => `- ${page.id} — ${page.title}: ${page.description}`).join("\n");

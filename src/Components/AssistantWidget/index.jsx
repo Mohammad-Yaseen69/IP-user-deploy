@@ -1,24 +1,23 @@
-import { ChatKit, useChatKit } from "@openai/chatkit-react";
 import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { UserContext } from "../../Context/UserContext";
+import AssistantPanel from "./AssistantPanel";
 import { ChatIcon, CloseIcon } from "./Icons";
-import { STARTER_PROMPTS } from "./knowledge/pages";
 import styles from "./styles.module.css";
+import { clearAllThreadIds } from "./threadStorage";
 import { useNavigationTool } from "./useNavigationTool";
 import { logger } from "@sentry/react";
+import { useChatKit } from "@openai/chatkit-react";
 
-const SESSION_ENDPOINT = "/api/chatkit/session";
-const BRAND_PRIMARY = "#5926f0";
+const SESSION_ENDPOINT = "/api/assistant/session";
+const BRAND_PRIMARY = "var(--brand-primary, #1c7df6)";
+const STARTER_PROMPTS = [
+    "Check my transaction history",
+    "How do I verify my account?",
+    "What are my payment limits?",
+    "Help me with a transfer",
+];
 
-/**
- * Floating AI assistant, backed by an OpenAI Agent Builder workflow through
- * ChatKit. ChatKit owns the conversation UI; this component owns the launcher,
- * the session handshake and the client tools the agent can call.
- *
- * Mounted in Layout and AgentLayout, so it only appears once the user is signed
- * in — the session endpoint requires their token.
- */
 const AssistantWidget = () => {
     const { t } = useTranslation();
     const { userDetails, token } = useContext(UserContext);
@@ -28,6 +27,9 @@ const AssistantWidget = () => {
     const userId = userDetails?._id;
     const canRun = Boolean(userId && token);
 
+    useEffect(() => {
+        if (!token) clearAllThreadIds();
+    }, [token]);
     const handleClientTool = useNavigationTool({
         // Navigating with the panel open would hide the page behind it.
         onNavigate: () => setIsOpen(false),
@@ -98,39 +100,16 @@ const AssistantWidget = () => {
         return () => window.removeEventListener("keydown", onKeyDown);
     }, [isOpen]);
 
-    // No session is possible before sign-in completes; showing a launcher that
-    // can only fail is worse than showing nothing.
     if (!canRun) return null;
 
     return (
         <div className={styles.root}>
-            {isOpen && (
-                <div className={styles.panel} role="dialog" aria-label={t("InstaPay Assistant")}>
-                    <div className={styles.header}>
-                        <p className={styles.headerTitle}>{t("InstaPay Assistant")}</p>
-                        <div className={styles.headerSpacer} />
-                        <button
-                            type="button"
-                            className={styles.headerBtn}
-                            onClick={() => setIsOpen(false)}
-                            aria-label={t("Close")}
-                        >
-                            <CloseIcon />
-                        </button>
-                    </div>
-
-                    {hasFailed ? (
-                        <div className={styles.errorState}>
-                            <p>{t("The assistant is unavailable right now.")}</p>
-                            <p className={styles.errorHint}>
-                                {t("Please try again shortly, or email support@insta-pay.ch.")}
-                            </p>
-                        </div>
-                    ) : (
-                        <ChatKit control={control} className={styles.chat} />
-                    )}
-                </div>
-            )}
+            <AssistantPanel
+                userId={userId}
+                token={token}
+                isOpen={isOpen}
+                onClose={() => setIsOpen(false)}
+            />
 
             <button
                 type="button"

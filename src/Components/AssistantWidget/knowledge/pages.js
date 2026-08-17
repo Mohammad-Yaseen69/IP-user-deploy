@@ -1,23 +1,4 @@
-/**
- * The pages the assistant is allowed to navigate to.
- *
- * This registry has two jobs:
- *
- *  1. **Client-side allowlist.** When the agent calls the `navigate_to_page`
- *     tool, the handler resolves `id` here. An id that isn't in this list is
- *     refused, so a hallucinated destination can never move the user.
- *  2. **Source for the agent's instructions.** `npm run agent:config` renders
- *     this list into the system prompt and tool schema you paste into the Agent
- *     Builder workflow, so the dashboard and the code cannot drift apart.
- *
- * `permission` uses the same keys as `usePermission()` / `MENU`. The agent is
- * not told which permissions a given user has — it may suggest anything, and
- * the handler refuses with a reason the agent can explain. That keeps the
- * workflow static while staying correct per user.
- */
-
 export const PAGES = [
-    /* ---------------------------------------------------------------- money in */
     {
         id: "add_funds",
         title: "Add Funds",
@@ -34,7 +15,6 @@ export const PAGES = [
             "Ask another person to pay you. The recipient gets a request they can approve or decline.",
     },
 
-    /* --------------------------------------------------------------- money out */
     {
         id: "send_money",
         title: "Send Money",
@@ -81,7 +61,6 @@ export const PAGES = [
             "Register people or companies allowed to send funds on the user's behalf so those transfers clear compliance.",
     },
 
-    /* ---------------------------------------------------------- money at rest */
     {
         id: "wallets",
         title: "My Wallets",
@@ -136,7 +115,6 @@ export const PAGES = [
         description: "Bank accounts the virtual IBAN can push funds out to over the banking rails.",
     },
 
-    /* ------------------------------------------------------------------ records */
     {
         id: "transactions",
         title: "Transactions",
@@ -188,7 +166,6 @@ export const PAGES = [
         description: "Audit trail: sign-ins, changes and actions taken on the account, with timestamps.",
     },
 
-    /* ------------------------------------------------------------------- people */
     {
         id: "beneficiaries",
         title: "Beneficiaries",
@@ -220,7 +197,6 @@ export const PAGES = [
             "Business accounts only: invite team members, assign roles, control what each can see or do.",
     },
 
-    /* ---------------------------------------------------------------- identity */
     {
         id: "payment_address",
         title: "My Payment Address",
@@ -245,7 +221,6 @@ export const PAGES = [
             "Details other InstaPay users see: display name, username, picture, bio. Legal and KYC details live in Settings instead.",
     },
 
-    /* ---------------------------------------------------------------- settings */
     {
         id: "settings",
         title: "Settings",
@@ -314,7 +289,6 @@ export const PAGES = [
             "Restrict which regions the account can be used from. Blocks access from anywhere not allowed.",
     },
 
-    /* --------------------------------------------------------------- overview */
     {
         id: "dashboard",
         title: "Dashboard",
@@ -326,7 +300,6 @@ export const PAGES = [
 
 export const getPageById = (id) => PAGES.find((page) => page.id === id);
 
-/** Starter prompts shown on ChatKit's new-thread screen. */
 export const STARTER_PROMPTS = [
     "How do I send money abroad?",
     "Where can I download my statements?",
