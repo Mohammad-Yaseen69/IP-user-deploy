@@ -249,6 +249,14 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
 
     const { vendorBalance, vendorBalanceInUSD, vendorBalanceLoading } = useVendorBalance(internationalData.currency, internationalData.payoutChannel?.vendor?.toLowerCase(), (err) => updateInternationalData("error", err))
 
+    const checkVendorBalance = () => {
+        const amount = Number(String(internationalData.amount)?.replaceAll(",", ""))
+        if (vendorBalanceInUSD < 4 || amount > vendorBalance) {
+            return false
+        }
+        return true
+    }
+
     const updateInternationalData = (field, value) => {
         dispatch({ type: "UPDATE_FIELD", field, value });
     };
@@ -294,7 +302,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                     return false
                 }
 
-                return !internationalData.amount || Number(String(internationalData.amount)?.replaceAll(",", "")) < 1 || !internationalData.currency || !internationalData.currency_wallet?.currency?.code || !internationalData.country?.name || !internationalData?.payoutChannel?.name || !internationalData?.payer?.name || internationalData.error || internationalData.exchange_rate_error || !internationalData.exchange_rate?.receiver?.amount > 0 || vendorBalanceLoading
+                return !internationalData.amount || Number(String(internationalData.amount)?.replaceAll(",", "")) < 1 || !internationalData.currency || !internationalData.currency_wallet?.currency?.code || !internationalData.country?.name || !internationalData?.payoutChannel?.name || !internationalData?.payer?.name || internationalData.error || internationalData.exchange_rate_error || !internationalData.exchange_rate?.receiver?.amount > 0
 
             case 2:
                 if (internationalData.showSenderSelection) {
@@ -789,6 +797,13 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
     const initiateCardPayment = async (otp) => {
         setLoading(true)
         try {
+            const balanceOk = checkVendorBalance()
+            if (!balanceOk) {
+                setShowBalanceModal(true)
+                setLoading(false)
+                return
+            }
+
             const data = {
                 token: internationalData.created_transaction?.token,
                 otp: otp,
@@ -849,6 +864,13 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
     const initiatePaypalPayment = async (otp) => {
         setLoading(true)
         try {
+            const balanceOk = checkVendorBalance()
+            if (!balanceOk) {
+                setShowBalanceModal(true)
+                setLoading(false)
+                return
+            }
+
             const data = {
                 token: internationalData.created_transaction?.token,
                 otp: otp,
@@ -894,6 +916,13 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
     const initiateMobileWalletPayment = async (otp) => {
         setLoading(true)
         try {
+            const balanceOk = checkVendorBalance()
+            if (!balanceOk) {
+                setShowBalanceModal(true)
+                setLoading(false)
+                return
+            }
+
             const data = {
                 token: internationalData.created_transaction?.token,
                 otp: otp,
@@ -952,10 +981,6 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
         switch (subStep) {
             case 1:
                 {
-                    if (vendorBalanceLoading) {
-                        return
-                    }
-
                     if (!internationalData.isRecipientTypeSelected) {
                         updateInternationalData("isRecipientTypeSelected", true)
                         if (!internationalData.isThirdPartyAllowed) {
@@ -976,17 +1001,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                         return
                     }
 
-                    const amount = Number(String(internationalData.amount)?.replaceAll(",", ""))
-
-                    if (vendorBalanceInUSD < 4) {
-                        setShowBalanceModal(true)
-                    } else {
-                        if (amount <= vendorBalance) {
-                            setSubStep(prev => prev + 1)
-                        } else {
-                            setShowBalanceModal(true)
-                        }
-                    }
+                    setSubStep(prev => prev + 1)
                     break;
                 }
             case 2:
@@ -1137,6 +1152,14 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
     const verifyOtp = async (otp) => {
         setLoading(true)
         try {
+            // Check vendor balance before confirming the transaction
+            const balanceOk = checkVendorBalance()
+            if (!balanceOk) {
+                setShowBalanceModal(true)
+                setLoading(false)
+                return
+            }
+
             let data;
 
             if (internationalData.payoutChannel?.vendor === "thunes") {
@@ -1290,12 +1313,6 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
             }
             {
                 <VendorBalanceModal
-                    vendorBalance={vendorBalance}
-                    vendorBalanceLoading={vendorBalanceLoading}
-                    vendorBalanceInUSD={vendorBalanceInUSD}
-                    sendingAmount={internationalData.amount}
-                    currency={internationalData.currency}
-                    sendingLimit={internationalData.exchange_rate?.limits_used?.daily_sending_limit_used}
                     isOpen={showBalanceModal}
                     toggle={() => setShowBalanceModal(false)}
                 />

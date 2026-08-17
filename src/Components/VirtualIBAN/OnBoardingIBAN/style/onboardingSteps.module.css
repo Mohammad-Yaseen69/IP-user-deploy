@@ -1281,7 +1281,7 @@
     align-items: center;
     justify-content: space-between;
     border-bottom: 1px solid #EFF1F6;
-    padding: 12px;
+    padding: 12px 0px;
 }
 
 .left {
@@ -1333,6 +1333,13 @@
     border-radius: 999px;
 }
 
+.inprogress .iconWrap svg {
+    color: #fff;
+}
+
+.inprogress .iconWrap svg path {
+    fill: currentColor !important;
+}
 
 .inprogress .iconWrap {
     background: #4A32E3;
