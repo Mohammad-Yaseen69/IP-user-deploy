@@ -76,8 +76,11 @@ const AssistantWidget = () => {
             onClientTool: handleClientTool,
             // `chatkit.error` surfaces here — as a hook option, not a prop on
             // <ChatKit>, where it would just be a DOM error attribute.
-            onError: ({ error }) => {
-                logger.error("Assistant error", error);
+            onError: (err) => {
+                logger.error("Assistant error", {
+                    err,
+                    message: "Error"
+                });
                 setHasFailed(true);
             },
         }),
