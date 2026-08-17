@@ -367,14 +367,6 @@ const WithdrawOldFlow = ({
 
             case 2:
                 if (amountError || !amount) break;
-                console.log(amount, vendorBalance)
-                if (vendorBalanceInUSD < 4) {
-                    setShowBalanceModal(true)
-                    break;
-                } else if (Number(String(amount)?.replaceAll(",", "")) >= vendorBalance) {
-                    setShowBalanceModal(true)
-                    break;
-                }
                 if (isExternalWithdrawal) {
                     if (showNotice) {
                         setStep(prev => prev + 1)
@@ -450,14 +442,8 @@ const WithdrawOldFlow = ({
         <>
             <ModalBody style={{ padding: step === 4 && confirmed && window.innerWidth < 450 ? "0" : "25px" }}>
                 <VendorBalanceModal
-                    currency={wallet.currency.code}
                     isOpen={showBalanceModal}
-                    sendingAmount={amount}
                     toggle={() => setShowBalanceModal(false)}
-                    vendorBalance={vendorBalance}
-                    vendorBalanceInUSD={vendorBalanceInUSD}
-                    vendorBalanceLoading={vendorBalanceLoading}
-                    sendingLimit={exchangeRate?.daily_receiving_limit_used || 0}
                 />
                 {
                     step === 1
@@ -584,6 +570,14 @@ const WithdrawOldFlow = ({
                         isExternalWithdrawal={isExternalWithdrawal}
                         vendor={getVendor()}
                         setAuthType={setCodeType}
+                        onBeforeConfirm={() => {
+                            const amt = Number(String(amount)?.replaceAll(",", ""))
+                            if (vendorBalanceInUSD < 4 || amt > vendorBalance) {
+                                setShowBalanceModal(true)
+                                return false
+                            }
+                            return true
+                        }}
                     />
                 }
                 {
