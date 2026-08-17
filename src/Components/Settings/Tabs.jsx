@@ -193,6 +193,9 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
             if (tab?.toLowerCase()?.includes("crypto")) {
                 setCurrentTab("Crypto Receiving Accounts")
             }
+            if (tab?.toLowerCase()?.includes("withdrawal")) {
+                setCurrentTab("Receiving Accounts")
+            }
         }
     }, [tab])
 
