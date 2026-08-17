@@ -6,6 +6,7 @@ import { ChatIcon, CloseIcon } from "./Icons";
 import { STARTER_PROMPTS } from "./knowledge/pages";
 import styles from "./styles.module.css";
 import { useNavigationTool } from "./useNavigationTool";
+import { logger } from "@sentry/react";
 
 const SESSION_ENDPOINT = "/api/chatkit/session";
 const BRAND_PRIMARY = "#5926f0";
@@ -76,7 +77,7 @@ const AssistantWidget = () => {
             // `chatkit.error` surfaces here — as a hook option, not a prop on
             // <ChatKit>, where it would just be a DOM error attribute.
             onError: ({ error }) => {
-                console.error("Assistant error", error);
+                logger.error("Assistant error", error);
                 setHasFailed(true);
             },
         }),
