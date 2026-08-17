@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Box, Modal, TextField, IconButton } from '@mui/material';
 import { X, User, Briefcase } from 'react-feather';
 import { useTranslation } from 'react-i18next';
@@ -12,6 +12,8 @@ const AddBeneficiaryModal = ({ open, handleClose, onSaveSuccess, beneficiaryToEd
     const { t } = useTranslation();
     const [loading, setLoading] = useState(false);
     const [beneficiaryType, setBeneficiaryType] = useState('individual');
+    const [phoneKey, setPhoneKey] = useState(0);
+    const prefillPhoneRef = useRef('');
     const [formData, setFormData] = useState({
         first_name: '',
         last_name: '',
@@ -27,17 +29,24 @@ const AddBeneficiaryModal = ({ open, handleClose, onSaveSuccess, beneficiaryToEd
     useEffect(() => {
         if (beneficiaryToEdit) {
             setBeneficiaryType(beneficiaryToEdit.beneficiary_type || 'individual');
+            const iso = beneficiaryToEdit.country_iso_code || '';
+            // Pass raw phone (with dial code) so CountryCode can strip it itself
+            const rawPhone = String(beneficiaryToEdit.phone || '');
             setFormData({
                 first_name: beneficiaryToEdit.first_name || '',
                 last_name: beneficiaryToEdit.last_name || '',
                 company_name: beneficiaryToEdit.company_name || '',
                 country_name: beneficiaryToEdit.country_name || '',
-                country_iso_code: beneficiaryToEdit.country_iso_code || '',
+                country_iso_code: iso,
                 city: beneficiaryToEdit.city || '',
                 address: beneficiaryToEdit.address || '',
                 email: beneficiaryToEdit.email || '',
-                phone: beneficiaryToEdit.phone || ''
+                phone: rawPhone
             });
+            // Store raw phone in ref so it survives PhoneInput's own setPhone('') on mount
+            prefillPhoneRef.current = rawPhone;
+            // Force PhoneInput to remount so firstTime/number state resets cleanly
+            setPhoneKey(prev => prev + 1);
         } else {
             setBeneficiaryType('individual');
             setFormData({
@@ -51,8 +60,11 @@ const AddBeneficiaryModal = ({ open, handleClose, onSaveSuccess, beneficiaryToEd
                 email: '',
                 phone: ''
             });
+            prefillPhoneRef.current = '';
+            setPhoneKey(prev => prev + 1);
         }
     }, [beneficiaryToEdit, open]);
+
 
     const handleChange = (field, value) => {
         setFormData(prev => ({ ...prev, [field]: value }));
@@ -150,6 +162,8 @@ const AddBeneficiaryModal = ({ open, handleClose, onSaveSuccess, beneficiaryToEd
             color: "#101828",
         },
     };
+
+    console.log(formData, "formData")
 
     return (
         <Modal open={open} onClose={handleClose} aria-labelledby="add-beneficiary-modal">
@@ -330,9 +344,9 @@ const AddBeneficiaryModal = ({ open, handleClose, onSaveSuccess, beneficiaryToEd
                             {t("Phone Number")} {beneficiaryType === 'individual' ? '*' : ''}
                         </label>
                         <PhoneInput
-                            key={`${beneficiaryToEdit?._id || 'new'}-${formData.phone || 'empty'}`}
+                            key={phoneKey}
                             country={formData.country_iso_code || formData.country_name}
-                            phone={formData.phone}
+                            phone={prefillPhoneRef.current}
                             disabled={isCountryDisabled}
                             setPhone={(val) => handleChange('phone', val)}
                             setCountry={(selected) => {
