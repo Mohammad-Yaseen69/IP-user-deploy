@@ -526,8 +526,9 @@ const Basic = ({ setCurrentTab }) => {
 
         const regex = getPostalCodeRegex(countryAlpha2);
 
+        console.log(regex, "regex")
         if (!regex) {
-            return false;
+            return true;
         }
 
         return regex.test(postalCode.trim());
