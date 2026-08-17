@@ -112,6 +112,7 @@
     border: none;
     outline: none;
     white-space: nowrap;
+
     &::placeholder {
         color: #bbb;
     }
@@ -348,6 +349,7 @@
     font-weight: 500;
     line-height: 1.45;
     color: #92400e;
+    text-transform: none;
 }
 
 .quoteTimerBox {
@@ -406,6 +408,7 @@
     from {
         transform: rotate(0deg);
     }
+
     to {
         transform: rotate(360deg);
     }
