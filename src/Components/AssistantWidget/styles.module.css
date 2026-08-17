@@ -1,0 +1,245 @@
+.root {
+    --assistant-primary: #5926f0;
+    --assistant-primary-dark: #4a1fce;
+    --assistant-surface: #ffffff;
+    --assistant-border: #e7e3f7;
+    --assistant-text-soft: #6b6880;
+
+    position: fixed;
+    right: 24px;
+    bottom: 24px;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 12px;
+    font-family: inherit;
+}
+
+@media (max-width: 1000px) {
+    .root {
+        right: 16px;
+        bottom: 96px;
+    }
+}
+
+.bubble {
+    width: 56px;
+    height: 56px;
+    border: none;
+    border-radius: 50%;
+    background: var(--assistant-primary);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 8px 24px rgba(89, 38, 240, 0.35);
+    transition: transform 0.18s ease, background 0.18s ease;
+}
+
+.bubble:hover {
+    background: var(--assistant-primary-dark);
+    transform: translateY(-2px);
+}
+
+.bubble:focus-visible {
+    outline: 3px solid rgba(89, 38, 240, 0.4);
+    outline-offset: 2px;
+}
+
+.bubble svg {
+    width: 26px;
+    height: 26px;
+}
+
+.panel {
+    width: 400px;
+    height: 600px;
+    max-height: calc(100vh - 140px);
+    background: var(--assistant-surface);
+    border: 1px solid var(--assistant-border);
+    border-radius: 18px;
+    box-shadow: 0 18px 50px rgba(23, 15, 60, 0.22);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    animation: rise 0.18s ease-out;
+}
+
+.panelHidden {
+    display: none;
+}
+
+@keyframes rise {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 480px) {
+    .panel {
+        width: calc(100vw - 32px);
+        height: calc(100vh - 190px);
+    }
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 16px;
+    background: var(--assistant-primary);
+    color: #fff;
+    flex-shrink: 0;
+}
+
+.headerTitle {
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 1.2;
+    margin: 0;
+}
+
+.headerSpacer {
+    flex: 1;
+}
+
+.headerBtn {
+    background: transparent;
+    border: none;
+    color: #fff;
+    opacity: 0.85;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+}
+
+.headerBtn:hover {
+    opacity: 1;
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.headerBtn svg {
+    width: 18px;
+    height: 18px;
+}
+
+.composerBar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 14px 10px;
+    background: var(--assistant-surface);
+    flex-shrink: 0;
+}
+
+.micBtn {
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+    border: 1px solid var(--assistant-border);
+    border-radius: 50%;
+    background: var(--assistant-surface);
+    color: var(--assistant-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.micBtn svg {
+    width: 16px;
+    height: 16px;
+}
+
+.micBtn:hover:not(:disabled) {
+    background: var(--assistant-muted, #f4f2fd);
+    border-color: var(--assistant-primary);
+}
+
+.micBtn:disabled {
+    opacity: 0.5;
+    cursor: default;
+}
+
+.micBtn:focus-visible {
+    outline: 2px solid var(--assistant-primary);
+    outline-offset: 2px;
+}
+
+.recording {
+    color: #fff;
+    background: #e04343;
+    border-color: #e04343;
+    animation: pulse 1.4s ease-in-out infinite;
+}
+
+.recording:hover:not(:disabled) {
+    background: #c93a3a;
+    border-color: #c93a3a;
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        box-shadow: 0 0 0 0 rgba(224, 67, 67, 0.5);
+    }
+
+    50% {
+        box-shadow: 0 0 0 6px rgba(224, 67, 67, 0);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .recording {
+        animation: none;
+    }
+}
+
+.voiceHint {
+    font-size: 11px;
+    color: var(--assistant-text-soft);
+    line-height: 1.3;
+}
+
+.voiceHintError {
+    font-size: 11px;
+    color: #a33;
+    line-height: 1.3;
+}
+
+.chat {
+    flex: 1;
+    min-height: 0;
+    width: 100%;
+    display: block;
+}
+
+.errorState {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 24px;
+    text-align: center;
+    font-size: 13.5px;
+}
+
+.errorHint {
+    color: var(--assistant-text-soft);
+    font-size: 12px;
+    margin: 0;
+}
