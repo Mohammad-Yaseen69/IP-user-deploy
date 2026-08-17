@@ -1,16 +1,15 @@
-import styles from "./styles/index.module.css"
+import axios from "axios"
+import { useContext, useEffect, useState } from "react"
 import { useTranslation } from 'react-i18next'
+import { BsInfoCircleFill } from "react-icons/bs"
+import { Button } from "reactstrap"
+import { UserContext } from "../../../Context/UserContext"
+import { decryptData } from "../../../Helper/EssentilaMethods/Decryption"
+import { usePermission } from "../../../hooks/GeneralUse/usePermission"
+import allCountries from "../../PaymentsNewer/CountriesData.json"
 import WithdrawalItem from "./WithdrawalItem"
 import add_wd from "./files/add_wd.svg"
-import { Button } from "reactstrap"
-import { BsInfoCircleFill } from "react-icons/bs"
-import React, { useContext, useEffect, useLayoutEffect, useState } from "react"
-import { decryptData } from "../../../Helper/EssentilaMethods/Decryption"
-import axios from "axios"
-import { UserContext } from "../../../Context/UserContext"
-import allCountries from "../../PaymentsNewer/CountriesData.json"
-import AddWithdrawalsModal from "../../AddWithdrawa;sModal"
-import { usePermission } from "../../../hooks/GeneralUse/usePermission"
+import styles from "./styles/index.module.css"
 
 const WithdrawalsNew = () => {
     const { t } = useTranslation()

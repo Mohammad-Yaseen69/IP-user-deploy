@@ -137,7 +137,9 @@ const ReviewStep = ({ amount, feeDetails, selectedIban, onRefreshFee, isRefreshi
             <div className={styles.warningNoticeBox}>
                 <WarningIcon />
                 <span className={styles.warningNoticeText}>
-                    {t("The Fee And The Received Amount May Vary a Little Depending Upon The Change in Exchange Rate at the Time of Execution.")}
+                    {t(
+                        "The fee and the received amount may vary a little depending upon the change in exchange rate at the time of execution."
+                    )}
                 </span>
             </div>
         </div>
