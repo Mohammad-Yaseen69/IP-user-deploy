@@ -524,14 +524,8 @@ const Basic = ({ setCurrentTab }) => {
             return false;
         }
 
-        const regex = getPostalCodeRegex(countryAlpha2);
-
-        console.log(regex, "regex")
-        if (!regex) {
-            return true;
-        }
-
-        return regex.test(postalCode.trim());
+        
+        return true
     }, [postalCode, countryAlpha2, isAfricanCountry]);
 
     console.log({
