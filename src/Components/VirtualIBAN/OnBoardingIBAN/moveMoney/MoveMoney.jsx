@@ -15,6 +15,7 @@ import {
     Search
 } from 'react-feather';
 import SepaTransfer from '../../SendMoney/SepaTransfer';
+import SwiftTransfer from '../../SendMoney/SwiftTransfer';
 import CryptoTopupModal from '../../CryptoTopupModal';
 import { useSyncVirtualIbanBalance, useVirtualIbans } from '../../../../hooks/useVirtualIban';
 import { asVirtualIbanArray } from '../../utils/virtualIban';
@@ -27,6 +28,7 @@ const MoveMoney = () => {
     const { t } = useTranslation();
     const width = useWindowWidth();
     const [showSepaPage, setShowSepaPage] = useState(false);
+    const [showSwiftPage, setShowSwiftPage] = useState(false);
     const [showCryptoTopupModal, setShowCryptoTopupModal] = useState(false);
     const navigate = useNavigate();
     const {
@@ -74,25 +76,39 @@ const MoveMoney = () => {
                     showSepaPage ?
                         <>
                             <div className={styles.headerTitle}>
-
                                 <div className={styles.navigationRow}>
-                                    <button className={styles.backBtn}
-                                        onClick={() => setShowSepaPage(false)}
-                                    >
+                                    <button className={styles.backBtn} onClick={() => setShowSepaPage(false)}>
                                         <ArrowLeft size={16} /> {t("Back")}
                                     </button>
                                     <span className={styles.breadcrumb}>
                                         {t("My virtual bank")} &gt; <span className={styles.breadcrumbActive}>{t("Move money")}</span>
                                     </span>
                                 </div>
-
-
                             </div>
                             <SepaTransfer
                                 isPage={true}
                                 selectedIban={selectedIban}
                                 availableBalance={currentBalance}
                                 toggle={() => setShowSepaPage(false)}
+                            />
+                        </>
+                    : showSwiftPage ?
+                        <>
+                            <div className={styles.headerTitle}>
+                                <div className={styles.navigationRow}>
+                                    <button className={styles.backBtn} onClick={() => setShowSwiftPage(false)}>
+                                        <ArrowLeft size={16} /> {t("Back")}
+                                    </button>
+                                    <span className={styles.breadcrumb}>
+                                        {t("My virtual bank")} &gt; <span className={styles.breadcrumbActive}>{t("Move money")}</span>
+                                    </span>
+                                </div>
+                            </div>
+                            <SwiftTransfer
+                                isPage={true}
+                                selectedIban={selectedIban}
+                                availableBalance={currentBalance}
+                                toggle={() => setShowSwiftPage(false)}
                             />
                         </>
 
@@ -144,26 +160,26 @@ const MoveMoney = () => {
                                             </div>
                                         </div>
                                     </div>
-                                    <Tooltip title="Coming Soon" arrow>
-
-                                        <div className={styles.card}>
-                                            <div className={`${styles.iconBox} ${styles.bgYellow}`}>
-                                                <Globe size={20} />
-                                            </div>
-                                            <div className={styles.cardBody}>
-
-                                                <h3 className={styles.cardTitle}>{t("SWIFT International")}</h3>
-                                                <p className={styles.cardDesc}>
-                                                    {t("Worldwide bank transfers in USD, EUR, GBP, CHF and more, with country-specific routing.")}
-                                                </p>
-                                                <div className={styles.badgeRow}>
-                                                    <span className={`${styles.tag} ${styles.tagBlue}`}>USD, EUR, GBP</span>
-                                                    <span className={`${styles.tag} ${styles.tagGray}`}>1-5 Days</span>
-                                                    <span className={`${styles.tag} ${styles.tagGray}`}>Worldwide</span>
-                                                </div>
+                                    <div
+                                        className={styles.card}
+                                        onClick={() => setShowSwiftPage(true)}
+                                        style={{ cursor: "pointer" }}
+                                    >
+                                        <div className={`${styles.iconBox} ${styles.bgYellow}`}>
+                                            <Globe size={20} />
+                                        </div>
+                                        <div className={styles.cardBody}>
+                                            <h3 className={styles.cardTitle}>{t("SWIFT International")}</h3>
+                                            <p className={styles.cardDesc}>
+                                                {t("Worldwide bank transfers in USD, EUR, GBP, CHF and more, with country-specific routing.")}
+                                            </p>
+                                            <div className={styles.badgeRow}>
+                                                <span className={`${styles.tag} ${styles.tagBlue}`}>USD, EUR, GBP</span>
+                                                <span className={`${styles.tag} ${styles.tagGray}`}>1-5 Days</span>
+                                                <span className={`${styles.tag} ${styles.tagGray}`}>Worldwide</span>
                                             </div>
                                         </div>
-                                    </Tooltip>
+                                    </div>
                                     <Tooltip title="Coming Soon" arrow>
 
                                         <div className={`${styles.card} ${styles.cardPurple}`}>
