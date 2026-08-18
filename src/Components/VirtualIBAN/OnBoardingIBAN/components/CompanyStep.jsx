@@ -72,6 +72,12 @@ const CompanyStep = ({ onNext, onBack, userType, data = {} }) => {
     })
 
     useEffect(() => {
+        window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+        document.body.scrollTop = 0;
+        document.documentElement.scrollTop = 0;
+    }, []);
+
+    useEffect(() => {
         const rawDate = userDetails?.company?.date_of_incorporation || data.dateOfIncorporation || '';
         if (rawDate) {
             const formatted = formatDateForInput(rawDate);

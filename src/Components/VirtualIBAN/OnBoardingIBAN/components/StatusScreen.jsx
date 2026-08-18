@@ -121,6 +121,12 @@ const StatusScreen = ({ status = 'submitted', ibanNumber, companyName, onAction,
         mutationFn: (payload) => getFeeAmount({ payload, authHeader }),
     })
 
+    React.useEffect(() => {
+        window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+        document.body.scrollTop = 0;
+        document.documentElement.scrollTop = 0;
+    }, []);
+
     const addPartnerHandler = async () => {
         if (!isEmailValid(partnerEmail)) {
             toast.error(t("Please enter a valid email address."));
