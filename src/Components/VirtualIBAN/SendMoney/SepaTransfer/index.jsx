@@ -124,7 +124,11 @@ const SepaAmountStep = ({ amount, setAmount, availableBalance, currencyCode, sou
 
     return (
         <div className={styles.stepStack}>
-            <AmountStep amount={amount} setAmount={setAmount} currencyCode={currencyCode} availableBalance={sourceBalance} label="Amount to send" />
+            <AmountStep amount={amount} setAmount={setAmount} currencyCode={currencyCode}
+                availableBalance={sourceBalance} label="Amount to send"
+                width="100%"
+
+            />
 
             <div>
                 <div className={styles.sectionLabel}>{t("From")}</div>
