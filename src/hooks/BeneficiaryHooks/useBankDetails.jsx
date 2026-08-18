@@ -9,6 +9,7 @@ const useBankDetails = ({ accNumType, setFormData, handleBankExtraChange, bankEx
     const [bankCountry, setBankCountry] = useState("")
     const [bankDetailsError, setBankDetailsError] = useState("")
     const [bankCountryCode, setBankCountryCode] = useState("")
+    const [bankCountryIsoCode, setBankCountryIsoCode] = useState("")
     const [isValidIban, setIsValidIban] = useState(true)
     const [ibanSwift, setIbanSwift] = useState("")
     const [debouncedValue, setDebouncedValue] = useState("")
@@ -67,6 +68,7 @@ const useBankDetails = ({ accNumType, setFormData, handleBankExtraChange, bankEx
             }
             setBankCountry("")
             setBankCountryCode("")
+            setBankCountryIsoCode("")
             setIsValidIban(true)
             setError ? setError("") : setBankDetailsError("")
         }
@@ -160,7 +162,13 @@ const useBankDetails = ({ accNumType, setFormData, handleBankExtraChange, bankEx
             if (countryNameRaw) {
                 setBankCountry(countryNameRaw[0].toUpperCase() + countryNameRaw.slice(1).toLowerCase())
             }
-            setBankCountryCode(decrypted?.bicDetails?.structured_address?.country_code || decrypted?.structured_address?.country_code || "")
+            const extractedCode = decrypted?.bicDetails?.structured_address?.country_code 
+                || decrypted?.structured_address?.country_code 
+                || decrypted?.ibanDetails?.country_iso_code 
+                || (accNumType === "IBAN" ? debouncedValue?.slice(0, 2)?.toUpperCase() : debouncedValue?.slice(4, 6)?.toUpperCase())
+                || ""
+            setBankCountryCode(extractedCode)
+            setBankCountryIsoCode(extractedCode)
             setIsValidIban(true)
         }
     }, [rawData, accNumType, alpha3, countryName, setError, setFormData, queryMetadata, bankNameKey, branchNameKey, bankBranchStreetKey, bankCityKey, bankProvinceKey, bankPostalCodeKey])
@@ -202,6 +210,7 @@ const useBankDetails = ({ accNumType, setFormData, handleBankExtraChange, bankEx
             }
             setBankCountry("")
             setBankCountryCode("")
+            setBankCountryIsoCode("")
             setIsValidIban(false)
         }
     }, [queryError, setError, setFormData, queryMetadata, bankNameKey, branchNameKey, bankBranchStreetKey, bankCityKey, bankProvinceKey, bankPostalCodeKey])
@@ -227,12 +236,14 @@ const useBankDetails = ({ accNumType, setFormData, handleBankExtraChange, bankEx
         getBankDetails,
         bankCountry,
         bankCountryCode,
+        bankCountryIsoCode,
         bankDetailsError,
         isValidIban,
         ibanSwift,
         setIbanSwift,
         setBankDetailsError,
         setBankCountryCode,
+        setBankCountryIsoCode,
         setBankCountry,
         isFetchingBank: isFetching
     }

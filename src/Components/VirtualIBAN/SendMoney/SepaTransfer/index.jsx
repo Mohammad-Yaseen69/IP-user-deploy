@@ -17,6 +17,8 @@ import {
     goNext,
     isSidebarStepActive,
     isSidebarStepCompleted,
+    MIN_AMOUNT,
+    MAX_AMOUNT,
     PURPOSE_OPTIONS,
     SEPA_TRANSFER_SPEEDS,
     SIDEBAR_STEPS,
@@ -124,7 +126,7 @@ const SepaAmountStep = ({ amount, setAmount, availableBalance, currencyCode, sou
 
     return (
         <div className={styles.stepStack}>
-            <AmountStep amount={amount} setAmount={setAmount} currencyCode={currencyCode} availableBalance={sourceBalance} label="Amount to send" />
+            <AmountStep amount={amount} setAmount={setAmount} currencyCode={currencyCode} availableBalance={sourceBalance} label="Amount to send" min={MIN_AMOUNT} max={MAX_AMOUNT} />
 
             <div>
                 <div className={styles.sectionLabel}>{t("From")}</div>
@@ -543,7 +545,7 @@ const SepaTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, i
     const { t } = useTranslation()
     const width = useWindowWidth()
     const navigate = useNavigate()
-    const { beneficiaries, userDetails, setProfileLockTime, getUserBeneficiaries } = useContext(UserContext)
+    const { beneficiaries: nonIbanBen, userDetails, setProfileLockTime, getUserBeneficiaries, IBANBeneficiaries } = useContext(UserContext)
     const currencyCode = selectedIban?.currency || "EUR"
     const sourceAvailableBalance = getSourceBalance(availableBalance, selectedIban)
     const getDefaultAuthType = () => (userDetails?.tfa ? "authenticator" : "sms")
@@ -581,6 +583,12 @@ const SepaTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, i
     const isProcessing = payoutFee.isPending || isSendingOtp
     const disabled = getDisabledState(currentStep, machineData) || isProcessing
     const showFooter = currentStep !== STEPS.OTP && currentStep !== STEPS.DONE
+
+
+    const beneficiaries = useMemo(() => {
+        const allBeneficiaries = [...(nonIbanBen || []), ...(IBANBeneficiaries || [])]
+        return allBeneficiaries
+    }, [nonIbanBen, IBANBeneficiaries])
 
     const resetState = () => {
         setCurrentStep(STEPS.AMOUNT)
@@ -738,7 +746,7 @@ const SepaTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, i
         }
     }
     const content = (
-        <div className={styles.modalLayout} style={{ flexDirection: width < 1000 ? "column" : "row" }}>
+        <div className={styles.modalLayout} style={{ flexDirection: width < 1000 ? "column" : "row", width: "100%" }}>
             <aside className={styles.leftPanel}>
                 <div>
                     <div className={styles.flowHeader}><div className={styles.flowIcon}><Send size={18} /></div><div><h2>{t("SEPA Transfer")}</h2><p>{t("European Bank Transfer - EUR only")}</p></div></div>
@@ -773,7 +781,7 @@ const SepaTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, i
     return (
         <>
             {isPage ? (
-                <div className={styles.pageContainer}>
+                <div style={{width: "100%"}} className={styles.pageContainer}>
                     {content}
                 </div>
             ) : (

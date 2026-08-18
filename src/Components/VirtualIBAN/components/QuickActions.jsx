@@ -59,7 +59,8 @@ const QuickActions = ({ selectedIban }) => {
         "yousuf_",
         "khalid222",
         "business_ininin",
-        "businessify"
+        "businessify",
+        "compadsaf"
     ];
 
     const isCryptoTopupAllowed = allowedUsernames.includes(
@@ -109,7 +110,7 @@ const QuickActions = ({ selectedIban }) => {
                 return;
 
             case 7:
-                navigate("/beneficiaries");
+                navigate("/virtual-IBAN/beneficiaries-virtual");
                 return;
             case 2:
                 navigate("/onboarding-IBAN/moneymove");
