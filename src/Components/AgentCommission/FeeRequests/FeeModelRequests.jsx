@@ -104,9 +104,13 @@ const FeeModelRequests = () => {
         }
     };
 
-    const copyToClipboard = (text) => {
+    const copyToClipboard = (text, type = "code") => {
         navigator.clipboard.writeText(text);
-        toast.info(t("Copied referral code: ") + text);
+        if (type === "link") {
+            toast.success(t("Signup link copied to clipboard!"));
+        } else {
+            toast.info(t("Copied referral code: ") + text);
+        }
     };
 
     return (
@@ -240,23 +244,44 @@ const FeeModelRequests = () => {
                                                     </div>
                                                 </div>
 
-                                                {req.status === 'approved' && req.model_code && (
-                                                    <div style={{ background: '#EEF2FF', padding: '14px 16px', borderRadius: '8px', border: '1px solid #C7D2FE', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                                        <div>
-                                                            <div style={{ fontSize: '12px', color: '#4338CA', fontWeight: 600 }}>
-                                                                {t("CLIENT REFERRAL CODE")}
+                                                 {req.status === 'approved' && req.model_code && (
+                                                    <div style={{ background: '#EEF2FF', padding: '14px 16px', borderRadius: '8px', border: '1px solid #C7D2FE', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                                            <div>
+                                                                <div style={{ fontSize: '12px', color: '#4338CA', fontWeight: 600 }}>
+                                                                    {t("CLIENT REFERRAL CODE")}
+                                                                </div>
+                                                                <div style={{ fontSize: '18px', fontWeight: 800, color: '#4F46E5', letterSpacing: '0.5px' }}>
+                                                                    {req.model_code}
+                                                                </div>
                                                             </div>
-                                                            <div style={{ fontSize: '18px', fontWeight: 800, color: '#4F46E5', letterSpacing: '0.5px' }}>
-                                                                {req.model_code}
-                                                            </div>
+                                                            <Button
+                                                                size="sm"
+                                                                style={{ background: '#4F46E5', border: 'none', display: 'flex', alignItems: 'center', gap: '6px' }}
+                                                                onClick={() => copyToClipboard(req.model_code, "code")}
+                                                            >
+                                                                <Copy size={14} /> {t("Copy Code")}
+                                                            </Button>
                                                         </div>
-                                                        <Button
-                                                            size="sm"
-                                                            style={{ background: '#4F46E5', border: 'none', display: 'flex', alignItems: 'center', gap: '6px' }}
-                                                            onClick={() => copyToClipboard(req.model_code)}
-                                                        >
-                                                            <Copy size={14} /> {t("Copy Code")}
-                                                        </Button>
+
+                                                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid #C7D2FE', paddingTop: '10px' }}>
+                                                            <div style={{ overflow: 'hidden', maxWidth: '70%' }}>
+                                                                <div style={{ fontSize: '11px', color: '#4338CA', fontWeight: 600 }}>
+                                                                    {t("FULL SIGNUP LINK")}
+                                                                </div>
+                                                                <div style={{ fontSize: '12px', fontWeight: 600, color: '#3730A3', wordBreak: 'break-all', fontFamily: 'monospace' }}>
+                                                                    {`${window.location.origin}/signup/${req.model_code}`}
+                                                                </div>
+                                                            </div>
+                                                            <Button
+                                                                size="sm"
+                                                                outline
+                                                                style={{ color: '#4F46E5', borderColor: '#4F46E5', display: 'flex', alignItems: 'center', gap: '6px', whiteSpace: 'nowrap' }}
+                                                                onClick={() => copyToClipboard(`${window.location.origin}/signup/${req.model_code}`, "link")}
+                                                            >
+                                                                <Copy size={14} /> {t("Copy Link")}
+                                                            </Button>
+                                                        </div>
                                                     </div>
                                                 )}
 

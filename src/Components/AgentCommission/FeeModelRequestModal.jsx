@@ -100,9 +100,13 @@ const FeeModelRequestModal = ({ isOpen, toggle }) => {
         }
     };
 
-    const copyToClipboard = (text) => {
+    const copyToClipboard = (text, type = "code") => {
         navigator.clipboard.writeText(text);
-        toast.info(t("Copied code to clipboard: ") + text);
+        if (type === "link") {
+            toast.success(t("Signup link copied to clipboard!"));
+        } else {
+            toast.info(t("Copied code to clipboard: ") + text);
+        }
     };
 
     return (
@@ -223,20 +227,43 @@ const FeeModelRequestModal = ({ isOpen, toggle }) => {
                                             <strong>{t("Pricing Summary")}:</strong> {req.pricing_summary || 'Custom Schedule'}
                                         </div>
 
-                                        {req.status === 'approved' && req.model_code && (
-                                            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', background: '#EEF2FF', padding: '10px 14px', borderRadius: '8px', border: '1px solid #C7D2FE' }}>
-                                                <div style={{ fontSize: '13px', color: '#3730A3', fontWeight: 600 }}>
-                                                    {t("Assigned Referral Code")}:
+                                         {req.status === 'approved' && req.model_code && (
+                                            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', background: '#EEF2FF', padding: '12px 14px', borderRadius: '8px', border: '1px solid #C7D2FE' }}>
+                                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '8px' }}>
+                                                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                                        <div style={{ fontSize: '13px', color: '#3730A3', fontWeight: 600 }}>
+                                                            {t("Assigned Referral Code")}:
+                                                        </div>
+                                                        <Badge color="primary" style={{ fontSize: '13px', padding: '6px 10px', letterSpacing: '0.5px' }}>
+                                                            {req.model_code}
+                                                        </Badge>
+                                                    </div>
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => copyToClipboard(req.model_code, "code")}
+                                                        style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#4F46E5', display: 'flex', alignItems: 'center', gap: '4px', fontSize: '12px', fontWeight: 600 }}
+                                                    >
+                                                        <Copy size={14} /> {t("Copy Code")}
+                                                    </button>
                                                 </div>
-                                                <Badge color="primary" style={{ fontSize: '13px', padding: '6px 10px', letterSpacing: '0.5px' }}>
-                                                    {req.model_code}
-                                                </Badge>
-                                                <button
-                                                    onClick={() => copyToClipboard(req.model_code)}
-                                                    style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#4F46E5', display: 'flex', alignItems: 'center', gap: '4px', fontSize: '12px', fontWeight: 600 }}
-                                                >
-                                                    <Copy size={14} /> {t("Copy Code")}
-                                                </button>
+
+                                                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '8px', borderTop: '1px solid #C7D2FE', paddingTop: '8px' }}>
+                                                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', overflow: 'hidden', maxWidth: '70%' }}>
+                                                        <div style={{ fontSize: '13px', color: '#3730A3', fontWeight: 600, whiteSpace: 'nowrap' }}>
+                                                            {t("Full Signup Link")}:
+                                                        </div>
+                                                        <span style={{ fontSize: '12px', color: '#4338CA', fontFamily: 'monospace', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}>
+                                                            {`${window.location.origin}/signup/${req.model_code}`}
+                                                        </span>
+                                                    </div>
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => copyToClipboard(`${window.location.origin}/signup/${req.model_code}`, "link")}
+                                                        style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#4F46E5', display: 'flex', alignItems: 'center', gap: '4px', fontSize: '12px', fontWeight: 600, whiteSpace: 'nowrap' }}
+                                                    >
+                                                        <Copy size={14} /> {t("Copy Link")}
+                                                    </button>
+                                                </div>
                                             </div>
                                         )}
 
