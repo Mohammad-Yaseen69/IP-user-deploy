@@ -196,11 +196,11 @@ const ActivateAccount = ({
           </div>
 
           <div
-          style={{
-            display: "flex",
-            alignItems:"flex-start",
-            justifyContent: "space-between"
-          }}
+            style={{
+              display: "flex",
+              alignItems: "flex-start",
+              justifyContent: "space-between"
+            }}
           >
             <div style={{ marginTop: "10px" }}>
               <label
@@ -490,8 +490,8 @@ const ActivateAccount = ({
           {loadingRates
             ? t("Calculating...")
             : isInsufficient
-            ? t("Confirm & Activate IBAN")
-            : `${t("Pay")} ${feeDetails?.currency !== "EUR" ? `${feeDetails?.convertedAmount} ${feeDetails?.currency}` : `€${feeDetails?.baseAmount || 500}.00`}`}
+              ? t("Confirm & Activate IBAN")
+              : `${t("Pay")} ${feeDetails?.currency !== "EUR" ? `${feeDetails?.convertedAmount} ${feeDetails?.currency}` : `€${feeDetails?.baseAmount || 500}.00`}`}
         </button>
       </div>
     </div>
