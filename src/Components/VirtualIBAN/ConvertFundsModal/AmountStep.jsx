@@ -12,7 +12,9 @@ import {
 } from "../utils/amount"
 import styles from "./convertFunds.module.scss"
 
-const AmountStep = ({ amount, setAmount, currencyCode = "EUR", availableBalance = 0, label = "Amount to convert" }) => {
+const AmountStep = ({ amount, setAmount, currencyCode = "EUR", availableBalance = 0,
+    label = "Amount to convert", width = "auto",
+}) => {
     const { t } = useTranslation()
     const numericAmount = getAmountNumber(amount)
     const sourceBalance = getAmountNumber(availableBalance)
@@ -34,6 +36,7 @@ const AmountStep = ({ amount, setAmount, currencyCode = "EUR", availableBalance 
                     <input
                         className={styles.amountInput}
                         type="text"
+                        style={{ width }}
                         value={amount}
                         onChange={(event) => handleAmountInputChange(event, setAmount)}
                         onKeyUp={(event) => handleAmountInputKeyUp(event, setAmount)}

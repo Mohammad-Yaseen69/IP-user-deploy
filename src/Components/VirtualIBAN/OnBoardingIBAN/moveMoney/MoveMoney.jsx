@@ -126,14 +126,14 @@ const MoveMoney = () => {
                                 <div className={styles.sectionLabel}>{t("Send money out")} <span>{t("Instant, free transfers between InstaPay accounts")}</span></div>
                                 <div className={styles.cardsGrid3}>
 
-                                    <div className={styles.card} onClick={() => setShowSepaPage(true)}
+                                    <div className={`${styles.card} ${styles.cardPurple}`} onClick={() => setShowSepaPage(true)}
                                         style={{ cursor: "pointer" }}
                                     >
                                         <div className={`${styles.iconBox} ${styles.bgBlue}`}>
                                             <Compass size={20} />
                                         </div>
                                         <div className={styles.cardBody}>
-                                            <h3 className={styles.cardTitle}>{t("SEPA Transfer")}</h3>
+                                            <h3 className={styles.cardTitleWhite}>{t("SEPA Transfer")}</h3>
                                             <p className={styles.cardDesc}>
                                                 {t("European bank transfers in euro — fast, and low-cost across 30+ SEPA countries.")}
                                             </p>
@@ -157,7 +157,7 @@ const MoveMoney = () => {
                                                     {t("Worldwide bank transfers in USD, EUR, GBP, CHF and more, with country-specific routing.")}
                                                 </p>
                                                 <div className={styles.badgeRow}>
-                                                    <span className={`${styles.tag} ${styles.tagBlue}`}>USD, EUR, GBP</span>
+                                                    <span className={`${styles.tag} ${styles.tagGray}`}>USD, EUR, GBP</span>
                                                     <span className={`${styles.tag} ${styles.tagGray}`}>1-5 Days</span>
                                                     <span className={`${styles.tag} ${styles.tagGray}`}>Worldwide</span>
                                                 </div>
@@ -166,19 +166,19 @@ const MoveMoney = () => {
                                     </Tooltip>
                                     <Tooltip title="Coming Soon" arrow>
 
-                                        <div className={`${styles.card} ${styles.cardPurple}`}>
-                                            <div className={`${styles.iconBox} ${styles.bgWhiteTrans}`}>
-                                                <Briefcase size={20} />
+                                        <div className={`${styles.card} `}>
+                                            <div className={`${styles.iconBox} ${styles.bgPurple}`}>
+                                                <Briefcase size={20} color='white' />
                                             </div>
                                             <div className={styles.cardBody}>
-                                                <h3 className={styles.cardTitleWhite}>{t("Global Remittance Hub")}</h3>
-                                                <p className={styles.cardDescWhite}>
+                                                <h3 className={styles.cardTitle}>{t("Global Remittance Hub")}</h3>
+                                                <p className={styles.cardDesc}>
                                                     {t("Pay to bank account, mobile money, wallet or cash pickup — country-adaptive, powered by Thunes.")}
                                                 </p>
                                                 <div className={styles.badgeRow}>
-                                                    <span className={`${styles.tag} ${styles.tagWhite}`}>Worldwide</span>
-                                                    <span className={`${styles.tag} ${styles.tagWhite}`}>Fast lookup</span>
-                                                    <span className={`${styles.tag} ${styles.tagWhite}`}>Country-adaptive</span>
+                                                    <span className={`${styles.tag} ${styles.tagGray}`}>Worldwide</span>
+                                                    <span className={`${styles.tag} ${styles.tagGray}`}>Fast lookup</span>
+                                                    <span className={`${styles.tag} ${styles.tagGray}`}>Country-adaptive</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -258,7 +258,7 @@ const MoveMoney = () => {
                                 </div>
                             </div>
 
-                            
+
                         </>
                 }
 
