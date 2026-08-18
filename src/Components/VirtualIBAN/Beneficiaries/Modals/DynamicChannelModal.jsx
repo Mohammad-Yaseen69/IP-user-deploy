@@ -1,11 +1,13 @@
 import { Box, FormControl, IconButton, MenuItem, Modal, Select, TextField } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ArrowLeft, Info, X } from 'react-feather';
 import { useTranslation } from 'react-i18next';
 import styles from './DynamicChannelModal.module.css';
+import useBankDetails from '../../../../hooks/BeneficiaryHooks/useBankDetails';
 import useChannels from '../../../../hooks/BeneficiaryHooks/useChannels';
 import { apiWrapper } from '../../../../utils/Functions/apiWrapper';
 import { toast } from 'react-toastify';
+import PhoneInput from '../../../PhoneInput';
 
 const DynamicChannelModal = ({ open, handleClose, beneficiaryData, onSaveSuccess }) => {
     const { t } = useTranslation();
@@ -13,14 +15,30 @@ const DynamicChannelModal = ({ open, handleClose, beneficiaryData, onSaveSuccess
     const [channelType, setChannelType] = useState('bank');
     const [submitting, setSubmitting] = useState(false);
 
-    // Bank States
-    const [iban, setIban] = useState('');
-    const [swift, setSwift] = useState('');
-    const [bankName, setBankName] = useState('');
-    const [branchName, setBranchName] = useState('');
-    const [bankCity, setBankCity] = useState('');
-    const [branchStreet, setBranchStreet] = useState('');
-    const [accountHolderName, setAccountHolderName] = useState('');
+    // Bank States & Identifier Selector
+    const [accNumType, setAccNumType] = useState('IBAN'); // 'IBAN' or 'BIC'
+    const [bankError, setBankError] = useState('');
+    const [bankFormState, setBankFormState] = useState({
+        iban: '',
+        swift: '',
+        bank_name: '',
+        branch_name: '',
+        bank_branch_street: '',
+        bank_city: '',
+        bank_account_number: '',
+        account_holder_name: ''
+    });
+
+    // Wire useBankDetails hook
+    const { getBankDetails, isFetchingBank, bankDetailsError } = useBankDetails({
+        accNumType,
+        setFormData: setBankFormState,
+        alpha3: beneficiaryData?.country_iso_code,
+        countryName: beneficiaryData?.country_name,
+        setError: setBankError,
+        debounceMs: 600,
+        bypassCountryCheck: true
+    });
 
     // Crypto States
     const [cryptoNetwork, setCryptoNetwork] = useState('ethereum');
@@ -30,6 +48,8 @@ const DynamicChannelModal = ({ open, handleClose, beneficiaryData, onSaveSuccess
     const [mobileProvider, setMobileProvider] = useState('');
     const [walletName, setWalletName] = useState('');
     const [mobileNumber, setMobileNumber] = useState('');
+    const [mobilePhoneKey, setMobilePhoneKey] = useState(0);
+    const mobilePhonePrefillRef = useRef('');
 
     // Wire useChannels for Mobile Wallet payers
     const { mobileProviders } = useChannels({
@@ -38,22 +58,29 @@ const DynamicChannelModal = ({ open, handleClose, beneficiaryData, onSaveSuccess
     });
 
     useEffect(() => {
-        setIban('');
-        setSwift('');
-        setBankName('');
-        setBranchName('');
-        setBankCity('');
-        setBranchStreet('');
-        setAccountHolderName('');
+        setBankError('');
+        setBankFormState({
+            iban: '',
+            swift: '',
+            bank_name: '',
+            branch_name: '',
+            bank_branch_street: '',
+            bank_city: '',
+            bank_account_number: '',
+            account_holder_name: ''
+        });
         setWalletAddress('');
         setMobileNumber('');
         setMobileProvider('');
         setWalletName('');
+        mobilePhonePrefillRef.current = '';
+        setMobilePhoneKey(prev => prev + 1);
     }, [channelType, open, beneficiaryData]);
 
     useEffect(() => {
         if (mobileProviders && mobileProviders.length > 0 && !mobileProvider) {
-            setMobileProvider(mobileProviders[0]?.id || mobileProviders[0]?.name || '');
+            // Force id to string — backend expects string, p.id may be a number
+            setMobileProvider(String(mobileProviders[0]?.id || mobileProviders[0]?.name || ''));
             setWalletName(mobileProviders[0]?.name || '');
         }
     }, [mobileProviders]);
@@ -86,23 +113,24 @@ const DynamicChannelModal = ({ open, handleClose, beneficiaryData, onSaveSuccess
         let channelPayload = { channel_type: channelType };
 
         if (channelType === 'bank') {
-            if (!iban || !iban.trim()) {
-                toast.error(t("IBAN / Account Number is required"));
+            const identifier = accNumType === 'IBAN' ? bankFormState.iban : bankFormState.swift;
+            if (!identifier || !identifier.trim()) {
+                toast.error(accNumType === 'IBAN' ? t("IBAN is required") : t("SWIFT / BIC is required"));
                 return;
             }
-            if (!bankName || !bankName.trim()) {
+            if (!bankFormState.bank_name || !bankFormState.bank_name.trim()) {
                 toast.error(t("Bank Name is required"));
                 return;
             }
             channelPayload.bank_details = {
-                iban: iban.trim(),
-                swift_code: swift.trim(),
-                account_number: iban.trim(),
-                name: bankName.trim(),
-                branch_name: branchName.trim(),
-                city: bankCity.trim(),
-                branch_street: branchStreet.trim(),
-                account_holder_name: accountHolderName.trim() || `${beneficiaryData?.first_name || ''} ${beneficiaryData?.last_name || ''}`.trim() || beneficiaryData?.company_name || ''
+                iban: bankFormState.iban?.trim() || '',
+                swift_code: bankFormState.swift?.trim() || '',
+                account_number: bankFormState.bank_account_number?.trim() || bankFormState.iban?.trim() || identifier.trim(),
+                name: bankFormState.bank_name.trim(),
+                branch_name: (bankFormState.branch_name || '').trim(),
+                city: (bankFormState.bank_city || '').trim(),
+                branch_street: (bankFormState.bank_branch_street || '').trim(),
+                account_holder_name: (bankFormState.account_holder_name || `${beneficiaryData?.first_name || ''} ${beneficiaryData?.last_name || ''}`.trim() || beneficiaryData?.company_name || '').trim()
             };
         } else if (channelType === 'crypto') {
             if (!walletAddress || !walletAddress.trim()) return toast.error(t("Wallet address is required"));
@@ -113,8 +141,9 @@ const DynamicChannelModal = ({ open, handleClose, beneficiaryData, onSaveSuccess
         } else if (channelType === 'mobile_wallet') {
             if (!mobileNumber || !mobileNumber.trim()) return toast.error(t("Mobile number is required"));
             channelPayload.mobile_wallet = {
-                money_provider: mobileProvider || 'Mobile Provider',
-                wallet_name: walletName || mobileProvider || 'Mobile Wallet',
+                // Ensure string — API validation rejects numbers
+                money_provider: String(mobileProvider || 'Mobile Provider'),
+                wallet_name: walletName || String(mobileProvider) || 'Mobile Wallet',
                 wallet_account_number: mobileNumber.trim()
             };
         }
@@ -163,8 +192,9 @@ const DynamicChannelModal = ({ open, handleClose, beneficiaryData, onSaveSuccess
                     </div>
 
                     <form onSubmit={handleSubmit} className={styles.modalForm}>
-                        {/* Main Dropdown */}
-                        <div className={styles.inputGroup}>
+                        <div className={styles.modalBody}>
+                            {/* Main Dropdown */}
+                            <div className={styles.inputGroup}>
                             <label className={styles.fieldLabel}>{t("Channel type")}</label>
                             <FormControl fullWidth size="small">
                                 <Select
@@ -203,33 +233,104 @@ const DynamicChannelModal = ({ open, handleClose, beneficiaryData, onSaveSuccess
                         {/* DYNAMIC FIELDS */}
                         {channelType === 'bank' && (
                             <>
+                                {/* Selector between IBAN and SWIFT / BIC */}
+                                <div style={{ display: 'flex', gap: '8px', background: '#F3F4F6', padding: '4px', borderRadius: '10px', marginBottom: '14px' }}>
+                                    <button
+                                        type="button"
+                                        onClick={() => setAccNumType('IBAN')}
+                                        style={{
+                                            flex: 1, padding: '7px 12px', borderRadius: '7px', border: 'none',
+                                            background: accNumType === 'IBAN' ? '#FFFFFF' : 'transparent',
+                                            color: accNumType === 'IBAN' ? '#4F46E5' : '#6B7280',
+                                            fontWeight: accNumType === 'IBAN' ? 600 : 500, fontSize: '13px', cursor: 'pointer',
+                                            boxShadow: accNumType === 'IBAN' ? '0 1px 3px rgba(0,0,0,0.1)' : 'none',
+                                            transition: 'all 0.2s ease'
+                                        }}
+                                    >
+                                        {t("IBAN")}
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => setAccNumType('BIC')}
+                                        style={{
+                                            flex: 1, padding: '7px 12px', borderRadius: '7px', border: 'none',
+                                            background: accNumType === 'BIC' ? '#FFFFFF' : 'transparent',
+                                            color: accNumType === 'BIC' ? '#4F46E5' : '#6B7280',
+                                            fontWeight: accNumType === 'BIC' ? 600 : 500, fontSize: '13px', cursor: 'pointer',
+                                            boxShadow: accNumType === 'BIC' ? '0 1px 3px rgba(0,0,0,0.1)' : 'none',
+                                            transition: 'all 0.2s ease'
+                                        }}
+                                    >
+                                        {t("SWIFT / BIC")}
+                                    </button>
+                                </div>
+
+                                {accNumType === 'IBAN' ? (
+                                    <div className={styles.inputGroup}>
+                                        <label className={styles.fieldLabel}>{t("IBAN")} *</label>
+                                        <TextField
+                                            fullWidth size="small" variant="outlined" required
+                                            name="iban"
+                                            placeholder="ES65 6849 0001 5900 0113 6464"
+                                            value={bankFormState.iban}
+                                            onChange={(e) => {
+                                                const val = e.target.value;
+                                                setBankFormState(prev => ({ ...prev, iban: val }));
+                                                getBankDetails(e);
+                                            }}
+                                            sx={commonInputStyles}
+                                        />
+                                    </div>
+                                ) : (
+                                    <>
+                                        <div className={styles.inputGroup}>
+                                            <label className={styles.fieldLabel}>{t("SWIFT / BIC")} *</label>
+                                            <TextField
+                                                fullWidth size="small" variant="outlined" required
+                                                name="swift"
+                                                placeholder="SCBLPKKX"
+                                                value={bankFormState.swift}
+                                                onChange={(e) => {
+                                                    const val = e.target.value;
+                                                    setBankFormState(prev => ({ ...prev, swift: val }));
+                                                    getBankDetails(e);
+                                                }}
+                                                sx={commonInputStyles}
+                                            />
+                                        </div>
+                                        <div className={styles.inputGroup}>
+                                            <label className={styles.fieldLabel}>{t("Account Number")}</label>
+                                            <TextField
+                                                fullWidth size="small" variant="outlined"
+                                                name="bank_account_number"
+                                                placeholder="1234567890"
+                                                value={bankFormState.bank_account_number}
+                                                onChange={(e) => setBankFormState(prev => ({ ...prev, bank_account_number: e.target.value }))}
+                                                sx={commonInputStyles}
+                                            />
+                                        </div>
+                                    </>
+                                )}
+
+                                {isFetchingBank && (
+                                    <div style={{ fontSize: '12px', color: '#4F46E5', margin: '-4px 0 10px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                        <Info size={14} /> {t("Fetching bank details...")}
+                                    </div>
+                                )}
+                                {(bankError || bankDetailsError) && (
+                                    <div style={{ fontSize: '12px', color: '#EF4444', margin: '-4px 0 10px' }}>
+                                        {t(bankError || bankDetailsError)}
+                                    </div>
+                                )}
+
                                 <div className={styles.inputGroup}>
                                     <label className={styles.fieldLabel}>{t("Account Holder Name")}</label>
                                     <TextField
                                         fullWidth size="small" variant="outlined"
+                                        name="account_holder_name"
                                         placeholder={t("e.g. Arnold Mbuka")}
-                                        value={accountHolderName}
-                                        onChange={(e) => setAccountHolderName(e.target.value)}
-                                        sx={commonInputStyles}
-                                    />
-                                </div>
-
-                                <div className={styles.inputGroup}>
-                                    <label className={styles.fieldLabel}>{t("IBAN / Account Number")} *</label>
-                                    <TextField
-                                        fullWidth size="small" variant="outlined" required
-                                        placeholder="ES65 6849 0001 5900 0113 6464"
-                                        value={iban} onChange={(e) => setIban(e.target.value)}
-                                        sx={commonInputStyles}
-                                    />
-                                </div>
-
-                                <div className={styles.inputGroup}>
-                                    <label className={styles.fieldLabel}>{t("SWIFT / BIC")}</label>
-                                    <TextField
-                                        fullWidth size="small" variant="outlined"
-                                        placeholder="SCBLPKKX"
-                                        value={swift} onChange={(e) => setSwift(e.target.value)}
+                                        value={bankFormState.account_holder_name}
+                                        onChange={(e) => setBankFormState(prev => ({ ...prev, account_holder_name: e.target.value }))}
                                         sx={commonInputStyles}
                                     />
                                 </div>
@@ -238,8 +339,10 @@ const DynamicChannelModal = ({ open, handleClose, beneficiaryData, onSaveSuccess
                                     <label className={styles.fieldLabel}>{t("Bank Name")} *</label>
                                     <TextField
                                         fullWidth size="small" variant="outlined" required
+                                        name="bank_name"
                                         placeholder={t("e.g. Santander Bank")}
-                                        value={bankName} onChange={(e) => setBankName(e.target.value)}
+                                        value={bankFormState.bank_name}
+                                        onChange={(e) => setBankFormState(prev => ({ ...prev, bank_name: e.target.value }))}
                                         sx={commonInputStyles}
                                     />
                                 </div>
@@ -249,8 +352,10 @@ const DynamicChannelModal = ({ open, handleClose, beneficiaryData, onSaveSuccess
                                         <label className={styles.fieldLabel}>{t("Branch Name")}</label>
                                         <TextField
                                             fullWidth size="small" variant="outlined"
+                                            name="branch_name"
                                             placeholder={t("e.g. Main Branch")}
-                                            value={branchName} onChange={(e) => setBranchName(e.target.value)}
+                                            value={bankFormState.branch_name}
+                                            onChange={(e) => setBankFormState(prev => ({ ...prev, branch_name: e.target.value }))}
                                             sx={commonInputStyles}
                                         />
                                     </div>
@@ -258,8 +363,10 @@ const DynamicChannelModal = ({ open, handleClose, beneficiaryData, onSaveSuccess
                                         <label className={styles.fieldLabel}>{t("Bank City")}</label>
                                         <TextField
                                             fullWidth size="small" variant="outlined"
+                                            name="bank_city"
                                             placeholder={t("e.g. Madrid")}
-                                            value={bankCity} onChange={(e) => setBankCity(e.target.value)}
+                                            value={bankFormState.bank_city}
+                                            onChange={(e) => setBankFormState(prev => ({ ...prev, bank_city: e.target.value }))}
                                             sx={commonInputStyles}
                                         />
                                     </div>
@@ -269,8 +376,10 @@ const DynamicChannelModal = ({ open, handleClose, beneficiaryData, onSaveSuccess
                                     <label className={styles.fieldLabel}>{t("Branch Address / Street")}</label>
                                     <TextField
                                         fullWidth size="small" variant="outlined"
+                                        name="bank_branch_street"
                                         placeholder={t("e.g. Av. de Cantabria, s/n")}
-                                        value={branchStreet} onChange={(e) => setBranchStreet(e.target.value)}
+                                        value={bankFormState.bank_branch_street}
+                                        onChange={(e) => setBankFormState(prev => ({ ...prev, bank_branch_street: e.target.value }))}
                                         sx={commonInputStyles}
                                     />
                                 </div>
@@ -313,8 +422,9 @@ const DynamicChannelModal = ({ open, handleClose, beneficiaryData, onSaveSuccess
                                     <Select
                                         value={mobileProvider}
                                         onChange={(e) => {
-                                            setMobileProvider(e.target.value);
-                                            const match = mobileProviders?.find(p => p.id === e.target.value || p.name === e.target.value);
+                                            const val = String(e.target.value);
+                                            setMobileProvider(val);
+                                            const match = mobileProviders?.find(p => String(p.id) === val || p.name === val);
                                             if (match) setWalletName(match.name);
                                         }}
                                         size="small"
@@ -322,7 +432,7 @@ const DynamicChannelModal = ({ open, handleClose, beneficiaryData, onSaveSuccess
                                     >
                                         {mobileProviders && mobileProviders.length > 0 ? (
                                             mobileProviders.map((p, idx) => (
-                                                <MenuItem key={idx} value={p.id || p.name}>
+                                                <MenuItem key={idx} value={String(p.id || p.name)}>
                                                     {p.name || p.id}
                                                 </MenuItem>
                                             ))
@@ -338,15 +448,17 @@ const DynamicChannelModal = ({ open, handleClose, beneficiaryData, onSaveSuccess
 
                                 <div className={styles.inputGroup}>
                                     <label className={styles.fieldLabel}>{t("Mobile Number / Wallet Account")}</label>
-                                    <TextField
-                                        fullWidth size="small" variant="outlined" required type="tel"
-                                        placeholder="+1 234 567 8900"
-                                        value={mobileNumber} onChange={(e) => setMobileNumber(e.target.value)}
-                                        sx={commonInputStyles}
+                                    <PhoneInput
+                                        key={mobilePhoneKey}
+                                        country={beneficiaryData?.country_iso_code || beneficiaryData?.country_name}
+                                        phone={mobilePhonePrefillRef.current}
+                                        setPhone={(val) => setMobileNumber(val)}
+                                        setCountry={() => {}}
                                     />
                                 </div>
                             </>
                         )}
+                        </div>
 
                         {/* Footer Buttons */}
                         <div className={styles.modalFooter}>

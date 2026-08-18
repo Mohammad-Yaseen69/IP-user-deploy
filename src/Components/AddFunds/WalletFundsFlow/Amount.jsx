@@ -86,7 +86,7 @@ const Amount = ({ data, dataHandler }) => {
         dataHandler && dataHandler('exchangeRateError', errorMsg);
     }, [data.amount, limits, userDetails?.user?.kyc_status]);
 
-    console.log('SNAPSHOT FOR LIMIT ERROR', +String(data.amount ?? "").replaceAll(",", "") > +formatCurrencyLocal(limits.max), +String(data.amount ?? "").replaceAll(",", ""), +formatCurrencyLocal(limits.max), userDetails?.user?.kyc_status)
+    console.log('SNAPSHOT FOR LIMIT ERROR', userDetails.user)
 
     return (
         loading
@@ -135,7 +135,8 @@ const Amount = ({ data, dataHandler }) => {
                             fontWeight: 600,
                             color: "red"
                         }}>{
-                                userDetails?.user?.kyc_status !== "approved" && +String(data.amount ?? "")?.replaceAll(",", "") > +formatCurrencyLocal(limits.max)
+                                userDetails?.user?.kyc_status !== "approved" &&
+                                    userDetails?.company?.kyb_status !== "approved" && +String(data.amount ?? "")?.replaceAll(",", "") > +formatCurrencyLocal(limits.max)
                                     ?
                                     t("⚠️ Invalid Amount: Your current  identity verification level limits the  maximum amount you can add. Please upgrade your identity verification to benefit from higher limits")
                                         .replace("⚠️ ", "")
