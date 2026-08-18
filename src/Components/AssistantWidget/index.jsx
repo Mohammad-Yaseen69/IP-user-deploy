@@ -1,95 +1,60 @@
-import { useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { UserContext } from "../../Context/UserContext";
-import AssistantPanel from "./AssistantPanel";
-import { ChatIcon, CloseIcon } from "./Icons";
+import { ChatIcon, CloseIcon, MicIcon, RefreshIcon, SendIcon, StopIcon } from "./Icons";
+import MessageList from "./MessageList";
 import styles from "./styles.module.css";
-import { clearAllThreadIds } from "./threadStorage";
-import { useNavigationTool } from "./useNavigationTool";
-import { logger } from "@sentry/react";
-import { useChatKit } from "@openai/chatkit-react";
+import { useAssistant } from "./useAssistant";
+import { useAssistantSession } from "./useAssistantSession";
+import { isVoiceInputSupported, useVoiceInput } from "./useVoiceInput";
 
-const SESSION_ENDPOINT = "/api/assistant/session";
-const BRAND_PRIMARY = "var(--brand-primary, #1c7df6)";
-const STARTER_PROMPTS = [
-    "Check my transaction history",
-    "How do I verify my account?",
-    "What are my payment limits?",
-    "Help me with a transfer",
-];
+const VOICE_ERRORS = {
+    permission_denied: "Microphone access was blocked. Allow it in your browser settings.",
+    nothing_heard: "I didn't catch that — try again.",
+    recording_failed: "Couldn't start recording.",
+    transcription_failed: "Couldn't transcribe that — try again.",
+};
 
 const AssistantWidget = () => {
     const { t } = useTranslation();
     const { userDetails, token } = useContext(UserContext);
     const [isOpen, setIsOpen] = useState(false);
-    const [hasFailed, setHasFailed] = useState(false);
+    const [draft, setDraft] = useState("");
+    const inputRef = useRef(null);
 
-    const userId = userDetails?._id;
-    const canRun = Boolean(userId && token);
+    const { ensureToken, authedFetch, clearSession } = useAssistantSession();
 
-    useEffect(() => {
-        if (!token) clearAllThreadIds();
-    }, [token]);
-    const handleClientTool = useNavigationTool({
-        // Navigating with the panel open would hide the page behind it.
-        onNavigate: () => setIsOpen(false),
+    const { messages, isThinking, starterPrompts, greeting, send, reset } = useAssistant({
+        authedFetch,
     });
 
-    /**
-     * ChatKit calls this on mount and again whenever the secret expires, so it
-     * has to stay callable for the life of the widget rather than run once.
-     */
-    const getClientSecret = useCallback(async () => {
-        const response = await fetch(SESSION_ENDPOINT, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify({ userId }),
+    const voice = useVoiceInput({
+        authedFetch,
+        onTranscript: useCallback((text) => {
+            setDraft(text);
+            inputRef.current?.focus();
+        }, []),
+    });
+
+    const canRun = Boolean(userDetails?._id && token);
+
+    // Get the session token the moment the widget opens, so the first message
+    // does not pay for the handshake on top of the model's own latency.
+    useEffect(() => {
+        if (!isOpen || !canRun) return;
+        ensureToken().catch((error) => {
+            console.error("Assistant session failed", error);
         });
+    }, [canRun, ensureToken, isOpen]);
 
-        if (!response.ok) {
-            throw new Error(`Assistant session failed with ${response.status}`);
-        }
+    // Signing out must not leave a usable session behind.
+    useEffect(() => {
+        if (!token) clearSession();
+    }, [clearSession, token]);
 
-        const { client_secret: clientSecret } = await response.json();
-        if (!clientSecret) throw new Error("Assistant session returned no client secret");
-
-        return clientSecret;
-    }, [token, userId]);
-
-    const options = useMemo(
-        () => ({
-            api: { getClientSecret },
-            theme: {
-                colorScheme: "light",
-                radius: "round",
-                color: { accent: { primary: BRAND_PRIMARY, level: 1 } },
-            },
-            startScreen: {
-                greeting: t("How can I help with your InstaPay account?"),
-                prompts: STARTER_PROMPTS.map((prompt) => ({ label: t(prompt), prompt: t(prompt) })),
-            },
-            composer: { placeholder: t("Ask about payments, limits, verification…") },
-            disclaimer: {
-                text: t("AI assistant — never share your password, PIN or OTP here."),
-            },
-            onClientTool: handleClientTool,
-            // `chatkit.error` surfaces here — as a hook option, not a prop on
-            // <ChatKit>, where it would just be a DOM error attribute.
-            onError: (err) => {
-                logger.error("Assistant error", {
-                    err,
-                    message: "Error"
-                });
-                setHasFailed(true);
-            },
-        }),
-        [getClientSecret, handleClientTool, t]
-    );
-
-    const { control } = useChatKit(options);
+    useEffect(() => {
+        if (isOpen) inputRef.current?.focus();
+    }, [isOpen]);
 
     useEffect(() => {
         if (!isOpen) return undefined;
@@ -100,16 +65,104 @@ const AssistantWidget = () => {
         return () => window.removeEventListener("keydown", onKeyDown);
     }, [isOpen]);
 
+    const submit = useCallback(
+        (event) => {
+            event.preventDefault();
+            const text = draft.trim();
+            if (!text) return;
+            setDraft("");
+            send(text);
+        },
+        [draft, send]
+    );
+
     if (!canRun) return null;
+
+    const voiceLabel =
+        voice.status === "recording"
+            ? t("Stop recording")
+            : voice.status === "transcribing"
+                ? t("Transcribing…")
+                : t("Record a voice message");
+
+    const voiceHint = voice.error
+        ? t(VOICE_ERRORS[voice.error] ?? VOICE_ERRORS.transcription_failed)
+        : voice.status === "recording"
+            ? t("Listening… tap to stop")
+            : voice.status === "transcribing"
+                ? t("Transcribing…")
+                : t("Never share your password, PIN or OTP.");
 
     return (
         <div className={styles.root}>
-            <AssistantPanel
-                userId={userId}
-                token={token}
-                isOpen={isOpen}
-                onClose={() => setIsOpen(false)}
-            />
+            {isOpen && (
+                <div className={styles.panel} role="dialog" aria-label={t("InstaPay Assistant")}>
+                    <div className={styles.header}>
+                        <p className={styles.headerTitle}>{t("InstaPay Assistant")}</p>
+                        <div className={styles.headerSpacer} />
+                        <button
+                            type="button"
+                            className={styles.headerBtn}
+                            onClick={reset}
+                            aria-label={t("Start a new chat")}
+                            title={t("Start a new chat")}
+                        >
+                            <RefreshIcon />
+                        </button>
+                        <button
+                            type="button"
+                            className={styles.headerBtn}
+                            onClick={() => setIsOpen(false)}
+                            aria-label={t("Close")}
+                        >
+                            <CloseIcon />
+                        </button>
+                    </div>
+
+                    <MessageList
+                        greeting={greeting}
+                        messages={messages}
+                        isThinking={isThinking}
+                        starterPrompts={starterPrompts}
+                        onPick={send}
+                    />
+
+                    <form className={styles.composer} onSubmit={submit}>
+                        {isVoiceInputSupported() && (
+                            <button
+                                type="button"
+                                className={`${styles.micBtn} ${voice.status === "recording" ? styles.recording : ""}`}
+                                onClick={voice.error ? voice.dismissError : voice.toggle}
+                                disabled={voice.status === "transcribing"}
+                                aria-label={voiceLabel}
+                                title={voiceLabel}
+                            >
+                                {voice.status === "recording" ? <StopIcon /> : <MicIcon />}
+                            </button>
+                        )}
+                        <input
+                            ref={inputRef}
+                            className={styles.input}
+                            value={draft}
+                            onChange={(event) => setDraft(event.target.value)}
+                            placeholder={t("Ask about payments, limits, verification…")}
+                            aria-label={t("Ask about payments, limits, verification…")}
+                        />
+                        <button
+                            type="submit"
+                            className={styles.send}
+                            disabled={!draft.trim() || isThinking}
+                            aria-label={t("Send")}
+                        >
+                            <SendIcon />
+                        </button>
+                    </form>
+
+                    <p className={voice.error ? styles.voiceHintError : styles.voiceHint}>
+                        {voiceHint}
+                    </p>
+                </div>
+            )}
 
             <button
                 type="button"

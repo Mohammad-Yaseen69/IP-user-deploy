@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
-const TRANSCRIBE_ENDPOINT = "/api/transcribe";
+const TRANSCRIBE_ENDPOINT = "/api/assistant/transcribe";
 const MAX_RECORDING_MS = 60_000;
 
 const MIME_CANDIDATES = [
@@ -28,7 +28,7 @@ const blobToBase64 = (blob) =>
         reader.readAsDataURL(blob);
     });
 
-export const useVoiceInput = ({ token, onTranscript }) => {
+export const useVoiceInput = ({ authedFetch, onTranscript }) => {
     const [status, setStatus] = useState("idle");
     const [error, setError] = useState(null);
 
@@ -62,18 +62,16 @@ export const useVoiceInput = ({ token, onTranscript }) => {
             if (isMountedRef.current) setStatus("transcribing");
 
             try {
-                const response = await fetch(TRANSCRIBE_ENDPOINT, {
+                const response = await authedFetch(TRANSCRIBE_ENDPOINT, {
                     method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${token}`,
-                    },
+                    headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ audio: await blobToBase64(blob), mimeType }),
                 });
 
                 if (!response.ok) throw new Error(`Transcription failed with ${response.status}`);
 
-                const { text } = await response.json();
+                const { data } = await response.json();
+                const text = data?.text;
                 if (!isMountedRef.current) return;
 
                 if (text) {
@@ -88,7 +86,7 @@ export const useVoiceInput = ({ token, onTranscript }) => {
                 if (isMountedRef.current) setStatus("idle");
             }
         },
-        [onTranscript, token]
+        [authedFetch, onTranscript]
     );
 
     const start = useCallback(async () => {

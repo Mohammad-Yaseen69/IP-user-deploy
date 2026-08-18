@@ -32,3 +32,16 @@ export const StopIcon = () => (
         <rect x="6" y="6" width="12" height="12" rx="2" />
     </svg>
 );
+
+export const RefreshIcon = () => (
+    <svg {...base}>
+        <path d="M3 2v6h6M21 12A9 9 0 0 0 6 5.3L3 8" />
+        <path d="M21 22v-6h-6M3 12a9 9 0 0 0 15 6.7l3-2.7" />
+    </svg>
+);
+
+export const SendIcon = () => (
+    <svg {...base}>
+        <path d="m22 2-7 20-4-9-9-4 20-7z" />
+    </svg>
+);
