@@ -1075,12 +1075,12 @@ const Index = () => {
 
         <div className={styles.footer}>
           <LanguagePicker newUI={width <= 700 ? true : false} />
-          <span>© 2024 Instapay. {t("All rights reserved.")}</span>
+          <span>{t("© 2024 Instapay.")}{t("All rights reserved.")}</span>
           <span><FlagSvg /> {t("A Swiss Company")}</span>
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 export default Index

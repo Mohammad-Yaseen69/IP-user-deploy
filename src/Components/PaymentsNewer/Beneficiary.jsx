@@ -155,14 +155,12 @@ const PaymentsBeneficiary = ({ beneficiary, setBeneficiary, setSubStep, type = "
         } else {
             const searchBenef = registeredBeneficiaries?.filter(item => {
                 return (
-                    item?.first_name?.toLowerCase()?.includes(searchQuery?.toLowerCase())
-                    ||
-                    item?.last_name?.toLowerCase()?.includes(searchQuery?.toLowerCase())
-                    ||
-                    item?.company_name?.toLowerCase()?.includes(searchQuery?.toLowerCase())
                     // ||
                     // item?.email?.toLowerCase()?.includes(e.target.value.toLowerCase())
-                )
+                    (item?.first_name?.toLowerCase()?.includes(searchQuery?.toLowerCase())
+                    ||
+                    item?.last_name?.toLowerCase()?.includes(searchQuery?.toLowerCase()) || item?.company_name?.toLowerCase()?.includes(searchQuery?.toLowerCase()))
+                );
             })
             setFiltered(searchBenef)
         }
@@ -306,9 +304,9 @@ const PaymentsBeneficiary = ({ beneficiary, setBeneficiary, setSubStep, type = "
                         ?
                         <div style={{ display: "flex", flexDirection: "column", gap: ".5rem" }}>
                             <p style={{ marginBottom: 0, fontWeight: 600 }}>{t("Please follow these examples:")} </p>
-                            <div>{t("Full Name")}: <strong>Muhammad Imtiaz</strong></div>
-                            <div>{t("InstaPay/Instagram Username")}: <strong>instauser</strong></div>
-                            <div>{t("Email")}: <strong>user@email.com</strong></div>
+                            <div>{t("Full Name")}: <strong>{t("Muhammad Imtiaz")}</strong></div>
+                            <div>{t("InstaPay/Instagram Username")}: <strong>{t("instauser")}</strong></div>
+                            <div>{t("Email")}: <strong>{t("user@email.com")}</strong></div>
                             <div>{t("Phone Number")}: <strong>44795396600</strong> ({t("With Country Code")})</div>
                         </div>
                         : ""
@@ -509,7 +507,7 @@ const PaymentsBeneficiary = ({ beneficiary, setBeneficiary, setSubStep, type = "
                 </p>
             </div>
         </Card >
-    )
+    );
 }
 
 export default PaymentsBeneficiary

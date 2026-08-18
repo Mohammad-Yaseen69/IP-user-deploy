@@ -210,6 +210,7 @@ const BeneficiariesVirtual = () => {
                                                 <p className={styles.subTextDetail}>
                                                     {activeBeneficiary.country_name || activeBeneficiary.country_iso_code || t("Global")}
                                                     {activeBeneficiary.city ? `, ${activeBeneficiary.city}` : ''}
+                                                    {activeBeneficiary.zip_code ? ` ${activeBeneficiary.zip_code}` : ''}
                                                     {activeBeneficiary.email ? ` • ${activeBeneficiary.email}` : ''}
                                                     {activeBeneficiary.phone ? ` • ${activeBeneficiary.phone}` : ''}
                                                 </p>
@@ -269,6 +270,8 @@ const BeneficiariesVirtual = () => {
                                                     <span className={styles.cryptoAddress}>
                                                         {`IBAN/Acc: ${bank.iban || bank.account_number || ''}`}
                                                         {bank.swift_code ? ` • SWIFT: ${bank.swift_code}` : ''}
+                                                        {bank.postal_code ? ` • ${t("Postal")}: ${bank.postal_code}` : ''}
+                                                        {bank.extras?.country_iso_code ? ` • ${bank.extras.country_iso_code}` : ''}
                                                     </span>
                                                     <button className={styles.copyBtn} onClick={() => handleCopy(bank.iban || bank.account_number)}>
                                                         <Copy size={14} />

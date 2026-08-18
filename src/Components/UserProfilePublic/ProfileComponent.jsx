@@ -383,7 +383,7 @@ const ProfileComponent = () => {
                                                 <div className={styles.qr_info}>
                                                     <h5>{t("Wallet ID")}:</h5>
                                                     <div className={`${styles.qri_box} ${styles.qri_box_p}`}>
-                                                        <span>INSTA-{userWallet?.wallet_id}</span>
+                                                        <span>{t("INSTA-")}{userWallet?.wallet_id}</span>
                                                         <img src={copy} alt="c" style={{ cursor: "pointer" }} onClick={() => {
                                                             navigator.clipboard.writeText(userWallet?.wallet_id)
                                                             toast.success(userWallet?.wallet_id + " copied to clipboard.")
@@ -588,7 +588,7 @@ const ProfileComponent = () => {
                 // </Card>
             }
         </>
-    )
+    );
 }
 
 export default ProfileComponent

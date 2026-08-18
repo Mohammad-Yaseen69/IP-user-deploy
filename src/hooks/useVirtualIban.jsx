@@ -236,14 +236,14 @@ export const useExecuteVirtualIbanCryptoTopup = () => {
     const { getKey } = useIdempotency()
 
     return useMutation({
-        mutationFn: (payload) =>
+        mutationFn: ({ idempotencyKey, ...payload }) =>
             apiWrapper({
                 endpoint: "/api/virtual-iban/topup/crypto",
                 method: "POST",
                 payload,
                 isEncrypted: true,
                 isDecrypted: true,
-                idempotencyKey: getKey(),
+                idempotencyKey: idempotencyKey || getKey(),
             }),
         onSuccess: (_, variables) => {
             queryClient.invalidateQueries({ queryKey: virtualIbanQueryKeys.list() })
@@ -272,3 +272,36 @@ const useVirtualIbanGraphData = (filter = "this_year") =>
     })
 export default useVirtualIbanGraphData
 
+// ─── SWIFT Payout ─────────────────────────────────────────────────────────────
+
+export const useVirtualIbanSwiftPayoutFee = () =>
+    useMutation({
+        mutationFn: (payload) =>
+            apiWrapper({
+                endpoint: "/api/virtual-iban/payout/swift/fee",
+                method: "POST",
+                payload,
+                isEncrypted: true,
+                isDecrypted: true,
+            }),
+    })
+
+export const useVirtualIbanSwiftPayoutDirect = () => {
+    const queryClient = useQueryClient()
+
+    return useMutation({
+        mutationFn: (payload) =>
+            apiWrapper({
+                endpoint: "/api/virtual-iban/payout/swift",
+                method: "POST",
+                payload,
+                isEncrypted: true,
+                isDecrypted: true,
+            }),
+        onSuccess: (_, variables) => {
+            queryClient.invalidateQueries({ queryKey: virtualIbanQueryKeys.list() })
+            queryClient.invalidateQueries({ queryKey: virtualIbanQueryKeys.detail(variables?.iban_id) })
+            queryClient.invalidateQueries({ queryKey: virtualIbanQueryKeys.balance(variables?.iban_id) })
+        },
+    })
+}

@@ -78,7 +78,7 @@ const CryptoAmount = ({ setStep, amount, setAmount, cryptoCurrency }) => {
                 boxShadow: "0 4px 5px rgba(89,38,240,0.06)",
                 marginBottom: "1rem"
             }} className="m_t_1_05">
-                <span style={{ color: "#808080", fontWeight: 500 }}>Estimated Price: 1 {cryptoCurrency.value.toUpperCase()} = {cryptoCurrency.price} USD</span>
+                <span style={{ color: "#808080", fontWeight: 500 }}>{t("Estimated Price: 1")}{cryptoCurrency.value.toUpperCase()} = {cryptoCurrency.price}{t("USD")}</span>
             </div>
             <div style={{
                 display: "flex",
@@ -92,7 +92,7 @@ const CryptoAmount = ({ setStep, amount, setAmount, cryptoCurrency }) => {
                 boxShadow: "0 4px 5px rgba(89,38,240,0.06)",
                 marginBottom: "1rem"
             }} className="m_t_1_05">
-                <span style={{ color: "#808080", fontWeight: 500 }}>Transaction Fee: $1.32</span>
+                <span style={{ color: "#808080", fontWeight: 500 }}>{t("Transaction Fee: $1.32")}</span>
             </div>
             <div style={{
                 display: "flex",
@@ -112,7 +112,7 @@ const CryptoAmount = ({ setStep, amount, setAmount, cryptoCurrency }) => {
                 {t("Continue")}
             </Button>
         </div>
-    )
+    );
 }
 
 export default CryptoAmount

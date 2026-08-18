@@ -200,7 +200,7 @@ const WalletTransfer = ({ sendPaymentType, setStep, setSendPaymentType, setIsWal
                                         paddingBottom: 0,
                                         width: "100%"
                                     }}>
-                                        <span>Updates:</span>
+                                        <span>{t("Updates:")}</span>
                                         <Timeline items={timelineData} />
                                     </CardBody>
                                 </Card>
@@ -457,7 +457,7 @@ const WalletTransfer = ({ sendPaymentType, setStep, setSendPaymentType, setIsWal
                     </div>
             }
         </>
-    )
+    );
 }
 
 export default WalletTransfer;

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
 import { Box, Modal, TextField, IconButton } from '@mui/material';
 import { X, User, Briefcase } from 'react-feather';
 import { useTranslation } from 'react-i18next';
@@ -7,12 +7,14 @@ import CountryDropDown from '../../../AddBeneficiary/CountryDropDown';
 import CitiesDropDown from '../../../CitiesDropDown';
 import PhoneInput from '../../../PhoneInput';
 import { toast } from 'react-toastify';
+import { UserContext } from '../../../../Context/UserContext';
 
 const AddBeneficiaryModal = ({ open, handleClose, onSaveSuccess, beneficiaryToEdit }) => {
     const { t } = useTranslation();
     const [loading, setLoading] = useState(false);
     const [beneficiaryType, setBeneficiaryType] = useState('individual');
     const [phoneKey, setPhoneKey] = useState(0);
+    const { allowedCountries } = useContext(UserContext)
     const prefillPhoneRef = useRef('');
     const [formData, setFormData] = useState({
         first_name: '',
@@ -22,6 +24,7 @@ const AddBeneficiaryModal = ({ open, handleClose, onSaveSuccess, beneficiaryToEd
         country_iso_code: '',
         city: '',
         address: '',
+        zip_code: '',
         email: '',
         phone: ''
     });
@@ -40,12 +43,11 @@ const AddBeneficiaryModal = ({ open, handleClose, onSaveSuccess, beneficiaryToEd
                 country_iso_code: iso,
                 city: beneficiaryToEdit.city || '',
                 address: beneficiaryToEdit.address || '',
+                zip_code: beneficiaryToEdit.zip_code || '',
                 email: beneficiaryToEdit.email || '',
                 phone: rawPhone
             });
-            // Store raw phone in ref so it survives PhoneInput's own setPhone('') on mount
             prefillPhoneRef.current = rawPhone;
-            // Force PhoneInput to remount so firstTime/number state resets cleanly
             setPhoneKey(prev => prev + 1);
         } else {
             setBeneficiaryType('individual');
@@ -57,6 +59,7 @@ const AddBeneficiaryModal = ({ open, handleClose, onSaveSuccess, beneficiaryToEd
                 country_iso_code: '',
                 city: '',
                 address: '',
+                zip_code: '',
                 email: '',
                 phone: ''
             });
@@ -100,6 +103,9 @@ const AddBeneficiaryModal = ({ open, handleClose, onSaveSuccess, beneficiaryToEd
 
         setLoading(true);
 
+        const countryId = allowedCountries.find(c => c.country_iso_code === formData.country_iso_code)?._id
+
+        console.log(countryId, 'country id passing')
         const payload = {
             beneficiary_type: beneficiaryType,
             first_name: beneficiaryType === 'individual' ? formData.first_name : '',
@@ -109,9 +115,13 @@ const AddBeneficiaryModal = ({ open, handleClose, onSaveSuccess, beneficiaryToEd
             country_iso_code: formData.country_iso_code,
             city: formData.city,
             address: formData.address,
+            zip_code: formData.zip_code,
             email: formData.email,
-            phone: formData.phone
+            phone: formData.phone,
+            country: countryId
         };
+
+        console.log(payload)
 
         try {
             let res;
@@ -358,15 +368,27 @@ const AddBeneficiaryModal = ({ open, handleClose, onSaveSuccess, beneficiaryToEd
                         />
                     </div>
 
-                    <div style={{ marginBottom: '20px' }}>
-                        <label style={{ display: 'block', fontSize: '13px', fontWeight: 500, color: '#374151', marginBottom: '6px' }}>{t("Address")}</label>
-                        <TextField
-                            fullWidth size="small" variant="outlined"
-                            placeholder={t("Street address, building, suite")}
-                            value={formData.address}
-                            onChange={(e) => handleChange('address', e.target.value)}
-                            sx={commonInputStyles}
-                        />
+                    <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '14px', marginBottom: '20px' }}>
+                        <div>
+                            <label style={{ display: 'block', fontSize: '13px', fontWeight: 500, color: '#374151', marginBottom: '6px' }}>{t("Address")}</label>
+                            <TextField
+                                fullWidth size="small" variant="outlined"
+                                placeholder={t("Street address, building, suite")}
+                                value={formData.address}
+                                onChange={(e) => handleChange('address', e.target.value)}
+                                sx={commonInputStyles}
+                            />
+                        </div>
+                        <div>
+                            <label style={{ display: 'block', fontSize: '13px', fontWeight: 500, color: '#374151', marginBottom: '6px' }}>{t("Zip Code")}</label>
+                            <TextField
+                                fullWidth size="small" variant="outlined"
+                                placeholder={t("e.g. 10001")}
+                                value={formData.zip_code}
+                                onChange={(e) => handleChange('zip_code', e.target.value)}
+                                sx={commonInputStyles}
+                            />
+                        </div>
                     </div>
 
                     {/* Footer Actions */}

@@ -1,5 +1,8 @@
 import { getAmountNumber } from "../Components/VirtualIBAN/utils/amount"
 
+export const MIN_AMOUNT = 5          // EUR
+export const MAX_AMOUNT = 1_500_000  // EUR
+
 export const STEPS = {
     AMOUNT: "AMOUNT",
     BENEFICIARY: "BENEFICIARY",
@@ -119,7 +122,7 @@ export const getDisabledState = (stepName, data = {}) => {
 
     switch (stepName) {
         case STEPS.AMOUNT:
-            return !data.amount || amount <= 0 || amount > availableBalance || !data.transferSpeed
+            return !data.amount || amount <= 0 || amount < MIN_AMOUNT || amount > MAX_AMOUNT || amount > availableBalance || !data.transferSpeed
         case STEPS.BENEFICIARY:
             return !data.selectedBeneficiary
         case STEPS.ADD_BENEFICIARY:
