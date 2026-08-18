@@ -27,7 +27,7 @@ const PaymentTypesModal = ({ isOpen, toggle }) => {
                                 {
                                     item.status !== "Active"
                                     &&
-                                    <div className={styles.coming_soon}>(Coming soon)</div>
+                                    <div className={styles.coming_soon}>{t("(Coming soon)")}</div>
                                 }
                             </div>
                         ))
@@ -35,7 +35,7 @@ const PaymentTypesModal = ({ isOpen, toggle }) => {
                 </div>
             </ModalBody>
         </Modal>
-    )
+    );
 }
 
 export default PaymentTypesModal

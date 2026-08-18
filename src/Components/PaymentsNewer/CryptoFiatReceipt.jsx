@@ -23,7 +23,7 @@ const CryptoFiatReceipt = ({ cryptoCurrency, amount, walletAddress }) => {
             }} className="conf_cont">
                 <div style={{ display: "flex", flexDirection: "column", alignItems: "center", marginBottom: "1.5rem" }}>
                     <h5 style={{ fontSize: "1rem", color: "#a8a8a8" }}>{t("You Are Sending")}</h5>
-                    <h4 style={{ fontWeight: "900" }} className="f_s_3r">{amount} USD</h4>
+                    <h4 style={{ fontWeight: "900" }} className="f_s_3r">{amount}{t("USD")}</h4>
                 </div>
 
                 <div style={{
@@ -61,7 +61,7 @@ const CryptoFiatReceipt = ({ cryptoCurrency, amount, walletAddress }) => {
                         alignItems: "center",
                         width: "90%"
                     }}>
-                        <span style={{ color: "#808080", fontWeight: 500, whiteSpace: "nowrap" }}>{t("Estimated Price")}: 1 {cryptoCurrency.value.toUpperCase()} = {cryptoCurrency.price}</span>
+                        <span style={{ color: "#808080", fontWeight: 500, whiteSpace: "nowrap" }}>{t("Estimated Price")}{t(": 1")}{cryptoCurrency.value.toUpperCase()} = {cryptoCurrency.price}</span>
                     </div>
                     <div style={{
                         display: "flex",
@@ -72,7 +72,7 @@ const CryptoFiatReceipt = ({ cryptoCurrency, amount, walletAddress }) => {
                         alignItems: "center",
                         width: "90%"
                     }}>
-                        <span style={{ color: "#808080", fontWeight: 500 }}>{t("Transaction Fee")}: 1.32 USD</span>
+                        <span style={{ color: "#808080", fontWeight: 500 }}>{t("Transaction Fee")}{t(": 1.32 USD")}</span>
                     </div>
                 </div>
 

@@ -1,0 +1,1324 @@
+import axios from "axios"
+import { useContext, useEffect, useMemo, useRef, useState } from "react"
+import { useTranslation } from "react-i18next"
+import { useNavigate } from "react-router"
+import { toast } from "react-toastify"
+import { Modal, ModalBody } from "reactstrap"
+import {
+    CheckCircle,
+    ChevronDown,
+    ChevronLeft,
+    ChevronRight,
+    Clock,
+    Download,
+    FileText,
+    Globe,
+    Home,
+    List,
+    Plus,
+    RefreshCw,
+    Search,
+    Send,
+    User,
+} from "react-feather"
+import AddBeneficiary from "../../../AddBeneficiary"
+import useWindowWidth from "../../../../utils/useWindowWidth"
+import ContactBox from "../../../MyMasterCard/PaymentModal/ContactBox"
+import { getAmountNumber } from "../../utils/amount"
+import { getVirtualIbanId } from "../../utils/virtualIban"
+import {
+    CHARGE_BEARER_OPTIONS,
+    getContinueLabel,
+    getDisabledState,
+    getPurposeCode,
+    goBack,
+    goNext,
+    isSidebarStepActive,
+    isSidebarStepCompleted,
+    MIN_AMOUNT,
+    MAX_AMOUNT,
+    PURPOSE_OPTIONS,
+    SIDEBAR_STEPS,
+    SIDEBAR_STEP_NAMES,
+    STEPS,
+} from "../../../../stateMachines/swiftTransfer"
+import SidebarProgress from "../../VirtualIbanModal/SidebarProgress"
+import AmountStep from "../../ConvertFundsModal/AmountStep"
+import MT from "../../VirtualIbanModal/icons/mt.svg"
+import success from "../../VirtualIbanModal/icons/success.png"
+import styles from "./SwiftTransfer.module.css"
+import withdrawStyles from "../../WithdrawBalanceModal/withdrawBalance.module.scss"
+import { UserContext } from "../../../../Context/UserContext"
+import useSendOtp from "../../../../hooks/GeneralUse/useSendOtp"
+import { useVirtualIbanSwiftPayoutFee, useVirtualIbanSwiftPayoutDirect } from "../../../../hooks/useVirtualIban"
+import { handlePaymentApiError } from "../../../../utils/Functions/handlePaymentApiError"
+import OTPConfirmation from "../../../UserSettingsNew/OTPConfirmation"
+import jsPDF from "jspdf"
+import autoTable from "jspdf-autotable"
+
+// ─── Constants ────────────────────────────────────────────────────────────────
+
+const DEFAULT_BENEFICIARY_FORM = {
+    type: "individual",
+    firstName: "",
+    lastName: "",
+    legalName: "",
+    swift_code: "",
+    bankName: "",
+    bankAddress: "",
+    bankCity: "",
+    bankPostal: "",
+    bankCountry: "",
+    beneficiaryAddress: "",
+    beneficiaryCity: "",
+    beneficiaryPostal: "",
+    beneficiaryCountry: "",
+    intermediaryBic: "",
+    accountNumber: "",
+    saveBeneficiary: true,
+}
+
+const sidebarIcons = {
+    [SIDEBAR_STEP_NAMES.PAYMENT_RAIL]: Globe,
+    [SIDEBAR_STEP_NAMES.AMOUNT]: () => <span className={styles.sidebarIconText}>EUR</span>,
+    [SIDEBAR_STEP_NAMES.BENEFICIARY]: User,
+    [SIDEBAR_STEP_NAMES.PURPOSE]: List,
+    [SIDEBAR_STEP_NAMES.REVIEW]: FileText,
+    [SIDEBAR_STEP_NAMES.DONE]: CheckCircle,
+}
+
+// ─── Formatters ───────────────────────────────────────────────────────────────
+
+const formatMoney = (value, currencyCode = "EUR") =>
+    `${currencyCode} ${getAmountNumber(value).toLocaleString("en-US", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+    })}`
+
+const formatUSD = (value) =>
+    `USD ${getAmountNumber(value).toLocaleString("en-US", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+    })}`
+
+const maskIban = (value) => {
+    const v = String(value || "").trim()
+    if (!v) return "-"
+    return v.length <= 14 ? v : `${v.slice(0, 7)} ... ${v.slice(-7)}`
+}
+
+const getSourceBalance = (availableBalance, selectedIban) => availableBalance ?? selectedIban?.balance ?? 0
+const getVirtualIbanNumber = (iban) =>
+    iban?.iban || iban?.ibanFull || iban?.account_number || iban?.accountNumber || iban?.virtual_iban || iban?.virtualIban || ""
+const getVirtualIbanTitle = (iban, fallbackCurrency = "EUR") =>
+    iban?.name || iban?.title || iban?.label || `${fallbackCurrency} IBAN`
+
+// ─── Beneficiary helpers ──────────────────────────────────────────────────────
+
+const getBeneficiaryId = (b) => b?._id || b?.id || ""
+const getBeneficiaryBankDetail = (b) => b?.bank_details?.[0] || {}
+const getBeneficiaryName = (b) => {
+    const first = b?.first_name
+    const last = b?.last_name
+    if (first || last) return [first, last].filter(Boolean).join(" ")
+    return b?.company_name || b?.legalName || b?.name || "Beneficiary"
+}
+const getBeneficiaryTypeLabel = (b) => {
+    const type = b?.beneficiary_type || b?.type
+    return type ? `${String(type).charAt(0).toUpperCase()}${String(type).slice(1)}` : "-"
+}
+const getBeneficiaryCountry = (b) => b?.country_name || b?.country || "-"
+const getBeneficiaryBic = (b) =>
+    getBeneficiaryBankDetail(b)?.swift_code || b?.swift_code || b?.bic || "-"
+const getBeneficiaryBankName = (b) => getBeneficiaryBankDetail(b)?.name || b?.bankName || "-"
+const getBeneficiaryAccountCount = (b) => b?.beneficiary_type
+const getBeneficiarySubtitle = (b) =>
+    [getBeneficiaryCountry(b), getBeneficiaryTypeLabel(b)].filter((v) => v && v !== "-").join(" - ")
+const getBeneficiaryInitial = (b) => (getBeneficiaryName(b).charAt(0) || "B").toUpperCase()
+
+// Returns the swift_code string if it exists on the beneficiary's bank_details, else empty string
+const getRawSwiftCode = (b) => {
+    const fromBank = b?.bank_details?.[0]?.swift_code
+    if (fromBank && String(fromBank).trim()) return String(fromBank).trim()
+    const direct = b?.swift_code || b?.bic || ""
+    return String(direct).trim()
+}
+const hasBeneficiarySwiftCode = (b) => getRawSwiftCode(b).length > 0
+
+const buildBeneficiaryFromForm = (form) => {
+    const isBusiness = form.type === "business"
+    const name = isBusiness
+        ? form.legalName
+        : [form.firstName, form.lastName].filter(Boolean).join(" ")
+    return {
+        id: `new-${Date.now()}`,
+        name: name || "New beneficiary",
+        country: form.beneficiaryCountry,
+        beneficiary_type: isBusiness ? "business" : "individual",
+        swift_code: form.swift_code,
+        bic: form.swift_code,
+        bankName: form.bankName,
+        bankAddress: form.bankAddress,
+        bankCity: form.bankCity,
+        bankPostal: form.bankPostal,
+        bankCountry: form.bankCountry,
+        beneficiaryAddress: form.beneficiaryAddress,
+        beneficiaryCity: form.beneficiaryCity,
+        beneficiaryPostal: form.beneficiaryPostal,
+        accountNumber: form.accountNumber,
+        intermediaryBic: form.intermediaryBic,
+    }
+}
+
+// ─── Shared TextField ─────────────────────────────────────────────────────────
+
+const TextField = ({ label, value, onChange, hint, type = "text", disabled = false, error = "", optional = false, placeholder = "" }) => (
+    <label className={styles.field}>
+        <span>
+            {label}
+            {optional && <span className={styles.optionalTag}>Optional</span>}
+        </span>
+        <input
+            type={type}
+            value={value}
+            disabled={disabled}
+            placeholder={placeholder}
+            className={error ? styles.fieldError : ""}
+            onChange={(e) => onChange(e.target.value)}
+        />
+        {hint && !error && <small>{hint}</small>}
+        {error && <span className={styles.fieldErrorText}>{error}</span>}
+    </label>
+)
+
+// ─── Step: Amount ─────────────────────────────────────────────────────────────
+
+const SwiftAmountStep = ({ amount, setAmount, availableBalance, currencyCode, sourceIban }) => {
+    const { t } = useTranslation()
+    const sourceBalance = getAmountNumber(availableBalance)
+
+    return (
+        <div className={styles.stepStack}>
+            <AmountStep
+                amount={amount}
+                setAmount={setAmount}
+                currencyCode={currencyCode}
+                availableBalance={sourceBalance}
+                label="Amount to send (EUR)"
+                min={MIN_AMOUNT}
+                max={MAX_AMOUNT}
+            />
+
+            <div>
+                <div className={styles.sectionLabel}>{t("From")}</div>
+                <div className={styles.sourceCard}>
+                    <div className={styles.sourceLeft}>
+                        <div className={styles.flagBox}>
+                            <img src={MT} alt="" />
+                        </div>
+                        <div>
+                            <h4>{sourceIban?.title || `${currencyCode} IBAN`}</h4>
+                            <p>{maskIban(sourceIban?.iban)}</p>
+                        </div>
+                    </div>
+                    <div className={styles.sourceBalance}>
+                        <h4>{formatMoney(sourceBalance, currencyCode)}</h4>
+                        <p>{t("Available")}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div className={styles.fxBanner}>
+                <Globe size={16} />
+                <span>
+                    {t("Your EUR balance will be converted to")} <strong>USD</strong>{" "}
+                    {t("at a live rate locked when you reach the Review step. The exact USD amount will be shown before you confirm.")}
+                </span>
+            </div>
+
+            <div className={styles.infoStrip}>
+                {t("SWIFT transfers are debited in EUR. The recipient always receives exactly the previewed USD amount — rate is guaranteed for 60 minutes.")}
+            </div>
+        </div>
+    )
+}
+
+// ─── Missing BIC banner (shown inside BeneficiaryStep when BIC absent) ────────
+
+const MissingSwiftCodeBanner = ({ beneficiary, authHeader, onSwiftCodeSaved }) => {
+    const { t } = useTranslation()
+    const [bic, setBic] = useState("")
+    const [saving, setSaving] = useState(false)
+
+    const bicClean = bic.trim().toUpperCase()
+    const bicValid = bicClean.length === 8 || bicClean.length === 11
+    const bicError = bicClean.length > 0 && !bicValid ? t("BIC must be 8 or 11 characters") : ""
+
+    const handleSave = async () => {
+        if (!bicValid) return
+        setSaving(true)
+        try {
+            const { encryptData } = await import("../../../../Helper/EssentilaMethods/Encryption")
+            const bankDetails = Array.isArray(beneficiary?.bank_details) && beneficiary.bank_details.length > 0
+                ? beneficiary.bank_details.map((bd, i) => i === 0 ? { ...bd, swift_code: bicClean } : bd)
+                : [{ swift_code: bicClean }]
+
+            const payload = { ...beneficiary, bank_details: bankDetails }
+            const encrypted = encryptData(payload)
+
+            await axios.put(
+                `${import.meta.env.VITE_IP_DEV_API}/api/beneficiary/update-beneficiary/${beneficiary._id}`,
+                { data: encrypted },
+                { headers: authHeader }
+            )
+
+            // Patch the in-memory beneficiary object with the new BIC so the flow can continue
+            onSwiftCodeSaved({
+                ...beneficiary,
+                swift_code: bicClean,
+                bic: bicClean,
+                bank_details: bankDetails,
+            })
+            toast.success(t("BIC / SWIFT code saved successfully."))
+        } catch (err) {
+            toast.error(t("Failed to save BIC. Please try again."))
+        } finally {
+            setSaving(false)
+        }
+    }
+
+    return (
+        <div className={styles.missingBicBanner}>
+            <div className={styles.missingBicHeader}>
+                <span className={styles.missingBicIcon}>⚠</span>
+                <div>
+                    <strong>{t("BIC / SWIFT code missing")}</strong>
+                    <p>{t("{{name}} doesn't have a BIC on file. Enter it below to continue.", { name: getBeneficiaryName(beneficiary) })}</p>
+                </div>
+            </div>
+            <div className={styles.missingBicRow}>
+                <TextField
+                    label={t("BIC / SWIFT Code *")}
+                    value={bic}
+                    onChange={(v) => setBic(v.toUpperCase())}
+                    placeholder="e.g. AAAABBCC"
+                    error={bicError}
+                    hint={bicValid ? t("Valid BIC format ✓") : ""}
+                />
+                <button
+                    type="button"
+                    className={styles.nextBtn}
+                    style={{ alignSelf: "flex-end", marginBottom: bicError ? "22px" : "0" }}
+                    disabled={!bicValid || saving}
+                    onClick={handleSave}
+                >
+                    {saving ? t("Saving...") : t("Save BIC")}
+                </button>
+            </div>
+        </div>
+    )
+}
+
+// ─── Step: Beneficiary (list) ─────────────────────────────────────────────────
+
+const BeneficiaryStep = ({ beneficiaries, selectedBeneficiary, setSelectedBeneficiary, onAddBeneficiary, authHeader, getUserBeneficiaries }) => {
+    const { t } = useTranslation()
+    const [query, setQuery] = useState("")
+    const navigate = useNavigate()
+    const filtered = beneficiaries.filter((b) =>
+        `${getBeneficiaryName(b)} ${getBeneficiarySubtitle(b)}`.toLowerCase().includes(query.toLowerCase())
+    )
+
+    const missingBic = selectedBeneficiary && !hasBeneficiarySwiftCode(selectedBeneficiary)
+
+    const handleSwiftCodeSaved = async (updatedBeneficiary) => {
+        // 1. Patch the selected beneficiary immediately so Next unblocks
+        setSelectedBeneficiary(updatedBeneficiary)
+        // 2. Refresh the full list in context in the background
+        try { await getUserBeneficiaries() } catch (_) { }
+    }
+
+    return (
+        <div className={styles.beneficiaryStep}>
+            <div className={styles.beneficiaryHeader}>
+                <h3>{t("Beneficiaries")}</h3>
+                <button type="button" className={styles.primarySmallBtn} onClick={() => navigate("/virtual-iban/beneficiaries-virtual")}>
+                    <Plus size={16} />
+                    {t("Add beneficiary")}
+                </button>
+            </div>
+
+            <label className={styles.searchBox}>
+                <Search size={15} />
+                <input
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}
+                    placeholder={t("Search beneficiaries")}
+                />
+            </label>
+
+            <div className={styles.beneficiaryList}>
+                {filtered.length === 0 && (
+                    <div style={{ padding: "10px", color: "var(--secondary-color)", textAlign: "center" }}>
+                        {t("No beneficiaries found with SWIFT bank details.")}
+                    </div>
+                )}
+                {filtered.map((b) => {
+                    const id = getBeneficiaryId(b)
+                    const selected = getBeneficiaryId(selectedBeneficiary) === id
+                    return (
+                        <button
+                            type="button"
+                            key={id}
+                            className={`${styles.beneficiaryCard} ${selected ? styles.selectedBeneficiary : ""}`}
+                            onClick={() => setSelectedBeneficiary(b)}
+                        >
+                            <span className={`${styles.avatar} ${styles[b.accent || "blue"]}`}>
+                                {getBeneficiaryInitial(b)}
+                            </span>
+                            <span className={styles.beneficiaryCopy}>
+                                <strong>{getBeneficiaryName(b)}</strong>
+                                <small>{getBeneficiarySubtitle(b)}</small>
+                            </span>
+                            <span className={`${styles.accountBadge} ${selected ? styles.activeBadge : ""}`}>
+                                {getBeneficiaryAccountCount(b)}
+                            </span>
+                        </button>
+                    )
+                })}
+            </div>
+
+            {missingBic && (
+                <MissingSwiftCodeBanner
+                    beneficiary={selectedBeneficiary}
+                    authHeader={authHeader}
+                    onSwiftCodeSaved={handleSwiftCodeSaved}
+                />
+            )}
+        </div>
+    )
+}
+
+// ─── Step: Add beneficiary ────────────────────────────────────────────────────
+
+const AddBeneficiaryStep = ({ amount, currencyCode, form, setForm }) => {
+    const { t } = useTranslation()
+    const update = (key, value) => setForm((prev) => ({ ...prev, [key]: value }))
+
+    const bicValue = String(form.swift_code || "").trim().toUpperCase()
+    const bicValid = bicValue.length === 8 || bicValue.length === 11
+    const bicError = bicValue.length > 0 && !bicValid ? t("BIC must be 8 or 11 characters") : ""
+
+    return (
+        <div className={styles.addBeneficiaryStep}>
+            <div className={styles.stepHeaderRow}>
+                <span>{t("Who are you paying?")}</span>
+                <strong>
+                    {t("Sending")} {formatMoney(amount, currencyCode)}
+                </strong>
+            </div>
+
+            {/* Beneficiary type */}
+            <div className={styles.segmentedControl}>
+                {[
+                    { id: "individual", label: "Individual" },
+                    { id: "business", label: "Business" },
+                ].map((item) => (
+                    <button
+                        type="button"
+                        key={item.id}
+                        className={form.type === item.id ? styles.selectedSegment : ""}
+                        onClick={() => update("type", item.id)}
+                    >
+                        {t(item.label)}
+                    </button>
+                ))}
+            </div>
+
+            {/* Name fields */}
+            {form.type === "business" ? (
+                <TextField label={t("Legal name *")} value={form.legalName} onChange={(v) => update("legalName", v)} />
+            ) : (
+                <div className={styles.formGrid}>
+                    <TextField label={t("First name *")} value={form.firstName} onChange={(v) => update("firstName", v)} />
+                    <TextField label={t("Last name *")} value={form.lastName} onChange={(v) => update("lastName", v)} />
+                </div>
+            )}
+
+            <hr className={styles.divider} />
+
+            {/* Bank details */}
+            <div className={styles.sectionLabel} style={{ margin: 0 }}>{t("Bank details")}</div>
+
+            <TextField
+                label={t("BIC / SWIFT Code *")}
+                value={form.swift_code}
+                onChange={(v) => update("swift_code", v.toUpperCase())}
+                hint={bicValid ? t("Valid BIC format") : ""}
+                error={bicError}
+                placeholder="e.g. AAAABBCC or AAAABBCCDDD"
+            />
+            <TextField label={t("Bank name *")} value={form.bankName} onChange={(v) => update("bankName", v)} />
+
+            <div className={styles.addressGrid}>
+                <TextField label={t("Bank street address *")} value={form.bankAddress} onChange={(v) => update("bankAddress", v)} />
+                <TextField label={t("Bank city *")} value={form.bankCity} onChange={(v) => update("bankCity", v)} />
+                <TextField label={t("Bank postal code *")} value={form.bankPostal} onChange={(v) => update("bankPostal", v)} />
+                <TextField label={t("Bank country")} value={form.bankCountry} onChange={(v) => update("bankCountry", v)} optional />
+            </div>
+
+            <TextField
+                label={t("Intermediary BIC")}
+                value={form.intermediaryBic}
+                onChange={(v) => update("intermediaryBic", v.toUpperCase())}
+                hint={t("Only needed if your bank requires a correspondent bank")}
+                optional
+                placeholder="AAAABBCC"
+            />
+
+            <hr className={styles.divider} />
+
+            {/* Beneficiary address */}
+            <div className={styles.sectionLabel} style={{ margin: 0 }}>{t("Beneficiary address")}</div>
+
+            <TextField label={t("Account / IBAN number")} value={form.accountNumber} onChange={(v) => update("accountNumber", v)} optional />
+
+            <div className={styles.addressGrid}>
+                <TextField label={t("Street address *")} value={form.beneficiaryAddress} onChange={(v) => update("beneficiaryAddress", v)} />
+                <TextField label={t("City *")} value={form.beneficiaryCity} onChange={(v) => update("beneficiaryCity", v)} />
+                <TextField label={t("Postal code *")} value={form.beneficiaryPostal} onChange={(v) => update("beneficiaryPostal", v)} />
+                <TextField label={t("Country")} value={form.beneficiaryCountry} onChange={(v) => update("beneficiaryCountry", v)} optional />
+            </div>
+
+            <button
+                type="button"
+                className={styles.toggleRow}
+                onClick={() => update("saveBeneficiary", !form.saveBeneficiary)}
+            >
+                <span className={`${styles.toggle} ${form.saveBeneficiary ? styles.toggleOn : ""}`}>
+                    <span />
+                </span>
+                {t("Save this beneficiary for next time")}
+            </button>
+        </div>
+    )
+}
+
+// ─── Step: Purpose & charges ──────────────────────────────────────────────────
+
+const PurposeStep = ({ amount, currencyCode, purpose, setPurpose, additionalInfo, setAdditionalInfo }) => {
+    const { t } = useTranslation()
+
+    return (
+        <div className={styles.purposeStep}>
+            <div className={styles.stepHeaderRow}>
+                <span>{t("Purpose of payment")}</span>
+                <strong>
+                    {t("Sending")} {formatMoney(amount, currencyCode)}
+                </strong>
+            </div>
+
+            <label className={styles.field}>
+                <span>{t("Purpose of payment")}</span>
+                <div className={styles.selectWrap}>
+                    <select value={purpose} onChange={(e) => setPurpose(e.target.value)}>
+                        {PURPOSE_OPTIONS.map((item) => (
+                            <option key={item} value={item}>
+                                {t(item)}
+                            </option>
+                        ))}
+                    </select>
+                    <ChevronDown size={18} />
+                </div>
+            </label>
+
+            <TextField
+                label={t("Additional information (optional)")}
+                value={additionalInfo}
+                onChange={setAdditionalInfo}
+                optional
+            />
+
+            <div className={styles.infoStrip}>
+                {t("SWIFT transfers are debited in EUR and delivered in USD. The full previewed amount is guaranteed for the rate-locked window.")}
+            </div>
+        </div>
+    )
+}
+
+// ─── Step: Review (with quote timer) ─────────────────────────────────────────
+
+const ReviewStep = ({
+    amount,
+    currencyCode,
+    selectedBeneficiary,
+    purpose,
+    additionalInfo,
+    feeDetails,
+    quoteExpiresAt,
+    confirmedDetails,
+    setConfirmedDetails,
+    onRefreshQuote,
+    isRefreshingQuote,
+}) => {
+    const { t } = useTranslation()
+
+    // ── Quote countdown — hardcoded 5 minutes, resets on every new quote ──────
+    const QUOTE_DURATION = 300 // 5 minutes, always
+    const [secondsLeft, setSecondsLeft] = useState(QUOTE_DURATION)
+
+    const timerRef = useRef(null)
+
+    // Reset to 5:00 every time a new fee quote arrives
+    useEffect(() => {
+        setSecondsLeft(QUOTE_DURATION)
+    }, [feeDetails])
+
+    useEffect(() => {
+        if (timerRef.current) clearInterval(timerRef.current)
+        timerRef.current = setInterval(() => {
+            setSecondsLeft((prev) => Math.max(0, prev - 1))
+        }, 1000)
+        return () => clearInterval(timerRef.current)
+    }, [feeDetails])
+
+    const isExpired = secondsLeft === 0
+    const isWarning = !isExpired && secondsLeft <= 60
+
+    const feeAmount = feeDetails?.fee
+    const recipientAmount = feeDetails?.recipient
+    const totalAmount = feeDetails?.total
+    const exchangeRate = feeDetails?.exchanged_rate
+
+    const rows = [
+        ["Recipient", getBeneficiaryName(selectedBeneficiary)],
+        ["Beneficiary type", getBeneficiaryTypeLabel(selectedBeneficiary)],
+        ["BIC / SWIFT", getBeneficiaryBic(selectedBeneficiary)],
+        ["Bank", getBeneficiaryBankName(selectedBeneficiary)],
+        ["Country", getBeneficiaryCountry(selectedBeneficiary)],
+        ["Purpose", purpose],
+        ["Additional info", additionalInfo || "-"],
+        ["You send (EUR)", formatMoney(amount, currencyCode)],
+        ["Fee", feeAmount ? formatMoney(feeAmount.value, feeAmount.currency || currencyCode) : t("Calculating...")],
+        ["Net after fee", feeDetails?.amount ? formatMoney(feeDetails.amount.value, currencyCode) : "-"],
+        [
+            "Exchange rate",
+            exchangeRate
+                ? `1 ${exchangeRate.from} = ${exchangeRate.value.toFixed(6)} ${exchangeRate.to}`
+                : t("Calculating..."),
+        ],
+        ["Recipient gets", recipientAmount ? formatUSD(recipientAmount.value) : t("Calculating...")],
+        ["Total debited", totalAmount ? formatMoney(totalAmount.value, totalAmount.currency || currencyCode) : formatMoney(amount, currencyCode)],
+        ["Estimated arrival", "1–5 business days"],
+    ]
+
+    return (
+        <div className={styles.reviewStep}>
+            {/* FX headline */}
+            {recipientAmount && (
+                <div className={styles.fxHighlight}>
+                    <div className={styles.fxHighlightLeft}>
+                        <p>{t("Recipient receives (guaranteed)")}</p>
+                        <h2>{formatUSD(recipientAmount.value)}</h2>
+                    </div>
+                    <span className={styles.fxArrow}>→</span>
+                    <div className={styles.fxHighlightRight}>
+                        <p>{t("You send")}</p>
+                        <strong>{formatMoney(amount, currencyCode)}</strong>
+                        {exchangeRate && (
+                            <>
+                                <br />
+                                <p style={{ marginTop: "4px" }}>{t("Rate")}</p>
+                                <strong>
+                                    1 EUR = {exchangeRate.value.toFixed(4)} USD
+                                </strong>
+                            </>
+                        )}
+                    </div>
+                </div>
+            )}
+
+            {/* Quote timer */}
+            <div
+                className={`${styles.quoteTimerBox} ${isWarning ? styles.timerWarning : ""} ${isExpired ? styles.timerExpired : ""}`}
+            >
+                <div className={styles.timerContent}>
+                    {isRefreshingQuote ? (
+                        <>
+                            <RefreshCw size={16} />
+                            <span>{t("Refreshing quote...")}</span>
+                        </>
+                    ) : isExpired ? (
+                        <>
+                            <Clock size={16} />
+                            <span>{t("Quote has expired. Please refresh to get a new rate.")}</span>
+                        </>
+                    ) : (
+                        <>
+                            <Clock size={16} />
+                            <span>
+                                {t("Rate locked for")}{" "}
+                                <strong className={styles.timerSeconds}>
+                                    {Math.floor(secondsLeft / 60)}:{String(secondsLeft % 60).padStart(2, "0")}
+                                </strong>
+                            </span>
+                        </>
+                    )}
+                </div>
+
+                <button
+                    type="button"
+                    className={styles.refreshBtn}
+                    onClick={onRefreshQuote}
+                    disabled={isRefreshingQuote}
+                >
+                    <RefreshCw size={12} />
+                    {t("New quote")}
+                </button>
+            </div>
+
+            {/* Review table */}
+            <div className={styles.sectionLabel}>{t("Review your payment")}</div>
+            <div className={styles.reviewTable}>
+                {rows.map(([label, value]) => (
+                    <div className={styles.reviewRow} key={label}>
+                        <span>{t(label)}</span>
+                        <strong>{value}</strong>
+                    </div>
+                ))}
+            </div>
+
+            <label className={styles.confirmRow}>
+                <input
+                    type="checkbox"
+                    checked={confirmedDetails}
+                    onChange={(e) => setConfirmedDetails(e.target.checked)}
+                />
+                <span>
+                    {t("The recipient details are correct. I understand this SWIFT transfer, once initiated, may be irreversible. The USD amount shown is guaranteed for the quoted window.")}
+                </span>
+            </label>
+        </div>
+    )
+}
+
+// ─── Receipt PDF ──────────────────────────────────────────────────────────────
+
+const downloadSwiftReceipt = ({
+    amount,
+    currencyCode,
+    selectedBeneficiary,
+    purpose,
+    additionalInfo,
+    feeDetails,
+    payoutResult,
+    t,
+}) => {
+    const doc = new jsPDF()
+
+    const feeAmount = feeDetails?.fee
+    const recipientAmount = feeDetails?.recipient
+    const totalAmount = feeDetails?.total
+    const exchangeRate = feeDetails?.exchanged_rate
+
+    const trackingReference =
+        payoutResult?.transaction_id ||
+        payoutResult?.transaction_ref ||
+        payoutResult?.reference_id ||
+        payoutResult?.reference ||
+        payoutResult?._id ||
+        "-"
+
+    const status = payoutResult?.status || "INITIATED"
+
+    const rows = [
+        ["Recipient", getBeneficiaryName(selectedBeneficiary)],
+        ["Beneficiary type", getBeneficiaryTypeLabel(selectedBeneficiary)],
+        ["BIC / SWIFT", getBeneficiaryBic(selectedBeneficiary)],
+        ["Bank", getBeneficiaryBankName(selectedBeneficiary)],
+        ["Country", getBeneficiaryCountry(selectedBeneficiary)],
+        ["Purpose", purpose || "-"],
+        ["Additional info", additionalInfo || "-"],
+        ["You sent (EUR)", formatMoney(amount, currencyCode)],
+        ["Fee", feeAmount ? formatMoney(feeAmount.value, feeAmount.currency || currencyCode) : "N/A"],
+        ["Net after fee", feeDetails?.amount ? formatMoney(feeDetails.amount.value, currencyCode) : "-"],
+        [
+            "Exchange rate",
+            exchangeRate ? `1 ${exchangeRate.from} = ${exchangeRate.value.toFixed(6)} ${exchangeRate.to}` : "-",
+        ],
+        ["Recipient received", recipientAmount ? formatUSD(recipientAmount.value) : "-"],
+        ["Total debited", totalAmount ? formatMoney(totalAmount.value, totalAmount.currency || currencyCode) : "-"],
+        ["Estimated arrival", "1–5 business days"],
+        ["Tracking reference", trackingReference],
+        ["Status", status],
+    ]
+
+    doc.setFontSize(20)
+    doc.setFont("helvetica", "bold")
+    doc.text("SWIFT Transfer Receipt", 14, 20)
+
+    doc.setFontSize(10)
+    doc.setFont("helvetica", "normal")
+    doc.text(`Generated: ${new Date().toLocaleString()}`, 14, 28)
+
+    autoTable(doc, {
+        startY: 36,
+        head: [["Details", "Information"]],
+        body: rows,
+        theme: "grid",
+        styles: { fontSize: 9, cellPadding: 4 },
+        headStyles: { fontStyle: "bold" },
+        columnStyles: {
+            0: { cellWidth: 55, fontStyle: "bold" },
+            1: { cellWidth: 125 },
+        },
+    })
+
+    const finalY = doc.lastAutoTable.finalY + 12
+    doc.setFontSize(9)
+    doc.text(
+        "The recipient receives the exact previewed USD amount — rate was locked at the time of quote.",
+        14,
+        finalY
+    )
+    doc.setFontSize(8)
+    doc.text("This receipt is generated electronically.", 14, finalY + 8)
+
+    doc.save(`SWIFT-Transfer-Receipt-${trackingReference}.pdf`)
+}
+
+// ─── Step: Done ───────────────────────────────────────────────────────────────
+
+const DoneStep = ({
+    amount,
+    currencyCode,
+    selectedBeneficiary,
+    feeDetails,
+    payoutResult,
+    purpose,
+    additionalInfo,
+    onSendAgain,
+}) => {
+    const { t } = useTranslation()
+    const navigate = useNavigate()
+
+    const recipientAmount = feeDetails?.recipient
+    const feeAmount = feeDetails?.fee
+    const trackingReference =
+        payoutResult?.transaction_id ||
+        payoutResult?.transaction_ref ||
+        payoutResult?.reference_id ||
+        payoutResult?.reference ||
+        payoutResult?._id ||
+        "-"
+    const status = payoutResult?.status || "INITIATED"
+
+    return (
+        <div className={styles.doneStep}>
+            <div className={styles.doneHero}>
+                <img src={success} alt="" />
+                <h3>{t("Payment submitted")}</h3>
+                <p>
+                    {t("You sent")} {formatMoney(amount, currencyCode)} {t("to")}{" "}
+                    {getBeneficiaryName(selectedBeneficiary)}
+                </p>
+            </div>
+
+            <div className={styles.reviewTable}>
+                <div className={styles.reviewRow}>
+                    <span>{t("Tracking reference")}</span>
+                    <strong>{trackingReference}</strong>
+                </div>
+                <div className={styles.reviewRow}>
+                    <span>{t("Status")}</span>
+                    <strong>{t(status)}</strong>
+                </div>
+                <div className={styles.reviewRow}>
+                    <span>{t("Fee")}</span>
+                    <strong>
+                        {feeAmount ? formatMoney(feeAmount.value, feeAmount.currency || currencyCode) : "-"}
+                    </strong>
+                </div>
+                <div className={styles.reviewRow}>
+                    <span>{t("Recipient gets")}</span>
+                    <strong>{recipientAmount ? formatUSD(recipientAmount.value) : "-"}</strong>
+                </div>
+                <div className={styles.reviewRow}>
+                    <span>{t("Estimated arrival")}</span>
+                    <strong>{t("1–5 business days")}</strong>
+                </div>
+            </div>
+
+            <div className={styles.doneActions}>
+                <button type="button" className={styles.backBtn} onClick={onSendAgain}>
+                    <Send size={15} />
+                    {t("Send again")}
+                </button>
+                <div>
+                    <button
+                        type="button"
+                        className={styles.backBtn}
+                        onClick={() =>
+                            downloadSwiftReceipt({
+                                amount,
+                                currencyCode,
+                                selectedBeneficiary,
+                                purpose,
+                                additionalInfo,
+                                feeDetails,
+                                payoutResult,
+                                t,
+                            })
+                        }
+                    >
+                        <Download size={15} />
+                        {t("Download receipt")}
+                    </button>
+                    <button type="button" className={styles.nextBtn} onClick={() => navigate("/virtual-IBAN")}>
+                        <Home size={15} />
+                        {t("Back to dashboard")}
+                    </button>
+                </div>
+            </div>
+        </div>
+    )
+}
+
+// ─── Main Component ───────────────────────────────────────────────────────────
+
+const SwiftTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, isPage = false }) => {
+    const { t } = useTranslation()
+    const width = useWindowWidth()
+    const navigate = useNavigate()
+    const { userDetails, setProfileLockTime, getUserBeneficiaries, beneficiaries, authHeader, IBANBeneficiaries } = useContext(UserContext)
+
+    const currencyCode = selectedIban?.currency || "EUR"
+    const sourceAvailableBalance = getSourceBalance(availableBalance, selectedIban)
+    const getDefaultAuthType = () => (userDetails?.tfa ? "authenticator" : "sms")
+
+    // ── State ──────────────────────────────────────────────────────────────────
+    const [currentStep, setCurrentStep] = useState(STEPS.AMOUNT)
+    const [amount, setAmount] = useState("")
+    const [selectedBeneficiary, setSelectedBeneficiary] = useState(null)
+    const [beneficiaryForm, setBeneficiaryForm] = useState(DEFAULT_BENEFICIARY_FORM)
+    const [isAddingBeneficiary, setIsAddingBeneficiary] = useState(false)
+    const [showBeneficiaryAddModal, setShowBeneficiaryAddModal] = useState(false)
+    const [purpose, setPurpose] = useState(PURPOSE_OPTIONS[0])
+    const [additionalInfo, setAdditionalInfo] = useState("")
+    const [confirmedDetails, setConfirmedDetails] = useState(false)
+    const [authType, setAuthType] = useState(getDefaultAuthType)
+    const [feeDetails, setFeeDetails] = useState(null)
+    const [quoteToken, setQuoteToken] = useState("")
+    const [quoteExpiresAt, setQuoteExpiresAt] = useState(null)
+    const [isRefreshingQuote, setIsRefreshingQuote] = useState(false)
+    const [otpToken, setOtpToken] = useState("")
+    const [payoutResult, setPayoutResult] = useState(null)
+
+    // ── Hooks ──────────────────────────────────────────────────────────────────
+    const payoutFee = useVirtualIbanSwiftPayoutFee()
+    const payoutDirect = useVirtualIbanSwiftPayoutDirect()
+
+    const { sendOtp, isSendingOtp } = useSendOtp({
+        onSuccess: (token) => {
+            setOtpToken(token)
+            setCurrentStep(STEPS.OTP)
+        },
+        onError: (err) => {
+            toast.error(err?.message || t("Unable to send OTP"))
+        },
+    })
+
+    // ── Derived ────────────────────────────────────────────────────────────────
+    const sourceIban = useMemo(
+        () => ({ title: getVirtualIbanTitle(selectedIban, currencyCode), iban: getVirtualIbanNumber(selectedIban) }),
+        [selectedIban, currencyCode]
+    )
+
+    const machineData = useMemo(
+        () => ({
+            amount,
+            availableBalance: sourceAvailableBalance,
+            selectedBeneficiary,
+            beneficiaryForm,
+            isAddingBeneficiary,
+            purpose,
+            confirmedDetails,
+        }),
+        [amount, sourceAvailableBalance, selectedBeneficiary, beneficiaryForm, isAddingBeneficiary, purpose, confirmedDetails]
+    )
+
+    // Only show beneficiaries that have a bank account (account_type includes "bank")
+    const swiftBeneficiaries = useMemo(
+        () => ([...beneficiaries || [], ...IBANBeneficiaries || []]).filter((b) => Array.isArray(b?.account_type) && b.account_type.includes("bank")),
+        [beneficiaries, IBANBeneficiaries]
+    )
+
+    const isProcessing = payoutFee.isPending || isSendingOtp || isRefreshingQuote
+    const isQuoteExpired = quoteExpiresAt ? new Date(quoteExpiresAt).getTime() <= Date.now() : false
+
+    // Disable Next on Review if quote has expired
+    const disabled =
+        getDisabledState(currentStep, machineData) ||
+        isProcessing ||
+        (currentStep === STEPS.REVIEW && isQuoteExpired)
+
+    const showFooter = currentStep !== STEPS.OTP && currentStep !== STEPS.DONE
+
+    // ── Effects ────────────────────────────────────────────────────────────────
+    useEffect(() => {
+        if (userDetails?.tfa) setAuthType("authenticator")
+    }, [userDetails?.tfa])
+
+    useEffect(() => {
+        if (userDetails?._id) getUserBeneficiaries()
+    }, [userDetails])
+
+    // ── Handlers ───────────────────────────────────────────────────────────────
+    const resetState = () => {
+        setCurrentStep(STEPS.AMOUNT)
+        setAmount("")
+        setSelectedBeneficiary(null)
+        setBeneficiaryForm(DEFAULT_BENEFICIARY_FORM)
+        setIsAddingBeneficiary(false)
+        setPurpose(PURPOSE_OPTIONS[0])
+        setAdditionalInfo("")
+        setConfirmedDetails(false)
+        setAuthType(getDefaultAuthType())
+        setFeeDetails(null)
+        setQuoteToken("")
+        setQuoteExpiresAt(null)
+        setIsRefreshingQuote(false)
+        setOtpToken("")
+        setPayoutResult(null)
+    }
+
+    const handleClose = () => {
+        resetState()
+        toggle?.()
+    }
+
+    const buildFeePayload = () => ({
+        iban_id: getVirtualIbanId(selectedIban),
+        amount: getAmountNumber(amount),
+    })
+
+    const buildPayoutPayload = () => ({
+        iban_id: getVirtualIbanId(selectedIban),
+        beneficiary_id: getBeneficiaryId(selectedBeneficiary),
+        token: quoteToken,
+        description: purpose,
+        purpose: getPurposeCode(purpose),
+        additionalInformation: additionalInfo || undefined,
+    })
+
+    const previewFee = async () => {
+        const res = await payoutFee.mutateAsync(buildFeePayload())
+        const data = res?.data || null
+        setFeeDetails(data)
+        setQuoteToken(data?.token || "")
+        setQuoteExpiresAt(data?.quote_expires_at || null)
+        return data
+    }
+
+    const handleRefreshQuote = async () => {
+        setIsRefreshingQuote(true)
+        setConfirmedDetails(false)
+        try {
+            await previewFee()
+        } catch (error) {
+            handlePaymentApiError({
+                error,
+                navigate,
+                setError: (message) => toast.error(message),
+                setProfileLockTime,
+            })
+        } finally {
+            setIsRefreshingQuote(false)
+        }
+    }
+
+    const handleSendOtp = async (otpCodeType) => {
+        const nextAuthType = otpCodeType || authType
+        setAuthType(nextAuthType)
+        try {
+            await sendOtp(buildPayoutPayload(), nextAuthType)
+        } catch {
+            // toast already shown by useSendOtp's onError
+        }
+    }
+
+    const verifyOtp = async (setVerified, type, otp, setOtpError) => {
+        try {
+            const res = await payoutDirect.mutateAsync({
+                ...buildPayoutPayload(),
+                token: otpToken,
+                otp,
+                type: type || authType,
+            })
+            const data = res?.data || res || null
+            setPayoutResult(data)
+            setVerified(true)
+        } catch (error) {
+            // Handle 409 duplicate gracefully
+            const status = error?.response?.status || error?.status
+            if (status === 409) {
+                const dupData = error?.response?.data?.data || {}
+                setPayoutResult(dupData)
+                setVerified(true)
+                toast.info(t("This transfer was already submitted. Showing the original transaction."))
+                return
+            }
+            handlePaymentApiError({
+                error,
+                navigate,
+                setError: setOtpError,
+                setProfileLockTime,
+            })
+        }
+    }
+
+    const handleContinue = async () => {
+        if (currentStep === STEPS.ADD_BENEFICIARY) {
+            const nextBeneficiary = buildBeneficiaryFromForm(beneficiaryForm)
+            setSelectedBeneficiary(nextBeneficiary)
+            if (beneficiaryForm.saveBeneficiary) {
+                // Optimistically add to list — real list refreshes after getUserBeneficiaries
+            }
+            setCurrentStep(STEPS.PURPOSE)
+            return
+        }
+
+        if (currentStep === STEPS.PURPOSE) {
+            try {
+                await previewFee()
+                setCurrentStep(STEPS.REVIEW)
+            } catch (error) {
+                handlePaymentApiError({
+                    error,
+                    navigate,
+                    setError: (message) => toast.error(message),
+                    setProfileLockTime,
+                })
+            }
+            return
+        }
+
+        if (currentStep === STEPS.REVIEW) {
+            // Guard: don't proceed if quote expired
+            if (isQuoteExpired) {
+                toast.warning(t("Your quote has expired. Please refresh the rate before confirming."))
+                return
+            }
+            await handleSendOtp()
+            return
+        }
+
+        const { nextStep } = goNext(currentStep, machineData)
+        if (nextStep) setCurrentStep(nextStep)
+    }
+
+    const handleBack = () => {
+        const { prevStep } = goBack(currentStep, machineData)
+        if (currentStep === STEPS.ADD_BENEFICIARY) setIsAddingBeneficiary(false)
+        if (prevStep === null) handleClose()
+        else setCurrentStep(prevStep)
+    }
+
+    const renderStepContent = () => {
+        switch (currentStep) {
+            case STEPS.AMOUNT:
+                return (
+                    <SwiftAmountStep
+                        amount={amount}
+                        setAmount={setAmount}
+                        availableBalance={sourceAvailableBalance}
+                        currencyCode={currencyCode}
+                        sourceIban={sourceIban}
+                    />
+                )
+            case STEPS.BENEFICIARY:
+                return (
+                    <BeneficiaryStep
+                        beneficiaries={swiftBeneficiaries}
+                        selectedBeneficiary={selectedBeneficiary}
+                        setSelectedBeneficiary={setSelectedBeneficiary}
+                        onAddBeneficiary={() => setShowBeneficiaryAddModal(true)}
+                        authHeader={authHeader}
+                        getUserBeneficiaries={getUserBeneficiaries}
+                    />
+                )
+            case STEPS.ADD_BENEFICIARY:
+                return (
+                    <AddBeneficiaryStep
+                        amount={amount}
+                        currencyCode={currencyCode}
+                        form={beneficiaryForm}
+                        setForm={setBeneficiaryForm}
+                    />
+                )
+            case STEPS.PURPOSE:
+                return (
+                    <PurposeStep
+                        amount={amount}
+                        currencyCode={currencyCode}
+                        purpose={purpose}
+                        setPurpose={setPurpose}
+                        additionalInfo={additionalInfo}
+                        setAdditionalInfo={setAdditionalInfo}
+                    />
+                )
+            case STEPS.REVIEW:
+                return (
+                    <ReviewStep
+                        amount={amount}
+                        currencyCode={currencyCode}
+                        selectedBeneficiary={selectedBeneficiary}
+                        purpose={purpose}
+                        additionalInfo={additionalInfo}
+                        feeDetails={feeDetails}
+                        quoteExpiresAt={quoteExpiresAt}
+                        confirmedDetails={confirmedDetails}
+                        setConfirmedDetails={setConfirmedDetails}
+                        onRefreshQuote={handleRefreshQuote}
+                        isRefreshingQuote={isRefreshingQuote}
+                    />
+                )
+            case STEPS.OTP:
+                return (
+                    <OTPConfirmation
+                        fullHeight
+                        setter={setCurrentStep}
+                        setterValue={STEPS.DONE}
+                        hideOtp={() => { }}
+                        callback={verifyOtp}
+                        processing={payoutDirect.isPending}
+                        resendHandler={handleSendOtp}
+                        authType={authType}
+                        setAuthType={setAuthType}
+                    />
+                )
+            case STEPS.DONE:
+                return (
+                    <DoneStep
+                        amount={amount}
+                        currencyCode={currencyCode}
+                        selectedBeneficiary={selectedBeneficiary}
+                        feeDetails={feeDetails}
+                        payoutResult={payoutResult}
+                        purpose={purpose}
+                        additionalInfo={additionalInfo}
+                        onSendAgain={resetState}
+                        onClose={handleClose}
+                    />
+                )
+            default:
+                return null
+        }
+    }
+
+    const content = (
+        <div className={styles.modalLayout} style={{ flexDirection: width < 1000 ? "column" : "row" }}>
+            {/* Left sidebar */}
+            <aside className={styles.leftPanel}>
+                <div>
+                    <div className={styles.flowHeader}>
+                        <div className={styles.flowIcon}>
+                            <Globe size={18} />
+                        </div>
+                        <div>
+                            <h2>{t("SWIFT Transfer")}</h2>
+                            <p>{t("International Wire — EUR → USD")}</p>
+                        </div>
+                    </div>
+
+                    <div style={{ marginTop: "2rem" }} className={withdrawStyles.progressEffect}>
+                        {SIDEBAR_STEPS.map((item, index) => {
+                            const IconComponent = sidebarIcons[item.stepName]
+                            return (
+                                <SidebarProgress
+                                    key={item.stepName}
+                                    stepLabel={item.stepLabel}
+                                    label={item.label}
+                                    Icon={IconComponent}
+                                    isActive={isSidebarStepActive(item, currentStep)}
+                                    isCompleted={isSidebarStepCompleted(item, currentStep)}
+                                    showBar={index < SIDEBAR_STEPS.length - 1}
+                                />
+                            )
+                        })}
+                    </div>
+                </div>
+
+                {width > 700 && (
+                    <div className={styles.contactBox}>
+                        <ContactBox />
+                    </div>
+                )}
+            </aside>
+
+            {/* Right content */}
+            <section className={styles.rightPanel}>
+                <div className={styles.content}>{renderStepContent()}</div>
+
+                {showFooter && (
+                    <div className={styles.footer}>
+                        <button type="button" className={styles.cancelBtn} onClick={handleClose}>
+                            {t("Cancel")}
+                        </button>
+                        <div className={styles.footerNav}>
+                            <button type="button" className={styles.backBtn} onClick={handleBack}>
+                                <ChevronLeft size={14} />
+                                {t("Back")}
+                            </button>
+                            <button
+                                type="button"
+                                className={styles.nextBtn}
+                                disabled={disabled}
+                                onClick={handleContinue}
+                            >
+                                {isProcessing ? t("Processing...") : getContinueLabel(currentStep, t)}
+                                <ChevronRight size={14} />
+                            </button>
+                        </div>
+                    </div>
+                )}
+            </section>
+        </div>
+    )
+
+    return (
+        <>
+            {isPage ? (
+                <div className={styles.pageContainer}>{content}</div>
+            ) : (
+                <Modal
+                    isOpen={isOpen}
+                    style={{ minWidth: width > 1000 ? "980px" : "0%" }}
+                    toggle={handleClose}
+                >
+                    <ModalBody style={{ padding: "20px" }}>{content}</ModalBody>
+                </Modal>
+            )}
+
+            {/* Add beneficiary modal */}
+            <Modal
+                style={{ minWidth: width > 1000 ? "900px" : "0%" }}
+                toggle={() => setShowBeneficiaryAddModal(false)}
+                isOpen={showBeneficiaryAddModal}
+            >
+                <ModalBody style={{ padding: "0px" }}>
+                    <AddBeneficiary
+                        inInternationalModal={true}
+                        toggleHandler={async (addedBen) => {
+                            await getUserBeneficiaries()
+                            if (addedBen) setSelectedBeneficiary(addedBen)
+                            setShowBeneficiaryAddModal(false)
+                        }}
+                    />
+                </ModalBody>
+            </Modal>
+        </>
+    )
+}
+
+export default SwiftTransfer

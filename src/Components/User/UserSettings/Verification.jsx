@@ -112,7 +112,7 @@ const Verification = ({ isCollapsed, setIsCollapsed }) => {
                         justifyContent: "space-between",
                         alignItems: "center"
                     }}>
-                        <h5>Verification Status: </h5>
+                        <h5>{t("Verification Status:")}</h5>
                         <h5 style={{
                             color: userDetails?.user?.kyc_status === "approved"
                                 ?
@@ -207,7 +207,7 @@ const Verification = ({ isCollapsed, setIsCollapsed }) => {
                 </CardBody>
             </div>
         </Card>
-    )
+    );
 }
 
 export default Verification

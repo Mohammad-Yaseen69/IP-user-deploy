@@ -56,8 +56,7 @@ const SuccessStep = ({ onDone }) => {
                         color: "#222"
                     }}
                 >
-                    {t("Your Business IBAN is live")} 🎉
-                </h2>
+                    {t("Your Business IBAN is live")}{t("🎉")}</h2>
 
                 <p
                     style={{
@@ -97,9 +96,7 @@ const SuccessStep = ({ onDone }) => {
                                 fontWeight: 600,
                                 fontSize: 13
                             }}
-                        >
-                            🇲🇹 Malta IBAN - MT jurisdiction
-                        </div>
+                        >{t("🇲🇹 Malta IBAN - MT jurisdiction")}</div>
 
                         <div
                             style={{
@@ -110,9 +107,7 @@ const SuccessStep = ({ onDone }) => {
                                 fontSize: 12,
                                 fontWeight: 600
                             }}
-                        >
-                            Active
-                        </div>
+                        >{t("Active")}</div>
                     </div>
 
                     {/* IBAN */}
@@ -126,9 +121,7 @@ const SuccessStep = ({ onDone }) => {
                             fontWeight: 700,
                             marginBottom: 24
                         }}
-                    >
-                        MTXX XXXX XXXX XXXX XXXX XX
-                    </div>
+                    >{t("MTXX XXXX XXXX XXXX XXXX XX")}</div>
 
 
                     <div
@@ -139,14 +132,14 @@ const SuccessStep = ({ onDone }) => {
                             fontSize: 14
                         }}
                     >
-                        <span style={{ color: "#777" }}>BIC / SWIFT</span>
-                        <strong>SYPLMTM2</strong>
+                        <span style={{ color: "#777" }}>{t("BIC / SWIFT")}</span>
+                        <strong>{t("SYPLMTM2")}</strong>
 
-                        <span style={{ color: "#777" }}>Issuer</span>
-                        <strong>System Pay Services (Malta) Limited - MFSA</strong>
+                        <span style={{ color: "#777" }}>{t("Issuer")}</span>
+                        <strong>{t("System Pay Services (Malta) Limited - MFSA")}</strong>
 
-                        <span style={{ color: "#777" }}>Pack applied</span>
-                        <strong>Growth Pack</strong>
+                        <span style={{ color: "#777" }}>{t("Pack applied")}</span>
+                        <strong>{t("Growth Pack")}</strong>
                     </div>
 
                     {/* Buttons */}

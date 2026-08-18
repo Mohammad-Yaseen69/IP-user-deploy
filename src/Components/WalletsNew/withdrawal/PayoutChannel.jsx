@@ -170,11 +170,11 @@ const PayoutChannel = ({
                             </Card>
                         ))
                         :
-                        <span>No payment method supported at the moment.</span>
+                        <span>{t("No payment method supported at the moment.")}</span>
                 }
             </div>
         </div>
-    )
+    );
 }
 
 export default PayoutChannel

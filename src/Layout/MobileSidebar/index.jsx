@@ -91,7 +91,7 @@ const MobileSidebar = ({ setShowModal }) => {
                         {
                             filteredMenu?.map(item => (
                                 // <li key={item.title} className={`${styles.nav_item} ${window.location.pathname === item.url && styles.nav_item_active} ${item.title === "Logout" && styles.ni_logout}`} onClick={verifyToken}>
-                                <li key={item.title} className={`${styles.nav_item} ${window.location.pathname === item.url && styles.nav_item_active} ${item.title === "Logout" && styles.ni_logout}`}>
+                                (<li key={item.title} className={`${styles.nav_item} ${window.location.pathname === item.url && styles.nav_item_active} ${item.title === "Logout" && styles.ni_logout}`}>
                                     {
                                         item.type === "text"
                                             ?
@@ -116,18 +116,18 @@ const MobileSidebar = ({ setShowModal }) => {
                                                 }
                                             </Link>
                                     }
-                                </li>
+                                </li>)
                             ))
                         }
                     </ul>
                     <div style={{ marginTop: "2rem", color: "#848484", fontSize: ".6rem" }}>
-                        <span>{t("Powered By")} <Link style={{ color: "#848484", textDecoration: "underline", whiteSpace: "nowrap" }}>Kemit Kingdom SA</Link></span>
+                        <span>{t("Powered By")} <Link style={{ color: "#848484", textDecoration: "underline", whiteSpace: "nowrap" }}>{t("Kemit Kingdom SA")}</Link></span>
                         <p style={{ fontSize: ".6rem" }}>{t("A Swiss Company")}</p>
                     </div>
                 </nav>
             </div>
         </div>
-    )
+    );
 }
 
 export default MobileSidebar;
