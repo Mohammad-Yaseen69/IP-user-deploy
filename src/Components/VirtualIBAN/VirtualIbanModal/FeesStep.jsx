@@ -27,8 +27,8 @@ const FeesStep = ({ jurisdiction, feesAccepted, setFeesAccepted, activationFeeAm
                     {t(info.header)}
                 </h4>
                 <div className={styles.badges}>
-                    <span className={styles.badge}>SEPA</span>
-                    <span className={styles.badge}>SWIFT</span>
+                    <span className={styles.badge}>{t("SEPA")}</span>
+                    <span className={styles.badge}>{t("SWIFT")}</span>
                 </div>
             </div>
 
@@ -92,7 +92,7 @@ const FeesStep = ({ jurisdiction, feesAccepted, setFeesAccepted, activationFeeAm
                 </p>
             </label>
         </div>
-    )
+    );
 }
 
 export default FeesStep

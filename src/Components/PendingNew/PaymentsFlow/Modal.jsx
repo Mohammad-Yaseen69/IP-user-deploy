@@ -472,7 +472,7 @@ const PaymentsFlowModal = ({ isOpen, toggle, data, dataHandler, item }) => {
                                                                                 lineHeight: 1.3,
                                                                                 letterSpacing: '-0.28px'
                                                                             }}>
-                                                                                <strong>{data?.exchange_rate?.paypal?.fee?.currency}</strong> {t("is not supported by Paypal,")} <strong>USD</strong> {t("will be used as the default currency.")}
+                                                                                <strong>{data?.exchange_rate?.paypal?.fee?.currency}</strong> {t("is not supported by Paypal,")} <strong>{t("USD")}</strong> {t("will be used as the default currency.")}
                                                                             </span>
                                                                         </div>
                                                                         <div style={{
@@ -507,7 +507,7 @@ const PaymentsFlowModal = ({ isOpen, toggle, data, dataHandler, item }) => {
                                                                                         fontStyle: 'normal',
                                                                                         lineHeight: 1.5,
                                                                                         letterSpacing: '-0.14px'
-                                                                                    }}>1.00 {data?.exchange_rate?.paypal?.fee?.currency} = {Number(data?.exchange_rate?.paypal?.paypal_rate?.value)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 4 })} USD</strong>
+                                                                                    }}>1.00 {data?.exchange_rate?.paypal?.fee?.currency} = {Number(data?.exchange_rate?.paypal?.paypal_rate?.value)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 4 })}{t("USD")}</strong>
                                                                             </div>
                                                                             <div style={{
                                                                                 display: "flex",
@@ -532,7 +532,7 @@ const PaymentsFlowModal = ({ isOpen, toggle, data, dataHandler, item }) => {
                                                                                     fontWeight: 700,
                                                                                     lineHeight: 1.7,
                                                                                     letterSpacing: '-0.8px'
-                                                                                }}>{Number(data?.exchange_rate?.paypal?.paypal_converted?.value)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} USD</strong>
+                                                                                }}>{Number(data?.exchange_rate?.paypal?.paypal_converted?.value)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}{t("USD")}</strong>
                                                                             </div>
                                                                         </div>
                                                                     </>
@@ -836,7 +836,7 @@ const PaymentsFlowModal = ({ isOpen, toggle, data, dataHandler, item }) => {
                     </div>
             }
         </>
-    )
+    );
 }
 
 export default PaymentsFlowModal

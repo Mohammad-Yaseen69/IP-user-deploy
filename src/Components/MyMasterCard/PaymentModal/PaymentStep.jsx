@@ -88,7 +88,7 @@ const PaymentStep = (
                             <img src={logo_w} alt="" />
                         </div>
                         <div className={cardStyles.c_bot}>
-                            <span>XXXX XXXX XXXX {item?.last4}</span>
+                            <span>{t("XXXX XXXX XXXX")}{item?.last4}</span>
                             {
                                 selectedSaveCard?._id === item?._id
                                 &&
@@ -123,7 +123,7 @@ const PaymentStep = (
                             key={wallet_l.name}
                         >
                             <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-                                <h3 style={{ fontSize: cardToWallet && "20px" }} className={styles.walletNameHead}>{wallet_l.name} Wallet</h3>
+                                <h3 style={{ fontSize: cardToWallet && "20px" }} className={styles.walletNameHead}>{wallet_l.name}{t("Wallet")}</h3>
                                 <span
                                     className={styles.walletId}
                                     style={
@@ -283,7 +283,7 @@ const PaymentStep = (
             }
 
         </div>
-    )
+    );
 }
 
 export default PaymentStep

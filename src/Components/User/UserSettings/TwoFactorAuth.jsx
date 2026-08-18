@@ -160,7 +160,7 @@ const TwoFactorAuth = ({ isCollapsed, setIsCollapsed }) => {
                                             <Button style={{
                                                 borderRadius: "10px",
                                                 display: "flex", alignItems: "center", gap: ".75rem"
-                                            }} color="success"><CheckCircle size={18} color='white' />Updated Successfully!</Button>
+                                            }} color="success"><CheckCircle size={18} color='white' />{t("Updated Successfully!")}</Button>
                                             :
                                             <Button style={{
                                                 background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
@@ -176,13 +176,13 @@ const TwoFactorAuth = ({ isCollapsed, setIsCollapsed }) => {
                                     border: "none",
                                     outline: "none",
                                     borderRadius: "10px"
-                                }} onClick={() => setEditMode(true)}>Edit</Button>
+                                }} onClick={() => setEditMode(true)}>{t("Edit")}</Button>
                         }
                     </div>
                 </CardBody>
             </div>
         </Card>
-    )
+    );
 }
 
 export default TwoFactorAuth

@@ -64,7 +64,7 @@ const Cash = ({ values, changeHandler, isEditMode, payers, cashExtras, serviceFi
                                     gap: "1rem"
                                 }}>
                                     <FormGroup style={{ flex: 1, margin: 0, position: "relative" }}>
-                                        <Label className="col-form-label" htmlFor="card-holder-name">Select Document Type <span className="req_star">*</span></Label>
+                                        <Label className="col-form-label" htmlFor="card-holder-name">{t("Select Document Type")}<span className="req_star">*</span></Label>
                                         <Input disabled={!isEditMode} readOnly={!isEditMode} className="form-control" style={{ flex: 1, minWidth: "250px" }} type="select" name="document_type" value={values.document_type} onChange={e => {
                                             changeHandler(e)
                                             if (userWithdrawals?.some(item => item?.cash_pickup?.[0]?.document_type === e.target.value) && userWithdrawals?.some(item => item?.cash_pickup?.[0]?.document_number === values.document_number)) {
@@ -89,7 +89,7 @@ const Cash = ({ values, changeHandler, isEditMode, payers, cashExtras, serviceFi
                                         }
                                     </FormGroup>
                                     <FormGroup style={{ flex: 1, margin: 0 }}>
-                                        <Label className="col-form-label" htmlFor="card-number">Enter Document Number <span className="req_star">*</span></Label>
+                                        <Label className="col-form-label" htmlFor="card-number">{t("Enter Document Number")}<span className="req_star">*</span></Label>
                                         <Input disabled={!isEditMode} readOnly={!isEditMode} className="form-control" style={{ flex: 1, minWidth: "250px" }} placeholder="ABCD12345WAD2" name='document_number' value={values.document_number} onChange={e => {
                                             const value = e.target.value.replace(/[^a-zA-Z0-9]/g, '')
                                             changeHandler({ target: { name: e.target.name, value } })
@@ -119,7 +119,7 @@ const Cash = ({ values, changeHandler, isEditMode, payers, cashExtras, serviceFi
                         </>
             }
         </>
-    )
+    );
 }
 
 export default Cash

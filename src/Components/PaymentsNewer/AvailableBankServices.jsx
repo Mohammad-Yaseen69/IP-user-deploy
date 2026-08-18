@@ -116,7 +116,7 @@ const AvailableBankServices = ({ subServices, subService, setSubService, setSubS
                                     </div>
                                 ))
                                 :
-                                <div style={{ margin: "1rem auto", textAlign: "center" }}>No services found.</div>
+                                <div style={{ margin: "1rem auto", textAlign: "center" }}>{t("No services found.")}</div>
                             // <div style={{ height: "100px", width: "100px" }}>
                             //     <InstaPayLoader />
                             // </div>
@@ -155,7 +155,7 @@ const AvailableBankServices = ({ subServices, subService, setSubService, setSubS
                 </Button>
             </div>
         </div>
-    )
+    );
 }
 
 export default AvailableBankServices;

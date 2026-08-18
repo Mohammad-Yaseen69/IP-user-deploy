@@ -29,12 +29,12 @@ const DoneStep = () => {
                     <SealCheckIcon />
                 </div>
                 <div className={styles.doneText}>
-                    <h3>{t("Transaction completed")} 🎉</h3>
+                    <h3>{t("Transaction completed")}{t("🎉")}</h3>
                     <p>{t("The transaction has been successfully initiated.")}</p>
                 </div>
             </div>
         </div>
-    )
+    );
 }
 
 export default DoneStep
