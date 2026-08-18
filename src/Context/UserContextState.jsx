@@ -52,6 +52,7 @@ const UserState = ({ children }) => {
     const [userDetails, setUserDetails] = useState(null)
     const [userWallets, setUserWallets] = useState([])
     const [beneficiaries, setBeneficiaries] = useState([])
+    const [IBANBeneficiaries, setIBANBeneficiaries] = useState([])
     const [registeredBeneficiaries, setRegisteredBeneficiaries] = useState([])
     const [userTransactions, setUserTransactions] = useState([])
     const [userSecurityQues, setUserSecurityQues] = useState([])
@@ -430,7 +431,11 @@ const UserState = ({ children }) => {
             })
             const decrypted = decryptData(res.data.data)
             const regularBens = (decrypted?.beneficiaryList || []).filter(b => !b.vIbanBeneficiary)
+            const IBANBens = (decrypted?.beneficiaryList || []).filter(b => b.vIbanBeneficiary)
+
+
             setBeneficiaries(regularBens)
+            setIBANBeneficiaries(IBANBens)
 
         } catch {
             // 
@@ -692,7 +697,7 @@ const UserState = ({ children }) => {
         <UserContext.Provider value={{
             selectedAccount,
             setSelectedAccount,
-            userDetails, setUserDetails, userWallets, setUserWallets, token, authHeader, beneficiaries, setBeneficiaries, userTransactions, setUserTransactions, searchQuery, setSearchQuery, apiDates, setApiDates, userSecurityQues, referralLink, userSessions, allowedFeatures, verifyToken, userWithdrawals, setUserWithdrawals, cryptoWithdrawals, setCryptoWithdrawals, allowedWithdrawals, registeredBeneficiaries, profileCompleted, allowedCountries, userPortfolio, profileIncompleteReason, setUserPortfolio, setUserVideos, getUserVideos, userVideos, checkRegisteredBenficiaries, getAllActiveCountries, getUserWallets, getUserBeneficiaries, getUserDocuments, checkAuth, getSecurityQuestions, getInvitationLink, getSessions, profileCompletedPercentage, getWithdrawals, getReferralCommission, totalReferralAmount, validateSendingLimits, validateReceivingLimits, validateTransactionsCount, profileLockTIme, setProfileLockTime, showInactivityModal, setShowInactivityModal, is30Days, setIs30Days, threeDaysReminder, set3DaysReminder, is30DaysInfo, setIs30DaysInfo, threeDaysReminderInfo, set3DaysReminderInfo, clearData, croppedImages, updateCoordinates, setCroppedImages, missingTabsData, setMissingTabsData, setAvailable, available, setBlocked, blocked, benLoading, balanceLoading, showModalState, setShowModalState, processReceivingNonIpFunds: processReceivingNonIpFunds.mutateAsync, showAnotherLoginModal, setShowAnotherLoginModal, isAgentLogin, setIsAgentLogin, agentDetails, setAgentDetails, commisions
+            userDetails, setUserDetails, userWallets, setUserWallets, token, authHeader, beneficiaries, setBeneficiaries, userTransactions, setUserTransactions, searchQuery, setSearchQuery, apiDates, setApiDates, userSecurityQues, referralLink, userSessions, allowedFeatures, verifyToken, userWithdrawals, setUserWithdrawals, cryptoWithdrawals, setCryptoWithdrawals, allowedWithdrawals, registeredBeneficiaries, profileCompleted, allowedCountries, userPortfolio, profileIncompleteReason, setUserPortfolio, setUserVideos, getUserVideos, userVideos, checkRegisteredBenficiaries, getAllActiveCountries, getUserWallets, getUserBeneficiaries, getUserDocuments, checkAuth, getSecurityQuestions, getInvitationLink, getSessions, profileCompletedPercentage, getWithdrawals, getReferralCommission, totalReferralAmount, validateSendingLimits, validateReceivingLimits, validateTransactionsCount, profileLockTIme, setProfileLockTime, showInactivityModal, setShowInactivityModal, is30Days, setIs30Days, threeDaysReminder, set3DaysReminder, is30DaysInfo, setIs30DaysInfo, threeDaysReminderInfo, set3DaysReminderInfo, clearData, croppedImages, updateCoordinates, setCroppedImages, missingTabsData, setMissingTabsData, setAvailable, available, setBlocked, blocked, benLoading, balanceLoading, showModalState, setShowModalState, processReceivingNonIpFunds: processReceivingNonIpFunds.mutateAsync, showAnotherLoginModal, setShowAnotherLoginModal, isAgentLogin, setIsAgentLogin, agentDetails, setAgentDetails, commisions, setIBANBeneficiaries, IBANBeneficiaries
         }}>
             {((showModalState || Boolean(isSessionExpired)) && !location.pathname.startsWith("/pay/")) &&
                 <SessionExpireModal

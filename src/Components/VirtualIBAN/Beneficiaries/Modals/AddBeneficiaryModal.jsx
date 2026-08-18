@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
 import { Box, Modal, TextField, IconButton } from '@mui/material';
 import { X, User, Briefcase } from 'react-feather';
 import { useTranslation } from 'react-i18next';
@@ -7,12 +7,14 @@ import CountryDropDown from '../../../AddBeneficiary/CountryDropDown';
 import CitiesDropDown from '../../../CitiesDropDown';
 import PhoneInput from '../../../PhoneInput';
 import { toast } from 'react-toastify';
+import { UserContext } from '../../../../Context/UserContext';
 
 const AddBeneficiaryModal = ({ open, handleClose, onSaveSuccess, beneficiaryToEdit }) => {
     const { t } = useTranslation();
     const [loading, setLoading] = useState(false);
     const [beneficiaryType, setBeneficiaryType] = useState('individual');
     const [phoneKey, setPhoneKey] = useState(0);
+    const { allowedCountries } = useContext(UserContext)
     const prefillPhoneRef = useRef('');
     const [formData, setFormData] = useState({
         first_name: '',
@@ -98,6 +100,9 @@ const AddBeneficiaryModal = ({ open, handleClose, onSaveSuccess, beneficiaryToEd
 
         setLoading(true);
 
+        const countryId = allowedCountries.find(c => c.country_iso_code === formData.country_iso_code)?._id
+
+        console.log(countryId, 'country id passing')
         const payload = {
             beneficiary_type: beneficiaryType,
             first_name: beneficiaryType === 'individual' ? formData.first_name : '',
@@ -108,8 +113,11 @@ const AddBeneficiaryModal = ({ open, handleClose, onSaveSuccess, beneficiaryToEd
             city: formData.city,
             address: formData.address,
             email: formData.email,
-            phone: formData.phone
+            phone: formData.phone,
+            country: countryId
         };
+
+        console.log(payload)
 
         try {
             let res;

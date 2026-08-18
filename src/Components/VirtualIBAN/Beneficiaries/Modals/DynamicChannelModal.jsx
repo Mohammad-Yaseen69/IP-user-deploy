@@ -30,7 +30,7 @@ const DynamicChannelModal = ({ open, handleClose, beneficiaryData, onSaveSuccess
     });
 
     // Wire useBankDetails hook
-    const { getBankDetails, isFetchingBank, bankDetailsError } = useBankDetails({
+    const { getBankDetails, isFetchingBank, bankDetailsError, bankCountry, bankCountryCode, bankCountryIsoCode } = useBankDetails({
         accNumType,
         setFormData: setBankFormState,
         alpha3: beneficiaryData?.country_iso_code,
@@ -122,6 +122,17 @@ const DynamicChannelModal = ({ open, handleClose, beneficiaryData, onSaveSuccess
                 toast.error(t("Bank Name is required"));
                 return;
             }
+
+            const resolvedCountryIso = bankCountryIsoCode
+                || bankCountryCode
+                || (accNumType === 'IBAN' ? bankFormState.iban?.replace(/\s/g, '').slice(0, 2)?.toUpperCase() : bankFormState.swift?.replace(/\s/g, '').slice(4, 6)?.toUpperCase())
+                || beneficiaryData?.country_iso_code
+                || '';
+
+            const resolvedCountryName = bankCountry
+                || beneficiaryData?.country_name
+                || '';
+
             channelPayload.bank_details = {
                 iban: bankFormState.iban?.trim() || '',
                 swift_code: bankFormState.swift?.trim() || '',
@@ -130,7 +141,13 @@ const DynamicChannelModal = ({ open, handleClose, beneficiaryData, onSaveSuccess
                 branch_name: (bankFormState.branch_name || '').trim(),
                 city: (bankFormState.bank_city || '').trim(),
                 branch_street: (bankFormState.bank_branch_street || '').trim(),
-                account_holder_name: (bankFormState.account_holder_name || `${beneficiaryData?.first_name || ''} ${beneficiaryData?.last_name || ''}`.trim() || beneficiaryData?.company_name || '').trim()
+                account_holder_name: (bankFormState.account_holder_name || `${beneficiaryData?.first_name || ''} ${beneficiaryData?.last_name || ''}`.trim() || beneficiaryData?.company_name || '').trim(),
+                extras: {
+                    country_iso_code: resolvedCountryIso,
+                    country_name: resolvedCountryName,
+                    bank_country: resolvedCountryName,
+                    country: resolvedCountryIso
+                }
             };
         } else if (channelType === 'crypto') {
             if (!walletAddress || !walletAddress.trim()) return toast.error(t("Wallet address is required"));

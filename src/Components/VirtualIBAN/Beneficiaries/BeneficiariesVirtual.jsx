@@ -269,6 +269,7 @@ const BeneficiariesVirtual = () => {
                                                     <span className={styles.cryptoAddress}>
                                                         {`IBAN/Acc: ${bank.iban || bank.account_number || ''}`}
                                                         {bank.swift_code ? ` • SWIFT: ${bank.swift_code}` : ''}
+                                                        {bank.extras?.country_iso_code ? ` • ${bank.extras.country_iso_code}` : ''}
                                                     </span>
                                                     <button className={styles.copyBtn} onClick={() => handleCopy(bank.iban || bank.account_number)}>
                                                         <Copy size={14} />
