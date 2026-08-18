@@ -218,13 +218,14 @@ const SepaAmountStep = ({ amount, setAmount, availableBalance, currencyCode, sou
 const BeneficiaryStep = ({ beneficiaries, selectedBeneficiary, setSelectedBeneficiary, onAddBeneficiary }) => {
     const { t } = useTranslation()
     const [query, setQuery] = useState("")
+    const navigate = useNavigate()
     const filteredBeneficiaries = beneficiaries.filter((beneficiary) => `${getBeneficiaryName(beneficiary)} ${getBeneficiarySubtitle(beneficiary)}`.toLowerCase().includes(query.toLowerCase()))
 
     return (
         <div className={styles.beneficiaryStep}>
             <div className={styles.beneficiaryHeader}>
                 <h3>{t("Beneficiaries")}</h3>
-                <button type="button" className={styles.primarySmallBtn} onClick={onAddBeneficiary}><Plus size={16} />{t("Add beneficiary")}</button>
+                <button type="button" className={styles.primarySmallBtn} onClick={() => navigate('/virtual-iban/beneficiaries-virtual')}><Plus size={16} />{t("Add beneficiary")}</button>
             </div>
             <label className={styles.searchBox}><Search size={15} /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder={t("Search beneficiaries")} /></label>
             <div className={styles.beneficiaryList}>
