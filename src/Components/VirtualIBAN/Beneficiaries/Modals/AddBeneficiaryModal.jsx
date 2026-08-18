@@ -24,6 +24,7 @@ const AddBeneficiaryModal = ({ open, handleClose, onSaveSuccess, beneficiaryToEd
         country_iso_code: '',
         city: '',
         address: '',
+        zip_code: '',
         email: '',
         phone: ''
     });
@@ -42,6 +43,7 @@ const AddBeneficiaryModal = ({ open, handleClose, onSaveSuccess, beneficiaryToEd
                 country_iso_code: iso,
                 city: beneficiaryToEdit.city || '',
                 address: beneficiaryToEdit.address || '',
+                zip_code: beneficiaryToEdit.zip_code || '',
                 email: beneficiaryToEdit.email || '',
                 phone: rawPhone
             });
@@ -57,6 +59,7 @@ const AddBeneficiaryModal = ({ open, handleClose, onSaveSuccess, beneficiaryToEd
                 country_iso_code: '',
                 city: '',
                 address: '',
+                zip_code: '',
                 email: '',
                 phone: ''
             });
@@ -112,6 +115,7 @@ const AddBeneficiaryModal = ({ open, handleClose, onSaveSuccess, beneficiaryToEd
             country_iso_code: formData.country_iso_code,
             city: formData.city,
             address: formData.address,
+            zip_code: formData.zip_code,
             email: formData.email,
             phone: formData.phone,
             country: countryId
@@ -364,15 +368,27 @@ const AddBeneficiaryModal = ({ open, handleClose, onSaveSuccess, beneficiaryToEd
                         />
                     </div>
 
-                    <div style={{ marginBottom: '20px' }}>
-                        <label style={{ display: 'block', fontSize: '13px', fontWeight: 500, color: '#374151', marginBottom: '6px' }}>{t("Address")}</label>
-                        <TextField
-                            fullWidth size="small" variant="outlined"
-                            placeholder={t("Street address, building, suite")}
-                            value={formData.address}
-                            onChange={(e) => handleChange('address', e.target.value)}
-                            sx={commonInputStyles}
-                        />
+                    <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '14px', marginBottom: '20px' }}>
+                        <div>
+                            <label style={{ display: 'block', fontSize: '13px', fontWeight: 500, color: '#374151', marginBottom: '6px' }}>{t("Address")}</label>
+                            <TextField
+                                fullWidth size="small" variant="outlined"
+                                placeholder={t("Street address, building, suite")}
+                                value={formData.address}
+                                onChange={(e) => handleChange('address', e.target.value)}
+                                sx={commonInputStyles}
+                            />
+                        </div>
+                        <div>
+                            <label style={{ display: 'block', fontSize: '13px', fontWeight: 500, color: '#374151', marginBottom: '6px' }}>{t("Zip Code")}</label>
+                            <TextField
+                                fullWidth size="small" variant="outlined"
+                                placeholder={t("e.g. 10001")}
+                                value={formData.zip_code}
+                                onChange={(e) => handleChange('zip_code', e.target.value)}
+                                sx={commonInputStyles}
+                            />
+                        </div>
                     </div>
 
                     {/* Footer Actions */}
