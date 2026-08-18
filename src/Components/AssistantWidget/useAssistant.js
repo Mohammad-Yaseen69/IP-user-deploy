@@ -7,7 +7,7 @@ import { useNavigationTool } from "./useNavigationTool";
 // Same-origin on purpose: Vite proxies this in development and a reverse proxy
 // does the same in production, so the browser never makes a cross-origin
 // request and CORS never enters the picture.
-const CHAT_ENDPOINT = "/api/assistant/chat";
+const CHAT_ENDPOINT = `${import.meta.env.VITE_BOT_API_URL}/api/assistant/chat`;
 
 const MAX_HISTORY_TURNS = 8;
 
@@ -115,7 +115,7 @@ export const useAssistant = ({ authedFetch }) => {
                     }
                 };
 
-                for (;;) {
+                for (; ;) {
                     const { value, done: finished } = await reader.read();
                     if (finished) break;
                     buffer += decoder.decode(value, { stream: true });
