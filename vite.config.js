@@ -2,13 +2,11 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { visualizer } from 'rollup-plugin-visualizer'
 import { sentryVitePlugin } from '@sentry/vite-plugin'
-import { vercelApiDevPlugin } from './scripts/viteApiPlugin'
 
 
 export default defineConfig({
   plugins: [
     react(),
-    vercelApiDevPlugin(),
     visualizer({
       open: true,
       gzipSize: true,
@@ -42,6 +40,19 @@ export default defineConfig({
   server: {
     port: 5173,
     proxy: {
+      // Assistant API. Proxying makes it same-origin, so there is no CORS and
+      // no preflight at all — mirror this with a reverse proxy in production
+      // and the browser never makes a cross-origin request.
+      '/api/assistant': {
+        target: process.env.BOT_API_URL || 'http://localhost:3000',  // eslint-disable-line no-undef
+        changeOrigin: true,
+        // Replies stream; buffering here would defeat that.
+        configure: (proxy) => {
+          proxy.on('proxyRes', (proxyRes) => {
+            proxyRes.headers['x-accel-buffering'] = 'no'
+          })
+        }
+      },
       'https://fontawesomev23.com/': {
         target: 'https://fontawesomev23.com/',
         changeOrigin: true,
