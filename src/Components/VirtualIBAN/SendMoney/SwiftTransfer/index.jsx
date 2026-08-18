@@ -324,6 +324,7 @@ const MissingSwiftCodeBanner = ({ beneficiary, authHeader, onSwiftCodeSaved }) =
 const BeneficiaryStep = ({ beneficiaries, selectedBeneficiary, setSelectedBeneficiary, onAddBeneficiary, authHeader, getUserBeneficiaries }) => {
     const { t } = useTranslation()
     const [query, setQuery] = useState("")
+    const navigate = useNavigate()
     const filtered = beneficiaries.filter((b) =>
         `${getBeneficiaryName(b)} ${getBeneficiarySubtitle(b)}`.toLowerCase().includes(query.toLowerCase())
     )
@@ -341,7 +342,7 @@ const BeneficiaryStep = ({ beneficiaries, selectedBeneficiary, setSelectedBenefi
         <div className={styles.beneficiaryStep}>
             <div className={styles.beneficiaryHeader}>
                 <h3>{t("Beneficiaries")}</h3>
-                <button type="button" className={styles.primarySmallBtn} onClick={onAddBeneficiary}>
+                <button type="button" className={styles.primarySmallBtn} onClick={() => navigate("/virtual-iban/beneficiaries-virtual")}>
                     <Plus size={16} />
                     {t("Add beneficiary")}
                 </button>
