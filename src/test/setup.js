@@ -18,12 +18,18 @@ Object.defineProperty(import.meta, 'env', {
 
 })
 
-globalThis.crypto = {
-  getRandomValues: (arr) => {
-    for (let i = 0; i < arr.length; i++) arr[i] = Math.floor(Math.random() * 256)
-    return arr
+// defineProperty, not assignment: from Node 20 `globalThis.crypto` is a
+// getter-only accessor and a plain assignment throws.
+Object.defineProperty(globalThis, 'crypto', {
+  configurable: true,
+  writable: true,
+  value: {
+    getRandomValues: (arr) => {
+      for (let i = 0; i < arr.length; i++) arr[i] = Math.floor(Math.random() * 256)
+      return arr
+    }
   }
-}
+})
 
 
 vi.mock('axios', () => ({

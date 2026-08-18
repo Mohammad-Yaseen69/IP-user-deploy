@@ -55,8 +55,7 @@ const LogActivity = () => {
 
         return entityMatch && actionMatch
     })
-    console.log(data, "data")
-    console.log(filteredData, "dfilteredDataata")
+ 
     return (
         <div className={styles.container}>
 

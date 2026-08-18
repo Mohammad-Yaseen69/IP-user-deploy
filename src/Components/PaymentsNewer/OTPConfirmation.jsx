@@ -63,6 +63,7 @@ const OTPConfirmation = ({
     quotationDetails,
     externalWithdrawalPayload,
     isExternalWithdrawal,
+    onBeforeConfirm,
 }) => {
     const { t } = useTranslation()
     const queryClient = useQueryClient()
@@ -174,6 +175,12 @@ const OTPConfirmation = ({
     const completeTransaction = (otp) => {
         setOtpError("")
         setIsSaving(true)
+
+        if (onBeforeConfirm && !onBeforeConfirm()) {
+            setIsSaving(false)
+            return
+        }
+
         console.log(type, requestObject)
         if (type === "request" && requestObject) {
             if (requestObject.paymentType.value === "standard") {

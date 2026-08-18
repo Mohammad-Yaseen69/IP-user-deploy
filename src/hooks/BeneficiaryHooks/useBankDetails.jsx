@@ -4,7 +4,7 @@ import { countries as CountriesList } from 'country-list-json'
 import { useQuery } from '@tanstack/react-query'
 import { apiWrapper } from '../../utils/Functions/apiWrapper'
 
-const useBankDetails = ({ accNumType, setFormData, handleBankExtraChange, bankExtras, setError, alpha3, countryName, fieldKeyOverrides = {}, debounceMs = 1500 }) => {
+const useBankDetails = ({ accNumType, setFormData, handleBankExtraChange, bankExtras, setError, alpha3, countryName, fieldKeyOverrides = {}, debounceMs = 1500, bypassCountryCheck = false }) => {
     const { authHeader } = useContext(UserContext)
     const [bankCountry, setBankCountry] = useState("")
     const [bankDetailsError, setBankDetailsError] = useState("")
@@ -82,37 +82,39 @@ const useBankDetails = ({ accNumType, setFormData, handleBankExtraChange, bankEx
             const decrypted = accNumType === "IBAN" ? rawData : rawData?.bicDetails
             if (!decrypted) return
 
-            let isValidCountry = true
-            try {
-                const code = decrypted?.bicDetails?.structured_address?.country_code || decrypted?.structured_address?.country_code
-                const name = decrypted?.structured_address?.country_name || decrypted?.bicDetails?.structured_address?.country_name
+            if (!bypassCountryCheck) {
+                let isValidCountry = true
+                try {
+                    const code = decrypted?.bicDetails?.structured_address?.country_code || decrypted?.structured_address?.country_code
+                    const name = decrypted?.structured_address?.country_name || decrypted?.bicDetails?.structured_address?.country_name
 
-                if (alpha3 || countryName) {
-                    isValidCountry = (
-                        (alpha3 && code === alpha3) ||
-                        (countryName && (countryName?.toLowerCase() === name?.toLowerCase())) ||
-                        CountriesList?.some(item => item.code === code)
-                    )
+                    if (alpha3 || countryName) {
+                        isValidCountry = (
+                            (alpha3 && code === alpha3) ||
+                            (countryName && (countryName?.toLowerCase() === name?.toLowerCase())) ||
+                            CountriesList?.some(item => item.code === code)
+                        )
+                    }
+                } catch (error) {
+                    console.error("[useBankDetails] Validation error:", error)
                 }
-            } catch (error) {
-                console.error("[useBankDetails] Validation error:", error)
-            }
 
-            if (!isValidCountry) {
-                const msg = accNumType === "IBAN" ? "IBAN must belong to your selected country!" : "Swift Code must belong to your selected country!"
-                setError ? setError(msg) : setBankDetailsError(msg)
-                setFormData(prev => ({
-                    ...prev,
-                    [bankNameKey]: "",
-                    [branchNameKey]: "",
-                    [bankBranchStreetKey]: "",
-                    [bankCityKey]: "",
-                    [bankProvinceKey]: "",
-                    [bankPostalCodeKey]: "",
-                    [bankAccountNumberKey]: ""
-                }))
-                setIsValidIban(false)
-                return
+                if (!isValidCountry) {
+                    const msg = accNumType === "IBAN" ? "IBAN must belong to your selected country!" : "Swift Code must belong to your selected country!"
+                    setError ? setError(msg) : setBankDetailsError(msg)
+                    setFormData(prev => ({
+                        ...prev,
+                        [bankNameKey]: "",
+                        [branchNameKey]: "",
+                        [bankBranchStreetKey]: "",
+                        [bankCityKey]: "",
+                        [bankProvinceKey]: "",
+                        [bankPostalCodeKey]: "",
+                        [bankAccountNumberKey]: ""
+                    }))
+                    setIsValidIban(false)
+                    return
+                }
             }
 
             setError ? setError("") : setBankDetailsError("")

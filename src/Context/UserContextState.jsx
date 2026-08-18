@@ -429,7 +429,8 @@ const UserState = ({ children }) => {
                 headers: authHeader
             })
             const decrypted = decryptData(res.data.data)
-            setBeneficiaries(decrypted.beneficiaryList)
+            const regularBens = (decrypted?.beneficiaryList || []).filter(b => !b.vIbanBeneficiary)
+            setBeneficiaries(regularBens)
 
         } catch {
             // 

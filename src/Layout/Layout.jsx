@@ -1,5 +1,5 @@
 import { Fragment, createContext, useContext, useEffect, useMemo, useState } from "react";
-import { Outlet, useLocation } from "react-router-dom";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 import TapTop from "./TapTop/index";
 import CheckContext from "../Helper/Customizer";
@@ -28,6 +28,8 @@ import { useTranslation } from "react-i18next";
 import { useQueryClient } from "@tanstack/react-query";
 import AdditionalDocumentModal from "./AdditionalDocumentModal";
 import NewMenu from "../Common/NewMenu";
+import AssistantWidget from "../Components/AssistantWidget";
+import { useVirtualIbans } from "../hooks/useVirtualIban";
 
 
 
@@ -118,7 +120,12 @@ const Layout = ({ children, classNames, ...rest }) => {
   } = useContext(UserContext)
   const [showSuccessModal, setShowSuccessModal] = useState()
   const [showAdditionalFilesModal, setShowAdditionalModal] = useState(false)
+  const navigate = useNavigate();
 
+  const accountId = userDetails?.account?._id || userDetails?.account_id;
+
+  const { data: virtualIbans = [], isLoading: virtualIbansLoading } =
+    useVirtualIbans(accountId);
   useEffect(() => {
     console.log("checking files status")
     if (location.pathname.toLowerCase().includes("my-mastercard")) return;
@@ -138,7 +145,23 @@ const Layout = ({ children, classNames, ...rest }) => {
     console.log("checking done")
   }, [userDetails])
 
+  useEffect(() => {
+    if (virtualIbansLoading) return;
 
+    const hasVirtualIban = virtualIbans?.length > 0;
+
+    if (
+      hasVirtualIban &&
+      location.pathname.toLowerCase() === "/onboarding-iban"
+    ) {
+      navigate("/", { replace: true });
+    }
+  }, [
+    virtualIbans,
+    virtualIbansLoading,
+    location.pathname,
+    navigate,
+  ]);
   const beneficiaryWithoutAddresses = useMemo(() => {
     if (location.pathname.startsWith("/beneficiaries/edit") && benId) {
       const beneficiary = beneficiaries?.find(ben => ben?._id === benId)
@@ -406,6 +429,7 @@ const Layout = ({ children, classNames, ...rest }) => {
             toggle={() => setShowAnotherLoginModal(false)}
           />
         }
+        <AssistantWidget />
       </MobileSbContextProvider>
     </Fragment>
   );

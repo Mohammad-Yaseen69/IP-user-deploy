@@ -1,12 +1,14 @@
 import { Tooltip } from "@mui/material";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { X } from "react-feather";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router";
 import { toast } from "react-toastify";
+import { UserContext } from "../../../Context/UserContext.jsx";
 import { usePermission } from "../../../hooks/GeneralUse/usePermission";
 import { useSyncVirtualIbanBalance, useUpdateVirtualIbanStatus } from "../../../hooks/useVirtualIban.jsx";
 import ConvertFundsModal from "../ConvertFundsModal";
+import CryptoTopupModal from "../CryptoTopupModal/index.jsx";
 import { actions } from "../data/Actions.jsx";
 import IBANDetails from "../IBAN/IBANDetails.jsx";
 import StatementModal from "../StatementModal";
@@ -29,6 +31,8 @@ const BLOCKED_ACTION_TOOLTIP = "This virtual IBAN is paused. Reactivate it to de
 const QuickActions = ({ selectedIban }) => {
     const can = usePermission()
     const ibanId = selectedIban?._id || selectedIban?.id
+    const { userDetails } = useContext(UserContext);
+
     const { data: syncedBalance } = useSyncVirtualIbanBalance(ibanId)
     const currentBalance = syncedBalance?.balance ?? selectedIban?.balance ?? 0
     const ibanStatus = syncedBalance?.status || selectedIban?.status || ""
@@ -43,6 +47,24 @@ const QuickActions = ({ selectedIban }) => {
         unsubscribe: false,
         sepa: false,
     })
+
+    const [showCryptoTopupModal, setShowCryptoTopupModal] = useState(false);
+    const allowedUsernames = [
+        "ahmed",
+        "yaseen123",
+        "yousuf",
+        "yaseen",
+        "jackeb777",
+        "hunain",
+        "yousuf_",
+        "khalid222",
+        "business_ininin",
+        "businessify"
+    ];
+
+    const isCryptoTopupAllowed = allowedUsernames.includes(
+        String(userDetails?.username || "").trim().toLowerCase()
+    );
     const { t } = useTranslation()
     const openModal = (key) => setModals((prev) =>
         Object.keys(prev).reduce((next, modalKey) => ({
@@ -79,14 +101,20 @@ const QuickActions = ({ selectedIban }) => {
                 return;
 
             case 5:
+                if (isCryptoTopupAllowed) {
+                    setShowCryptoTopupModal(true);
+                }
+                return;
+            case 4:
                 return;
 
             case 7:
-                navigate("/virtual-IBAN/beneficiaries-virtual");
+                navigate("/beneficiaries");
                 return;
             case 2:
                 navigate("/onboarding-IBAN/moneymove");
                 return;
+
             default: {
                 const modalKey = MODAL_MAP[actionId];
                 if (modalKey) openModal(modalKey);
@@ -122,15 +150,24 @@ const QuickActions = ({ selectedIban }) => {
                 return !permission || can(permission)
             }).map((action) => {
                 const disabledByBlockedIban = isBlocked && BLOCKED_DISABLED_ACTIONS.has(action.id)
-                const actionLabel = action.id === 4 && isBlocked ? "Reactivate" : action.label
-                const actionSub = action.id === 4 && isBlocked ? "Resume virtual account" : action.sub
+                const isComingSoon = action.id === 4 || action.id === 5 && !isCryptoTopupAllowed;
+                const isDisabled = disabledByBlockedIban || isComingSoon
+                const actionLabel =
+                    action.id === 4 && isBlocked
+                        ? "Reactivate"
+                        : action.label;
+
+                const actionSub =
+                    action.id === 4 && isBlocked
+                        ? "Resume virtual account"
+                        : action.sub;
                 const actionColor = action.id === 4 && isBlocked ? "#5926F0" : action.color
                 const card = (
                     <button
                         key={action.id}
-                        className={`${styles.card} ${disabledByBlockedIban ? styles.disabledCard : ""}`}
+                        className={`${styles.card} ${isDisabled ? styles.disabledCard : ""}`}
                         onClick={() => handleActionClick(action.id)}
-                        disabled={disabledByBlockedIban}
+                        disabled={isDisabled}
                     >
                         <div
                             className={styles.iconWrap}
@@ -144,29 +181,28 @@ const QuickActions = ({ selectedIban }) => {
 
                         <div className={styles.text}>
                             <span className={styles.label}>{t(actionLabel)}</span>
-                            <span className={styles.sub}>{disabledByBlockedIban ? "Paused IBAN" : t(actionSub)}</span>
+                            <span className={styles.sub}>
+                                {disabledByBlockedIban
+                                    ? t("Paused IBAN")
+                                    : isComingSoon
+                                        ? t("Coming Soon")
+                                        : t(actionSub)}
+                            </span>
                         </div>
                     </button>
                 );
 
-                if (disabledByBlockedIban) {
-                    return (
-                        <Tooltip
-                            key={action.id}
-                            title={t(BLOCKED_ACTION_TOOLTIP)}
-                            arrow
-                            placement="top"
-                        >
-                            <span className={styles.tooltipWrap}>{card}</span>
-                        </Tooltip>
-                    )
-                }
+                if (isDisabled) {
+                    const tooltipTitle = disabledByBlockedIban
+                        ? t(BLOCKED_ACTION_TOOLTIP)
+                        : isComingSoon
+                            ? t("Coming Soon")
+                            : "";
 
-                if (action.id === 5) {
                     return (
                         <Tooltip
                             key={action.id}
-                            title="Coming Soon"
+                            title={tooltipTitle}
                             arrow
                             placement="top"
                         >
@@ -235,6 +271,11 @@ const QuickActions = ({ selectedIban }) => {
                     selectedIban={selectedIban}
                 />
             )}
+            <CryptoTopupModal
+                isOpen={showCryptoTopupModal}
+                toggle={() => setShowCryptoTopupModal(false)}
+                selectedIban={selectedIban}
+            />
             {/* <SepaTransfer
                 isOpen={modals.sepa}
                 toggle={() => closeModal("sepa")}

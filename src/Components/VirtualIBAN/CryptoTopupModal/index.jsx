@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react"
+import { useCallback, useMemo, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { Modal, ModalBody } from "reactstrap"
 import { toast } from "react-toastify"
@@ -23,6 +23,7 @@ import styles from "../ConvertFundsModal/convertFunds.module.scss"
 import SidebarProgress from "../VirtualIbanModal/SidebarProgress"
 import { useVirtualIbanCryptoTopupFee, useExecuteVirtualIbanCryptoTopup } from "../../../hooks/useVirtualIban"
 import { getErrorMessage } from "../../../Helper/getErrorMessage"
+import { useIdempotency } from "../../../hooks/Payments/useIdempotency"
 
 const CoinsIcon = () => (
     <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
@@ -84,6 +85,7 @@ const CryptoTopupModal = ({ isOpen, toggle, selectedIban }) => {
     const [amount, setAmount] = useState("")
     const [feeDetails, setFeeDetails] = useState(null)
     const [confirmData, setConfirmData] = useState(null)
+    const { reset } = useIdempotency();
 
     const feeMutation = useVirtualIbanCryptoTopupFee()
     const confirmMutation = useExecuteVirtualIbanCryptoTopup()
@@ -132,6 +134,23 @@ const CryptoTopupModal = ({ isOpen, toggle, selectedIban }) => {
             toast.error(res.message)
         }
     }
+
+    const refreshFeeDetails = useCallback(async () => {
+        if (!ibanId || !amount) return
+        try {
+            const res = await feeMutation.mutateAsync({
+                iban_id: ibanId,
+                amount: getAmountNumber(amount),
+            })
+            if (res?.data) {
+                setFeeDetails(res.data)
+            } else if (res?.message) {
+                toast.error(res.message)
+            }
+        } catch (error) {
+            console.error("Failed to refresh fee details:", error)
+        }
+    }, [ibanId, amount, feeMutation, t])
 
     const confirmTopup = async () => {
         if (!ibanId || !feeDetails?.token) {
@@ -187,6 +206,7 @@ const CryptoTopupModal = ({ isOpen, toggle, selectedIban }) => {
     }
 
     const handleBack = () => {
+        reset()
         const { prevStep } = goBack(currentStep, machineData)
         if (prevStep === null) handleClose()
         else setCurrentStep(prevStep)
@@ -208,6 +228,8 @@ const CryptoTopupModal = ({ isOpen, toggle, selectedIban }) => {
                         amount={amount}
                         feeDetails={feeDetails}
                         selectedIban={selectedIban}
+                        onRefreshFee={refreshFeeDetails}
+                        isRefreshing={feeMutation.isPending}
                     />
                 )
             case STEPS.DONE:

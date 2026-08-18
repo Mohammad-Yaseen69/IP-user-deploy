@@ -21,5 +21,8 @@ mcp_config.json
 *.ntvs*
 *.njsproj
 *.sln
-.env.local
+.env
+.env.*
+!.env.example
 *.sw?
+/test*

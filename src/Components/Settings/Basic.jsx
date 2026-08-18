@@ -12,6 +12,7 @@ import { encryptData } from '../../Helper/EssentilaMethods/Encryption';
 import SuccessModal from '../AddBeneficiary/SuccessModal';
 import CitiesDropDown from '../CitiesDropDown';
 import citiesData from "../CitiesDropDown/CitiesData.json";
+import countryAlpha2Map from "../AddFunds/WalletFund/countries_iso2.json";
 import countriesData from "../PaymentsNewer/CountriesData.json";
 import PhoneInput from '../PhoneInput';
 import CountryBasedPhone from "../PhoneInput/PhoneNumberBasedOnCountry.json";
@@ -21,9 +22,9 @@ import QrGenerate from './QrGenerate';
 import { usePermission } from '../../hooks/GeneralUse/usePermission';
 import { useQuery } from '@tanstack/react-query';
 import { apiWrapper } from '../../utils/Functions/apiWrapper';
+import { POSTAL_CODE_FORMATS, postalCodeRegex } from '../../Data/CountriesWithTranslations/PostalCode';
 
 
-// dates
 export const currentDate = new Date();
 export const minDate = new Date(currentDate.getFullYear() - 15, currentDate.getMonth(), currentDate.getDate());
 let timeout;
@@ -61,8 +62,9 @@ const Basic = ({ setCurrentTab }) => {
     useEffect(() => {
         setCodeType("sms")
     }, [userDetails])
-    console.log(userDetails, "userDetails")
-    const isVerified = useMemo(() => userDetails?.user?.kyc_status === "approved" || userDetails?.user?.kyc_status === "verified", [userDetails])
+    const isKycApproved = useMemo(() => userDetails?.user?.kyc_status === "approved" || userDetails?.user?.kyc_status === "verified" || userDetails?.kyc_status === "approved" || userDetails?.kyc_status === "verified", [userDetails])
+    const isKybApproved = useMemo(() => userDetails?.company?.kyb_status === "approved" || userDetails?.kyb_status === "approved", [userDetails])
+    const isVerified = useMemo(() => isKycApproved || isKybApproved, [isKycApproved, isKybApproved])
 
     const { data: statesResponse, isLoading: isStatesLoading } = useQuery({
         queryKey: ['country-states', 'US'],
@@ -219,10 +221,6 @@ const Basic = ({ setCurrentTab }) => {
         }
     }
 
-
-
-
-
     const [otpToken, setOtpToken] = useState("")
     const sendOtp = async (type = "") => {
         setIsSaving(true)
@@ -268,7 +266,7 @@ const Basic = ({ setCurrentTab }) => {
         }
 
         if (userDetails?.account_type === "individual") {
-            const data = isVerified ? { about_me: aboutMe, address, postal_code: postalCode } : {
+            const data = isVerified ? { about_me: aboutMe } : {
                 first_name: firstName,
                 last_name: lastName,
                 address,
@@ -423,7 +421,6 @@ const Basic = ({ setCurrentTab }) => {
         setIsEditMode(editmode)
     }, [editmode])
 
-
     const handleUsernameChange = (e) => {
         const value = e.target.value;
         if (value.length > 30) return;
@@ -468,13 +465,76 @@ const Basic = ({ setCurrentTab }) => {
         }
     }
 
-
     const isAfricanCountry = useMemo(() => {
-        if (country) {
-            return citiesData.find(item => item.iso3 === country).region === "Africa"
-        }
-    }, [country])
+        if (!country) return false;
 
+        const countryData = citiesData.find(
+            item =>
+                item.iso3 === country ||
+                item.alpha3 === country ||
+                item.alpha2 === country
+        );
+
+        return countryData?.region === "Africa";
+    }, [country]);
+
+
+
+    const selectedCountry = useMemo(() => {
+        return countriesData.find(
+            item =>
+                item.alpha3 === country ||
+                item.alpha2 === country ||
+                item.iso3 === country
+        );
+    }, [country]);
+
+    const countryAlpha2 = useMemo(() => {
+        if (!country) return undefined;
+
+        const normalized = String(country).toUpperCase();
+
+        if (countryAlpha2Map[normalized]) {
+            return countryAlpha2Map[normalized];
+        }
+
+        if (selectedCountry?.alpha2) {
+            return selectedCountry.alpha2;
+        }
+
+        if (normalized.length === 2) {
+            return normalized;
+        }
+
+        return undefined;
+    }, [country, selectedCountry]);
+
+    const getPostalCodeRegex = (countryCode) => {
+        if (!countryCode) return null;
+
+        return postalCodeRegex[countryCode.toUpperCase()] || null;
+    };
+
+    const isPostalCodeValid = useMemo(() => {
+        if (!postalCode?.trim()) {
+            return isAfricanCountry;
+        }
+
+        if (!countryAlpha2) {
+            return false;
+        }
+
+        
+        return true
+    }, [postalCode, countryAlpha2, isAfricanCountry]);
+
+    console.log({
+        country,
+        selectedCountry,
+        countryAlpha2,
+        postalCode,
+        isPostalCodeValid
+    });
     return (
         <MuiPickersUtilsProvider utils={DateMomentUtils}>
             <Card>
@@ -626,8 +686,8 @@ const Basic = ({ setCurrentTab }) => {
                             {!username && <span style={{ color: "red" }}>{t("(Required)")}</span>}
                         </Label>
                         <div style={{ position: "relative" }}>
-                            <Input disabled={!isEditMode} readOnly={!isEditMode} style={{
-                                borderColor: !isEditMode ? "#eeeeee" : usernameValid ? "green" : "red",
+                            <Input disabled={!isEditMode || isVerified} readOnly={!isEditMode || isVerified} style={{
+                                borderColor: (!isEditMode || isVerified) ? "#eeeeee" : usernameValid ? "green" : "red",
                             }} value={username} onChange={handleUsernameChange} onFocus={() => setShowUsernameGuide(true)} onBlur={() => setShowUsernameGuide(false)} />
 
 
@@ -786,7 +846,7 @@ const Basic = ({ setCurrentTab }) => {
                         <Label>{t("Email Address")}  {
                             (!email && userDetails?.account_type !== "individual")
                             && <span style={{ color: "red" }}>{t("(Required)")}</span>}</Label>
-                        <Input disabled={userDetails?.email || isVerified || !isEditMode} readOnly={userDetails?.email || isVerified || !isEditMode} value={email} onChange={e => setEmail(e.target.value)} />
+                        <Input disabled={!isEditMode || isKybApproved} readOnly={!isEditMode || isKybApproved} value={email} onChange={e => setEmail(e.target.value)} />
                     </FormGroup>
                     <FormGroup style={{ position: "relative" }}>
                         {
@@ -810,10 +870,10 @@ const Basic = ({ setCurrentTab }) => {
                             country={countriesData.find(item => item.alpha3 === country)?.alpha3}
                             disableDropdown={true}
                             setPhone={setPhone}
-                            disabled={userDetails?.phone || isVerified || !isEditMode}
+                            disabled={!isEditMode || isKycApproved}
                             customStyles={{
                                 width: "100%",
-                                background: userDetails?.phone ? "#e9ecef" : "white",
+                                background: (!isEditMode || isKycApproved) ? "#e9ecef" : "white",
                                 alignItems: "center"
                             }}
                         />
@@ -837,10 +897,10 @@ const Basic = ({ setCurrentTab }) => {
                             <Label>{t("Address")}  {
                                 !address
                                 && <span style={{ color: "red" }}>{t("(Required)")}</span>}</Label>
-                            <Input disabled={!isEditMode || (userDetails?.address && isVerified)} readOnly={!isEditMode || (isVerified && userDetails?.address)} value={address} onChange={e => setAddress(e.target.value)} />
+                            <Input disabled={!isEditMode || isVerified} readOnly={!isEditMode || isVerified} value={address} onChange={e => setAddress(e.target.value)} />
                         </FormGroup>
                     }
-                  
+
                     <FormGroup style={{ position: "relative" }}>
                         {
                             !country
@@ -903,7 +963,7 @@ const Basic = ({ setCurrentTab }) => {
                             </Input>
                         </FormGroup>
                     )}
-                      <FormGroup style={{ position: "relative" }}>
+                    <FormGroup style={{ position: "relative" }}>
                         {
                             !city
                             &&
@@ -1011,27 +1071,29 @@ const Basic = ({ setCurrentTab }) => {
                             {t("Postal Code")}
                             {(!userDetails?.postal_code && !isAfricanCountry) && <span style={{ color: "red" }}>{t("(Required)")}</span>}
                         </Label>
-                        <Input disabled={!isEditMode || (isVerified && userDetails?.postal_code)}
-                            readOnly={!isEditMode || (isVerified && userDetails?.postal_code)}
-                            value={postalCode} onChange={(e) => {
-                                const value = e.target.value;
-
-                                if (/^\d{0,5}(-\d{0,4})?$/.test(value)) {
-                                    setPostalCode(value);
-                                }
+                        <Input
+                            disabled={!isEditMode || isVerified}
+                            readOnly={!isEditMode || isVerified}
+                            value={postalCode || ""}
+                            onChange={(e) => {
+                                setPostalCode(e.target.value);
                             }}
-                            placeholder="55555 or 55555-5555"
-                            maxLength={10}
-                            pattern="\d{5}(-\d{4})?"
+                            placeholder={
+                                countryAlpha2
+                                    ? POSTAL_CODE_FORMATS[countryAlpha2] || ""
+                                    : ""
+                            }
                         />
-                        {postalCode && !/^\d{5}(-\d{4})?$/.test(postalCode) && (
-                            <div style={{
-                                color: "red",
-                                fontSize: "0.8rem",
-                                fontWeight: 600,
-                                marginTop: "5px"
-                            }}>
-                                {t("Postal code must be 55555 or 55555-5555.")}
+                        {postalCode && !isPostalCodeValid && (
+                            <div
+                                style={{
+                                    color: "red",
+                                    fontSize: "0.8rem",
+                                    fontWeight: 600,
+                                    marginTop: "5px"
+                                }}
+                            >
+                                {t("Invalid postal code format.")}
                             </div>
                         )}
                     </FormGroup>
@@ -1057,14 +1119,16 @@ const Basic = ({ setCurrentTab }) => {
                                     // (userDetails?.account_type === "individual" ? !firstName || !lastName : !company) || !address || !city || !country || !email || !phone || !postalCode || !timezone || !username || !usernameValid || phone.length < 8
                                     disabled={
                                         isSaving ||
-                                        usernameError ||
-                                        !usernameValid ||
-                                        !city ||
-                                        !username ||
-                                        (country === "USA" && !state?.trim()) ||
-                                        (userDetails?.account_type === "business" && !company?.trim()) ||
-                                        (!isAfricanCountry && !postalCode?.trim()) ||
-                                        (!isAfricanCountry && !/^\d{5}(-\d{4})?$/.test(postalCode || ""))
+                                        (!isVerified && (
+                                            usernameError ||
+                                            !usernameValid ||
+                                            !city ||
+                                            !username ||
+                                            (country === "USA" && !state?.trim()) ||
+                                            (userDetails?.account_type === "business" && !company?.trim()) ||
+                                            (!isAfricanCountry && !postalCode?.trim()) ||
+                                            !isPostalCodeValid
+                                        ))
                                     }>
                                     {
                                         isSaving

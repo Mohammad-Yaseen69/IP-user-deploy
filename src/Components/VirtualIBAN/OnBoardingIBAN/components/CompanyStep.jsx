@@ -345,8 +345,13 @@ const CompanyStep = ({ onNext, onBack, userType, data = {} }) => {
                                     style={{ padding: "14.5px 14px 14.5px 12.5px" }}
                                     className={styles.textInput}
                                     value={form.taxNumber}
-                                    onChange={set("taxNumber")}
-                                    placeholder="CHE-105.837.234 VAT"
+                                    onChange={(e) => {
+                                        const value = e.target.value.replace(/[^a-zA-Z0-9]/g, "");
+                                        setForm((prev) => ({
+                                            ...prev,
+                                            taxNumber: value,
+                                        }));
+                                    }} placeholder="CHE-105.837.234 VAT"
                                     disabled={Boolean(userDetails?.company?.tax_id)}
                                     readOnly={Boolean(userDetails?.company?.tax_id)}
                                 />
