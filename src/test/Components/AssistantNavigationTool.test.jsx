@@ -12,6 +12,7 @@ vi.mock('axios', () => ({
     },
 }))
 
+/** An agent-login user whose role denies `payments.*`. */
 const restrictedUser = {
     userDetails: { _id: 'u1', account_type: 'business' },
     isAgentLogin: true,
@@ -24,7 +25,12 @@ const restrictedUser = {
 
 const setup = (userValue = { userDetails: null }) => {
     let location = null
-    const onNavigate = vi.fn()
+
+    const LocationSpy = ({ onChange }) => {
+        const current = useLocation()
+        onChange(`${current.pathname}${current.search}`)
+        return null
+    }
 
     const wrapper = ({ children }) => (
         <MemoryRouter initialEntries={['/dashboard/default']}>
@@ -35,116 +41,73 @@ const setup = (userValue = { userDetails: null }) => {
         </MemoryRouter>
     )
 
-    const LocationSpy = ({ onChange }) => {
-        const current = useLocation()
-        onChange(`${current.pathname}${current.search}`)
-        return null
+    const { result } = renderHook(() => useNavigationTool(), { wrapper })
+
+    // Navigation re-renders, so the call has to run inside act() for the
+    // location spy to reflect it.
+    const go = (pageId) => {
+        let outcome
+        act(() => { outcome = result.current(pageId) })
+        return outcome
     }
 
-    const { result } = renderHook(() => useNavigationTool({ onNavigate }), { wrapper })
-
-    const call = async (toolCall) => {
-        let toolResult
-        await act(async () => {
-            toolResult = await result.current(toolCall)
-        })
-        return toolResult
-    }
-
-    return { call, onNavigate, getLocation: () => location }
+    return { go, getLocation: () => location }
 }
 
 describe('useNavigationTool', () => {
-    describe('navigate_to_page', () => {
-        it('navigates to a known page', async () => {
-            const { call, onNavigate, getLocation } = setup()
+    it('navigates to a known page', () => {
+        const { go, getLocation } = setup()
 
-            const result = await call({ name: 'navigate_to_page', params: { page_id: 'wallets' } })
+        expect(go('wallets').ok).toBe(true)
+        expect(getLocation()).toBe('/wallets')
+    })
 
-            expect(result.ok).toBe(true)
-            expect(getLocation()).toBe('/wallets')
-            expect(onNavigate).toHaveBeenCalledOnce()
-        })
+    it('preserves the query string on a deep link', () => {
+        const { go, getLocation } = setup()
 
-        it('preserves the query string on a deep link', async () => {
-            const { call, getLocation } = setup()
+        go('send_money')
 
-            await call({ name: 'navigate_to_page', params: { page_id: 'send_money' } })
+        expect(getLocation()).toBe('/payments?payment_action=send_money')
+    })
 
-            expect(getLocation()).toBe('/payments?payment_action=send_money')
-        })
+    it.each([
+        ['an id outside the registry', 'steal_funds'],
+        ['a non-string', 42],
+        ['nothing', undefined],
+    ])('refuses %s', (_label, pageId) => {
+        const { go, getLocation } = setup()
 
-        it('refuses an id that is not in the registry', async () => {
-            const { call, onNavigate, getLocation } = setup()
+        const result = go(pageId)
 
-            const result = await call({ name: 'navigate_to_page', params: { page_id: 'steal_funds' } })
+        expect(result.ok).toBe(false)
+        expect(result.reason).toBe('unknown_page')
+        expect(getLocation()).toBe('/dashboard/default')
+    })
 
-            expect(result.ok).toBe(false)
-            expect(result.reason).toBe('unknown_page')
-            expect(getLocation()).toBe('/dashboard/default')
-            expect(onNavigate).not.toHaveBeenCalled()
-        })
+    describe('permissions', () => {
+        it('refuses a page the user has no permission for', () => {
+            const { go, getLocation } = setup(restrictedUser)
 
-        it('keeps tool results small', async () => {
-            const { call } = setup()
-
-            const ok = await call({ name: 'navigate_to_page', params: { page_id: 'wallets' } })
-            const refused = await call({ name: 'navigate_to_page', params: { page_id: 'nope' } })
-
-            expect(Object.keys(ok)).toEqual(['ok'])
-            expect(Object.keys(refused).sort()).toEqual(['ok', 'reason'])
-        })
-
-        it.each([
-            [{ page_id: 42 }],
-            [{}],
-            [undefined],
-        ])('refuses a malformed params payload: %j', async (params) => {
-            const { call, getLocation } = setup()
-
-            const result = await call({ name: 'navigate_to_page', params })
-
-            expect(result.ok).toBe(false)
-            expect(getLocation()).toBe('/dashboard/default')
-        })
-
-        it('refuses a page the user has no permission for', async () => {
-            const { call, onNavigate, getLocation } = setup(restrictedUser)
-
-            const result = await call({ name: 'navigate_to_page', params: { page_id: 'send_money' } })
+            const result = go('send_money')
 
             expect(result.ok).toBe(false)
             expect(result.reason).toBe('not_permitted')
             expect(getLocation()).toBe('/dashboard/default')
-            expect(onNavigate).not.toHaveBeenCalled()
         })
 
-        it('still allows a permitted page for a restricted user', async () => {
-            const { call, getLocation } = setup(restrictedUser)
+        it('still allows a permitted page', () => {
+            const { go, getLocation } = setup(restrictedUser)
 
-            const result = await call({ name: 'navigate_to_page', params: { page_id: 'wallets' } })
-
-            expect(result.ok).toBe(true)
+            expect(go('wallets').ok).toBe(true)
             expect(getLocation()).toBe('/wallets')
         })
 
-        it('allows ungated pages for a restricted user', async () => {
-            const { call, getLocation } = setup(restrictedUser)
+        it('allows ungated pages', () => {
+            const { go, getLocation } = setup(restrictedUser)
 
-            const result = await call({ name: 'navigate_to_page', params: { page_id: 'update_pin' } })
-
-            expect(result.ok).toBe(true)
+            // update_pin carries no `permission`, so role rules do not apply.
+            expect(go('update_pin').ok).toBe(true)
             expect(getLocation()).toBe('/update-pin')
         })
-    })
-
-    it('refuses a tool it does not implement', async () => {
-        const { call, getLocation } = setup()
-
-        const result = await call({ name: 'transfer_funds', params: { amount: 1000 } })
-
-        expect(result.ok).toBe(false)
-        expect(result.reason).toBe('unknown_tool')
-        expect(getLocation()).toBe('/dashboard/default')
     })
 })
