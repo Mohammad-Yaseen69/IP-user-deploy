@@ -1,3 +1,4 @@
+import axios from "axios"
 import { useContext, useEffect, useMemo, useRef, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { useNavigate } from "react-router"
@@ -34,6 +35,8 @@ import {
     goNext,
     isSidebarStepActive,
     isSidebarStepCompleted,
+    MIN_AMOUNT,
+    MAX_AMOUNT,
     PURPOSE_OPTIONS,
     SIDEBAR_STEPS,
     SIDEBAR_STEP_NAMES,
@@ -133,6 +136,15 @@ const getBeneficiarySubtitle = (b) =>
     [getBeneficiaryCountry(b), getBeneficiaryTypeLabel(b)].filter((v) => v && v !== "-").join(" - ")
 const getBeneficiaryInitial = (b) => (getBeneficiaryName(b).charAt(0) || "B").toUpperCase()
 
+// Returns the swift_code string if it exists on the beneficiary's bank_details, else empty string
+const getRawSwiftCode = (b) => {
+    const fromBank = b?.bank_details?.[0]?.swift_code
+    if (fromBank && String(fromBank).trim()) return String(fromBank).trim()
+    const direct = b?.swift_code || b?.bic || ""
+    return String(direct).trim()
+}
+const hasBeneficiarySwiftCode = (b) => getRawSwiftCode(b).length > 0
+
 const buildBeneficiaryFromForm = (form) => {
     const isBusiness = form.type === "business"
     const name = isBusiness
@@ -193,6 +205,8 @@ const SwiftAmountStep = ({ amount, setAmount, availableBalance, currencyCode, so
                 currencyCode={currencyCode}
                 availableBalance={sourceBalance}
                 label="Amount to send (EUR)"
+                min={MIN_AMOUNT}
+                max={MAX_AMOUNT}
             />
 
             <div>
@@ -229,14 +243,99 @@ const SwiftAmountStep = ({ amount, setAmount, availableBalance, currencyCode, so
     )
 }
 
+// ─── Missing BIC banner (shown inside BeneficiaryStep when BIC absent) ────────
+
+const MissingSwiftCodeBanner = ({ beneficiary, authHeader, onSwiftCodeSaved }) => {
+    const { t } = useTranslation()
+    const [bic, setBic] = useState("")
+    const [saving, setSaving] = useState(false)
+
+    const bicClean = bic.trim().toUpperCase()
+    const bicValid = bicClean.length === 8 || bicClean.length === 11
+    const bicError = bicClean.length > 0 && !bicValid ? t("BIC must be 8 or 11 characters") : ""
+
+    const handleSave = async () => {
+        if (!bicValid) return
+        setSaving(true)
+        try {
+            const { encryptData } = await import("../../../../Helper/EssentilaMethods/Encryption")
+            const bankDetails = Array.isArray(beneficiary?.bank_details) && beneficiary.bank_details.length > 0
+                ? beneficiary.bank_details.map((bd, i) => i === 0 ? { ...bd, swift_code: bicClean } : bd)
+                : [{ swift_code: bicClean }]
+
+            const payload = { ...beneficiary, bank_details: bankDetails }
+            const encrypted = encryptData(payload)
+
+            await axios.put(
+                `${import.meta.env.VITE_IP_DEV_API}/api/beneficiary/update-beneficiary/${beneficiary._id}`,
+                { data: encrypted },
+                { headers: authHeader }
+            )
+
+            // Patch the in-memory beneficiary object with the new BIC so the flow can continue
+            onSwiftCodeSaved({
+                ...beneficiary,
+                swift_code: bicClean,
+                bic: bicClean,
+                bank_details: bankDetails,
+            })
+            toast.success(t("BIC / SWIFT code saved successfully."))
+        } catch (err) {
+            toast.error(t("Failed to save BIC. Please try again."))
+        } finally {
+            setSaving(false)
+        }
+    }
+
+    return (
+        <div className={styles.missingBicBanner}>
+            <div className={styles.missingBicHeader}>
+                <span className={styles.missingBicIcon}>⚠</span>
+                <div>
+                    <strong>{t("BIC / SWIFT code missing")}</strong>
+                    <p>{t("{{name}} doesn't have a BIC on file. Enter it below to continue.", { name: getBeneficiaryName(beneficiary) })}</p>
+                </div>
+            </div>
+            <div className={styles.missingBicRow}>
+                <TextField
+                    label={t("BIC / SWIFT Code *")}
+                    value={bic}
+                    onChange={(v) => setBic(v.toUpperCase())}
+                    placeholder="e.g. AAAABBCC"
+                    error={bicError}
+                    hint={bicValid ? t("Valid BIC format ✓") : ""}
+                />
+                <button
+                    type="button"
+                    className={styles.nextBtn}
+                    style={{ alignSelf: "flex-end", marginBottom: bicError ? "22px" : "0" }}
+                    disabled={!bicValid || saving}
+                    onClick={handleSave}
+                >
+                    {saving ? t("Saving...") : t("Save BIC")}
+                </button>
+            </div>
+        </div>
+    )
+}
+
 // ─── Step: Beneficiary (list) ─────────────────────────────────────────────────
 
-const BeneficiaryStep = ({ beneficiaries, selectedBeneficiary, setSelectedBeneficiary, onAddBeneficiary }) => {
+const BeneficiaryStep = ({ beneficiaries, selectedBeneficiary, setSelectedBeneficiary, onAddBeneficiary, authHeader, getUserBeneficiaries }) => {
     const { t } = useTranslation()
     const [query, setQuery] = useState("")
     const filtered = beneficiaries.filter((b) =>
         `${getBeneficiaryName(b)} ${getBeneficiarySubtitle(b)}`.toLowerCase().includes(query.toLowerCase())
     )
+
+    const missingBic = selectedBeneficiary && !hasBeneficiarySwiftCode(selectedBeneficiary)
+
+    const handleSwiftCodeSaved = async (updatedBeneficiary) => {
+        // 1. Patch the selected beneficiary immediately so Next unblocks
+        setSelectedBeneficiary(updatedBeneficiary)
+        // 2. Refresh the full list in context in the background
+        try { await getUserBeneficiaries() } catch (_) { }
+    }
 
     return (
         <div className={styles.beneficiaryStep}>
@@ -287,6 +386,14 @@ const BeneficiaryStep = ({ beneficiaries, selectedBeneficiary, setSelectedBenefi
                     )
                 })}
             </div>
+
+            {missingBic && (
+                <MissingSwiftCodeBanner
+                    beneficiary={selectedBeneficiary}
+                    authHeader={authHeader}
+                    onSwiftCodeSaved={handleSwiftCodeSaved}
+                />
+            )}
         </div>
     )
 }
@@ -782,7 +889,7 @@ const SwiftTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, 
     const { t } = useTranslation()
     const width = useWindowWidth()
     const navigate = useNavigate()
-    const { userDetails, setProfileLockTime, getUserBeneficiaries, beneficiaries } = useContext(UserContext)
+    const { userDetails, setProfileLockTime, getUserBeneficiaries, beneficiaries, authHeader, IBANBeneficiaries } = useContext(UserContext)
 
     const currencyCode = selectedIban?.currency || "EUR"
     const sourceAvailableBalance = getSourceBalance(availableBalance, selectedIban)
@@ -837,6 +944,12 @@ const SwiftTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, 
             confirmedDetails,
         }),
         [amount, sourceAvailableBalance, selectedBeneficiary, beneficiaryForm, isAddingBeneficiary, purpose, confirmedDetails]
+    )
+
+    // Only show beneficiaries that have a bank account (account_type includes "bank")
+    const swiftBeneficiaries = useMemo(
+        () => ([...beneficiaries || [], ...IBANBeneficiaries || []]).filter((b) => Array.isArray(b?.account_type) && b.account_type.includes("bank")),
+        [beneficiaries, IBANBeneficiaries]
     )
 
     const isProcessing = payoutFee.isPending || isSendingOtp || isRefreshingQuote
@@ -1025,10 +1138,12 @@ const SwiftTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, 
             case STEPS.BENEFICIARY:
                 return (
                     <BeneficiaryStep
-                        beneficiaries={beneficiaries || []}
+                        beneficiaries={swiftBeneficiaries}
                         selectedBeneficiary={selectedBeneficiary}
                         setSelectedBeneficiary={setSelectedBeneficiary}
                         onAddBeneficiary={() => setShowBeneficiaryAddModal(true)}
+                        authHeader={authHeader}
+                        getUserBeneficiaries={getUserBeneficiaries}
                     />
                 )
             case STEPS.ADD_BENEFICIARY:
@@ -1073,7 +1188,7 @@ const SwiftTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, 
                         fullHeight
                         setter={setCurrentStep}
                         setterValue={STEPS.DONE}
-                        hideOtp={() => {}}
+                        hideOtp={() => { }}
                         callback={verifyOtp}
                         processing={payoutDirect.isPending}
                         resendHandler={handleSendOtp}

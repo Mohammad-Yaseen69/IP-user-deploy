@@ -1,5 +1,8 @@
 import { getAmountNumber } from "../Components/VirtualIBAN/utils/amount"
 
+export const MIN_AMOUNT = 5          // EUR
+export const MAX_AMOUNT = 1_500_000  // EUR
+
 export const STEPS = {
     AMOUNT: "AMOUNT",
     BENEFICIARY: "BENEFICIARY",
@@ -123,9 +126,15 @@ export const getDisabledState = (stepName, data = {}) => {
 
     switch (stepName) {
         case STEPS.AMOUNT:
-            return !data.amount || amount <= 0 || amount > availableBalance
-        case STEPS.BENEFICIARY:
-            return !data.selectedBeneficiary
+            return !data.amount || amount <= 0 || amount < MIN_AMOUNT || amount > MAX_AMOUNT || amount > availableBalance
+        case STEPS.BENEFICIARY: {
+            if (!data.selectedBeneficiary) return true
+            // Block if the selected beneficiary has no BIC on bank_details or root level
+            const b = data.selectedBeneficiary
+            const fromBank = b?.bank_details?.[0]?.swift_code
+            const bic = fromBank?.trim() || b?.swift_code?.trim() || b?.bic?.trim() || ""
+            return bic.length === 0
+        }
         case STEPS.ADD_BENEFICIARY: {
             if (beneficiaryForm.type === "business" && !hasValue(beneficiaryForm.legalName)) return true
             if (beneficiaryForm.type !== "business" && (!hasValue(beneficiaryForm.firstName) || !hasValue(beneficiaryForm.lastName))) return true

@@ -8,6 +8,7 @@
     min-height: 100vh;
     flex-direction: column;
     height: auto;
+    margin: 2rem 0 2rem 1rem;
 }
 
 
@@ -50,7 +51,6 @@
 }
 
 .mainContent {
-    max-width: 1200px;
     width: 100%;
     display: flex;
     justify-content: space-between;
@@ -97,13 +97,12 @@
 }
 
 .headerTitle h1 {
-    color: #000000;
-    font-family: 'Inter', sans-serif;
-    font-size: 18px;
+    color: var(--COLORS-Tertiary-300, #6039CD);
+    font-size: 30px;
     font-style: normal;
-    font-weight: 600;
-    line-height: 120%;
-    margin: 0 0 4px 0;
+    font-weight: 700;
+    line-height: 46px;
+    letter-spacing: -1.2px;
 }
 
 .headerTitle p {
