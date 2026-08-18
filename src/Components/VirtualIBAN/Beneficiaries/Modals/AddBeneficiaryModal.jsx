@@ -43,9 +43,7 @@ const AddBeneficiaryModal = ({ open, handleClose, onSaveSuccess, beneficiaryToEd
                 email: beneficiaryToEdit.email || '',
                 phone: rawPhone
             });
-            // Store raw phone in ref so it survives PhoneInput's own setPhone('') on mount
             prefillPhoneRef.current = rawPhone;
-            // Force PhoneInput to remount so firstTime/number state resets cleanly
             setPhoneKey(prev => prev + 1);
         } else {
             setBeneficiaryType('individual');
