@@ -4,7 +4,7 @@ import { countries } from "country-list-json";
 import PhoneInput from "../PhoneInput";
 import 'react-phone-input-2/lib/style.css'
 import "./req_star.css"
-import { useContext, useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { UserContext } from "../../Context/UserContext";
 import WalletDetails from "./WalletDetails";
 import CountryDropDown from "./CountryDropDown";
@@ -170,6 +170,8 @@ const BusinessAccount = ({ isInternational, toggleHandler }) => {
         iban: ""
     }
 
+    const initializedUserId = useRef(null)
+
     useEffect(() => {
         if (!isAddBeneficiary) {
             const filtered = beneficiaries.filter(ben => ben._id === user_id)[0]
@@ -186,7 +188,8 @@ const BusinessAccount = ({ isInternational, toggleHandler }) => {
     }, [companyName])
 
     useEffect(() => {
-        if (user) {
+        if (user && initializedUserId.current !== user._id) {
+            initializedUserId.current = user._id
             setCompanyName(user?.company_name || "")
 
             setFormData(prev => ({
