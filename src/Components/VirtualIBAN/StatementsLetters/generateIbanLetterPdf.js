@@ -75,11 +75,11 @@ const buildLetterHtml = ({ logoBase64, qrBase64, iban, userDetails, qrUrl }) => 
     const companyType = getSafeString(iban?.companyType || userDetails?.companyType, (userDetails?.companyName ? 'Limited Liability Company' : 'Individual Account'));
     const jurisdiction = getSafeString(iban?.incorporationJurisdiction || userDetails?.country?.country_name || userDetails?.country || userDetails?.jurisdiction, 'Cyprus');
     const incDate = iban?.incorporationDate ? formatDate(iban.incorporationDate) : '24 November 2020';
-    const regAddress = getSafeString(iban?.registeredAddress || userDetails?.address || userDetails?.formattedAddress, 'Solonos 7, Kolossi, 4632, Limassol, Cyprus');
-    const orgNumber = getSafeString(iban?.organisationNumber || userDetails?.orgNumber || userDetails?.registrationNumber, '577309');
-    const recordNumber = getSafeString(iban?.recordNumber || userDetails?.recordNumber, '39117956');
+    const regAddress = getSafeString(iban?.registeredAddress || userDetails?.address || userDetails?.formattedAddress);
     const virtualIbanId = getSafeString(iban?.virtualIbanId || iban?._id || iban?.id, '');
-    const customerId = getSafeString(iban?.customerId || userDetails?.customerId || (virtualIbanId ? virtualIbanId.slice(-8).toUpperCase() : 'NKGI6TY9'), 'NKGI6TY9');
+    const customerId = getSafeString((virtualIbanId ? virtualIbanId.slice(-8).toUpperCase() : 'NKGI6TY9'), 'NKGI6TY9');
+    const orgNumber = getSafeString(iban?.orgNumber || userDetails?.orgNumber || userDetails?.organizationNumber, 'HE 412345');
+    const recordNumber = getSafeString(iban?.recordNumber || userDetails?.recordNumber, 'REC-99482');
 
     const ibanNumber = getSafeString(iban?.iban, 'MT17 SYPL 3948 0354 2000 1814 7054 916');
     const bic = getSafeString(iban?.bank?.bic || iban?.swift_code || iban?.bic, 'SYPLMTM2');
