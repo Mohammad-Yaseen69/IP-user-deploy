@@ -818,7 +818,6 @@ const VirtualIbanModal = ({
             className={styles.modalLayout}
             style={{ flexDirection: width < 1000 ? "column" : "row" }}
         >
-            {/* {width >= 1000 && ( */}
             <div className={addFundsStyles.left}>
                 <div>
                     <div className={styles.bankHeader}>
@@ -865,7 +864,6 @@ const VirtualIbanModal = ({
                     </div>
                 }
             </div>
-            {/* )} */}
 
             <div
                 className={styles.rightPanel}
@@ -923,10 +921,6 @@ const VirtualIbanModal = ({
             >
                 <ModalBody style={{ padding: "20px" }}>{renderBody()}</ModalBody>
             </Modal>
-
-            {/* {isOpen && width < 1000 && (
-                <div style={{ padding: "16px" }}>{renderBody()}</div>
-            )} */}
 
             <Modal isOpen={showOtp} toggle={() => setShowOtp(false)} centered>
                 <ModalBody>

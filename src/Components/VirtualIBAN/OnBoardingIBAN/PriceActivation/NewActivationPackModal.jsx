@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 const NewActivationPackModal = ({ open, handleClose }) => {
     const [step, setStep] = useState(1);
     const [setBy, setSetBy] = useState('agent');
-    const { t } = useTranslation()
+
     const [services, setServices] = useState([
         { id: 'iban', label: 'Activation fee (one-time)', active: true },
         { id: 'monthly', label: 'Monthly IBAN fee', active: false },

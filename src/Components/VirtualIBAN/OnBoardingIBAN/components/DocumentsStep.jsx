@@ -147,7 +147,6 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {}, userDetails, compa
                         </div>
                     </div>
 
-
                     <div className={styles.section}>
                         <div className={styles.sectionHeader}>
                             <div className={styles.sectionNumber}>{t('1')}</div>
@@ -196,7 +195,6 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {}, userDetails, compa
                             </div>
                         </div>
                     </div>
-
 
                     <div className={styles.section}>
                         <div className={styles.sectionHeader}>
@@ -270,7 +268,6 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {}, userDetails, compa
                             </div>
                         </div>
                     </div>
-
 
                     <div className={styles.section}>
                         <div className={styles.sectionHeader}>

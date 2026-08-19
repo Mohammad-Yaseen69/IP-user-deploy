@@ -242,10 +242,6 @@ const QuickActions = ({ selectedIban }) => {
                     availableBalance={currentBalance}
                 />
             )}
-            {/* <AddFundsModal
-                isOpen={modals.addFunds}
-                toggle={() => closeModal("addFunds")}
-            /> */}
             {can("virtual-iban.funds.convert") && (
                 <ConvertFundsModal
                     isOpen={modals.convertFunds}
@@ -277,12 +273,6 @@ const QuickActions = ({ selectedIban }) => {
                 toggle={() => setShowCryptoTopupModal(false)}
                 selectedIban={selectedIban}
             />
-            {/* <SepaTransfer
-                isOpen={modals.sepa}
-                toggle={() => closeModal("sepa")}
-                selectedIban={selectedIban}
-                availableBalance={currentBalance}
-            /> */}
         </div>
     );
 };

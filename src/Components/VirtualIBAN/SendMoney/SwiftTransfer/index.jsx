@@ -21,7 +21,8 @@ import {
     Send,
     User,
 } from "react-feather"
-import AddBeneficiary from "../../../AddBeneficiary"
+import AddBeneficiaryModal from "../../Beneficiaries/Modals/AddBeneficiaryModal"
+import DynamicChannelModal from "../../Beneficiaries/Modals/DynamicChannelModal"
 import useWindowWidth from "../../../../utils/useWindowWidth"
 import ContactBox from "../../../MyMasterCard/PaymentModal/ContactBox"
 import { getAmountNumber } from "../../utils/amount"
@@ -55,8 +56,7 @@ import { handlePaymentApiError } from "../../../../utils/Functions/handlePayment
 import OTPConfirmation from "../../../UserSettingsNew/OTPConfirmation"
 import jsPDF from "jspdf"
 import autoTable from "jspdf-autotable"
-
-// ─── Constants ────────────────────────────────────────────────────────────────
+import AddBeneficiary from "../../../AddBeneficiary"
 
 const DEFAULT_BENEFICIARY_FORM = {
     type: "individual",
@@ -87,8 +87,6 @@ const sidebarIcons = {
     [SIDEBAR_STEP_NAMES.DONE]: CheckCircle,
 }
 
-// ─── Formatters ───────────────────────────────────────────────────────────────
-
 const formatMoney = (value, currencyCode = "EUR") =>
     `${currencyCode} ${getAmountNumber(value).toLocaleString("en-US", {
         minimumFractionDigits: 2,
@@ -113,8 +111,6 @@ const getVirtualIbanNumber = (iban) =>
 const getVirtualIbanTitle = (iban, fallbackCurrency = "EUR") =>
     iban?.name || iban?.title || iban?.label || `${fallbackCurrency} IBAN`
 
-// ─── Beneficiary helpers ──────────────────────────────────────────────────────
-
 const getBeneficiaryId = (b) => b?._id || b?.id || ""
 const getBeneficiaryBankDetail = (b) => b?.bank_details?.[0] || {}
 const getBeneficiaryName = (b) => {
@@ -136,7 +132,6 @@ const getBeneficiarySubtitle = (b) =>
     [getBeneficiaryCountry(b), getBeneficiaryTypeLabel(b)].filter((v) => v && v !== "-").join(" - ")
 const getBeneficiaryInitial = (b) => (getBeneficiaryName(b).charAt(0) || "B").toUpperCase()
 
-// Returns the swift_code string if it exists on the beneficiary's bank_details, else empty string
 const getRawSwiftCode = (b) => {
     const fromBank = b?.bank_details?.[0]?.swift_code
     if (fromBank && String(fromBank).trim()) return String(fromBank).trim()
@@ -170,8 +165,6 @@ const buildBeneficiaryFromForm = (form) => {
     }
 }
 
-// ─── Shared TextField ─────────────────────────────────────────────────────────
-
 const TextField = ({ label, value, onChange, hint, type = "text", disabled = false, error = "", optional = false, placeholder = "" }) => (
     <label className={styles.field}>
         <span>
@@ -190,8 +183,6 @@ const TextField = ({ label, value, onChange, hint, type = "text", disabled = fal
         {error && <span className={styles.fieldErrorText}>{error}</span>}
     </label>
 )
-
-// ─── Step: Amount ─────────────────────────────────────────────────────────────
 
 const SwiftAmountStep = ({ amount, setAmount, availableBalance, currencyCode, sourceIban }) => {
     const { t } = useTranslation()
@@ -243,8 +234,6 @@ const SwiftAmountStep = ({ amount, setAmount, availableBalance, currencyCode, so
     )
 }
 
-// ─── Missing BIC banner (shown inside BeneficiaryStep when BIC absent) ────────
-
 const MissingSwiftCodeBanner = ({ beneficiary, authHeader, onSwiftCodeSaved }) => {
     const { t } = useTranslation()
     const [bic, setBic] = useState("")
@@ -272,7 +261,6 @@ const MissingSwiftCodeBanner = ({ beneficiary, authHeader, onSwiftCodeSaved }) =
                 { headers: authHeader }
             )
 
-            // Patch the in-memory beneficiary object with the new BIC so the flow can continue
             onSwiftCodeSaved({
                 ...beneficiary,
                 swift_code: bicClean,
@@ -319,8 +307,6 @@ const MissingSwiftCodeBanner = ({ beneficiary, authHeader, onSwiftCodeSaved }) =
     )
 }
 
-// ─── Step: Beneficiary (list) ─────────────────────────────────────────────────
-
 const BeneficiaryStep = ({ beneficiaries, selectedBeneficiary, setSelectedBeneficiary, onAddBeneficiary, authHeader, getUserBeneficiaries }) => {
     const { t } = useTranslation()
     const [query, setQuery] = useState("")
@@ -332,17 +318,15 @@ const BeneficiaryStep = ({ beneficiaries, selectedBeneficiary, setSelectedBenefi
     const missingBic = selectedBeneficiary && !hasBeneficiarySwiftCode(selectedBeneficiary)
 
     const handleSwiftCodeSaved = async (updatedBeneficiary) => {
-        // 1. Patch the selected beneficiary immediately so Next unblocks
         setSelectedBeneficiary(updatedBeneficiary)
-        // 2. Refresh the full list in context in the background
-        try { await getUserBeneficiaries() } catch (_) { }
+        await getUserBeneficiaries()
     }
 
     return (
         <div className={styles.beneficiaryStep}>
             <div className={styles.beneficiaryHeader}>
                 <h3>{t("Beneficiaries")}</h3>
-                <button type="button" className={styles.primarySmallBtn} onClick={() => navigate("/virtual-iban/beneficiaries-virtual")}>
+                <button type="button" className={styles.primarySmallBtn} onClick={onAddBeneficiary}>
                     <Plus size={16} />
                     {t("Add beneficiary")}
                 </button>
@@ -399,8 +383,6 @@ const BeneficiaryStep = ({ beneficiaries, selectedBeneficiary, setSelectedBenefi
     )
 }
 
-// ─── Step: Add beneficiary ────────────────────────────────────────────────────
-
 const AddBeneficiaryStep = ({ amount, currencyCode, form, setForm }) => {
     const { t } = useTranslation()
     const update = (key, value) => setForm((prev) => ({ ...prev, [key]: value }))
@@ -418,7 +400,6 @@ const AddBeneficiaryStep = ({ amount, currencyCode, form, setForm }) => {
                 </strong>
             </div>
 
-            {/* Beneficiary type */}
             <div className={styles.segmentedControl}>
                 {[
                     { id: "individual", label: "Individual" },
@@ -435,7 +416,6 @@ const AddBeneficiaryStep = ({ amount, currencyCode, form, setForm }) => {
                 ))}
             </div>
 
-            {/* Name fields */}
             {form.type === "business" ? (
                 <TextField label={t("Legal name *")} value={form.legalName} onChange={(v) => update("legalName", v)} />
             ) : (
@@ -447,7 +427,6 @@ const AddBeneficiaryStep = ({ amount, currencyCode, form, setForm }) => {
 
             <hr className={styles.divider} />
 
-            {/* Bank details */}
             <div className={styles.sectionLabel} style={{ margin: 0 }}>{t("Bank details")}</div>
 
             <TextField
@@ -478,7 +457,6 @@ const AddBeneficiaryStep = ({ amount, currencyCode, form, setForm }) => {
 
             <hr className={styles.divider} />
 
-            {/* Beneficiary address */}
             <div className={styles.sectionLabel} style={{ margin: 0 }}>{t("Beneficiary address")}</div>
 
             <TextField label={t("Account / IBAN number")} value={form.accountNumber} onChange={(v) => update("accountNumber", v)} optional />
@@ -503,8 +481,6 @@ const AddBeneficiaryStep = ({ amount, currencyCode, form, setForm }) => {
         </div>
     )
 }
-
-// ─── Step: Purpose & charges ──────────────────────────────────────────────────
 
 const PurposeStep = ({ amount, currencyCode, purpose, setPurpose, additionalInfo, setAdditionalInfo }) => {
     const { t } = useTranslation()
@@ -546,8 +522,6 @@ const PurposeStep = ({ amount, currencyCode, purpose, setPurpose, additionalInfo
     )
 }
 
-// ─── Step: Review (with quote timer) ─────────────────────────────────────────
-
 const ReviewStep = ({
     amount,
     currencyCode,
@@ -563,13 +537,11 @@ const ReviewStep = ({
 }) => {
     const { t } = useTranslation()
 
-    // ── Quote countdown — hardcoded 5 minutes, resets on every new quote ──────
-    const QUOTE_DURATION = 300 // 5 minutes, always
+    const QUOTE_DURATION = 300
     const [secondsLeft, setSecondsLeft] = useState(QUOTE_DURATION)
 
     const timerRef = useRef(null)
 
-    // Reset to 5:00 every time a new fee quote arrives
     useEffect(() => {
         setSecondsLeft(QUOTE_DURATION)
     }, [feeDetails])
@@ -614,7 +586,6 @@ const ReviewStep = ({
 
     return (
         <div className={styles.reviewStep}>
-            {/* FX headline */}
             {recipientAmount && (
                 <div className={styles.fxHighlight}>
                     <div className={styles.fxHighlightLeft}>
@@ -638,7 +609,6 @@ const ReviewStep = ({
                 </div>
             )}
 
-            {/* Quote timer */}
             <div
                 className={`${styles.quoteTimerBox} ${isWarning ? styles.timerWarning : ""} ${isExpired ? styles.timerExpired : ""}`}
             >
@@ -677,7 +647,6 @@ const ReviewStep = ({
                 </button>
             </div>
 
-            {/* Review table */}
             <div className={styles.sectionLabel}>{t("Review your payment")}</div>
             <div className={styles.reviewTable}>
                 {rows.map(([label, value]) => (
@@ -701,8 +670,6 @@ const ReviewStep = ({
         </div>
     )
 }
-
-// ─── Receipt PDF ──────────────────────────────────────────────────────────────
 
 const downloadSwiftReceipt = ({
     amount,
@@ -786,8 +753,6 @@ const downloadSwiftReceipt = ({
 
     doc.save(`SWIFT-Transfer-Receipt-${trackingReference}.pdf`)
 }
-
-// ─── Step: Done ───────────────────────────────────────────────────────────────
 
 const DoneStep = ({
     amount,
@@ -884,25 +849,24 @@ const DoneStep = ({
     )
 }
 
-// ─── Main Component ───────────────────────────────────────────────────────────
-
 const SwiftTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, isPage = false }) => {
     const { t } = useTranslation()
     const width = useWindowWidth()
     const navigate = useNavigate()
-    const { userDetails, setProfileLockTime, getUserBeneficiaries, beneficiaries, authHeader, IBANBeneficiaries } = useContext(UserContext)
+    const { userDetails, setProfileLockTime, getUserBeneficiaries, beneficiaries, authHeader } = useContext(UserContext)
 
     const currencyCode = selectedIban?.currency || "EUR"
     const sourceAvailableBalance = getSourceBalance(availableBalance, selectedIban)
     const getDefaultAuthType = () => (userDetails?.tfa ? "authenticator" : "sms")
 
-    // ── State ──────────────────────────────────────────────────────────────────
     const [currentStep, setCurrentStep] = useState(STEPS.AMOUNT)
     const [amount, setAmount] = useState("")
     const [selectedBeneficiary, setSelectedBeneficiary] = useState(null)
     const [beneficiaryForm, setBeneficiaryForm] = useState(DEFAULT_BENEFICIARY_FORM)
     const [isAddingBeneficiary, setIsAddingBeneficiary] = useState(false)
-    const [showBeneficiaryAddModal, setShowBeneficiaryAddModal] = useState(false)
+    const [isAddModalOpen, setIsAddModalOpen] = useState(false)
+    const [isChannelModalOpen, setIsChannelModalOpen] = useState(false)
+    const [channelModalBeneficiary, setChannelModalBeneficiary] = useState(null)
     const [purpose, setPurpose] = useState(PURPOSE_OPTIONS[0])
     const [additionalInfo, setAdditionalInfo] = useState("")
     const [confirmedDetails, setConfirmedDetails] = useState(false)
@@ -914,7 +878,6 @@ const SwiftTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, 
     const [otpToken, setOtpToken] = useState("")
     const [payoutResult, setPayoutResult] = useState(null)
 
-    // ── Hooks ──────────────────────────────────────────────────────────────────
     const payoutFee = useVirtualIbanSwiftPayoutFee()
     const payoutDirect = useVirtualIbanSwiftPayoutDirect()
 
@@ -928,7 +891,6 @@ const SwiftTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, 
         },
     })
 
-    // ── Derived ────────────────────────────────────────────────────────────────
     const sourceIban = useMemo(
         () => ({ title: getVirtualIbanTitle(selectedIban, currencyCode), iban: getVirtualIbanNumber(selectedIban) }),
         [selectedIban, currencyCode]
@@ -947,16 +909,14 @@ const SwiftTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, 
         [amount, sourceAvailableBalance, selectedBeneficiary, beneficiaryForm, isAddingBeneficiary, purpose, confirmedDetails]
     )
 
-    // Only show beneficiaries that have a bank account (account_type includes "bank")
     const swiftBeneficiaries = useMemo(
-        () => ([...beneficiaries || [], ...IBANBeneficiaries || []]).filter((b) => Array.isArray(b?.account_type) && b.account_type.includes("bank")),
-        [beneficiaries, IBANBeneficiaries]
+        () => (beneficiaries || []).filter((b) => Array.isArray(b?.account_type) && b.account_type.includes("bank")),
+        [beneficiaries]
     )
 
     const isProcessing = payoutFee.isPending || isSendingOtp || isRefreshingQuote
     const isQuoteExpired = quoteExpiresAt ? new Date(quoteExpiresAt).getTime() <= Date.now() : false
 
-    // Disable Next on Review if quote has expired
     const disabled =
         getDisabledState(currentStep, machineData) ||
         isProcessing ||
@@ -964,7 +924,6 @@ const SwiftTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, 
 
     const showFooter = currentStep !== STEPS.OTP && currentStep !== STEPS.DONE
 
-    // ── Effects ────────────────────────────────────────────────────────────────
     useEffect(() => {
         if (userDetails?.tfa) setAuthType("authenticator")
     }, [userDetails?.tfa])
@@ -973,7 +932,24 @@ const SwiftTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, 
         if (userDetails?._id) getUserBeneficiaries()
     }, [userDetails])
 
-    // ── Handlers ───────────────────────────────────────────────────────────────
+    const handleBeneficiarySaved = (savedBeneficiary, isNew) => {
+        if (isNew && savedBeneficiary) {
+            setChannelModalBeneficiary(savedBeneficiary);
+            setIsChannelModalOpen(true);
+        }
+    };
+
+    const handleChannelSaved = async (updatedBeneficiary) => {
+        await getUserBeneficiaries();
+        if (updatedBeneficiary) {
+            const hasBank = (Array.isArray(updatedBeneficiary.account_type) && updatedBeneficiary.account_type.includes("bank")) ||
+                (Array.isArray(updatedBeneficiary.bank_details) && updatedBeneficiary.bank_details.length > 0);
+            if (hasBank) {
+                setSelectedBeneficiary(updatedBeneficiary);
+            }
+        }
+    };
+
     const resetState = () => {
         setCurrentStep(STEPS.AMOUNT)
         setAmount("")
@@ -1043,7 +1019,6 @@ const SwiftTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, 
         try {
             await sendOtp(buildPayoutPayload(), nextAuthType)
         } catch {
-            // toast already shown by useSendOtp's onError
         }
     }
 
@@ -1059,7 +1034,6 @@ const SwiftTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, 
             setPayoutResult(data)
             setVerified(true)
         } catch (error) {
-            // Handle 409 duplicate gracefully
             const status = error?.response?.status || error?.status
             if (status === 409) {
                 const dupData = error?.response?.data?.data || {}
@@ -1082,7 +1056,6 @@ const SwiftTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, 
             const nextBeneficiary = buildBeneficiaryFromForm(beneficiaryForm)
             setSelectedBeneficiary(nextBeneficiary)
             if (beneficiaryForm.saveBeneficiary) {
-                // Optimistically add to list — real list refreshes after getUserBeneficiaries
             }
             setCurrentStep(STEPS.PURPOSE)
             return
@@ -1104,7 +1077,6 @@ const SwiftTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, 
         }
 
         if (currentStep === STEPS.REVIEW) {
-            // Guard: don't proceed if quote expired
             if (isQuoteExpired) {
                 toast.warning(t("Your quote has expired. Please refresh the rate before confirming."))
                 return
@@ -1142,7 +1114,7 @@ const SwiftTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, 
                         beneficiaries={swiftBeneficiaries}
                         selectedBeneficiary={selectedBeneficiary}
                         setSelectedBeneficiary={setSelectedBeneficiary}
-                        onAddBeneficiary={() => setShowBeneficiaryAddModal(true)}
+                        onAddBeneficiary={() => setIsAddModalOpen(true)}
                         authHeader={authHeader}
                         getUserBeneficiaries={getUserBeneficiaries}
                     />
@@ -1218,7 +1190,6 @@ const SwiftTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, 
 
     const content = (
         <div className={styles.modalLayout} style={{ flexDirection: width < 1000 ? "column" : "row" }}>
-            {/* Left sidebar */}
             <aside className={styles.leftPanel}>
                 <div>
                     <div className={styles.flowHeader}>
@@ -1256,7 +1227,6 @@ const SwiftTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, 
                 )}
             </aside>
 
-            {/* Right content */}
             <section className={styles.rightPanel}>
                 <div className={styles.content}>{renderStepContent()}</div>
 
@@ -1300,23 +1270,22 @@ const SwiftTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, 
                 </Modal>
             )}
 
-            {/* Add beneficiary modal */}
-            <Modal
-                style={{ minWidth: width > 1000 ? "900px" : "0%" }}
-                toggle={() => setShowBeneficiaryAddModal(false)}
-                isOpen={showBeneficiaryAddModal}
-            >
-                <ModalBody style={{ padding: "0px" }}>
-                    <AddBeneficiary
-                        inInternationalModal={true}
-                        toggleHandler={async (addedBen) => {
-                            await getUserBeneficiaries()
-                            if (addedBen) setSelectedBeneficiary(addedBen)
-                            setShowBeneficiaryAddModal(false)
-                        }}
-                    />
-                </ModalBody>
-            </Modal>
+            <AddBeneficiaryModal
+                open={isAddModalOpen}
+                handleClose={() => setIsAddModalOpen(false)}
+                onSaveSuccess={handleBeneficiarySaved}
+            />
+
+            <DynamicChannelModal
+                open={isChannelModalOpen}
+                handleClose={() => {
+                    setIsChannelModalOpen(false);
+                    setChannelModalBeneficiary(null);
+                }}
+                beneficiaryData={channelModalBeneficiary}
+                lockChannelType="bank"
+                onSaveSuccess={handleChannelSaved}
+            />
         </>
     )
 }

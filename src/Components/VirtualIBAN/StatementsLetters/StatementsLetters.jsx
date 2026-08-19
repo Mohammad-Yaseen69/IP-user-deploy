@@ -35,10 +35,8 @@ const StatementsLetters = () => {
     const [previewing, setPreviewing] = useState(false);
     const [showStatementModal, setShowStatementModal] = useState(false);
 
-    // Fetch IBANs
     const { data: rawIbans = [] } = useVirtualIbans(userDetails?._id);
 
-    // Get the selected or first IBAN
     const selectedIban = useMemo(() => {
         if (!rawIbans.length) return null;
         return rawIbans.find((iban) => (iban?._id || iban?.id) === selectedAccount) || rawIbans[0];
@@ -46,7 +44,6 @@ const StatementsLetters = () => {
 
     const ibanId = selectedIban?._id || selectedIban?.id;
 
-    // Fetch full details
     const { data: ibanDetailData } = useVirtualIbanDetails(ibanId);
     const iban = useMemo(
         () => normalizeVirtualIban(ibanDetailData || selectedIban) || {},
@@ -100,7 +97,6 @@ const StatementsLetters = () => {
         }
     };
 
-    // Derived display values
     const holderName = getSafeString(iban?.account_holder_name || iban?.accountHolderName || userDetails?.fullName || userDetails?.companyName || userDetails?.name, 'HEAVYMORE LTD');
     const holderType = getSafeString(iban?.holderType || userDetails?.accountType, (userDetails?.companyName ? 'Business / Company' : 'Individual / Personal'));
     const companyType = getSafeString(iban?.companyType || userDetails?.companyType, (userDetails?.companyName ? 'Limited Liability Company' : 'Individual Account'));

@@ -3,8 +3,6 @@ import html2canvas from 'html2canvas';
 import QRCodeStyling from 'qr-code-styling';
 import logoImg from '../../../assets/images/logo/logo2.webp';
 
-// ─── Helpers ───────────────────────────────────────────────────────────
-
 const formatDate = (value, options = {}) => {
     if (!value) return new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric', ...options });
     const date = new Date(value);
@@ -71,10 +69,7 @@ const getSafeString = (val, fallback = '') => {
     return fallback;
 };
 
-// ─── HTML Template Builder (Matching Figma Node 70:20) ─────────────────
-
 const buildLetterHtml = ({ logoBase64, qrBase64, iban, userDetails, qrUrl }) => {
-    // Account Holder details
     const holderName = getSafeString(iban?.account_holder_name || iban?.accountHolderName || userDetails?.fullName || userDetails?.companyName || userDetails?.name, 'HEAVYMORE LTD');
     const holderType = getSafeString(iban?.holderType || userDetails?.accountType, (userDetails?.companyName ? 'Business / Company' : 'Individual / Personal'));
     const companyType = getSafeString(iban?.companyType || userDetails?.companyType, (userDetails?.companyName ? 'Limited Liability Company' : 'Individual Account'));
@@ -86,7 +81,6 @@ const buildLetterHtml = ({ logoBase64, qrBase64, iban, userDetails, qrUrl }) => 
     const virtualIbanId = getSafeString(iban?.virtualIbanId || iban?._id || iban?.id, '');
     const customerId = getSafeString(iban?.customerId || userDetails?.customerId || (virtualIbanId ? virtualIbanId.slice(-8).toUpperCase() : 'NKGI6TY9'), 'NKGI6TY9');
 
-    // IBAN details
     const ibanNumber = getSafeString(iban?.iban, 'MT17 SYPL 3948 0354 2000 1814 7054 916');
     const bic = getSafeString(iban?.bank?.bic || iban?.swift_code || iban?.bic, 'SYPLMTM2');
     const currency = getSafeString(iban?.currency, 'EUR');
@@ -295,7 +289,7 @@ const buildLetterHtml = ({ logoBase64, qrBase64, iban, userDetails, qrUrl }) => 
                     SCAN OR VISIT TO VERIFY
                 </div>
                 <div style="font-size: 10px; color: #45159C; font-weight: 600; line-height: 1.35; font-family: 'SF Mono', 'Consolas', monospace; margin-top: 2px; word-break: break-all;">
-                    verify.insta-pay.ch/<br />${refCode}
+                   ${qrUrl}
                 </div>
             </div>
         </div>
@@ -333,10 +327,7 @@ const buildLetterHtml = ({ logoBase64, qrBase64, iban, userDetails, qrUrl }) => 
     </div>`;
 };
 
-// ─── Main PDF Generator ─────────────────────────────────────────────────
-
 const generateIbanLetterPdf = async (iban, userDetails = {}, options = {}) => {
-    // 1. Prepare assets in parallel
     const virtualIbanId = iban?.virtualIbanId || iban?._id || iban?.id || '';
     const base_url = window.location.origin || 'https://my.insta-pay.ch';
     const qrUrl = `${base_url}/validate-iban/${virtualIbanId}`;
@@ -348,10 +339,8 @@ const generateIbanLetterPdf = async (iban, userDetails = {}, options = {}) => {
         results.map((r) => (r.status === 'fulfilled' ? r.value : null))
     );
 
-    // 2. Build HTML
     const html = buildLetterHtml({ logoBase64, qrBase64, iban, userDetails, qrUrl });
 
-    // 3. Create off-screen container
     const wrapper = document.createElement('div');
     wrapper.style.cssText = 'position:absolute;left:-9999px;top:0;z-index:-1;width:794px;';
     wrapper.innerHTML = html;
@@ -360,7 +349,6 @@ const generateIbanLetterPdf = async (iban, userDetails = {}, options = {}) => {
     const target = wrapper.querySelector('#iban-letter');
 
     try {
-        // 4. Render to canvas using html2canvas
         const canvas = await html2canvas(target, {
             scale: 2,
             useCORS: true,
@@ -371,17 +359,14 @@ const generateIbanLetterPdf = async (iban, userDetails = {}, options = {}) => {
             windowWidth: 794,
         });
 
-        // 5. Convert to PDF
         const imgData = canvas.toDataURL('image/png');
         const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
         const pdfWidth = 210;
         const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
 
-        // If height fits in standard A4 single page or multi page
         if (pdfHeight <= 297) {
             doc.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
         } else {
-            // Multi-page rendering if content exceeds 1 page
             let heightLeft = pdfHeight;
             let position = 0;
             const pageHeight = 297;
@@ -397,7 +382,6 @@ const generateIbanLetterPdf = async (iban, userDetails = {}, options = {}) => {
             }
         }
 
-        // 6. Preview or Download
         if (options.isPreview) {
             const blobUrl = doc.output('bloburl');
             window.open(blobUrl, '_blank');
@@ -406,7 +390,6 @@ const generateIbanLetterPdf = async (iban, userDetails = {}, options = {}) => {
             doc.save(fileName);
         }
     } finally {
-        // 7. Clean up
         if (document.body.contains(wrapper)) {
             document.body.removeChild(wrapper);
         }

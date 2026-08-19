@@ -141,7 +141,6 @@ const ActivateAccount = ({
           alignItems: "start",
         }}
       >
-        {/* Left Side: Header, Payment Method, Wallet Selection */}
         <div className={styles.mainArea}>
           <div className={styles.header}>
             <div className={styles.headerTitle}>
@@ -470,7 +469,6 @@ const ActivateAccount = ({
           </div>
         </div>
 
-        {/* Right Side: Order Summary & Payment Card */}
       </div>
 
       <div className={styles.navigationFooter}>

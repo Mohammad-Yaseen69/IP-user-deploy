@@ -112,7 +112,6 @@ const ReviewStep = ({ onSubmit, onBack, allData = {}, onNext, userType }) => {
             <div className={styles.mainArea}>
                 <div className={styles.summaryWrapper} style={{ width: "100%" }}>
 
-                    {/* COMPANY DETAILS CARD */}
                     <div className={styles.summaryCard}>
                         <div className={styles.cardHeader}>
                             <h4>{t("Company details")}</h4>
@@ -188,7 +187,6 @@ const ReviewStep = ({ onSubmit, onBack, allData = {}, onNext, userType }) => {
                         </div>
                     </div>
 
-                    {/* ACTIVITY & INTENDED USE CARD */}
                     <div className={styles.summaryCard}>
                         <div className={styles.cardHeader}>
                             <h4>{t("Activity & intended use")}</h4>

@@ -4,7 +4,8 @@ import { useNavigate } from "react-router"
 import { toast } from "react-toastify"
 import { Modal, ModalBody } from "reactstrap"
 import { CheckCircle, ChevronDown, ChevronLeft, ChevronRight, Download, FileText, Home, List, Plus, Search, Send, User } from "react-feather"
-import AddBeneficiary from "../../../AddBeneficiary"
+import AddBeneficiaryModal from "../../Beneficiaries/Modals/AddBeneficiaryModal"
+import DynamicChannelModal from "../../Beneficiaries/Modals/DynamicChannelModal"
 import useWindowWidth from "../../../../utils/useWindowWidth"
 import ContactBox from "../../../MyMasterCard/PaymentModal/ContactBox"
 import { getAmountNumber } from "../../utils/amount"
@@ -225,7 +226,7 @@ const BeneficiaryStep = ({ beneficiaries, selectedBeneficiary, setSelectedBenefi
         <div className={styles.beneficiaryStep}>
             <div className={styles.beneficiaryHeader}>
                 <h3>{t("Beneficiaries")}</h3>
-                <button type="button" className={styles.primarySmallBtn} onClick={() => navigate('/virtual-iban/beneficiaries-virtual')}><Plus size={16} />{t("Add beneficiary")}</button>
+                <button type="button" className={styles.primarySmallBtn} onClick={onAddBeneficiary}><Plus size={16} />{t("Add beneficiary")}</button>
             </div>
             <label className={styles.searchBox}><Search size={15} /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder={t("Search beneficiaries")} /></label>
             <div className={styles.beneficiaryList}>
@@ -546,7 +547,7 @@ const SepaTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, i
     const { t } = useTranslation()
     const width = useWindowWidth()
     const navigate = useNavigate()
-    const { beneficiaries: nonIbanBen, userDetails, setProfileLockTime, getUserBeneficiaries, IBANBeneficiaries } = useContext(UserContext)
+    const { beneficiaries, userDetails, setProfileLockTime, getUserBeneficiaries } = useContext(UserContext)
     const currencyCode = selectedIban?.currency || "EUR"
     const sourceAvailableBalance = getSourceBalance(availableBalance, selectedIban)
     const getDefaultAuthType = () => (userDetails?.tfa ? "authenticator" : "sms")
@@ -557,7 +558,9 @@ const SepaTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, i
     const [selectedBeneficiary, setSelectedBeneficiary] = useState(null)
     const [beneficiaryForm, setBeneficiaryForm] = useState(DEFAULT_BENEFICIARY_FORM)
     const [isAddingBeneficiary, setIsAddingBeneficiary] = useState(false)
-    const [showBeneficiaryAddModal, setShowBeneficiaryAddModal] = useState(false)
+    const [isAddModalOpen, setIsAddModalOpen] = useState(false)
+    const [isChannelModalOpen, setIsChannelModalOpen] = useState(false)
+    const [channelModalBeneficiary, setChannelModalBeneficiary] = useState(null)
     const [purpose, setPurpose] = useState(PURPOSE_OPTIONS[0])
     const [additionalInfo, setAdditionalInfo] = useState("")
     const [confirmedDetails, setConfirmedDetails] = useState(false)
@@ -585,11 +588,25 @@ const SepaTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, i
     const disabled = getDisabledState(currentStep, machineData) || isProcessing
     const showFooter = currentStep !== STEPS.OTP && currentStep !== STEPS.DONE
 
+    const handleBeneficiarySaved = (savedBeneficiary, isNew) => {
+        if (isNew && savedBeneficiary) {
+            setChannelModalBeneficiary(savedBeneficiary);
+            setIsChannelModalOpen(true);
+        }
+    };
 
-    const beneficiaries = useMemo(() => {
-        const allBeneficiaries = [...(nonIbanBen || []), ...(IBANBeneficiaries || [])]
-        return allBeneficiaries
-    }, [nonIbanBen, IBANBeneficiaries])
+    const handleChannelSaved = async (updatedBeneficiary) => {
+        await getUserBeneficiaries();
+        if (updatedBeneficiary) {
+            const hasBank = (Array.isArray(updatedBeneficiary.account_type) && updatedBeneficiary.account_type.includes("bank")) ||
+                (Array.isArray(updatedBeneficiary.bank_details) && updatedBeneficiary.bank_details.length > 0);
+            const bankCountry = updatedBeneficiary?.bank_details?.[0]?.extras?.country_iso_code || updatedBeneficiary?.country_iso_code || updatedBeneficiary?.country;
+            const isSepaCountry = sepaCountries.includes(bankCountry);
+            if (hasBank && isSepaCountry) {
+                setSelectedBeneficiary(updatedBeneficiary);
+            }
+        }
+    };
 
     const resetState = () => {
         setCurrentStep(STEPS.AMOUNT)
@@ -624,7 +641,6 @@ const SepaTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, i
             setBeneficiaryList(europeanBeneficiaries)
         }
     }, [beneficiaries])
-
 
     useEffect(() => {
         if (userDetails?._id) {
@@ -667,7 +683,6 @@ const SepaTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, i
         try {
             await sendOtp(buildPayoutPayload(), nextAuthType)
         } catch {
-            // toast already shown by useSendOtp's onError
         }
     }
 
@@ -731,7 +746,7 @@ const SepaTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, i
             case STEPS.AMOUNT:
                 return <SepaAmountStep amount={amount} setAmount={setAmount} availableBalance={sourceAvailableBalance} currencyCode={currencyCode} sourceIban={sourceIban} transferSpeed={transferSpeed} setTransferSpeed={setTransferSpeed} />
             case STEPS.BENEFICIARY:
-                return <BeneficiaryStep beneficiaries={beneficiaryList} selectedBeneficiary={selectedBeneficiary} setSelectedBeneficiary={setSelectedBeneficiary} onAddBeneficiary={() => { setShowBeneficiaryAddModal(true) }} />
+                return <BeneficiaryStep beneficiaries={beneficiaryList} selectedBeneficiary={selectedBeneficiary} setSelectedBeneficiary={setSelectedBeneficiary} onAddBeneficiary={() => setIsAddModalOpen(true)} />
             case STEPS.ADD_BENEFICIARY:
                 return <AddBeneficiaryStep amount={amount} currencyCode={currencyCode} form={beneficiaryForm} setForm={setBeneficiaryForm} />
             case STEPS.PURPOSE:
@@ -782,7 +797,7 @@ const SepaTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, i
     return (
         <>
             {isPage ? (
-                <div style={{width: "100%"}} className={styles.pageContainer}>
+                <div style={{ width: "100%" }} className={styles.pageContainer}>
                     {content}
                 </div>
             ) : (
@@ -793,21 +808,22 @@ const SepaTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, i
                 </Modal>
             )}
 
+            <AddBeneficiaryModal
+                open={isAddModalOpen}
+                handleClose={() => setIsAddModalOpen(false)}
+                onSaveSuccess={handleBeneficiarySaved}
+            />
 
-
-
-            <Modal style={{ minWidth: width > 1000 ? "900px" : "0%" }} toggle={() => setShowBeneficiaryAddModal(false)} isOpen={showBeneficiaryAddModal}>
-                <ModalBody style={{ padding: "0px" }}>
-                    <AddBeneficiary
-                        inInternationalModal={true}
-                        toggleHandler={async (addedBen) => {
-                            await getUserBeneficiaries()
-                            if (addedBen) setSelectedBeneficiary(addedBen)
-                            setShowBeneficiaryAddModal(false)
-                        }}
-                    />
-                </ModalBody>
-            </Modal>
+            <DynamicChannelModal
+                open={isChannelModalOpen}
+                handleClose={() => {
+                    setIsChannelModalOpen(false);
+                    setChannelModalBeneficiary(null);
+                }}
+                beneficiaryData={channelModalBeneficiary}
+                lockChannelType="bank"
+                onSaveSuccess={handleChannelSaved}
+            />
         </>
     )
 }
