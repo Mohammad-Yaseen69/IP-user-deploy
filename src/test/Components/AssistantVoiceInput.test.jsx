@@ -47,8 +47,15 @@ afterEach(() => {
     delete globalThis.MediaRecorder
 })
 
+/** Stands in for useAssistantSession: attaches the session token and calls fetch. */
+const authedFetch = (url, { headers, ...options } = {}) =>
+    globalThis.fetch(url, {
+        ...options,
+        headers: { ...headers, Authorization: 'Bearer session-token' },
+    })
+
 const setup = (onTranscript = vi.fn()) => {
-    const { result } = renderHook(() => useVoiceInput({ token: 'jwt-abc', onTranscript }))
+    const { result } = renderHook(() => useVoiceInput({ authedFetch, onTranscript }))
     return { result, onTranscript }
 }
 
@@ -97,7 +104,7 @@ describe('useVoiceInput', () => {
 
         it('releases the microphone when recording stops', async () => {
             const { result } = setup()
-            globalThis.fetch.mockResolvedValue({ ok: true, json: async () => ({ text: 'hi' }) })
+            globalThis.fetch.mockResolvedValue({ ok: true, json: async () => ({ success: true, data: { text: 'hi' } }) })
 
             await record(result)
 
@@ -110,7 +117,7 @@ describe('useVoiceInput', () => {
             const { result, onTranscript } = setup()
             globalThis.fetch.mockResolvedValue({
                 ok: true,
-                json: async () => ({ text: 'how do I send money' }),
+                json: async () => ({ success: true, data: { text: 'how do I send money' } }),
             })
 
             await record(result)
@@ -118,15 +125,15 @@ describe('useVoiceInput', () => {
             await waitFor(() => expect(onTranscript).toHaveBeenCalledWith('how do I send money'))
 
             const [url, init] = globalThis.fetch.mock.calls[0]
-            expect(url).toBe('/api/transcribe')
-            expect(init.headers.Authorization).toBe('Bearer jwt-abc')
+            expect(url).toContain('/api/assistant/transcribe')
+            expect(init.headers.Authorization).toBe('Bearer session-token')
             expect(JSON.parse(init.body).mimeType).toContain('audio/')
             expect(JSON.parse(init.body).audio).toBeTruthy()
         })
 
         it('returns to idle once done', async () => {
             const { result } = setup()
-            globalThis.fetch.mockResolvedValue({ ok: true, json: async () => ({ text: 'hi' }) })
+            globalThis.fetch.mockResolvedValue({ ok: true, json: async () => ({ success: true, data: { text: 'hi' } }) })
 
             await record(result)
 
@@ -135,7 +142,7 @@ describe('useVoiceInput', () => {
 
         it('reports empty transcripts instead of sending nothing', async () => {
             const { result, onTranscript } = setup()
-            globalThis.fetch.mockResolvedValue({ ok: true, json: async () => ({ text: '' }) })
+            globalThis.fetch.mockResolvedValue({ ok: true, json: async () => ({ success: true, data: { text: '' } }) })
 
             await record(result)
 

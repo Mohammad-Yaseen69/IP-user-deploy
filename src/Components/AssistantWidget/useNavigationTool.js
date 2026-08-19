@@ -3,40 +3,30 @@ import { useNavigate } from "react-router-dom";
 import { usePermission } from "../../hooks/GeneralUse/usePermission";
 import { getPageById } from "./knowledge/pages";
 
-export const useNavigationTool = ({ onNavigate } = {}) => {
+/**
+ * Turns a page id from the assistant into an actual route change.
+ *
+ * The agent proposes; this decides. Two rules hold whatever comes back:
+ * an id outside PAGES resolves to nothing, and a page this user's role cannot
+ * open is refused. The bot is only ever sent pages the user may open, so this
+ * is the second line rather than the first — but it is the one that runs in
+ * the browser, where the permissions actually live.
+ */
+export const useNavigationTool = () => {
     const navigate = useNavigate();
     const can = usePermission();
 
-    const navigateToPage = useCallback(
-        (params) => {
-            const pageId = typeof params?.page_id === "string" ? params.page_id : "";
-            const page = getPageById(pageId);
-
-            if (!page) {
-                return { ok: false, reason: "unknown_page" };
-            }
-
+    return useCallback(
+        (pageId) => {
+            const page = getPageById(typeof pageId === "string" ? pageId : "");
+            if (!page) return { ok: false, reason: "unknown_page" };
             if (page.permission && !can(page.permission)) {
                 return { ok: false, reason: "not_permitted" };
             }
 
             navigate(page.route);
-            onNavigate?.(page);
-
             return { ok: true };
         },
-        [can, navigate, onNavigate]
-    );
-
-    return useCallback(
-        async ({ name, params }) => {
-            switch (name) {
-                case "navigate_to_page":
-                    return navigateToPage(params);
-                default:
-                    return { ok: false, reason: "unknown_tool" };
-            }
-        },
-        [navigateToPage]
+        [can, navigate]
     );
 };

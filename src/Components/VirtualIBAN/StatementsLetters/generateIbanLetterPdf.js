@@ -289,7 +289,7 @@ const buildLetterHtml = ({ logoBase64, qrBase64, iban, userDetails, qrUrl }) => 
                     SCAN OR VISIT TO VERIFY
                 </div>
                 <div style="font-size: 10px; color: #45159C; font-weight: 600; line-height: 1.35; font-family: 'SF Mono', 'Consolas', monospace; margin-top: 2px; word-break: break-all;">
-                    verify.insta-pay.ch/<br />${refCode}
+                   ${qrUrl}
                 </div>
             </div>
         </div>
