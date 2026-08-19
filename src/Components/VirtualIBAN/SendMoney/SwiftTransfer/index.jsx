@@ -21,7 +21,8 @@ import {
     Send,
     User,
 } from "react-feather"
-import AddBeneficiary from "../../../AddBeneficiary"
+import AddBeneficiaryModal from "../../Beneficiaries/Modals/AddBeneficiaryModal"
+import DynamicChannelModal from "../../Beneficiaries/Modals/DynamicChannelModal"
 import useWindowWidth from "../../../../utils/useWindowWidth"
 import ContactBox from "../../../MyMasterCard/PaymentModal/ContactBox"
 import { getAmountNumber } from "../../utils/amount"
@@ -55,6 +56,7 @@ import { handlePaymentApiError } from "../../../../utils/Functions/handlePayment
 import OTPConfirmation from "../../../UserSettingsNew/OTPConfirmation"
 import jsPDF from "jspdf"
 import autoTable from "jspdf-autotable"
+import AddBeneficiary from "../../../AddBeneficiary"
 
 const DEFAULT_BENEFICIARY_FORM = {
     type: "individual",
@@ -317,14 +319,14 @@ const BeneficiaryStep = ({ beneficiaries, selectedBeneficiary, setSelectedBenefi
 
     const handleSwiftCodeSaved = async (updatedBeneficiary) => {
         setSelectedBeneficiary(updatedBeneficiary)
-        try { await getUserBeneficiaries() } catch (_) { }
+        await getUserBeneficiaries()
     }
 
     return (
         <div className={styles.beneficiaryStep}>
             <div className={styles.beneficiaryHeader}>
                 <h3>{t("Beneficiaries")}</h3>
-                <button type="button" className={styles.primarySmallBtn} onClick={() => navigate("/virtual-iban/beneficiaries-virtual")}>
+                <button type="button" className={styles.primarySmallBtn} onClick={onAddBeneficiary}>
                     <Plus size={16} />
                     {t("Add beneficiary")}
                 </button>
@@ -862,7 +864,9 @@ const SwiftTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, 
     const [selectedBeneficiary, setSelectedBeneficiary] = useState(null)
     const [beneficiaryForm, setBeneficiaryForm] = useState(DEFAULT_BENEFICIARY_FORM)
     const [isAddingBeneficiary, setIsAddingBeneficiary] = useState(false)
-    const [showBeneficiaryAddModal, setShowBeneficiaryAddModal] = useState(false)
+    const [isAddModalOpen, setIsAddModalOpen] = useState(false)
+    const [isChannelModalOpen, setIsChannelModalOpen] = useState(false)
+    const [channelModalBeneficiary, setChannelModalBeneficiary] = useState(null)
     const [purpose, setPurpose] = useState(PURPOSE_OPTIONS[0])
     const [additionalInfo, setAdditionalInfo] = useState("")
     const [confirmedDetails, setConfirmedDetails] = useState(false)
@@ -927,6 +931,24 @@ const SwiftTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, 
     useEffect(() => {
         if (userDetails?._id) getUserBeneficiaries()
     }, [userDetails])
+
+    const handleBeneficiarySaved = (savedBeneficiary, isNew) => {
+        if (isNew && savedBeneficiary) {
+            setChannelModalBeneficiary(savedBeneficiary);
+            setIsChannelModalOpen(true);
+        }
+    };
+
+    const handleChannelSaved = async (updatedBeneficiary) => {
+        await getUserBeneficiaries();
+        if (updatedBeneficiary) {
+            const hasBank = (Array.isArray(updatedBeneficiary.account_type) && updatedBeneficiary.account_type.includes("bank")) ||
+                (Array.isArray(updatedBeneficiary.bank_details) && updatedBeneficiary.bank_details.length > 0);
+            if (hasBank) {
+                setSelectedBeneficiary(updatedBeneficiary);
+            }
+        }
+    };
 
     const resetState = () => {
         setCurrentStep(STEPS.AMOUNT)
@@ -997,7 +1019,6 @@ const SwiftTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, 
         try {
             await sendOtp(buildPayoutPayload(), nextAuthType)
         } catch {
-            // toast already shown by useSendOtp's onError
         }
     }
 
@@ -1035,7 +1056,6 @@ const SwiftTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, 
             const nextBeneficiary = buildBeneficiaryFromForm(beneficiaryForm)
             setSelectedBeneficiary(nextBeneficiary)
             if (beneficiaryForm.saveBeneficiary) {
-                // Optimistically add to list — real list refreshes after getUserBeneficiaries
             }
             setCurrentStep(STEPS.PURPOSE)
             return
@@ -1094,7 +1114,7 @@ const SwiftTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, 
                         beneficiaries={swiftBeneficiaries}
                         selectedBeneficiary={selectedBeneficiary}
                         setSelectedBeneficiary={setSelectedBeneficiary}
-                        onAddBeneficiary={() => setShowBeneficiaryAddModal(true)}
+                        onAddBeneficiary={() => setIsAddModalOpen(true)}
                         authHeader={authHeader}
                         getUserBeneficiaries={getUserBeneficiaries}
                     />
@@ -1250,22 +1270,22 @@ const SwiftTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, 
                 </Modal>
             )}
 
-            <Modal
-                style={{ minWidth: width > 1000 ? "900px" : "0%" }}
-                toggle={() => setShowBeneficiaryAddModal(false)}
-                isOpen={showBeneficiaryAddModal}
-            >
-                <ModalBody style={{ padding: "0px" }}>
-                    <AddBeneficiary
-                        inInternationalModal={true}
-                        toggleHandler={async (addedBen) => {
-                            await getUserBeneficiaries()
-                            if (addedBen) setSelectedBeneficiary(addedBen)
-                            setShowBeneficiaryAddModal(false)
-                        }}
-                    />
-                </ModalBody>
-            </Modal>
+            <AddBeneficiaryModal
+                open={isAddModalOpen}
+                handleClose={() => setIsAddModalOpen(false)}
+                onSaveSuccess={handleBeneficiarySaved}
+            />
+
+            <DynamicChannelModal
+                open={isChannelModalOpen}
+                handleClose={() => {
+                    setIsChannelModalOpen(false);
+                    setChannelModalBeneficiary(null);
+                }}
+                beneficiaryData={channelModalBeneficiary}
+                lockChannelType="bank"
+                onSaveSuccess={handleChannelSaved}
+            />
         </>
     )
 }

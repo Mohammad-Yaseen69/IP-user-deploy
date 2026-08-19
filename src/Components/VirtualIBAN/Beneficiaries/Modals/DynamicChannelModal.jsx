@@ -9,10 +9,10 @@ import { apiWrapper } from '../../../../utils/Functions/apiWrapper';
 import { toast } from 'react-toastify';
 import PhoneInput from '../../../PhoneInput';
 
-const DynamicChannelModal = ({ open, handleClose, beneficiaryData, onSaveSuccess }) => {
+const DynamicChannelModal = ({ open, handleClose, beneficiaryData, onSaveSuccess, lockChannelType = null }) => {
     const { t } = useTranslation();
 
-    const [channelType, setChannelType] = useState('bank');
+    const [channelType, setChannelType] = useState(lockChannelType || 'bank');
     const [submitting, setSubmitting] = useState(false);
 
     const [accNumType, setAccNumType] = useState('IBAN');
@@ -176,7 +176,7 @@ const DynamicChannelModal = ({ open, handleClose, beneficiaryData, onSaveSuccess
             });
 
             toast.success(t("Payout channel added successfully"));
-            if (onSaveSuccess) onSaveSuccess(res);
+            if (onSaveSuccess) onSaveSuccess(res?.data || res, channelPayload);
             handleClose();
         } catch (err) {
             console.error("Add channel error:", err);

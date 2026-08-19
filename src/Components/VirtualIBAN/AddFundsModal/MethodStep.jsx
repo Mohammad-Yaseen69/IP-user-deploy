@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next"
-import { FUNDING_METHODS, MOCK_WALLETS } from "../../stateMachines/addFundsFlow"
+import { FUNDING_METHODS, MOCK_WALLETS } from "../../../stateMachines/addFundsFlow"
 import styles from "./addFundsModal.module.scss"
 
 const WalletIcon = () => (
