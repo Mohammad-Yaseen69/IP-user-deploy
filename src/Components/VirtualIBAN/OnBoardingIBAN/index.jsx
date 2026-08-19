@@ -137,6 +137,18 @@ const OnboardingIBAN = ({ onCreated }) => {
         checkRequestStatus();
     }, [userDetails?._id]);
 
+    useEffect(() => {
+        window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+        document.body.scrollTop = 0;
+        document.documentElement.scrollTop = 0;
+        const scrollContainers = document.querySelectorAll('.page-body, .page-content, .main-content, .content-wrapper, main, [class*="layout"], [class*="container"]');
+        scrollContainers.forEach(el => {
+            if (el && el.scrollTop > 0) {
+                el.scrollTop = 0;
+            }
+        });
+    }, [state.step]);
+
     const { sendOtp } = useSendOtp({
         onSuccess: (token) => {
             setOtpToken(token)
