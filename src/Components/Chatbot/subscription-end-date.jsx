@@ -199,9 +199,7 @@ export default function SubscriptionCalendarEndDate() {
                   flexDirection: "column",
                 }}
               >
-                <CustomLabel htmlFor="datepicker">
-                  Select an Ending Date:
-                </CustomLabel>
+                <CustomLabel htmlFor="datepicker">{t("Select an Ending Date:")}</CustomLabel>
                 <MobileDatePicker
                   id="datepicker"
                   value={selectedDate}

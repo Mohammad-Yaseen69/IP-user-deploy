@@ -65,15 +65,15 @@ const Nominee = ({ isCollapsed, setIsCollapsed }) => {
                                         <AddNominee setNominee={setNominee} setAddNominee={setAddNominee} />
                                         :
                                         <div style={{ display: "flex", alignItems: "center", flexDirection: "column", gap: "10px" }}>
-                                            <p style={{ textAlign: "center" }}>You may elect a Nominee of your choice not being a minor through the InstaPay platform itself. You acknowledge that no wet signature will be taken to appoint the nominee and the online registration will be considered as final and binding. In the event of the death of an InstaPay Wallet holder, the balance in the Wallet will be handed over to the Nominee as registered on the platform. KEMIT KINGDOM will be discharged from all its liabilities upon handover of the amount to the Nominee. The Nominee will provide documents as may be required by InstaPay including for identification and proof of death.</p>
+                                            <p style={{ textAlign: "center" }}>{t(
+                                                "You may elect a Nominee of your choice not being a minor through the InstaPay platform itself. You acknowledge that no wet signature will be taken to appoint the nominee and the online registration will be considered as final and binding. In the event of the death of an InstaPay Wallet holder, the balance in the Wallet will be handed over to the Nominee as registered on the platform. KEMIT KINGDOM will be discharged from all its liabilities upon handover of the amount to the Nominee. The Nominee will provide documents as may be required by InstaPay including for identification and proof of death."
+                                            )}</p>
                                             <Button style={{
                                                 background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
                                                 border: "none",
                                                 outline: "none",
                                                 borderRadius: "10px"
-                                            }} onClick={() => setAddNominee(true)}>
-                                                Add Nominee
-                                            </Button>
+                                            }} onClick={() => setAddNominee(true)}>{t("Add Nominee")}</Button>
                                         </div>
                                 }
                             </>
@@ -81,7 +81,7 @@ const Nominee = ({ isCollapsed, setIsCollapsed }) => {
                 </CardBody>
             </div>
         </Card>
-    )
+    );
 }
 
 export default Nominee

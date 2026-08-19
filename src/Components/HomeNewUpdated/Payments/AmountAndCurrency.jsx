@@ -147,9 +147,9 @@ const AmountAndCurrency = ({ amount, setAmount, currency, setCurrency, reason, s
                     outline: "none"
 
                 }} value={currency} onChange={(e) => setCurrency(e.target.value)}>
-                    <option value="USD">USD</option>
-                    <option value="GBP">GBP</option>
-                    <option value="EUR">EUR</option>
+                    <option value="USD">{t("USD")}</option>
+                    <option value="GBP">{t("GBP")}</option>
+                    <option value="EUR">{t("EUR")}</option>
                 </Input>
             </div>
             <Input type="select" value={reason} onChange={(e) => setReason(e.target.value)} className="mb-2"
@@ -277,7 +277,7 @@ const AmountAndCurrency = ({ amount, setAmount, currency, setCurrency, reason, s
                 <ChevronRight size={20} />
             </Button>
         </div>
-    )
+    );
 }
 
 export default AmountAndCurrency

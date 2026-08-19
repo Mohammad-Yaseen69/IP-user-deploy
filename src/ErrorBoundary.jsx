@@ -63,7 +63,7 @@ class ErrorBoundary extends Component {
                             <div className='error-id'>
                                 {t("Error ID")}: {this.state.eventId}
                             </div>
-                            <p>{t("If the issue continues, please email us at")} <a href="mailto:support@insta-pay.ch">support@insta-pay.ch</a> {t("with the Error ID, your username, and phone number for further assistance.")}</p>
+                            <p>{t("If the issue continues, please email us at")} <a href="mailto:support@insta-pay.ch">{t("support@insta-pay.ch")}</a> {t("with the Error ID, your username, and phone number for further assistance.")}</p>
                             <button style={{ marginTop: "30px" }} onClick={() => window.location.reload()} className="error-button">{t("Reload Page")}</button>
                         </div>
                     </div>

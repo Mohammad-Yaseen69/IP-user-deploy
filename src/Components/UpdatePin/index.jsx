@@ -266,7 +266,7 @@ const CreatePin = () => {
 
 
                         <Modal isOpen={showOtpModal}>
-                            <ModalHeader toggle={() => setShowOtpModal(!showOtpModal)}>Confirm</ModalHeader>
+                            <ModalHeader toggle={() => setShowOtpModal(!showOtpModal)}>{t("Confirm")}</ModalHeader>
                             <ModalBody>
                                 <OTPConfirmation
                                     callback={updatePinFunc}
@@ -283,7 +283,7 @@ const CreatePin = () => {
                     </div >)
                     : (
                         // New mobile layout
-                        <div style={{ margin: "auto" }} className={styles.container}>
+                        (<div style={{ margin: "auto" }} className={styles.container}>
                             <div style={{ padding: "27px" }} className={styles.right}>
                                 <div>
                                     <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "35px" }}>
@@ -364,7 +364,7 @@ const CreatePin = () => {
                                     </button>
                                 </div>
                             </div>
-                        </div>
+                        </div>)
                     )) : (
                 <div style={{
                     margin: "auto",
@@ -438,7 +438,7 @@ const CreatePin = () => {
             )}
 
             <Modal isOpen={showOtpModal}>
-                <ModalHeader toggle={() => setShowOtpModal(!showOtpModal)}>Confirm</ModalHeader>
+                <ModalHeader toggle={() => setShowOtpModal(!showOtpModal)}>{t("Confirm")}</ModalHeader>
                 <ModalBody>
                     <OTPConfirmation
                         callback={updatePinFunc}
@@ -453,7 +453,7 @@ const CreatePin = () => {
                 </ModalBody>
             </Modal>
         </>
-    )
+    );
 }
 
 export default CreatePin
