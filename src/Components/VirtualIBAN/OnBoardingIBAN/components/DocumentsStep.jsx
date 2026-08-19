@@ -5,8 +5,6 @@ import { toast } from 'react-toastify'
 import styles from '../style/onboardingSteps.module.css'
 import SidebarProgress from './SidebarProgress'
 
-
-
 const DocumentsStep = ({ onNext, onBack, userType, data = {}, userDetails, companyDetails }) => {
     const { t } = useTranslation()
     const [files, setFiles] = useState(data.files || {})
@@ -146,7 +144,6 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {}, userDetails, compa
                         </div>
                     </div>
 
-
                     <div className={styles.section}>
                         <div className={styles.sectionHeader}>
                             <div className={styles.sectionNumber}>1</div>
@@ -195,7 +192,6 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {}, userDetails, compa
                             </div>
                         </div>
                     </div>
-
 
                     <div className={styles.section}>
                         <div className={styles.sectionHeader}>
@@ -270,8 +266,6 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {}, userDetails, compa
                             </div>
                         </div>
                     </div>
-
-                    {/* ===================== Section 3 ===================== */}
 
                     <div className={styles.section}>
                         <div className={styles.sectionHeader}>

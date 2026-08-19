@@ -169,7 +169,6 @@ const ActivityStep = ({ onNext, onBack, data = {} }) => {
                     }}>
                         <div className={styles.onboardingForm2}>
 
-
                             <div className={styles.inputGroup}>
                                 <label className={styles.inputLabel}>
                                     {t("INDUSTRY / SECTOR")} <span style={{ color: "red", fontWeight: 600 }}>*</span>
@@ -194,7 +193,6 @@ const ActivityStep = ({ onNext, onBack, data = {} }) => {
                                 </select>
                             </div>
 
-
                             <div className={styles.inputGroup}>
                                 <label className={styles.inputLabel}>
                                     {t("DETAILED DESCRIPTION OF BUSINESS ACTIVITY")}
@@ -212,7 +210,6 @@ const ActivityStep = ({ onNext, onBack, data = {} }) => {
                                 />
                                 < span className={styles.charCount}>{form.businessDescription.length}/1000</span>
                             </div>
-
 
                             <div className={styles.inputGroup}
                                 style={{
@@ -289,7 +286,6 @@ const ActivityStep = ({ onNext, onBack, data = {} }) => {
                                 )}
                             </div>
 
-
                             <div className={styles.inputGroup}>
                                 <label className={styles.inputLabel}>
                                     {t("EXPECTED MONTHLY INFLOW")}
@@ -322,7 +318,6 @@ const ActivityStep = ({ onNext, onBack, data = {} }) => {
                                 </div>
                             </div>
 
-
                             <div className={styles.inputGroup}>
                                 <label className={styles.inputLabel}>
                                     {t("CURRENCIES YOU WORK WITH")}
@@ -344,7 +339,6 @@ const ActivityStep = ({ onNext, onBack, data = {} }) => {
                                     ))}
                                 </div>
                             </div>
-
 
                             <div className={styles.inputGroup}>
                                 <label className={styles.inputLabel}>
@@ -383,7 +377,6 @@ const ActivityStep = ({ onNext, onBack, data = {} }) => {
                                 </div>
                             </div>
 
-
                             <div className={styles.inputGroup}>
                                 <label className={styles.inputLabel}>
                                     {t("PAYMENT RAILS")}
@@ -405,12 +398,6 @@ const ActivityStep = ({ onNext, onBack, data = {} }) => {
                                     ))}
                                 </div>
                             </div>
-
-                            {/* <div className={styles.sectionDivider} /> */}
-
-
-
-
 
                         </div>
                     </div>

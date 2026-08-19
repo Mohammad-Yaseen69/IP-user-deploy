@@ -28,7 +28,6 @@ import OTPConfirmation from '../../UserSettingsNew/OTPConfirmation'
 const STEPS_BUSINESS = ['landing', 'selection', 'account', 'company', 'activity', 'ownership', 'documents', 'review']
 const STEPS_INDIVIDUAL = ['landing', 'selection', 'account', 'review']
 
-
 const initialState = {
     step: 'landing',
     userType: 'business',
@@ -379,15 +378,6 @@ const OnboardingIBAN = ({ onCreated }) => {
                     </div>
                 </div>
             )}
-
-            {/* {state.step === 'account' && (
-                <AccountStep
-                    onNext={(d) => goNext(d, 'account')}
-                    onBack={goBack}
-                    userType={state.userType}
-                    data={state.account}
-                />
-            )} */}
 
             {state.step === 'company' && (
                 <CompanyStep

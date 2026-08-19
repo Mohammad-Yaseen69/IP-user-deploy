@@ -15,8 +15,7 @@ const DynamicChannelModal = ({ open, handleClose, beneficiaryData, onSaveSuccess
     const [channelType, setChannelType] = useState('bank');
     const [submitting, setSubmitting] = useState(false);
 
-    // Bank States & Identifier Selector
-    const [accNumType, setAccNumType] = useState('IBAN'); // 'IBAN' or 'BIC'
+    const [accNumType, setAccNumType] = useState('IBAN');
     const [bankError, setBankError] = useState('');
     const [bankFormState, setBankFormState] = useState({
         iban: '',
@@ -30,7 +29,6 @@ const DynamicChannelModal = ({ open, handleClose, beneficiaryData, onSaveSuccess
         account_holder_name: ''
     });
 
-    // Wire useBankDetails hook
     const { getBankDetails, isFetchingBank, bankDetailsError, bankCountry, bankCountryCode, bankCountryIsoCode } = useBankDetails({
         accNumType,
         setFormData: setBankFormState,
@@ -44,18 +42,15 @@ const DynamicChannelModal = ({ open, handleClose, beneficiaryData, onSaveSuccess
         }
     });
 
-    // Crypto States
     const [cryptoNetwork, setCryptoNetwork] = useState('ethereum');
     const [walletAddress, setWalletAddress] = useState('');
 
-    // Mobile Wallet States
     const [mobileProvider, setMobileProvider] = useState('');
     const [walletName, setWalletName] = useState('');
     const [mobileNumber, setMobileNumber] = useState('');
     const [mobilePhoneKey, setMobilePhoneKey] = useState(0);
     const mobilePhonePrefillRef = useRef('');
 
-    // Wire useChannels for Mobile Wallet payers
     const { mobileProviders } = useChannels({
         setLoading: () => {},
         countryIsoCode: beneficiaryData?.country_iso_code
@@ -84,7 +79,6 @@ const DynamicChannelModal = ({ open, handleClose, beneficiaryData, onSaveSuccess
 
     useEffect(() => {
         if (mobileProviders && mobileProviders.length > 0 && !mobileProvider) {
-            // Force id to string — backend expects string, p.id may be a number
             setMobileProvider(String(mobileProviders[0]?.id || mobileProviders[0]?.name || ''));
             setWalletName(mobileProviders[0]?.name || '');
         }
@@ -164,7 +158,6 @@ const DynamicChannelModal = ({ open, handleClose, beneficiaryData, onSaveSuccess
         } else if (channelType === 'mobile_wallet') {
             if (!mobileNumber || !mobileNumber.trim()) return toast.error(t("Mobile number is required"));
             channelPayload.mobile_wallet = {
-                // Ensure string — API validation rejects numbers
                 money_provider: String(mobileProvider || 'Mobile Provider'),
                 wallet_name: walletName || String(mobileProvider) || 'Mobile Wallet',
                 wallet_account_number: mobileNumber.trim()
@@ -216,7 +209,6 @@ const DynamicChannelModal = ({ open, handleClose, beneficiaryData, onSaveSuccess
 
                 <form onSubmit={handleSubmit} className={styles.modalForm}>
                     <div className={styles.modalBody}>
-                        {/* Main Dropdown */}
                         <div className={styles.inputGroup}>
                         <label className={styles.fieldLabel}>{t("Channel type")}</label>
                         <FormControl fullWidth size="small">
@@ -253,10 +245,8 @@ const DynamicChannelModal = ({ open, handleClose, beneficiaryData, onSaveSuccess
                         </FormControl>
                     </div>
 
-                    {/* DYNAMIC FIELDS */}
                     {channelType === 'bank' && (
                         <>
-                            {/* Selector between IBAN and SWIFT / BIC */}
                             <div style={{ display: 'flex', gap: '8px', background: '#F3F4F6', padding: '4px', borderRadius: '10px', marginBottom: '14px' }}>
                                 <button
                                     type="button"
@@ -496,7 +486,6 @@ const DynamicChannelModal = ({ open, handleClose, beneficiaryData, onSaveSuccess
                         )}
                         </div>
 
-                        {/* Footer Buttons */}
                         <div className={styles.modalFooter}>
                             <button type="button" onClick={handleClose} className={styles.backButton}>
                                 <ArrowLeft size={16} style={{ marginRight: '6px' }} />

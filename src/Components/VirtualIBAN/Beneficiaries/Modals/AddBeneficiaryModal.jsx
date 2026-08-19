@@ -33,7 +33,6 @@ const AddBeneficiaryModal = ({ open, handleClose, onSaveSuccess, beneficiaryToEd
         if (beneficiaryToEdit) {
             setBeneficiaryType(beneficiaryToEdit.beneficiary_type || 'individual');
             const iso = beneficiaryToEdit.country_iso_code || '';
-            // Pass raw phone (with dial code) so CountryCode can strip it itself
             const rawPhone = String(beneficiaryToEdit.phone || '');
             setFormData({
                 first_name: beneficiaryToEdit.first_name || '',
@@ -67,7 +66,6 @@ const AddBeneficiaryModal = ({ open, handleClose, onSaveSuccess, beneficiaryToEd
             setPhoneKey(prev => prev + 1);
         }
     }, [beneficiaryToEdit, open]);
-
 
     const handleChange = (field, value) => {
         setFormData(prev => ({ ...prev, [field]: value }));
@@ -193,7 +191,6 @@ const AddBeneficiaryModal = ({ open, handleClose, onSaveSuccess, beneficiaryToEd
                     overflow: "hidden"
                 }}
             >
-                {/* Header */}
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '20px 24px', borderBottom: '1px solid #F3F4F6' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                         <div style={{ width: '40px', height: '40px', borderRadius: '12px', background: '#EEF2FF', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#4F46E5' }}>
@@ -214,7 +211,6 @@ const AddBeneficiaryModal = ({ open, handleClose, onSaveSuccess, beneficiaryToEd
                 </div>
 
                 <form onSubmit={handleSubmit} style={{ padding: '24px' }}>
-                    {/* Type Selector */}
                     <div style={{ display: 'flex', gap: '8px', background: '#F3F4F6', padding: '4px', borderRadius: '12px', marginBottom: '20px', opacity: beneficiaryToEdit ? 0.6 : 1, pointerEvents: beneficiaryToEdit ? 'none' : 'auto' }}>
                         <button
                             type="button"
@@ -268,7 +264,6 @@ const AddBeneficiaryModal = ({ open, handleClose, onSaveSuccess, beneficiaryToEd
                         </button>
                     </div>
 
-                    {/* Form Fields */}
                     {beneficiaryType === 'individual' ? (
                         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px', marginBottom: '14px' }}>
                             <div>
@@ -314,14 +309,12 @@ const AddBeneficiaryModal = ({ open, handleClose, onSaveSuccess, beneficiaryToEd
                                 const cCode = selected?.alpha3 || selected?.country_iso_code || '';
                                 handleChange('country_name', cName);
                                 handleChange('country_iso_code', cCode);
-                                // reset city/phone if country changed
                                 handleChange('city', '');
                             }}
                         />
                     </div>
 
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px', marginBottom: '14px' }}>
-                        {/* CITY DROPDOWN */}
                         <div title={isCountryDisabled ? t("Please select country first") : ""}>
                             <label style={{ display: 'block', fontSize: '13px', fontWeight: 500, color: isCountryDisabled ? '#9CA3AF' : '#374151', marginBottom: '6px' }}>{t("City")}</label>
                             <CitiesDropDown
@@ -348,7 +341,6 @@ const AddBeneficiaryModal = ({ open, handleClose, onSaveSuccess, beneficiaryToEd
                         </div>
                     </div>
 
-                    {/* PHONE INPUT WITH HOVER TOOLTIP & DISABLED STATE */}
                     <div title={isCountryDisabled ? t("Please select country first") : ""} style={{ marginBottom: '14px' }}>
                         <label style={{ display: 'block', fontSize: '13px', fontWeight: 500, color: isCountryDisabled ? '#9CA3AF' : '#374151', marginBottom: '6px' }}>
                             {t("Phone Number")} {beneficiaryType === 'individual' ? '*' : ''}
@@ -391,7 +383,6 @@ const AddBeneficiaryModal = ({ open, handleClose, onSaveSuccess, beneficiaryToEd
                         </div>
                     </div>
 
-                    {/* Footer Actions */}
                     <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px', paddingTop: '16px', borderTop: '1px solid #F3F4F6' }}>
                         <button
                             type="button"

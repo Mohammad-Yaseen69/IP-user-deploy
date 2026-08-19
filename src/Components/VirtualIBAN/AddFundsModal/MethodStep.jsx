@@ -2,7 +2,6 @@ import { useTranslation } from "react-i18next"
 import { FUNDING_METHODS, MOCK_WALLETS } from "../../stateMachines/addFundsFlow"
 import styles from "./addFundsModal.module.scss"
 
-/* ---- Figma-matched icons ---- */
 const WalletIcon = () => (
     <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
         <rect x="2" y="4" width="12" height="10" rx="1.5" stroke="#F2EEFF" strokeWidth="1.2" />

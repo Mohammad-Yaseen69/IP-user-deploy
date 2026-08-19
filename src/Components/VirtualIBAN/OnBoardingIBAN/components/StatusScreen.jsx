@@ -464,7 +464,6 @@ const StatusScreen = ({ status = 'submitted', ibanNumber, companyName, onAction,
                 </div>
             </div>
 
-            {/* KYB Additional Requested Files / Info Section */}
             {kybFiles?.length > 0 && (
                 <div style={{ marginTop: '20px' }}>
                     <h3 style={{ fontSize: '18px', fontWeight: 700, marginBottom: '12px', color: '#111827' }}>
@@ -477,7 +476,6 @@ const StatusScreen = ({ status = 'submitted', ibanNumber, companyName, onAction,
                 </div>
             )}
 
-            {/* IBAN Additional Requested Files / Info Section */}
             {ibanFiles?.length > 0 && (
                 <div style={{ marginTop: '20px' }}>
                     <h3 style={{ fontSize: '18px', fontWeight: 700, marginBottom: '12px', color: '#111827' }}>
