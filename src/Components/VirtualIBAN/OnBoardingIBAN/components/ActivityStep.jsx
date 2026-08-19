@@ -1,5 +1,5 @@
 import { Tooltip } from '@mui/material'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { ArrowLeft, ArrowRight, X } from 'react-feather'
 import { useTranslation } from 'react-i18next'
 import bvnkIndustryReference from '../../../../utils/Data/bvnkIndustryReference.json'
@@ -33,6 +33,13 @@ const COUNTRY_LIST = ['Switzerland', 'France', 'Germany', 'United Kingdom', 'Net
 const ActivityStep = ({ onNext, onBack, data = {} }) => {
     const { t } = useTranslation()
     const [showCountryDropdown, setShowCountryDropdown] = useState(false)
+
+    useEffect(() => {
+        window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+        document.body.scrollTop = 0;
+        document.documentElement.scrollTop = 0;
+    }, []);
+
     const [form, setForm] = useState({
         industry: data.industry || '',
         industryReference: data.industryReference || parseIndustryReference(data.industry),
@@ -437,8 +444,8 @@ const ActivityStep = ({ onNext, onBack, data = {} }) => {
 
                                     <input
                                         style={{ padding: "14.5px 14px 14.5px 12.5px" }}
-                                        type="number"
-                                        min="0"
+                                        type="text"
+                                        placeholder={t("e.g. Invoices, consulting fees, supplier settlements")}
                                         className={styles.textInput}
                                         value={form.paymentNature}
                                         onChange={set("paymentNature")}
@@ -513,81 +520,99 @@ const ActivityStep = ({ onNext, onBack, data = {} }) => {
                             <div className={styles.formGrid}>
                                 <div className={styles.inputGroup}>
                                     <label className={styles.inputLabel}>
-                                        {t("AVERAGE TRANSACTION VALUE")}
+                                        {t("AVERAGE TRANSACTION VALUE (EUR)")}
                                     </label>
 
-                                    <input
-                                        style={{ padding: "14.5px 14px 14.5px 12.5px" }}
-                                        type="number"
-                                        min="0"
-                                        className={styles.textInput}
-                                        value={form.averageTransaction}
-                                        onChange={set("averageTransaction")}
-                                    />
+                                    <div className={styles.inputWrapper}>
+                                        <input
+                                            style={{ padding: "14.5px 52px 14.5px 14px" }}
+                                            type="number"
+                                            min="0"
+                                            placeholder="12000"
+                                            className={styles.textInput}
+                                            value={form.averageTransaction}
+                                            onChange={set("averageTransaction")}
+                                        />
+                                        <span className={styles.currencyBadge}>EUR</span>
+                                    </div>
                                 </div>
 
                                 <div className={styles.inputGroup}>
                                     <label className={styles.inputLabel}>
-                                        {t("MAXIMUM TRANSACTION VALUE")}
+                                        {t("MAXIMUM TRANSACTION VALUE (EUR)")}
                                     </label>
 
-                                    <input
-                                        type="number"
-                                        min="0"
-
-                                        style={{ padding: "14.5px 14px 14.5px 12.5px" }}
-                                        className={styles.textInput}
-                                        value={form.maximumTransaction}
-                                        onChange={set("maximumTransaction")}
-                                    />
+                                    <div className={styles.inputWrapper}>
+                                        <input
+                                            type="number"
+                                            min="0"
+                                            placeholder="25000"
+                                            style={{ padding: "14.5px 52px 14.5px 14px" }}
+                                            className={styles.textInput}
+                                            value={form.maximumTransaction}
+                                            onChange={set("maximumTransaction")}
+                                        />
+                                        <span className={styles.currencyBadge}>EUR</span>
+                                    </div>
                                 </div>
                             </div>
 
                             <div className={styles.formGrid}>
                                 <div className={styles.inputGroup}>
                                     <label className={styles.inputLabel}>
-                                        {t("EXPECTED AVERAGE BALANCE")}
+                                        {t("EXPECTED AVERAGE BALANCE (EUR)")}
                                     </label>
 
-                                    <input
-                                        style={{ padding: "14.5px 14px 14.5px 12.5px" }}
-                                        type="number"
-                                        min="0"
-
-                                        className={styles.textInput}
-                                        value={form.averageBalance}
-                                        onChange={set("averageBalance")}
-                                    />
+                                    <div className={styles.inputWrapper}>
+                                        <input
+                                            style={{ padding: "14.5px 52px 14.5px 14px" }}
+                                            type="number"
+                                            min="0"
+                                            placeholder="24000"
+                                            className={styles.textInput}
+                                            value={form.averageBalance}
+                                            onChange={set("averageBalance")}
+                                        />
+                                        <span className={styles.currencyBadge}>EUR</span>
+                                    </div>
                                 </div>
 
                                 <div className={styles.inputGroup}>
                                     <label className={styles.inputLabel}>
-                                        {t("INCOMING PAYMENTS / MONTH")}
+                                        {t("INCOMING PAYMENTS / MONTH (EUR)")}
                                     </label>
 
-                                    <input
-                                        style={{ padding: "14.5px 14px 14.5px 12.5px" }}
-                                        type="number"
-                                        min="0"
-                                        className={styles.textInput}
-                                        value={form.incomingPayments}
-                                        onChange={set("incomingPayments")}
-                                    />
+                                    <div className={styles.inputWrapper}>
+                                        <input
+                                            style={{ padding: "14.5px 52px 14.5px 14px" }}
+                                            type="number"
+                                            min="0"
+                                            placeholder="50000"
+                                            className={styles.textInput}
+                                            value={form.incomingPayments}
+                                            onChange={set("incomingPayments")}
+                                        />
+                                        <span className={styles.currencyBadge}>EUR</span>
+                                    </div>
                                 </div>
 
                                 <div className={styles.inputGroup}>
                                     <label className={styles.inputLabel}>
-                                        {t("OUTGOING PAYMENTS / MONTH")}
+                                        {t("OUTGOING PAYMENTS / MONTH (EUR)")}
                                     </label>
 
-                                    <input
-                                        style={{ padding: "14.5px 14px 14.5px 12.5px" }}
-                                        type="number"
-                                        min="0"
-                                        className={styles.textInput}
-                                        value={form.outgoingPayments}
-                                        onChange={set("outgoingPayments")}
-                                    />
+                                    <div className={styles.inputWrapper}>
+                                        <input
+                                            style={{ padding: "14.5px 52px 14.5px 14px" }}
+                                            type="number"
+                                            min="0"
+                                            placeholder="40000"
+                                            className={styles.textInput}
+                                            value={form.outgoingPayments}
+                                            onChange={set("outgoingPayments")}
+                                        />
+                                        <span className={styles.currencyBadge}>EUR</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
