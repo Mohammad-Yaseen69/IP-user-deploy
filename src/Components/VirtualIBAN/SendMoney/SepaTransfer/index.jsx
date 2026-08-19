@@ -501,7 +501,7 @@ const SepaTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, i
     const { t } = useTranslation()
     const width = useWindowWidth()
     const navigate = useNavigate()
-    const { beneficiaries: nonIbanBen, userDetails, setProfileLockTime, getUserBeneficiaries, IBANBeneficiaries } = useContext(UserContext)
+    const { beneficiaries, userDetails, setProfileLockTime, getUserBeneficiaries } = useContext(UserContext)
     const currencyCode = selectedIban?.currency || "EUR"
     const sourceAvailableBalance = getSourceBalance(availableBalance, selectedIban)
     const getDefaultAuthType = () => (userDetails?.tfa ? "authenticator" : "sms")
@@ -540,12 +540,6 @@ const SepaTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, i
     const disabled = getDisabledState(currentStep, machineData) || isProcessing
     const showFooter = currentStep !== STEPS.OTP && currentStep !== STEPS.DONE
 
-
-    const beneficiaries = useMemo(() => {
-        const allBeneficiaries = [...(nonIbanBen || []), ...(IBANBeneficiaries || [])]
-        return allBeneficiaries
-    }, [nonIbanBen, IBANBeneficiaries])
-
     const resetState = () => {
         setCurrentStep(STEPS.AMOUNT)
         setAmount("")
@@ -579,7 +573,6 @@ const SepaTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, i
             setBeneficiaryList(europeanBeneficiaries)
         }
     }, [beneficiaries])
-
 
     useEffect(() => {
         if (userDetails?._id) {
@@ -622,7 +615,6 @@ const SepaTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, i
         try {
             await sendOtp(buildPayoutPayload(), nextAuthType)
         } catch {
-            // toast already shown by useSendOtp's onError
         }
     }
 
@@ -737,7 +729,7 @@ const SepaTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, i
     return (
         <>
             {isPage ? (
-                <div style={{width: "100%"}} className={styles.pageContainer}>
+                <div style={{ width: "100%" }} className={styles.pageContainer}>
                     {content}
                 </div>
             ) : (
@@ -747,9 +739,6 @@ const SepaTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, i
                     </ModalBody>
                 </Modal>
             )}
-
-
-
 
             <Modal style={{ minWidth: width > 1000 ? "900px" : "0%" }} toggle={() => setShowBeneficiaryAddModal(false)} isOpen={showBeneficiaryAddModal}>
                 <ModalBody style={{ padding: "0px" }}>

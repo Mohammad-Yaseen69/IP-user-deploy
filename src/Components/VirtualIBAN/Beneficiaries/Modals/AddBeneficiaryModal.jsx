@@ -14,7 +14,7 @@ const AddBeneficiaryModal = ({ open, handleClose, onSaveSuccess, beneficiaryToEd
     const [loading, setLoading] = useState(false);
     const [beneficiaryType, setBeneficiaryType] = useState('individual');
     const [phoneKey, setPhoneKey] = useState(0);
-    const { allowedCountries } = useContext(UserContext)
+    const { allowedCountries } = useContext(UserContext);
     const prefillPhoneRef = useRef('');
     const [formData, setFormData] = useState({
         first_name: '',
@@ -101,9 +101,8 @@ const AddBeneficiaryModal = ({ open, handleClose, onSaveSuccess, beneficiaryToEd
 
         setLoading(true);
 
-        const countryId = allowedCountries.find(c => c.country_iso_code === formData.country_iso_code)?._id
+        const countryId = allowedCountries.find(c => c.country_iso_code === formData.country_iso_code)?._id;
 
-        console.log(countryId, 'country id passing')
         const payload = {
             beneficiary_type: beneficiaryType,
             first_name: beneficiaryType === 'individual' ? formData.first_name : '',
@@ -118,8 +117,6 @@ const AddBeneficiaryModal = ({ open, handleClose, onSaveSuccess, beneficiaryToEd
             phone: formData.phone,
             country: countryId
         };
-
-        console.log(payload)
 
         try {
             let res;
@@ -143,7 +140,8 @@ const AddBeneficiaryModal = ({ open, handleClose, onSaveSuccess, beneficiaryToEd
                 toast.success(t("Beneficiary created successfully"));
             }
 
-            if (onSaveSuccess) onSaveSuccess(res);
+            const createdOrUpdated = res?.data || res;
+            if (onSaveSuccess) onSaveSuccess(createdOrUpdated, !beneficiaryToEdit);
             handleClose();
         } catch (err) {
             console.error("Save beneficiary error:", err);
@@ -170,8 +168,6 @@ const AddBeneficiaryModal = ({ open, handleClose, onSaveSuccess, beneficiaryToEd
             color: "#101828",
         },
     };
-
-    console.log(formData, "formData")
 
     return (
         <Modal open={open} onClose={handleClose} aria-labelledby="add-beneficiary-modal">
@@ -415,7 +411,7 @@ const AddBeneficiaryModal = ({ open, handleClose, onSaveSuccess, beneficiaryToEd
                                 transition: 'background 0.2s ease'
                             }}
                         >
-                            {loading ? t("Saving...") : beneficiaryToEdit ? t("Update Beneficiary") : t("Create Beneficiary")}
+                            {loading ? t("Saving...") : beneficiaryToEdit ? t("Update Beneficiary") : t("Next")}
                         </button>
                     </div>
                 </form>
