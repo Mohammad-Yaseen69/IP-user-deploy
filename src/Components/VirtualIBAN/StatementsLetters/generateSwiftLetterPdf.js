@@ -155,19 +155,18 @@ const renderFooter = () => `
     </div>
 `;
 
-const buildSwiftLetterPagesHtml = ({ logoBase64, qrBase64, signatureBase64, iban, userDetails, displayUrl, currency = 'usd' }) => {
+const buildSwiftLetterPagesHtml = ({ logoBase64, qrBase64, signatureBase64, iban, userDetails, qrUrl, displayUrl, currency = 'usd' }) => {
     const intl = INTL_SWIFT_DATA[currency.toLowerCase()] || INTL_SWIFT_DATA.usd;
 
     const holderName = getSafeString(iban?.account_holder_name || iban?.accountHolderName || userDetails?.fullName || userDetails?.companyName || userDetails?.name, 'HEAVYMORE LTD');
-    const holderType = getSafeString(iban?.holderType || userDetails?.accountType, (userDetails?.companyName ? 'Business / Company' : 'Individual / Personal'));
-    const companyType = getSafeString(iban?.companyType || userDetails?.companyType, (userDetails?.companyName ? 'Limited Liability Company' : 'Individual Account'));
+    const holderType = getSafeString(userDetails?.account_type, (userDetails?.companyName ? 'Business / Company' : 'Individual / Personal'));
+    const companyType = getSafeString(userDetails?.category?.name, '---');
     const jurisdiction = getSafeString(iban?.incorporationJurisdiction || userDetails?.country?.country_name || userDetails?.country || userDetails?.jurisdiction, 'Cyprus');
-    const incDate = iban?.incorporationDate ? formatDate(iban.incorporationDate) : (userDetails?.incorporationDate ? formatDate(userDetails.incorporationDate) : '24 November 2020');
+    const incDate = userDetails?.company?.date_of_incorporation ? formatDate(userDetails?.company?.date_of_incorporation) : (userDetails?.dob ? formatDate(userDetails.dob) : '24 November 2020');
     const regAddress = getSafeString(iban?.registeredAddress || userDetails?.address || userDetails?.formattedAddress, 'Solonos 7, Kolossi, 4632, Limassol, Cyprus');
-    const orgNumber = getSafeString(iban?.organisationNumber || userDetails?.orgNumber || userDetails?.registrationNumber, '577309');
-    const recordNumber = getSafeString(iban?.recordNumber || userDetails?.recordNumber, '39117956');
+    const orgNumber = getSafeString(userDetails?.company?.registration_number || "---", '577309');
     const virtualIbanId = getSafeString(iban?.virtualIbanId || iban?._id || iban?.id, '');
-    const customerId = getSafeString(iban?.customerId || userDetails?.customerId || (virtualIbanId ? virtualIbanId.slice(-8).toUpperCase() : 'NKGI6TY9'), 'NKGI6TY9');
+    const customerId = virtualIbanId
 
     const todayDate = formatDate(new Date());
     const refCode = `ISCL-${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, '0')}${String(new Date().getDate()).padStart(2, '0')}-${customerId.slice(-4)}`;
@@ -228,14 +227,13 @@ const buildSwiftLetterPagesHtml = ({ logoBase64, qrBase64, signatureBase64, iban
             <table style="width: 100%; border-collapse: collapse; background: #ffffff;">
                 <tbody>
                     ${renderTableRow('Full legal name', holderName)}
-                    ${renderTableRow('Customer type', holderType)}
-                    ${renderTableRow('Company type', companyType)}
+                    ${renderTableRow('Customer type', service_name_formatter(holderType))}
+                    ${holderType === 'business' ? renderTableRow('Company type', companyType) : ''}
                     ${renderTableRow('Registration / Incorporation jurisdiction', jurisdiction)}
-                    ${renderTableRow('Incorporation date', incDate)}
+                    ${holderType === 'business' ? renderTableRow('Incorporation date', incDate) : renderTableRow('Date of birth', incDate)}
                     ${renderTableRow('Registered address', regAddress)}
                     ${renderTableRow('Organisation / Registration number', orgNumber)}
-                    ${renderTableRow('Record number', recordNumber)}
-                    ${renderTableRow('InstaPay Customer ID', customerId, true)}
+                    ${renderTableRow('Customer Id', customerId)}
                 </tbody>
             </table>
         </div>
@@ -264,7 +262,7 @@ const buildSwiftLetterPagesHtml = ({ logoBase64, qrBase64, signatureBase64, iban
                     ${renderTableRow('BIC / SWIFT', intl.bankCode, false, true)}
                     ${renderTableRow('Bank name', intl.bankName)}
                     ${renderTableRow('Bank address', intl.bankAddress)}
-                    ${renderTableRow('Payment reference', intl.paymentReference, true, true)}
+                    ${renderTableRow('Payment reference', `${intl.paymentReference}-${virtualIbanId}`, true, true)}
                 </tbody>
             </table>
         </div>
@@ -370,14 +368,13 @@ const buildSwiftLetterPagesHtml = ({ logoBase64, qrBase64, signatureBase64, iban
         ">
             <!-- Left: Signatory Info -->
             <div style="flex: 1; padding-right: 28px;">
-                <div style="font-size: 15px; font-weight: 700; color: #1A1826; margin-bottom: 6px;">
+                <div style="font-size: 15px; font-weight: 700; color: #1A1826; margin-bottom: 10px;">
                     InstaPay Operations
                 </div>
-                <!-- Signature Space -->
                 ${signatureBase64
-        ? `<div style="height: 48px; display: flex; align-items: center; margin-bottom: 6px;"><img src="${signatureBase64}" style="max-height: 50px; max-width: 190px; width: auto; object-fit: contain;" /></div>`
-        : `<div style="width: 160px; height: 48px; border: 1px dashed #D0D5DD; border-radius: 4px; background: #FAFAFC; display: flex; align-items: center; justify-content: center; color: #98A2B3; font-size: 10px; font-weight: 600; letter-spacing: 1px; margin-bottom: 6px;">SIGNATURE</div>`
-    }
+            ? `<div style="height: 44px; display: flex; align-items: center; margin-bottom: 6px;"><img src="${signatureBase64}" style="max-height: 42px; max-width: 150px; width: auto; object-fit: contain;" /></div>`
+            : ''
+        }
                 <div style="font-size: 12px; color: #55506B; line-height: 1.55; font-weight: 400;">
                     <span style="font-weight: 600; color: #1A1826;">Authorised signatory · Client Operations &amp; Compliance</span><br />
                     InstaPay, a brand of Kemit Kingdom - K2 - SA, Route des Falaises 7, 2000 Neuchâtel, Switzerland<br />
@@ -402,14 +399,14 @@ const buildSwiftLetterPagesHtml = ({ logoBase64, qrBase64, signatureBase64, iban
                     box-sizing: border-box;
                 ">
                     ${qrBase64
-        ? `<img src="${qrBase64}" style="width: 106px; height: 106px; border-radius: 4px;" />`
-        : `<div style="font-size: 10px; color: #98A2B3;">QR Code</div>`
-    }
+            ? `<img src="${qrBase64}" style="width: 106px; height: 106px; border-radius: 4px;" />`
+            : `<div style="font-size: 10px; color: #98A2B3;">QR Code</div>`
+        }
                 </div>
                 <div style="font-size: 9.5px; color: #55506B; margin-top: 6px; font-weight: 600; letter-spacing: 0.4px;">
                     SCAN OR VISIT TO VERIFY
                 </div>
-                <div style="font-size: 9.5px; color: #45159C; font-weight: 600; line-height: 1.35; font-family: 'SF Mono', 'Consolas', monospace; margin-top: 2px; word-break: break-all;">
+                <div style="font-size: 9px; color: #45159C; font-weight: 600; line-height: 1.35; font-family: 'SF Mono', 'Consolas', monospace; margin-top: 2px; word-break: break-all;">
                     ${displayUrl}
                 </div>
             </div>
@@ -458,7 +455,7 @@ const generateSwiftLetterPdf = async (iban, userDetails = {}, options = {}) => {
     const origin = window.location.origin || 'https://my.insta-pay.ch';
     const cleanHost = origin.replace(/^https?:\/\//, '');
     const qrUrl = `${origin}/v/${virtualIbanId}?type=swift&curr=${selectedCurrency}`;
-    const displayUrl = `${cleanHost}/v/${virtualIbanId}`;
+    const displayUrl = `${cleanHost}/v/${virtualIbanId}?type=swift&curr=${selectedCurrency}`;
 
     const [logoBase64, qrBase64, signatureBase64] = await Promise.allSettled([
         toBase64(logoImg),
@@ -474,6 +471,7 @@ const generateSwiftLetterPdf = async (iban, userDetails = {}, options = {}) => {
         signatureBase64,
         iban,
         userDetails,
+        qrUrl,
         displayUrl,
         currency: selectedCurrency,
     });
