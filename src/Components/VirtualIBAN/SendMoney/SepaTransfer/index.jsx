@@ -113,11 +113,19 @@ const buildBeneficiaryFromForm = (form) => {
     }
 }
 
-const TextField = ({ label, value, onChange, hint, type = "text", disabled = false }) => (
+const TextField = ({ label, value, onChange, hint, type = "text", disabled = false, error = "", placeholder = "" }) => (
     <label className={styles.field}>
         <span>{label}</span>
-        <input type={type} value={value} disabled={disabled} onChange={(event) => onChange(event.target.value)} />
-        {hint && <small>{hint}</small>}
+        <input
+            type={type}
+            value={value}
+            disabled={disabled}
+            placeholder={placeholder}
+            className={error ? styles.fieldError : ""}
+            onChange={(event) => onChange(event.target.value)}
+        />
+        {hint && !error && <small>{hint}</small>}
+        {error && <span className={styles.fieldErrorText}>{error}</span>}
     </label>
 )
 
@@ -178,26 +186,25 @@ const SepaAmountStep = ({ amount, setAmount, availableBalance, currencyCode, sou
                                                 {speed.rail}
                                             </span>
 
-                                            {speed.default && (
-                                                <span className={styles.defaultPill}>
-                                                    {t("Default")}
-                                                </span>
-                                            )}
+                                            <span className={styles.speedFee}>
+                                                {formatMoney(
+                                                    speed.fee,
+                                                    currencyCode
+                                                )}
+                                            </span>
                                         </div>
 
-                                        <div>
-                                            <h4>{t(speed.label)}</h4>
-                                            <p>{t(speed.description)}</p>
-
-                                            <strong
+                                        <div className={styles.speedCardBody}>
+                                            <p className={styles.speedLabel}>
+                                                {speed.label}
+                                            </p>
+                                            <p
                                                 className={
-                                                    speed.feeAmount === 0
-                                                        ? styles.freeFeeText
-                                                        : styles.feeText
+                                                    styles.speedDescription
                                                 }
                                             >
-                                                {t(speed.feeLabel)}
-                                            </strong>
+                                                {speed.description}
+                                            </p>
                                         </div>
                                     </button>
                                 </span>
@@ -205,42 +212,50 @@ const SepaAmountStep = ({ amount, setAmount, availableBalance, currencyCode, sou
                         );
                     })}
                 </div>
-
-                <div className={styles.infoStrip}>
-                    {t("The recipient receives")}{" "}
-                    <strong>
-                        {formatMoney(numericAmount, currencyCode)}
-                    </strong>{" "}
-                    {t("in full - no correspondent-bank deductions in SEPA.")}
-                </div>
             </div>
         </div>
     )
 }
 
-const BeneficiaryStep = ({ beneficiaries, selectedBeneficiary, setSelectedBeneficiary, onAddBeneficiary }) => {
+const BeneficiaryStep = ({ selectedBeneficiary, setSelectedBeneficiary, onAddNew, beneficiaries = [] }) => {
     const { t } = useTranslation()
-    const [query, setQuery] = useState("")
-    const navigate = useNavigate()
-    const filteredBeneficiaries = beneficiaries.filter((beneficiary) => `${getBeneficiaryName(beneficiary)} ${getBeneficiarySubtitle(beneficiary)}`.toLowerCase().includes(query.toLowerCase()))
 
     return (
-        <div className={styles.beneficiaryStep}>
+        <div className={styles.stepStack}>
             <div className={styles.beneficiaryHeader}>
-                <h3>{t("Beneficiaries")}</h3>
-                <button type="button" className={styles.primarySmallBtn} onClick={onAddBeneficiary}><Plus size={16} />{t("Add beneficiary")}</button>
+                <div>
+                    <div className={styles.sectionLabel}>{t("Choose recipient")}</div>
+                    <p style={{ margin: 0, fontSize: "13px", color: "#6e7687" }}>
+                        {t("Select an existing beneficiary or add a new one.")}
+                    </p>
+                </div>
+
+                <button type="button" className={styles.addBeneficiaryBtn} onClick={onAddNew}>
+                    <Plus size={16} />
+                    <span>{t("Add new")}</span>
+                </button>
             </div>
-            <label className={styles.searchBox}><Search size={15} /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder={t("Search beneficiaries")} /></label>
+
             <div className={styles.beneficiaryList}>
-                {filteredBeneficiaries?.length === 0 && <div style={{ padding: "10px", color: "var(--secondary-color)", textAlign: "center" }}>{t("No beneficiaries found with euroean bank accounts.")}</div>}
-                {filteredBeneficiaries.map((beneficiary) => {
-                    const beneficiaryId = getBeneficiaryId(beneficiary)
-                    const selected = getBeneficiaryId(selectedBeneficiary) === beneficiaryId
+                {beneficiaries.map((beneficiary) => {
+                    const isSelected = selectedBeneficiary?._id === beneficiary._id
                     return (
-                        <button type="button" key={beneficiaryId} className={`${styles.beneficiaryCard} ${selected ? styles.selectedBeneficiary : ""}`} onClick={() => setSelectedBeneficiary(beneficiary)}>
-                            <span className={`${styles.avatar} ${styles[beneficiary.accent || "gold"]}`}>{getBeneficiaryInitial(beneficiary)}</span>
-                            <span className={styles.beneficiaryCopy}><strong>{getBeneficiaryName(beneficiary)}</strong><small>{getBeneficiarySubtitle(beneficiary)}</small></span>
-                            <span className={`${styles.accountBadge} ${selected ? styles.activeBadge : ""}`}>{getBeneficiaryAccountCount(beneficiary)}</span>
+                        <button
+                            type="button"
+                            key={beneficiary._id}
+                            className={`${styles.beneficiaryCard} ${isSelected ? styles.selectedBeneficiary : ""}`}
+                            onClick={() => setSelectedBeneficiary(beneficiary)}
+                        >
+                            <div className={styles.avatarCircle}>{getBeneficiaryInitial(beneficiary)}</div>
+                            <div className={styles.beneficiaryCopy}>
+                                <strong>{getBeneficiaryName(beneficiary)}</strong>
+                                <small>{getBeneficiarySubtitle(beneficiary)}</small>
+                            </div>
+                            <div className={styles.badgeWrap}>
+                                <span className={`${styles.accountBadge} ${isSelected ? styles.activeBadge : ""}`}>
+                                    {getBeneficiaryIban(beneficiary) ? maskIban(getBeneficiaryIban(beneficiary)) : "IBAN"}
+                                </span>
+                            </div>
                         </button>
                     )
                 })}
@@ -279,8 +294,7 @@ const AddBeneficiaryStep = ({ amount, currencyCode, form, setForm }) => {
 
 const PurposeStep = ({ amount, currencyCode, purpose, setPurpose, description, setDescription, additionalInfo, setAdditionalInfo }) => {
     const { t } = useTranslation()
-    const currentDesc = description || purpose
-    const isDescValid = isValidDescription(currentDesc)
+    const descError = description && !isValidDescription(description) ? t("5–34 characters; letters, digits, space, comma, dot, hyphen only") : ""
 
     return (
         <div className={styles.purposeStep}>
@@ -288,10 +302,7 @@ const PurposeStep = ({ amount, currencyCode, purpose, setPurpose, description, s
             <label className={styles.field}>
                 <span>{t("Purpose category")}</span>
                 <div className={styles.selectWrap}>
-                    <select value={purpose} onChange={(event) => {
-                        setPurpose(event.target.value)
-                        if (!description) setDescription(event.target.value)
-                    }}>
+                    <select value={purpose} onChange={(event) => setPurpose(event.target.value)}>
                         {PURPOSE_OPTIONS.map((item) => <option key={item} value={item}>{t(item)}</option>)}
                     </select>
                     <ChevronDown size={18} />
@@ -299,10 +310,11 @@ const PurposeStep = ({ amount, currencyCode, purpose, setPurpose, description, s
             </label>
             <TextField
                 label={t("Description / Remittance Reference *")}
-                value={description || purpose}
+                value={description}
                 onChange={setDescription}
-                hint={!isDescValid ? t("5–34 characters; letters, digits, space, comma, dot, hyphen only") : ""}
-                error={!isDescValid}
+                placeholder={t("e.g. Invoice payment, consultant fees, trade")}
+                hint={!descError ? t("5–34 characters; letters, digits, space, comma, dot, hyphen only") : ""}
+                error={descError}
             />
             <TextField label={t("Additional information (optional)")} value={additionalInfo} onChange={setAdditionalInfo} />
             <div className={styles.infoStrip}>{t("SEPA transfers deliver the full amount and carry no correspondent fees, so there is no OUR/SHA/BEN choice to make.")}</div>
@@ -657,7 +669,7 @@ const SepaTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, i
         beneficiary_id: getBeneficiaryId(selectedBeneficiary),
         method: getSelectedMethod(),
         amount: getAmountNumber(amount),
-        description: (description || purpose).trim(),
+        description: (description || "").trim(),
         purpose: getPurposeCode(purpose),
         additionalInformation: additionalInfo || undefined,
     })
@@ -706,7 +718,7 @@ const SepaTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, i
         }
 
         if (currentStep === STEPS.PURPOSE) {
-            const currentDesc = (description || purpose).trim()
+            const currentDesc = (description || "").trim()
             if (!isValidDescription(currentDesc)) {
                 toast.error(t("Description must be 5–34 characters and contain only letters, numbers, spaces, commas, periods, and hyphens."))
                 return

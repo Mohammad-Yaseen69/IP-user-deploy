@@ -131,8 +131,7 @@ export const getDisabledState = (stepName, data = {}) => {
             if (beneficiaryForm.type !== "business" && (!hasValue(beneficiaryForm.firstName) || !hasValue(beneficiaryForm.lastName))) return true
             return !hasValue(beneficiaryForm.iban) || !hasValue(beneficiaryForm.reference)
         case STEPS.PURPOSE: {
-            const desc = data.description || data.purpose
-            return !hasValue(data.purpose) || !isValidDescription(desc)
+            return !hasValue(data.purpose) || !isValidDescription(data.description)
         }
         case STEPS.REVIEW:
             return !data.confirmedDetails

@@ -154,19 +154,19 @@ const MoveMoney = () => {
                                     </div>
                                     <Tooltip title="Coming Soon" arrow>
 
-                                        <div className={`${styles.card} ${styles.cardPurple}`}>
-                                            <div className={`${styles.iconBox} ${styles.bgWhiteTrans}`}>
+                                        <div className={`${styles.card}`}>
+                                            <div className={`${styles.iconBox} ${styles.bgGreen}`}>
                                                 <Briefcase size={20} />
                                             </div>
                                             <div className={styles.cardBody}>
-                                                <h3 className={styles.cardTitleWhite}>{t("Global Remittance Hub")}</h3>
-                                                <p className={styles.cardDescWhite}>
+                                                <h3 className={styles.cardTitle}>{t("Global Remittance Hub")}</h3>
+                                                <p className={styles.cardDesc}>
                                                     {t("Pay to bank account, mobile money, wallet or cash pickup — country-adaptive, powered by Thunes.")}
                                                 </p>
                                                 <div className={styles.badgeRow}>
-                                                    <span className={`${styles.tag} ${styles.tagWhite}`}>Worldwide</span>
-                                                    <span className={`${styles.tag} ${styles.tagWhite}`}>Fast lookup</span>
-                                                    <span className={`${styles.tag} ${styles.tagWhite}`}>Country-adaptive</span>
+                                                    <span className={`${styles.tag}`}>Worldwide</span>
+                                                    <span className={`${styles.tag}`}>Fast lookup</span>
+                                                    <span className={`${styles.tag}`}>Country-adaptive</span>
                                                 </div>
                                             </div>
                                         </div>
