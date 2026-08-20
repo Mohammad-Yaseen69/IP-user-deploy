@@ -1,6 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { Copy, Plus, ChevronLeft, Search, User, Trash2, Edit3, Shield, Phone, Mail, MapPin } from 'react-feather';
 import styles from './BeneficiariesVirtual.module.css';
+import IbanBreadcrumb from '../components/IbanBreadcrumb';
 import { useTranslation } from 'react-i18next';
 import useWindowWidth from '../../../utils/useWindowWidth';
 import TopRight from '../../topRight';
@@ -121,14 +122,10 @@ const BeneficiariesVirtual = () => {
 
             <div className={styles.mainContent}>
                 <div className={styles.navigationHeader}>
-                    <div className={styles.navigationRow}>
-                        <button className={styles.backBtn} onClick={() => navigate("/virtual-IBAN")}>
-                            <ChevronLeft size={16} /> {t("Back")}
-                        </button>
-                        <span className={styles.breadcrumb}>
-                            {t("My virtual bank")} &gt; <span className={styles.breadcrumbActive}>{t("Beneficiaries")}</span>
-                        </span>
-                    </div>
+                    <IbanBreadcrumb items={[
+                        { label: "My virtual bank", path: "/virtual-IBAN" },
+                        { label: "Beneficiaries" }
+                    ]} />
                 </div>
 
                 <div className={styles.contentLayout}>
