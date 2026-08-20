@@ -1,8 +1,8 @@
 import { getAmountNumber } from "../Components/VirtualIBAN/utils/amount"
 import { isValidBic, isValidDescription, validateSwiftBeneficiary } from "../Components/VirtualIBAN/utils/swiftValidation"
 
-export const MIN_AMOUNT = 5          // EUR
-export const MAX_AMOUNT = 1_500_000  // EUR
+export const MIN_AMOUNT = 5
+export const MAX_AMOUNT = 1_500_000
 
 export const STEPS = {
     AMOUNT: "AMOUNT",
