@@ -8,6 +8,8 @@ import useChannels from '../../../../hooks/BeneficiaryHooks/useChannels';
 import { apiWrapper } from '../../../../utils/Functions/apiWrapper';
 import { toast } from 'react-toastify';
 import PhoneInput from '../../../PhoneInput';
+import CountryDropDown from '../../../AddBeneficiary/CountryDropDown';
+import { isValidBic, ISO3_REGEX } from '../../utils/swiftValidation';
 
 const DynamicChannelModal = ({ open, handleClose, beneficiaryData, onSaveSuccess, lockChannelType = null }) => {
     const { t } = useTranslation();
@@ -17,6 +19,8 @@ const DynamicChannelModal = ({ open, handleClose, beneficiaryData, onSaveSuccess
 
     const [accNumType, setAccNumType] = useState('IBAN');
     const [bankError, setBankError] = useState('');
+    const [selectedBankCountry, setSelectedBankCountry] = useState('');
+    const [selectedBankCountryName, setSelectedBankCountryName] = useState('');
     const [bankFormState, setBankFormState] = useState({
         iban: '',
         swift: '',
@@ -58,6 +62,8 @@ const DynamicChannelModal = ({ open, handleClose, beneficiaryData, onSaveSuccess
 
     useEffect(() => {
         setBankError('');
+        setSelectedBankCountry('');
+        setSelectedBankCountryName('');
         setBankFormState({
             iban: '',
             swift: '',
@@ -112,35 +118,82 @@ const DynamicChannelModal = ({ open, handleClose, beneficiaryData, onSaveSuccess
         let channelPayload = { channel_type: channelType };
 
         if (channelType === 'bank') {
-            const identifier = accNumType === 'IBAN' ? bankFormState.iban : bankFormState.swift;
-            if (!identifier || !identifier.trim()) {
-                toast.error(accNumType === 'IBAN' ? t("IBAN is required") : t("SWIFT / BIC is required"));
+            const iban = bankFormState.iban?.trim() || '';
+            const swift = bankFormState.swift?.trim()?.toUpperCase() || '';
+            const accNum = bankFormState.bank_account_number?.trim() || '';
+            const identifier = accNumType === 'IBAN' ? iban : swift;
+
+            if (accNumType === 'IBAN') {
+                if (!iban) {
+                    toast.error(t("IBAN is required"));
+                    return;
+                }
+            } else {
+                if (!swift) {
+                    toast.error(t("SWIFT / BIC code is required"));
+                    return;
+                }
+                if (!isValidBic(swift)) {
+                    toast.error(t("SWIFT / BIC code must be 8 or 11 characters (letters and digits only)"));
+                    return;
+                }
+                if (!accNum) {
+                    toast.error(t("Account Number is required"));
+                    return;
+                }
+            }
+
+            if (swift && !isValidBic(swift)) {
+                toast.error(t("SWIFT / BIC code must be 8 or 11 characters (letters and digits only)"));
                 return;
             }
+
             if (!bankFormState.bank_name || !bankFormState.bank_name.trim()) {
                 toast.error(t("Bank Name is required"));
                 return;
             }
 
-            const resolvedCountryIso = bankCountryIsoCode
+            if (!bankFormState.bank_branch_street || !bankFormState.bank_branch_street.trim()) {
+                toast.error(t("Branch Street / Address is required"));
+                return;
+            }
+
+            if (!bankFormState.bank_city || !bankFormState.bank_city.trim()) {
+                toast.error(t("Bank City is required"));
+                return;
+            }
+
+            if (!bankFormState.postal_code || !bankFormState.postal_code.trim()) {
+                toast.error(t("Bank Postal Code is required"));
+                return;
+            }
+
+            const resolvedCountryIso = selectedBankCountry
+                || bankCountryIsoCode
                 || bankCountryCode
-                || (accNumType === 'IBAN' ? bankFormState.iban?.replace(/\s/g, '').slice(0, 2)?.toUpperCase() : bankFormState.swift?.replace(/\s/g, '').slice(4, 6)?.toUpperCase())
+                || (accNumType === 'IBAN' ? iban.replace(/\s/g, '').slice(0, 2)?.toUpperCase() : swift.replace(/\s/g, '').slice(4, 6)?.toUpperCase())
                 || beneficiaryData?.country_iso_code
                 || '';
 
-            const resolvedCountryName = bankCountry
+            const resolvedCountryName = selectedBankCountryName
+                || bankCountry
                 || beneficiaryData?.country_name
                 || '';
 
+            if (!resolvedCountryIso || !ISO3_REGEX.test(resolvedCountryIso)) {
+                toast.error(t("Bank Country (3-letter ISO code) is required"));
+                return;
+            }
+
             channelPayload.bank_details = {
-                iban: bankFormState.iban?.trim() || '',
-                swift_code: bankFormState.swift?.trim() || '',
-                account_number: bankFormState.bank_account_number?.trim() || bankFormState.iban?.trim() || identifier.trim(),
+                iban: iban,
+                swift_code: swift,
+                account_number: accNum || iban || identifier,
                 name: bankFormState.bank_name.trim(),
                 branch_name: (bankFormState.branch_name || '').trim(),
-                city: (bankFormState.bank_city || '').trim(),
-                branch_street: (bankFormState.bank_branch_street || '').trim(),
-                postal_code: (bankFormState.postal_code || '').trim(),
+                city: bankFormState.bank_city.trim(),
+                branch_street: bankFormState.bank_branch_street.trim(),
+                postal_code: bankFormState.postal_code.trim(),
                 account_holder_name: (bankFormState.account_holder_name || `${beneficiaryData?.first_name || ''} ${beneficiaryData?.last_name || ''}`.trim() || beneficiaryData?.company_name || '').trim(),
                 extras: {
                     country_iso_code: resolvedCountryIso,
@@ -360,6 +413,19 @@ const DynamicChannelModal = ({ open, handleClose, beneficiaryData, onSaveSuccess
                                 />
                             </div>
 
+                            <div className={styles.inputGroup}>
+                                <label className={styles.fieldLabel}>{t("Bank Country")} *</label>
+                                <CountryDropDown
+                                    country={selectedBankCountry || bankCountryIsoCode || beneficiaryData?.country_iso_code}
+                                    onSelect={(selected) => {
+                                        const cName = selected?.country_name || selected?.name || selected?.alpha3 || '';
+                                        const cCode = selected?.alpha3 || selected?.country_iso_code || '';
+                                        setSelectedBankCountry(cCode);
+                                        setSelectedBankCountryName(cName);
+                                    }}
+                                />
+                            </div>
+
                             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
                                 <div className={styles.inputGroup}>
                                     <label className={styles.fieldLabel}>{t("Branch Name")}</label>
@@ -373,9 +439,9 @@ const DynamicChannelModal = ({ open, handleClose, beneficiaryData, onSaveSuccess
                                     />
                                 </div>
                                 <div className={styles.inputGroup}>
-                                    <label className={styles.fieldLabel}>{t("Bank City")}</label>
+                                    <label className={styles.fieldLabel}>{t("Bank City")} *</label>
                                     <TextField
-                                        fullWidth size="small" variant="outlined"
+                                        fullWidth size="small" variant="outlined" required
                                         name="bank_city"
                                         placeholder={t("e.g. Madrid")}
                                         value={bankFormState.bank_city}
@@ -387,9 +453,9 @@ const DynamicChannelModal = ({ open, handleClose, beneficiaryData, onSaveSuccess
 
                             <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '14px' }}>
                                 <div className={styles.inputGroup}>
-                                    <label className={styles.fieldLabel}>{t("Branch Address / Street")}</label>
+                                    <label className={styles.fieldLabel}>{t("Branch Address / Street")} *</label>
                                     <TextField
-                                        fullWidth size="small" variant="outlined"
+                                        fullWidth size="small" variant="outlined" required
                                         name="bank_branch_street"
                                         placeholder={t("e.g. Av. de Cantabria, s/n")}
                                         value={bankFormState.bank_branch_street}
@@ -398,9 +464,9 @@ const DynamicChannelModal = ({ open, handleClose, beneficiaryData, onSaveSuccess
                                     />
                                 </div>
                                 <div className={styles.inputGroup}>
-                                    <label className={styles.fieldLabel}>{t("Postal Code")}</label>
+                                    <label className={styles.fieldLabel}>{t("Postal Code")} *</label>
                                     <TextField
-                                        fullWidth size="small" variant="outlined"
+                                        fullWidth size="small" variant="outlined" required
                                         name="postal_code"
                                         placeholder={t("e.g. 28042")}
                                         value={bankFormState.postal_code}

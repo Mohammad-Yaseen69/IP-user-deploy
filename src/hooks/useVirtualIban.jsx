@@ -132,11 +132,14 @@ export const useSyncVirtualIbanBalance = (ibanId) =>
                 isDecrypted: true,
             })
             const data = unwrapVirtualIbanResponse(res)
-            return data === true || data?.inProgress === true
+            return data
         },
         enabled: !!ibanId,
         gcTime: 0,
-        staleTime: 0
+        cacheTime: 0,
+        staleTime: 0,
+        refetchOnMount: "always",
+        refetchOnWindowFocus: false,
     })
 
 export const useCreateVirtualIban = () => {
@@ -179,9 +182,12 @@ export const useExecuteVirtualIbanTransfer = () => {
                 isDecrypted: true,
             }),
         onSuccess: (_, variables) => {
+            queryClient.invalidateQueries({ queryKey: virtualIbanQueryKeys.all })
             queryClient.invalidateQueries({ queryKey: virtualIbanQueryKeys.list() })
-            queryClient.invalidateQueries({ queryKey: virtualIbanQueryKeys.detail(variables?.iban_id) })
-            queryClient.invalidateQueries({ queryKey: virtualIbanQueryKeys.balance(variables?.iban_id) })
+            if (variables?.iban_id) {
+                queryClient.invalidateQueries({ queryKey: virtualIbanQueryKeys.detail(variables.iban_id) })
+                queryClient.invalidateQueries({ queryKey: virtualIbanQueryKeys.balance(variables.iban_id) })
+            }
         },
     })
 }
@@ -211,9 +217,12 @@ export const useVirtualIbanPayoutDirect = () => {
                 isDecrypted: true,
             }),
         onSuccess: (_, variables) => {
+            queryClient.invalidateQueries({ queryKey: virtualIbanQueryKeys.all })
             queryClient.invalidateQueries({ queryKey: virtualIbanQueryKeys.list() })
-            queryClient.invalidateQueries({ queryKey: virtualIbanQueryKeys.detail(variables?.iban_id) })
-            queryClient.invalidateQueries({ queryKey: virtualIbanQueryKeys.balance(variables?.iban_id) })
+            if (variables?.iban_id) {
+                queryClient.invalidateQueries({ queryKey: virtualIbanQueryKeys.detail(variables.iban_id) })
+                queryClient.invalidateQueries({ queryKey: virtualIbanQueryKeys.balance(variables.iban_id) })
+            }
         },
     })
 }
@@ -272,8 +281,6 @@ const useVirtualIbanGraphData = (filter = "this_year") =>
     })
 export default useVirtualIbanGraphData
 
-// ─── SWIFT Payout ─────────────────────────────────────────────────────────────
-
 export const useVirtualIbanSwiftPayoutFee = () =>
     useMutation({
         mutationFn: (payload) =>
@@ -299,9 +306,12 @@ export const useVirtualIbanSwiftPayoutDirect = () => {
                 isDecrypted: true,
             }),
         onSuccess: (_, variables) => {
+            queryClient.invalidateQueries({ queryKey: virtualIbanQueryKeys.all })
             queryClient.invalidateQueries({ queryKey: virtualIbanQueryKeys.list() })
-            queryClient.invalidateQueries({ queryKey: virtualIbanQueryKeys.detail(variables?.iban_id) })
-            queryClient.invalidateQueries({ queryKey: virtualIbanQueryKeys.balance(variables?.iban_id) })
+            if (variables?.iban_id) {
+                queryClient.invalidateQueries({ queryKey: virtualIbanQueryKeys.detail(variables.iban_id) })
+                queryClient.invalidateQueries({ queryKey: virtualIbanQueryKeys.balance(variables.iban_id) })
+            }
         },
     })
 }
