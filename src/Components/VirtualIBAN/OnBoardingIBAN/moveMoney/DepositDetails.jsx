@@ -1,6 +1,7 @@
 import { AlertTriangle, ChevronLeft, ChevronRight, Copy, Tag } from 'react-feather';
 import { useTranslation } from 'react-i18next';
 import styles from '../style/DepositDetails.module.css';
+import IbanBreadcrumb from '../../components/IbanBreadcrumb';
 
 const DepositDetails = () => {
     const { t } = useTranslation();
@@ -11,14 +12,10 @@ const DepositDetails = () => {
 
     return (
         <div className={styles.container}>
-            <div className={styles.navigationRow}>
-                <button className={styles.backBtn}>
-                    <ChevronLeft size={16} /> {t('Back')}
-                </button>
-                <span className={styles.breadcrumb}>
-                    {t('My virtual bank')} <ChevronRight /> <span className={styles.breadcrumbActive}>{t('Deposit')}</span>
-                </span>
-            </div>
+            <IbanBreadcrumb items={[
+                { label: "My virtual bank", path: "/virtual-IBAN" },
+                { label: "Deposit" }
+            ]} />
 
             <span className={styles.tagHeader}>{t('Receiving money from outside SEPA')}</span>
             <h1 className={styles.mainHeading}>{t('Share the right bank details for your incoming payment')}</h1>

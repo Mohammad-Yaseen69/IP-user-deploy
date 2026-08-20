@@ -51,12 +51,14 @@ import styles from "./SwiftTransfer.module.css"
 import withdrawStyles from "../../WithdrawBalanceModal/withdrawBalance.module.scss"
 import { UserContext } from "../../../../Context/UserContext"
 import useSendOtp from "../../../../hooks/GeneralUse/useSendOtp"
-import { useVirtualIbanSwiftPayoutFee, useVirtualIbanSwiftPayoutDirect } from "../../../../hooks/useVirtualIban"
+import { useQueryClient } from "@tanstack/react-query"
+import { useVirtualIbanSwiftPayoutFee, useVirtualIbanSwiftPayoutDirect, useSyncVirtualIbanBalance, virtualIbanQueryKeys } from "../../../../hooks/useVirtualIban"
 import { handlePaymentApiError } from "../../../../utils/Functions/handlePaymentApiError"
 import OTPConfirmation from "../../../UserSettingsNew/OTPConfirmation"
 import jsPDF from "jspdf"
 import autoTable from "jspdf-autotable"
 import AddBeneficiary from "../../../AddBeneficiary"
+import { validateSwiftBeneficiary, isValidDescription, isValidBic } from "../../utils/swiftValidation"
 
 const DEFAULT_BENEFICIARY_FORM = {
     type: "individual",
@@ -482,8 +484,10 @@ const AddBeneficiaryStep = ({ amount, currencyCode, form, setForm }) => {
     )
 }
 
-const PurposeStep = ({ amount, currencyCode, purpose, setPurpose, additionalInfo, setAdditionalInfo }) => {
+const PurposeStep = ({ amount, currencyCode, purpose, setPurpose, description, setDescription, additionalInfo, setAdditionalInfo }) => {
     const { t } = useTranslation()
+    const currentDesc = description || purpose
+    const isDescValid = isValidDescription(currentDesc)
 
     return (
         <div className={styles.purposeStep}>
@@ -495,9 +499,12 @@ const PurposeStep = ({ amount, currencyCode, purpose, setPurpose, additionalInfo
             </div>
 
             <label className={styles.field}>
-                <span>{t("Purpose of payment")}</span>
+                <span>{t("Purpose category")}</span>
                 <div className={styles.selectWrap}>
-                    <select value={purpose} onChange={(e) => setPurpose(e.target.value)}>
+                    <select value={purpose} onChange={(e) => {
+                        setPurpose(e.target.value)
+                        if (!description) setDescription(e.target.value)
+                    }}>
                         {PURPOSE_OPTIONS.map((item) => (
                             <option key={item} value={item}>
                                 {t(item)}
@@ -507,6 +514,14 @@ const PurposeStep = ({ amount, currencyCode, purpose, setPurpose, additionalInfo
                     <ChevronDown size={18} />
                 </div>
             </label>
+
+            <TextField
+                label={t("Description / Remittance Reference *")}
+                value={description || purpose}
+                onChange={(v) => setDescription(v)}
+                hint={!isDescValid ? t("5–34 characters; letters, digits, space, comma, dot, hyphen only") : ""}
+                error={!isDescValid}
+            />
 
             <TextField
                 label={t("Additional information (optional)")}
@@ -853,10 +868,14 @@ const SwiftTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, 
     const { t } = useTranslation()
     const width = useWindowWidth()
     const navigate = useNavigate()
+    const queryClient = useQueryClient()
     const { userDetails, setProfileLockTime, getUserBeneficiaries, beneficiaries, authHeader } = useContext(UserContext)
 
+    const ibanId = selectedIban?._id || selectedIban?.id
+    const { data: syncedBalance } = useSyncVirtualIbanBalance(ibanId)
+    const liveBalance = syncedBalance?.balance ?? availableBalance ?? selectedIban?.balance ?? 0
     const currencyCode = selectedIban?.currency || "EUR"
-    const sourceAvailableBalance = getSourceBalance(availableBalance, selectedIban)
+    const sourceAvailableBalance = getSourceBalance(liveBalance, selectedIban)
     const getDefaultAuthType = () => (userDetails?.tfa ? "authenticator" : "sms")
 
     const [currentStep, setCurrentStep] = useState(STEPS.AMOUNT)
@@ -868,6 +887,7 @@ const SwiftTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, 
     const [isChannelModalOpen, setIsChannelModalOpen] = useState(false)
     const [channelModalBeneficiary, setChannelModalBeneficiary] = useState(null)
     const [purpose, setPurpose] = useState(PURPOSE_OPTIONS[0])
+    const [description, setDescription] = useState("")
     const [additionalInfo, setAdditionalInfo] = useState("")
     const [confirmedDetails, setConfirmedDetails] = useState(false)
     const [authType, setAuthType] = useState(getDefaultAuthType)
@@ -904,9 +924,10 @@ const SwiftTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, 
             beneficiaryForm,
             isAddingBeneficiary,
             purpose,
+            description,
             confirmedDetails,
         }),
-        [amount, sourceAvailableBalance, selectedBeneficiary, beneficiaryForm, isAddingBeneficiary, purpose, confirmedDetails]
+        [amount, sourceAvailableBalance, selectedBeneficiary, beneficiaryForm, isAddingBeneficiary, purpose, description, confirmedDetails]
     )
 
     const swiftBeneficiaries = useMemo(
@@ -951,12 +972,21 @@ const SwiftTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, 
     };
 
     const resetState = () => {
+        const id = getVirtualIbanId(selectedIban)
+        if (id) {
+            queryClient.invalidateQueries({ queryKey: virtualIbanQueryKeys.balance(id) })
+            queryClient.invalidateQueries({ queryKey: virtualIbanQueryKeys.detail(id) })
+        }
+        queryClient.invalidateQueries({ queryKey: virtualIbanQueryKeys.list() })
+        queryClient.invalidateQueries({ queryKey: virtualIbanQueryKeys.all })
+        queryClient.refetchQueries({ queryKey: virtualIbanQueryKeys.all })
         setCurrentStep(STEPS.AMOUNT)
         setAmount("")
         setSelectedBeneficiary(null)
         setBeneficiaryForm(DEFAULT_BENEFICIARY_FORM)
         setIsAddingBeneficiary(false)
         setPurpose(PURPOSE_OPTIONS[0])
+        setDescription("")
         setAdditionalInfo("")
         setConfirmedDetails(false)
         setAuthType(getDefaultAuthType())
@@ -982,7 +1012,7 @@ const SwiftTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, 
         iban_id: getVirtualIbanId(selectedIban),
         beneficiary_id: getBeneficiaryId(selectedBeneficiary),
         token: quoteToken,
-        description: purpose,
+        description: (description || purpose).trim(),
         purpose: getPurposeCode(purpose),
         additionalInformation: additionalInfo || undefined,
     })
@@ -1061,7 +1091,20 @@ const SwiftTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, 
             return
         }
 
+        if (currentStep === STEPS.BENEFICIARY) {
+            const { isValid, errors } = validateSwiftBeneficiary(selectedBeneficiary)
+            if (!isValid) {
+                toast.error(errors[0] || t("Selected beneficiary is missing required SWIFT bank details"))
+                return
+            }
+        }
+
         if (currentStep === STEPS.PURPOSE) {
+            const currentDesc = (description || purpose).trim()
+            if (!isValidDescription(currentDesc)) {
+                toast.error(t("Description must be 5–34 characters and contain only letters, numbers, spaces, commas, periods, and hyphens."))
+                return
+            }
             try {
                 await previewFee()
                 setCurrentStep(STEPS.REVIEW)
@@ -1135,6 +1178,8 @@ const SwiftTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, 
                         currencyCode={currencyCode}
                         purpose={purpose}
                         setPurpose={setPurpose}
+                        description={description}
+                        setDescription={setDescription}
                         additionalInfo={additionalInfo}
                         setAdditionalInfo={setAdditionalInfo}
                     />

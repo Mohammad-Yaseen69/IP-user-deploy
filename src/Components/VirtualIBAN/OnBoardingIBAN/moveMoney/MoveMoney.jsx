@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import useWindowWidth from '../../../../utils/useWindowWidth';
 import TopRight from '../../../topRight';
 import styles from "../style/moveMoney.module.css";
+import IbanBreadcrumb from '../../components/IbanBreadcrumb';
 import Tooltip from "@mui/material/Tooltip";
 import {
     Compass,
@@ -70,16 +71,11 @@ const MoveMoney = () => {
                 {
                     showSepaPage ?
                         <>
-                            <div className={styles.headerTitle}>
-                                <div className={styles.navigationRow}>
-                                    <button className={styles.backBtn} onClick={() => setShowSepaPage(false)}>
-                                        <ArrowLeft size={16} /> {t("Back")}
-                                    </button>
-                                    <span className={styles.breadcrumb}>
-                                        {t("My virtual bank")} &gt; <span className={styles.breadcrumbActive}>{t("Move money")}</span>
-                                    </span>
-                                </div>
-                            </div>
+                            <IbanBreadcrumb items={[
+                                { label: "My virtual bank", path: "/virtual-IBAN" },
+                                { label: "Move money", onClick: () => setShowSepaPage(false) },
+                                { label: "SEPA Transfer" }
+                            ]} />
                             <SepaTransfer
                                 isPage={true}
                                 selectedIban={selectedIban}
@@ -89,16 +85,11 @@ const MoveMoney = () => {
                         </>
                     : showSwiftPage ?
                         <>
-                            <div className={styles.headerTitle}>
-                                <div className={styles.navigationRow}>
-                                    <button className={styles.backBtn} onClick={() => setShowSwiftPage(false)}>
-                                        <ArrowLeft size={16} /> {t("Back")}
-                                    </button>
-                                    <span className={styles.breadcrumb}>
-                                        {t("My virtual bank")} &gt; <span className={styles.breadcrumbActive}>{t("Move money")}</span>
-                                    </span>
-                                </div>
-                            </div>
+                            <IbanBreadcrumb items={[
+                                { label: "My virtual bank", path: "/virtual-IBAN" },
+                                { label: "Move money", onClick: () => setShowSwiftPage(false) },
+                                { label: "SWIFT Transfer" }
+                            ]} />
                             <SwiftTransfer
                                 isPage={true}
                                 selectedIban={selectedIban}
@@ -109,18 +100,10 @@ const MoveMoney = () => {
 
                         : <>
                             <div className={styles.headerTitle}>
-
-                                <div className={styles.navigationRow}>
-                                    <button className={styles.backBtn}
-                                        onClick={() => navigate("/virtual-IBAN")}
-                                    >
-                                        <ArrowLeft size={16} /> {t("Back")}
-                                    </button>
-                                    <span className={styles.breadcrumb}>
-                                        {t("My virtual bank")} &gt; <span className={styles.breadcrumbActive}>{t("Move money")}</span>
-                                    </span>
-                                </div>
-
+                                <IbanBreadcrumb items={[
+                                    { label: "My virtual bank", path: "/virtual-IBAN" },
+                                    { label: "Move money" }
+                                ]} />
                                 <h1>{t("How would you like to move money?")}</h1>
                                 <p>{t("Six ways to pay, get paid and manage your balances — pick one to begin.")}</p>
 

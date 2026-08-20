@@ -34,13 +34,15 @@ import styles from "./SepaTransfer.module.css"
 import withdrawStyles from "../../WithdrawBalanceModal/withdrawBalance.module.scss"
 import { UserContext } from "../../../../Context/UserContext"
 import useSendOtp from "../../../../hooks/GeneralUse/useSendOtp"
-import { useVirtualIbanPayoutDirect, useVirtualIbanPayoutFee } from "../../../../hooks/useVirtualIban"
+import { useQueryClient } from "@tanstack/react-query"
+import { useVirtualIbanPayoutDirect, useVirtualIbanPayoutFee, useSyncVirtualIbanBalance, virtualIbanQueryKeys } from "../../../../hooks/useVirtualIban"
 import { handlePaymentApiError } from "../../../../utils/Functions/handlePaymentApiError"
 import OTPConfirmation from "../../../UserSettingsNew/OTPConfirmation"
 import sepaCountries from "./sepaCountries.json"
 import { Tooltip } from "@mui/material"
 import jsPDF from "jspdf"
 import autoTable from "jspdf-autotable"
+import { isValidDescription } from "../../utils/swiftValidation"
 
 const DEFAULT_BENEFICIARY_FORM = {
     type: "individual",
@@ -275,15 +277,33 @@ const AddBeneficiaryStep = ({ amount, currencyCode, form, setForm }) => {
     )
 }
 
-const PurposeStep = ({ amount, currencyCode, purpose, setPurpose, additionalInfo, setAdditionalInfo }) => {
+const PurposeStep = ({ amount, currencyCode, purpose, setPurpose, description, setDescription, additionalInfo, setAdditionalInfo }) => {
     const { t } = useTranslation()
+    const currentDesc = description || purpose
+    const isDescValid = isValidDescription(currentDesc)
+
     return (
         <div className={styles.purposeStep}>
             <div className={styles.stepHeaderRow}><span>{t("Who pays the intermediary charges?")}</span><strong>{t("Sending")} {formatMoney(amount, currencyCode)}</strong></div>
             <label className={styles.field}>
-                <span>{t("Purpose of payment")}</span>
-                <div className={styles.selectWrap}><select value={purpose} onChange={(event) => setPurpose(event.target.value)}>{PURPOSE_OPTIONS.map((item) => <option key={item} value={item}>{t(item)}</option>)}</select><ChevronDown size={18} /></div>
+                <span>{t("Purpose category")}</span>
+                <div className={styles.selectWrap}>
+                    <select value={purpose} onChange={(event) => {
+                        setPurpose(event.target.value)
+                        if (!description) setDescription(event.target.value)
+                    }}>
+                        {PURPOSE_OPTIONS.map((item) => <option key={item} value={item}>{t(item)}</option>)}
+                    </select>
+                    <ChevronDown size={18} />
+                </div>
             </label>
+            <TextField
+                label={t("Description / Remittance Reference *")}
+                value={description || purpose}
+                onChange={setDescription}
+                hint={!isDescValid ? t("5–34 characters; letters, digits, space, comma, dot, hyphen only") : ""}
+                error={!isDescValid}
+            />
             <TextField label={t("Additional information (optional)")} value={additionalInfo} onChange={setAdditionalInfo} />
             <div className={styles.infoStrip}>{t("SEPA transfers deliver the full amount and carry no correspondent fees, so there is no OUR/SHA/BEN choice to make.")}</div>
         </div>
@@ -547,9 +567,14 @@ const SepaTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, i
     const { t } = useTranslation()
     const width = useWindowWidth()
     const navigate = useNavigate()
+    const queryClient = useQueryClient()
     const { beneficiaries, userDetails, setProfileLockTime, getUserBeneficiaries } = useContext(UserContext)
+
+    const ibanId = selectedIban?._id || selectedIban?.id
+    const { data: syncedBalance } = useSyncVirtualIbanBalance(ibanId)
+    const liveBalance = syncedBalance?.balance ?? availableBalance ?? selectedIban?.balance ?? 0
     const currencyCode = selectedIban?.currency || "EUR"
-    const sourceAvailableBalance = getSourceBalance(availableBalance, selectedIban)
+    const sourceAvailableBalance = getSourceBalance(liveBalance, selectedIban)
     const getDefaultAuthType = () => (userDetails?.tfa ? "authenticator" : "sms")
     const [currentStep, setCurrentStep] = useState(STEPS.AMOUNT)
     const [amount, setAmount] = useState("")
@@ -562,6 +587,7 @@ const SepaTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, i
     const [isChannelModalOpen, setIsChannelModalOpen] = useState(false)
     const [channelModalBeneficiary, setChannelModalBeneficiary] = useState(null)
     const [purpose, setPurpose] = useState(PURPOSE_OPTIONS[0])
+    const [description, setDescription] = useState("")
     const [additionalInfo, setAdditionalInfo] = useState("")
     const [confirmedDetails, setConfirmedDetails] = useState(false)
     const [authType, setAuthType] = useState(getDefaultAuthType)
@@ -583,7 +609,7 @@ const SepaTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, i
     })
 
     const sourceIban = useMemo(() => ({ title: getVirtualIbanTitle(selectedIban, currencyCode), iban: getVirtualIbanNumber(selectedIban) }), [selectedIban, currencyCode])
-    const machineData = useMemo(() => ({ amount, availableBalance: sourceAvailableBalance, transferSpeed, selectedBeneficiary, beneficiaryForm, isAddingBeneficiary, purpose, confirmedDetails }), [amount, sourceAvailableBalance, transferSpeed, selectedBeneficiary, beneficiaryForm, isAddingBeneficiary, purpose, confirmedDetails])
+    const machineData = useMemo(() => ({ amount, availableBalance: sourceAvailableBalance, transferSpeed, selectedBeneficiary, beneficiaryForm, isAddingBeneficiary, purpose, description, confirmedDetails }), [amount, sourceAvailableBalance, transferSpeed, selectedBeneficiary, beneficiaryForm, isAddingBeneficiary, purpose, description, confirmedDetails])
     const isProcessing = payoutFee.isPending || isSendingOtp
     const disabled = getDisabledState(currentStep, machineData) || isProcessing
     const showFooter = currentStep !== STEPS.OTP && currentStep !== STEPS.DONE
@@ -609,6 +635,14 @@ const SepaTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, i
     };
 
     const resetState = () => {
+        const id = getVirtualIbanId(selectedIban)
+        if (id) {
+            queryClient.invalidateQueries({ queryKey: virtualIbanQueryKeys.balance(id) })
+            queryClient.invalidateQueries({ queryKey: virtualIbanQueryKeys.detail(id) })
+        }
+        queryClient.invalidateQueries({ queryKey: virtualIbanQueryKeys.list() })
+        queryClient.invalidateQueries({ queryKey: virtualIbanQueryKeys.all })
+        queryClient.refetchQueries({ queryKey: virtualIbanQueryKeys.all })
         setCurrentStep(STEPS.AMOUNT)
         setAmount("")
         setTransferSpeed("standard")
@@ -616,6 +650,7 @@ const SepaTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, i
         setBeneficiaryForm(DEFAULT_BENEFICIARY_FORM)
         setIsAddingBeneficiary(false)
         setPurpose(PURPOSE_OPTIONS[0])
+        setDescription("")
         setAdditionalInfo("")
         setConfirmedDetails(false)
         setAuthType(getDefaultAuthType())
@@ -667,7 +702,7 @@ const SepaTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, i
         beneficiary_id: getBeneficiaryId(selectedBeneficiary),
         method: getSelectedMethod(),
         amount: getAmountNumber(amount),
-        description: purpose,
+        description: (description || purpose).trim(),
         purpose: getPurposeCode(purpose),
         additionalInformation: additionalInfo || undefined,
     })
@@ -716,6 +751,11 @@ const SepaTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, i
         }
 
         if (currentStep === STEPS.PURPOSE) {
+            const currentDesc = (description || purpose).trim()
+            if (!isValidDescription(currentDesc)) {
+                toast.error(t("Description must be 5–34 characters and contain only letters, numbers, spaces, commas, periods, and hyphens."))
+                return
+            }
             try {
                 await previewFee()
                 setCurrentStep(STEPS.REVIEW)
@@ -750,7 +790,7 @@ const SepaTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, i
             case STEPS.ADD_BENEFICIARY:
                 return <AddBeneficiaryStep amount={amount} currencyCode={currencyCode} form={beneficiaryForm} setForm={setBeneficiaryForm} />
             case STEPS.PURPOSE:
-                return <PurposeStep amount={amount} currencyCode={currencyCode} purpose={purpose} setPurpose={setPurpose} additionalInfo={additionalInfo} setAdditionalInfo={setAdditionalInfo} />
+                return <PurposeStep amount={amount} currencyCode={currencyCode} purpose={purpose} setPurpose={setPurpose} description={description} setDescription={setDescription} additionalInfo={additionalInfo} setAdditionalInfo={setAdditionalInfo} />
             case STEPS.REVIEW:
                 return <ReviewStep amount={amount} currencyCode={currencyCode} transferSpeed={transferSpeed} selectedBeneficiary={selectedBeneficiary} purpose={purpose} additionalInfo={additionalInfo} feeDetails={feeDetails} confirmedDetails={confirmedDetails} setConfirmedDetails={setConfirmedDetails} />
             case STEPS.OTP:

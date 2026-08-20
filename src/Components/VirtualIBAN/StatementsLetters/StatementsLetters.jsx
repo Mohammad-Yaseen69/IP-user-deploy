@@ -1,6 +1,7 @@
 import { useContext, useMemo, useState } from 'react';
 import { Copy, Download, Share2, FileText, ChevronLeft, Eye, Loader, File, Globe } from 'react-feather';
 import styles from './StatementsLetters.module.css';
+import IbanBreadcrumb from '../components/IbanBreadcrumb';
 import { useTranslation } from 'react-i18next';
 import useWindowWidth from '../../../utils/useWindowWidth';
 import TopRight from '../../topRight';
@@ -175,14 +176,10 @@ const StatementsLetters = () => {
             <div className={styles.mainContent}>
 
                 <div className={styles.navigationHeader}>
-                    <div className={styles.navigationRow}>
-                        <button className={styles.backBtn} onClick={() => window.history.back()}>
-                            <ChevronLeft size={16} /> {t("Back")}
-                        </button>
-                        <span className={styles.breadcrumb}>
-                            {t("My virtual bank")} &gt; <span className={styles.breadcrumbActive}>{t("Statements & letters")}</span>
-                        </span>
-                    </div>
+                    <IbanBreadcrumb items={[
+                        { label: "My virtual bank", path: "/virtual-IBAN" },
+                        { label: "Statements & letters" }
+                    ]} />
                 </div>
 
                 <div className={styles.subSectionHeader}>

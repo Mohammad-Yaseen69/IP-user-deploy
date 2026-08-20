@@ -1,4 +1,5 @@
 import { getAmountNumber } from "../Components/VirtualIBAN/utils/amount"
+import { isValidDescription } from "../Components/VirtualIBAN/utils/swiftValidation"
 
 export const MIN_AMOUNT = 5          // EUR
 export const MAX_AMOUNT = 1_500_000  // EUR
@@ -129,8 +130,10 @@ export const getDisabledState = (stepName, data = {}) => {
             if (beneficiaryForm.type === "business" && !hasValue(beneficiaryForm.legalName)) return true
             if (beneficiaryForm.type !== "business" && (!hasValue(beneficiaryForm.firstName) || !hasValue(beneficiaryForm.lastName))) return true
             return !hasValue(beneficiaryForm.iban) || !hasValue(beneficiaryForm.reference)
-        case STEPS.PURPOSE:
-            return !hasValue(data.purpose)
+        case STEPS.PURPOSE: {
+            const desc = data.description || data.purpose
+            return !hasValue(data.purpose) || !isValidDescription(desc)
+        }
         case STEPS.REVIEW:
             return !data.confirmedDetails
         case STEPS.OTP:

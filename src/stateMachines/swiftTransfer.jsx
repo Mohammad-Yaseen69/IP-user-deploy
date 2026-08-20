@@ -1,4 +1,5 @@
 import { getAmountNumber } from "../Components/VirtualIBAN/utils/amount"
+import { isValidBic, isValidDescription, validateSwiftBeneficiary } from "../Components/VirtualIBAN/utils/swiftValidation"
 
 export const MIN_AMOUNT = 5          // EUR
 export const MAX_AMOUNT = 1_500_000  // EUR
@@ -114,11 +115,6 @@ export const goBack = (stepName, data) => {
 
 const hasValue = (value) => String(value ?? "").trim().length > 0
 
-const isValidBic = (value) => {
-    const v = String(value || "").trim().toUpperCase()
-    return v.length === 8 || v.length === 11
-}
-
 export const getDisabledState = (stepName, data = {}) => {
     const amount = getAmountNumber(data.amount)
     const availableBalance = getAmountNumber(data.availableBalance)
@@ -129,11 +125,8 @@ export const getDisabledState = (stepName, data = {}) => {
             return !data.amount || amount <= 0 || amount < MIN_AMOUNT || amount > MAX_AMOUNT || amount > availableBalance
         case STEPS.BENEFICIARY: {
             if (!data.selectedBeneficiary) return true
-            // Block if the selected beneficiary has no BIC on bank_details or root level
-            const b = data.selectedBeneficiary
-            const fromBank = b?.bank_details?.[0]?.swift_code
-            const bic = fromBank?.trim() || b?.swift_code?.trim() || b?.bic?.trim() || ""
-            return bic.length === 0
+            const { isValid } = validateSwiftBeneficiary(data.selectedBeneficiary)
+            return !isValid
         }
         case STEPS.ADD_BENEFICIARY: {
             if (beneficiaryForm.type === "business" && !hasValue(beneficiaryForm.legalName)) return true
@@ -148,8 +141,10 @@ export const getDisabledState = (stepName, data = {}) => {
             if (!hasValue(beneficiaryForm.beneficiaryPostal)) return true
             return false
         }
-        case STEPS.PURPOSE:
-            return !hasValue(data.purpose)
+        case STEPS.PURPOSE: {
+            const desc = data.description || data.purpose
+            return !hasValue(data.purpose) || !isValidDescription(desc)
+        }
         case STEPS.REVIEW:
             return !data.confirmedDetails
         case STEPS.OTP:
