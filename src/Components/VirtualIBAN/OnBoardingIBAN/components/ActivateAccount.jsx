@@ -280,8 +280,7 @@ const ActivateAccount = ({
                               color: "#111827",
                             }}
                           >
-                            {wallet.currency?.code} Wallet
-                          </h5>
+                            {wallet.currency?.code}{t("Wallet")}</h5>
                         </div>
                         <div
                           style={{
@@ -289,8 +288,7 @@ const ActivateAccount = ({
                             fontSize: "12px",
                             color: "#64748B",
                           }}
-                        >
-                          ID: {wallet.wallet_id}
+                        >{t("ID:")}{wallet.wallet_id}
                         </div>
                         <div
                           style={{
@@ -361,7 +359,7 @@ const ActivateAccount = ({
                 {feeDetails?.isKybIncluded && (
                   <div className={styles.summaryRow} style={{ marginTop: "8px" }}>
                     <span>{t("KYB Verification Fee")}</span>
-                    <strong>${feeDetails?.kybFee || 0}.00 USD</strong>
+                    <strong>${feeDetails?.kybFee || 0}{t(".00 USD")}</strong>
                   </div>
                 )}
 

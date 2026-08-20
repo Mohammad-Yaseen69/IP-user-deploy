@@ -50,7 +50,7 @@ const ConfirmCryptoSend = ({ setSubStep, cryptoCurrency, amount, wallet }) => {
                 boxShadow: "0px 18px 15.348464965820312px -15px rgba(89, 38, 240, 0.16)"
             }} className="conf_cont">
                 <div style={{ display: "flex", flexDirection: "column", alignItems: "center", marginBottom: "1.5rem" }}>
-                    <h5 style={{ fontSize: "1.3rem", color: "#a8a8a8" }}>You Are Sending</h5>
+                    <h5 style={{ fontSize: "1.3rem", color: "#a8a8a8" }}>{t("You Are Sending")}</h5>
                     <h4 style={{ fontSize: "2rem", fontWeight: "900" }}>${value} {cryptoCurrency.value.toUpperCase()}</h4>
                 </div>
                 <SelectedCryptoCurrency cryptoCurrency={cryptoCurrency} setSubStep={setSubStep} />

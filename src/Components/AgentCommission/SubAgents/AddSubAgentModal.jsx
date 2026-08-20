@@ -115,8 +115,8 @@ const AddSubAgentModal = ({ open, onClose, onSubmit }) => {
                                             onChange={handleChange('country')}
                                         >
                                             <option value="" disabled hidden>{t("Select country")}</option>
-                                            <option value="uk">United Kingdom</option>
-                                            <option value="us">United States</option>
+                                            <option value="uk">{t("United Kingdom")}</option>
+                                            <option value="us">{t("United States")}</option>
                                         </select>
                                         <ChevronDown className={styles.selectIcon} size={16} />
                                     </div>
@@ -126,7 +126,7 @@ const AddSubAgentModal = ({ open, onClose, onSubmit }) => {
                                     <label className={styles.label}>{t("Mobile Number")}</label>
                                     <div className={styles.mobileInputWrapper}>
                                         <div className={styles.countryCode}>
-                                            <span>🇬🇧 +44</span>
+                                            <span>{t("🇬🇧 +44")}</span>
                                             <ChevronDown size={14} />
                                         </div>
                                         <input
@@ -172,9 +172,9 @@ const AddSubAgentModal = ({ open, onClose, onSubmit }) => {
                                             onChange={handleChange('clientProfile')}
                                         >
                                             <option value="" disabled hidden>{t("Select profile")}</option>
-                                            <option value="apex">Apex Platinum Co.</option>
-                                            <option value="regal">Regal Goldsmiths</option>
-                                            <option value="blue">BlueLine Button Traders</option>
+                                            <option value="apex">{t("Apex Platinum Co.")}</option>
+                                            <option value="regal">{t("Regal Goldsmiths")}</option>
+                                            <option value="blue">{t("BlueLine Button Traders")}</option>
                                         </select>
                                         <ChevronDown className={styles.selectIcon} size={16} />
                                     </div>
@@ -199,7 +199,7 @@ const AddSubAgentModal = ({ open, onClose, onSubmit }) => {
                                             onChange={handleChange('additionalClients')}
                                         >
                                             <option value="" disabled hidden>{t("Select profile")}</option>
-                                            <option value="regal">Regal Goldsmiths</option>
+                                            <option value="regal">{t("Regal Goldsmiths")}</option>
                                         </select>
                                         <ChevronDown className={styles.selectIcon} size={16} />
                                     </div>
@@ -213,13 +213,13 @@ const AddSubAgentModal = ({ open, onClose, onSubmit }) => {
                                     <h4 className={styles.reviewSubtitle}>{t("Primary Contact")}</h4>
                                 </div>
                                 <div className={styles.profileRow}>
-                                    <div className={`${styles.avatar} ${styles.avatarPurple}`}>AP</div>
-                                    <span className={styles.profileName}>Anna Petrova</span>
+                                    <div className={`${styles.avatar} ${styles.avatarPurple}`}>{t("AP")}</div>
+                                    <span className={styles.profileName}>{t("Anna Petrova")}</span>
                                 </div>
                                 <div className={styles.detailsGrid}>
                                     <div className={styles.detailItem}>
                                         <span className={styles.detailLabel}>{t("Email Address")}</span>
-                                        <span className={styles.detailValue}>anna@example.com</span>
+                                        <span className={styles.detailValue}>{t("anna@example.com")}</span>
                                     </div>
                                     <div className={styles.detailItem}>
                                         <span className={styles.detailLabel}>{t("Mobile Number")}</span>
@@ -237,15 +237,15 @@ const AddSubAgentModal = ({ open, onClose, onSubmit }) => {
                                 <div className={styles.clientList}>
                                     <div className={styles.clientRow}>
                                         <div className={styles.clientInfo}>
-                                            <div className={`${styles.avatar} ${styles.avatarBlue}`}>AP</div>
-                                            <span className={styles.clientName}>Apex Platinum Co.</span>
+                                            <div className={`${styles.avatar} ${styles.avatarBlue}`}>{t("AP")}</div>
+                                            <span className={styles.clientName}>{t("Apex Platinum Co.")}</span>
                                         </div>
                                         <span className={styles.clientCommission}>30%</span>
                                     </div>
                                     <div className={styles.clientRow}>
                                         <div className={styles.clientInfo}>
-                                            <div className={`${styles.avatar} ${styles.avatarGreen}`}>BB</div>
-                                            <span className={styles.clientName}>BlueLine Button Traders</span>
+                                            <div className={`${styles.avatar} ${styles.avatarGreen}`}>{t("BB")}</div>
+                                            <span className={styles.clientName}>{t("BlueLine Button Traders")}</span>
                                         </div>
                                         <span className={styles.clientCommission}>30%</span>
                                     </div>

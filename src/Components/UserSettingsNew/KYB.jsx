@@ -132,7 +132,7 @@ const KYB = ({ isCollapsed, setIsCollapsed }) => {
                         }} onClick={(e) => {
                             e.stopPropagation()
                             setShowAdditionalModal(!showAdditionalModal)
-                        }}>Additional Files</Button>
+                        }}>{t("Additional Files")}</Button>
                     }
                 </div>
             </CardHeader>
@@ -144,7 +144,7 @@ const KYB = ({ isCollapsed, setIsCollapsed }) => {
             <div className={`accordion-body expanded`}>
                 <CardBody>
                     <Input type='select' value={companyType} onChange={e => setCompanyType(e.target.value)}>
-                        <option value={""} disabled>--Select-Your-Company-Type--</option>
+                        <option value={""} disabled>{t("--Select-Your-Company-Type--")}</option>
                         {
                             company_types.map(item => (
                                 <option value={item} key={item}>{t(item)}</option>
@@ -176,7 +176,7 @@ const KYB = ({ isCollapsed, setIsCollapsed }) => {
                         &&
                         <Card style={{ marginTop: "1.5rem" }}>
                             <CardHeader style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                                <h4>Partners</h4>
+                                <h4>{t("Partners")}</h4>
                                 <Button style={{
                                     background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
                                     border: "none",
@@ -246,7 +246,7 @@ const KYB = ({ isCollapsed, setIsCollapsed }) => {
                 </CardBody>
             </div>
         </Card>
-    )
+    );
 }
 
 export default KYB

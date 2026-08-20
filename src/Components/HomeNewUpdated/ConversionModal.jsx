@@ -246,7 +246,7 @@ const ConversionModal = ({ isOpen, toggleModal, amount, exchangeAmount, currency
             <ModalHeader toggle={() => {
                 toggleModal()
                 setError(null)
-            }}>{("Currency Conversion")}</ModalHeader>
+            }}>{t("Currency Conversion")}</ModalHeader>
             <ModalBody style={{ padding: step > 1 ? "0px" : "1rem", overflow: "hidden" }}>
                 {
                     step === 1

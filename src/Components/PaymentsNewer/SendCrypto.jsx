@@ -137,7 +137,7 @@ const SendCrypto = () => {
                                                 marginTop: "-.6rem",
                                                 maxWidth: "320px"
                                             }} className="confirm_container">
-                                                <h4 style={{ color: "#5936f0", wordBreak: "normal" }} className="head_confirm">Confirm Your Payment</h4>
+                                                <h4 style={{ color: "#5936f0", wordBreak: "normal" }} className="head_confirm">{t("Confirm Your Payment")}</h4>
                                                 <img src={cryptoCurrency.img} alt={cryptoCurrency?.value} style={{
                                                     marginTop: "3rem",
                                                 }} />
@@ -157,7 +157,7 @@ const SendCrypto = () => {
                                                 maxWidth: "320px",
                                                 overflow: "hidden"
                                             }} className="confirm_container">
-                                                <h4 style={{ color: "#5936f0", wordBreak: "normal" }} className="head_confirm">Request Is Being Processed</h4>
+                                                <h4 style={{ color: "#5936f0", wordBreak: "normal" }} className="head_confirm">{t("Request Is Being Processed")}</h4>
                                                 <img src={clock} alt={"Clock Ticking"} style={{
                                                     marginTop: "3rem",
                                                     objectFit: "contain",

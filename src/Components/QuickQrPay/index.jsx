@@ -286,7 +286,7 @@ const QuickQrPay = () => {
                                         position: "absolute",
                                         top: "29%",
                                         left: "13px",
-                                    }}>#INSTAPAY-</h5>
+                                    }}>{t("#INSTAPAY-")}</h5>
                                 </div>
 
                                 <div style={{ display: "flex", alignItems: "center", gap: "18px" }}>
@@ -422,7 +422,7 @@ const QuickQrPay = () => {
             </div>}
 
         </>
-    )
+    );
 }
 
 export default QuickQrPay

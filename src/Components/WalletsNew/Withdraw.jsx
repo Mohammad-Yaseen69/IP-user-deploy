@@ -208,8 +208,11 @@ const Withdraw = ({ isOpen, toggle, wallet }) => {
                                                     ? userDetails?.user?.kyc_status === "approved"
                                                     : userDetails?.company?.kyb_status === "approved")
                                                     ? t("Continue")
-                                                    : t(`Verify Your ${userDetails?.account_type === "individual" ? "Identity" : "Business"}`)
-                                            }
+                                                    : t("Verify Your {{type}}", {
+                                                        type: userDetails?.account_type === "individual"
+                                                            ? t("Identity")
+                                                            : t("Business"),
+                                                    })}
                                         </Button>
                                     </ModalFooter>
                                 </>
