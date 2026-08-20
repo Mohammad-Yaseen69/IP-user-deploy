@@ -236,8 +236,8 @@ export const publicRoutes = [
     { path: "/pay/subscription/:subscriptionId", component: <PlansSubscription /> },
     { path: "/pay/plan/:username/:planId", component: <PlanPaymentLink /> },
     { path: "/create-agent-password/:token", component: <CreateAgentPassword /> },
-    // { path: "/KYBOnboarding", component: <KYBOnboarding /> },
     { path: "/validate-iban/:ibanId", component: <IbanValidationPage /> },
+    { path: "/v/:ibanId", component: <IbanValidationPage /> },
     { path: "/Insta-media", component: <InstaMedia /> },
     { path: "/lead-claim-confirm", component: <LeadClaimConfirm /> },
     { path: "*", component: <NotFound type='Page' /> }

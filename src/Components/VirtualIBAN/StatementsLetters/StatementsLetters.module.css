@@ -467,9 +467,226 @@
     word-break: break-word;
 }
 
+.iconCircleWrapperPurple {
+    display: flex;
+    padding: 10px;
+    border-radius: 11px;
+    background: #7C3AED;
+    box-shadow: 0 8px 18px -8px rgba(124, 58, 237, 0.45);
+}
+
+.swiftModalBody {
+    padding: 0;
+    border-radius: 16px;
+    overflow: hidden;
+    border: none;
+}
+
+.swiftModalContainer {
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    background: #ffffff;
+}
+
+.swiftModalHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.swiftModalHeaderLeft {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.swiftModalIcon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: #F3EFFE;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.swiftModalTitle {
+    font-size: 18px;
+    font-weight: 600;
+    color: #101828;
+    margin: 0 0 4px 0;
+}
+
+.swiftModalSubtitle {
+    font-size: 13px;
+    color: #667085;
+    margin: 0;
+}
+
+.swiftModalCloseBtn {
+    background: none;
+    border: none;
+    color: #98A2B3;
+    cursor: pointer;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    transition: all 0.2s;
+}
+
+.swiftModalCloseBtn:hover {
+    background: #F2F4F7;
+    color: #344054;
+}
+
+.swiftModalContent {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.currencyRadioGrid {
+    display: flex;
+    gap: 12px;
+    width: 100%;
+}
+
+.currencyRadioCard {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+    border-radius: 10px;
+    border: 1px solid #EAECF0;
+    background: #FFFFFF;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    user-select: none;
+}
+
+.currencyRadioCard:hover {
+    border-color: #D6BBFB;
+    background: #FAF8FF;
+}
+
+.activeRadioCard {
+    border: 1.5px solid #5626E6 !important;
+    background: #F8F5FF !important;
+    box-shadow: 0 1px 3px rgba(86, 38, 230, 0.1);
+}
+
+.radioIndicator {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: 1.5px solid #D0D5DD;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.activeRadioCard .radioIndicator {
+    border-color: #5626E6;
+}
+
+.radioIndicatorInner {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #5626E6;
+}
+
+.currencyBadgeIcon {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #0052FF;
+    color: #FFFFFF;
+    font-size: 13px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.currencyLabelText {
+    font-size: 13.5px;
+    font-weight: 600;
+    color: #101828;
+}
+
+.currencyHelpText {
+    font-size: 12.5px;
+    color: #667085;
+    margin: 4px 0 0 0;
+}
+
+.swiftModalFooter {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 12px;
+    padding-top: 16px;
+    border-top: 1px solid #EAECF0;
+    margin-top: 8px;
+}
+
+.swiftCancelBtn {
+    padding: 9px 18px;
+    border-radius: 8px;
+    border: 1px solid #D0D5DD;
+    background: #FFFFFF;
+    color: #344054;
+    font-size: 13.5px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.swiftCancelBtn:hover:not(:disabled) {
+    background: #F9FAFB;
+}
+
+.swiftPrimaryBtn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 20px;
+    border-radius: 8px;
+    border: 1px solid #5626E6;
+    background: #5626E6;
+    color: #FFFFFF;
+    font-size: 13.5px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.swiftPrimaryBtn:hover:not(:disabled) {
+    background: #45159C;
+    border-color: #45159C;
+}
+
+.swiftPrimaryBtn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
 @media (max-width: 768px) {
     .columnsFlexGrid {
         flex-direction: column;
         gap: 24px;
+    }
+
+    .currencyRadioGrid {
+        flex-direction: column;
     }
 }
