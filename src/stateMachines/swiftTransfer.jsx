@@ -115,11 +115,6 @@ export const goBack = (stepName, data) => {
 
 const hasValue = (value) => String(value ?? "").trim().length > 0
 
-const isValidBic = (value) => {
-    const v = String(value || "").trim().toUpperCase()
-    return v.length === 8 || v.length === 11
-}
-
 export const getDisabledState = (stepName, data = {}) => {
     const amount = getAmountNumber(data.amount)
     const availableBalance = getAmountNumber(data.availableBalance)
