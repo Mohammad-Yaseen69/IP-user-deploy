@@ -164,7 +164,7 @@ const buildSwiftLetterPagesHtml = ({ logoBase64, qrBase64, signatureBase64, iban
     const jurisdiction = getSafeString(iban?.incorporationJurisdiction || userDetails?.country?.country_name || userDetails?.country || userDetails?.jurisdiction, 'Cyprus');
     const incDate = userDetails?.company?.date_of_incorporation ? formatDate(userDetails?.company?.date_of_incorporation) : (userDetails?.dob ? formatDate(userDetails.dob) : '24 November 2020');
     const regAddress = getSafeString(iban?.registeredAddress || userDetails?.address || userDetails?.formattedAddress, 'Solonos 7, Kolossi, 4632, Limassol, Cyprus');
-    const orgNumber = getSafeString(userDetails?.company?.registration_number || "---", '577309');
+    const orgNumber = getSafeString(userDetails?.company?.registration_number || userDetails?.company?.tax_id, '---');
     const virtualIbanId = getSafeString(iban?.virtualIbanId || iban?._id || iban?.id, '');
     const customerId = virtualIbanId
 
