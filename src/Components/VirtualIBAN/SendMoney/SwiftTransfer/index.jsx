@@ -59,6 +59,22 @@ import jsPDF from "jspdf"
 import autoTable from "jspdf-autotable"
 import AddBeneficiary from "../../../AddBeneficiary"
 import { validateSwiftBeneficiary, isValidDescription, isValidBic } from "../../utils/swiftValidation"
+import BeneficiaryStep from "../Common/BeneficiaryStep"
+import {
+    getBeneficiaryName,
+    getBeneficiaryTypeLabel,
+    getBeneficiaryCountry,
+    getBeneficiaryBankDetail,
+    getBeneficiaryBic,
+    getBeneficiaryBankName,
+    getBeneficiaryInitial,
+    getBeneficiaryId,
+    getBeneficiaryAccountCount,
+    getBeneficiarySubtitle,
+    getRawSwiftCode,
+    hasBeneficiarySwiftCode,
+    maskIban
+} from "../Common/beneficiaryHelpers"
 
 const DEFAULT_BENEFICIARY_FORM = {
     type: "individual",
@@ -101,46 +117,12 @@ const formatUSD = (value) =>
         maximumFractionDigits: 2,
     })}`
 
-const maskIban = (value) => {
-    const v = String(value || "").trim()
-    if (!v) return "-"
-    return v.length <= 14 ? v : `${v.slice(0, 7)} ... ${v.slice(-7)}`
-}
 
 const getSourceBalance = (availableBalance, selectedIban) => availableBalance ?? selectedIban?.balance ?? 0
 const getVirtualIbanNumber = (iban) =>
     iban?.iban || iban?.ibanFull || iban?.account_number || iban?.accountNumber || iban?.virtual_iban || iban?.virtualIban || ""
 const getVirtualIbanTitle = (iban, fallbackCurrency = "EUR") =>
     iban?.name || iban?.title || iban?.label || `${fallbackCurrency} IBAN`
-
-const getBeneficiaryId = (b) => b?._id || b?.id || ""
-const getBeneficiaryBankDetail = (b) => b?.bank_details?.[0] || {}
-const getBeneficiaryName = (b) => {
-    const first = b?.first_name
-    const last = b?.last_name
-    if (first || last) return [first, last].filter(Boolean).join(" ")
-    return b?.company_name || b?.legalName || b?.name || "Beneficiary"
-}
-const getBeneficiaryTypeLabel = (b) => {
-    const type = b?.beneficiary_type || b?.type
-    return type ? `${String(type).charAt(0).toUpperCase()}${String(type).slice(1)}` : "-"
-}
-const getBeneficiaryCountry = (b) => b?.country_name || b?.country || "-"
-const getBeneficiaryBic = (b) =>
-    getBeneficiaryBankDetail(b)?.swift_code || b?.swift_code || b?.bic || "-"
-const getBeneficiaryBankName = (b) => getBeneficiaryBankDetail(b)?.name || b?.bankName || "-"
-const getBeneficiaryAccountCount = (b) => b?.beneficiary_type
-const getBeneficiarySubtitle = (b) =>
-    [getBeneficiaryCountry(b), getBeneficiaryTypeLabel(b)].filter((v) => v && v !== "-").join(" - ")
-const getBeneficiaryInitial = (b) => (getBeneficiaryName(b).charAt(0) || "B").toUpperCase()
-
-const getRawSwiftCode = (b) => {
-    const fromBank = b?.bank_details?.[0]?.swift_code
-    if (fromBank && String(fromBank).trim()) return String(fromBank).trim()
-    const direct = b?.swift_code || b?.bic || ""
-    return String(direct).trim()
-}
-const hasBeneficiarySwiftCode = (b) => getRawSwiftCode(b).length > 0
 
 const buildBeneficiaryFromForm = (form) => {
     const isBusiness = form.type === "business"
@@ -305,82 +287,6 @@ const MissingSwiftCodeBanner = ({ beneficiary, authHeader, onSwiftCodeSaved }) =
                     {saving ? t("Saving...") : t("Save BIC")}
                 </button>
             </div>
-        </div>
-    )
-}
-
-const BeneficiaryStep = ({ beneficiaries, selectedBeneficiary, setSelectedBeneficiary, onAddBeneficiary, authHeader, getUserBeneficiaries }) => {
-    const { t } = useTranslation()
-    const [query, setQuery] = useState("")
-    const navigate = useNavigate()
-    const filtered = beneficiaries.filter((b) =>
-        `${getBeneficiaryName(b)} ${getBeneficiarySubtitle(b)}`.toLowerCase().includes(query.toLowerCase())
-    )
-
-    const missingBic = selectedBeneficiary && !hasBeneficiarySwiftCode(selectedBeneficiary)
-
-    const handleSwiftCodeSaved = async (updatedBeneficiary) => {
-        setSelectedBeneficiary(updatedBeneficiary)
-        await getUserBeneficiaries()
-    }
-
-    return (
-        <div className={styles.beneficiaryStep}>
-            <div className={styles.beneficiaryHeader}>
-                <h3>{t("Beneficiaries")}</h3>
-                <button type="button" className={styles.primarySmallBtn} onClick={onAddBeneficiary}>
-                    <Plus size={16} />
-                    {t("Add beneficiary")}
-                </button>
-            </div>
-
-            <label className={styles.searchBox}>
-                <Search size={15} />
-                <input
-                    value={query}
-                    onChange={(e) => setQuery(e.target.value)}
-                    placeholder={t("Search beneficiaries")}
-                />
-            </label>
-
-            <div className={styles.beneficiaryList}>
-                {filtered.length === 0 && (
-                    <div style={{ padding: "10px", color: "var(--secondary-color)", textAlign: "center" }}>
-                        {t("No beneficiaries found with SWIFT bank details.")}
-                    </div>
-                )}
-                {filtered.map((b) => {
-                    const id = getBeneficiaryId(b)
-                    const selected = getBeneficiaryId(selectedBeneficiary) === id
-                    return (
-                        <button
-                            type="button"
-                            key={id}
-                            className={`${styles.beneficiaryCard} ${selected ? styles.selectedBeneficiary : ""}`}
-                            onClick={() => setSelectedBeneficiary(b)}
-                        >
-                            <span className={`${styles.avatar} ${styles[b.accent || "blue"]}`}>
-                                {getBeneficiaryInitial(b)}
-                            </span>
-                            <span className={styles.beneficiaryCopy}>
-                                <strong>{getBeneficiaryName(b)}</strong>
-                                <small>{getBeneficiarySubtitle(b)}</small>
-                            </span>
-                            <span className={`${styles.accountBadge} ${selected ? styles.activeBadge : ""}`}>
-                                {getBeneficiaryAccountCount(b)}
-                            </span>
-                        </button>
-                    )
-                })}
-            </div>
-
-            {missingBic && (
-                <MissingSwiftCodeBanner
-                    beneficiary={selectedBeneficiary}
-                    authHeader={authHeader}
-                    onSwiftCodeSaved={handleSwiftCodeSaved}
-                />
-            )}
         </div>
     )
 }
@@ -1043,10 +949,9 @@ const SwiftTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, 
     const handleSendOtp = async (otpCodeType) => {
         const nextAuthType = otpCodeType || authType
         setAuthType(nextAuthType)
-        try {
-            await sendOtp(buildPayoutPayload(), nextAuthType)
-        } catch {
-        }
+
+        await sendOtp(buildPayoutPayload(), nextAuthType)
+
     }
 
     const verifyOtp = async (setVerified, type, otp, setOtpError) => {
@@ -1082,8 +987,8 @@ const SwiftTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, 
         if (currentStep === STEPS.ADD_BENEFICIARY) {
             const nextBeneficiary = buildBeneficiaryFromForm(beneficiaryForm)
             setSelectedBeneficiary(nextBeneficiary)
-            if (beneficiaryForm.saveBeneficiary) {
-            }
+            // if (beneficiaryForm.saveBeneficiary) {
+            // }
             setCurrentStep(STEPS.PURPOSE)
             return
         }
@@ -1155,9 +1060,19 @@ const SwiftTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, 
                         selectedBeneficiary={selectedBeneficiary}
                         setSelectedBeneficiary={setSelectedBeneficiary}
                         onAddBeneficiary={() => setIsAddModalOpen(true)}
-                        authHeader={authHeader}
-                        getUserBeneficiaries={getUserBeneficiaries}
-                    />
+                        emptyMessage={t("No beneficiaries found with SWIFT bank details.")}
+                    >
+                        {selectedBeneficiary && !hasBeneficiarySwiftCode(selectedBeneficiary) && (
+                            <MissingSwiftCodeBanner
+                                beneficiary={selectedBeneficiary}
+                                authHeader={authHeader}
+                                onSwiftCodeSaved={async (updatedBeneficiary) => {
+                                    setSelectedBeneficiary(updatedBeneficiary)
+                                    await getUserBeneficiaries()
+                                }}
+                            />
+                        )}
+                    </BeneficiaryStep>
                 )
             case STEPS.ADD_BENEFICIARY:
                 return (
