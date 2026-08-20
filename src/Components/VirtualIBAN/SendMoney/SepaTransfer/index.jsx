@@ -179,10 +179,7 @@ const SepaAmountStep = ({ amount, setAmount, availableBalance, currencyCode, sou
                                             </span>
 
                                             <span className={styles.speedFee}>
-                                                {formatMoney(
-                                                    speed.feeAmount,
-                                                    currencyCode
-                                                )}
+                                                {speed.feeLabel}
                                             </span>
                                         </div>
 
