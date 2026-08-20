@@ -43,6 +43,22 @@ import { Tooltip } from "@mui/material"
 import jsPDF from "jspdf"
 import autoTable from "jspdf-autotable"
 import { isValidDescription } from "../../utils/swiftValidation"
+import BeneficiaryStep from "../Common/BeneficiaryStep"
+import {
+    getBeneficiaryName,
+    getBeneficiaryTypeLabel,
+    getBeneficiaryCountry,
+    getBeneficiaryBankDetail,
+    getBeneficiaryBic,
+    getBeneficiaryBankName,
+    getBeneficiaryIban,
+    getBeneficiaryInitial,
+    getBeneficiaryId,
+    getBeneficiaryAccountCount,
+    getBeneficiarySubtitle,
+    maskIban
+} from "../Common/beneficiaryHelpers"
+import { formatCurrency } from "../../../../Helper/AmountFormat"
 
 const DEFAULT_BENEFICIARY_FORM = {
     type: "individual",
@@ -66,36 +82,12 @@ const sidebarIcons = {
     [SIDEBAR_STEP_NAMES.DONE]: CheckCircle,
 }
 
-const formatMoney = (value, currencyCode = "EUR") => `${currencyCode} ${getAmountNumber(value).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+const formatMoney = (value, currencyCode = "EUR") => {
+    return `${currencyCode} ${formatCurrency(value, false, undefined)}`
+}
 const getSourceBalance = (availableBalance, selectedIban) => availableBalance ?? selectedIban?.balance ?? 0
 const getVirtualIbanNumber = (iban) => iban?.iban || iban?.ibanFull || iban?.account_number || iban?.accountNumber || iban?.virtual_iban || iban?.virtualIban || ""
 const getVirtualIbanTitle = (iban, fallbackCurrency = "EUR") => iban?.name || iban?.title || iban?.label || `${fallbackCurrency} IBAN`
-
-const getBeneficiaryId = (beneficiary) => beneficiary?._id || beneficiary?.id || ""
-const getBeneficiaryBankDetail = (beneficiary) => beneficiary?.bank_details?.[0] || {}
-const getBeneficiaryName = (beneficiary) => {
-    const first = beneficiary?.first_name
-    const last = beneficiary?.last_name
-    if (first || last) return [first, last].filter(Boolean).join(" ")
-    return beneficiary?.company_name || beneficiary?.legalName || beneficiary?.name || "Beneficiary"
-}
-const getBeneficiaryTypeLabel = (beneficiary) => {
-    const type = beneficiary?.beneficiary_type || beneficiary?.type
-    return type ? `${String(type).charAt(0).toUpperCase()}${String(type).slice(1)}` : "-"
-}
-const getBeneficiaryCountry = (beneficiary) => beneficiary?.country_name || beneficiary?.country || "-"
-const getBeneficiaryIban = (beneficiary) => getBeneficiaryBankDetail(beneficiary)?.iban || beneficiary?.iban || "-"
-const getBeneficiaryBic = (beneficiary) => getBeneficiaryBankDetail(beneficiary)?.swift_code || beneficiary?.bic || "-"
-const getBeneficiaryBankName = (beneficiary) => getBeneficiaryBankDetail(beneficiary)?.name || beneficiary?.bankName || "-"
-const getBeneficiaryAccountCount = (beneficiary) => beneficiary?.beneficiary_type
-const getBeneficiarySubtitle = (beneficiary) => [getBeneficiaryCountry(beneficiary), getBeneficiaryTypeLabel(beneficiary)].filter((value) => value && value !== "-").join(" - ")
-const getBeneficiaryInitial = (beneficiary) => (getBeneficiaryName(beneficiary).charAt(0) || "B").toUpperCase()
-
-const maskIban = (iban) => {
-    const value = String(iban || "").trim()
-    if (!value) return "-"
-    return value.length <= 14 ? value : `${value.slice(0, 7)} ... ${value.slice(-7)}`
-}
 
 const buildBeneficiaryFromForm = (form) => {
     const isBusiness = form.type === "business"
@@ -188,7 +180,7 @@ const SepaAmountStep = ({ amount, setAmount, availableBalance, currencyCode, sou
 
                                             <span className={styles.speedFee}>
                                                 {formatMoney(
-                                                    speed.fee,
+                                                    speed.feeAmount,
                                                     currencyCode
                                                 )}
                                             </span>
@@ -212,53 +204,6 @@ const SepaAmountStep = ({ amount, setAmount, availableBalance, currencyCode, sou
                         );
                     })}
                 </div>
-            </div>
-        </div>
-    )
-}
-
-const BeneficiaryStep = ({ selectedBeneficiary, setSelectedBeneficiary, onAddNew, beneficiaries = [] }) => {
-    const { t } = useTranslation()
-
-    return (
-        <div className={styles.stepStack}>
-            <div className={styles.beneficiaryHeader}>
-                <div>
-                    <div className={styles.sectionLabel}>{t("Choose recipient")}</div>
-                    <p style={{ margin: 0, fontSize: "13px", color: "#6e7687" }}>
-                        {t("Select an existing beneficiary or add a new one.")}
-                    </p>
-                </div>
-
-                <button type="button" className={styles.addBeneficiaryBtn} onClick={onAddNew}>
-                    <Plus size={16} />
-                    <span>{t("Add new")}</span>
-                </button>
-            </div>
-
-            <div className={styles.beneficiaryList}>
-                {beneficiaries.map((beneficiary) => {
-                    const isSelected = selectedBeneficiary?._id === beneficiary._id
-                    return (
-                        <button
-                            type="button"
-                            key={beneficiary._id}
-                            className={`${styles.beneficiaryCard} ${isSelected ? styles.selectedBeneficiary : ""}`}
-                            onClick={() => setSelectedBeneficiary(beneficiary)}
-                        >
-                            <div className={styles.avatarCircle}>{getBeneficiaryInitial(beneficiary)}</div>
-                            <div className={styles.beneficiaryCopy}>
-                                <strong>{getBeneficiaryName(beneficiary)}</strong>
-                                <small>{getBeneficiarySubtitle(beneficiary)}</small>
-                            </div>
-                            <div className={styles.badgeWrap}>
-                                <span className={`${styles.accountBadge} ${isSelected ? styles.activeBadge : ""}`}>
-                                    {getBeneficiaryIban(beneficiary) ? maskIban(getBeneficiaryIban(beneficiary)) : "IBAN"}
-                                </span>
-                            </div>
-                        </button>
-                    )
-                })}
             </div>
         </div>
     )
@@ -694,7 +639,6 @@ const SepaTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, i
             getUserBeneficiaries()
         }
     }, [userDetails])
-    console.log(beneficiaries, "beneficiaryList")
 
     const handleClose = () => {
         resetState()
@@ -727,10 +671,7 @@ const SepaTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, i
     const handleSendOtp = async (otpCodeType) => {
         const nextAuthType = otpCodeType || authType
         setAuthType(nextAuthType)
-        try {
-            await sendOtp(buildPayoutPayload(), nextAuthType)
-        } catch {
-        }
+        await sendOtp(buildPayoutPayload(), nextAuthType)
     }
 
     const verifyOtp = async (setVerified, type, otp, setOtpError) => {
@@ -798,7 +739,15 @@ const SepaTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, i
             case STEPS.AMOUNT:
                 return <SepaAmountStep amount={amount} setAmount={setAmount} availableBalance={sourceAvailableBalance} currencyCode={currencyCode} sourceIban={sourceIban} transferSpeed={transferSpeed} setTransferSpeed={setTransferSpeed} />
             case STEPS.BENEFICIARY:
-                return <BeneficiaryStep beneficiaries={beneficiaryList} selectedBeneficiary={selectedBeneficiary} setSelectedBeneficiary={setSelectedBeneficiary} onAddBeneficiary={() => setIsAddModalOpen(true)} />
+                return (
+                    <BeneficiaryStep
+                        beneficiaries={beneficiaryList}
+                        selectedBeneficiary={selectedBeneficiary}
+                        setSelectedBeneficiary={setSelectedBeneficiary}
+                        onAddBeneficiary={() => setIsAddModalOpen(true)}
+                        emptyMessage={t("No beneficiaries found with European bank accounts.")}
+                    />
+                )
             case STEPS.ADD_BENEFICIARY:
                 return <AddBeneficiaryStep amount={amount} currencyCode={currencyCode} form={beneficiaryForm} setForm={setBeneficiaryForm} />
             case STEPS.PURPOSE:
