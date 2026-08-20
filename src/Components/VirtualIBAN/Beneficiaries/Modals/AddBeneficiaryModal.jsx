@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
 import { Box, Modal, TextField, IconButton } from '@mui/material';
 import { X, User, Briefcase } from 'react-feather';
 import { useTranslation } from 'react-i18next';
@@ -7,12 +7,14 @@ import CountryDropDown from '../../../AddBeneficiary/CountryDropDown';
 import CitiesDropDown from '../../../CitiesDropDown';
 import PhoneInput from '../../../PhoneInput';
 import { toast } from 'react-toastify';
+import { UserContext } from '../../../../Context/UserContext';
 
 const AddBeneficiaryModal = ({ open, handleClose, onSaveSuccess, beneficiaryToEdit }) => {
     const { t } = useTranslation();
     const [loading, setLoading] = useState(false);
     const [beneficiaryType, setBeneficiaryType] = useState('individual');
     const [phoneKey, setPhoneKey] = useState(0);
+    const { allowedCountries } = useContext(UserContext);
     const prefillPhoneRef = useRef('');
     const [formData, setFormData] = useState({
         first_name: '',
@@ -22,6 +24,7 @@ const AddBeneficiaryModal = ({ open, handleClose, onSaveSuccess, beneficiaryToEd
         country_iso_code: '',
         city: '',
         address: '',
+        zip_code: '',
         email: '',
         phone: ''
     });
@@ -30,7 +33,6 @@ const AddBeneficiaryModal = ({ open, handleClose, onSaveSuccess, beneficiaryToEd
         if (beneficiaryToEdit) {
             setBeneficiaryType(beneficiaryToEdit.beneficiary_type || 'individual');
             const iso = beneficiaryToEdit.country_iso_code || '';
-            // Pass raw phone (with dial code) so CountryCode can strip it itself
             const rawPhone = String(beneficiaryToEdit.phone || '');
             setFormData({
                 first_name: beneficiaryToEdit.first_name || '',
@@ -40,12 +42,11 @@ const AddBeneficiaryModal = ({ open, handleClose, onSaveSuccess, beneficiaryToEd
                 country_iso_code: iso,
                 city: beneficiaryToEdit.city || '',
                 address: beneficiaryToEdit.address || '',
+                zip_code: beneficiaryToEdit.zip_code || '',
                 email: beneficiaryToEdit.email || '',
                 phone: rawPhone
             });
-            // Store raw phone in ref so it survives PhoneInput's own setPhone('') on mount
             prefillPhoneRef.current = rawPhone;
-            // Force PhoneInput to remount so firstTime/number state resets cleanly
             setPhoneKey(prev => prev + 1);
         } else {
             setBeneficiaryType('individual');
@@ -57,6 +58,7 @@ const AddBeneficiaryModal = ({ open, handleClose, onSaveSuccess, beneficiaryToEd
                 country_iso_code: '',
                 city: '',
                 address: '',
+                zip_code: '',
                 email: '',
                 phone: ''
             });
@@ -64,7 +66,6 @@ const AddBeneficiaryModal = ({ open, handleClose, onSaveSuccess, beneficiaryToEd
             setPhoneKey(prev => prev + 1);
         }
     }, [beneficiaryToEdit, open]);
-
 
     const handleChange = (field, value) => {
         setFormData(prev => ({ ...prev, [field]: value }));
@@ -100,6 +101,8 @@ const AddBeneficiaryModal = ({ open, handleClose, onSaveSuccess, beneficiaryToEd
 
         setLoading(true);
 
+        const countryId = allowedCountries.find(c => c.country_iso_code === formData.country_iso_code)?._id;
+
         const payload = {
             beneficiary_type: beneficiaryType,
             first_name: beneficiaryType === 'individual' ? formData.first_name : '',
@@ -109,8 +112,10 @@ const AddBeneficiaryModal = ({ open, handleClose, onSaveSuccess, beneficiaryToEd
             country_iso_code: formData.country_iso_code,
             city: formData.city,
             address: formData.address,
+            zip_code: formData.zip_code,
             email: formData.email,
-            phone: formData.phone
+            phone: formData.phone,
+            country: countryId
         };
 
         try {
@@ -135,7 +140,8 @@ const AddBeneficiaryModal = ({ open, handleClose, onSaveSuccess, beneficiaryToEd
                 toast.success(t("Beneficiary created successfully"));
             }
 
-            if (onSaveSuccess) onSaveSuccess(res);
+            const createdOrUpdated = res?.data || res;
+            if (onSaveSuccess) onSaveSuccess(createdOrUpdated, !beneficiaryToEdit);
             handleClose();
         } catch (err) {
             console.error("Save beneficiary error:", err);
@@ -163,8 +169,6 @@ const AddBeneficiaryModal = ({ open, handleClose, onSaveSuccess, beneficiaryToEd
         },
     };
 
-    console.log(formData, "formData")
-
     return (
         <Modal open={open} onClose={handleClose} aria-labelledby="add-beneficiary-modal">
             <Box
@@ -183,7 +187,6 @@ const AddBeneficiaryModal = ({ open, handleClose, onSaveSuccess, beneficiaryToEd
                     overflow: "hidden"
                 }}
             >
-                {/* Header */}
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '20px 24px', borderBottom: '1px solid #F3F4F6' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                         <div style={{ width: '40px', height: '40px', borderRadius: '12px', background: '#EEF2FF', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#4F46E5' }}>
@@ -204,7 +207,6 @@ const AddBeneficiaryModal = ({ open, handleClose, onSaveSuccess, beneficiaryToEd
                 </div>
 
                 <form onSubmit={handleSubmit} style={{ padding: '24px' }}>
-                    {/* Type Selector */}
                     <div style={{ display: 'flex', gap: '8px', background: '#F3F4F6', padding: '4px', borderRadius: '12px', marginBottom: '20px', opacity: beneficiaryToEdit ? 0.6 : 1, pointerEvents: beneficiaryToEdit ? 'none' : 'auto' }}>
                         <button
                             type="button"
@@ -258,7 +260,6 @@ const AddBeneficiaryModal = ({ open, handleClose, onSaveSuccess, beneficiaryToEd
                         </button>
                     </div>
 
-                    {/* Form Fields */}
                     {beneficiaryType === 'individual' ? (
                         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px', marginBottom: '14px' }}>
                             <div>
@@ -304,14 +305,12 @@ const AddBeneficiaryModal = ({ open, handleClose, onSaveSuccess, beneficiaryToEd
                                 const cCode = selected?.alpha3 || selected?.country_iso_code || '';
                                 handleChange('country_name', cName);
                                 handleChange('country_iso_code', cCode);
-                                // reset city/phone if country changed
                                 handleChange('city', '');
                             }}
                         />
                     </div>
 
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px', marginBottom: '14px' }}>
-                        {/* CITY DROPDOWN */}
                         <div title={isCountryDisabled ? t("Please select country first") : ""}>
                             <label style={{ display: 'block', fontSize: '13px', fontWeight: 500, color: isCountryDisabled ? '#9CA3AF' : '#374151', marginBottom: '6px' }}>{t("City")}</label>
                             <CitiesDropDown
@@ -338,7 +337,6 @@ const AddBeneficiaryModal = ({ open, handleClose, onSaveSuccess, beneficiaryToEd
                         </div>
                     </div>
 
-                    {/* PHONE INPUT WITH HOVER TOOLTIP & DISABLED STATE */}
                     <div title={isCountryDisabled ? t("Please select country first") : ""} style={{ marginBottom: '14px' }}>
                         <label style={{ display: 'block', fontSize: '13px', fontWeight: 500, color: isCountryDisabled ? '#9CA3AF' : '#374151', marginBottom: '6px' }}>
                             {t("Phone Number")} {beneficiaryType === 'individual' ? '*' : ''}
@@ -358,18 +356,29 @@ const AddBeneficiaryModal = ({ open, handleClose, onSaveSuccess, beneficiaryToEd
                         />
                     </div>
 
-                    <div style={{ marginBottom: '20px' }}>
-                        <label style={{ display: 'block', fontSize: '13px', fontWeight: 500, color: '#374151', marginBottom: '6px' }}>{t("Address")}</label>
-                        <TextField
-                            fullWidth size="small" variant="outlined"
-                            placeholder={t("Street address, building, suite")}
-                            value={formData.address}
-                            onChange={(e) => handleChange('address', e.target.value)}
-                            sx={commonInputStyles}
-                        />
+                    <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '14px', marginBottom: '20px' }}>
+                        <div>
+                            <label style={{ display: 'block', fontSize: '13px', fontWeight: 500, color: '#374151', marginBottom: '6px' }}>{t("Address")}</label>
+                            <TextField
+                                fullWidth size="small" variant="outlined"
+                                placeholder={t("Street address, building, suite")}
+                                value={formData.address}
+                                onChange={(e) => handleChange('address', e.target.value)}
+                                sx={commonInputStyles}
+                            />
+                        </div>
+                        <div>
+                            <label style={{ display: 'block', fontSize: '13px', fontWeight: 500, color: '#374151', marginBottom: '6px' }}>{t("Zip Code")}</label>
+                            <TextField
+                                fullWidth size="small" variant="outlined"
+                                placeholder={t("e.g. 10001")}
+                                value={formData.zip_code}
+                                onChange={(e) => handleChange('zip_code', e.target.value)}
+                                sx={commonInputStyles}
+                            />
+                        </div>
                     </div>
 
-                    {/* Footer Actions */}
                     <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px', paddingTop: '16px', borderTop: '1px solid #F3F4F6' }}>
                         <button
                             type="button"
@@ -402,7 +411,7 @@ const AddBeneficiaryModal = ({ open, handleClose, onSaveSuccess, beneficiaryToEd
                                 transition: 'background 0.2s ease'
                             }}
                         >
-                            {loading ? t("Saving...") : beneficiaryToEdit ? t("Update Beneficiary") : t("Create Beneficiary")}
+                            {loading ? t("Saving...") : beneficiaryToEdit ? t("Update Beneficiary") : t("Next")}
                         </button>
                     </div>
                 </form>

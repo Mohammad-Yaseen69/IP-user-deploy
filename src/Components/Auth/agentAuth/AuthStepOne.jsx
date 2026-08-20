@@ -53,7 +53,7 @@ const AuthStepOne = ({ isEmail,
             <form onSubmit={onFormSubmit}>
                 <div >
 
-                    <h1>{t("Welcome Back Agent")}👋</h1>
+                    <h1>{t("Welcome Back Agent")}{t("👋")}</h1>
                     <p style={{
                         width: "100%"
                     }}>{t("Enter your phone and password ")} <br />
@@ -174,7 +174,7 @@ const AuthStepOne = ({ isEmail,
                 </div>
             </form>
         </div >
-    )
+    );
 }
 
 export default AuthStepOne

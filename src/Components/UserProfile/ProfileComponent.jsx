@@ -219,7 +219,7 @@ const ProfileComponent = () => {
                                 <div className={styles.qr_info}>
                                     <h5>{t("InstaPay ID:")}</h5>
                                     <div className={`${styles.qri_box} ${styles.qri_box_p}`}>
-                                        <span>INSTA-{userWallet?.wallet_id}</span>
+                                        <span>{t("INSTA-")}{userWallet?.wallet_id}</span>
                                         <img src={copy} alt="c" />
                                     </div>
                                     <div className={`${styles.qri_box} ${styles.qri_box_g}`}>
@@ -412,7 +412,7 @@ const ProfileComponent = () => {
                 </CardBody>
             </Card>
         </div>
-    )
+    );
 }
 
 export default ProfileComponent

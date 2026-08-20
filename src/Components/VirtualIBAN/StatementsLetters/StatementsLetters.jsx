@@ -45,7 +45,6 @@ const StatementsLetters = () => {
     // Fetch IBANs
     const { data: rawIbans = [] } = useVirtualIbans(userDetails?._id);
 
-    // Get the selected or first IBAN
     const selectedIban = useMemo(() => {
         if (!rawIbans.length) return null;
         return rawIbans.find((iban) => (iban?._id || iban?.id) === selectedAccount) || rawIbans[0];
@@ -53,7 +52,6 @@ const StatementsLetters = () => {
 
     const ibanId = selectedIban?._id || selectedIban?.id;
 
-    // Fetch full details
     const { data: ibanDetailData } = useVirtualIbanDetails(ibanId);
     const iban = useMemo(
         () => normalizeVirtualIban(ibanDetailData || selectedIban) || {},
@@ -223,7 +221,6 @@ const StatementsLetters = () => {
                             <span className={styles.sectionHeadingTitle}>{t("Documents & Statements")}</span>
                             <p className={styles.sectionHeadingSub}>{t("Choose official ownership confirmation letter or transaction activity statement.")}</p>
 
-                            {/* Section 1: IBAN Confirmation Letter */}
                             <div className={styles.docBlock}>
                                 <div className={styles.actionCard}>
                                     <div className={styles.iconCircleWrapper}>
@@ -373,7 +370,7 @@ const StatementsLetters = () => {
                                     </tr>
                                     <tr>
                                         <td className={styles.metaLabel}>{t("Account Type")}</td>
-                                        <td className={styles.metaValue}>E-money payment account (Virtual IBAN)</td>
+                                        <td className={styles.metaValue}>{t("E-money payment account (Virtual IBAN)")}</td>
                                     </tr>
                                     <tr>
                                         <td className={styles.metaLabel}>{t("Status")}</td>

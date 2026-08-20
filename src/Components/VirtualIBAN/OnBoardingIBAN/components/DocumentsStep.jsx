@@ -5,8 +5,6 @@ import { toast } from 'react-toastify'
 import styles from '../style/onboardingSteps.module.css'
 import SidebarProgress from './SidebarProgress'
 
-
-
 const DocumentsStep = ({ onNext, onBack, userType, data = {}, userDetails, companyDetails }) => {
     const { t } = useTranslation()
     const [files, setFiles] = useState(data.files || {})
@@ -65,7 +63,7 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {}, userDetails, compa
     const uploadedCount = Object.keys(files).length
     const progressPercent = Math.min(100, Math.round((uploadedCount / requiredDocKeys.length) * 100))
 
-    const renderUploadControl = (key, badgeClassName = styles.optional, badgeText = 'OPTIONAL') => {
+    const renderUploadControl = (key, badgeClassName = styles.optional, badgeText = t('OPTIONAL')) => {
         const selectedFile = files[key]
 
         return (
@@ -74,21 +72,21 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {}, userDetails, compa
                     <>
                         <span className={styles.provided}>{selectedFile.name}</span>
                         <button type="button" className={styles.uploadBtn} onClick={() => openFilePicker(key)}>
-                            <Upload size={10} /> Replace
+                            <Upload size={10} /> {t('Replace')}
                         </button>
                     </>
                 ) : isKybDone ? (
                     <>
-                        <span className={styles.optional} style={{ background: '#E0F2FE', color: '#0369A1', border: '1px solid #BAE6FD' }}>VERIFIED (KYB)</span>
+                        <span className={styles.optional} style={{ background: '#E0F2FE', color: '#0369A1', border: '1px solid #BAE6FD' }}>{t('VERIFIED (KYB)')}</span>
                         <button type="button" className={styles.uploadBtn} onClick={() => openFilePicker(key)}>
-                            <Upload size={10} /> Upload
+                            <Upload size={10} /> {t('Upload')}
                         </button>
                     </>
                 ) : (
                     <>
                         <span className={badgeClassName}>{badgeText}</span>
                         <button type="button" className={styles.uploadBtn} onClick={() => openFilePicker(key)}>
-                            <Upload size={10} /> Upload
+                            <Upload size={10} /> {t('Upload')}
                         </button>
                     </>
                 )}
@@ -139,11 +137,8 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {}, userDetails, compa
                             <div className={styles.progressCount}>{uploadedCount} / {requiredDocKeys.length}</div>
 
                             <div className={styles.progressContent}>
-                                <h4>Required documents provided</h4>
-                                <p>
-                                    Optional and not listed docs are listed below too. Upload them
-                                    whenever you have them ready.
-                                </p>
+                                <h4>{t('Required documents provided')}</h4>
+                                <p>{t('Optional and not listed docs are listed below too. Upload them whenever you have them ready.')}</p>
 
                                 <div className={styles.progressBar}>
                                     <div className={styles.progressFill} style={{ width: `${progressPercent}%` }}></div>
@@ -152,11 +147,10 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {}, userDetails, compa
                         </div>
                     </div>
 
-
                     <div className={styles.section}>
                         <div className={styles.sectionHeader}>
-                            <div className={styles.sectionNumber}>1</div>
-                            <h3>Company registration documents</h3>
+                            <div className={styles.sectionNumber}>{t('1')}</div>
+                            <h3>{t('Company registration documents')}</h3>
                         </div>
 
                         <div className={styles.documentList}>
@@ -164,7 +158,7 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {}, userDetails, compa
                                 <div className={styles.left}>
                                     <span className={styles.empty}></span>
                                     <span>
-                                        Recent commercial register extract or certificate of incorporation
+                                        {t('Recent commercial register extract or certificate of incorporation')}
                                     </span>
                                 </div>
 
@@ -174,7 +168,7 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {}, userDetails, compa
                             <div className={styles.documentRow}>
                                 <div className={styles.left}>
                                     <span className={styles.empty}></span>
-                                    <span>Company articles of association</span>
+                                    <span>{t('Company articles of association')}</span>
                                 </div>
 
                                 {renderUploadControl('articles_association', styles.required, 'REQUIRED')}
@@ -194,7 +188,7 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {}, userDetails, compa
                             <div className={styles.documentRow}>
                                 <div className={styles.left}>
                                     <span className={styles.empty}></span>
-                                    <span>Certificate of good standing</span>
+                                    <span>{t('Certificate of good standing')}</span>
                                 </div>
 
                                 {renderUploadControl('good_standing', styles.optional, 'OPTIONAL')}
@@ -202,21 +196,20 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {}, userDetails, compa
                         </div>
                     </div>
 
-
                     <div className={styles.section}>
                         <div className={styles.sectionHeader}>
-                            <div className={styles.sectionNumber}>2</div>
-                            <h3>Company proof of address</h3>
+                            <div className={styles.sectionNumber}>{t('2')}</div>
+                            <h3>{t('Company proof of address')}</h3>
                         </div>
 
-                        <p className={styles.subtitle}>Provide ONE of the following</p>
+                        <p className={styles.subtitle}>{t('Provide ONE of the following')}</p>
 
                         <div className={styles.documentList}>
                             <div className={styles.documentRow}>
                                 <div className={styles.left}>
                                     <span className={styles.empty}></span>
                                     <span>
-                                        Register extract showing the registered office address
+                                        {t('Register extract showing the registered office address')}
                                     </span>
                                 </div>
 
@@ -226,7 +219,7 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {}, userDetails, compa
                             <div className={styles.documentRow}>
                                 <div className={styles.left}>
                                     <span className={styles.empty}></span>
-                                    <span>Official certificate of domiciliation</span>
+                                    <span>{t('Official certificate of domiciliation')}</span>
                                 </div>
 
                                 {renderUploadControl('domiciliation_certificate', styles.oneof, 'ONE OF')}
@@ -235,7 +228,7 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {}, userDetails, compa
                             <div className={styles.documentRow}>
                                 <div className={styles.left}>
                                     <span className={styles.empty}></span>
-                                    <span>Professional lease agreement</span>
+                                    <span>{t('Professional lease agreement')}</span>
                                 </div>
 
                                 {renderUploadControl('lease_agreement', styles.oneof, 'ONE OF')}
@@ -245,8 +238,7 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {}, userDetails, compa
                                 <div className={styles.left}>
                                     <span className={styles.empty}></span>
                                     <span>
-                                        Utility bill under 3 months (electricity, water, gas, internet,
-                                        landline)
+                                        {t('Utility bill under 3 months (electricity, water, gas, internet, landline)')}
                                     </span>
                                 </div>
 
@@ -257,7 +249,7 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {}, userDetails, compa
                                 <div className={styles.left}>
                                     <span className={styles.empty}></span>
                                     <span>
-                                        Recent business bank statement showing company name and address
+                                        {t('Recent business bank statement showing company name and address')}
                                     </span>
                                 </div>
 
@@ -268,7 +260,7 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {}, userDetails, compa
                                 <div className={styles.left}>
                                     <span className={styles.empty}></span>
                                     <span>
-                                        Official letter from an administration or tax authority
+                                        {t('Official letter from an administration or tax authority')}
                                     </span>
                                 </div>
 
@@ -277,23 +269,21 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {}, userDetails, compa
                         </div>
                     </div>
 
-                    {/* ===================== Section 3 ===================== */}
-
                     <div className={styles.section}>
                         <div className={styles.sectionHeader}>
-                            <div className={styles.sectionNumber}>3</div>
-                            <h3>Ultimate Beneficial Owners (UBO)</h3>
+                            <div className={styles.sectionNumber}>{t('3')}</div>
+                            <h3>{t('Ultimate Beneficial Owners (UBO)')}</h3>
                         </div>
 
                         <p className={styles.subtitle}>
-                            For each UBO holding directly or indirectly 25% or more
+                            {t('For each UBO holding directly or indirectly 25% or more')}
                         </p>
 
                         <div className={styles.documentList}>
                             <div className={styles.documentRow}>
                                 <div className={styles.left}>
                                     <span className={styles.empty}></span>
-                                    <span>Shareholders register</span>
+                                    <span>{t('Shareholders register')}</span>
                                 </div>
 
                                 {renderUploadControl('shareholders_register', styles.required, 'REQUIRED')}
@@ -302,7 +292,7 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {}, userDetails, compa
                             <div className={styles.documentRow}>
                                 <div className={styles.left}>
                                     <span className={styles.empty}></span>
-                                    <span>Ownership structure chart</span>
+                                    <span>{t('Ownership structure chart')}</span>
                                 </div>
 
                                 {renderUploadControl('ownership_chart', styles.required, 'REQUIRED')}
@@ -311,7 +301,7 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {}, userDetails, compa
                             <div className={styles.documentRow}>
                                 <div className={styles.left}>
                                     <span className={styles.empty}></span>
-                                    <span>UBO declaration (including corporate UBO if applicable)</span>
+                                    <span>{t('UBO declaration (including corporate UBO if applicable)')}</span>
                                 </div>
 
                                 {renderUploadControl('ubo_declaration', styles.required, 'REQUIRED')}
@@ -320,7 +310,7 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {}, userDetails, compa
                             <div className={styles.documentRow}>
                                 <div className={styles.left}>
                                     <span className={styles.empty}></span>
-                                    <span>Valid passport / ID for each UBO</span>
+                                    <span>{t('Valid passport / ID for each UBO')}</span>
                                 </div>
 
                                 {renderUploadControl('ubo_passport', styles.required, 'REQUIRED')}
@@ -329,7 +319,7 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {}, userDetails, compa
                             <div className={styles.documentRow}>
                                 <div className={styles.left}>
                                     <span className={styles.empty}></span>
-                                    <span>Private proof of address under 3 months for each UBO</span>
+                                    <span>{t('Private proof of address under 3 months for each UBO')}</span>
                                 </div>
 
                                 {renderUploadControl('ubo_address_proof', styles.required, 'REQUIRED')}
@@ -342,7 +332,7 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {}, userDetails, compa
                         percent={80}
                         stepsLeft={1}
                         currentStepKey="documents"
-                        assistantMessage="Almost done! Upload your company docs and we'll move to the final review. Good quality scans speed up approval."
+                        assistantMessage={t("Almost done! Upload your company docs and we'll move to the final review. Good quality scans speed up approval.")}
                     />
                 </div>
 

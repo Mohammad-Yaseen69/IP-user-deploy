@@ -167,7 +167,7 @@ const StepFour = ({
                     <strong>
                       {data?.exchange_rate?.paypal?.fee?.currency}
                     </strong>{" "}
-                    {t("is not supported by Paypal,")} <strong>USD</strong>
+                    {t("is not supported by Paypal,")} <strong>{t("USD")}</strong>
                     {t("will be used as the default currency.")}
                   </span>
                 </div>
@@ -219,9 +219,7 @@ const StepFour = ({
                       )?.toLocaleString("en-US", {
                         minimumFractionDigits: 2,
                         maximumFractionDigits: 4,
-                      })}{" "}
-                      USD
-                    </strong>
+                      })}{" "}{t("USD")}</strong>
                   </div>
                   <div
                     style={{
@@ -260,9 +258,7 @@ const StepFour = ({
                       )?.toLocaleString("en-US", {
                         minimumFractionDigits: 2,
                         maximumFractionDigits: 2,
-                      })}{" "}
-                      USD
-                    </strong>
+                      })}{" "}{t("USD")}</strong>
                   </div>
                 </div>
               </>

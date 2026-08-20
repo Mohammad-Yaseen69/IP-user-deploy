@@ -105,7 +105,7 @@ const CryptoAmountNew = ({ setSubStep, amount, setAmount, cryptoCurrency }) => {
                     alignItems: "center",
                     width: "90%"
                 }} className="m_t_1_05">
-                    <span style={{ color: "#808080", fontWeight: 500 }}>Transaction Fee: 1.32 USD</span>
+                    <span style={{ color: "#808080", fontWeight: 500 }}>{t("Transaction Fee: 1.32 USD")}</span>
                 </div>
             </CardBody>
             <div style={{
@@ -141,7 +141,7 @@ const CryptoAmountNew = ({ setSubStep, amount, setAmount, cryptoCurrency }) => {
                 </Button>
             </div>
         </Card>
-    )
+    );
 }
 
 export default CryptoAmountNew;

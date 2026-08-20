@@ -710,8 +710,7 @@ const WalletFund = ({ setAction }) => {
                                                                     lineHeight: 1.5,
                                                                     letterSpacing: '-0.14px'
                                                                 }}>
-                                                                1.00 {wallet?.currency?.code}  = {Number(paypalFx?.exchange_rate)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 4 })} USD
-                                                            </strong>
+                                                                1.00 {wallet?.currency?.code}  = {Number(paypalFx?.exchange_rate)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 4 })}{t("USD")}</strong>
                                                         </div>
                                                         <div style={{
                                                             display: "flex",
@@ -737,8 +736,7 @@ const WalletFund = ({ setAction }) => {
                                                                 lineHeight: 1.7,
                                                                 letterSpacing: '-0.8px'
                                                             }}>
-                                                                {Number(paypalFx?.amount)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} USD
-                                                            </strong>
+                                                                {Number(paypalFx?.amount)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}{t("USD")}</strong>
                                                         </div>
                                                     </div>
                                                 </>
@@ -890,8 +888,7 @@ const WalletFund = ({ setAction }) => {
                     </div >
             }
         </>
-
-    )
+    );
 }
 
 export default WalletFund

@@ -36,7 +36,6 @@ const Stepone = ({ cardType, setCardType, userDetails, applePay, setApplePay, go
                 <p>{t("Choose the type of card that best suits your needs. Whether you want an instant Virtual Card for online payments or a Physical Card for everyday transactions, we’ve got you covered!")}</p>
             </div>
 
-
             <div className={styles.cardSelection}>
                 <div style={{ display: "flex", alignItems: "center", gap: "30px" }}>
                     <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
@@ -120,7 +119,7 @@ const Stepone = ({ cardType, setCardType, userDetails, applePay, setApplePay, go
                             <div>
                                 <img src={USD} alt="" />
                                 <p style={{ color: "#282B35" }}>{t("US Dollars")}</p>
-                                <p>USD</p>
+                                <p>{t("USD")}</p>
                             </div>
                             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="15" viewBox="0 0 14 15" fill="none">
                                 <path d="M11.6673 4.00781L5.25065 10.4245L2.33398 7.50781" stroke="#333333" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
@@ -130,7 +129,7 @@ const Stepone = ({ cardType, setCardType, userDetails, applePay, setApplePay, go
                             <div>
                                 <img src={Euro} alt="" />
                                 <p style={{ color: "#282B35" }}>{t("Euro")}</p>
-                                <p>EUR</p>
+                                <p>{t("EUR")}</p>
                             </div>
 
                             <p>{t("Coming Soon")}</p>
@@ -140,7 +139,7 @@ const Stepone = ({ cardType, setCardType, userDetails, applePay, setApplePay, go
                             <div>
                                 <img src={Gb} alt="" />
                                 <p style={{ color: "#282B35" }}>{t("British pound")}</p>
-                                <p>Gb</p>
+                                <p>{t("Gb")}</p>
                             </div>
 
                             <p>{t("Coming Soon")}</p>
@@ -217,7 +216,7 @@ const Stepone = ({ cardType, setCardType, userDetails, applePay, setApplePay, go
             </div>
 
         </div>
-    )
+    );
 }
 
 export default Stepone
