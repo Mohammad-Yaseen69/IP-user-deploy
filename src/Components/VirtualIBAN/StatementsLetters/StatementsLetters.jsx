@@ -1,5 +1,5 @@
-import React, { useContext, useMemo, useState } from 'react';
-import { Copy, Download, Share2, FileText, ChevronLeft, Eye, Loader, File } from 'react-feather';
+import { useContext, useMemo, useState } from 'react';
+import { Copy, Download, Share2, FileText, ChevronLeft, Eye, Loader, File, Globe } from 'react-feather';
 import styles from './StatementsLetters.module.css';
 import { useTranslation } from 'react-i18next';
 import useWindowWidth from '../../../utils/useWindowWidth';
@@ -8,6 +8,8 @@ import { UserContext } from '../../../Context/UserContext';
 import { useVirtualIbans, useVirtualIbanDetails } from '../../../hooks/useVirtualIban';
 import { normalizeVirtualIban } from '../utils/virtualIban';
 import generateIbanLetterPdf from './generateIbanLetterPdf';
+import generateSwiftLetterPdf from './generateSwiftLetterPdf';
+import SwiftCurrencyModal from './SwiftCurrencyModal';
 import StatementModal from '../StatementModal';
 import { toast } from 'react-toastify';
 
@@ -34,6 +36,11 @@ const StatementsLetters = () => {
     const [downloading, setDownloading] = useState(false);
     const [previewing, setPreviewing] = useState(false);
     const [showStatementModal, setShowStatementModal] = useState(false);
+
+    // SWIFT Letter state
+    const [showSwiftModal, setShowSwiftModal] = useState(false);
+    const [swiftActionType, setSwiftActionType] = useState('preview');
+    const [swiftProcessing, setSwiftProcessing] = useState(false);
 
     // Fetch IBANs
     const { data: rawIbans = [] } = useVirtualIbans(userDetails?._id);
@@ -88,7 +95,7 @@ const StatementsLetters = () => {
     const handleShare = () => {
         const virtualIbanId = iban?.virtualIbanId || iban?._id || iban?.id || '';
         const base_url = window.location.origin || 'https://my.insta-pay.ch';
-        const shareUrl = `${base_url}/validate-iban/${virtualIbanId}`;
+        const shareUrl = `${base_url}/v/${virtualIbanId}`;
         if (navigator.share) {
             navigator.share({
                 title: t('IBAN Confirmation Letter'),
@@ -97,6 +104,44 @@ const StatementsLetters = () => {
             }).catch(() => handleCopy(shareUrl));
         } else {
             handleCopy(shareUrl);
+        }
+    };
+
+    const handleOpenSwiftModal = (actionType) => {
+        setSwiftActionType(actionType);
+        setShowSwiftModal(true);
+    };
+
+    const handleSwiftActionConfirm = async (currency, actionType) => {
+        setSwiftProcessing(true);
+        try {
+            if (actionType === 'preview') {
+                await generateSwiftLetterPdf(iban, userDetails, { isPreview: true, currency });
+                setShowSwiftModal(false);
+            } else if (actionType === 'download') {
+                await generateSwiftLetterPdf(iban, userDetails, { isPreview: false, currency });
+                toast.success(t('SWIFT confirmation letter downloaded successfully!'));
+                setShowSwiftModal(false);
+            } else if (actionType === 'share') {
+                const virtualIbanId = iban?.virtualIbanId || iban?._id || iban?.id || '';
+                const base_url = window.location.origin || 'https://my.insta-pay.ch';
+                const shareUrl = `${base_url}/v/${virtualIbanId}?type=swift&curr=${currency}`;
+                if (navigator.share) {
+                    navigator.share({
+                        title: t('SWIFT Confirmation Letter'),
+                        text: t('Official InstaPay International / SWIFT Payment Instructions'),
+                        url: shareUrl,
+                    }).catch(() => handleCopy(shareUrl));
+                } else {
+                    handleCopy(shareUrl);
+                }
+                setShowSwiftModal(false);
+            }
+        } catch (error) {
+            console.error('SWIFT letter action failed:', error);
+            toast.error(t('Failed to process SWIFT letter. Please try again.'));
+        } finally {
+            setSwiftProcessing(false);
         }
     };
 
@@ -222,7 +267,47 @@ const StatementsLetters = () => {
 
                             <div className={styles.divider} />
 
-                            {/* Section 2: Account Statement (Transactions) */}
+                            {/* Section 2: SWIFT Confirmation Letter */}
+                            <div className={styles.docBlock}>
+                                <div className={styles.actionCard}>
+                                    <div className={styles.iconCircleWrapperPurple}>
+                                        <Globe size={20} style={{ color: '#fff' }} />
+                                    </div>
+                                    <div className={styles.actionContent}>
+                                        <h3 className={styles.actionTitle}>{t("International / SWIFT Confirmation Letter")}</h3>
+                                        <p className={styles.actionDesc}>
+                                            {t("Official bank document with international receiving instructions, correspondent bank details, and reference code (USD / EUR).")}
+                                        </p>
+                                    </div>
+                                </div>
+                                <div className={styles.btnGroup}>
+                                    <button
+                                        className={styles.previewBtn}
+                                        onClick={() => handleOpenSwiftModal('preview')}
+                                        disabled={swiftProcessing}
+                                    >
+                                        <Eye size={14} /> {t("Preview Letter")}
+                                    </button>
+                                    <button
+                                        className={styles.downloadBtn}
+                                        onClick={() => handleOpenSwiftModal('download')}
+                                        disabled={swiftProcessing}
+                                    >
+                                        <Download size={14} /> {t("Download Confirmation Letter")}
+                                    </button>
+                                    <button
+                                        className={styles.shareBtn}
+                                        onClick={() => handleOpenSwiftModal('share')}
+                                        disabled={swiftProcessing}
+                                    >
+                                        <Share2 size={14} /> {t("Share")}
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div className={styles.divider} />
+
+                            {/* Section 3: Account Statement (Transactions) */}
                             <div className={styles.docBlock}>
                                 <div className={styles.actionCard}>
                                     <div className={styles.iconCircleWrapperGreen}>
@@ -314,6 +399,13 @@ const StatementsLetters = () => {
                 isOpen={showStatementModal}
                 toggle={() => setShowStatementModal(false)}
                 selectedIban={iban}
+            />
+            <SwiftCurrencyModal
+                isOpen={showSwiftModal}
+                toggle={() => setShowSwiftModal(false)}
+                actionType={swiftActionType}
+                onConfirm={handleSwiftActionConfirm}
+                isProcessing={swiftProcessing}
             />
         </div>
     );
