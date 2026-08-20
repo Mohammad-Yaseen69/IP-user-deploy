@@ -1266,9 +1266,7 @@ const WalletFundsFlow = ({ setAction }) => {
                             )?.toLocaleString("en-US", {
                               minimumFractionDigits: 2,
                               maximumFractionDigits: 4,
-                            })}{" "}
-                            USD
-                          </strong>
+                            })}{" "}{t("USD")}</strong>
                         </div>
                         <div
                           style={{
@@ -1308,9 +1306,7 @@ const WalletFundsFlow = ({ setAction }) => {
                                 minimumFractionDigits: 2,
                                 maximumFractionDigits: 2,
                               },
-                            )}{" "}
-                            USD
-                          </strong>
+                            )}{" "}{t("USD")}</strong>
                         </div>
                       </div>
                     </>

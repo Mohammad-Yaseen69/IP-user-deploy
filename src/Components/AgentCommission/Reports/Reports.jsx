@@ -196,9 +196,7 @@ const SubAgentRanking = () => {
                             <tr key={i}>
                                 <td>
                                     <div className={styles.agentCell}>
-                                        <div className={`${styles.agentAvatar} ${agent.avatarCls}`}>
-                                            SC
-                                        </div>
+                                        <div className={`${styles.agentAvatar} ${agent.avatarCls}`}>{t("SC")}</div>
                                         <span>{agent.name}</span>
                                     </div>
                                 </td>

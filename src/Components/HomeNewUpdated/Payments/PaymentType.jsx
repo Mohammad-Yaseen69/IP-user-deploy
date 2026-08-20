@@ -93,12 +93,12 @@ const PaymentType = ({ paymentType, setPaymentType, setStep, step }) => {
                         }
                     }}
                 >
-                    <span>Confirm</span>
+                    <span>{t("Confirm")}</span>
                     <ChevronRight size={20} />
                 </Button>
             </CardBody>
         </Card>
-    )
+    );
 }
 
 export default PaymentType

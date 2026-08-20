@@ -35,7 +35,7 @@ const WalletsMobile = ({ setCurrentWallet }) => {
                                     ?
                                     <div className="d-flex justify-content-center">
                                 <div className="spinner-border" color='primary' role="status">
-                                            <span className="sr-only">Loading...</span>
+                                            <span className="sr-only">{t("Loading...")}</span>
                                         </div>
                                     </div>
                                     :
@@ -95,7 +95,7 @@ const WalletsMobile = ({ setCurrentWallet }) => {
                 <Link to={"/referrals"}>{t("Referrals")} {">"}</Link>
             </div>
         </div>
-    )
+    );
 }
 
 export default WalletsMobile

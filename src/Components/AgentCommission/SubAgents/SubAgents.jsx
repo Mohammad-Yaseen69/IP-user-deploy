@@ -60,50 +60,50 @@ const SubAgents = () => {
                     <div className={styles.statCard}>
                         <div className={styles.cardHeader}>
                             <div className={`${styles.avatar} ${styles.greenAvatar}`}>
-                                <span>BT</span>
+                                <span>{t("BT")}</span>
                             </div>
 
                             <div className={styles.cardTitle}>
-                                <h4>BrightSpark Trading</h4>
-                                <span>San Pedro, CA</span>
+                                <h4>{t("BrightSpark Trading")}</h4>
+                                <span>{t("San Pedro, CA")}</span>
                             </div>
 
                             <span className={`${styles.statusBadge} ${styles.active}`}>
-                                Active
+                                {t("Active")}
                             </span>
                         </div>
 
                         <div className={styles.cardRows}>
                             <div className={styles.infoRow}>
-                                <span>Type</span>
+                                <span>{t("Type")}</span>
                                 <span className={`${styles.typeBadge} ${styles.private}`}>
-                                    Private
+                                    {t("Private")}
                                 </span>
                             </div>
 
                             <div className={styles.infoRow}>
-                                <span>KYC/KYB</span>
+                                <span>{t("KYC/KYB")}</span>
                                 <span className={`${styles.kycBadge} ${styles.verified}`}>
                                     <Check size={10} />
-                                    Verified
+                                    {t("Verified")}
                                 </span>
                             </div>
 
                             <div className={styles.infoRow}>
-                                <span>Leads + active</span>
+                                <span>{t("Leads + active")}</span>
                                 <strong>14 - 9</strong>
                             </div>
 
                             <div className={styles.infoRow}>
-                                <span>Commission split</span>
+                                <span>{t("Commission split")}</span>
                                 <strong>40%</strong>
                             </div>
                         </div>
 
                         <div className={styles.cardActions}>
-                            <button className={styles.lightButton}>Assign leads</button>
-                            <button className={styles.lightButton}>Payouts</button>
-                            <button className={styles.dangerButton}>Disable</button>
+                            <button className={styles.lightButton}>{t("Assign leads")}</button>
+                            <button className={styles.lightButton}>{t("Payouts")}</button>
+                            <button className={styles.dangerButton}>{t("Disable")}</button>
                         </div>
                     </div>
 
@@ -111,50 +111,50 @@ const SubAgents = () => {
                     <div className={styles.statCard}>
                         <div className={styles.cardHeader}>
                             <div className={`${styles.avatar} ${styles.purpleAvatar}`}>
-                                <span>TB</span>
+                                <span>{t("TB")}</span>
                             </div>
 
                             <div className={styles.cardTitle}>
-                                <h4>TradeBridge Ltd</h4>
-                                <span>Accra, GH</span>
+                                <h4>{t("TradeBridge Ltd")}</h4>
+                                <span>{t("Accra, GH")}</span>
                             </div>
 
                             <span className={`${styles.statusBadge} ${styles.active}`}>
-                                Active
+                                {t("Active")}
                             </span>
                         </div>
 
                         <div className={styles.cardRows}>
                             <div className={styles.infoRow}>
-                                <span>Type</span>
+                                <span>{t("Type")}</span>
                                 <span className={`${styles.typeBadge} ${styles.corporate}`}>
-                                    Corporate
+                                    {t("Corporate")}
                                 </span>
                             </div>
 
                             <div className={styles.infoRow}>
-                                <span>KYC/KYB</span>
+                                <span>{t("KYC/KYB")}</span>
                                 <span className={`${styles.kycBadge} ${styles.verified}`}>
                                     <Check size={10} />
-                                    KYC verified
+                                    {t("KYC verified")}
                                 </span>
                             </div>
 
                             <div className={styles.infoRow}>
-                                <span>Leads + active</span>
+                                <span>{t("Leads + active")}</span>
                                 <strong>22 - 11</strong>
                             </div>
 
                             <div className={styles.infoRow}>
-                                <span>Commission split</span>
+                                <span>{t("Commission split")}</span>
                                 <strong>55%</strong>
                             </div>
                         </div>
 
                         <div className={styles.cardActions}>
-                            <button className={styles.lightButton}>Assign leads</button>
-                            <button className={styles.lightButton}>Payouts</button>
-                            <button className={styles.dangerButton}>Disable</button>
+                            <button className={styles.lightButton}>{t("Assign leads")}</button>
+                            <button className={styles.lightButton}>{t("Payouts")}</button>
+                            <button className={styles.dangerButton}>{t("Disable")}</button>
                         </div>
                     </div>
 
@@ -162,50 +162,50 @@ const SubAgents = () => {
                     <div className={styles.statCard}>
                         <div className={styles.cardHeader}>
                             <div className={`${styles.avatar} ${styles.blueAvatar}`}>
-                                <span>AN</span>
+                                <span>{t("AN")}</span>
                             </div>
 
                             <div className={styles.cardTitle}>
-                                <h4>Akira Ndaye</h4>
-                                <span>Dakar, SN</span>
+                                <h4>{t("Akira Ndaye")}</h4>
+                                <span>{t("Dakar, SN")}</span>
                             </div>
 
                             <span className={`${styles.statusBadge} ${styles.suspended}`}>
-                                Suspended
+                                {t("Suspended")}
                             </span>
                         </div>
 
                         <div className={styles.cardRows}>
                             <div className={styles.infoRow}>
-                                <span>Type</span>
+                                <span>{t("Type")}</span>
                                 <span className={`${styles.typeBadge} ${styles.private}`}>
-                                    Private
+                                    {t("Private")}
                                 </span>
                             </div>
 
                             <div className={styles.infoRow}>
-                                <span>KYC/KYB</span>
+                                <span>{t("KYC/KYB")}</span>
                                 <span className={`${styles.kycBadge} ${styles.verified}`}>
                                     <Check size={10} />
-                                    Verified
+                                    {t("Verified")}
                                 </span>
                             </div>
 
                             <div className={styles.infoRow}>
-                                <span>Leads + active</span>
+                                <span>{t("Leads + active")}</span>
                                 <strong>8 - 5</strong>
                             </div>
 
                             <div className={styles.infoRow}>
-                                <span>Commission split</span>
+                                <span>{t("Commission split")}</span>
                                 <strong>35%</strong>
                             </div>
                         </div>
 
                         <div className={styles.cardActions}>
-                            <button className={styles.lightButton}>Assign leads</button>
-                            <button className={styles.lightButton}>Payouts</button>
-                            <button className={styles.enableButton}>Enable</button>
+                            <button className={styles.lightButton}>{t("Assign leads")}</button>
+                            <button className={styles.lightButton}>{t("Payouts")}</button>
+                            <button className={styles.enableButton}>{t("Enable")}</button>
                         </div>
                     </div>
                 </div>

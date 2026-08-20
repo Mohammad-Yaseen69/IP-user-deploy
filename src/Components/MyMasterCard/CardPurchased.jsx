@@ -846,7 +846,7 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
                             </svg>
                             <div className={styles.top}>
                                 <p>{t('Card Balance')}</p>
-                                <span>•• {currentCardDetails?.card_number?.slice(-4)}</span>
+                                <span>{t("••")}{currentCardDetails?.card_number?.slice(-4)}</span>
                             </div>
 
                             <div className={styles.bottom}>
@@ -1087,9 +1087,8 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
 
                 </div>}
 
-
             <Modal isOpen={showOtp} toggle={() => setShowOtp(!showOtp)}>
-                <ModalHeader toggle={() => setShowOtp(!showOtp)}>Confirm</ModalHeader>
+                <ModalHeader toggle={() => setShowOtp(!showOtp)}>{t("Confirm")}</ModalHeader>
                 <ModalBody>
                     <OTPConfirmation type={userDetails?.account_type === "individual" ? "email" : "phone"} callback={verifyOTP} setterValue={true} hideOtp={() => setShowOtp(false)} processing={isSaving} resendHandler={sendOtp} authType={codeType} setAuthType={setCodeType} showAuthToggle={false} hideTfaSwitch={true} otpTypeOnProfile={otpType} />
                 </ModalBody>
@@ -1171,8 +1170,8 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
                                 value={fileType}
                                 onChange={(e) => setFileType(e.target.value)}
                             >
-                                <option value="pdf">PDF</option>
-                                <option value="docx">DOCX</option>
+                                <option value="pdf">{t("PDF")}</option>
+                                <option value="docx">{t("DOCX")}</option>
                             </select>
                         </div>
                     </ModalBody>

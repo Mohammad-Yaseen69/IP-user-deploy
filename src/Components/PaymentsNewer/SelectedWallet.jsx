@@ -34,11 +34,11 @@ const SelectedWallet = ({ wallet, setSubStep, step = 1 }) => {
                 }}>{wallet?.first_name?.[0] || wallet?.company_name?.[0]}</div>
                 <div>
                     <p style={{ fontWeight: "600", marginBottom: "-6px", fontSize: "1rem" }}>{`${wallet?.first_name || wallet?.company_name?.[0]} ${wallet?.last_name}`}</p>
-                    <span style={{ fontWeight: 500, color: "rgba(0,0,0,.36)", fontSize: ".6rem" }}>INSTA-{wallet?.wallet_id}</span>
+                    <span style={{ fontWeight: 500, color: "rgba(0,0,0,.36)", fontSize: ".6rem" }}>{t("INSTA-")}{wallet?.wallet_id}</span>
                 </div>
             </div>
         </div>
-    )
+    );
 }
 
 export default SelectedWallet;
