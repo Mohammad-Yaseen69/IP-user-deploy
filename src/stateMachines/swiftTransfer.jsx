@@ -142,8 +142,7 @@ export const getDisabledState = (stepName, data = {}) => {
             return false
         }
         case STEPS.PURPOSE: {
-            const desc = data.description || data.purpose
-            return !hasValue(data.purpose) || !isValidDescription(desc)
+            return !hasValue(data.purpose) || !isValidDescription(data.description)
         }
         case STEPS.REVIEW:
             return !data.confirmedDetails

@@ -486,8 +486,7 @@ const AddBeneficiaryStep = ({ amount, currencyCode, form, setForm }) => {
 
 const PurposeStep = ({ amount, currencyCode, purpose, setPurpose, description, setDescription, additionalInfo, setAdditionalInfo }) => {
     const { t } = useTranslation()
-    const currentDesc = description || purpose
-    const isDescValid = isValidDescription(currentDesc)
+    const descError = description && !isValidDescription(description) ? t("5–34 characters; letters, digits, space, comma, dot, hyphen only") : ""
 
     return (
         <div className={styles.purposeStep}>
@@ -501,10 +500,7 @@ const PurposeStep = ({ amount, currencyCode, purpose, setPurpose, description, s
             <label className={styles.field}>
                 <span>{t("Purpose category")}</span>
                 <div className={styles.selectWrap}>
-                    <select value={purpose} onChange={(e) => {
-                        setPurpose(e.target.value)
-                        if (!description) setDescription(e.target.value)
-                    }}>
+                    <select value={purpose} onChange={(e) => setPurpose(e.target.value)}>
                         {PURPOSE_OPTIONS.map((item) => (
                             <option key={item} value={item}>
                                 {t(item)}
@@ -517,10 +513,11 @@ const PurposeStep = ({ amount, currencyCode, purpose, setPurpose, description, s
 
             <TextField
                 label={t("Description / Remittance Reference *")}
-                value={description || purpose}
+                value={description}
                 onChange={(v) => setDescription(v)}
-                hint={!isDescValid ? t("5–34 characters; letters, digits, space, comma, dot, hyphen only") : ""}
-                error={!isDescValid}
+                placeholder={t("e.g. Invoice payment, consultant fees, trade")}
+                hint={!descError ? t("5–34 characters; letters, digits, space, comma, dot, hyphen only") : ""}
+                error={descError}
             />
 
             <TextField
@@ -1012,7 +1009,7 @@ const SwiftTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, 
         iban_id: getVirtualIbanId(selectedIban),
         beneficiary_id: getBeneficiaryId(selectedBeneficiary),
         token: quoteToken,
-        description: (description || purpose).trim(),
+        description: (description || "").trim(),
         purpose: getPurposeCode(purpose),
         additionalInformation: additionalInfo || undefined,
     })
@@ -1100,7 +1097,7 @@ const SwiftTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, 
         }
 
         if (currentStep === STEPS.PURPOSE) {
-            const currentDesc = (description || purpose).trim()
+            const currentDesc = (description || "").trim()
             if (!isValidDescription(currentDesc)) {
                 toast.error(t("Description must be 5–34 characters and contain only letters, numbers, spaces, commas, periods, and hyphens."))
                 return
