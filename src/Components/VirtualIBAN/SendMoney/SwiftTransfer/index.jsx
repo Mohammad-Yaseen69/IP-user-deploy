@@ -220,12 +220,17 @@ const SwiftAmountStep = ({ amount, setAmount, availableBalance, currencyCode, so
 
 const MissingSwiftCodeBanner = ({ beneficiary, authHeader, onSwiftCodeSaved }) => {
     const { t } = useTranslation()
-    const [bic, setBic] = useState("")
+    const rawBic = getRawSwiftCode(beneficiary)
+    const [bic, setBic] = useState(rawBic || "")
     const [saving, setSaving] = useState(false)
 
+    useEffect(() => {
+        setBic(getRawSwiftCode(beneficiary) || "")
+    }, [beneficiary])
+
     const bicClean = bic.trim().toUpperCase()
-    const bicValid = bicClean.length === 8 || bicClean.length === 11
-    const bicError = bicClean.length > 0 && !bicValid ? t("BIC must be 8 or 11 characters") : ""
+    const bicValid = isValidBic(bicClean)
+    const bicError = bicClean.length > 0 && !bicValid ? t("Valid 8 or 11 character BIC / SWIFT code is required") : ""
 
     const handleSave = async () => {
         if (!bicValid) return
@@ -233,10 +238,10 @@ const MissingSwiftCodeBanner = ({ beneficiary, authHeader, onSwiftCodeSaved }) =
         try {
             const { encryptData } = await import("../../../../Helper/EssentilaMethods/Encryption")
             const bankDetails = Array.isArray(beneficiary?.bank_details) && beneficiary.bank_details.length > 0
-                ? beneficiary.bank_details.map((bd, i) => i === 0 ? { ...bd, swift_code: bicClean } : bd)
-                : [{ swift_code: bicClean }]
+                ? beneficiary.bank_details.map((bd, i) => i === 0 ? { ...bd, swift_code: bicClean, bic: bicClean } : bd)
+                : [{ swift_code: bicClean, bic: bicClean }]
 
-            const payload = { ...beneficiary, bank_details: bankDetails }
+            const payload = { ...beneficiary, swift_code: bicClean, bic: bicClean, bank_details: bankDetails }
             const encrypted = encryptData(payload)
 
             await axios.put(
@@ -264,8 +269,8 @@ const MissingSwiftCodeBanner = ({ beneficiary, authHeader, onSwiftCodeSaved }) =
             <div className={styles.missingBicHeader}>
                 <span className={styles.missingBicIcon}>⚠</span>
                 <div>
-                    <strong>{t("BIC / SWIFT code missing")}</strong>
-                    <p>{t("{{name}} doesn't have a BIC on file. Enter it below to continue.", { name: getBeneficiaryName(beneficiary) })}</p>
+                    <strong>{t("Valid 8 or 11 character BIC / SWIFT code is required")}</strong>
+                    <p>{t("{{name}} has an invalid or missing BIC / SWIFT code. Enter a valid 8 or 11 character code below to continue.", { name: getBeneficiaryName(beneficiary) })}</p>
                 </div>
             </div>
             <div className={styles.missingBicRow}>
@@ -987,8 +992,6 @@ const SwiftTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, 
         if (currentStep === STEPS.ADD_BENEFICIARY) {
             const nextBeneficiary = buildBeneficiaryFromForm(beneficiaryForm)
             setSelectedBeneficiary(nextBeneficiary)
-            // if (beneficiaryForm.saveBeneficiary) {
-            // }
             setCurrentStep(STEPS.PURPOSE)
             return
         }

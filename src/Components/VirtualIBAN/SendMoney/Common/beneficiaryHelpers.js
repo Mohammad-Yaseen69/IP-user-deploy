@@ -1,3 +1,5 @@
+import { isValidBic } from "../../utils/swiftValidation"
+
 export const getBeneficiaryName = (b) => {
     const first = b?.first_name
     const last = b?.last_name
@@ -37,7 +39,7 @@ export const getRawSwiftCode = (b) => {
     return String(direct).trim()
 }
 
-export const hasBeneficiarySwiftCode = (b) => getRawSwiftCode(b).length > 0
+export const hasBeneficiarySwiftCode = (b) => isValidBic(getRawSwiftCode(b))
 
 export const maskIban = (iban) => {
     if (!iban) return "-"
