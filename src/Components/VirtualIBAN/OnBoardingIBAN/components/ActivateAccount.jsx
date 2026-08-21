@@ -55,6 +55,9 @@ const ActivateAccount = ({
   const [loadingRates, setLoadingRates] = useState(false);
 
   useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
     getUserWallets();
   }, []);
 
@@ -138,7 +141,6 @@ const ActivateAccount = ({
           alignItems: "start",
         }}
       >
-        {/* Left Side: Header, Payment Method, Wallet Selection */}
         <div className={styles.mainArea}>
           <div className={styles.header}>
             <div className={styles.headerTitle}>
@@ -467,7 +469,6 @@ const ActivateAccount = ({
           </div>
         </div>
 
-        {/* Right Side: Order Summary & Payment Card */}
       </div>
 
       <div className={styles.navigationFooter}>

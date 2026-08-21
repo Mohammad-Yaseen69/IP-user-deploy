@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { ArrowLeft, ArrowRight, Upload } from 'react-feather'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
@@ -9,6 +9,12 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {}, userDetails, compa
     const { t } = useTranslation()
     const [files, setFiles] = useState(data.files || {})
     const inputRefs = useRef({})
+
+    useEffect(() => {
+        window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+        document.body.scrollTop = 0;
+        document.documentElement.scrollTop = 0;
+    }, []);
 
     const kybStatus = userDetails?.company?.kyb_status
     const isKybDone = ['approved', 'verified'].includes(kybStatus)
@@ -141,7 +147,6 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {}, userDetails, compa
                         </div>
                     </div>
 
-
                     <div className={styles.section}>
                         <div className={styles.sectionHeader}>
                             <div className={styles.sectionNumber}>{t('1')}</div>
@@ -190,7 +195,6 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {}, userDetails, compa
                             </div>
                         </div>
                     </div>
-
 
                     <div className={styles.section}>
                         <div className={styles.sectionHeader}>
@@ -264,7 +268,6 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {}, userDetails, compa
                             </div>
                         </div>
                     </div>
-
 
                     <div className={styles.section}>
                         <div className={styles.sectionHeader}>

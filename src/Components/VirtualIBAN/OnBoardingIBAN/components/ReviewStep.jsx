@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { ArrowLeft, FileText } from 'react-feather'
 import { useTranslation } from 'react-i18next'
 import styles from '../style/onboardingSteps.module.css'
@@ -26,6 +26,12 @@ const ReviewStep = ({ onSubmit, onBack, allData = {}, onNext, userType }) => {
     const { t } = useTranslation()
     const [agreed, setAgreed] = useState(false)
     const [submitting, setSubmitting] = useState(false)
+
+    useEffect(() => {
+        window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+        document.body.scrollTop = 0;
+        document.documentElement.scrollTop = 0;
+    }, []);
 
     const company = allData.company || allData.companyDetails || {}
     const activity = allData.activity || {}
@@ -106,7 +112,6 @@ const ReviewStep = ({ onSubmit, onBack, allData = {}, onNext, userType }) => {
             <div className={styles.mainArea}>
                 <div className={styles.summaryWrapper} style={{ width: "100%" }}>
 
-                    {/* COMPANY DETAILS CARD */}
                     <div className={styles.summaryCard}>
                         <div className={styles.cardHeader}>
                             <h4>{t("Company details")}</h4>
@@ -182,7 +187,6 @@ const ReviewStep = ({ onSubmit, onBack, allData = {}, onNext, userType }) => {
                         </div>
                     </div>
 
-                    {/* ACTIVITY & INTENDED USE CARD */}
                     <div className={styles.summaryCard}>
                         <div className={styles.cardHeader}>
                             <h4>{t("Activity & intended use")}</h4>
@@ -252,21 +256,35 @@ const ReviewStep = ({ onSubmit, onBack, allData = {}, onNext, userType }) => {
                             {activity.averageTransaction && (
                                 <div className={styles.item}>
                                     <label>{t("Average transaction")}</label>
-                                    <span>{formatVal(activity.averageTransaction)}</span>
+                                    <span>{formatVal(activity.averageTransaction)} EUR</span>
                                 </div>
                             )}
 
                             {activity.maximumTransaction && (
                                 <div className={styles.item}>
                                     <label>{t("Maximum transaction")}</label>
-                                    <span>{formatVal(activity.maximumTransaction)}</span>
+                                    <span>{formatVal(activity.maximumTransaction)} EUR</span>
                                 </div>
                             )}
 
                             {activity.averageBalance && (
                                 <div className={styles.item}>
                                     <label>{t("Average balance")}</label>
-                                    <span>{formatVal(activity.averageBalance)}</span>
+                                    <span>{formatVal(activity.averageBalance)} EUR</span>
+                                </div>
+                            )}
+
+                            {activity.incomingPayments && (
+                                <div className={styles.item}>
+                                    <label>{t("Incoming payments / month")}</label>
+                                    <span>{formatVal(activity.incomingPayments)} EUR</span>
+                                </div>
+                            )}
+
+                            {activity.outgoingPayments && (
+                                <div className={styles.item}>
+                                    <label>{t("Outgoing payments / month")}</label>
+                                    <span>{formatVal(activity.outgoingPayments)} EUR</span>
                                 </div>
                             )}
 

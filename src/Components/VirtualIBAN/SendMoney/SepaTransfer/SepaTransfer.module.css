@@ -611,10 +611,22 @@
     font-weight: 500;
 }
 
+.field input.fieldError {
+    border-color: #f87171;
+    background: #fff5f5;
+}
+
 .field small {
     color: #047857;
     font-family: Inter, sans-serif;
     font-size: 14px;
+    font-weight: 500;
+}
+
+.fieldErrorText {
+    color: #dc2626;
+    font-family: Inter, sans-serif;
+    font-size: 12px;
     font-weight: 500;
 }
 

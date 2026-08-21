@@ -10,7 +10,6 @@ import UK_Image from "../files/images/UK.svg"
 import styles from "../styles/Balanceheader.module.css"
 import { getVirtualIbanCountry, normalizeVirtualIban } from "../utils/virtualIban"
 
-
 const formatAmount = (amount, currency) => {
   const value = Number(amount || 0)
   return value.toLocaleString("en-US", {
@@ -100,9 +99,7 @@ const BalanceHeader = ({ iban, isLoading, setActiveTab, onShowDetails }) => {
           <div className={styles.balanceSection}>
             <div>
               <h1 className={styles.balance}>{canViewBalance ? formatAmount(currentBalance, currency) : "****"}</h1>
-              {/* <Eye color="#5926F0" size={15} /> */}
             </div>
-            {/* <span className={styles.growth}><ArrowUpRight size={15} /> 0.00%</span> */}
           </div>
 
           {

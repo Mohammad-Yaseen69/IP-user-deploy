@@ -2,14 +2,14 @@ import { CardBody, CardHeader, Form, FormGroup, Input, Label } from "reactstrap"
 import { countries } from "country-list-json";
 // import PhoneInput from 'react-phone-input-2'
 import 'react-phone-input-2/lib/style.css'
-import { useContext, useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { UserContext } from "../../Context/UserContext";
 import { useLocation, useNavigate } from "react-router";
 import CountryDropDown from "../AddBeneficiary/CountryDropDown";
 import SuccessModal from "../AddBeneficiary/SuccessModal";
 import CitiesDropDown from "../CitiesDropDown";
 import { useTranslation } from "react-i18next";
-import { bankExtrasInitial, beneficiaryInitialFormData, BeneficiaryRelation, friendsAndFamily, gendersData, idTypeData, occupations, BUSINESS_RELATIONSHIPS } from "../../utils/Data";
+import { bankExtrasInitial, beneficiaryInitialFormData, BeneficiaryRelation, friendsAndFamily, gendersData, idTypeData, occupations, BUSINESS_RELATIONSHIPS, basicExtrasInitial } from "../../utils/Data";
 import NestedDropdown from "../NestedDropdown";
 import InstaPayLoader from "../Loader";
 import { service_name_formatter } from "../TransactionsNewApi/TransactionItem";
@@ -272,7 +272,7 @@ const EditBeneficiary = () => {
         } else {
             setCompletedBank(false)
         }
-    }, [formData, bankExtras, services])
+    }, [formData, bankExtras, services, accNumType, isAfricanBank, fieldsInfo])
 
     useEffect(() => {
         if (cashPickupType && cashPickupNumber && Object.keys(cashExtras).filter(item => serviceFieldInfoValidate(services?.find(item => item?.method?.toLowerCase()?.includes("cash")), "credit_party_identifiers_accepted", item, fieldsInfo)).every(item => cashExtras?.[item]?.length > 0)) {
@@ -310,104 +310,104 @@ const EditBeneficiary = () => {
         }
     }, [formData])
 
+    const initializedUserId = useRef(null)
+
+    const populateForm = (userData) => {
+        if (!userData) return
+        setFirstName(userData?.first_name || "")
+        setLastName(userData?.last_name || "")
+        setFormData({
+            postal_code: userData?.zip_code ?? userData?.postal_code ?? "",
+            country: userData?.country ?? "",
+            city: userData?.city ?? "",
+            address: userData?.address ?? "",
+            email: userData?.email ?? "",
+            relation: userData?.relation ?? "",
+            account_type: userData?.account_type ?? "",
+            account_holder_name: userData?.bank_details?.[0]?.account_holder_name ?? "",
+            bank_name: userData?.bank_details?.[0]?.name ?? "",
+            branch_name: userData?.bank_details?.[0]?.branch_name ?? "",
+            bank_account_number: userData?.bank_details?.[0]?.account_number ?? "",
+            bank_branch_street: userData?.bank_details?.[0]?.branch_street ?? "",
+            bank_city: userData?.bank_details?.[0]?.city ?? "",
+            bank_province: userData?.bank_details?.[0]?.province ?? "",
+            bank_postal_code: userData?.bank_details?.[0]?.postal_code ?? "",
+            mobile_wallet_provider: userData?.mobile_wallet?.[0]?.money_provider ?? "",
+            mobile_wallet_number: userData?.mobile_wallet?.[0]?.wallet_number ?? "",
+            mobile_wallet_name: userData?.mobile_wallet?.[0]?.wallet_name ?? `${userData?.first_name ?? ""} ${userData?.last_name ?? ""}`,
+            mobile_wallet_account_number: userData?.mobile_wallet?.[0]?.wallet_account_number ?? "",
+            crypto_currency: userData?.crypto?.[0]?.currency ?? "Bitcoin",
+            crypto_wallet_address: userData?.crypto?.[0]?.wallet_address ?? "",
+            card_holder_one: userData?.card?.[0]?.card_name ?? "",
+            card_number_one: userData?.card?.[0]?.card_number ?? "",
+            card_expiry_one: userData?.card?.[0]?.card_expiry ?? "",
+            card_holder_two: userData?.card?.[1]?.card_name ?? "",
+            card_number_two: userData?.card?.[1]?.card_number ?? "",
+            card_expiry_two: userData?.card?.[1]?.card_expiry ?? "",
+            card_holder_three: userData?.card?.[2]?.card_name ?? "",
+            card_number_three: userData?.card?.[2]?.card_number ?? "",
+            card_expiry_three: userData?.card?.[2]?.card_expiry ?? "",
+        })
+
+        setInstapayWallets(userData?.wallet?.length > 0 ? userData?.wallet : [""])
+        setApiWallets(userData?.wallet?.length > 0 ? userData?.wallet : [""])
+        if (userData?.bank_details?.[0]?.iban || userData?.bank_details?.[0]?.swift_code) {
+            getBankDetails({ target: { value: (userData?.bank_details?.[0]?.iban || userData?.bank_details?.[0]?.swift_code) } }, true, userData?.bank_details?.[0]?.account_number)
+        }
+        setMobileNumber(userData?.phone || "")
+        setCountry(userData?.country_name || "")
+        setCountryIsoCode(userData?.country_iso_code || "")
+        setCountryId(userData?.country?._id ?? userData?.country ?? "")
+        setCity(userData?.city || "")
+        setCashPickupType(userData?.cash_pickup?.[0]?.document_type || "")
+        setCashPickupNumber(userData?.cash_pickup?.[0]?.document_number || "")
+
+        setBasicExtras(userData?.extras ?? basicExtrasInitial)
+        setAdditionalFields({
+            gender: userData?.extras?.gender || "",
+            date_of_birth: userData?.extras?.date_of_birth || "",
+            nationality: userData?.extras?.nationality || "",
+            occupation: userData?.extras?.occupation || "",
+        })
+        setBankExtras(userData?.bank_details?.[0]?.extras ?? bankExtrasInitial)
+        setCashxtras(userData?.cash_pickup?.[0]?.extras ?? { msisdn: "" })
+        setBankCountryCode(userData?.bank_details?.[0]?.extras?.country_iso_code || "")
+        setCardExtras(userData?.card?.[0]?.extras ?? { bank_account_number: "" })
+        setAccNumType(userData?.bank_details?.[0]?.iban ? "IBAN" : (userData?.bank_details?.[0]?.swift_code ? "Swift" : "IBAN"))
+
+        const accountType = userData?.account_type?.[0]?.toLowerCase() || (typeof userData?.account_type === 'string' ? userData.account_type.toLowerCase() : "");
+        switch (accountType) {
+            case "bank":
+                setActive(1)
+                break;
+            case "mobile":
+                setActive(2)
+                break;
+            case "card":
+                setActive(3)
+                break;
+            case "crypto":
+                setActive(4)
+                break;
+            case "cash":
+                setActive(6)
+                break;
+            default:
+                setActive(5)
+        }
+    }
 
     useEffect(() => {
         const filtered = beneficiaries.filter(ben => ben._id === user_id)[0]
-        // console.log(filtered)
         setUser(filtered)
-    }, [beneficiaries])
+    }, [beneficiaries, user_id])
 
     useEffect(() => {
-        if (user) {
-            setFirstName(user?.first_name)
-            setLastName(user?.last_name)
-            setFormData({
-                postal_code: user?.zip_code ?? user?.postal_code,
-                country: user?.country ?? "",
-                city: user?.city ?? "",
-                city: user?.postal_code ?? "",
-                address: user?.address ?? "",
-                email: user?.email ?? "",
-                relation: user?.relation ?? "",
-                account_type: user?.account_type ?? "",
-                account_holder_name: user?.bank_details?.[0]?.account_holder_name ?? "",
-                bank_name: user?.bank_details?.[0]?.name ?? "",
-                branch_name: user?.bank_details?.[0]?.branch_name ?? "",
-                bank_account_number: user?.bank_details?.[0]?.account_number ?? "",
-                bank_branch_street: user?.bank_details?.[0]?.branch_street ?? "",
-                bank_city: user?.bank_details?.[0]?.city ?? "",
-                bank_province: user?.bank_details?.[0]?.province ?? "",
-                bank_postal_code: user?.bank_details?.[0]?.postal_code ?? "",
-                mobile_wallet_provider: user?.mobile_wallet?.[0]?.money_provider ?? "",
-                mobile_wallet_number: user?.mobile_wallet?.[0]?.wallet_number ?? "",
-                mobile_wallet_name: user?.mobile_wallet?.[0]?.wallet_name ?? `${user?.first_name ?? ""} ${user?.last_name ?? ""} `,
-                mobile_wallet_account_number: user?.mobile_wallet?.[0]?.wallet_account_number ?? "",
-                crypto_currency: user?.crypto?.[0]?.currency ?? "Bitcoin",
-                crypto_wallet_address: user?.crypto?.[0]?.wallet_address ?? "",
-                card_holder_one: user?.card[0]?.card_name ?? "",
-                card_number_one: user?.card[0]?.card_number ?? "",
-                card_expiry_one: user?.card[0]?.card_expiry ?? "",
-                card_holder_two: user?.card[1]?.card_name ?? "",
-                card_number_two: user?.card[1]?.card_number ?? "",
-                card_expiry_two: user?.card[1]?.card_expiry ?? "",
-                card_holder_three: user?.card[2]?.card_name ?? "",
-                card_number_three: user?.card[2]?.card_number ?? "",
-                card_expiry_three: user?.card[2]?.card_expiry ?? "",
-            })
-            // const wallet_ids = user.wallet.map(item => item._id)
-            // setInstapayWallets(user?.wallet.length > 0 ? wallet_ids : [""])
-
-            setInstapayWallets(user?.wallet?.length > 0 ? user?.wallet : [""])
-            setApiWallets(user?.wallet?.length > 0 ? user?.wallet : [""])
-            if ((user?.bank_details?.[0]?.iban || user?.bank_details?.[0]?.swift_code)) {
-                getBankDetails({ target: { value: (user?.bank_details?.[0]?.iban || user?.bank_details?.[0]?.swift_code) } }, true, user?.bank_details?.[0]?.account_number)
-            }
-            setMobileNumber(user?.phone)
-            setCountryId(user?.country?._id ?? "")
-            setCountry(user?.country_name)
-            setCountryIsoCode(user?.country_iso_code)
-            setCountryId(user?.country)
-            setCity(user?.city)
-            setCashPickupType(user?.cash_pickup?.[0]?.document_type)
-            setCashPickupNumber(user?.cash_pickup?.[0]?.document_number)
-
-            setAccNumType(user?.bank_details?.[0]?.account_number?.length > 11 ? "IBAN" : "Swift")
-
-            setBasicExtras(prev => user?.extras ?? prev)
-            setAdditionalFields({
-                gender: user?.extras?.gender,
-                date_of_birth: user?.extras?.date_of_birth,
-                nationality: user?.extras?.nationality,
-                occupation: user?.extras?.occupation,
-            })
-            setBankExtras(prev => user?.bank_details?.[0]?.extras ?? prev)
-            setCashxtras(prev => user?.cash_pickup?.[0]?.extras ?? prev)
-            setBankCountryCode(user?.bank_details?.[0]?.extras?.country_iso_code && "")
-            setCardExtras(prev => user?.card?.[0]?.extras ?? prev)
-            setAccNumType(user?.bank_details?.[0]?.iban ? "IBAN" : "Swift")
-
-            const accountType = user?.account_type?.[0]?.toLowerCase() || (typeof user?.account_type === 'string' ? user.account_type.toLowerCase() : "");
-            switch (accountType) {
-                case "bank":
-                    setActive(1)
-                    break;
-                case "mobile":
-                    setActive(2)
-                    break;
-                case "card":
-                    setActive(3)
-                    break;
-                case "crypto":
-                    setActive(4)
-                    break;
-                case "cash":
-                    setActive(6)
-                    break;
-                default:
-                    setActive(5)
-            }
+        if (user && initializedUserId.current !== user._id) {
+            initializedUserId.current = user._id
+            populateForm(user)
         }
-    }, [user, isEditMode])
+    }, [user])
 
 
 
@@ -760,7 +760,7 @@ const EditBeneficiary = () => {
                                                                         <option value="">--{t("Select Gender")}--</option>
                                                                         {
                                                                             Object.keys(gendersData).map(item => (
-                                                                                <option value={item}>{t(item)}</option>
+                                                                                <option key={item} value={item}>{t(item)}</option>
                                                                             ))
                                                                         }
                                                                     </Input>
@@ -828,7 +828,7 @@ const EditBeneficiary = () => {
                                                                                 <option value="">--{t("Select Occupation")}--</option>
                                                                                 {
                                                                                     Object.keys(occupations).map(item => (
-                                                                                        <option value={item}>{t(item)}</option>
+                                                                                        <option key={item} value={item}>{t(item)}</option>
                                                                                     ))
                                                                                 }
                                                                             </Input>
@@ -922,7 +922,7 @@ const EditBeneficiary = () => {
                                                     <div style={{ display: "flex", justifyContent: "flex-end", width: "100%", marginTop: "2rem", gap: "2rem", alignItems: "center" }}>
                                                         <button onClick={() => {
                                                             setIsEditMode(false)
-                                                            setInstapayWallets([...apiWallets])
+                                                            populateForm(user)
                                                         }} style={{ all: "unset", cursor: "pointer" }}>
                                                             {t("Cancel")}
                                                         </button>
@@ -947,9 +947,9 @@ const EditBeneficiary = () => {
                                                                 {t("Save")}
                                                             </button>}
 
-                                                        {saveloading && <div class="d-flex justify-content-center">
-                                                            <div class="spinner-border" color='primary' role="status">
-                                                                <span class="sr-only">{t("Loading...")}</span>
+                                                        {saveloading && <div className="d-flex justify-content-center">
+                                                            <div className="spinner-border" color='primary' role="status">
+                                                                <span className="sr-only">Loading...</span>
                                                             </div>
                                                         </div>}
                                                     </div>

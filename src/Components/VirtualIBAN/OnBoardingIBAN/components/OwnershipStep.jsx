@@ -48,6 +48,12 @@ const OwnershipStep = ({ onNext, onBack, userType, data = {}, userDetails }) => 
     const [isEditing, setIsEditing] = useState(false)
 
     useEffect(() => {
+        window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+        document.body.scrollTop = 0;
+        document.documentElement.scrollTop = 0;
+    }, []);
+
+    useEffect(() => {
         if (!userDetails?._id) return undefined
 
         let isMounted = true
