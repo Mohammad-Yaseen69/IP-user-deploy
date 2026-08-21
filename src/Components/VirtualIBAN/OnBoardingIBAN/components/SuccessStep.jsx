@@ -22,8 +22,6 @@ const SuccessStep = ({ onDone }) => {
         >
             <div style={{ width: "100%", maxWidth: 980 }}>
 
-                {/* Success Icon */}
-
                 <div
                     style={{
                         display: "flex",
@@ -46,7 +44,6 @@ const SuccessStep = ({ onDone }) => {
                         <CheckCircle size={30} color="#fff" />
                     </div>
                 </div>
-
 
                 <h2
                     style={{
@@ -73,7 +70,6 @@ const SuccessStep = ({ onDone }) => {
                     )}
                 </p>
 
-
                 <div
                     style={{
                         background: "#fff",
@@ -82,8 +78,6 @@ const SuccessStep = ({ onDone }) => {
                         padding: 20
                     }}
                 >
-
-                    {/* Header */}
 
                     <div
                         style={{
@@ -115,8 +109,6 @@ const SuccessStep = ({ onDone }) => {
                         </div>
                     </div>
 
-                    {/* IBAN */}
-
                     <div
                         style={{
                             background: "#f3efff",
@@ -129,7 +121,6 @@ const SuccessStep = ({ onDone }) => {
                     >
                         MTXX XXXX XXXX XXXX XXXX XX
                     </div>
-
 
                     <div
                         style={{
@@ -148,8 +139,6 @@ const SuccessStep = ({ onDone }) => {
                         <span style={{ color: "#777" }}>Pack applied</span>
                         <strong>Growth Pack</strong>
                     </div>
-
-                    {/* Buttons */}
 
                     <div
                         style={{

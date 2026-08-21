@@ -37,7 +37,6 @@ const WalletStep = ({
 
     return (
         <div>
-            {/* From Wallet */}
             <div className={styles.sectionLabel}>{t("From")}</div>
             <div className={styles.walletGrid}>
                 {wallets.map((w) => {
@@ -69,14 +68,12 @@ const WalletStep = ({
                 })}
             </div>
 
-            {/* Swap */}
             <div className={styles.swapRow}>
                 <button type="button" className={styles.swapBtn} onClick={handleSwap}>
                     <SwapArrowIcon />
                 </button>
             </div>
 
-            {/* To Wallet */}
             <div className={styles.sectionLabel}>{t("To")}</div>
             <div className={styles.walletGrid}>
                 {wallets.map((w) => {
@@ -108,7 +105,6 @@ const WalletStep = ({
                 })}
             </div>
 
-            {/* Exchange Rate */}
             {rateInfo && (
                 <div className={styles.rateBox}>
                     <span className={styles.rateText}>

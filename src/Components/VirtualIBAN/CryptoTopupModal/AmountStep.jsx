@@ -79,7 +79,6 @@ const AmountStep = ({ amount, setAmount, selectedIban }) => {
         setAmount(formatAmountValue(val))
     }
 
-
     return (
         <div>
             <div className={styles.amountLabel}>{t("Gross Deposit Amount in USDT")}</div>

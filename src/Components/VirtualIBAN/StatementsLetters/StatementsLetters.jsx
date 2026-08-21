@@ -1,6 +1,7 @@
 import { useContext, useMemo, useState } from 'react';
 import { Copy, Download, Share2, FileText, ChevronLeft, Eye, Loader, File, Globe } from 'react-feather';
 import styles from './StatementsLetters.module.css';
+import IbanBreadcrumb from '../components/IbanBreadcrumb';
 import { useTranslation } from 'react-i18next';
 import useWindowWidth from '../../../utils/useWindowWidth';
 import TopRight from '../../topRight';
@@ -45,7 +46,6 @@ const StatementsLetters = () => {
     // Fetch IBANs
     const { data: rawIbans = [] } = useVirtualIbans(userDetails?._id);
 
-    // Get the selected or first IBAN
     const selectedIban = useMemo(() => {
         if (!rawIbans.length) return null;
         return rawIbans.find((iban) => (iban?._id || iban?.id) === selectedAccount) || rawIbans[0];
@@ -53,7 +53,6 @@ const StatementsLetters = () => {
 
     const ibanId = selectedIban?._id || selectedIban?.id;
 
-    // Fetch full details
     const { data: ibanDetailData } = useVirtualIbanDetails(ibanId);
     const iban = useMemo(
         () => normalizeVirtualIban(ibanDetailData || selectedIban) || {},
@@ -177,14 +176,10 @@ const StatementsLetters = () => {
             <div className={styles.mainContent}>
 
                 <div className={styles.navigationHeader}>
-                    <div className={styles.navigationRow}>
-                        <button className={styles.backBtn} onClick={() => window.history.back()}>
-                            <ChevronLeft size={16} /> {t("Back")}
-                        </button>
-                        <span className={styles.breadcrumb}>
-                            {t("My virtual bank")} &gt; <span className={styles.breadcrumbActive}>{t("Statements & letters")}</span>
-                        </span>
-                    </div>
+                    <IbanBreadcrumb items={[
+                        { label: "My virtual bank", path: "/virtual-IBAN" },
+                        { label: "Statements & letters" }
+                    ]} />
                 </div>
 
                 <div className={styles.subSectionHeader}>
@@ -223,7 +218,6 @@ const StatementsLetters = () => {
                             <span className={styles.sectionHeadingTitle}>{t("Documents & Statements")}</span>
                             <p className={styles.sectionHeadingSub}>{t("Choose official ownership confirmation letter or transaction activity statement.")}</p>
 
-                            {/* Section 1: IBAN Confirmation Letter */}
                             <div className={styles.docBlock}>
                                 <div className={styles.actionCard}>
                                     <div className={styles.iconCircleWrapper}>

@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import useWindowWidth from '../../../../utils/useWindowWidth';
 import TopRight from '../../../topRight';
 import styles from "../style/moveMoney.module.css";
+import IbanBreadcrumb from '../../components/IbanBreadcrumb';
 import Tooltip from "@mui/material/Tooltip";
 import {
     Compass,
@@ -15,18 +16,18 @@ import {
     Search
 } from 'react-feather';
 import SepaTransfer from '../../SendMoney/SepaTransfer';
+import SwiftTransfer from '../../SendMoney/SwiftTransfer';
 import CryptoTopupModal from '../../CryptoTopupModal';
 import { useSyncVirtualIbanBalance, useVirtualIbans } from '../../../../hooks/useVirtualIban';
 import { asVirtualIbanArray } from '../../utils/virtualIban';
 import { UserContext } from '../../../../Context/UserContext';
 import { useNavigate } from 'react-router';
 
-
-
 const MoveMoney = () => {
     const { t } = useTranslation();
     const width = useWindowWidth();
     const [showSepaPage, setShowSepaPage] = useState(false);
+    const [showSwiftPage, setShowSwiftPage] = useState(false);
     const [showCryptoTopupModal, setShowCryptoTopupModal] = useState(false);
     const navigate = useNavigate();
     const {
@@ -50,7 +51,6 @@ const MoveMoney = () => {
 
     const ibanId = selectedIban?._id || selectedIban?.id;
 
-
     const { data: syncedBalance } = useSyncVirtualIbanBalance(ibanId);
 
     const currentBalance = syncedBalance?.balance ?? selectedIban?.balance ?? 0
@@ -73,21 +73,11 @@ const MoveMoney = () => {
                 {
                     showSepaPage ?
                         <>
-                            <div className={styles.headerTitle}>
-
-                                <div className={styles.navigationRow}>
-                                    <button className={styles.backBtn}
-                                        onClick={() => setShowSepaPage(false)}
-                                    >
-                                        <ArrowLeft size={16} /> {t("Back")}
-                                    </button>
-                                    <span className={styles.breadcrumb}>
-                                        {t("My virtual bank")} &gt; <span className={styles.breadcrumbActive}>{t("Move money")}</span>
-                                    </span>
-                                </div>
-
-
-                            </div>
+                            <IbanBreadcrumb items={[
+                                { label: "My virtual bank", path: "/virtual-IBAN" },
+                                { label: "Move money", onClick: () => setShowSepaPage(false) },
+                                { label: "SEPA Transfer" }
+                            ]} />
                             <SepaTransfer
                                 isPage={true}
                                 selectedIban={selectedIban}
@@ -95,32 +85,30 @@ const MoveMoney = () => {
                                 toggle={() => setShowSepaPage(false)}
                             />
                         </>
+                    : showSwiftPage ?
+                        <>
+                            <IbanBreadcrumb items={[
+                                { label: "My virtual bank", path: "/virtual-IBAN" },
+                                { label: "Move money", onClick: () => setShowSwiftPage(false) },
+                                { label: "SWIFT Transfer" }
+                            ]} />
+                            <SwiftTransfer
+                                isPage={true}
+                                selectedIban={selectedIban}
+                                availableBalance={currentBalance}
+                                toggle={() => setShowSwiftPage(false)}
+                            />
+                        </>
 
                         : <>
                             <div className={styles.headerTitle}>
-
-                                <div className={styles.navigationRow}>
-                                    <button className={styles.backBtn}
-                                        onClick={() => navigate("/virtual-IBAN")}
-                                    >
-                                        <ArrowLeft size={16} /> {t("Back")}
-                                    </button>
-                                    <span className={styles.breadcrumb}>
-                                        {t("My virtual bank")} &gt; <span className={styles.breadcrumbActive}>{t("Move money")}</span>
-                                    </span>
-                                </div>
-
+                                <IbanBreadcrumb items={[
+                                    { label: "My virtual bank", path: "/virtual-IBAN" },
+                                    { label: "Move money" }
+                                ]} />
                                 <h1>{t("How would you like to move money?")}</h1>
                                 <p>{t("Six ways to pay, get paid and manage your balances — pick one to begin.")}</p>
 
-                                {/* <div className={styles.searchContainer}>
-                                    <Search size={18} className={styles.searchIcon} />
-                                    <input
-                                        type="text"
-                                        className={styles.searchInput}
-                                        placeholder={t("Search — e.g. Europe, crypto, cash, instant_")}
-                                    />
-                                </div> */}
                             </div>
                             <div className={styles.sectionBlock}>
                                 <div className={styles.sectionLabel}>{t("Send money out")} <span>{t("Instant, free transfers between InstaPay accounts")}</span></div>
@@ -144,41 +132,41 @@ const MoveMoney = () => {
                                             </div>
                                         </div>
                                     </div>
-                                    <Tooltip title="Coming Soon" arrow>
-
-                                        <div className={styles.card}>
-                                            <div className={`${styles.iconBox} ${styles.bgYellow}`}>
-                                                <Globe size={20} />
-                                            </div>
-                                            <div className={styles.cardBody}>
-
-                                                <h3 className={styles.cardTitle}>{t("SWIFT International")}</h3>
-                                                <p className={styles.cardDesc}>
-                                                    {t("Worldwide bank transfers in USD, EUR, GBP, CHF and more, with country-specific routing.")}
-                                                </p>
-                                                <div className={styles.badgeRow}>
-                                                    <span className={`${styles.tag} ${styles.tagBlue}`}>USD, EUR, GBP</span>
-                                                    <span className={`${styles.tag} ${styles.tagGray}`}>1-5 Days</span>
-                                                    <span className={`${styles.tag} ${styles.tagGray}`}>Worldwide</span>
-                                                </div>
+                                    <div
+                                        className={styles.card}
+                                        onClick={() => setShowSwiftPage(true)}
+                                        style={{ cursor: "pointer" }}
+                                    >
+                                        <div className={`${styles.iconBox} ${styles.bgYellow}`}>
+                                            <Globe size={20} />
+                                        </div>
+                                        <div className={styles.cardBody}>
+                                            <h3 className={styles.cardTitle}>{t("SWIFT International")}</h3>
+                                            <p className={styles.cardDesc}>
+                                                {t("Worldwide bank transfers in USD, EUR, GBP, CHF and more, with country-specific routing.")}
+                                            </p>
+                                            <div className={styles.badgeRow}>
+                                                <span className={`${styles.tag} ${styles.tagBlue}`}>USD, EUR, GBP</span>
+                                                <span className={`${styles.tag} ${styles.tagGray}`}>1-5 Days</span>
+                                                <span className={`${styles.tag} ${styles.tagGray}`}>Worldwide</span>
                                             </div>
                                         </div>
-                                    </Tooltip>
+                                    </div>
                                     <Tooltip title="Coming Soon" arrow>
 
-                                        <div className={`${styles.card} ${styles.cardPurple}`}>
-                                            <div className={`${styles.iconBox} ${styles.bgWhiteTrans}`}>
+                                        <div className={`${styles.card}`}>
+                                            <div className={`${styles.iconBox} ${styles.bgGreen}`}>
                                                 <Briefcase size={20} />
                                             </div>
                                             <div className={styles.cardBody}>
-                                                <h3 className={styles.cardTitleWhite}>{t("Global Remittance Hub")}</h3>
-                                                <p className={styles.cardDescWhite}>
+                                                <h3 className={styles.cardTitle}>{t("Global Remittance Hub")}</h3>
+                                                <p className={styles.cardDesc}>
                                                     {t("Pay to bank account, mobile money, wallet or cash pickup — country-adaptive, powered by Thunes.")}
                                                 </p>
                                                 <div className={styles.badgeRow}>
-                                                    <span className={`${styles.tag} ${styles.tagWhite}`}>Worldwide</span>
-                                                    <span className={`${styles.tag} ${styles.tagWhite}`}>Fast lookup</span>
-                                                    <span className={`${styles.tag} ${styles.tagWhite}`}>Country-adaptive</span>
+                                                    <span className={`${styles.tag}`}>Worldwide</span>
+                                                    <span className={`${styles.tag}`}>Fast lookup</span>
+                                                    <span className={`${styles.tag}`}>Country-adaptive</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -213,7 +201,6 @@ const MoveMoney = () => {
                                     </Tooltip>
                                 </div>
                             </div>
-
 
                             <div className={styles.sectionBlock}>
                                 <div className={styles.sectionLabel}>{t("YOUR MONEY & ASSETS")} <span>{t("Hold, convert and grow your balances")}</span></div>

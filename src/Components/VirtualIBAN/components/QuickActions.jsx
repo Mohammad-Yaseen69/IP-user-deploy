@@ -59,7 +59,8 @@ const QuickActions = ({ selectedIban }) => {
         "yousuf_",
         "khalid222",
         "business_ininin",
-        "businessify"
+        "businessify",
+        "compadsaf"
     ];
 
     const isCryptoTopupAllowed = allowedUsernames.includes(
@@ -109,7 +110,7 @@ const QuickActions = ({ selectedIban }) => {
                 return;
 
             case 7:
-                navigate("/beneficiaries");
+                navigate("/virtual-IBAN/beneficiaries-virtual");
                 return;
             case 2:
                 navigate("/onboarding-IBAN/moneymove");
@@ -241,10 +242,6 @@ const QuickActions = ({ selectedIban }) => {
                     availableBalance={currentBalance}
                 />
             )}
-            {/* <AddFundsModal
-                isOpen={modals.addFunds}
-                toggle={() => closeModal("addFunds")}
-            /> */}
             {can("virtual-iban.funds.convert") && (
                 <ConvertFundsModal
                     isOpen={modals.convertFunds}
@@ -276,12 +273,6 @@ const QuickActions = ({ selectedIban }) => {
                 toggle={() => setShowCryptoTopupModal(false)}
                 selectedIban={selectedIban}
             />
-            {/* <SepaTransfer
-                isOpen={modals.sepa}
-                toggle={() => closeModal("sepa")}
-                selectedIban={selectedIban}
-                availableBalance={currentBalance}
-            /> */}
         </div>
     );
 };

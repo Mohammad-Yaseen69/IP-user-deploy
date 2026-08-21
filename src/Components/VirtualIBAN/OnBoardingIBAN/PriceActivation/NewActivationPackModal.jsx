@@ -5,9 +5,8 @@ import styles from "../style/PriceActivation.module.css";
 
 const NewActivationPackModal = ({ open, handleClose }) => {
     const [step, setStep] = useState(1);
-    const [setBy, setSetBy] = useState('agent'); // 'institution' or 'agent'
+    const [setBy, setSetBy] = useState('agent');
 
-    // Capsule Services State
     const [services, setServices] = useState([
         { id: 'iban', label: 'Activation fee (one-time)', active: true },
         { id: 'monthly', label: 'Monthly IBAN fee', active: false },
@@ -154,7 +153,6 @@ const NewActivationPackModal = ({ open, handleClose }) => {
                     </div>
                 )}
 
-                {/* Step 2 Content */}
                 {step === 2 && (
                     <div className={styles.content}>
                         <h3 className={styles.sectionTitle}>Fee schedule</h3>
@@ -194,7 +192,6 @@ const NewActivationPackModal = ({ open, handleClose }) => {
                     </div>
                 )}
 
-                {/* Modal Footer Actions */}
                 <div className={styles.footer}>
                     <button className={styles.cancelBtn} onClick={handleClose}>Cancel</button>
 

@@ -8,6 +8,7 @@
     min-height: 100vh;
     flex-direction: column;
     height: auto;
+    margin: 2rem 0 2rem 1rem;
 }
 
 
@@ -50,11 +51,10 @@
 }
 
 .mainContent {
-    max-width: 1200px;
     width: 100%;
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    /* align-items: center; */
     flex-direction: column;
     gap: 15px;
     background-color: #ffffff;
@@ -86,9 +86,32 @@
 }
 
 .breadcrumb {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
     color: #475467;
     font-size: 14px;
     font-weight: 400;
+}
+
+.breadcrumbLink {
+    color: #475467;
+    cursor: pointer;
+    text-decoration: none;
+    transition: color 0.15s ease;
+    display: inline-flex;
+    align-items: center;
+}
+
+.breadcrumbLink:hover {
+    color: #5626E6;
+    text-decoration: underline;
+}
+
+.breadcrumbSeparator {
+    color: #98A2B3;
+    font-size: 13px;
+    user-select: none;
 }
 
 .breadcrumbActive {
@@ -97,13 +120,12 @@
 }
 
 .headerTitle h1 {
-    color: #000000;
-    font-family: 'Inter', sans-serif;
-    font-size: 18px;
+    color: var(--COLORS-Tertiary-300, #6039CD);
+    font-size: 30px;
     font-style: normal;
-    font-weight: 600;
-    line-height: 120%;
-    margin: 0 0 4px 0;
+    font-weight: 700;
+    line-height: 46px;
+    letter-spacing: -1.2px;
 }
 
 .headerTitle p {
