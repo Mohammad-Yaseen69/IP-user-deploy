@@ -15,7 +15,7 @@ const OtherBalance = () => {
 
                     <div className="d-flex justify-content-center">
                         <div className="spinner-border" color='primary' role="status">
-                            <span className="sr-only">Loading...</span>
+                            <span className="sr-only">{t("Loading...")}</span>
                         </div>
                     </div>
                     :
@@ -28,7 +28,7 @@ const OtherBalance = () => {
 
                     <div className="d-flex justify-content-center">
                         <div className="spinner-border" color='primary' role="status">
-                            <span className="sr-only">Loading...</span>
+                            <span className="sr-only">{t("Loading...")}</span>
                         </div>
                     </div>
                     :
@@ -36,7 +36,7 @@ const OtherBalance = () => {
                 }
             </div>
         </div>
-    )
+    );
 }
 
 export default OtherBalance

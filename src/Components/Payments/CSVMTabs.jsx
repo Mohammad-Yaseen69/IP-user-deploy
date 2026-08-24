@@ -67,9 +67,7 @@ const CSVMTabs = () => {
                         borderRadius: "5px",
                         padding: ".3rem .75rem",
                         flex: 1
-                    }}>
-                    CSV
-                </Button>
+                    }}>{t("CSV")}</Button>
                 <Button color='transparent' onClick={() => handleTabClick('TXT')}
                     style={{
                         background: activeTab === "TXT"
@@ -84,9 +82,7 @@ const CSVMTabs = () => {
                         borderRadius: "5px",
                         padding: ".3rem .75rem",
                         flex: 1
-                    }}>
-                    TXT
-                </Button>
+                    }}>{t("TXT")}</Button>
                 <Button color='transparent' onClick={() => handleTabClick('JSON')}
                     style={{
                         background: activeTab === "JSON"
@@ -101,9 +97,7 @@ const CSVMTabs = () => {
                         borderRadius: "5px",
                         padding: ".3rem .75rem",
                         flex: 1
-                    }}>
-                    JSON
-                </Button>
+                    }}>{t("JSON")}</Button>
                 <Button color='transparent' onClick={() => handleTabClick('XML')}
                     style={{
                         background: activeTab === "XML"
@@ -118,9 +112,7 @@ const CSVMTabs = () => {
                         borderRadius: "5px",
                         padding: ".3rem .75rem",
                         flex: 1
-                    }}>
-                    XML
-                </Button>
+                    }}>{t("XML")}</Button>
                 <Button color='transparent' onClick={() => handleTabClick('XLS/XLSX')}
                     style={{
                         background: activeTab === "XLS/XLSX"
@@ -135,9 +127,7 @@ const CSVMTabs = () => {
                         borderRadius: "5px",
                         padding: ".3rem .75rem",
                         flex: 1
-                    }}>
-                    XLS/XLSX
-                </Button>
+                    }}>{t("XLS/XLSX")}</Button>
             </div>
             <div>
                 <p>{filtered.info}</p>

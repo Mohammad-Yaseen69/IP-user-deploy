@@ -2,11 +2,12 @@ import { Dialog } from '@mui/material';
 import { useState } from 'react';
 import { ArrowRight, Check, Plus, X } from 'react-feather';
 import styles from "../style/PriceActivation.module.css";
+import { useTranslation } from 'react-i18next';
 
 const NewActivationPackModal = ({ open, handleClose }) => {
     const [step, setStep] = useState(1);
     const [setBy, setSetBy] = useState('agent');
-
+    const { t } = useTranslation()
     const [services, setServices] = useState([
         { id: 'iban', label: 'Activation fee (one-time)', active: true },
         { id: 'monthly', label: 'Monthly IBAN fee', active: false },
@@ -50,7 +51,7 @@ const NewActivationPackModal = ({ open, handleClose }) => {
                         <div className={styles.iconWrapper}>
                             <Plus size={20} />
                         </div>
-                        <h2 className={styles.title}>New activation pack</h2>
+                        <h2 className={styles.title}>{t('New activation pack')}</h2>
                     </div>
                     <button className={styles.closeBtn} onClick={handleClose}>
                         <X size={20} />
@@ -60,57 +61,57 @@ const NewActivationPackModal = ({ open, handleClose }) => {
                 {step === 1 && (
                     <div className={styles.content}>
                         <div className={styles.formGroup}>
-                            <label className={styles.label}>Pack Name</label>
-                            <input type="text" className={styles.input} placeholder="e.g. Growth - Pack Two" />
+                            <label className={styles.label}>{t('Pack Name')}</label>
+                            <input type="text" className={styles.input} placeholder={t('e.g. Growth - Pack Two')} />
                         </div>
 
                         <div className={styles.formGroup}>
-                            <label className={styles.label}>Set By</label>
+                            <label className={styles.label}>{t('Set By')}</label>
                             <div className={styles.toggleGroup}>
                                 <button
                                     className={`${styles.toggleBtn} ${setBy === 'institution' ? styles.toggleBtnActive : ''}`}
                                     onClick={() => setSetBy('institution')}
                                 >
-                                    Konstanz Kingdom / InstaPay
+                                    {t('Konstanz Kingdom / InstaPay')}
                                 </button>
                                 <button
                                     className={`${styles.toggleBtn} ${setBy === 'agent' ? styles.toggleBtnActive : ''}`}
                                     onClick={() => setSetBy('agent')}
                                 >
-                                    Agent
+                                    {t('Agent')}
                                 </button>
                             </div>
                         </div>
 
                         <div className={styles.formGroup}>
-                            <label className={styles.label}>Link to Agent (Optional)</label>
-                            <input type="text" className={styles.input} placeholder="- None / Null -" />
+                            <label className={styles.label}>{t('Link to Agent (Optional)')}</label>
+                            <input type="text" className={styles.input} placeholder={t('- None / Null -')} />
                         </div>
 
                         <div className={styles.formGroup}>
-                            <label className={styles.label}>Agent Revenue Model</label>
+                            <label className={styles.label}>{t('Agent Revenue Model')}</label>
                             <div className={styles.toggleGroup}>
                                 <button className={`${styles.toggleBtn} ${styles.toggleBtnActive}`}>
-                                    1. Markup on our services
+                                    {t('1. Markup on our services')}
                                 </button>
                                 <button className={styles.toggleBtn}>
-                                    2. Commission on our fees
+                                    {t('2. Commission on our fees')}
                                 </button>
                             </div>
                         </div>
 
                         <div style={{ display: 'flex', gap: '16px', width: '100%' }}>
                             <div className={styles.formGroup} style={{ flex: 1 }}>
-                                <label className={styles.label}>Markup Type</label>
-                                <input type="text" className={styles.input} defaultValue="percentage" />
+                                <label className={styles.label}>{t('Markup Type')}</label>
+                                <input type="text" className={styles.input} defaultValue={t('percentage')} />
                             </div>
                             <div className={styles.formGroup} style={{ flex: 1 }}>
-                                <label className={styles.label}>Markup Value</label>
+                                <label className={styles.label}>{t('Markup Value')}</label>
                                 <input type="text" className={styles.input} defaultValue="0" />
                             </div>
                         </div>
                         <div className={styles.formGroup}>
-                            <span className={styles.subLabel}>Apply markup on these services</span>
+                            <span className={styles.subLabel}>{t('Apply markup on these services')}</span>
                             <div className={styles.servicesContainer}>
                                 {services.map((srv) => (
                                     <button
@@ -126,13 +127,13 @@ const NewActivationPackModal = ({ open, handleClose }) => {
                         </div>
 
                         <div className={styles.step1FeeSection}>
-                            <h4 className={styles.feeHeader}>Fee schedule</h4>
+                            <h4 className={styles.feeHeader}>{t('Fee schedule')}</h4>
                             <table className={styles.table}>
                                 <thead>
                                     <tr>
-                                        <th>FEE ITEM</th>
-                                        <th className={styles.textRight}>FLAT (€)</th>
-                                        <th className={styles.textRight}>% OF AMOUNT</th>
+                                        <th>{t('FEE ITEM')}</th>
+                                        <th className={styles.textRight}>{t('FLAT (€)')}</th>
+                                        <th className={styles.textRight}>{t('% OF AMOUNT')}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -155,13 +156,13 @@ const NewActivationPackModal = ({ open, handleClose }) => {
 
                 {step === 2 && (
                     <div className={styles.content}>
-                        <h3 className={styles.sectionTitle}>Fee schedule</h3>
+                        <h3 className={styles.sectionTitle}>{t('Fee schedule')}</h3>
                         <table className={styles.table}>
                             <thead>
                                 <tr>
-                                    <th>FEE ITEM</th>
-                                    <th className={styles.textRight}>FLAT (€)</th>
-                                    <th className={styles.textRight}>% OF AMOUNT</th>
+                                    <th>{t('FEE ITEM')}</th>
+                                    <th className={styles.textRight}>{t('FLAT (€)')}</th>
+                                    <th className={styles.textRight}>{t('% OF AMOUNT')}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -193,15 +194,15 @@ const NewActivationPackModal = ({ open, handleClose }) => {
                 )}
 
                 <div className={styles.footer}>
-                    <button className={styles.cancelBtn} onClick={handleClose}>Cancel</button>
+                    <button className={styles.cancelBtn} onClick={handleClose}>{t('Cancel')}</button>
 
                     {step === 1 ? (
                         <button className={styles.submitBtn} onClick={() => setStep(2)}>
-                            Next Step <ArrowRight size={16} />
+                            {t('Next Step')} <ArrowRight size={16} />
                         </button>
                     ) : (
                         <button className={styles.submitBtn} onClick={handleClose}>
-                            Create pack <ArrowRight size={16} />
+                            {t('Create pack')} <ArrowRight size={16} />
                         </button>
                     )}
                 </div>

@@ -964,7 +964,7 @@ const EditBeneficiary = () => {
                 }
             </div >
         </LocalizationProvider>
-    )
+    );
 }
 
 export default EditBeneficiary;

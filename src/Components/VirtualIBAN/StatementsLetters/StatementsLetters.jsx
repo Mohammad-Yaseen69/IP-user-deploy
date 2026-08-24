@@ -367,7 +367,7 @@ const StatementsLetters = () => {
                                     </tr>
                                     <tr>
                                         <td className={styles.metaLabel}>{t("Account Type")}</td>
-                                        <td className={styles.metaValue}>E-money payment account (Virtual IBAN)</td>
+                                        <td className={styles.metaValue}>{t("E-money payment account (Virtual IBAN)")}</td>
                                     </tr>
                                     <tr>
                                         <td className={styles.metaLabel}>{t("Status")}</td>

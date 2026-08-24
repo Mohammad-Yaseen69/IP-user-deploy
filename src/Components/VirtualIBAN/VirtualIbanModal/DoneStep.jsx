@@ -31,7 +31,7 @@ const DoneStep = ({ jurisdiction, iban, onGoToAccount }) => {
                     <img src={success} />
 
 
-                    <h3>{t("Your IBAN is ready")} 🎉</h3>
+                    <h3>{t("Your IBAN is ready")}{t("🎉")}</h3>
                     <p>
                         {t(
                             "Your {{jurisdiction}} IBAN has been activated. You can now receive SEPA and SWIFT transfers directly to this account.",
@@ -93,7 +93,7 @@ const DoneStep = ({ jurisdiction, iban, onGoToAccount }) => {
                 </button>
             </div>
         </div>
-    )
+    );
 }
 
 export default DoneStep

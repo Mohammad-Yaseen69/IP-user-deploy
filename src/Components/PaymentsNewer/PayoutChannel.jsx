@@ -196,7 +196,7 @@ const PayoutChannel = ({ payoutChannel, setPayoutChannel, setSubStep, services =
                             </Card>
                         ))
                         :
-                        <span>No payment method supported at the moment.</span>
+                        <span>{t("No payment method supported at the moment.")}</span>
                 }
             </CardBody>
             <div style={{
@@ -230,7 +230,7 @@ const PayoutChannel = ({ payoutChannel, setPayoutChannel, setSubStep, services =
                 </Button>
             </div>
         </Card>
-    )
+    );
 }
 
 export default PayoutChannel;

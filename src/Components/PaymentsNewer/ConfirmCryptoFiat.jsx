@@ -86,7 +86,7 @@ const ConfirmCryptoFiat = ({ setSubStep, cryptoCurrency, amount, walletAddress }
                         alignItems: "center",
                         width: "90%"
                     }}>
-                        <span style={{ color: "#808080", fontWeight: 500, whiteSpace: "nowrap" }}>{t("Estimated Price")}: 1 {cryptoCurrency.value.toUpperCase()} = {cryptoCurrency.price}</span>
+                        <span style={{ color: "#808080", fontWeight: 500, whiteSpace: "nowrap" }}>{t("Estimated Price")}{t(": 1")}{cryptoCurrency.value.toUpperCase()} = {cryptoCurrency.price}</span>
                     </div>
                     <div style={{
                         display: "flex",
@@ -97,7 +97,7 @@ const ConfirmCryptoFiat = ({ setSubStep, cryptoCurrency, amount, walletAddress }
                         alignItems: "center",
                         width: "90%"
                     }}>
-                        <span style={{ color: "#808080", fontWeight: 500 }}>{t("Transaction Fee")}: 1.32 USD</span>
+                        <span style={{ color: "#808080", fontWeight: 500 }}>{t("Transaction Fee")}{t(": 1.32 USD")}</span>
                     </div>
                 </div>
 
