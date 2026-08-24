@@ -111,8 +111,8 @@ const BulkPaymentModal = ({ isOpen, onClose, onNext, initialRecipients = [] }) =
                             <h6>{t("Recipient Identifier")}</h6>
                             <p>{t("Enter the recipient&apos;s email address, phone number, or username.")}</p>
                             <p>
-                                {t("Example:")}&nbsp;<code>john@example.com</code>&nbsp;&middot;&nbsp;
-                                <code>+15551234567</code>&nbsp;&middot;&nbsp;<code>john_doe</code>
+                                {t("Example:")}&nbsp;<code>{t("john@example.com")}</code>&nbsp;&middot;&nbsp;
+                                <code>+15551234567</code>&nbsp;&middot;&nbsp;<code>{t("john_doe")}</code>
                             </p>
                         </div>
 
@@ -128,13 +128,13 @@ const BulkPaymentModal = ({ isOpen, onClose, onNext, initialRecipients = [] }) =
                         <div className={styles.colBlock}>
                             <h6>{t("Sending Currency")}</h6>
                             <p>{t("Enter the 3-letter currency code of the currency you are sending from.")}</p>
-                            <p>{t("Example:")}&nbsp;<code>USD</code>, <code>CHF</code>, <code>EUR</code></p>
+                            <p>{t("Example:")}&nbsp;<code>{t("USD")}</code>, <code>{t("CHF")}</code>, <code>{t("EUR")}</code></p>
                         </div>
 
                         <div className={styles.colBlock}>
                             <h6>{t("Recipient Currency")}</h6>
                             <p>{t("Enter the 3-letter currency code the recipient should receive.")}</p>
-                            <p>{t("Example:")}&nbsp;<code>PKR</code>, <code>EUR</code>, <code>GBP</code></p>
+                            <p>{t("Example:")}&nbsp;<code>{t("PKR")}</code>, <code>{t("EUR")}</code>, <code>{t("GBP")}</code></p>
                         </div>
 
                         <div className={styles.divider} />

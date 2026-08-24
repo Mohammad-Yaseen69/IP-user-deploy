@@ -176,9 +176,9 @@ const WalletDetails = ({ setWallet, setSubStep, wallet }) => {
                         ?
                         <div style={{ display: "flex", flexDirection: "column", gap: ".5rem" }}>
                             <p style={{ marginBottom: 0, fontWeight: 600 }}>{t("Please follow these examples:")} </p>
-                            <div>{t("Wallet ID:")} <strong>GY68J782</strong></div>
-                            <div>{t("InstaPay/Instagram Username:")} <strong>instauser</strong></div>
-                            <div>{t("Email:")} <strong>user@email.com</strong></div>
+                            <div>{t("Wallet ID:")} <strong>{t("GY68J782")}</strong></div>
+                            <div>{t("InstaPay/Instagram Username:")} <strong>{t("instauser")}</strong></div>
+                            <div>{t("Email:")} <strong>{t("user@email.com")}</strong></div>
                             <div>{t("Phone Number:")} <strong>44795396600</strong> {t("(With Country Code)")}</div>
                         </div>
                         : ""
@@ -361,7 +361,7 @@ const WalletDetails = ({ setWallet, setSubStep, wallet }) => {
                 </Button>
             </div>
         </Card>
-    )
+    );
 }
 
 export default WalletDetails;

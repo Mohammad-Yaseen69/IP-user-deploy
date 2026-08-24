@@ -136,12 +136,8 @@ const OTPConfirmation = ({ setter, callback, setterValue, hideOtp }) => {
                         <h4 style={{
                             fontSize: "24px",
                             fontWeight: 700
-                        }}>
-                            Enter Code
-                        </h4>
-                        <p style={{ maxWidth: "212px", fontSize: "14px", fontWeight: 600 }}>
-                            A Verification code has been sent to your email and number.
-                        </p>
+                        }}>{t("Enter Code")}</h4>
+                        <p style={{ maxWidth: "212px", fontSize: "14px", fontWeight: 600 }}>{t("A Verification code has been sent to your email and number.")}</p>
                     </div>
                     <>
                         <div style={{ display: 'flex', gap: '8px' }}>
@@ -180,7 +176,7 @@ const OTPConfirmation = ({ setter, callback, setterValue, hideOtp }) => {
                                     :
                                     <>
                                         {"Didn't receive OTP? "}
-                                        <span style={{ color: "#5926f0", fontWeight: 800, cursor: "pointer" }} onClick={() => setResendTimer(90)}>Resend Now</span>
+                                        <span style={{ color: "#5926f0", fontWeight: 800, cursor: "pointer" }} onClick={() => setResendTimer(90)}>{t("Resend Now")}</span>
                                     </>
                             }
 
@@ -205,8 +201,7 @@ const OTPConfirmation = ({ setter, callback, setterValue, hideOtp }) => {
                                 setIsSaving(false)
                             }}
                             disabled={isAnyFieldEmpty || isSaving}
-                        >
-                            Verify <ChevronRight size={24} />
+                        >{t("Verify")}<ChevronRight size={24} />
                         </Button>
                     </>
                 </div>

@@ -74,7 +74,7 @@ const Qr = ({ currentRevTab, averageRatingAsBuyer, averageRatingAsSeller, totalR
                     <div className={styles.qr_info}>
                         <h5>{t("InstaPay ID")}:</h5>
                         <div className={`${styles.qri_box} ${styles.qri_box_p}`}>
-                            <span>INSTA-{userWallet?.wallet_id}</span>
+                            <span>{t("INSTA-")}{userWallet?.wallet_id}</span>
                             <img src={copy} alt="c" style={{ cursor: "pointer" }} onClick={() => {
                                 navigator.clipboard.writeText(userWallet?.wallet_id)
                                 toast.success(userWallet?.wallet_id + " copied to clipboard.")
@@ -117,7 +117,7 @@ const Qr = ({ currentRevTab, averageRatingAsBuyer, averageRatingAsSeller, totalR
                 </div>
             </div>
         </div>
-    )
+    );
 }
 
 export default Qr

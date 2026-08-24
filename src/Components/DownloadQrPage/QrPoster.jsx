@@ -87,7 +87,7 @@ const QrPoster = ({ wallet }) => {
                 <h4>{t("Scan, Pay, Done!")}</h4>
 
                 <ul className={styles.guide}>
-                    <ol>{t("Scan the QR Code or use the code:")} <span>INSTA-{wallet?.wallet_id}</span></ol>
+                    <ol>{t("Scan the QR Code or use the code:")} <span>{t("INSTA-")}{wallet?.wallet_id}</span></ol>
                     <ol>{t("Enter the payment amount.")}</ol>
                     <ol>{t("Confirm your payment.")}</ol>
                 </ul>
@@ -99,11 +99,11 @@ const QrPoster = ({ wallet }) => {
                     {t("If you need support, we would gladly answer your questions.")}
                 </p>
                 <p className={styles.b}>
-                    {t("Please contact")}: <a>support@insta-pay.ch</a>
+                    {t("Please contact")}: <a>{t("support@insta-pay.ch")}</a>
                 </p>
             </div>
         </div>
-    )
+    );
 }
 
 export default QrPoster

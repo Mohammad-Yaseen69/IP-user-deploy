@@ -124,9 +124,6 @@ const StepOne = ({ data, dataHandler, cardToWallet, style }) => {
                 </button>
             </form>
 
-
-
-
             {!expandRecent &&
                 <>
                     {!cardToWallet &&
@@ -187,10 +184,10 @@ const StepOne = ({ data, dataHandler, cardToWallet, style }) => {
                         &&
                         <div className={styles.guide}>
                             <p>{t("Please follow these examples:")}</p>
-                            <p>{t("Wallet ID")}: <strong>GY68J782</strong></p>
-                            <p>{t("InstaPay/Instagram Username")}: <strong>instauser</strong></p>
-                            <p>{t("Email")}: <strong>user@email.com</strong></p>
-                            <p>{t("Phone Number")}: <strong>44795396600 ({t("With Country code")})</strong></p>
+                            <p>{t("Wallet ID")}: <strong>{t("GY68J782")}</strong></p>
+                            <p>{t("InstaPay/Instagram Username")}: <strong>{t("instauser")}</strong></p>
+                            <p>{t("Email")}: <strong>{t("user@email.com")}</strong></p>
+                            <p>{t("Phone Number")}: <strong>{t("44795396600 (")}{t("With Country code")})</strong></p>
                         </div>
                     }
 
@@ -225,7 +222,7 @@ const StepOne = ({ data, dataHandler, cardToWallet, style }) => {
                 <RecentBeneficiary expandRecent={expandRecent} data={data} dataHandler={dataHandler} setExpandRecent={setExpandRecent} />
             }
         </div>
-    )
+    );
 }
 
 export default StepOne
@@ -334,7 +331,7 @@ export const BeneficiaryCard = ({ data, dataHandler, item, type, setBenWalletsFo
                         loading ?
                             <div className="d-flex justify-content-center">
                                 <div className="spinner-border" color='primary' role="status">
-                                    <span className="sr-only">Loading...</span>
+                                    <span className="sr-only">{t("Loading...")}</span>
                                 </div>
                             </div> :
                             showMore
@@ -400,7 +397,6 @@ export const BeneficiaryCard = ({ data, dataHandler, item, type, setBenWalletsFo
                 </div>
             }
 
-
         </div>
-    )
+    );
 }

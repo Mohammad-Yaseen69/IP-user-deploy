@@ -138,7 +138,7 @@ const MobileWalletLink = ({ externalLink, setSubStep, data, type = "Mobile Walle
                     lineHeight: "normal",
                     textOverflow: "ellipsis",
                 }}>
-                    {convertSecondsToTime(timer)} <span style={{ fontSize: "1rem" }}>(MM:SS)</span>
+                    {convertSecondsToTime(timer)} <span style={{ fontSize: "1rem" }}>{t("(MM:SS)")}</span>
                 </span>
             </div>
 

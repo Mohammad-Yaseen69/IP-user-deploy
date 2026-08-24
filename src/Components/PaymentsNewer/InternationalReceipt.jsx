@@ -175,7 +175,7 @@ const Receipt = ({ beneficiary, amount, currency, country, payoutChannel, isExte
                             ?
                             <div className="d-flex justify-content-center">
                                 <div className="spinner-border" color='primary' role="status">
-                                    <span className="sr-only">Loading...</span>
+                                    <span className="sr-only">{t("Loading...")}</span>
                                 </div>
                             </div>
                             :
@@ -189,7 +189,7 @@ const Receipt = ({ beneficiary, amount, currency, country, payoutChannel, isExte
                 </div>
             </CardBody>
         </Card>
-    )
+    );
 }
 
 export default Receipt;

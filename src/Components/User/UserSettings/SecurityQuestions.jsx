@@ -160,7 +160,7 @@ const SecurityQuestions = ({ isCollapsed, setIsCollapsed }) => {
                             <GradientButton value={t("Edit")} size="m" attr={{ onClick: () => setIsEditable(true), type: "button" }} />
                     }
                     <Modal isOpen={showOtp} toggle={() => setShowOtp(!showOtp)}>
-                        <ModalHeader toggle={() => setShowOtp(!showOtp)}>Confirm</ModalHeader>
+                        <ModalHeader toggle={() => setShowOtp(!showOtp)}>{t("Confirm")}</ModalHeader>
                         <ModalBody>
                             <OTPConfirmation callback={(setter) => UpdateQuestionHandler(setter)} setter={setShowSuccess} setterValue={true} hideOtp={() => setShowOtp(false)} />
                         </ModalBody>
@@ -168,7 +168,7 @@ const SecurityQuestions = ({ isCollapsed, setIsCollapsed }) => {
                 </div>
             </div>
         </Form>
-    )
+    );
 }
 
 export default SecurityQuestions

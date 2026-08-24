@@ -155,7 +155,7 @@ const Dropzone = ({ file, setFile, setFileType, pAddress, tempFile }) => {
                                         {pAddress ? t("Click to upload a video") : t("Drag/Drop or Upload a file (Photo/Video/PDF)")}
                                       
                                     </p>
-                                    <p style={{ margin: '0', color: '#888', display: "flex", alignItems: "center", gap: ".3rem", justifyContent: "center", fontSize: "9px" }}><AlertTriangle size={12} /> Max size 1GB</p>
+                                    <p style={{ margin: '0', color: '#888', display: "flex", alignItems: "center", gap: ".3rem", justifyContent: "center", fontSize: "9px" }}><AlertTriangle size={12} />{t("Max size 1GB")}</p>
                                     <input type="file" value={""} onChange={handleFileChange} hidden ref={inputRef} />
                                 </div>
                         }
@@ -172,9 +172,7 @@ const Dropzone = ({ file, setFile, setFileType, pAddress, tempFile }) => {
                         border: "none",
                         outline: "none",
                         background: "#5926f0"
-                    }}>
-                        OK
-                    </Button>
+                    }}>{t("OK")}</Button>
                 </ModalFooter>
             </Modal>
         </div>

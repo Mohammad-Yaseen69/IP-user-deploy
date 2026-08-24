@@ -14,9 +14,7 @@ const ImageSwiperView = ({ isOpen, toggle, images = [] }) => {
     const [current, setCurrent] = useState(0)
     return (
         <Modal isOpen={isOpen}>
-            <ModalHeader toggle={toggle}>
-                Attachments
-            </ModalHeader>
+            <ModalHeader toggle={toggle}>{t("Attachments")}</ModalHeader>
             <ModalBody style={{ display: "flex", gap: "1rem", flexDirection: "column" }}>
                 <div style={{ display: "flex", gap: "1rem", overflowX: "auto" }}>
                     {
@@ -121,7 +119,7 @@ const ImageSwiperView = ({ isOpen, toggle, images = [] }) => {
                 </Swiper>
             </ModalBody>
         </Modal>
-    )
+    );
 }
 
 export default ImageSwiperView

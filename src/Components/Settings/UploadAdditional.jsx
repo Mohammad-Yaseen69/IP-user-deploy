@@ -332,8 +332,7 @@ const UploadAdditional = ({ isOpen, toggle, files, user_id }) => {
                                                     {selectedFile.name}
                                                 </div>
                                                 <div style={{ fontSize: '10px', color: '#64748b' }}>
-                                                    {(selectedFile.size / (1024 * 1024)).toFixed(2)} MB
-                                                </div>
+                                                    {(selectedFile.size / (1024 * 1024)).toFixed(2)}{t("MB")}</div>
                                             </div>
                                         </div>
                                     )}
