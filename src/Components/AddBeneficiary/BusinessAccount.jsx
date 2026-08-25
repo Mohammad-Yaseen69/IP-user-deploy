@@ -28,7 +28,7 @@ import SuccessModal from "./SuccessModal";
 import NestedDropdown from "../NestedDropdown";
 
 
-const BusinessAccount = ({ isInternational, toggleHandler }) => {
+const BusinessAccount = ({ isInternational, toggleHandler, errorOnInvalid = false, error = false }) => {
     const { t } = useTranslation()
     const navigate = useNavigate()
     const [active, setActive] = useState(1)
@@ -153,12 +153,15 @@ const BusinessAccount = ({ isInternational, toggleHandler }) => {
         bankCountry,
         bankCountryCode,
         bankDetailsError,
+        warning,
         isValidIban,
         ibanSwift,
         setIbanSwift,
         setBankCountry,
         setBankCountryCode,
-    } = useBankDetails({ accNumType, setFormData, handleBankExtraChange, bankExtras })
+        bankCountryIsoCode,
+        setBankCountryIsoCode,
+    } = useBankDetails({ accNumType, setFormData, handleBankExtraChange, bankExtras, errorOnInvalid, error })
     const { fieldsInfo, services, mobileProviders, selectedCountryDetails, getCountryFields } = useChannels({ setLoading, setActive, countryIsoCode, countryId, isBusiness: true })
 
     const mobileExtras = {
@@ -960,10 +963,19 @@ const BusinessAccount = ({ isInternational, toggleHandler }) => {
                         ibanSwift,
                         getBankDetails,
                         bankDetailsError,
+                        warning,
                         isValidIban,
                         formData,
+                        setFormData,
                         inputChangeHandler,
                         bankCountry,
+                        setBankCountry,
+                        bankCountryCode,
+                        setBankCountryCode,
+                        bankCountryIsoCode,
+                        setBankCountryIsoCode,
+                        errorOnInvalid,
+                        error,
                         bankExtras,
                         handleBankExtraChange,
                         fieldsInfo,

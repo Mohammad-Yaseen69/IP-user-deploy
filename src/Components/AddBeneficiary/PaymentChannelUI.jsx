@@ -8,6 +8,7 @@ import { AccountTypeData } from '../../utils/Data'
 import { UserContext } from '../../Context/UserContext'
 import { useTranslation } from 'react-i18next'
 import PhoneInput from '../PhoneInput'
+import CountryDropDown from './CountryDropDown'
 
 const PaymentChannelUI = ({
     services,
@@ -29,10 +30,19 @@ const PaymentChannelUI = ({
     ibanSwift,
     getBankDetails,
     bankDetailsError,
+    warning,
     isValidIban,
     formData,
+    setFormData,
     inputChangeHandler,
     bankCountry,
+    setBankCountry,
+    bankCountryCode,
+    setBankCountryCode,
+    bankCountryIsoCode,
+    setBankCountryIsoCode,
+    errorOnInvalid = false,
+    error = false,
     bankExtras,
     handleBankExtraChange,
     fieldsInfo,
@@ -73,6 +83,7 @@ const PaymentChannelUI = ({
     completedCrypto,
     isAfricanBank
 }) => {
+    const isErrorMode = typeof errorOnInvalid === 'boolean' ? errorOnInvalid : typeof error === 'boolean' ? error : false;
     const { userDetails } = useContext(UserContext)
     const { t } = useTranslation()
     const handleInputChange = (index, value) => {
@@ -350,7 +361,11 @@ const PaymentChannelUI = ({
                         <Label className="col-form-label">{accNumType === "IBAN" ? t("IBAN Number") : t("Swift Code")} <span className="req_star">*</span></Label>
                         <Input disabled={isEdit ? !isEditMode : false} className="form-control" style={{ flex: 1, width: "100%", minWidth: "250px" }} placeholder={accNumType === "IBAN" ? t("IBAN Number") : t("Swift Code")} required value={ibanSwift} onChange={(e) => getBankDetails(e, false)} maxLength={34} min={8} />
                         {
-                            bankDetailsError && <span style={{ color: "red", position: "absolute", bottom: "-25px", left: "10px" }} > {bankDetailsError}</span>
+                            bankDetailsError ? (
+                                <span style={{ color: "red", position: "absolute", bottom: "-25px", left: "10px" }}> {bankDetailsError}</span>
+                            ) : warning ? (
+                                <span style={{ color: "orange", position: "absolute", bottom: "-25px", left: "10px" }}> {t(warning)}</span>
+                            ) : null
                         }
                     </FormGroup>
                     {/* {
@@ -412,9 +427,30 @@ const PaymentChannelUI = ({
                             inputChangeHandler({ target: { name: e.target.name, value } })
                         }} />
                     </FormGroup>
-                    <FormGroup style={{ flex: 1, margin: 0, position: "relative" }}>
-                        <Label className="col-form-label" htmlFor="bank_account_number">{t("Bank Country")} <span className="req_star">*</span></Label>
-                        <Input className="form-control" disabled={!bankCountry} readOnly={true} style={{ flex: 1, width: "100%", minWidth: "250px" }} required name="bank_account_country" id="bank_account_country" value={bankCountry} />
+                    <FormGroup style={{ flex: 1, margin: 0, position: "relative", minWidth: "250px" }}>
+                        <Label className="col-form-label" htmlFor="bank_account_country">{t("Bank Country")} <span className="req_star">*</span></Label>
+                        {!isErrorMode ? (
+                            <CountryDropDown
+                                country={bankCountryCode || bankCountryIsoCode || bankCountry}
+                                disabled={isEdit ? !isEditMode : false}
+                                onSelect={(selected) => {
+                                    const cName = selected?.country_name || selected?.name || selected?.alpha3 || '';
+                                    const cCode = selected?.alpha3 || selected?.country_iso_code || selected?.code || '';
+                                    if (setBankCountry) setBankCountry(cName);
+                                    if (setBankCountryCode) setBankCountryCode(cCode);
+                                    if (setBankCountryIsoCode) setBankCountryIsoCode(cCode);
+                                    if (setFormData) {
+                                        setFormData(prev => ({
+                                            ...prev,
+                                            bank_account_country: cName,
+                                            bank_country: cName,
+                                        }));
+                                    }
+                                }}
+                            />
+                        ) : (
+                            <Input className="form-control" disabled={!bankCountry} readOnly={true} style={{ flex: 1, width: "100%", minWidth: "250px" }} required name="bank_account_country" id="bank_account_country" value={bankCountry} />
+                        )}
                     </FormGroup>
                     {
                         Object.keys(bankExtras).map(item => {
