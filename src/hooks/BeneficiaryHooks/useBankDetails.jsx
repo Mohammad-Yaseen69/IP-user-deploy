@@ -34,9 +34,10 @@ const useBankDetails = ({ accNumType, setFormData, handleBankExtraChange, bankEx
     const { data: rawData, error: queryError, isFetching } = useQuery({
         queryKey: ['bankDetails', accNumType, debouncedValue, alpha3, countryName],
         queryFn: () => {
-            const endpoint = accNumType === "IBAN"
-                ? `/api/beneficiary/get-details-by-iban/${debouncedValue}`
-                : `/api/beneficiary/get-details-by-bic/${debouncedValue}/abc`
+            // const endpoint = accNumType === "IBAN"
+            //     ? `/api/beneficiary/get-details-by-iban/${debouncedValue}`
+            //     : `/api/beneficiary/get-details-by-bic/${debouncedValue}/abc`
+            const endpoint = `/api/beneficiary/get-bank-details/${debouncedValue}/${accNumType === "IBAN" ? "iban" : "swift"}`
             return apiWrapper({ endpoint })
         },
         enabled: !!debouncedValue && (accNumType === "IBAN" ? debouncedValue.length > 13 : debouncedValue.length >= 7),
@@ -196,9 +197,9 @@ const useBankDetails = ({ accNumType, setFormData, handleBankExtraChange, bankEx
             if (countryNameRaw) {
                 setBankCountry(countryNameRaw[0].toUpperCase() + countryNameRaw.slice(1).toLowerCase())
             }
-            const extractedCode = decrypted?.bicDetails?.structured_address?.country_code 
-                || decrypted?.structured_address?.country_code 
-                || decrypted?.ibanDetails?.country_iso_code 
+            const extractedCode = decrypted?.bicDetails?.structured_address?.country_code
+                || decrypted?.structured_address?.country_code
+                || decrypted?.ibanDetails?.country_iso_code
                 || (accNumType === "IBAN" ? debouncedValue?.slice(0, 2)?.toUpperCase() : debouncedValue?.slice(4, 6)?.toUpperCase())
                 || ""
             setBankCountryCode(extractedCode)
