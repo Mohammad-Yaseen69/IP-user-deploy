@@ -1,7 +1,8 @@
 import { useQuery } from '@tanstack/react-query'
-import { useContext, useMemo, useState } from 'react'
+import { useContext, useEffect, useMemo, useState } from 'react'
 import { Search } from 'react-feather'
 import { useTranslation } from 'react-i18next'
+import { useLocation } from 'react-router'
 import { UserContext } from '../../Context/UserContext'
 import useWindowWidth from '../../utils/useWindowWidth'
 import InstaPayLoader from '../Loader'
@@ -34,6 +35,13 @@ const ReceiptInvoice = () => {
         invoice: null
     })
     const { userDetails } = useContext(UserContext)
+
+ 
+    const location = useLocation()
+    useEffect(() => {
+        const action = new URLSearchParams(location.search).get("action")
+        if (action === "create" && can("invoices.create")) setShowModal(true)
+    }, [location.search])
 
     const { isLoading, data, isRefetching } = useQuery({
         queryKey: ["GetInvoicesList", debouncedSearch.trim().toLowerCase(), page, limit],

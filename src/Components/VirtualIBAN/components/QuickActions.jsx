@@ -1,8 +1,8 @@
 import { Tooltip } from "@mui/material";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { X } from "react-feather";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import { toast } from "react-toastify";
 import { UserContext } from "../../../Context/UserContext.jsx";
 import { usePermission } from "../../../hooks/GeneralUse/usePermission";
@@ -74,6 +74,15 @@ const QuickActions = ({ selectedIban }) => {
         }), {})
     )
     const closeModal = (key) => setModals((prev) => ({ ...prev, [key]: false }))
+
+   
+    const location = useLocation()
+    useEffect(() => {
+        const action = new URLSearchParams(location.search).get("action")
+        if (!action || isBlocked) return
+        if (action === "deposit" && can("virtual-iban.details.view")) openModal("deposit")
+        else if (action === "convert" && can("virtual-iban.funds.convert")) openModal("convertFunds")
+    }, [location.search, isBlocked])
     const permissionByAction = {
         1: "virtual-iban.details.view",
         2: "virtual-iban.funds.convert",
