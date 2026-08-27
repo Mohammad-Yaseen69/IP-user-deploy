@@ -85,7 +85,7 @@ const CryptoTopupModal = ({ isOpen, toggle, selectedIban }) => {
     const [amount, setAmount] = useState("")
     const [feeDetails, setFeeDetails] = useState(null)
     const [confirmData, setConfirmData] = useState(null)
-    const { getKey, reset } = useIdempotency();
+    const { reset } = useIdempotency();
 
     const feeMutation = useVirtualIbanCryptoTopupFee()
     const confirmMutation = useExecuteVirtualIbanCryptoTopup()
@@ -161,8 +161,7 @@ const CryptoTopupModal = ({ isOpen, toggle, selectedIban }) => {
         const res = await confirmMutation.mutateAsync({
             iban_id: ibanId,
             token: feeDetails.token,
-            returnUrl: `${base_url}/add-funds/crypto-success?isIban=true`,
-            idempotencyKey: getKey(),
+            returnUrl: `${base_url}/add-funds/crypto-success?isIban=true`
         })
 
         const checkoutUrl = res?.data?.checkout_url || res?.data?.data?.checkout_url

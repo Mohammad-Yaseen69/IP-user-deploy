@@ -312,27 +312,6 @@ const downloadSepaReceipt = ({
     t,
 }) => {
     const doc = new jsPDF()
-    const pageWidth = doc.internal.pageSize.getWidth()
-    const pageHeight = doc.internal.pageSize.getHeight()
-    const margin = 14
-
-    const headerCanvas = document.createElement("canvas")
-    headerCanvas.width = 1000
-    headerCanvas.height = 140
-    const headerContext = headerCanvas.getContext("2d")
-    const headerGradient = headerContext.createLinearGradient(0, 0, headerCanvas.width, 0)
-    headerGradient.addColorStop(0, "#4B2AC7")
-    headerGradient.addColorStop(0.35, "#8C7DF2")
-    headerGradient.addColorStop(0.7, "#E9E5FB")
-    headerGradient.addColorStop(1, "#FFFFFF")
-    headerContext.fillStyle = headerGradient
-    headerContext.fillRect(0, 0, headerCanvas.width, headerCanvas.height)
-    doc.addImage(headerCanvas.toDataURL("image/png"), "PNG", 0, 0, pageWidth, 32)
-
-    doc.setFont("helvetica", "bold")
-    doc.setFontSize(14)
-    doc.setTextColor(255, 255, 255)
-    doc.text("InstaPay", pageWidth - margin, 18, { align: "right" })
 
     const speed =
         SEPA_TRANSFER_SPEEDS.find(
@@ -398,43 +377,34 @@ const downloadSepaReceipt = ({
         ["Status", status],
     ]
 
-    doc.setFontSize(24)
+    doc.setFontSize(20)
     doc.setFont("helvetica", "bold")
-    doc.setTextColor(89, 38, 240)
-    doc.text("SEPA Transfer Receipt", margin, 48)
+    doc.text("SEPA Transfer Receipt", 14, 20)
 
-    doc.setFontSize(9)
+    doc.setFontSize(10)
     doc.setFont("helvetica", "normal")
-    doc.setTextColor(130, 130, 138)
     doc.text(
         `Generated: ${new Date().toLocaleString()}`,
-        margin,
-        56
+        14,
+        28
     )
 
     autoTable(doc, {
-        startY: 64,
+        startY: 36,
         head: [["Details", "Information"]],
         body: rows,
-        theme: "plain",
+        theme: "grid",
         styles: {
             fontSize: 9,
             cellPadding: 4,
-            textColor: [35, 35, 40],
         },
         headStyles: {
             fontStyle: "bold",
-            fillColor: [89, 38, 240],
-            textColor: [255, 255, 255],
-        },
-        alternateRowStyles: {
-            fillColor: [246, 245, 252],
         },
         columnStyles: {
             0: {
                 cellWidth: 55,
                 fontStyle: "bold",
-                textColor: [130, 130, 138],
             },
             1: {
                 cellWidth: 125,
@@ -446,32 +416,19 @@ const downloadSepaReceipt = ({
 
     doc.setFontSize(9)
     doc.setFont("helvetica", "normal")
-    doc.setTextColor(90, 90, 95)
 
     doc.text(
         "The recipient receives the full amount - no correspondent-bank deductions in SEPA.",
-        margin,
+        14,
         finalY
     )
 
     doc.setFontSize(8)
-    doc.setTextColor(130, 130, 138)
     doc.text(
         "This receipt is generated electronically.",
-        margin,
+        14,
         finalY + 8
     )
-
-    doc.setDrawColor(225, 222, 240)
-    doc.line(margin, pageHeight - 16, pageWidth - margin, pageHeight - 16)
-    doc.setFont("helvetica", "bold")
-    doc.setFontSize(9)
-    doc.setTextColor(35, 35, 40)
-    doc.text("InstaPay Swiss", margin, pageHeight - 10)
-    doc.setFont("helvetica", "normal")
-    doc.setFontSize(8)
-    doc.setTextColor(89, 38, 240)
-    doc.text("www.insta-pay.ch", pageWidth - margin, pageHeight - 10, { align: "right" })
 
     doc.save(
         `SEPA-Transfer-Receipt-${trackingReference}.pdf`
@@ -509,9 +466,7 @@ const DoneStep = ({
             </div>
             <div className={styles.doneActions}>
                 <button type="button" className={styles.backBtn} onClick={onSendAgain}><Send size={15} />{t("Send again")}</button>
-                <div>
-                    <button type="button" className={styles.backBtn} onClick={() => downloadSepaReceipt({ amount, currencyCode, transferSpeed, selectedBeneficiary, purpose, additionalInfo, feeDetails, payoutResult, t })}><Download size={15} />{t("Download receipt")}</button>
-                    <button type="button" className={styles.nextBtn} onClick={() => navigate('/virtual-IBAN')}><Home size={15} />{t("Back to dashboard")}</button></div>
+                <div><button type="button" className={styles.backBtn} onClick={() => downloadSepaReceipt({ amount, currencyCode, transferSpeed, selectedBeneficiary, purpose, additionalInfo, feeDetails, payoutResult, t })}><Download size={15} />{t("Download receipt")}</button><button type="button" className={styles.nextBtn} onClick={() => navigate('/virtual-IBAN')}><Home size={15} />{t("Back to dashboard")}</button></div>
             </div>
         </div>
     )

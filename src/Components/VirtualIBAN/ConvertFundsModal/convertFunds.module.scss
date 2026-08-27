@@ -71,41 +71,27 @@
 
 .amountDisplay {
     display: flex;
-    align-items: center;
+    align-items: baseline;
     justify-content: center;
     width: 100%;
-    gap: 4px;
-    overflow: hidden;
+    max-width: 100%;
+    gap: 8px;
+    overflow-x: auto;
+    overflow-y: hidden;
     max-height: 90px;
-    padding: 0;
+    padding-right: 8px;
 
-    .currencySymbol {
-        flex-shrink: 0;
-        font-size: 44px;
-        font-weight: 600;
-        color: #6e7687;
-        line-height: 1;
+    &::-webkit-scrollbar {
+        height: 4px;
     }
 
-    .amountInput {
-        flex: 0 1 auto;
-        // width: auto;
-        min-width: 60px;
-        max-width: 100%;
-        font-size: 64px;
-        font-weight: 600;
-        color: #0c0a20;
+    &::-webkit-scrollbar-track {
         background: transparent;
-        border: none;
-        outline: none;
-        white-space: nowrap;
-        text-align: left;
-        padding: 0;
-        margin: 0;
+    }
 
-        &::placeholder {
-            color: #bbb;
-        }
+    &::-webkit-scrollbar-thumb {
+        background: #d0d0d0;
+        border-radius: 2px;
     }
 }
 
