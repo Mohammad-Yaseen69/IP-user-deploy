@@ -108,7 +108,7 @@ const StepFour = ({
   useEffect(() => {
     if (types.length > 0) {
       const defaultPaymentType = types.find((item) => item.value !== "card") ?? types?.[0];
-      dataHandler("payment_type", defaultPaymentType);
+      // dataHandler("payment_type", defaultPaymentType);
       const timeout = setTimeout(() => {
         callback();
       }, 100);

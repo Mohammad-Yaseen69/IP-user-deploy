@@ -29,7 +29,7 @@ import citiesData from "../CitiesDropDown/CitiesData.json"
 
 
 
-const EditBeneficiary = () => {
+const EditBeneficiary = ({ errorOnInvalid = false, error = false }) => {
     const { t } = useTranslation()
     const location = useLocation()
     const queryParams = new URLSearchParams(location.search)
@@ -89,7 +89,7 @@ const EditBeneficiary = () => {
         }
     }
 
-    const { getBankDetails, bankCountry, bankCountryCode, bankDetailsError, isValidIban, ibanSwift, setBankCountryCode } = useBankDetails({ accNumType, setFormData, handleBankExtraChange, bankExtras })
+    const { getBankDetails, bankCountry, bankCountryCode, bankCountryIsoCode, bankDetailsError, warning, isValidIban, ibanSwift, setBankCountry, setBankCountryCode, setBankCountryIsoCode } = useBankDetails({ accNumType, setFormData, handleBankExtraChange, bankExtras, errorOnInvalid, error })
     const { fieldsInfo, services, mobileProviders, selectedCountryDetails, getCountryFields } = useChannels({ setLoading, setActive, countryIsoCode, countryId })
 
 
@@ -877,10 +877,19 @@ const EditBeneficiary = () => {
                                                 ibanSwift,
                                                 getBankDetails,
                                                 bankDetailsError,
+                                                warning,
                                                 isValidIban,
                                                 formData,
+                                                setFormData,
                                                 inputChangeHandler,
                                                 bankCountry,
+                                                setBankCountry,
+                                                bankCountryCode,
+                                                setBankCountryCode,
+                                                bankCountryIsoCode,
+                                                setBankCountryIsoCode,
+                                                errorOnInvalid,
+                                                error,
                                                 bankExtras,
                                                 handleBankExtraChange,
                                                 fieldsInfo,

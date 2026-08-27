@@ -84,6 +84,15 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
     const [showConversionModal, setShowConversionModal] = useState(false)
     const [showDownloadStatementModal, setShowDownloadStatementModal] = useState(false)
 
+
+    useEffect(() => {
+        if (action === "convert") setShowConversionModal(true)
+        else if (action === "withdraw") setShowWithdrawalModal(true)
+        else if (action === "add-currency") setShowAddCurrencyModal(true)
+        else if (action === "statement") setShowDownloadStatementModal(true)
+        
+    }, [action])
+
     useEffect(() => {
         getUserWallets()
     }, [])

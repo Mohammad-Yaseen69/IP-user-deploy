@@ -77,7 +77,7 @@ const buildLetterHtml = ({ logoBase64, qrBase64, signatureBase64, iban, userDeta
     const jurisdiction = getSafeString(userDetails?.country?.country_name, 'Cyprus');
     const incDate = userDetails?.company?.date_of_incorporation ? formatDate(userDetails?.company?.date_of_incorporation) : (userDetails?.dob ? formatDate(userDetails.dob) : '24 November 2020');
     const regAddress = getSafeString(userDetails?.address, 'Solonos 7, Kolossi, 4632, Limassol, Cyprus');
-    const orgNumber = getSafeString(iban?.organisationNumber || userDetails?.orgNumber || userDetails?.registrationNumber, '577309');
+    const orgNumber = getSafeString(userDetails?.company?.registration_number || userDetails?.company?.tax_id, '---');
     const virtualIbanId = getSafeString(iban?.virtualIbanId || iban?._id || iban?.id, '');
     const customerId = virtualIbanId
 

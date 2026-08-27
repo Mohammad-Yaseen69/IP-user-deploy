@@ -162,9 +162,9 @@ const MoveMoney = () => {
                                                     {t("Pay to bank account, mobile money, wallet or cash pickup — country-adaptive, powered by Thunes.")}
                                                 </p>
                                                 <div className={styles.badgeRow}>
-                                                    <span className={`${styles.tag}`}>Worldwide</span>
-                                                    <span className={`${styles.tag}`}>Fast lookup</span>
-                                                    <span className={`${styles.tag}`}>Country-adaptive</span>
+                                                    <span className={`${styles.tag}`}>{t("Worldwide")}</span>
+                                                    <span className={`${styles.tag}`}>{t("Fast lookup")}</span>
+                                                    <span className={`${styles.tag}`}>{t("Country-adaptive")}</span>
                                                 </div>
                                             </div>
                                         </div>

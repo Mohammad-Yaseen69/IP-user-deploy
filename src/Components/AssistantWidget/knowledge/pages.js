@@ -10,11 +10,34 @@ export const PAGES = [
         id: "request_money",
         title: "Request Money",
         route: "/payments?payment_action=req_money",
-        permission: "payments.view",
+        permission: "payments.money.request",
         description:
             "Ask another person to pay you. The recipient gets a request they can approve or decline.",
     },
 
+    {
+        id: "international_transfer",
+        title: "International Transfer",
+        route: "/payments?payment_action=send_money&send_type=international",
+        permission: "payments.international.send",
+        description:
+            "Send money abroad — bank deposit, cash pickup or mobile wallet depending on the destination country. Offer this whenever someone says international, abroad, overseas, or names another country.",
+    },
+    {
+        id: "wallet_transfer",
+        title: "Wallet to Wallet Transfer",
+        route: "/payments?payment_action=send_money&send_type=wallet",
+        permission: "payments.wallet.send",
+        description:
+            "Send money to another InstaPay user's wallet. Instant, and stays inside InstaPay.",
+    },
+    {
+        id: "qr_pay",
+        title: "Pay by QR",
+        route: "/payments?payment_action=send_money&send_type=qr_pay",
+        permission: "payments.qr.send",
+        description: "Pay someone by scanning their InstaPay QR code.",
+    },
     {
         id: "send_money",
         title: "Send Money",
@@ -27,21 +50,21 @@ export const PAGES = [
         id: "pay_with_crypto",
         title: "Pay With Crypto",
         route: "/payments?payment_action=send_crypto",
-        permission: "payments.view",
+        permission: "payments.crypto.send",
         description: "Send a payment from a crypto wallet, with the converted value shown before confirming.",
     },
     {
         id: "send_quote",
         title: "Send A Quote",
         route: "/payments?payment_action=send_quote",
-        permission: "payments.view",
+        permission: "payments.quote.send",
         description: "Propose an amount and terms to someone before any money moves.",
     },
     {
         id: "airtime",
         title: "Airtime Top-Up",
         route: "/payments?payment_action=airtime",
-        permission: "payments.view",
+        permission: "payments.airtime.topup",
         description: "Buy mobile airtime for a phone number by operator and amount.",
     },
     {
@@ -70,6 +93,46 @@ export const PAGES = [
             "Every currency wallet the user holds, with available and blocked balances. New currency wallets are opened here.",
     },
     {
+        id: "convert_funds",
+        title: "Convert Funds",
+        route: "/wallets?action=convert",
+        permission: "wallet.view",
+        description:
+            "Convert money from one currency wallet to another. Opens the currency conversion window on the wallets page, where the amount, source and target currencies are chosen and the rate and fee are shown before confirming. Needs at least two currency wallets.",
+    },
+    {
+        id: "withdraw_balance",
+        title: "Withdraw Balance",
+        route: "/wallets?action=withdraw",
+        permission: "wallet.payment.withdraw",
+        description:
+            "Withdraw money out of a currency wallet to a verified receiving account. Opens the withdrawal window on the wallets page.",
+    },
+    {
+        id: "add_currency",
+        title: "Add Currency Wallet",
+        route: "/wallets?action=add-currency",
+        permission: "wallet.currencies.add",
+        description:
+            "Open a new currency wallet. Opens the add-currency window on the wallets page, where a currency is picked to create the wallet.",
+    },
+    {
+        id: "wallet_statement",
+        title: "Download Wallet Statement",
+        route: "/wallets?action=statement",
+        permission: "transactions.wallet.export",
+        description:
+            "Download a statement for a currency wallet as PDF or CSV. Opens the download-statement window on the wallets page.",
+    },
+    {
+        id: "block_wallet",
+        title: "Block or Unblock Wallet",
+        route: "/wallets",
+        permission: "wallet.status.update",
+        description:
+            "Block or unblock a currency wallet. Takes the user to the wallets page where the 'Block the Wallet' button acts on the selected wallet — the user picks the wallet and presses it themselves. A wallet set as default cannot be blocked.",
+    },
+    {
         id: "portfolio",
         title: "My Portfolio",
         route: "/portfolio",
@@ -85,12 +148,52 @@ export const PAGES = [
             "Order a card, view its details, load it from a wallet, or freeze it. Card top-ups draw from a chosen wallet.",
     },
     {
+        id: "mastercard_add_funds",
+        title: "Load Money onto the Card",
+        route: "/my-mastercard?addFundsMobile=true",
+        permission: "mastercard.funds.add",
+        description:
+            "Opens My Mastercard with the top-up window already up, for moving money from a wallet onto the card.",
+    },
+    {
+        id: "mastercard_card_to_card",
+        title: "Card to Card Transfer",
+        route: "/my-mastercard?ctcMobile=true",
+        permission: "mastercard.transfer.card-to-card",
+        description:
+            "Opens My Mastercard with the card-to-card transfer window already up, for moving money between two cards.",
+    },
+    {
+        id: "mastercard_card_to_wallet",
+        title: "Card to Wallet Transfer",
+        route: "/my-mastercard?ctwMobile=true",
+        permission: "mastercard.transfer.card-to-wallet",
+        description:
+            "Opens My Mastercard with the card-to-wallet window already up, for moving money off the card back into a wallet.",
+    },
+    {
         id: "virtual_iban",
         title: "My Virtual IBAN",
         route: "/virtual-IBAN",
         permission: "virtual-iban.view",
         description:
             "A bank account number in the user's own name for receiving ordinary bank transfers into InstaPay.",
+    },
+    {
+        id: "iban_deposit",
+        title: "Virtual IBAN Deposit Details",
+        route: "/virtual-IBAN?action=deposit",
+        permission: "virtual-iban.details.view",
+        description:
+            "Show the deposit details (IBAN, BIC and reference) for receiving a bank transfer into the virtual IBAN. Opens the deposit window on the virtual IBAN page.",
+    },
+    {
+        id: "iban_convert_funds",
+        title: "Move Virtual IBAN Funds",
+        route: "/virtual-IBAN?action=convert",
+        permission: "virtual-iban.funds.convert",
+        description:
+            "Move funds from the virtual IBAN into an InstaPay wallet. Opens the convert-funds window on the virtual IBAN page, where the amount and destination wallet are chosen and the fee is shown before confirming.",
     },
     {
         id: "iban_onboarding",
@@ -138,6 +241,22 @@ export const PAGES = [
         description: "Requests the user has sent and requests waiting on them to approve or decline.",
     },
     {
+        id: "payment_requests_received",
+        title: "Requests Waiting on Me",
+        route: "/payment-requests?tab=received",
+        permission: "payment-request.view",
+        description:
+            "Payment Requests opened on the received tab — the ones other people sent, waiting for this user to approve or decline.",
+    },
+    {
+        id: "payment_requests_sent",
+        title: "Requests I Sent",
+        route: "/payment-requests?tab=sent",
+        permission: "payment-request.view",
+        description:
+            "Payment Requests opened on the sent tab — the ones this user asked others to pay, and where each stands.",
+    },
+    {
         id: "quotations",
         title: "Quotations",
         route: "/quotations",
@@ -145,11 +264,35 @@ export const PAGES = [
         description: "Every quote sent and received, with current status.",
     },
     {
+        id: "quotations_received",
+        title: "Quotes I Received",
+        route: "/quotations?tab=received",
+        permission: "quotations.view",
+        description:
+            "Quotations opened on the received tab — quotes other people sent this user to accept or decline.",
+    },
+    {
+        id: "quotations_sent",
+        title: "Quotes I Sent",
+        route: "/quotations?tab=sent",
+        permission: "quotations.view",
+        description:
+            "Quotations opened on the sent tab — quotes this user proposed to others, and their current status.",
+    },
+    {
         id: "invoices",
         title: "Invoices",
         route: "/invoices",
         permission: "invoices.view",
         description: "Create and send invoices, share a payment link per invoice, track which are paid.",
+    },
+    {
+        id: "create_invoice",
+        title: "Create Invoice",
+        route: "/invoices?action=create",
+        permission: "invoices.create",
+        description:
+            "Create a new invoice to send to someone. Opens the create-invoice window on the invoices page.",
     },
     {
         id: "analytics",
@@ -206,6 +349,20 @@ export const PAGES = [
             "The user's shareable public page. Anyone with the link can pay them without needing account details.",
     },
     {
+        id: "quick_qr_pay",
+        title: "Pay from a QR Image",
+        route: "/quick-qrpay",
+        description:
+            "Upload a saved QR code image to pay it, for when the code was sent as a picture rather than shown on a screen to scan.",
+    },
+    {
+        id: "insta_media",
+        title: "InstaPay Media",
+        route: "/Insta-media",
+        description:
+            "InstaPay's product for creators — live streaming, posting and publishing video, with one login across the creators a user follows.",
+    },
+    {
         id: "qr_sticker",
         title: "My QR Code Sticker",
         route: "/chips-in",
@@ -228,6 +385,14 @@ export const PAGES = [
         permission: "settings.view",
         description:
             "Basic info, security, verification, receiving accounts, saved cards, data export, account deletion.",
+    },
+    {
+        id: "edit_basic_info",
+        title: "Edit Basic Info",
+        route: "/settings?tab=basic&editmode=true",
+        permission: "settings.view",
+        description:
+            "Settings opened on Basic Info with editing already switched on — for changing name, username or other personal details straight away.",
     },
     {
         id: "verification",
