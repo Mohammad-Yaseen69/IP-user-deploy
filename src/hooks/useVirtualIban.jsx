@@ -245,14 +245,14 @@ export const useExecuteVirtualIbanCryptoTopup = () => {
     const { getKey } = useIdempotency()
 
     return useMutation({
-        mutationFn: ({ idempotencyKey, ...payload }) =>
+        mutationFn: (payload) =>
             apiWrapper({
                 endpoint: "/api/virtual-iban/topup/crypto",
                 method: "POST",
                 payload,
                 isEncrypted: true,
                 isDecrypted: true,
-                idempotencyKey: idempotencyKey || getKey(),
+                idempotencyKey: getKey(),
             }),
         onSuccess: (_, variables) => {
             queryClient.invalidateQueries({ queryKey: virtualIbanQueryKeys.list() })

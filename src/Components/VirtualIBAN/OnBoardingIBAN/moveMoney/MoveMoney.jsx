@@ -112,14 +112,14 @@ const MoveMoney = () => {
                                 <div className={styles.sectionLabel}>{t("Send money out")} <span>{t("Instant, free transfers between InstaPay accounts")}</span></div>
                                 <div className={styles.cardsGrid3}>
 
-                                    <div className={`${styles.card} ${styles.cardPurple}`} onClick={() => setShowSepaPage(true)}
+                                    <div className={styles.card} onClick={() => setShowSepaPage(true)}
                                         style={{ cursor: "pointer" }}
                                     >
                                         <div className={`${styles.iconBox} ${styles.bgBlue}`}>
                                             <Compass size={20} />
                                         </div>
                                         <div className={styles.cardBody}>
-                                            <h3 className={styles.cardTitleWhite}>{t("SEPA Transfer")}</h3>
+                                            <h3 className={styles.cardTitle}>{t("SEPA Transfer")}</h3>
                                             <p className={styles.cardDesc}>
                                                 {t("European bank transfers in euro — fast, and low-cost across 30+ SEPA countries.")}
                                             </p>
@@ -243,7 +243,7 @@ const MoveMoney = () => {
                                 </div>
                             </div>
 
-
+                            
                         </>
                 }
 
