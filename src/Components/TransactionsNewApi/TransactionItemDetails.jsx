@@ -286,7 +286,7 @@ const TransactionItemDetails = ({ item, badgeColor, desc, internationalReceiver,
                                                 ?
                                                 ""
                                                 :
-                                                <p>INSTA-{item?.wallet_id}</p>
+                                                <p>{t("INSTA-")}{item?.wallet_id}</p>
                                         }
                                         {item?.cardNo && (
                                             <p>{t("Card Number")}: {`••${cardNo?.slice(-4)}`}</p>
@@ -542,7 +542,7 @@ const TransactionItemDetails = ({ item, badgeColor, desc, internationalReceiver,
                     </div>}
             </div>
         </div>
-    )
+    );
 }
 
 export default TransactionItemDetails

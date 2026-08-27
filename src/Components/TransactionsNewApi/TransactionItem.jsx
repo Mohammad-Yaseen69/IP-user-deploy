@@ -230,7 +230,7 @@ const TransactionItem = ({ item, activeItem, setActiveItem, index, fromReferral 
             }}>
                 <div style={{ minWidth: "155px", whiteSpace: 'nowrap' }}>{new Date(item?.createdAt)?.toLocaleString()}</div>
                 {vvc && <div>{item?.transactionId}</div>}
-                {vvc && <div>••{cardNo?.slice(-4)}</div>}
+                {vvc && <div>{t("••")}{cardNo?.slice(-4)}</div>}
                 {vvc && <div>{item?.type}</div>}
                 {vvc && <div>{service_name_formatter(item?.transaction_type)?.replace("Mastercard", "") ?? "--"} </div>}
 
@@ -309,7 +309,7 @@ const TransactionItem = ({ item, activeItem, setActiveItem, index, fromReferral 
                 ))
             }
         </div>
-    )
+    );
 }
 
 export default TransactionItem

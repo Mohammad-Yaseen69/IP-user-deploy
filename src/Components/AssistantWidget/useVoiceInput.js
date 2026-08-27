@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
-const TRANSCRIBE_ENDPOINT = "/api/assistant/transcribe";
+const TRANSCRIBE_ENDPOINT = `${import.meta.env.VITE_BOT_API_URL}/api/assistant/transcribe`;
 const MAX_RECORDING_MS = 60_000;
 
 const MIME_CANDIDATES = [

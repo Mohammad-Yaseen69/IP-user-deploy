@@ -47,8 +47,6 @@ const formatDateForInput = (val) => {
     return '';
 };
 
-
-
 const CompanyStep = ({ onNext, onBack, userType, data = {} }) => {
     const { t } = useTranslation()
     const { userDetails } = useContext(UserContext)
@@ -70,6 +68,12 @@ const CompanyStep = ({ onNext, onBack, userType, data = {} }) => {
         mainContact: data.mainContact || '',
         agent: agentDefault,
     })
+
+    useEffect(() => {
+        window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+        document.body.scrollTop = 0;
+        document.documentElement.scrollTop = 0;
+    }, []);
 
     useEffect(() => {
         const rawDate = userDetails?.company?.date_of_incorporation || data.dateOfIncorporation || '';
@@ -176,8 +180,6 @@ const CompanyStep = ({ onNext, onBack, userType, data = {} }) => {
                         style={{ width: "100%" }}
                     >
 
-
-
                         <div className={styles.formRow}>
                             <div className={styles.inputGroup}>
                                 <label className={styles.inputLabel}>
@@ -186,7 +188,6 @@ const CompanyStep = ({ onNext, onBack, userType, data = {} }) => {
 
                                 <div className={styles.inputWrapper}>
                                     <MapPin className={styles.inputIcon} size={16} />
-
 
                                     <input
                                         type="text"
@@ -197,20 +198,6 @@ const CompanyStep = ({ onNext, onBack, userType, data = {} }) => {
                                         readOnly
                                         value={form.countryOfIncorporation}
                                     />
-                                    {/* <select
-                                    className={styles.selectInput}
-                                    value={form.countryOfIncorporation}
-                                    onChange={set("countryOfIncorporation")}
-                                    style={{ paddingLeft: 44 }}
-                                >
-                                    <option value="">{t("Select country")}</option>
-
-                                    {COUNTRIES.map((c) => (
-                                        <option key={c} value={c}>
-                                            {t(c)}
-                                        </option>
-                                    ))}
-                                </select> */}
                                 </div>
                             </div>
 
@@ -237,23 +224,9 @@ const CompanyStep = ({ onNext, onBack, userType, data = {} }) => {
                             </div>
                         </div>
 
-
                         <div className={styles.formRow}>
 
-
-
-                            {/* <div className={styles.inputGroup}>
-                                <label className={styles.inputLabel}>&nbsp;</label>
-
-                                <button
-                                    className={styles.registryBtn}
-                                    type="button"
-                                >
-                                    {t("Look up on registry")}
-                                </button>
-                            </div> */}
                         </div>
-
 
                         <div className={styles.formRow}>
                             <div className={styles.inputGroup}>
@@ -298,7 +271,6 @@ const CompanyStep = ({ onNext, onBack, userType, data = {} }) => {
                             </div>
                         </div>
 
-
                         <div className={styles.formRow}>
                             <div className={styles.inputGroup}>
                                 <label className={styles.inputLabel}>
@@ -333,7 +305,6 @@ const CompanyStep = ({ onNext, onBack, userType, data = {} }) => {
                                 />
                             </div>
                         </div>
-
 
                         <div className={styles.formRow}>
                             <div className={styles.inputGroup}>
@@ -375,7 +346,6 @@ const CompanyStep = ({ onNext, onBack, userType, data = {} }) => {
                             </div>
                         </div>
 
-
                         <div className={styles.inputGroup}>
                             <label className={styles.inputLabel}>
                                 {t("REGISTERED ADDRESS")}
@@ -394,7 +364,6 @@ const CompanyStep = ({ onNext, onBack, userType, data = {} }) => {
                                 />
                             </div>
                         </div>
-
 
                         <div className={styles.formRow}>
                             <div className={styles.inputGroup}>
@@ -447,7 +416,6 @@ const CompanyStep = ({ onNext, onBack, userType, data = {} }) => {
                     {t("Continue")}
                 </button>
             </div>
-
 
         </div>
     )

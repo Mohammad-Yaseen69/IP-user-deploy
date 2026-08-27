@@ -35,7 +35,7 @@ export default Wallets
 
 const WalletCard = ({ item, data, dataHandler }) => {
     const { authHeader } = useContext(UserContext)
-
+    const {t} = useTranslation()
     const [walletData, setWalletData] = useState({})
     const [updateValue, setUpdateValue] = useState(0)
 
@@ -78,7 +78,7 @@ const WalletCard = ({ item, data, dataHandler }) => {
             }}
         >
             <div className={styles.left}>
-                <h5>{item?.currency?.code}  Wallet</h5>
+                <h5>{item?.currency?.code}{t("Wallet")}</h5>
                 <div className={styles.badge}>{item?.wallet_id}</div>
             </div>
             <div className={styles.card_view}>
@@ -88,7 +88,7 @@ const WalletCard = ({ item, data, dataHandler }) => {
                 />
             </div>
         </div>
-    )
+    );
 }
 
 const WalletCardView = ({ wallet, walletData }) => {

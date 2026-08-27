@@ -86,9 +86,6 @@ const SIDEBAR_ICONS = {
     [STEPS.DONE]: () => <SealCheckSmall />,
 }
 
-
-
-
 const ConvertFundsModal = ({ isOpen, toggle, selectedIban, availableBalance }) => {
     const { t } = useTranslation()
     const width = useWindowWidth()
@@ -261,7 +258,6 @@ const ConvertFundsModal = ({ isOpen, toggle, selectedIban, availableBalance }) =
             className={styles.modalLayout}
             style={{ flexDirection: width < 1000 ? "column" : "row" }}
         >
-            {/* {width >= 1000 && ( */}
             <div className={addFundsStyles.left}>
                 <div
                     style={
@@ -308,7 +304,6 @@ const ConvertFundsModal = ({ isOpen, toggle, selectedIban, availableBalance }) =
                         <ContactBox />
                     </div>}
             </div>
-            {/* )} */}
 
             <div
                 className={styles.rightPanel}
@@ -362,11 +357,6 @@ const ConvertFundsModal = ({ isOpen, toggle, selectedIban, availableBalance }) =
             >
                 <ModalBody style={{ padding: "20px" }}>{renderBody()}</ModalBody>
             </Modal >
-            {/* 
-            {isOpen && width < 1000 && (
-                <div style={{ padding: "16px" }}>{renderBody()}</div>
-            )
-            } */}
         </>
     )
 }

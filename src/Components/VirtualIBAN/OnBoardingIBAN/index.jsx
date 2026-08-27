@@ -28,7 +28,6 @@ import OTPConfirmation from '../../UserSettingsNew/OTPConfirmation'
 const STEPS_BUSINESS = ['landing', 'selection', 'account', 'company', 'activity', 'ownership', 'documents', 'review']
 const STEPS_INDIVIDUAL = ['landing', 'selection', 'account', 'review']
 
-
 const initialState = {
     step: 'landing',
     userType: 'business',
@@ -136,6 +135,18 @@ const OnboardingIBAN = ({ onCreated }) => {
     useEffect(() => {
         checkRequestStatus();
     }, [userDetails?._id]);
+
+    useEffect(() => {
+        window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+        document.body.scrollTop = 0;
+        document.documentElement.scrollTop = 0;
+        const scrollContainers = document.querySelectorAll('.page-body, .page-content, .main-content, .content-wrapper, main, [class*="layout"], [class*="container"]');
+        scrollContainers.forEach(el => {
+            if (el && el.scrollTop > 0) {
+                el.scrollTop = 0;
+            }
+        });
+    }, [state.step]);
 
     const { sendOtp } = useSendOtp({
         onSuccess: (token) => {
@@ -379,15 +390,6 @@ const OnboardingIBAN = ({ onCreated }) => {
                     </div>
                 </div>
             )}
-
-            {/* {state.step === 'account' && (
-                <AccountStep
-                    onNext={(d) => goNext(d, 'account')}
-                    onBack={goBack}
-                    userType={state.userType}
-                    data={state.account}
-                />
-            )} */}
 
             {state.step === 'company' && (
                 <CompanyStep

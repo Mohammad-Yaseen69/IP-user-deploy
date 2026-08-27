@@ -152,7 +152,7 @@ const Country = ({ country, setCountry, setStep, setServices, type = "thunes" })
                                         </div>
                                     ))
                                     :
-                                    <div>No Countries</div>
+                                    <div>{t("No Countries")}</div>
                             }
                         </>
                 }
@@ -161,7 +161,7 @@ const Country = ({ country, setCountry, setStep, setServices, type = "thunes" })
                 {t("Continue")}
             </Button>
         </div>
-    )
+    );
 }
 
 export default Country

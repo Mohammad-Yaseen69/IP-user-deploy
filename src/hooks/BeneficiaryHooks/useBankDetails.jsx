@@ -4,11 +4,19 @@ import { countries as CountriesList } from 'country-list-json'
 import { useQuery } from '@tanstack/react-query'
 import { apiWrapper } from '../../utils/Functions/apiWrapper'
 
-const useBankDetails = ({ accNumType, setFormData, handleBankExtraChange, bankExtras, setError, alpha3, countryName, fieldKeyOverrides = {}, debounceMs = 1500, bypassCountryCheck = false }) => {
+const useBankDetails = ({ accNumType, setFormData, handleBankExtraChange, bankExtras, setError, alpha3, countryName, fieldKeyOverrides = {}, debounceMs = 1500, bypassCountryCheck = false, errorOnInvalid = false, error = false }) => {
+    const isErrorMode = typeof errorOnInvalid === 'boolean'
+        ? errorOnInvalid
+        : typeof error === 'boolean'
+            ? error
+            : false
+
     const { authHeader } = useContext(UserContext)
     const [bankCountry, setBankCountry] = useState("")
     const [bankDetailsError, setBankDetailsError] = useState("")
+    const [warning, setWarning] = useState("")
     const [bankCountryCode, setBankCountryCode] = useState("")
+    const [bankCountryIsoCode, setBankCountryIsoCode] = useState("")
     const [isValidIban, setIsValidIban] = useState(true)
     const [ibanSwift, setIbanSwift] = useState("")
     const [debouncedValue, setDebouncedValue] = useState("")
@@ -26,9 +34,10 @@ const useBankDetails = ({ accNumType, setFormData, handleBankExtraChange, bankEx
     const { data: rawData, error: queryError, isFetching } = useQuery({
         queryKey: ['bankDetails', accNumType, debouncedValue, alpha3, countryName],
         queryFn: () => {
-            const endpoint = accNumType === "IBAN"
-                ? `/api/beneficiary/get-details-by-iban/${debouncedValue}`
-                : `/api/beneficiary/get-details-by-bic/${debouncedValue}/abc`
+            // const endpoint = accNumType === "IBAN"
+            //     ? `/api/beneficiary/get-details-by-iban/${debouncedValue}`
+            //     : `/api/beneficiary/get-details-by-bic/${debouncedValue}/abc`
+            const endpoint = `/api/beneficiary/get-bank-details/${debouncedValue}/${accNumType === "IBAN" ? "iban" : "swift"}`
             return apiWrapper({ endpoint })
         },
         enabled: !!debouncedValue && (accNumType === "IBAN" ? debouncedValue.length > 13 : debouncedValue.length >= 7),
@@ -67,10 +76,13 @@ const useBankDetails = ({ accNumType, setFormData, handleBankExtraChange, bankEx
             }
             setBankCountry("")
             setBankCountryCode("")
+            setBankCountryIsoCode("")
             setIsValidIban(true)
-            setError ? setError("") : setBankDetailsError("")
+            if (setError) setError("")
+            setBankDetailsError("")
+            setWarning("")
         }
-    }, [debouncedValue, accNumType, bankNameKey, branchNameKey, bankBranchStreetKey, bankCityKey, bankProvinceKey, bankPostalCodeKey, queryMetadata.isForEdit, hasInputInteraction, setError])
+    }, [debouncedValue, accNumType, bankNameKey, branchNameKey, bankBranchStreetKey, bankCityKey, bankProvinceKey, bankPostalCodeKey, queryMetadata.isForEdit, hasInputInteraction, setError, bankExtras, handleBankExtraChange, setFormData])
 
     useEffect(() => {
         setIbanSwift("")
@@ -80,7 +92,21 @@ const useBankDetails = ({ accNumType, setFormData, handleBankExtraChange, bankEx
     useEffect(() => {
         if (rawData) {
             const decrypted = accNumType === "IBAN" ? rawData : rawData?.bicDetails
-            if (!decrypted) return
+            if (!decrypted || decrypted?.error || decrypted?.status === false) {
+                if (isErrorMode) {
+                    const msg = "Invalid Details"
+                    if (setError) setError(msg)
+                    setBankDetailsError(msg)
+                    setWarning("")
+                    setIsValidIban(false)
+                } else {
+                    if (setError) setError("")
+                    setBankDetailsError("")
+                    setWarning("Please enter rest of the details")
+                    setIsValidIban(true)
+                }
+                return
+            }
 
             if (!bypassCountryCheck) {
                 let isValidCountry = true
@@ -100,24 +126,35 @@ const useBankDetails = ({ accNumType, setFormData, handleBankExtraChange, bankEx
                 }
 
                 if (!isValidCountry) {
-                    const msg = accNumType === "IBAN" ? "IBAN must belong to your selected country!" : "Swift Code must belong to your selected country!"
-                    setError ? setError(msg) : setBankDetailsError(msg)
-                    setFormData(prev => ({
-                        ...prev,
-                        [bankNameKey]: "",
-                        [branchNameKey]: "",
-                        [bankBranchStreetKey]: "",
-                        [bankCityKey]: "",
-                        [bankProvinceKey]: "",
-                        [bankPostalCodeKey]: "",
-                        [bankAccountNumberKey]: ""
-                    }))
-                    setIsValidIban(false)
-                    return
+                    if (isErrorMode) {
+                        const msg = accNumType === "IBAN" ? "IBAN must belong to your selected country!" : "Swift Code must belong to your selected country!"
+                        if (setError) setError(msg)
+                        setBankDetailsError(msg)
+                        setWarning("")
+                        setFormData(prev => ({
+                            ...prev,
+                            [bankNameKey]: "",
+                            [branchNameKey]: "",
+                            [bankBranchStreetKey]: "",
+                            [bankCityKey]: "",
+                            [bankProvinceKey]: "",
+                            [bankPostalCodeKey]: "",
+                            [bankAccountNumberKey]: ""
+                        }))
+                        setIsValidIban(false)
+                        return
+                    } else {
+                        if (setError) setError("")
+                        setBankDetailsError("")
+                        setWarning("Please enter rest of the details")
+                        setIsValidIban(true)
+                    }
                 }
             }
 
-            setError ? setError("") : setBankDetailsError("")
+            if (setError) setError("")
+            setBankDetailsError("")
+            setWarning("")
 
             setFormData(prev => {
                 const valueOrPrevious = (value, key) => (
@@ -160,10 +197,16 @@ const useBankDetails = ({ accNumType, setFormData, handleBankExtraChange, bankEx
             if (countryNameRaw) {
                 setBankCountry(countryNameRaw[0].toUpperCase() + countryNameRaw.slice(1).toLowerCase())
             }
-            setBankCountryCode(decrypted?.bicDetails?.structured_address?.country_code || decrypted?.structured_address?.country_code || "")
+            const extractedCode = decrypted?.bicDetails?.structured_address?.country_code
+                || decrypted?.structured_address?.country_code
+                || decrypted?.ibanDetails?.country_iso_code
+                || (accNumType === "IBAN" ? debouncedValue?.slice(0, 2)?.toUpperCase() : debouncedValue?.slice(4, 6)?.toUpperCase())
+                || ""
+            setBankCountryCode(extractedCode)
+            setBankCountryIsoCode(extractedCode)
             setIsValidIban(true)
         }
-    }, [rawData, accNumType, alpha3, countryName, setError, setFormData, queryMetadata, bankNameKey, branchNameKey, bankBranchStreetKey, bankCityKey, bankProvinceKey, bankPostalCodeKey])
+    }, [rawData, accNumType, alpha3, countryName, setError, setFormData, queryMetadata, bankNameKey, branchNameKey, bankBranchStreetKey, bankCityKey, bankProvinceKey, bankPostalCodeKey, bypassCountryCheck, isErrorMode, bankExtras, handleBankExtraChange, debouncedValue])
 
     // Process query errors
     useEffect(() => {
@@ -176,35 +219,46 @@ const useBankDetails = ({ accNumType, setFormData, handleBankExtraChange, bankEx
                 return
             }
 
-            setError ? setError("Invalid Details") : setBankDetailsError("Invalid Details")
-            if (queryMetadata.isForEdit) {
-                setIsValidIban(true)
-                return
-            }
+            if (isErrorMode) {
+                const msg = "Invalid Details"
+                if (setError) setError(msg)
+                setBankDetailsError(msg)
+                setWarning("")
+                if (queryMetadata.isForEdit) {
+                    setIsValidIban(true)
+                    return
+                }
 
-            setFormData(prev => ({
-                ...prev,
-                [bankNameKey]: "",
-                [branchNameKey]: "",
-                [bankBranchStreetKey]: "",
-                [bankCityKey]: "",
-                [bankProvinceKey]: "",
-                [bankPostalCodeKey]: "",
-                [bankAccountNumberKey]: ""
-            }))
+                setFormData(prev => ({
+                    ...prev,
+                    [bankNameKey]: "",
+                    [branchNameKey]: "",
+                    [bankBranchStreetKey]: "",
+                    [bankCityKey]: "",
+                    [bankProvinceKey]: "",
+                    [bankPostalCodeKey]: "",
+                    [bankAccountNumberKey]: ""
+                }))
 
-            if (!queryMetadata.isForEdit) {
-                if (bankExtras && handleBankExtraChange) {
-                    for (const key in bankExtras) {
-                        handleBankExtraChange({ target: { name: key, value: "" } })
+                if (!queryMetadata.isForEdit) {
+                    if (bankExtras && handleBankExtraChange) {
+                        for (const key in bankExtras) {
+                            handleBankExtraChange({ target: { name: key, value: "" } })
+                        }
                     }
                 }
+                setBankCountry("")
+                setBankCountryCode("")
+                setBankCountryIsoCode("")
+                setIsValidIban(false)
+            } else {
+                if (setError) setError("")
+                setBankDetailsError("")
+                setWarning("Please enter rest of the details")
+                setIsValidIban(true)
             }
-            setBankCountry("")
-            setBankCountryCode("")
-            setIsValidIban(false)
         }
-    }, [queryError, setError, setFormData, queryMetadata, bankNameKey, branchNameKey, bankBranchStreetKey, bankCityKey, bankProvinceKey, bankPostalCodeKey])
+    }, [queryError, isErrorMode, setError, setFormData, queryMetadata, bankNameKey, branchNameKey, bankBranchStreetKey, bankCityKey, bankProvinceKey, bankPostalCodeKey, bankExtras, handleBankExtraChange])
 
     const getBankDetails = useCallback((e, isForEdit = false, account_number = "") => {
         const value = e.target.value?.replace(/[^a-zA-Z0-9]/g, '')
@@ -216,23 +270,34 @@ const useBankDetails = ({ accNumType, setFormData, handleBankExtraChange, bankEx
         }))
         setIbanSwift(value)
         setQueryMetadata({ isForEdit, account_number })
-        setIsValidIban(false)
+
+        if (isErrorMode) {
+            setIsValidIban(false)
+        } else {
+            setIsValidIban(true)
+        }
 
         if (value.length < (accNumType === "IBAN" ? 14 : 7)) {
-            setError ? setError("") : setBankDetailsError("")
+            if (setError) setError("")
+            setBankDetailsError("")
+            setWarning("")
         }
-    }, [accNumType, setError, setFormData])
+    }, [accNumType, isErrorMode, setError, setFormData])
 
     return {
         getBankDetails,
         bankCountry,
         bankCountryCode,
+        bankCountryIsoCode,
         bankDetailsError,
+        warning,
         isValidIban,
         ibanSwift,
         setIbanSwift,
         setBankDetailsError,
+        setWarning,
         setBankCountryCode,
+        setBankCountryIsoCode,
         setBankCountry,
         isFetchingBank: isFetching
     }

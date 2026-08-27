@@ -1,7 +1,7 @@
 import { useCallback, useContext, useRef } from "react";
 import { UserContext } from "../../Context/UserContext";
 
-const SESSION_ENDPOINT = "/api/assistant/session";
+const SESSION_ENDPOINT = `${import.meta.env.VITE_BOT_API_URL}/api/assistant/session`;
 
 /**
  * Exchanges the InstaPay token for a short-lived assistant token, once.

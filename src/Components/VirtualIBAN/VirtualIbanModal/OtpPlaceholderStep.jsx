@@ -1,10 +1,6 @@
 import { useTranslation } from "react-i18next"
 import styles from "./virtualIbanModal.module.scss"
 
-/**
- * Placeholder while OTP API is not wired.
- * Real flow uses OTPConfirmation inside a nested Modal (see index.jsx — commented block).
- */
 const OtpPlaceholderStep = () => {
     const { t } = useTranslation()
 

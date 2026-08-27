@@ -4,7 +4,7 @@ import { countries } from "country-list-json";
 import PhoneInput from "../PhoneInput";
 import 'react-phone-input-2/lib/style.css'
 import "./req_star.css"
-import { useContext, useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { UserContext } from "../../Context/UserContext";
 import WalletDetails from "./WalletDetails";
 import CountryDropDown from "./CountryDropDown";
@@ -28,7 +28,7 @@ import SuccessModal from "./SuccessModal";
 import NestedDropdown from "../NestedDropdown";
 
 
-const BusinessAccount = ({ isInternational, toggleHandler }) => {
+const BusinessAccount = ({ isInternational, toggleHandler, errorOnInvalid = false, error = false }) => {
     const { t } = useTranslation()
     const navigate = useNavigate()
     const [active, setActive] = useState(1)
@@ -153,12 +153,15 @@ const BusinessAccount = ({ isInternational, toggleHandler }) => {
         bankCountry,
         bankCountryCode,
         bankDetailsError,
+        warning,
         isValidIban,
         ibanSwift,
         setIbanSwift,
         setBankCountry,
         setBankCountryCode,
-    } = useBankDetails({ accNumType, setFormData, handleBankExtraChange, bankExtras })
+        bankCountryIsoCode,
+        setBankCountryIsoCode,
+    } = useBankDetails({ accNumType, setFormData, handleBankExtraChange, bankExtras, errorOnInvalid, error })
     const { fieldsInfo, services, mobileProviders, selectedCountryDetails, getCountryFields } = useChannels({ setLoading, setActive, countryIsoCode, countryId, isBusiness: true })
 
     const mobileExtras = {
@@ -169,6 +172,8 @@ const BusinessAccount = ({ isInternational, toggleHandler }) => {
         account_type: "",
         iban: ""
     }
+
+    const initializedUserId = useRef(null)
 
     useEffect(() => {
         if (!isAddBeneficiary) {
@@ -186,7 +191,8 @@ const BusinessAccount = ({ isInternational, toggleHandler }) => {
     }, [companyName])
 
     useEffect(() => {
-        if (user) {
+        if (user && initializedUserId.current !== user._id) {
+            initializedUserId.current = user._id
             setCompanyName(user?.company_name || "")
 
             setFormData(prev => ({
@@ -957,10 +963,19 @@ const BusinessAccount = ({ isInternational, toggleHandler }) => {
                         ibanSwift,
                         getBankDetails,
                         bankDetailsError,
+                        warning,
                         isValidIban,
                         formData,
+                        setFormData,
                         inputChangeHandler,
                         bankCountry,
+                        setBankCountry,
+                        bankCountryCode,
+                        setBankCountryCode,
+                        bankCountryIsoCode,
+                        setBankCountryIsoCode,
+                        errorOnInvalid,
+                        error,
                         bankExtras,
                         handleBankExtraChange,
                         fieldsInfo,

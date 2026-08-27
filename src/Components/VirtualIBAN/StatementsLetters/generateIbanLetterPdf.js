@@ -2,8 +2,7 @@ import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import QRCodeStyling from 'qr-code-styling';
 import logoImg from '../../../assets/images/logo/logo2.webp';
-
-// ─── Helpers ───────────────────────────────────────────────────────────
+import signatureImg from './signatur.png';
 
 const formatDate = (value, options = {}) => {
     if (!value) return new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric', ...options });
@@ -71,22 +70,17 @@ const getSafeString = (val, fallback = '') => {
     return fallback;
 };
 
-// ─── HTML Template Builder (Matching Figma Node 70:20) ─────────────────
-
-const buildLetterHtml = ({ logoBase64, qrBase64, iban, userDetails, qrUrl }) => {
-    // Account Holder details
-    const holderName = getSafeString(iban?.account_holder_name || iban?.accountHolderName || userDetails?.fullName || userDetails?.companyName || userDetails?.name, 'HEAVYMORE LTD');
-    const holderType = getSafeString(iban?.holderType || userDetails?.accountType, (userDetails?.companyName ? 'Business / Company' : 'Individual / Personal'));
-    const companyType = getSafeString(iban?.companyType || userDetails?.companyType, (userDetails?.companyName ? 'Limited Liability Company' : 'Individual Account'));
-    const jurisdiction = getSafeString(iban?.incorporationJurisdiction || userDetails?.country?.country_name || userDetails?.country || userDetails?.jurisdiction, 'Cyprus');
-    const incDate = iban?.incorporationDate ? formatDate(iban.incorporationDate) : '24 November 2020';
-    const regAddress = getSafeString(iban?.registeredAddress || userDetails?.address || userDetails?.formattedAddress, 'Solonos 7, Kolossi, 4632, Limassol, Cyprus');
-    const orgNumber = getSafeString(iban?.organisationNumber || userDetails?.orgNumber || userDetails?.registrationNumber, '577309');
-    const recordNumber = getSafeString(iban?.recordNumber || userDetails?.recordNumber, '39117956');
+const buildLetterHtml = ({ logoBase64, qrBase64, signatureBase64, iban, userDetails, displayUrl }) => {
+    const holderName = getSafeString(iban?.account_holder_name, 'HEAVYMORE LTD');
+    const holderType = getSafeString(userDetails?.account_type, '---');
+    const companyType = getSafeString(userDetails?.category?.name, '---');
+    const jurisdiction = getSafeString(userDetails?.country?.country_name, 'Cyprus');
+    const incDate = userDetails?.company?.date_of_incorporation ? formatDate(userDetails?.company?.date_of_incorporation) : (userDetails?.dob ? formatDate(userDetails.dob) : '24 November 2020');
+    const regAddress = getSafeString(userDetails?.address, 'Solonos 7, Kolossi, 4632, Limassol, Cyprus');
+    const orgNumber = getSafeString(userDetails?.company?.registration_number || userDetails?.company?.tax_id, '---');
     const virtualIbanId = getSafeString(iban?.virtualIbanId || iban?._id || iban?.id, '');
-    const customerId = getSafeString(iban?.customerId || userDetails?.customerId || (virtualIbanId ? virtualIbanId.slice(-8).toUpperCase() : 'NKGI6TY9'), 'NKGI6TY9');
+    const customerId = virtualIbanId
 
-    // IBAN details
     const ibanNumber = getSafeString(iban?.iban, 'MT17 SYPL 3948 0354 2000 1814 7054 916');
     const bic = getSafeString(iban?.bank?.bic || iban?.swift_code || iban?.bic, 'SYPLMTM2');
     const currency = getSafeString(iban?.currency, 'EUR');
@@ -103,12 +97,11 @@ const buildLetterHtml = ({ logoBase64, qrBase64, iban, userDetails, qrUrl }) => 
             <td style="padding: 11px 20px; color: #55506B; font-size: 13.5px; font-weight: 500; width: 44%; vertical-align: middle;">
                 ${label}
             </td>
-            <td style="padding: 11px 20px; color: #1A1826; font-size: 13.5px; font-weight: 600; vertical-align: middle; line-height: 1.45; ${isMono ? 'font-family: \"SF Mono\", \"Consolas\", monospace;' : ''}">
-                ${
-                    isStatus
-                        ? `<span style="display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 12px; font-weight: 600; background: #DCFCE7; color: #15803D;">${value}</span>`
-                        : (value || '-')
-                }
+            <td style="padding: 11px 20px; color: #1A1826; font-size: 13.5px; font-weight: 600; vertical-align: middle; line-height: 1.45; ${isMono ? "font-family: 'SF Mono', 'Consolas', monospace;" : ''}">
+                ${isStatus
+            ? `<span style="display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 12px; font-weight: 600; background: #DCFCE7; color: #15803D;">${value}</span>`
+            : (value || '-')
+        }
             </td>
         </tr>
     `;
@@ -127,11 +120,10 @@ const buildLetterHtml = ({ logoBase64, qrBase64, iban, userDetails, qrUrl }) => 
         <!-- ═══ TOP HEADER ═══ -->
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 28px;">
             <div style="display: flex; align-items: center;">
-                ${
-                    logoBase64
-                        ? `<img src="${logoBase64}" style="height: 30px; width: auto;" />`
-                        : `<span style="font-size: 24px; font-weight: 800; color: #5626E6;">InstaPay</span>`
-                }
+                ${logoBase64
+            ? `<img src="${logoBase64}" style="height: 30px; width: auto;" />`
+            : `<span style="font-size: 24px; font-weight: 800; color: #5626E6;">InstaPay</span>`
+        }
             </div>
             <div style="
                 font-size: 11.5px;
@@ -187,12 +179,11 @@ const buildLetterHtml = ({ logoBase64, qrBase64, iban, userDetails, qrUrl }) => 
                 <tbody>
                     ${renderTableRow('Full legal name', holderName)}
                     ${renderTableRow('Holder type', holderType)}
-                    ${renderTableRow('Company type', companyType)}
+                    ${holderType === 'business' ? renderTableRow('Company type', companyType) : ''}
                     ${renderTableRow('Registration / Incorporation jurisdiction', jurisdiction)}
-                    ${renderTableRow('Incorporation date', incDate)}
+                    ${holderType === 'business' ? renderTableRow('Incorporation date', incDate) : renderTableRow('Date of birth', incDate)}
                     ${renderTableRow('Registered address', regAddress)}
-                    ${renderTableRow('Organisation number', orgNumber)}
-                    ${renderTableRow('Record number', recordNumber)}
+                    ${renderTableRow('Organisation / Registration number', orgNumber)}
                     ${renderTableRow('Customer ID', customerId, true)}
                 </tbody>
             </table>
@@ -259,9 +250,13 @@ const buildLetterHtml = ({ logoBase64, qrBase64, iban, userDetails, qrUrl }) => 
         ">
             <!-- Left: Signatory Info -->
             <div style="flex: 1; padding-right: 28px;">
-                <div style="font-size: 14px; font-weight: 700; color: #1A1826; margin-bottom: 6px;">
+                <div style="font-size: 14px; font-weight: 700; color: #1A1826; margin-bottom: 4px;">
                     InstaPay Operations
                 </div>
+                ${signatureBase64
+            ? `<div style="height: 44px; display: flex; align-items: center; margin-bottom: 6px;"><img src="${signatureBase64}" style="max-height: 42px; max-width: 150px; width: auto; object-fit: contain;" /></div>`
+            : ''
+        }
                 <div style="font-size: 13px; color: #55506B; line-height: 1.5; font-weight: 400;">
                     Authorised signatory · Client Operations &amp; Compliance<br />
                     InstaPay, a brand of Kemit Kingdom - K2 - SA, Route des Falaises 7, 2000 Neuchâtel, Switzerland<br />
@@ -285,17 +280,16 @@ const buildLetterHtml = ({ logoBase64, qrBase64, iban, userDetails, qrUrl }) => 
                     padding: 4px;
                     box-sizing: border-box;
                 ">
-                    ${
-                        qrBase64
-                            ? `<img src="${qrBase64}" style="width: 110px; height: 110px; border-radius: 4px;" />`
-                            : `<div style="font-size: 10px; color: #98A2B3;">QR Code</div>`
-                    }
+                    ${qrBase64
+            ? `<img src="${qrBase64}" style="width: 110px; height: 110px; border-radius: 4px;" />`
+            : `<div style="font-size: 10px; color: #98A2B3;">QR Code</div>`
+        }
                 </div>
                 <div style="font-size: 10px; color: #55506B; margin-top: 6px; font-weight: 500;">
                     SCAN OR VISIT TO VERIFY
                 </div>
                 <div style="font-size: 10px; color: #45159C; font-weight: 600; line-height: 1.35; font-family: 'SF Mono', 'Consolas', monospace; margin-top: 2px; word-break: break-all;">
-                    verify.insta-pay.ch/<br />${refCode}
+                   ${displayUrl}
                 </div>
             </div>
         </div>
@@ -333,25 +327,23 @@ const buildLetterHtml = ({ logoBase64, qrBase64, iban, userDetails, qrUrl }) => 
     </div>`;
 };
 
-// ─── Main PDF Generator ─────────────────────────────────────────────────
-
 const generateIbanLetterPdf = async (iban, userDetails = {}, options = {}) => {
-    // 1. Prepare assets in parallel
     const virtualIbanId = iban?.virtualIbanId || iban?._id || iban?.id || '';
-    const base_url = window.location.origin || 'https://my.insta-pay.ch';
-    const qrUrl = `${base_url}/validate-iban/${virtualIbanId}`;
+    const origin = window.location.origin || 'https://my.insta-pay.ch';
+    const cleanHost = origin.replace(/^https?:\/\//, '');
+    const qrUrl = `${origin}/v/${virtualIbanId}`;
+    const displayUrl = `${cleanHost}/v/${virtualIbanId}`;
 
-    const [logoBase64, qrBase64] = await Promise.allSettled([
+    const [logoBase64, qrBase64, signatureBase64] = await Promise.allSettled([
         toBase64(logoImg),
         generateQrBase64(qrUrl),
+        toBase64(signatureImg),
     ]).then((results) =>
         results.map((r) => (r.status === 'fulfilled' ? r.value : null))
     );
 
-    // 2. Build HTML
-    const html = buildLetterHtml({ logoBase64, qrBase64, iban, userDetails, qrUrl });
+    const html = buildLetterHtml({ logoBase64, qrBase64, signatureBase64, iban, userDetails, displayUrl });
 
-    // 3. Create off-screen container
     const wrapper = document.createElement('div');
     wrapper.style.cssText = 'position:absolute;left:-9999px;top:0;z-index:-1;width:794px;';
     wrapper.innerHTML = html;
@@ -360,7 +352,6 @@ const generateIbanLetterPdf = async (iban, userDetails = {}, options = {}) => {
     const target = wrapper.querySelector('#iban-letter');
 
     try {
-        // 4. Render to canvas using html2canvas
         const canvas = await html2canvas(target, {
             scale: 2,
             useCORS: true,
@@ -371,33 +362,29 @@ const generateIbanLetterPdf = async (iban, userDetails = {}, options = {}) => {
             windowWidth: 794,
         });
 
-        // 5. Convert to PDF
-        const imgData = canvas.toDataURL('image/png');
-        const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+        const imgData = canvas.toDataURL('image/jpeg', 0.92);
+        const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4', compress: true });
         const pdfWidth = 210;
         const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
 
-        // If height fits in standard A4 single page or multi page
         if (pdfHeight <= 297) {
-            doc.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+            doc.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight, undefined, 'FAST');
         } else {
-            // Multi-page rendering if content exceeds 1 page
             let heightLeft = pdfHeight;
             let position = 0;
             const pageHeight = 297;
 
-            doc.addImage(imgData, 'PNG', 0, position, pdfWidth, pdfHeight);
+            doc.addImage(imgData, 'JPEG', 0, position, pdfWidth, pdfHeight, undefined, 'FAST');
             heightLeft -= pageHeight;
 
             while (heightLeft > 0) {
                 position = heightLeft - pdfHeight;
                 doc.addPage();
-                doc.addImage(imgData, 'PNG', 0, position, pdfWidth, pdfHeight);
+                doc.addImage(imgData, 'JPEG', 0, position, pdfWidth, pdfHeight, undefined, 'FAST');
                 heightLeft -= pageHeight;
             }
         }
 
-        // 6. Preview or Download
         if (options.isPreview) {
             const blobUrl = doc.output('bloburl');
             window.open(blobUrl, '_blank');
@@ -406,7 +393,6 @@ const generateIbanLetterPdf = async (iban, userDetails = {}, options = {}) => {
             doc.save(fileName);
         }
     } finally {
-        // 7. Clean up
         if (document.body.contains(wrapper)) {
             document.body.removeChild(wrapper);
         }

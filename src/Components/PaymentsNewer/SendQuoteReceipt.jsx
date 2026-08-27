@@ -187,7 +187,7 @@ const SendQuoteReceipt = ({ beneficiary, amount, currency, title, description, f
                             ?
                             <div class="d-flex justify-content-center">
                                 <div class="spinner-border" color='primary' role="status">
-                                    <span class="sr-only">Loading...</span>
+                                    <span class="sr-only">{t("Loading...")}</span>
                                 </div>
                             </div>
                             :
@@ -201,7 +201,7 @@ const SendQuoteReceipt = ({ beneficiary, amount, currency, title, description, f
                 </div>
             </CardBody>
         </Card >
-    )
+    );
 }
 
 export default SendQuoteReceipt;
