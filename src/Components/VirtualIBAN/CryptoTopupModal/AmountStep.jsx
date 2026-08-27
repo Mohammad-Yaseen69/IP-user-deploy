@@ -1,27 +1,33 @@
-import React, { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { useTranslation } from "react-i18next"
+import usePlainFx from "../../../hooks/Payments/usePlainFx"
+import styles from "../ConvertFundsModal/convertFunds.module.scss"
 import {
     formatAmountValue,
-    getAmountNumber,
     getAmountInputSize,
+    getAmountNumber,
     handleAmountInputBlur,
     handleAmountInputChange,
     handleAmountInputKeyUp,
     isSameAmount,
 } from "../utils/amount"
-import styles from "../ConvertFundsModal/convertFunds.module.scss"
-import usePlainFx from "../../../hooks/Payments/usePlainFx"
 
 const QUICK_USDT_AMOUNTS = [20, 50, 100, 250, 500]
 const MIN_USDT_AMOUNT = 5
 const MAX_EUR_AMOUNT = 1500000
 
-const AmountStep = ({ amount, setAmount, selectedIban }) => {
+const AmountStep = ({ amount, setAmount, selectedIban, width = "auto" }) => {
     const { t } = useTranslation()
     const { getExchangeRate } = usePlainFx()
     const [exchangeRate, setExchangeRate] = useState(null)
+    const amountInputRef = useRef(null)
     const numericAmount = getAmountNumber(amount)
     const hasAmount = !!String(amount ?? "").trim()
+
+    useEffect(() => {
+        amountInputRef.current?.focus()
+    }, [])
+
     useEffect(() => {
         let isMounted = true
 
@@ -87,7 +93,9 @@ const AmountStep = ({ amount, setAmount, selectedIban }) => {
                     <span className={styles.currencySymbol}>$</span>
 
                     <input
+                        ref={amountInputRef}
                         className={styles.amountInput}
+                        style={{ width }}
                         type="text"
                         value={amount}
                         onChange={(event) =>

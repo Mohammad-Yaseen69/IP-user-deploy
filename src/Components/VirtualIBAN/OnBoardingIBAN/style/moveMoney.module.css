@@ -242,6 +242,9 @@
 .bgYellow {
     background: #EAAA08;
 }
+.bgPurple{
+    background: #6941C6;
+}
 
 .bgWhiteTrans {
     background: rgba(255, 255, 255, 0.2);

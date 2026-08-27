@@ -45,6 +45,7 @@ const AmountStep = ({ amount, setAmount, currencyCode = "EUR", availableBalance 
                     <input
                         className={styles.amountInput}
                         type="text"
+                        style={{ width }}
                         value={amount}
                         onChange={(event) => handleAmountInputChange(event, setAmount)}
                         onKeyUp={(event) => handleAmountInputKeyUp(event, setAmount)}
