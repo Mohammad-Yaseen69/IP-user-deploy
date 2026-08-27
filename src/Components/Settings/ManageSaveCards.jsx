@@ -83,7 +83,7 @@ const ManageSaveCards = () => {
                             <img src={logo_w} alt="" />
                         </div>
                         <div className={cardStyles.c_bot}>
-                            <span>XXXX XXXX XXXX {item?.last4}</span>
+                            <span>{t("XXXX XXXX XXXX")}{item?.last4}</span>
                             <div style={{ position: "relative", display: "inline-block" }}>
                                 <svg
                                     title="Delete"
@@ -145,7 +145,7 @@ const ManageSaveCards = () => {
                 </ModalFooter>
             </Modal>
         </div>
-    )
+    );
 }
 
 export default ManageSaveCards

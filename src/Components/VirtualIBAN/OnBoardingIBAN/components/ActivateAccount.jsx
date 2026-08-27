@@ -55,6 +55,9 @@ const ActivateAccount = ({
   const [loadingRates, setLoadingRates] = useState(false);
 
   useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
     getUserWallets();
   }, []);
 
@@ -138,7 +141,6 @@ const ActivateAccount = ({
           alignItems: "start",
         }}
       >
-        {/* Left Side: Header, Payment Method, Wallet Selection */}
         <div className={styles.mainArea}>
           <div className={styles.header}>
             <div className={styles.headerTitle}>
@@ -278,8 +280,7 @@ const ActivateAccount = ({
                               color: "#111827",
                             }}
                           >
-                            {wallet.currency?.code} Wallet
-                          </h5>
+                            {wallet.currency?.code}{t("Wallet")}</h5>
                         </div>
                         <div
                           style={{
@@ -287,8 +288,7 @@ const ActivateAccount = ({
                             fontSize: "12px",
                             color: "#64748B",
                           }}
-                        >
-                          ID: {wallet.wallet_id}
+                        >{t("ID:")}{wallet.wallet_id}
                         </div>
                         <div
                           style={{
@@ -359,24 +359,7 @@ const ActivateAccount = ({
                 {feeDetails?.isKybIncluded && (
                   <div className={styles.summaryRow} style={{ marginTop: "8px" }}>
                     <span>{t("KYB Verification Fee")}</span>
-                    <strong>${feeDetails?.kybFee || 0}.00 USD</strong>
-                  </div>
-                )}
-
-                <div className={styles.summaryRow} style={{ marginTop: "8px" }}>
-                  <span>{t("Total")}</span>
-                  <strong>€{feeDetails?.baseAmount || 500}.00</strong>
-                </div>
-
-                {feeDetails?.currency !== "EUR" && (
-                  <div
-                    className={styles.summaryRow}
-                    style={{ marginTop: "8px" }}
-                  >
-                    <span>{t("Converted payable amount")}</span>
-                    <strong style={{ color: "#4A32E3" }}>
-                      {feeDetails?.convertedAmount} {feeDetails?.currency}
-                    </strong>
+                    <strong>${feeDetails?.kybFee || 0}{t(".00 USD")}</strong>
                   </div>
                 )}
               </div>
@@ -469,7 +452,6 @@ const ActivateAccount = ({
           </div>
         </div>
 
-        {/* Right Side: Order Summary & Payment Card */}
       </div>
 
       <div className={styles.navigationFooter}>

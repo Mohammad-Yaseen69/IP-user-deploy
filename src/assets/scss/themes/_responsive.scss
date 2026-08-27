@@ -702,7 +702,7 @@
     }
 
     li {
-      margin-right: 8px;
+      margin-right: 0px;
 
       .files-list {
         .file-left {
@@ -945,6 +945,7 @@
                             .sidebar-link {
                               display: flex;
                               align-items: center;
+                              flex-wrap: nowrap;
 
                               &::before {
                                 height: 100%;

@@ -286,6 +286,24 @@
     position: relative;
     display: flex;
     align-items: center;
+    width: 100%;
+}
+
+.currencyBadge {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: #F1F0FD;
+    color: #4A32E3;
+    font-size: 11.5px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 6px;
+    pointer-events: none;
+    letter-spacing: 0.5px;
+    font-family: 'Inter', sans-serif;
+    user-select: none;
 }
 
 .chips {
@@ -1282,12 +1300,15 @@
     justify-content: space-between;
     border-bottom: 1px solid #EFF1F6;
     padding: 12px 0px;
+    gap: 8px;
 }
 
 .left {
     display: flex;
     align-items: center;
     gap: 10px;
+    min-width: 0;
+    flex: 1;
 }
 
 .iconWrap {
@@ -1324,6 +1345,13 @@
     text-decoration: line-through;
 }
 
+.right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
 .doneBadge {
     background: #DCFCE7;
     color: #16A34A;
@@ -1331,6 +1359,10 @@
     font-weight: 700;
     padding: 5px 10px;
     border-radius: 999px;
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .inprogress .iconWrap svg {
@@ -1355,8 +1387,13 @@
     color: #4A32E3;
     font-size: 11px;
     font-weight: 700;
-    padding: 5px 10px;
+    padding: 5px 12px;
     border-radius: 999px;
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
 }
 
 
@@ -1370,10 +1407,11 @@
 }
 
 .todoBadge {
-    display: flex;
+    display: inline-flex;
     padding: 4px 11px;
-    flex-direction: column;
-    align-items: flex-start;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
     border-radius: 100px;
     background: #FFFCE0;
     color: #6B5900;
@@ -1382,6 +1420,7 @@
     font-style: normal;
     font-weight: 800;
     line-height: normal;
+    white-space: nowrap;
 }
 
 

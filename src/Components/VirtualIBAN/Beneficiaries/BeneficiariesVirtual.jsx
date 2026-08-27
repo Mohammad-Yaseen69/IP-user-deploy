@@ -1,6 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { Copy, Plus, ChevronLeft, Search, User, Trash2, Edit3, Shield, Phone, Mail, MapPin } from 'react-feather';
 import styles from './BeneficiariesVirtual.module.css';
+import IbanBreadcrumb from '../components/IbanBreadcrumb';
 import { useTranslation } from 'react-i18next';
 import useWindowWidth from '../../../utils/useWindowWidth';
 import TopRight from '../../topRight';
@@ -25,8 +26,8 @@ const BeneficiariesVirtual = () => {
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
     const [isChannelModalOpen, setIsChannelModalOpen] = useState(false);
     const [beneficiaryToEdit, setBeneficiaryToEdit] = useState(null);
+    const [channelModalBeneficiary, setChannelModalBeneficiary] = useState(null);
 
-    // Fetch user beneficiaries from API
     const { data: rawData, refetch, isFetching } = useQuery({
         queryKey: ['userBeneficiaries', accountId],
         queryFn: () => {
@@ -40,9 +41,8 @@ const BeneficiariesVirtual = () => {
     });
 
     const allBeneficiaries = rawData?.beneficiaryList || rawData?.data?.beneficiaryList || (Array.isArray(rawData?.data) ? rawData.data : []);
-    const beneficiaries = allBeneficiaries.filter(b => !!b.vIbanBeneficiary);
+    const beneficiaries = allBeneficiaries;
 
-    // Filter beneficiaries by search query
     const filteredBeneficiaries = beneficiaries.filter(b => {
         const query = searchQuery.toLowerCase();
         const fullName = `${b.first_name || ''} ${b.last_name || ''}`.toLowerCase();
@@ -79,6 +79,18 @@ const BeneficiariesVirtual = () => {
         }
     };
 
+    const handleBeneficiarySaved = async (savedBeneficiary, isNew) => {
+        if (savedBeneficiary?._id) {
+            setSelectedBeneficiaryId(savedBeneficiary._id);
+        }
+        await refetch();
+
+        if (isNew && savedBeneficiary) {
+            setChannelModalBeneficiary(savedBeneficiary);
+            setIsChannelModalOpen(true);
+        }
+    };
+
     const getInitials = (b) => {
         if (!b) return 'B';
         if (b.beneficiary_type === 'business' && b.company_name) {
@@ -110,19 +122,14 @@ const BeneficiariesVirtual = () => {
 
             <div className={styles.mainContent}>
                 <div className={styles.navigationHeader}>
-                    <div className={styles.navigationRow}>
-                        <button className={styles.backBtn} onClick={() => navigate("/virtual-IBAN")}>
-                            <ChevronLeft size={16} /> {t("Back")}
-                        </button>
-                        <span className={styles.breadcrumb}>
-                            {t("My virtual bank")} &gt; <span className={styles.breadcrumbActive}>{t("Beneficiaries")}</span>
-                        </span>
-                    </div>
+                    <IbanBreadcrumb items={[
+                        { label: "My virtual bank", path: "/virtual-IBAN" },
+                        { label: "Beneficiaries" }
+                    ]} />
                 </div>
 
                 <div className={styles.contentLayout}>
                     <div className={styles.columnsFlexGrid}>
-                        {/* LEFT COLUMN: BENEFICIARY LIST */}
                         <div className={styles.leftColumn}>
                             <div className={styles.lefHeader}>
                                 <div className={styles.subHeaderFlex}>
@@ -189,7 +196,6 @@ const BeneficiariesVirtual = () => {
                             </div>
                         </div>
 
-                        {/* RIGHT COLUMN: ACTIVE BENEFICIARY DETAILS & CHANNELS */}
                         <div className={styles.rightColumn}>
                             {activeBeneficiary ? (
                                 <>
@@ -210,6 +216,7 @@ const BeneficiariesVirtual = () => {
                                                 <p className={styles.subTextDetail}>
                                                     {activeBeneficiary.country_name || activeBeneficiary.country_iso_code || t("Global")}
                                                     {activeBeneficiary.city ? `, ${activeBeneficiary.city}` : ''}
+                                                    {activeBeneficiary.zip_code ? ` ${activeBeneficiary.zip_code}` : ''}
                                                     {activeBeneficiary.email ? ` • ${activeBeneficiary.email}` : ''}
                                                     {activeBeneficiary.phone ? ` • ${activeBeneficiary.phone}` : ''}
                                                 </p>
@@ -234,13 +241,15 @@ const BeneficiariesVirtual = () => {
                                         <span className={styles.sectionSubTitle}>{t("Payout Channels")}</span>
                                         <button
                                             className={styles.addChannelLink}
-                                            onClick={() => setIsChannelModalOpen(true)}
+                                            onClick={() => {
+                                                setChannelModalBeneficiary(activeBeneficiary);
+                                                setIsChannelModalOpen(true);
+                                            }}
                                         >
                                             + {t("Add channel")}
                                         </button>
                                     </div>
 
-                                    {/* 1. BANK CHANNELS */}
                                     {activeBeneficiary.bank_details && activeBeneficiary.bank_details.length > 0 && (
                                         activeBeneficiary.bank_details.map((bank, bIdx) => (
                                             <div key={bank._id || bIdx} className={styles.cryptoWalletCard} style={{ marginTop: '12px' }}>
@@ -267,8 +276,7 @@ const BeneficiariesVirtual = () => {
                                                 </div>
                                                 <div className={styles.addressRow}>
                                                     <span className={styles.cryptoAddress}>
-                                                        {`IBAN/Acc: ${bank.iban || bank.account_number || ''}`}
-                                                        {bank.swift_code ? ` • SWIFT: ${bank.swift_code}` : ''}
+                                                        {bank.iban || bank.account_number || bank.bank_account_number || ''}
                                                     </span>
                                                     <button className={styles.copyBtn} onClick={() => handleCopy(bank.iban || bank.account_number)}>
                                                         <Copy size={14} />
@@ -278,7 +286,6 @@ const BeneficiariesVirtual = () => {
                                         ))
                                     )}
 
-                                    {/* 2. MOBILE WALLET CHANNELS */}
                                     {activeBeneficiary.mobile_wallet && activeBeneficiary.mobile_wallet.length > 0 && (
                                         activeBeneficiary.mobile_wallet.map((mw, mIdx) => (
                                             <div key={mw._id || mIdx} className={styles.cryptoWalletCard} style={{ marginTop: '12px' }}>
@@ -313,7 +320,6 @@ const BeneficiariesVirtual = () => {
                                         ))
                                     )}
 
-                                    {/* 3. CRYPTO CHANNELS */}
                                     {activeBeneficiary.crypto && activeBeneficiary.crypto.length > 0 && (
                                         activeBeneficiary.crypto.map((cr, cIdx) => (
                                             <div key={cr._id || cIdx} className={styles.cryptoWalletCard} style={{ marginTop: '12px' }}>
@@ -348,7 +354,6 @@ const BeneficiariesVirtual = () => {
                                         ))
                                     )}
 
-                                    {/* Empty state if no channels exist */}
                                     {(!activeBeneficiary.bank_details || activeBeneficiary.bank_details.length === 0) &&
                                         (!activeBeneficiary.mobile_wallet || activeBeneficiary.mobile_wallet.length === 0) &&
                                         (!activeBeneficiary.crypto || activeBeneficiary.crypto.length === 0) && (
@@ -357,7 +362,10 @@ const BeneficiariesVirtual = () => {
                                                     {t("No payout channels added for this beneficiary yet.")}
                                                 </p>
                                                 <button
-                                                    onClick={() => setIsChannelModalOpen(true)}
+                                                    onClick={() => {
+                                                        setChannelModalBeneficiary(activeBeneficiary);
+                                                        setIsChannelModalOpen(true);
+                                                    }}
                                                     style={{ padding: '8px 16px', borderRadius: '8px', border: 'none', background: '#4F46E5', color: '#FFF', fontWeight: 600, fontSize: '13px', cursor: 'pointer' }}
                                                 >
                                                     + {t("Add first channel")}
@@ -375,7 +383,6 @@ const BeneficiariesVirtual = () => {
                 </div>
             </div>
 
-            {/* MODALS */}
             <AddBeneficiaryModal
                 open={isAddModalOpen}
                 handleClose={() => {
@@ -383,13 +390,16 @@ const BeneficiariesVirtual = () => {
                     setBeneficiaryToEdit(null);
                 }}
                 beneficiaryToEdit={beneficiaryToEdit}
-                onSaveSuccess={() => refetch()}
+                onSaveSuccess={handleBeneficiarySaved}
             />
 
             <DynamicChannelModal
                 open={isChannelModalOpen}
-                handleClose={() => setIsChannelModalOpen(false)}
-                beneficiaryData={activeBeneficiary}
+                handleClose={() => {
+                    setIsChannelModalOpen(false);
+                    setChannelModalBeneficiary(null);
+                }}
+                beneficiaryData={channelModalBeneficiary || activeBeneficiary}
                 onSaveSuccess={() => refetch()}
             />
         </div>

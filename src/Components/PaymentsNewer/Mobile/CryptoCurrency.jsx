@@ -148,7 +148,7 @@ const CryptoCurrency = ({ cryptoCurrency, setStep, setCryptoCurrency, }) => {
                                     padding: ".3rem",
                                     borderRadius: "3px",
                                     fontWeight: 700
-                                }}>{item.value.toUpperCase()}-USD</span>
+                                }}>{item.value.toUpperCase()}{t("-USD")}</span>
                                 <h4 style={{ marginBottom: 0, fontSize: "1.2rem", fontWeight: 800, color: item.text_color }}>{item.price}</h4>
                             </div>
                             <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", justifyContent: "space-between", width: "100%", position: "relative" }}>
@@ -176,14 +176,14 @@ const CryptoCurrency = ({ cryptoCurrency, setStep, setCryptoCurrency, }) => {
                                 </div>
                             </div>
                         </div>
-                    )
+                    );
                 })}
             </div>
             <Button className={styles.button} disabled={!cryptoCurrency} onClick={() => setStep(prev => prev + 1)}>
                 {t("Continue")}
             </Button>
         </div>
-    )
+    );
 }
 
 export default CryptoCurrency

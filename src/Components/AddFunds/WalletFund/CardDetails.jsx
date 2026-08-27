@@ -169,7 +169,7 @@ const CardDetails = ({ setSubStep, cardNumber, setCardNumber, expiry, setExpiry,
                         <img src={logo_w} alt="" />
                       </div>
                       <div className={styles.c_bot}>
-                        <span>XXXX XXXX XXXX {item?.last4}</span>
+                        <span>{t("XXXX XXXX XXXX")}{item?.last4}</span>
                         {
                           currentCard?._id === item?._id
                           &&
@@ -259,7 +259,7 @@ const CardDetails = ({ setSubStep, cardNumber, setCardNumber, expiry, setExpiry,
         </div>
       }
     </Card>
-  )
+  );
 }
 
 export default CardDetails

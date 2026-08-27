@@ -54,7 +54,7 @@ const Index = () => {
 
             </div>
             <div className={style.footer}>
-                <span>www.instapay.biz | Karrri Kingdom SA - Switzerland</span>
+                <span>{t("www.instapay.biz | Karrri Kingdom SA - Switzerland")}</span>
             </div>
         </div>
     );

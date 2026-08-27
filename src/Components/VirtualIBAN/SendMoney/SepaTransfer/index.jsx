@@ -4,7 +4,8 @@ import { useNavigate } from "react-router"
 import { toast } from "react-toastify"
 import { Modal, ModalBody } from "reactstrap"
 import { CheckCircle, ChevronDown, ChevronLeft, ChevronRight, Download, FileText, Home, List, Plus, Search, Send, User } from "react-feather"
-import AddBeneficiary from "../../../AddBeneficiary"
+import AddBeneficiaryModal from "../../Beneficiaries/Modals/AddBeneficiaryModal"
+import DynamicChannelModal from "../../Beneficiaries/Modals/DynamicChannelModal"
 import useWindowWidth from "../../../../utils/useWindowWidth"
 import ContactBox from "../../../MyMasterCard/PaymentModal/ContactBox"
 import { getAmountNumber } from "../../utils/amount"
@@ -17,6 +18,8 @@ import {
     goNext,
     isSidebarStepActive,
     isSidebarStepCompleted,
+    MIN_AMOUNT,
+    MAX_AMOUNT,
     PURPOSE_OPTIONS,
     SEPA_TRANSFER_SPEEDS,
     SIDEBAR_STEPS,
@@ -31,13 +34,31 @@ import styles from "./SepaTransfer.module.css"
 import withdrawStyles from "../../WithdrawBalanceModal/withdrawBalance.module.scss"
 import { UserContext } from "../../../../Context/UserContext"
 import useSendOtp from "../../../../hooks/GeneralUse/useSendOtp"
-import { useVirtualIbanPayoutDirect, useVirtualIbanPayoutFee } from "../../../../hooks/useVirtualIban"
+import { useQueryClient } from "@tanstack/react-query"
+import { useVirtualIbanPayoutDirect, useVirtualIbanPayoutFee, useSyncVirtualIbanBalance, virtualIbanQueryKeys } from "../../../../hooks/useVirtualIban"
 import { handlePaymentApiError } from "../../../../utils/Functions/handlePaymentApiError"
 import OTPConfirmation from "../../../UserSettingsNew/OTPConfirmation"
 import sepaCountries from "./sepaCountries.json"
 import { Tooltip } from "@mui/material"
 import jsPDF from "jspdf"
 import autoTable from "jspdf-autotable"
+import { isValidDescription } from "../../utils/swiftValidation"
+import BeneficiaryStep from "../Common/BeneficiaryStep"
+import {
+    getBeneficiaryName,
+    getBeneficiaryTypeLabel,
+    getBeneficiaryCountry,
+    getBeneficiaryBankDetail,
+    getBeneficiaryBic,
+    getBeneficiaryBankName,
+    getBeneficiaryIban,
+    getBeneficiaryInitial,
+    getBeneficiaryId,
+    getBeneficiaryAccountCount,
+    getBeneficiarySubtitle,
+    maskIban
+} from "../Common/beneficiaryHelpers"
+import { formatCurrency } from "../../../../Helper/AmountFormat"
 
 const DEFAULT_BENEFICIARY_FORM = {
     type: "individual",
@@ -61,36 +82,12 @@ const sidebarIcons = {
     [SIDEBAR_STEP_NAMES.DONE]: CheckCircle,
 }
 
-const formatMoney = (value, currencyCode = "EUR") => `${currencyCode} ${getAmountNumber(value).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+const formatMoney = (value, currencyCode = "EUR") => {
+    return `${currencyCode} ${formatCurrency(value, false, undefined)}`
+}
 const getSourceBalance = (availableBalance, selectedIban) => availableBalance ?? selectedIban?.balance ?? 0
 const getVirtualIbanNumber = (iban) => iban?.iban || iban?.ibanFull || iban?.account_number || iban?.accountNumber || iban?.virtual_iban || iban?.virtualIban || ""
 const getVirtualIbanTitle = (iban, fallbackCurrency = "EUR") => iban?.name || iban?.title || iban?.label || `${fallbackCurrency} IBAN`
-
-const getBeneficiaryId = (beneficiary) => beneficiary?._id || beneficiary?.id || ""
-const getBeneficiaryBankDetail = (beneficiary) => beneficiary?.bank_details?.[0] || {}
-const getBeneficiaryName = (beneficiary) => {
-    const first = beneficiary?.first_name
-    const last = beneficiary?.last_name
-    if (first || last) return [first, last].filter(Boolean).join(" ")
-    return beneficiary?.company_name || beneficiary?.legalName || beneficiary?.name || "Beneficiary"
-}
-const getBeneficiaryTypeLabel = (beneficiary) => {
-    const type = beneficiary?.beneficiary_type || beneficiary?.type
-    return type ? `${String(type).charAt(0).toUpperCase()}${String(type).slice(1)}` : "-"
-}
-const getBeneficiaryCountry = (beneficiary) => beneficiary?.country_name || beneficiary?.country || "-"
-const getBeneficiaryIban = (beneficiary) => getBeneficiaryBankDetail(beneficiary)?.iban || beneficiary?.iban || "-"
-const getBeneficiaryBic = (beneficiary) => getBeneficiaryBankDetail(beneficiary)?.swift_code || beneficiary?.bic || "-"
-const getBeneficiaryBankName = (beneficiary) => getBeneficiaryBankDetail(beneficiary)?.name || beneficiary?.bankName || "-"
-const getBeneficiaryAccountCount = (beneficiary) => beneficiary?.beneficiary_type
-const getBeneficiarySubtitle = (beneficiary) => [getBeneficiaryCountry(beneficiary), getBeneficiaryTypeLabel(beneficiary)].filter((value) => value && value !== "-").join(" - ")
-const getBeneficiaryInitial = (beneficiary) => (getBeneficiaryName(beneficiary).charAt(0) || "B").toUpperCase()
-
-const maskIban = (iban) => {
-    const value = String(iban || "").trim()
-    if (!value) return "-"
-    return value.length <= 14 ? value : `${value.slice(0, 7)} ... ${value.slice(-7)}`
-}
 
 const buildBeneficiaryFromForm = (form) => {
     const isBusiness = form.type === "business"
@@ -108,11 +105,19 @@ const buildBeneficiaryFromForm = (form) => {
     }
 }
 
-const TextField = ({ label, value, onChange, hint, type = "text", disabled = false }) => (
+const TextField = ({ label, value, onChange, hint, type = "text", disabled = false, error = "", placeholder = "" }) => (
     <label className={styles.field}>
         <span>{label}</span>
-        <input type={type} value={value} disabled={disabled} onChange={(event) => onChange(event.target.value)} />
-        {hint && <small>{hint}</small>}
+        <input
+            type={type}
+            value={value}
+            disabled={disabled}
+            placeholder={placeholder}
+            className={error ? styles.fieldError : ""}
+            onChange={(event) => onChange(event.target.value)}
+        />
+        {hint && !error && <small>{hint}</small>}
+        {error && <span className={styles.fieldErrorText}>{error}</span>}
     </label>
 )
 
@@ -124,11 +129,7 @@ const SepaAmountStep = ({ amount, setAmount, availableBalance, currencyCode, sou
 
     return (
         <div className={styles.stepStack}>
-            <AmountStep amount={amount} setAmount={setAmount} currencyCode={currencyCode}
-                availableBalance={sourceBalance} label="Amount to send"
-                width="100%"
-
-            />
+            <AmountStep amount={amount} setAmount={setAmount} currencyCode={currencyCode} availableBalance={sourceBalance} label="Amount to send" min={MIN_AMOUNT} max={MAX_AMOUNT} />
 
             <div>
                 <div className={styles.sectionLabel}>{t("From")}</div>
@@ -177,26 +178,22 @@ const SepaAmountStep = ({ amount, setAmount, availableBalance, currencyCode, sou
                                                 {speed.rail}
                                             </span>
 
-                                            {speed.default && (
-                                                <span className={styles.defaultPill}>
-                                                    {t("Default")}
-                                                </span>
-                                            )}
+                                            <span className={styles.speedFee}>
+                                                {speed.feeLabel}
+                                            </span>
                                         </div>
 
-                                        <div>
-                                            <h4>{t(speed.label)}</h4>
-                                            <p>{t(speed.description)}</p>
-
-                                            <strong
+                                        <div className={styles.speedCardBody}>
+                                            <p className={styles.speedLabel}>
+                                                {speed.label}
+                                            </p>
+                                            <p
                                                 className={
-                                                    speed.feeAmount === 0
-                                                        ? styles.freeFeeText
-                                                        : styles.feeText
+                                                    styles.speedDescription
                                                 }
                                             >
-                                                {t(speed.feeLabel)}
-                                            </strong>
+                                                {speed.description}
+                                            </p>
                                         </div>
                                     </button>
                                 </span>
@@ -204,44 +201,6 @@ const SepaAmountStep = ({ amount, setAmount, availableBalance, currencyCode, sou
                         );
                     })}
                 </div>
-
-                <div className={styles.infoStrip}>
-                    {t("The recipient receives")}{" "}
-                    <strong>
-                        {formatMoney(numericAmount, currencyCode)}
-                    </strong>{" "}
-                    {t("in full - no correspondent-bank deductions in SEPA.")}
-                </div>
-            </div>
-        </div>
-    )
-}
-
-const BeneficiaryStep = ({ beneficiaries, selectedBeneficiary, setSelectedBeneficiary, onAddBeneficiary }) => {
-    const { t } = useTranslation()
-    const [query, setQuery] = useState("")
-    const filteredBeneficiaries = beneficiaries.filter((beneficiary) => `${getBeneficiaryName(beneficiary)} ${getBeneficiarySubtitle(beneficiary)}`.toLowerCase().includes(query.toLowerCase()))
-
-    return (
-        <div className={styles.beneficiaryStep}>
-            <div className={styles.beneficiaryHeader}>
-                <h3>{t("Beneficiaries")}</h3>
-                <button type="button" className={styles.primarySmallBtn} onClick={onAddBeneficiary}><Plus size={16} />{t("Add beneficiary")}</button>
-            </div>
-            <label className={styles.searchBox}><Search size={15} /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder={t("Search beneficiaries")} /></label>
-            <div className={styles.beneficiaryList}>
-                {filteredBeneficiaries?.length === 0 && <div style={{ padding: "10px", color: "var(--secondary-color)", textAlign: "center" }}>{t("No beneficiaries found with euroean bank accounts.")}</div>}
-                {filteredBeneficiaries.map((beneficiary) => {
-                    const beneficiaryId = getBeneficiaryId(beneficiary)
-                    const selected = getBeneficiaryId(selectedBeneficiary) === beneficiaryId
-                    return (
-                        <button type="button" key={beneficiaryId} className={`${styles.beneficiaryCard} ${selected ? styles.selectedBeneficiary : ""}`} onClick={() => setSelectedBeneficiary(beneficiary)}>
-                            <span className={`${styles.avatar} ${styles[beneficiary.accent || "gold"]}`}>{getBeneficiaryInitial(beneficiary)}</span>
-                            <span className={styles.beneficiaryCopy}><strong>{getBeneficiaryName(beneficiary)}</strong><small>{getBeneficiarySubtitle(beneficiary)}</small></span>
-                            <span className={`${styles.accountBadge} ${selected ? styles.activeBadge : ""}`}>{getBeneficiaryAccountCount(beneficiary)}</span>
-                        </button>
-                    )
-                })}
             </div>
         </div>
     )
@@ -275,15 +234,30 @@ const AddBeneficiaryStep = ({ amount, currencyCode, form, setForm }) => {
     )
 }
 
-const PurposeStep = ({ amount, currencyCode, purpose, setPurpose, additionalInfo, setAdditionalInfo }) => {
+const PurposeStep = ({ amount, currencyCode, purpose, setPurpose, description, setDescription, additionalInfo, setAdditionalInfo }) => {
     const { t } = useTranslation()
+    const descError = description && !isValidDescription(description) ? t("5–34 characters; letters, digits, space, comma, dot, hyphen only") : ""
+
     return (
         <div className={styles.purposeStep}>
             <div className={styles.stepHeaderRow}><span>{t("Who pays the intermediary charges?")}</span><strong>{t("Sending")} {formatMoney(amount, currencyCode)}</strong></div>
             <label className={styles.field}>
-                <span>{t("Purpose of payment")}</span>
-                <div className={styles.selectWrap}><select value={purpose} onChange={(event) => setPurpose(event.target.value)}>{PURPOSE_OPTIONS.map((item) => <option key={item} value={item}>{t(item)}</option>)}</select><ChevronDown size={18} /></div>
+                <span>{t("Purpose category")}</span>
+                <div className={styles.selectWrap}>
+                    <select value={purpose} onChange={(event) => setPurpose(event.target.value)}>
+                        {PURPOSE_OPTIONS.map((item) => <option key={item} value={item}>{t(item)}</option>)}
+                    </select>
+                    <ChevronDown size={18} />
+                </div>
             </label>
+            <TextField
+                label={t("Description / Remittance Reference *")}
+                value={description}
+                onChange={setDescription}
+                placeholder={t("e.g. Invoice payment, consultant fees, trade")}
+                hint={!descError ? t("5–34 characters; letters, digits, space, comma, dot, hyphen only") : ""}
+                error={descError}
+            />
             <TextField label={t("Additional information (optional)")} value={additionalInfo} onChange={setAdditionalInfo} />
             <div className={styles.infoStrip}>{t("SEPA transfers deliver the full amount and carry no correspondent fees, so there is no OUR/SHA/BEN choice to make.")}</div>
         </div>
@@ -547,9 +521,14 @@ const SepaTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, i
     const { t } = useTranslation()
     const width = useWindowWidth()
     const navigate = useNavigate()
+    const queryClient = useQueryClient()
     const { beneficiaries, userDetails, setProfileLockTime, getUserBeneficiaries } = useContext(UserContext)
+
+    const ibanId = selectedIban?._id || selectedIban?.id
+    const { data: syncedBalance } = useSyncVirtualIbanBalance(ibanId)
+    const liveBalance = syncedBalance?.balance ?? availableBalance ?? selectedIban?.balance ?? 0
     const currencyCode = selectedIban?.currency || "EUR"
-    const sourceAvailableBalance = getSourceBalance(availableBalance, selectedIban)
+    const sourceAvailableBalance = getSourceBalance(liveBalance, selectedIban)
     const getDefaultAuthType = () => (userDetails?.tfa ? "authenticator" : "sms")
     const [currentStep, setCurrentStep] = useState(STEPS.AMOUNT)
     const [amount, setAmount] = useState("")
@@ -558,8 +537,11 @@ const SepaTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, i
     const [selectedBeneficiary, setSelectedBeneficiary] = useState(null)
     const [beneficiaryForm, setBeneficiaryForm] = useState(DEFAULT_BENEFICIARY_FORM)
     const [isAddingBeneficiary, setIsAddingBeneficiary] = useState(false)
-    const [showBeneficiaryAddModal, setShowBeneficiaryAddModal] = useState(false)
+    const [isAddModalOpen, setIsAddModalOpen] = useState(false)
+    const [isChannelModalOpen, setIsChannelModalOpen] = useState(false)
+    const [channelModalBeneficiary, setChannelModalBeneficiary] = useState(null)
     const [purpose, setPurpose] = useState(PURPOSE_OPTIONS[0])
+    const [description, setDescription] = useState("")
     const [additionalInfo, setAdditionalInfo] = useState("")
     const [confirmedDetails, setConfirmedDetails] = useState(false)
     const [authType, setAuthType] = useState(getDefaultAuthType)
@@ -581,12 +563,40 @@ const SepaTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, i
     })
 
     const sourceIban = useMemo(() => ({ title: getVirtualIbanTitle(selectedIban, currencyCode), iban: getVirtualIbanNumber(selectedIban) }), [selectedIban, currencyCode])
-    const machineData = useMemo(() => ({ amount, availableBalance: sourceAvailableBalance, transferSpeed, selectedBeneficiary, beneficiaryForm, isAddingBeneficiary, purpose, confirmedDetails }), [amount, sourceAvailableBalance, transferSpeed, selectedBeneficiary, beneficiaryForm, isAddingBeneficiary, purpose, confirmedDetails])
+    const machineData = useMemo(() => ({ amount, availableBalance: sourceAvailableBalance, transferSpeed, selectedBeneficiary, beneficiaryForm, isAddingBeneficiary, purpose, description, confirmedDetails }), [amount, sourceAvailableBalance, transferSpeed, selectedBeneficiary, beneficiaryForm, isAddingBeneficiary, purpose, description, confirmedDetails])
     const isProcessing = payoutFee.isPending || isSendingOtp
     const disabled = getDisabledState(currentStep, machineData) || isProcessing
     const showFooter = currentStep !== STEPS.OTP && currentStep !== STEPS.DONE
 
+    const handleBeneficiarySaved = (savedBeneficiary, isNew) => {
+        if (isNew && savedBeneficiary) {
+            setChannelModalBeneficiary(savedBeneficiary);
+            setIsChannelModalOpen(true);
+        }
+    };
+
+    const handleChannelSaved = async (updatedBeneficiary) => {
+        await getUserBeneficiaries();
+        if (updatedBeneficiary) {
+            const hasBank = (Array.isArray(updatedBeneficiary.account_type) && updatedBeneficiary.account_type.includes("bank")) ||
+                (Array.isArray(updatedBeneficiary.bank_details) && updatedBeneficiary.bank_details.length > 0);
+            const bankCountry = updatedBeneficiary?.bank_details?.[0]?.extras?.country_iso_code || updatedBeneficiary?.country_iso_code || updatedBeneficiary?.country;
+            const isSepaCountry = sepaCountries.includes(bankCountry);
+            if (hasBank && isSepaCountry) {
+                setSelectedBeneficiary(updatedBeneficiary);
+            }
+        }
+    };
+
     const resetState = () => {
+        const id = getVirtualIbanId(selectedIban)
+        if (id) {
+            queryClient.invalidateQueries({ queryKey: virtualIbanQueryKeys.balance(id) })
+            queryClient.invalidateQueries({ queryKey: virtualIbanQueryKeys.detail(id) })
+        }
+        queryClient.invalidateQueries({ queryKey: virtualIbanQueryKeys.list() })
+        queryClient.invalidateQueries({ queryKey: virtualIbanQueryKeys.all })
+        queryClient.refetchQueries({ queryKey: virtualIbanQueryKeys.all })
         setCurrentStep(STEPS.AMOUNT)
         setAmount("")
         setTransferSpeed("standard")
@@ -594,6 +604,7 @@ const SepaTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, i
         setBeneficiaryForm(DEFAULT_BENEFICIARY_FORM)
         setIsAddingBeneficiary(false)
         setPurpose(PURPOSE_OPTIONS[0])
+        setDescription("")
         setAdditionalInfo("")
         setConfirmedDetails(false)
         setAuthType(getDefaultAuthType())
@@ -620,13 +631,11 @@ const SepaTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, i
         }
     }, [beneficiaries])
 
-
     useEffect(() => {
         if (userDetails?._id) {
             getUserBeneficiaries()
         }
     }, [userDetails])
-    console.log(beneficiaries, "beneficiaryList")
 
     const handleClose = () => {
         resetState()
@@ -646,7 +655,7 @@ const SepaTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, i
         beneficiary_id: getBeneficiaryId(selectedBeneficiary),
         method: getSelectedMethod(),
         amount: getAmountNumber(amount),
-        description: purpose,
+        description: (description || "").trim(),
         purpose: getPurposeCode(purpose),
         additionalInformation: additionalInfo || undefined,
     })
@@ -659,11 +668,7 @@ const SepaTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, i
     const handleSendOtp = async (otpCodeType) => {
         const nextAuthType = otpCodeType || authType
         setAuthType(nextAuthType)
-        try {
-            await sendOtp(buildPayoutPayload(), nextAuthType)
-        } catch {
-            // toast already shown by useSendOtp's onError
-        }
+        await sendOtp(buildPayoutPayload(), nextAuthType)
     }
 
     const verifyOtp = async (setVerified, type, otp, setOtpError) => {
@@ -696,6 +701,11 @@ const SepaTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, i
         }
 
         if (currentStep === STEPS.PURPOSE) {
+            const currentDesc = (description || "").trim()
+            if (!isValidDescription(currentDesc)) {
+                toast.error(t("Description must be 5–34 characters and contain only letters, numbers, spaces, commas, periods, and hyphens."))
+                return
+            }
             try {
                 await previewFee()
                 setCurrentStep(STEPS.REVIEW)
@@ -726,11 +736,19 @@ const SepaTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, i
             case STEPS.AMOUNT:
                 return <SepaAmountStep amount={amount} setAmount={setAmount} availableBalance={sourceAvailableBalance} currencyCode={currencyCode} sourceIban={sourceIban} transferSpeed={transferSpeed} setTransferSpeed={setTransferSpeed} />
             case STEPS.BENEFICIARY:
-                return <BeneficiaryStep beneficiaries={beneficiaryList} selectedBeneficiary={selectedBeneficiary} setSelectedBeneficiary={setSelectedBeneficiary} onAddBeneficiary={() => { setShowBeneficiaryAddModal(true) }} />
+                return (
+                    <BeneficiaryStep
+                        beneficiaries={beneficiaryList}
+                        selectedBeneficiary={selectedBeneficiary}
+                        setSelectedBeneficiary={setSelectedBeneficiary}
+                        onAddBeneficiary={() => setIsAddModalOpen(true)}
+                        emptyMessage={t("No beneficiaries found with European bank accounts.")}
+                    />
+                )
             case STEPS.ADD_BENEFICIARY:
                 return <AddBeneficiaryStep amount={amount} currencyCode={currencyCode} form={beneficiaryForm} setForm={setBeneficiaryForm} />
             case STEPS.PURPOSE:
-                return <PurposeStep amount={amount} currencyCode={currencyCode} purpose={purpose} setPurpose={setPurpose} additionalInfo={additionalInfo} setAdditionalInfo={setAdditionalInfo} />
+                return <PurposeStep amount={amount} currencyCode={currencyCode} purpose={purpose} setPurpose={setPurpose} description={description} setDescription={setDescription} additionalInfo={additionalInfo} setAdditionalInfo={setAdditionalInfo} />
             case STEPS.REVIEW:
                 return <ReviewStep amount={amount} currencyCode={currencyCode} transferSpeed={transferSpeed} selectedBeneficiary={selectedBeneficiary} purpose={purpose} additionalInfo={additionalInfo} feeDetails={feeDetails} confirmedDetails={confirmedDetails} setConfirmedDetails={setConfirmedDetails} />
             case STEPS.OTP:
@@ -742,7 +760,7 @@ const SepaTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, i
         }
     }
     const content = (
-        <div className={styles.modalLayout} style={{ flexDirection: width < 1000 ? "column" : "row" }}>
+        <div className={styles.modalLayout} style={{ flexDirection: width < 1000 ? "column" : "row", width: "100%" }}>
             <aside className={styles.leftPanel}>
                 <div>
                     <div className={styles.flowHeader}><div className={styles.flowIcon}><Send size={18} /></div><div><h2>{t("SEPA Transfer")}</h2><p>{t("European Bank Transfer - EUR only")}</p></div></div>
@@ -777,7 +795,7 @@ const SepaTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, i
     return (
         <>
             {isPage ? (
-                <div className={styles.pageContainer}>
+                <div style={{ width: "100%" }} className={styles.pageContainer}>
                     {content}
                 </div>
             ) : (
@@ -788,21 +806,22 @@ const SepaTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, i
                 </Modal>
             )}
 
+            <AddBeneficiaryModal
+                open={isAddModalOpen}
+                handleClose={() => setIsAddModalOpen(false)}
+                onSaveSuccess={handleBeneficiarySaved}
+            />
 
-
-
-            <Modal style={{ minWidth: width > 1000 ? "900px" : "0%" }} toggle={() => setShowBeneficiaryAddModal(false)} isOpen={showBeneficiaryAddModal}>
-                <ModalBody style={{ padding: "0px" }}>
-                    <AddBeneficiary
-                        inInternationalModal={true}
-                        toggleHandler={async (addedBen) => {
-                            await getUserBeneficiaries()
-                            if (addedBen) setSelectedBeneficiary(addedBen)
-                            setShowBeneficiaryAddModal(false)
-                        }}
-                    />
-                </ModalBody>
-            </Modal>
+            <DynamicChannelModal
+                open={isChannelModalOpen}
+                handleClose={() => {
+                    setIsChannelModalOpen(false);
+                    setChannelModalBeneficiary(null);
+                }}
+                beneficiaryData={channelModalBeneficiary}
+                lockChannelType="bank"
+                onSaveSuccess={handleChannelSaved}
+            />
         </>
     )
 }

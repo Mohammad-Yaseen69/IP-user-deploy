@@ -58,6 +58,7 @@
 }
 
 .amountInputBox {
+    width: 100%;
     background: #eff1f6;
     border: 0;
     border-radius: 24px;
@@ -117,8 +118,8 @@
 }
 
 .amountInput {
-    width: 100%;
-    min-width: 60px;
+    min-width: 40px;
+    max-width: 100%;
     font-size: 64px;
     font-weight: 600;
     color: #0c0a20;
@@ -126,6 +127,7 @@
     border: none;
     outline: none;
     white-space: nowrap;
+    text-align: center;
 
     &::placeholder {
         color: #bbb;

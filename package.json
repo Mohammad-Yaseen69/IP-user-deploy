@@ -13,7 +13,6 @@
     "test:run": "vitest run",
     "test:coverage": "vitest run --coverage",
     "optimize": "node scripts/optimizeImages.js",
-    "agent:config": "node scripts/generateAgentConfig.js",
     "i18n:check": "npx eslint src/ -c eslint.i18n.config.js --format json > report.json"
   },
   "dependencies": {
@@ -27,7 +26,6 @@
     "@material-ui/pickers": "^3.3.11",
     "@mui/material": "^5.15.11",
     "@mui/x-date-pickers": "^6.19.5",
-    "@openai/chatkit-react": "^1.6.1",
     "@reduxjs/toolkit": "^1.9.5",
     "@sentry/react": "^9.41.0",
     "@simplewebauthn/browser": "^9.0.1",

@@ -121,6 +121,12 @@ const StatusScreen = ({ status = 'submitted', ibanNumber, companyName, onAction,
         mutationFn: (payload) => getFeeAmount({ payload, authHeader }),
     })
 
+    React.useEffect(() => {
+        window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+        document.body.scrollTop = 0;
+        document.documentElement.scrollTop = 0;
+    }, []);
+
     const addPartnerHandler = async () => {
         if (!isEmailValid(partnerEmail)) {
             toast.error(t("Please enter a valid email address."));
@@ -250,9 +256,7 @@ const StatusScreen = ({ status = 'submitted', ibanNumber, companyName, onAction,
                                 <a
                                     href="mailto:help@insta-pay.ch"
                                     style={{ color: '#5B3DF5', fontWeight: 600, textDecoration: 'none' }}
-                                >
-                                    help@insta-pay.ch
-                                </a>
+                                >{t("help@insta-pay.ch")}</a>
                             </p>
                         </div>
 
@@ -464,7 +468,6 @@ const StatusScreen = ({ status = 'submitted', ibanNumber, companyName, onAction,
                 </div>
             </div>
 
-            {/* KYB Additional Requested Files / Info Section */}
             {kybFiles?.length > 0 && (
                 <div style={{ marginTop: '20px' }}>
                     <h3 style={{ fontSize: '18px', fontWeight: 700, marginBottom: '12px', color: '#111827' }}>
@@ -477,7 +480,6 @@ const StatusScreen = ({ status = 'submitted', ibanNumber, companyName, onAction,
                 </div>
             )}
 
-            {/* IBAN Additional Requested Files / Info Section */}
             {ibanFiles?.length > 0 && (
                 <div style={{ marginTop: '20px' }}>
                     <h3 style={{ fontSize: '18px', fontWeight: 700, marginBottom: '12px', color: '#111827' }}>
@@ -490,7 +492,7 @@ const StatusScreen = ({ status = 'submitted', ibanNumber, companyName, onAction,
                 </div>
             )}
         </div>
-    )
+    );
 }
 
 export default StatusScreen

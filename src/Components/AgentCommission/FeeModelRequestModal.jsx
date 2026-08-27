@@ -9,7 +9,6 @@ import { decryptData } from '../../Helper/EssentilaMethods/Decryption';
 import { encryptData } from '../../Helper/EssentilaMethods/Encryption';
 
 const DEFAULT_FEE_ITEMS = [
-    { id: "opening_fee", name: "Opening Fee (One-Time)", flatEuro: 500, percentAmount: 0 },
     { id: "iban_activation", name: "IBAN Activation Fee (One-Time)", flatEuro: 500, percentAmount: 0 },
     { id: "monthly_iban_fee", name: "Monthly IBAN Fee", flatEuro: 50, percentAmount: 0 },
     { id: "sepa_inward", name: "SEPA Inward Transfer", flatEuro: 1, percentAmount: 0 },
