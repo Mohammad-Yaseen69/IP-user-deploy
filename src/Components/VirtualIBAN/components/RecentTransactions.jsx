@@ -8,6 +8,7 @@ import { UserContext } from "../../../Context/UserContext";
 import { generateProofOfPaymentPDF, isOutgoingTransaction } from "../../../utils/Functions/proofOfPayment";
 import StatementModal from "../StatementModal";
 import styles from "../styles/RecentTransactions.module.css";
+import Empty from './Empty';
 
 const statusColors = {
   COMPLETED: { bg: "rgba(34,197,94,0.1)", color: "#16a34a" },
@@ -23,6 +24,14 @@ const formatType = (type = "") =>
     .split("_")
     .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
     .join(" ");
+
+const formatPaymentRail = (method) => {
+  if (!method) return null;
+  const upper = String(method).toUpperCase();
+  if (upper === "SEPA_INST" || upper === "SEPA_INSTANT" || upper === "INSTANT") return "SEPA Instant (SEPA_INST)";
+  if (upper === "SEPA_CT" || upper === "SEPA_CREDIT_TRANSFER" || upper === "STANDARD") return "SEPA Credit Transfer (SEPA_CT)";
+  return String(method).replace(/_/g, " ");
+};
 
 const normalizeStatus = (raw) => {
   if (!raw) return "PENDING";
@@ -58,6 +67,28 @@ const TransactionRow = ({ tx, selectedIban }) => {
     year: "numeric", month: "short", day: "2-digit",
     hour: "2-digit", minute: "2-digit",
   });
+
+  const beneficiaryEntityType =
+    tx.beneficiary?.entity_type ||
+    tx.beneficiary?.beneficiary_type ||
+    tx.beneficiary?.type;
+  const formattedEntityType = beneficiaryEntityType
+    ? `${String(beneficiaryEntityType).charAt(0).toUpperCase()}${String(beneficiaryEntityType).slice(1).toLowerCase()}`
+    : null;
+
+  const beneficiaryBank =
+    tx.beneficiary?.bank_name ||
+    tx.beneficiary?.bankName ||
+    tx.beneficiary?.bank_details?.[0]?.name;
+
+  const beneficiaryCountry =
+    tx.beneficiary?.address?.country ||
+    tx.beneficiary?.country ||
+    tx.beneficiary?.bankCountry;
+
+  const paymentRail = formatPaymentRail(
+    tx.bvnk_method || tx.payment_method || tx.rail || tx.network || tx.method
+  );
 
   return (
     <>
@@ -109,23 +140,39 @@ const TransactionRow = ({ tx, selectedIban }) => {
             <div className={styles.accordionInner}>
 
               <div className={styles.detailGrid}>
+                {paymentRail && (
+                  <DetailItem label={t("Payment Rail")} value={t(paymentRail)} />
+                )}
+                {formattedEntityType && (
+                  <DetailItem label={t("Entity Type")} value={t(formattedEntityType)} />
+                )}
+                {beneficiaryBank && (
+                  <DetailItem label={t("Bank Name")} value={beneficiaryBank} />
+                )}
+                {beneficiaryCountry && (
+                  <DetailItem label={t("Country")} value={beneficiaryCountry} />
+                )}
                 <DetailItem label={t("Amount")}
-                  value={`${tx.currency} ${tx.amount?.toFixed(2)}`} />
-                <DetailItem label={t("Fee")}
-                  value={`${tx.currency} ${tx.fee?.toFixed(2)}`} />
-                <DetailItem
-                  label={t("Total")}
-                  value={
-                    tx.total != null
-                      ? `${tx.currency ?? ""} ${tx.total.toFixed(2)}`
-                      : "N/A"
-                  }
-                />
+                   value={`${tx.currency} ${tx.amount?.toFixed(2)}`} />
+                {tx.fee != null && (
+                  <DetailItem label={t("Fee")}
+                    value={`${tx.currency} ${tx.fee?.toFixed(2)}`} />
+                )}
+                {tx.total != null && (
+                  <DetailItem
+                    label={t("Total")}
+                    value={`${tx.currency ?? ""} ${tx.total.toFixed(2)}`}
+                  />
+                )}
 
-                <DetailItem label={t("Transaction Type")}
-                  value={t(tx.transaction_type || "N/A")} />
-                <DetailItem label={t("Service Type")}
-                  value={t(formatType(tx.type || "N/A"))} />
+                {tx.transaction_type && (
+                  <DetailItem label={t("Transaction Type")}
+                    value={t(tx.transaction_type)} />
+                )}
+                {tx.type && (
+                  <DetailItem label={t("Service Type")}
+                    value={t(formatType(tx.type))} />
+                )}
 
               </div>
 

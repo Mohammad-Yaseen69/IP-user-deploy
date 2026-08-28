@@ -163,9 +163,13 @@ const beneficiaryRequiredFields = [
     "id_delivery_date",
     "id_expiration_date",
     "occupation",
-    "bank_account_holder_name",
-    "province_state"
+    "bank_account_holder_name"
 ];
+
+const beneficiaryExtrasRequiredFields = [
+    "province_state"
+]
+
 
 const vendorsRequiredFields = [
     "msisdn",
@@ -1051,6 +1055,16 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                                 }
                             }))
                         } else if ((internationalData.beneficiary?.extras?.[field] === "" || !internationalData.beneficiary?.extras?.[field]) && !internationalData.beneficiary?.[field]) {
+                            setRequiredMissingFields(prev => ({
+                                ...prev,
+                                beneficiary: {
+                                    ...prev.beneficiary,
+                                    extras: [...prev.beneficiary.extras, field]
+                                }
+                            }))
+                        }
+                    } else if (beneficiaryExtrasRequiredFields.includes(field)) {
+                        if ((internationalData.beneficiary?.extras?.[field] === "" || !internationalData.beneficiary?.extras?.[field]) && !internationalData.beneficiary?.[field]) {
                             setRequiredMissingFields(prev => ({
                                 ...prev,
                                 beneficiary: {

@@ -1,21 +1,43 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import useWindowWidth from '../../../utils/useWindowWidth';
 import { useTranslation } from 'react-i18next';
 import styles from "../styles/leads.module.css";
 import TopRight from '../../topRight';
-import { AlertTriangle, Search, Send, Trash2, X } from 'react-feather';
+import { AlertTriangle, Search, Send, Trash2, X, UserPlus, Eye } from 'react-feather';
 import LeadModal from './LeadModal';
+import AddByNameModal from './AddByNameModal';
 import { Modal, ModalBody } from 'reactstrap';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiWrapper } from '../../../utils/Functions/apiWrapper';
+import { UserContext } from '../../../Context/UserContext';
+
+const formatCountryName = (countryVal) => {
+    if (!countryVal) return '—';
+    const str = String(countryVal).trim();
+    if (/^[0-9a-fA-F]{24}$/.test(str)) {
+        return '—';
+    }
+    return str;
+};
+
+const truncateStr = (str, max = 20) => {
+    if (!str) return '—';
+    const s = String(str).trim();
+    return s.length > max ? s.slice(0, max) + '...' : s;
+};
 
 const Leads = () => {
     const { t } = useTranslation();
     const width = useWindowWidth();
     const queryClient = useQueryClient();
+    const { userDetails } = useContext(UserContext);
 
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isAddByNameOpen, setIsAddByNameOpen] = useState(false);
     const [initialEntityType, setInitialEntityType] = useState('business');
+    const [selectedLead, setSelectedLead] = useState(null);
+
+    const isManager = Boolean(userDetails?.isInstapayAgent && userDetails?.isInstapayManager);
 
     const [search, setSearch] = useState('');
     const [selectedStage, setSelectedStage] = useState('all');
@@ -154,6 +176,16 @@ const Leads = () => {
                     </div>
 
                     <div className={styles.actionGroup}>
+                        {isManager && (
+                            <button
+                                className={styles.secondaryBtn}
+                                onClick={() => setIsAddByNameOpen(true)}
+                                style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px' }}
+                            >
+                                <UserPlus size={15} />
+                                <span>{t("Add by Name")}</span>
+                            </button>
+                        )}
                         <button className={styles.primaryBtn} onClick={() => handleOpenModal('business')}>
                             <span>+ {t("Add new lead")}</span>
                         </button>
@@ -184,18 +216,20 @@ const Leads = () => {
 
                                     return (
                                         <div key={row._id} className={styles.tableDataRow}>
-                                            <div className={`${styles.tdCell} ${styles.clientCell}`}>
+                                            <div className={`${styles.tdCell} ${styles.clientCell}`} title={displayName}>
                                                 <div className={`${styles.avatar} ${styles.avatarBlue}`}>
                                                     {avatarText}
                                                 </div>
-                                                <span className={styles.clientName}>{displayName}</span>
+                                                <span className={styles.clientName}>{truncateStr(displayName, 22)}</span>
                                             </div>
 
                                             <div className={styles.tdCell}>
                                                 <span style={{ textTransform: 'capitalize' }}>{t(row.leadType)}</span>
                                             </div>
 
-                                            <div className={styles.tdCell}>{row.country || '—'}</div>
+                                            <div className={styles.tdCell} title={formatCountryName(row.country)}>
+                                                {formatCountryName(row.country)}
+                                            </div>
 
                                             <div className={styles.tdCell}>
                                                 <span className={`${styles.badge} ${getStageBadgeClass(row.stage)}`}>
@@ -203,20 +237,29 @@ const Leads = () => {
                                                 </span>
                                             </div>
 
-                                            <div className={styles.tdCell}>
+                                            <div className={styles.tdCell} title={row.email || row.phone || '—'}>
                                                 <span style={{ fontSize: '13px', color: '#555' }}>
-                                                    {row.email || row.phone || '—'}
+                                                    {truncateStr(row.email || row.phone || '—', 22)}
                                                 </span>
                                             </div>
 
-                                            <div className={styles.tdCell}>
+                                            <div className={styles.tdCell} title={row.fee_pack?.name || 'Standard'}>
                                                 <span className={`${styles.textIndicator} ${styles.statusGreen}`}>
-                                                    {row.fee_pack?.name || 'Standard'}
+                                                    {truncateStr(row.fee_pack?.name || 'Standard', 18)}
                                                 </span>
                                             </div>
 
-                                            <div className={styles.tdCell} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                                {(row.stage === 'not-registered' || row.stage === 'claim-pending') && (
+                                            <div className={styles.tdCell} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                                <button
+                                                    onClick={() => setSelectedLead(row)}
+                                                    className={styles.secondaryBtn}
+                                                    style={{ padding: '4px 8px', fontSize: '12px', display: 'flex', alignItems: 'center', gap: '4px', cursor: 'pointer' }}
+                                                    title={t("View Details")}
+                                                >
+                                                    <Eye size={13} />
+                                                </button>
+
+                                                {!row.addedByManager && (row.stage === 'not-registered' || row.stage === 'claim-pending') && (
                                                     <button
                                                         onClick={() => resendInviteMutation.mutate(row._id)}
                                                         disabled={resendInviteMutation.isPending}
@@ -228,6 +271,7 @@ const Leads = () => {
                                                         {resendInviteMutation.isPending ? t("Sending...") : t("Resend")}
                                                     </button>
                                                 )}
+
                                                 <button
                                                     onClick={() => setDeleteConfirmLead(row)}
                                                     disabled={deleteLeadMutation.isPending}
@@ -274,6 +318,141 @@ const Leads = () => {
                 onClose={handleCloseModal}
                 initialEntityType={initialEntityType}
             />
+
+            <AddByNameModal
+                open={isAddByNameOpen}
+                onClose={() => setIsAddByNameOpen(false)}
+            />
+
+            <Modal
+                isOpen={!!selectedLead}
+                toggle={() => setSelectedLead(null)}
+                centered
+                size="lg"
+            >
+                <ModalBody style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '18px', borderRadius: '16px', background: '#FFF' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', borderBottom: '1px solid #F1F5F9', paddingBottom: '14px' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                            <div style={{
+                                width: '44px',
+                                height: '44px',
+                                borderRadius: '10px',
+                                background: '#EEF2FF',
+                                color: '#4F46E5',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                fontWeight: 700,
+                                fontSize: '16px'
+                            }}>
+                                {(selectedLead?.company_name || `${selectedLead?.first_name || ''} ${selectedLead?.last_name || ''}`.trim() || 'L').substring(0, 2).toUpperCase()}
+                            </div>
+                            <div>
+                                <h3 style={{ margin: 0, fontSize: '18px', fontWeight: 700, color: '#0F172A' }}>
+                                    {selectedLead?.company_name || `${selectedLead?.first_name || ''} ${selectedLead?.last_name || ''}`.trim() || t("Lead Details")}
+                                </h3>
+                                <div style={{ display: 'flex', gap: '8px', alignItems: 'center', marginTop: '4px' }}>
+                                    <span style={{
+                                        fontSize: '11px',
+                                        fontWeight: 600,
+                                        textTransform: 'capitalize',
+                                        background: '#F1F5F9',
+                                        padding: '2px 8px',
+                                        borderRadius: '4px',
+                                        color: '#475569'
+                                    }}>
+                                        {t(selectedLead?.leadType || 'business')}
+                                    </span>
+                                    <span className={`${styles.badge} ${getStageBadgeClass(selectedLead?.stage)}`} style={{ fontSize: '11px' }}>
+                                        {getStageLabel(selectedLead?.stage)}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <button
+                            onClick={() => setSelectedLead(null)}
+                            style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#94A3B8', padding: '4px' }}
+                            type="button"
+                        >
+                            <X size={20} />
+                        </button>
+                    </div>
+
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+                        <div style={{ background: '#F8FAFC', border: '1px solid #E2E8F0', borderRadius: '10px', padding: '14px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                            <div style={{ fontSize: '12px', fontWeight: 700, color: '#475569', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                                {t("Contact & Location")}
+                            </div>
+                            <div>
+                                <span style={{ fontSize: '11px', color: '#64748B', display: 'block' }}>{t("Email Address")}</span>
+                                <span style={{ fontSize: '13px', fontWeight: 600, color: '#1E293B' }}>{selectedLead?.email || '—'}</span>
+                            </div>
+                            <div>
+                                <span style={{ fontSize: '11px', color: '#64748B', display: 'block' }}>{t("Phone Number")}</span>
+                                <span style={{ fontSize: '13px', fontWeight: 600, color: '#1E293B' }}>{selectedLead?.phone || '—'}</span>
+                            </div>
+                            <div>
+                                <span style={{ fontSize: '11px', color: '#64748B', display: 'block' }}>{t("Country")}</span>
+                                <span style={{ fontSize: '13px', fontWeight: 600, color: '#1E293B' }}>{formatCountryName(selectedLead?.country)}</span>
+                            </div>
+                            <div>
+                                <span style={{ fontSize: '11px', color: '#64748B', display: 'block' }}>{t("Lead Creation Method")}</span>
+                                <span style={{ fontSize: '12px', fontWeight: 600, color: selectedLead?.addedByManager ? '#5926F0' : '#0284C7' }}>
+                                    {selectedLead?.addedByManager ? t("Manager Mode (Direct / Name Search)") : t("Standard Self-Onboarding Invite")}
+                                </span>
+                            </div>
+                        </div>
+
+                        <div style={{ background: '#F8FAFC', border: '1px solid #E2E8F0', borderRadius: '10px', padding: '14px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                            <div style={{ fontSize: '12px', fontWeight: 700, color: '#475569', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                                {t("Commercial & Account Details")}
+                            </div>
+                            <div>
+                                <span style={{ fontSize: '11px', color: '#64748B', display: 'block' }}>{t("Assigned Fee Model")}</span>
+                                <span style={{ fontSize: '13px', fontWeight: 700, color: '#15803D' }}>{selectedLead?.fee_pack?.name || 'Standard'}</span>
+                                {selectedLead?.fee_pack?.pricing_summary && (
+                                    <div style={{ fontSize: '11px', color: '#64748B', marginTop: '2px' }}>{selectedLead.fee_pack.pricing_summary}</div>
+                                )}
+                            </div>
+                            <div>
+                                <span style={{ fontSize: '11px', color: '#64748B', display: 'block' }}>{t("Current Lifecycle Stage")}</span>
+                                <span style={{ fontSize: '13px', fontWeight: 600, color: '#1E293B' }}>{getStageLabel(selectedLead?.stage)}</span>
+                            </div>
+                            <div>
+                                <span style={{ fontSize: '11px', color: '#64748B', display: 'block' }}>{t("Created Date")}</span>
+                                <span style={{ fontSize: '12px', color: '#475569' }}>
+                                    {selectedLead?.createdAt ? new Date(selectedLead.createdAt).toLocaleString() : '—'}
+                                </span>
+                            </div>
+                            <div>
+                                <span style={{ fontSize: '11px', color: '#64748B', display: 'block' }}>{t("Claim Status")}</span>
+                                <span style={{ fontSize: '12px', fontWeight: 600, textTransform: 'uppercase', color: selectedLead?.claimStatus === 'accepted' ? '#16A34A' : '#D97706' }}>
+                                    {selectedLead?.claimStatus || 'pending'}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '8px', borderTop: '1px solid #F1F5F9', paddingTop: '14px' }}>
+                        <button
+                            type="button"
+                            onClick={() => setSelectedLead(null)}
+                            style={{
+                                padding: '8px 18px',
+                                borderRadius: '8px',
+                                border: '1px solid #D1D5DB',
+                                background: '#F9FAFB',
+                                color: '#374151',
+                                fontWeight: 600,
+                                fontSize: '13px',
+                                cursor: 'pointer'
+                            }}
+                        >
+                            {t("Close")}
+                        </button>
+                    </div>
+                </ModalBody>
+            </Modal>
 
             <Modal
                 isOpen={!!deleteConfirmLead}
