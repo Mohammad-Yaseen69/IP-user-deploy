@@ -3,7 +3,6 @@
     min-height: 100vh;
     font-family: 'Inter', sans-serif;
     background-color: #F8F9FC;
-    /* Exact Figma canvas layer color */
 }
 
 .top {
@@ -86,7 +85,6 @@
     height: 33px;
     border-radius: 100px;
     background: #5926F0;
-    /* Cleaned static brand blue-purple color */
     box-shadow: 0 4px 14px -4px rgba(89, 38, 240, 0.55);
     color: #FFF;
     font-family: Inter;
@@ -180,7 +178,6 @@
     border: none;
     color: var(--Greyscale-0, #FFF);
     text-align: center;
-
     font-size: 14px;
     font-style: normal;
     font-weight: 500;
@@ -197,6 +194,7 @@
     flex: 1 0 0;
     align-self: stretch;
     border-radius: 12px;
+    width: 100%;
 }
 
 .tableWrapper {
@@ -205,13 +203,14 @@
     align-items: flex-start;
     align-self: stretch;
     width: 100%;
-
+    overflow-x: auto;
+    min-width: 1000px;
 }
 
 .tableHeaderRow,
 .tableDataRow {
     display: grid;
-    grid-template-columns: 2fr 1fr 1.5fr 1fr 1fr 1fr 1fr;
+    grid-template-columns: minmax(180px, 2fr) minmax(85px, 0.8fr) minmax(95px, 0.9fr) minmax(150px, 1.4fr) minmax(180px, 1.6fr) minmax(140px, 1.2fr) minmax(85px, 0.8fr);
     align-items: center;
     align-self: stretch;
     width: 100%;
@@ -226,17 +225,18 @@
 
 .thCell {
     display: flex;
-    padding: 10px 24px;
+    padding: 10px 16px;
     flex-direction: row;
     align-items: center;
     align-self: stretch;
     color: var(--gray-gray-600, #6E7687);
     font-family: Inter;
-    font-size: 14px;
+    font-size: 13.5px;
     font-style: normal;
     font-weight: 500;
     line-height: normal;
     letter-spacing: -0.42px;
+    white-space: nowrap;
 }
 
 .tableDataRow {
@@ -246,28 +246,36 @@
 .tableBody {
     background: var(--bg-surface, #fff);
     border-radius: 10px;
-
+    width: 100%;
 }
 
 .tdCell {
     display: flex;
-    padding: 16px 24px;
+    padding: 14px 16px;
     align-items: center;
     color: #475467;
-    font-size: 14px;
+    font-size: 13.5px;
     font-weight: 400;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .clientCell {
-    gap: 12px;
+    gap: 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .clientName {
     font-weight: 600;
     color: #101828;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
-/* Avatars */
 .avatar {
     width: 32px;
     height: 32px;
@@ -278,6 +286,7 @@
     font-size: 12px;
     font-weight: 600;
     color: #FFF;
+    flex-shrink: 0;
 }
 
 .avatarPurple {
@@ -300,10 +309,12 @@
     background: #15B79E;
 }
 
-/* Text Indicators */
 .textIndicator {
     font-size: 13px;
     font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .statusOrange {
@@ -318,13 +329,16 @@
     color: #98A2B3;
 }
 
-/* Pill Badges */
 .badge {
     display: inline-flex;
+    align-items: center;
+    justify-content: center;
     padding: 4px 12px;
     border-radius: 100px;
     font-size: 12px;
     font-weight: 600;
+    white-space: nowrap;
+    text-align: center;
 }
 
 .stageOrange {
@@ -337,12 +351,16 @@
     color: #1D4ED8;
 }
 
+.stagePurple {
+    background: #F4F0FF;
+    color: #6927DA;
+}
+
 .stageGrey {
     background: #F2F4F7;
     color: #344054;
 }
 
-/* Pagination container at bottom */
 .paginationRow {
     display: flex;
     justify-content: flex-end;
