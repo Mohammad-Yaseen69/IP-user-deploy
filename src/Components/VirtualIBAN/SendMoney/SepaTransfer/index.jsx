@@ -312,7 +312,7 @@ const downloadSepaReceipt = ({
     t,
 }) => {
     const doc = new jsPDF()
-
+    const margin = 14
     const speed =
         SEPA_TRANSFER_SPEEDS.find(
             (item) => item.id === transferSpeed
@@ -377,12 +377,14 @@ const downloadSepaReceipt = ({
         ["Status", status],
     ]
 
-    doc.setFontSize(20)
+    doc.setFontSize(24)
     doc.setFont("helvetica", "bold")
-    doc.text("SEPA Transfer Receipt", 14, 20)
+    doc.setTextColor(89, 38, 240)
+    doc.text("SEPA Transfer Receipt", margin, 48)
 
-    doc.setFontSize(10)
+    doc.setFontSize(9)
     doc.setFont("helvetica", "normal")
+    doc.setTextColor(130, 130, 138)
     doc.text(
         `Generated: ${new Date().toLocaleString()}`,
         14,
