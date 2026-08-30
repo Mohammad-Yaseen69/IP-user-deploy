@@ -9,7 +9,7 @@ import { useTranslation } from "react-i18next";
 import { UserContext } from "../../Context/UserContext";
 
 
-const AddBeneficiary = ({ inInternationalModal, toggleHandler, errorOnInvalid = false, error = false }) => {
+const AddBeneficiary = ({ inInternationalModal, toggleHandler, errorOnInvalid = true, error = false }) => {
     const { t } = useTranslation()
     const [mobileView, setMobileView] = useState(window?.innerWidth < 600)
     const [isIndividual, setIsIndividual] = useState(true)
