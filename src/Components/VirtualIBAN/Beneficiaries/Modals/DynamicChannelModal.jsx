@@ -11,7 +11,7 @@ import PhoneInput from '../../../PhoneInput';
 import CountryDropDown from '../../../AddBeneficiary/CountryDropDown';
 import { isValidBic, ISO3_REGEX } from '../../utils/swiftValidation';
 
-const DynamicChannelModal = ({ open, handleClose, beneficiaryData, onSaveSuccess, lockChannelType = null, errorOnInvalid = false, error = false }) => {
+const DynamicChannelModal = ({ open, handleClose, beneficiaryData, onSaveSuccess, lockChannelType = null, errorOnInvalid = true, error = false }) => {
     const isErrorMode = typeof errorOnInvalid === 'boolean' ? errorOnInvalid : typeof error === 'boolean' ? error : false;
     const { t } = useTranslation();
 

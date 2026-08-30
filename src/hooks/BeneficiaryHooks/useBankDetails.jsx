@@ -4,7 +4,9 @@ import { countries as CountriesList } from 'country-list-json'
 import { useQuery } from '@tanstack/react-query'
 import { apiWrapper } from '../../utils/Functions/apiWrapper'
 
-const useBankDetails = ({ accNumType, setFormData, handleBankExtraChange, bankExtras, setError, alpha3, countryName, fieldKeyOverrides = {}, debounceMs = 1500, bypassCountryCheck = false, errorOnInvalid = false, error = false }) => {
+const errorOnInvalid = true
+
+const useBankDetails = ({ accNumType, setFormData, handleBankExtraChange, bankExtras, setError, alpha3, countryName, fieldKeyOverrides = {}, debounceMs = 1500, bypassCountryCheck = false, error = false }) => {
     const isErrorMode = typeof errorOnInvalid === 'boolean'
         ? errorOnInvalid
         : typeof error === 'boolean'
@@ -28,6 +30,7 @@ const useBankDetails = ({ accNumType, setFormData, handleBankExtraChange, bankEx
     useEffect(() => { handleBankExtraChangeRef.current = handleBankExtraChange }, [handleBankExtraChange])
 
     const [queryMetadata, setQueryMetadata] = useState({ isForEdit: false, account_number: "" })
+    const skipNextAccNumTypeResetRef = useRef(false)
 
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -90,6 +93,10 @@ const useBankDetails = ({ accNumType, setFormData, handleBankExtraChange, bankEx
     }, [debouncedValue, accNumType, bankNameKey, branchNameKey, bankBranchStreetKey, bankCityKey, bankProvinceKey, bankPostalCodeKey, queryMetadata.isForEdit, hasInputInteraction, setError, setFormData])
 
     useEffect(() => {
+        if (skipNextAccNumTypeResetRef.current) {
+            skipNextAccNumTypeResetRef.current = false
+            return;
+        }
         setIbanSwift("")
         setDebouncedValue("")
     }, [accNumType])
@@ -268,6 +275,9 @@ const useBankDetails = ({ accNumType, setFormData, handleBankExtraChange, bankEx
     const getBankDetails = useCallback((e, isForEdit = false, account_number = "") => {
         const value = e.target.value?.replace(/[^a-zA-Z0-9]/g, '')
 
+        if (isForEdit) {
+            skipNextAccNumTypeResetRef.current = true
+        }
         setHasInputInteraction(true)
         setFormData(prev => ({
             ...prev,
@@ -304,7 +314,8 @@ const useBankDetails = ({ accNumType, setFormData, handleBankExtraChange, bankEx
         setBankCountryCode,
         setBankCountryIsoCode,
         setBankCountry,
-        isFetchingBank: isFetching
+        isFetchingBank: isFetching,
+        skipNextAccNumTypeResetRef
     }
 }
 

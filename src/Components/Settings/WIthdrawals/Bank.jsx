@@ -8,7 +8,7 @@ import NeemaBenExtrasFields from '../../AddBeneficiary/NeemaBenExtrasFields';
 import useBankDetails from '../../../hooks/BeneficiaryHooks/useBankDetails';
 
 
-const Bank = ({ country, states, values, changeHandler, isEditMode, setBankDetails, setBankError, bankError, payers, bankExtras, serviceFieldInfoValidate, services, handleBankExtraChange, alpha3, payerLoading, basicExtras, fieldInfoValidate, setBasicExtras, handleBasicExtraChange, setBankCountryCode, isAfricanBank, errorOnInvalid = false, error = false }) => {
+const Bank = ({ country, states, values, changeHandler, isEditMode, setBankDetails, setBankError, bankError, payers, bankExtras, serviceFieldInfoValidate, services, handleBankExtraChange, alpha3, payerLoading, basicExtras, fieldInfoValidate, setBasicExtras, handleBasicExtraChange, setBankCountryCode, isAfricanBank, errorOnInvalid = true, error = false }) => {
     const { t } = useTranslation()
 
 
