@@ -9,14 +9,14 @@ import useBankDetails from '../../../hooks/BeneficiaryHooks/useBankDetails';
 import CitiesDropDown from '../../CitiesDropDown';
 
 
-const Bank = ({ country, states, values, changeHandler, isEditMode, setBankDetails, setBankError, bankError, payers, bankExtras, serviceFieldInfoValidate, services, handleBankExtraChange, alpha3, payerLoading, basicExtras, fieldInfoValidate, setBasicExtras, handleBasicExtraChange, setBankCountryCode, isAfricanBank }) => {
+const Bank = ({ country, states, values, changeHandler, isEditMode, setBankDetails, setBankError, bankError, payers, bankExtras, serviceFieldInfoValidate, services, handleBankExtraChange, alpha3, payerLoading, basicExtras, fieldInfoValidate, setBasicExtras, handleBasicExtraChange, setBankCountryCode, isAfricanBank, errorOnInvalid = true, error = false }) => {
     const { t } = useTranslation()
 
 
     useEffect(() => {
         setBankError("")
     }, [])
-    const { getBankDetails, bankCountryCode } = useBankDetails({
+    const { getBankDetails, bankCountryCode, warning } = useBankDetails({
         accNumType: states.accNumType,
         setFormData: setBankDetails,
         handleBankExtraChange,
@@ -26,6 +26,8 @@ const Bank = ({ country, states, values, changeHandler, isEditMode, setBankDetai
         countryName: country,
         fieldKeyOverrides: { branch_name: 'bank_branch_name' },
         debounceMs: 2000,
+        errorOnInvalid,
+        error,
     })
 
     useEffect(() => {
@@ -105,15 +107,25 @@ const Bank = ({ country, states, values, changeHandler, isEditMode, setBankDetai
                                             onChange={getBankDetails}
                                         />
                                         {
-                                            bankError &&
-                                            <div style={{
-                                                color: "red",
-                                                fontSize: "1rem",
-                                                fontWeight: 500,
-                                                position: "absolute",
-                                                top: "110%",
-                                                left: "0"
-                                            }}>{bankError}</div>
+                                            bankError ? (
+                                                <div style={{
+                                                    color: "red",
+                                                    fontSize: "1rem",
+                                                    fontWeight: 500,
+                                                    position: "absolute",
+                                                    top: "110%",
+                                                    left: "0"
+                                                }}>{bankError}</div>
+                                            ) : warning ? (
+                                                <div style={{
+                                                    color: "orange",
+                                                    fontSize: "1rem",
+                                                    fontWeight: 500,
+                                                    position: "absolute",
+                                                    top: "110%",
+                                                    left: "0"
+                                                }}>{t(warning)}</div>
+                                            ) : null
                                         }
                                     </FormGroup>
                                     {

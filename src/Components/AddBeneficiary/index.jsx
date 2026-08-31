@@ -9,7 +9,7 @@ import { useTranslation } from "react-i18next";
 import { UserContext } from "../../Context/UserContext";
 
 
-const AddBeneficiary = ({ inInternationalModal, toggleHandler }) => {
+const AddBeneficiary = ({ inInternationalModal, toggleHandler, errorOnInvalid = true, error = false }) => {
     const { t } = useTranslation()
     const [mobileView, setMobileView] = useState(window?.innerWidth < 600)
     const [isIndividual, setIsIndividual] = useState(true)
@@ -145,10 +145,10 @@ const AddBeneficiary = ({ inInternationalModal, toggleHandler }) => {
                     isIndividual
                         ?
                         // <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <IndividualAccount mobileView={mobileView} handleChangeAlpha={handleChangeAlpha} handleChangeNumber={handleChangeNumber} sii={setIsIndividual} toggleSuccess={toggleSuccess} filteringCountries={filteringCountries} inInternationalModal={inInternationalModal} />
+                        <IndividualAccount mobileView={mobileView} handleChangeAlpha={handleChangeAlpha} handleChangeNumber={handleChangeNumber} sii={setIsIndividual} toggleSuccess={toggleSuccess} filteringCountries={filteringCountries} inInternationalModal={inInternationalModal} errorOnInvalid={errorOnInvalid} error={error} />
                         // </LocalizationProvider>
                         :
-                        <BusinessAccount toggleHandler={toggleHandler} isInternational={inInternationalModal} mobileView={mobileView} handleChangeAlpha={handleChangeAlpha} handleChangeNumber={handleChangeNumber} sii={setIsIndividual} toggleSuccess={toggleSuccess} filteringCountries={filteringCountries} />
+                        <BusinessAccount toggleHandler={toggleHandler} isInternational={inInternationalModal} mobileView={mobileView} handleChangeAlpha={handleChangeAlpha} handleChangeNumber={handleChangeNumber} sii={setIsIndividual} toggleSuccess={toggleSuccess} filteringCountries={filteringCountries} errorOnInvalid={errorOnInvalid} error={error} />
                 }
             </Form >
             <SuccessModal isOpen={showSuccess} toggle={toggleSuccess} message={t("Beneficiary has been successfully added.")} subMessage={t("Beneficiary Updated.")} />

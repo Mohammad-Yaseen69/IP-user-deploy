@@ -11,7 +11,8 @@ import PhoneInput from '../../../PhoneInput';
 import CountryDropDown from '../../../AddBeneficiary/CountryDropDown';
 import { isValidBic, ISO3_REGEX } from '../../utils/swiftValidation';
 
-const DynamicChannelModal = ({ open, handleClose, beneficiaryData, onSaveSuccess, lockChannelType = null }) => {
+const DynamicChannelModal = ({ open, handleClose, beneficiaryData, onSaveSuccess, lockChannelType = null, errorOnInvalid = true, error = false }) => {
+    const isErrorMode = typeof errorOnInvalid === 'boolean' ? errorOnInvalid : typeof error === 'boolean' ? error : false;
     const { t } = useTranslation();
 
     const [channelType, setChannelType] = useState(lockChannelType || 'bank');
@@ -33,7 +34,7 @@ const DynamicChannelModal = ({ open, handleClose, beneficiaryData, onSaveSuccess
         account_holder_name: ''
     });
 
-    const { getBankDetails, isFetchingBank, bankDetailsError, bankCountry, bankCountryCode, bankCountryIsoCode } = useBankDetails({
+    const { getBankDetails, isFetchingBank, bankDetailsError, bankCountry, bankCountryCode, bankCountryIsoCode, warning } = useBankDetails({
         accNumType,
         setFormData: setBankFormState,
         alpha3: beneficiaryData?.country_iso_code,
@@ -43,7 +44,9 @@ const DynamicChannelModal = ({ open, handleClose, beneficiaryData, onSaveSuccess
         bypassCountryCheck: true,
         fieldKeyOverrides: {
             bank_postal_code: 'postal_code'
-        }
+        },
+        errorOnInvalid: isErrorMode,
+        error: isErrorMode,
     });
 
     const [cryptoNetwork, setCryptoNetwork] = useState('ethereum');
@@ -133,7 +136,7 @@ const DynamicChannelModal = ({ open, handleClose, beneficiaryData, onSaveSuccess
                     toast.error(t("SWIFT / BIC code is required"));
                     return;
                 }
-                if (!isValidBic(swift)) {
+                if (isErrorMode && !isValidBic(swift)) {
                     toast.error(t("SWIFT / BIC code must be 8 or 11 characters (letters and digits only)"));
                     return;
                 }
@@ -143,7 +146,7 @@ const DynamicChannelModal = ({ open, handleClose, beneficiaryData, onSaveSuccess
                 }
             }
 
-            if (swift && !isValidBic(swift)) {
+            if (isErrorMode && swift && !isValidBic(swift)) {
                 toast.error(t("SWIFT / BIC code must be 8 or 11 characters (letters and digits only)"));
                 return;
             }
@@ -384,11 +387,15 @@ const DynamicChannelModal = ({ open, handleClose, beneficiaryData, onSaveSuccess
                                         <Info size={14} /> {t("Fetching bank details...")}
                                     </div>
                                 )}
-                                {(bankError || bankDetailsError) && (
+                                {(bankError || bankDetailsError) ? (
                                     <div style={{ fontSize: '12px', color: '#EF4444', margin: '-4px 0 10px' }}>
                                         {t(bankError || bankDetailsError)}
                                     </div>
-                                )}
+                                ) : warning ? (
+                                    <div style={{ fontSize: '12px', color: '#F59E0B', margin: '-4px 0 10px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                        <Info size={14} /> {t(warning)}
+                                    </div>
+                                ) : null}
 
                                 <div className={styles.inputGroup}>
                                     <label className={styles.fieldLabel}>{t("Account Holder Name")}</label>

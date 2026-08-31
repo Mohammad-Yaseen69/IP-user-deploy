@@ -24,7 +24,7 @@ import citiesData from "../CitiesDropDown/CitiesData.json"
 
 
 
-const IndividualAccount = ({ mobileView, handleChangeNumber, toggleSuccess, filteringCountries }) => {
+const IndividualAccount = ({ mobileView, handleChangeNumber, toggleSuccess, filteringCountries, errorOnInvalid = true, error = false }) => {
     const { t } = useTranslation()
     const [active, setActive] = useState(5)
     const [totalCards, setTotalCards] = useState(1)
@@ -156,7 +156,7 @@ const IndividualAccount = ({ mobileView, handleChangeNumber, toggleSuccess, filt
         })
     }
     // cash extra fields
-    const { getBankDetails, bankCountry, bankCountryCode, bankDetailsError, isValidIban, ibanSwift, } = useBankDetails({ accNumType, setFormData, handleBankExtraChange, bankExtras })
+    const { getBankDetails, bankCountry, bankCountryCode, bankCountryIsoCode, setBankCountry, setBankCountryCode, setBankCountryIsoCode, bankDetailsError, warning, isValidIban, ibanSwift, } = useBankDetails({ accNumType, setFormData, handleBankExtraChange, bankExtras, errorOnInvalid, error })
     const { fieldsInfo, services, mobileProviders, selectedCountryDetails, getCountryFields } = useChannels({ setLoading, setActive, countryIsoCode, countryId })
 
 
@@ -778,10 +778,19 @@ const IndividualAccount = ({ mobileView, handleChangeNumber, toggleSuccess, filt
                                         ibanSwift,
                                         getBankDetails,
                                         bankDetailsError,
+                                        warning,
                                         isValidIban,
                                         formData,
+                                        setFormData,
                                         inputChangeHandler,
                                         bankCountry,
+                                        setBankCountry,
+                                        bankCountryCode,
+                                        setBankCountryCode,
+                                        bankCountryIsoCode,
+                                        setBankCountryIsoCode,
+                                        errorOnInvalid,
+                                        error,
                                         bankExtras,
                                         handleBankExtraChange,
                                         fieldsInfo,
