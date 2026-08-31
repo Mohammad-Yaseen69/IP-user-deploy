@@ -48,10 +48,19 @@ export const PAGES = [
     },
     {
         id: "pay_with_crypto",
-        title: "Pay With Crypto",
+        title: "Pay Someone From a Crypto Wallet",
         route: "/payments?payment_action=send_crypto",
         permission: "payments.crypto.send",
-        description: "Send a payment from a crypto wallet, with the converted value shown before confirming.",
+        description:
+            "Send a payment out of a crypto wallet to someone, with the converted value shown before confirming. This is paying another party — cashing crypto out into one of the user's own currency wallets is Cash Out Crypto instead.",
+    },
+    {
+        id: "crypto_to_money",
+        title: "Cash Out Crypto",
+        route: "/payments?payment_action=crypto_fiat",
+        permission: "payments.crypto.send",
+        description:
+            "Convert crypto into ordinary money — the cash-out flow. Offer this for turning crypto into a currency balance, selling it, or 'converting crypto to fiat'. On the Payments hub this is the card labelled Pay With Crypto.",
     },
     {
         id: "send_quote",
@@ -62,10 +71,11 @@ export const PAGES = [
     },
     {
         id: "airtime",
-        title: "Airtime Top-Up",
+        title: "Top-Up and eSIM",
         route: "/payments?payment_action=airtime",
         permission: "payments.airtime.topup",
-        description: "Buy mobile airtime for a phone number by operator and amount.",
+        description:
+            "Buy mobile airtime for a phone number by operator and amount, and buy an eSIM for travel data. Both run in the same flow, so send anyone asking about top-ups, credit, roaming or a travel data plan here.",
     },
     {
         id: "payments",
@@ -137,7 +147,8 @@ export const PAGES = [
         title: "My Portfolio",
         route: "/portfolio",
         permission: "portfolio.view",
-        description: "Combined value of holdings across wallets and assets, converted to the base currency.",
+        description:
+            "The user's showcase of their own work — videos and items they upload, post and manage, shown on their public profile. Nothing to do with balances or holdings: money across wallets is My Wallets.",
     },
     {
         id: "mastercard",
@@ -295,6 +306,22 @@ export const PAGES = [
             "Create a new invoice to send to someone. Opens the create-invoice window on the invoices page.",
     },
     {
+        id: "plans",
+        title: "Plans & Pricing",
+        route: "/invoices?tab=plans",
+        permission: "invoices.view",
+        description:
+            "Recurring plans people can subscribe to: create a plan with its price, share its payment link, and put it on the payment address. Opens the Plans tab on the invoices page. This is the page for subscriptions the user charges others for — payments they have scheduled themselves are Schedules.",
+    },
+    {
+        id: "direct_card_invoices",
+        title: "Direct Card Invoices",
+        route: "/invoices?tab=direct_card",
+        permission: "invoices.view",
+        description:
+            "Invoices paid straight by card, listed on their own tab of the invoices page, where they are also created.",
+    },
+    {
         id: "analytics",
         title: "Analytics",
         route: "/analytics",
@@ -323,6 +350,14 @@ export const PAGES = [
         permission: "beneficiaries.add",
         description:
             "Register a new recipient. The required fields depend on the destination country and payout method.",
+    },
+    {
+        id: "edit_beneficiary",
+        title: "Edit a Beneficiary",
+        route: "/beneficiaries",
+        permission: "beneficiaries.edit",
+        description:
+            "Change or remove a saved recipient's details. Takes the user to the beneficiaries list, where they pick the person and press edit themselves — the edit form opens for one chosen beneficiary, so it cannot be opened directly.",
     },
     {
         id: "referrals",
@@ -440,6 +475,93 @@ export const PAGES = [
         description: "External crypto addresses to withdraw to. Network matters when saving an address.",
     },
     {
+        id: "change_password",
+        title: "Change Your Password",
+        route: "/settings?tab=password",
+        permission: "settings.password.view",
+        description:
+            "Set a new sign-in password from inside the account. Someone locked out and unable to sign in needs the forgotten-password link on the login screen instead.",
+    },
+    {
+        id: "payment_threshold",
+        title: "Payment Threshold",
+        route: "/settings?tab=threshold",
+        permission: "settings.payment-threshold.view",
+        description:
+            "The amount above which a payment has to be confirmed with a code. This is the page for 'why am I asked for a code' and for changing when that happens.",
+    },
+    {
+        id: "financial_info",
+        title: "Financial Info",
+        route: "/settings?tab=financial",
+        permission: "settings.financial-info.view",
+        description:
+            "Compliance questions about income, source of funds and expected activity. The tab disappears once the answers are on file.",
+    },
+    {
+        id: "nominee_information",
+        title: "Nominee Information",
+        route: "/settings?tab=nominee",
+        permission: "settings.nominee.view",
+        description: "Who the account passes to. Names a nominee and their contact details.",
+    },
+    {
+        id: "how_others_find_you",
+        title: "How Others Can Find You",
+        route: "/settings?tab=find",
+        permission: "settings.how-others-find-you.view",
+        description:
+            "Controls whether other InstaPay users can find this account by name, username, phone or email — the page for being searchable, or not.",
+    },
+    {
+        id: "notification_settings",
+        title: "Notifications",
+        route: "/settings?tab=notification",
+        permission: "settings.notifications.view",
+        description:
+            "Which alerts the user receives and on which channel. Offer this for turning notifications on or off, not for reading them.",
+    },
+    {
+        id: "api_key",
+        title: "API Key",
+        route: "/settings?tab=apikey",
+        permission: "settings.api-key.view",
+        businessOnly: true,
+        description:
+            "Business accounts only: the key for connecting their own systems to InstaPay.",
+    },
+    {
+        id: "login_activity",
+        title: "Login Activity",
+        route: "/settings?tab=activity",
+        permission: "settings.login-activity.view",
+        description:
+            "Devices and sessions that have signed in, with times. The page for 'was someone else in my account'.",
+    },
+    {
+        id: "saved_cards",
+        title: "Manage Saved Cards",
+        route: "/settings?tab=cards",
+        permission: "settings.saved-cards.view",
+        description:
+            "Cards saved for topping up. Cards are added and removed here — this is not the InstaPay Mastercard, which is My Mastercard.",
+    },
+    {
+        id: "download_data",
+        title: "Download Your Data",
+        route: "/settings?tab=data",
+        permission: "settings.download-data.view",
+        description: "Request a copy of the account's data.",
+    },
+    {
+        id: "delete_account",
+        title: "Delete Your Account",
+        route: "/settings?tab=delete",
+        permission: "settings.delete-account.view",
+        description:
+            "Closing the account for good. Take the user here if they ask, and let the page state the consequences — do not talk them out of it or through it.",
+    },
+    {
         id: "update_pin",
         title: "Transaction PIN",
         route: "/update-pin",
@@ -460,6 +582,97 @@ export const PAGES = [
         route: "/dashboard/default",
         permission: "dashboard.view",
         description: "Overview: balances, quick actions, recent transactions and recent beneficiaries.",
+    },
+
+    // Agent portal. These sit behind AgentRoute, which sends anyone without
+    // `isInstapayAgent` back to the dashboard — so `agentOnly` gates them the
+    // way `permission` gates the rest, and both checks run before navigating.
+    {
+        id: "agent_overview",
+        title: "Agent Overview",
+        route: "/agent-commission",
+        permission: "agent-commission.view",
+        agentOnly: true,
+        description:
+            "The agent portal's home: totals for leads, clients, commission earned, IBANs generated, fee packs and the sub-agent network.",
+    },
+    {
+        id: "agent_leads",
+        title: "Leads",
+        route: "/leads",
+        permission: "leads.view",
+        agentOnly: true,
+        description:
+            "People the agent is signing up, with where each one has reached — not registered, onboarding, KYC or IBAN in review, IBAN generated. New leads are added here.",
+    },
+    {
+        id: "agent_clients",
+        title: "Referred Clients",
+        route: "/clients",
+        permission: "clients.view",
+        agentOnly: true,
+        description:
+            "Clients who completed sign-up under this agent, filterable by account type and status.",
+    },
+    {
+        id: "agent_sub_agents",
+        title: "Sub-Agents",
+        route: "/sub-agents",
+        permission: "sub-agents.view",
+        agentOnly: true,
+        description:
+            "The agent's own network of sub-agents, their verification state and commission split. New sub-agents are invited here.",
+    },
+    {
+        id: "agent_commissions",
+        title: "Commissions",
+        route: "/commissions",
+        permission: "commissions.view",
+        agentOnly: true,
+        description:
+            "What the agent has earned and what is still pending, the commission rules behind it, and the commission statement.",
+    },
+    {
+        id: "agent_reports",
+        title: "Reports & Analytics",
+        route: "/reports",
+        permission: "reports.view",
+        agentOnly: true,
+        description: "Performance reporting across the agent's leads, clients and earnings.",
+    },
+    {
+        id: "agent_fee_requests",
+        title: "Fee Model Requests",
+        route: "/fee-model-requests",
+        agentOnly: true,
+        description:
+            "Request and track pricing for a client — monthly IBAN fee, SEPA and SWIFT transfers, crypto on/off ramp, FX margin.",
+    },
+    {
+        id: "agent_documents",
+        title: "Agent Documents",
+        route: "/documents",
+        permission: "documents.view",
+        agentOnly: true,
+        description: "Documents held for the agent account and its onboarding.",
+    },
+    {
+        id: "agent_profile",
+        title: "Agent Profile",
+        route: "/agent-profile",
+        permission: "agent-profile.view",
+        agentOnly: true,
+        description:
+            "The agent's own corporate profile: company details, country, reseller type, directors and UBOs.",
+    },
+    {
+        id: "agent_support",
+        title: "Agent Support",
+        route: "/support",
+        permission: "support.view",
+        agentOnly: true,
+        description:
+            "The reseller support desk — dedicated agent line, onboarding playbook and best-practice guides.",
     },
 ];
 
