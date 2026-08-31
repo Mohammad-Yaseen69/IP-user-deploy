@@ -92,10 +92,12 @@ const UserState = ({ children }) => {
         queryFn: () => getRegisteredBeneficiariesFn(authHeader),
         enabled: !!userDetails?._id
     })
-    const { data: balances, isLoading: balanceLoading } = useQuery({
+    const { data: balances, isLoading: balanceLoading, refetch: refetchBalances } = useQuery({
         queryKey: ["getBalancesIUSD", userDetails?._id],
         queryFn: () => getBalances(authHeader),
-        enabled: !!userDetails?._id
+        enabled: !!userDetails?._id,
+        refetchOnMount: "always",
+        staleTime: 0,
     })
 
     const processReceivingNonIpFunds = useMutation({
@@ -357,6 +359,20 @@ const UserState = ({ children }) => {
     }
 
 
+    const getUserBalances = async () => {
+        if (!userDetails?._id) return
+        try {
+            const res = await refetchBalances()
+            if (res?.data) {
+                setAvailable(res.data?.available ?? 0)
+                setBlocked(res.data?.blocked ?? 0)
+            }
+            return res?.data
+        } catch (e) {
+            console.error("Error refetching balances:", e)
+        }
+    }
+
     const getUserWallets = (dontSort) => {
         axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/get-user-wallet/${userDetails?._id}`, { headers: authHeader })
             .then(async (res) => {
@@ -378,6 +394,7 @@ const UserState = ({ children }) => {
                     const wallets = defaultWallet ? [defaultWallet, ...otherWallets] : otherWallets
                     setUserWallets(wallets);
                 }
+                getUserBalances()
             })
     }
 
@@ -693,7 +710,7 @@ const UserState = ({ children }) => {
         <UserContext.Provider value={{
             selectedAccount,
             setSelectedAccount,
-            userDetails, setUserDetails, userWallets, setUserWallets, token, authHeader, beneficiaries, setBeneficiaries, userTransactions, setUserTransactions, searchQuery, setSearchQuery, apiDates, setApiDates, userSecurityQues, referralLink, userSessions, allowedFeatures, verifyToken, userWithdrawals, setUserWithdrawals, cryptoWithdrawals, setCryptoWithdrawals, allowedWithdrawals, registeredBeneficiaries, profileCompleted, allowedCountries, userPortfolio, profileIncompleteReason, setUserPortfolio, setUserVideos, getUserVideos, userVideos, checkRegisteredBenficiaries, getAllActiveCountries, getUserWallets, getUserBeneficiaries, getUserDocuments, checkAuth, getSecurityQuestions, getInvitationLink, getSessions, profileCompletedPercentage, getWithdrawals, getReferralCommission, totalReferralAmount, validateSendingLimits, validateReceivingLimits, validateTransactionsCount, profileLockTIme, setProfileLockTime, showInactivityModal, setShowInactivityModal, is30Days, setIs30Days, threeDaysReminder, set3DaysReminder, is30DaysInfo, setIs30DaysInfo, threeDaysReminderInfo, set3DaysReminderInfo, clearData, croppedImages, updateCoordinates, setCroppedImages, missingTabsData, setMissingTabsData, setAvailable, available, setBlocked, blocked, benLoading, balanceLoading, showModalState, setShowModalState, processReceivingNonIpFunds: processReceivingNonIpFunds.mutateAsync, showAnotherLoginModal, setShowAnotherLoginModal, isAgentLogin, setIsAgentLogin, agentDetails, setAgentDetails, commisions
+            userDetails, setUserDetails, userWallets, setUserWallets, token, authHeader, beneficiaries, setBeneficiaries, userTransactions, setUserTransactions, searchQuery, setSearchQuery, apiDates, setApiDates, userSecurityQues, referralLink, userSessions, allowedFeatures, verifyToken, userWithdrawals, setUserWithdrawals, cryptoWithdrawals, setCryptoWithdrawals, allowedWithdrawals, registeredBeneficiaries, profileCompleted, allowedCountries, userPortfolio, profileIncompleteReason, setUserPortfolio, setUserVideos, getUserVideos, userVideos, checkRegisteredBenficiaries, getAllActiveCountries, getUserWallets, getUserBeneficiaries, getUserDocuments, checkAuth, getSecurityQuestions, getInvitationLink, getSessions, profileCompletedPercentage, getWithdrawals, getReferralCommission, totalReferralAmount, validateSendingLimits, validateReceivingLimits, validateTransactionsCount, profileLockTIme, setProfileLockTime, showInactivityModal, setShowInactivityModal, is30Days, setIs30Days, threeDaysReminder, set3DaysReminder, is30DaysInfo, setIs30DaysInfo, threeDaysReminderInfo, set3DaysReminderInfo, clearData, croppedImages, updateCoordinates, setCroppedImages, missingTabsData, setMissingTabsData, setAvailable, available, setBlocked, blocked, benLoading, balanceLoading, getUserBalances, refetchBalances, showModalState, setShowModalState, processReceivingNonIpFunds: processReceivingNonIpFunds.mutateAsync, showAnotherLoginModal, setShowAnotherLoginModal, isAgentLogin, setIsAgentLogin, agentDetails, setAgentDetails, commisions
         }}>
             {((showModalState || Boolean(isSessionExpired)) && !location.pathname.startsWith("/pay/")) &&
                 <SessionExpireModal
