@@ -28,7 +28,7 @@ import SuccessModal from "./SuccessModal";
 import NestedDropdown from "../NestedDropdown";
 
 
-const BusinessAccount = ({ isInternational, toggleHandler, errorOnInvalid = false, error = false }) => {
+const BusinessAccount = ({ isInternational, toggleHandler, errorOnInvalid = true, error = false }) => {
     const { t } = useTranslation()
     const navigate = useNavigate()
     const [active, setActive] = useState(1)
@@ -161,6 +161,7 @@ const BusinessAccount = ({ isInternational, toggleHandler, errorOnInvalid = fals
         setBankCountryCode,
         bankCountryIsoCode,
         setBankCountryIsoCode,
+        skipNextAccNumTypeResetRef,
     } = useBankDetails({ accNumType, setFormData, handleBankExtraChange, bankExtras, errorOnInvalid, error })
     const { fieldsInfo, services, mobileProviders, selectedCountryDetails, getCountryFields } = useChannels({ setLoading, setActive, countryIsoCode, countryId, isBusiness: true })
 
@@ -244,6 +245,7 @@ const BusinessAccount = ({ isInternational, toggleHandler, errorOnInvalid = fals
             const savedBankCountryCode = bankDetail?.extras?.country_iso_code || user?.country_iso_code || ""
             const savedBankCountryName = bankDetail?.country_name || citiesData.find(item => item.iso3 === savedBankCountryCode)?.name || user?.country_name || ""
 
+            skipNextAccNumTypeResetRef.current = true
             setAccNumType(bankDetail?.iban ? "IBAN" : "Swift")
             setIbanSwift(bankCodeValue)
             setBankCountryCode(savedBankCountryCode)

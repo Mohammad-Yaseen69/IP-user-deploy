@@ -1,6 +1,7 @@
 import jsPDF from "jspdf";
 import countriesData from "../../Components/CitiesDropDown/CitiesData.json";
 import logoImg from "../../assets/images/logo/logo2.webp";
+import { service_name_formatter } from "../../Components/TransactionsNewApi/TransactionItem";
 
 const toBase64 = (src) =>
     new Promise((resolve, reject) => {
@@ -32,12 +33,28 @@ const createGradientHeader = (widthPx, heightPx) => {
     return canvas.toDataURL("image/png");
 };
 
+const isValidValue = (val) => {
+    if (val === null || val === undefined) return false;
+    const s = String(val).trim();
+    if (!s) return false;
+    if (/^(n\/?a|---|--|-|none|null|undefined)$/i.test(s)) return false;
+    return true;
+};
+
 const getCountryName = (iso2) => {
-    if (!iso2) return "N/A";
+    if (!iso2) return "";
     const country = countriesData.find(
-        (c) => c.iso2?.toUpperCase() === iso2.toUpperCase()
+        (c) => c.iso2?.toUpperCase() === String(iso2).toUpperCase() || c.name?.toUpperCase() === String(iso2).toUpperCase()
     );
-    return country?.name || iso2;
+    return country?.name || iso2 || "";
+};
+
+const formatPaymentMethod = (method) => {
+    if (!method) return "";
+    const upper = String(method).toUpperCase();
+    if (upper === "SEPA_INST" || upper === "SEPA_INSTANT" || upper === "INSTANT") return "SEPA Instant (SEPA_INST)";
+    if (upper === "SEPA_CT" || upper === "SEPA_CREDIT_TRANSFER" || upper === "STANDARD") return "SEPA Credit Transfer (SEPA_CT)";
+    return String(method).replace(/_/g, " ");
 };
 
 export const isOutgoingTransaction = (type) => /out/i.test(type || "");
@@ -46,6 +63,10 @@ const COLOR_PURPLE = [89, 38, 240];
 const COLOR_PURPLE_DARK = [45, 20, 130];
 const COLOR_GREEN = [22, 163, 74];
 const COLOR_GREEN_BG = [220, 245, 230];
+const COLOR_AMBER = [217, 119, 6];
+const COLOR_AMBER_BG = [254, 243, 199];
+const COLOR_RED = [220, 38, 38];
+const COLOR_RED_BG = [254, 226, 226];
 const COLOR_LABEL_GRAY = [130, 130, 138];
 const COLOR_VALUE_DARK = [35, 35, 40];
 const COLOR_ROW_SHADE = [246, 245, 252];
@@ -93,27 +114,29 @@ export const generateProofOfPaymentPDF = async (tx, selectedIban, userDetails) =
         `${userDetails?.first_name || userDetails?.user?.first_name || ""} ${userDetails?.last_name || userDetails?.user?.last_name || ""}`.trim() ||
         userDetails?.company_name ||
         userDetails?.companyName ||
-        "N/A";
+        "";
     const accountHolderAddress = userDetails?.address || userDetails?.formattedAddress || "";
 
-    let ahY = y - 11;
-    doc.setFont("helvetica", "normal");
-    doc.setFontSize(8);
-    doc.setTextColor(...COLOR_LABEL_GRAY);
-    doc.text("ACCOUNT HOLDER", pageWidth - rightMargin, ahY, { align: "right" });
+    if (isValidValue(accountHolderName)) {
+        let ahY = y - 11;
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(8);
+        doc.setTextColor(...COLOR_LABEL_GRAY);
+        doc.text("ACCOUNT HOLDER", pageWidth - rightMargin, ahY, { align: "right" });
 
-    ahY += 6;
-    doc.setFont("helvetica", "bold");
-    doc.setFontSize(10);
-    doc.setTextColor(...COLOR_VALUE_DARK);
-    doc.text(accountHolderName, pageWidth - rightMargin, ahY, { align: "right" });
+        ahY += 6;
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(10);
+        doc.setTextColor(...COLOR_VALUE_DARK);
+        doc.text(accountHolderName, pageWidth - rightMargin, ahY, { align: "right" });
 
-    if (accountHolderAddress) {
-        const addrLines = doc.splitTextToSize(accountHolderAddress, 70);
-        addrLines.forEach((line) => {
-            ahY += 4.5;
-            doc.text(line, pageWidth - rightMargin, ahY, { align: "right" });
-        });
+        if (isValidValue(accountHolderAddress)) {
+            const addrLines = doc.splitTextToSize(accountHolderAddress, 70);
+            addrLines.forEach((line) => {
+                ahY += 4.5;
+                doc.text(line, pageWidth - rightMargin, ahY, { align: "right" });
+            });
+        }
     }
 
     y += 14;
@@ -123,13 +146,27 @@ export const generateProofOfPaymentPDF = async (tx, selectedIban, userDetails) =
 
     const statusRaw = String(tx.status || tx.bvnk_status || "Completed");
     const isSuccess = /success|complet|approved|done/i.test(statusRaw);
-    const statusHeadline = isSuccess ? "Successfully completed" : statusRaw;
+    const isPending = /pending|process|initiat/i.test(statusRaw);
+    const isFailed = !isSuccess && !isPending;
 
-    const paragraphText =
-        "The payment described below has been successfully processed through the InstaPay Swiss payment infrastructure.";
+    const formatStatusName = (str) =>
+        String(str || "")
+            .split(/[\s_]+/)
+            .map((w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+            .join(" ");
+
+    const statusHeadline = isSuccess
+        ? "Successfully completed"
+        : formatStatusName(statusRaw) || (isPending ? "Pending" : "Failed");
+
+    const paragraphText = isSuccess
+        ? "The payment described below has been successfully processed through the InstaPay Swiss payment infrastructure."
+        : isPending
+            ? "The payment described below is currently being processed through the InstaPay Swiss payment infrastructure. This document reflects its status at the time of generation."
+            : "The payment described below could not be completed through the InstaPay Swiss payment infrastructure. Please contact support for further assistance.";
+
     const paragraphLines = doc.splitTextToSize(paragraphText, cardWidth - 24);
     const cardHeight = 32 + paragraphLines.length * 5;
-
     doc.setDrawColor(...COLOR_CARD_BORDER);
     doc.setLineWidth(0.4);
     doc.roundedRect(cardX, cardTop, cardWidth, cardHeight, 3, 3, "S");
@@ -137,8 +174,13 @@ export const generateProofOfPaymentPDF = async (tx, selectedIban, userDetails) =
     const iconCx = cardX + 14;
     const iconCy = cardTop + 13;
     const iconR = 6;
-    doc.setFillColor(...(isSuccess ? COLOR_GREEN_BG : [253, 237, 220]));
+
+    const statusColor = isSuccess ? COLOR_GREEN : isPending ? COLOR_AMBER : COLOR_RED;
+    const statusBgColor = isSuccess ? COLOR_GREEN_BG : isPending ? COLOR_AMBER_BG : COLOR_RED_BG;
+
+    doc.setFillColor(...statusBgColor);
     doc.circle(iconCx, iconCy, iconR, "F");
+
     if (isSuccess) {
         doc.setDrawColor(...COLOR_GREEN);
         doc.setLineWidth(1.1);
@@ -152,6 +194,17 @@ export const generateProofOfPaymentPDF = async (tx, selectedIban, userDetails) =
             [1, 1],
             "S"
         );
+    } else if (isPending) {
+        doc.setDrawColor(...COLOR_AMBER);
+        doc.setLineWidth(0.85);
+        doc.circle(iconCx, iconCy, 3.5, "S");
+        doc.line(iconCx, iconCy, iconCx, iconCy - 2.0);
+        doc.line(iconCx, iconCy, iconCx + 1.5, iconCy + 0.8);
+    } else {
+        doc.setDrawColor(...COLOR_RED);
+        doc.setLineWidth(1.1);
+        doc.line(iconCx - 2.4, iconCy - 2.4, iconCx + 2.4, iconCy + 2.4);
+        doc.line(iconCx + 2.4, iconCy - 2.4, iconCx - 2.4, iconCy + 2.4);
     }
 
     let cardTextX = cardX + 26;
@@ -164,7 +217,7 @@ export const generateProofOfPaymentPDF = async (tx, selectedIban, userDetails) =
     cardTextY += 6;
     doc.setFont("helvetica", "bold");
     doc.setFontSize(13);
-    doc.setTextColor(...(isSuccess ? COLOR_GREEN : COLOR_VALUE_DARK));
+    doc.setTextColor(...statusColor);
     doc.text(statusHeadline, cardTextX, cardTextY);
 
     const sepY = cardTop + 22;
@@ -192,11 +245,13 @@ export const generateProofOfPaymentPDF = async (tx, selectedIban, userDetails) =
     };
 
     const addTableRow = (label, value, options = {}) => {
+        if (!isValidValue(value)) return;
+
         const { bold = false, big = false, color = COLOR_VALUE_DARK, shaded } = options;
 
         doc.setFont("helvetica", bold ? "bold" : "normal");
         doc.setFontSize(big ? 12 : 9.5);
-        const valStr = String(value ?? "N/A");
+        const valStr = String(value);
         const lines = doc.splitTextToSize(valStr, contentWidth - (valueX - leftMargin) - 4);
         const thisRowHeight = Math.max(lines.length * rowHeight, rowHeight);
 
@@ -226,63 +281,123 @@ export const generateProofOfPaymentPDF = async (tx, selectedIban, userDetails) =
         `${userDetails?.first_name || userDetails?.user?.first_name || ""} ${userDetails?.last_name || userDetails?.user?.last_name || ""}`.trim() ||
         userDetails?.company_name ||
         userDetails?.companyName ||
-        "N/A";
+        "";
 
-    const txDate = new Date(tx.settlement_time || tx.createdAt);
-    const dateFormatted = txDate.toLocaleDateString("en-GB", {
-        day: "2-digit",
-        month: "long",
-        year: "numeric",
-    });
+    const txDate = tx.settlement_time || tx.createdAt ? new Date(tx.settlement_time || tx.createdAt) : null;
+    const dateFormatted =
+        txDate && !isNaN(txDate.getTime())
+            ? txDate.toLocaleDateString("en-GB", {
+                  day: "2-digit",
+                  month: "long",
+                  year: "numeric",
+              })
+            : "";
 
-    const amount = tx.amount != null ? Number(tx.amount).toFixed(2) : "0.00";
+    const amount = tx.amount != null ? Number(tx.amount).toFixed(2) : "";
     const currency = tx.currency || "EUR";
 
-    const rows = [
-        ["Payment Reference", tx.external_reference || tx.reference_id || tx._id || "N/A"],
-        ["Provider Reference", tx.external_reference || "N/A"],
-        ["Transaction ID", tx.transaction_id || tx._id || "N/A"],
+    const beneficiaryName =
+        tx.beneficiary?.name ||
+        [tx.beneficiary?.first_name, tx.beneficiary?.last_name].filter(Boolean).join(" ") ||
+        tx.beneficiary_name ||
+        tx.virtual_iban?.account_holder_name ||
+        "";
+
+    const beneficiaryEntityTypeRaw =
+        tx.beneficiary?.entity_type ||
+        tx.beneficiary?.beneficiary_type ||
+        tx.beneficiary?.type ||
+        tx.entity_type ||
+        "";
+    const beneficiaryEntityType = beneficiaryEntityTypeRaw
+        ? beneficiaryEntityTypeRaw.charAt(0).toUpperCase() + beneficiaryEntityTypeRaw.slice(1).toLowerCase()
+        : "";
+
+    const beneficiaryBank =
+        tx.beneficiary?.bank_name ||
+        tx.beneficiary?.bankName ||
+        tx.bank_name ||
+        tx.beneficiary?.bank_details?.[0]?.name ||
+        "";
+
+    const beneficiaryCountryCode =
+        tx.beneficiary?.address?.country ||
+        tx.beneficiary?.country ||
+        tx.beneficiary?.bankCountry ||
+        tx.country ||
+        "";
+    const beneficiaryCountry = getCountryName(beneficiaryCountryCode);
+
+    const beneficiaryIban =
+        tx.beneficiary?.account_number ||
+        tx.beneficiary?.iban ||
+        tx.beneficiary_iban ||
+        "";
+
+    const paymentRail = formatPaymentMethod(
+        tx.bvnk_method || tx.payment_method || tx.rail || tx.network || tx.method || tx.transfer_speed
+    );
+
+    const rawRows = [
+        // ["Payment Reference", tx.external_reference || tx.reference_id || tx._id],
+        // ["Provider Reference", tx.external_reference],
+        ["Transaction ID", tx.transaction_id || tx._id],
         ["Date", dateFormatted],
-        ["Settlement", tx.status || tx.bvnk_status || "N/A"],
-        ["Network", tx.network || tx.rail || tx.payment_method || "N/A"],
+        ["Settlement", tx.status || tx.bvnk_status],
+        ["Payment Rail", paymentRail],
         ["Sender", senderName],
-        ["Sender Account", selectedIban?.iban || "N/A"],
-        ["Beneficiary", tx.beneficiary?.name || "N/A"],
-        ["Beneficiary IBAN", tx.beneficiary?.account_number || tx.beneficiary?.iban || "N/A"],
-        ["Amount", `${currency} ${amount}`, { bold: true, big: true, color: COLOR_PURPLE }],
-        ["Fees", tx.fee != null ? `${currency} ${Number(tx.fee).toFixed(2)}` : `${currency} 0.00`],
-        ["Reference", tx.remittance_information || tx.additional_information || "N/A"],
-        ["Document ID", tx.document_id || "N/A"],
-        ["Verification Code", tx.verification_code || "N/A"],
+        ["Purpose", service_name_formatter(tx?.purpose)],
+        ["Description / Remittance Reference", tx?.remittance_information],
+        ["Sender Account", selectedIban?.iban],
+        ["Beneficiary", beneficiaryName],
+        ["Beneficiary Entity Type", beneficiaryEntityType],
+        ["Beneficiary Bank", beneficiaryBank],
+        ["Beneficiary Country", beneficiaryCountry],
+        ["Beneficiary IBAN", beneficiaryIban],
+        ["Amount", amount ? `${currency} ${amount}` : "", { bold: true, big: true, color: COLOR_PURPLE }],
+        ["Fees", tx.fee != null ? `${currency} ${Number(tx.fee).toFixed(2)}` : ""],
+        ["Additional Information", tx.additionalInformation || tx.additional_information],
     ];
+
+    const rows = rawRows.filter(([, value]) => isValidValue(value));
 
     rows.forEach(([label, value, options], index) => {
         addTableRow(label, value, { ...options, shaded: index % 2 === 0 });
     });
 
     if (Array.isArray(tx.timeline) && tx.timeline.length > 0) {
-        ensureSpace(20);
-        y += 4;
-        doc.setDrawColor(...COLOR_DIVIDER);
-        doc.setLineWidth(0.3);
-        doc.line(leftMargin, y, pageWidth - rightMargin, y);
-        y += 8;
-
-        doc.setFont("helvetica", "bold");
-        doc.setFontSize(11);
-        doc.setTextColor(...COLOR_PURPLE);
-        doc.text("Transaction Timeline", leftMargin, y);
-        y += 7;
-
-        tx.timeline.forEach((entry, index) => {
-            const entryDate = new Date(entry.date);
-            const timeStr =
-                entryDate.toLocaleDateString("en-GB", { day: "2-digit", month: "long", year: "numeric" }) +
-                " @ " +
-                entryDate.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit", second: "2-digit" }) +
-                " UTC";
-            addTableRow(entry.status || "N/A", timeStr, { shaded: index % 2 === 0 });
+        const validTimeline = tx.timeline.filter((entry) => {
+            const date = entry?.date ? new Date(entry.date) : null;
+            const hasDate = date && !isNaN(date.getTime());
+            const hasStatus = isValidValue(entry?.status) || isValidValue(entry?.title) || isValidValue(entry?.event);
+            return hasDate && hasStatus;
         });
+
+        if (validTimeline.length > 0) {
+            ensureSpace(20);
+            y += 4;
+            doc.setDrawColor(...COLOR_DIVIDER);
+            doc.setLineWidth(0.3);
+            doc.line(leftMargin, y, pageWidth - rightMargin, y);
+            y += 8;
+
+            doc.setFont("helvetica", "bold");
+            doc.setFontSize(11);
+            doc.setTextColor(...COLOR_PURPLE);
+            doc.text("Transaction Timeline", leftMargin, y);
+            y += 7;
+
+            validTimeline.forEach((entry, index) => {
+                const entryDate = new Date(entry.date);
+                const timeStr =
+                    entryDate.toLocaleDateString("en-GB", { day: "2-digit", month: "long", year: "numeric" }) +
+                    " @ " +
+                    entryDate.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit", second: "2-digit" }) +
+                    " UTC";
+                const statusLabel = entry.status || entry.title || entry.event;
+                addTableRow(statusLabel, timeStr, { shaded: index % 2 === 0 });
+            });
+        }
     }
 
 

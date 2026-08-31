@@ -1037,11 +1037,13 @@ const Login = ({ country, setIsLoginForm, }) => {
 
                 if (!username || !domain) return str;
 
-                if (username.length <= 4) {
-                    return `${username[0]}***@${domain}`;
+                if (username.length <= 3) {
+                    return `${"*".repeat(username.length)}@${domain}`;
                 }
 
-                return `${username.slice(0, 6)}********${username.slice(-2)}@${domain}`;
+                const visibleSuffix = username.slice(-3);
+                const maskedLength = username.length - 3;
+                return `${"*".repeat(maskedLength)}${visibleSuffix}@${domain}`;
             }
 
             if (str.length <= 4) {

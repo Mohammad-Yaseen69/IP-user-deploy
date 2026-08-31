@@ -24,7 +24,7 @@ import citiesData from "../CitiesDropDown/CitiesData.json"
 
 
 
-const IndividualAccount = ({ mobileView, handleChangeNumber, toggleSuccess, filteringCountries, errorOnInvalid = false, error = false }) => {
+const IndividualAccount = ({ mobileView, handleChangeNumber, toggleSuccess, filteringCountries, errorOnInvalid = true, error = false }) => {
     const { t } = useTranslation()
     const [active, setActive] = useState(5)
     const [totalCards, setTotalCards] = useState(1)

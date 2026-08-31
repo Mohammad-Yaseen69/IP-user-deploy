@@ -84,7 +84,7 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
         })
     }
 
-    const handleBankExtraChange = (e) => {
+    const handleBankExtraChange = useCallback((e) => {
         const { value, name } = e.target;
         setBankExtras(prev => {
             return {
@@ -92,7 +92,7 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
                 [name]: value
             }
         })
-    }
+    }, [])
 
     const [mobileExtras, setMobileExtras] = useState({
         msisdn: "",

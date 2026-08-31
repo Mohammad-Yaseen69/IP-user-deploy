@@ -1,10 +1,12 @@
-import { useCallback, useContext, useEffect, useState, useMemo } from 'react'
+import { useCallback, useContext, useEffect, useState, useMemo, useRef } from 'react'
 import { UserContext } from '../../Context/UserContext'
 import { countries as CountriesList } from 'country-list-json'
 import { useQuery } from '@tanstack/react-query'
 import { apiWrapper } from '../../utils/Functions/apiWrapper'
 
-const useBankDetails = ({ accNumType, setFormData, handleBankExtraChange, bankExtras, setError, alpha3, countryName, fieldKeyOverrides = {}, debounceMs = 1500, bypassCountryCheck = false, errorOnInvalid = false, error = false }) => {
+const errorOnInvalid = true
+
+const useBankDetails = ({ accNumType, setFormData, handleBankExtraChange, bankExtras, setError, alpha3, countryName, fieldKeyOverrides = {}, debounceMs = 1500, bypassCountryCheck = false, error = false }) => {
     const isErrorMode = typeof errorOnInvalid === 'boolean'
         ? errorOnInvalid
         : typeof error === 'boolean'
@@ -22,7 +24,13 @@ const useBankDetails = ({ accNumType, setFormData, handleBankExtraChange, bankEx
     const [debouncedValue, setDebouncedValue] = useState("")
     const [hasInputInteraction, setHasInputInteraction] = useState(false)
 
+    const bankExtrasRef = useRef(bankExtras)
+    const handleBankExtraChangeRef = useRef(handleBankExtraChange)
+    useEffect(() => { bankExtrasRef.current = bankExtras }, [bankExtras])
+    useEffect(() => { handleBankExtraChangeRef.current = handleBankExtraChange }, [handleBankExtraChange])
+
     const [queryMetadata, setQueryMetadata] = useState({ isForEdit: false, account_number: "" })
+    const skipNextAccNumTypeResetRef = useRef(false)
 
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -68,9 +76,9 @@ const useBankDetails = ({ accNumType, setFormData, handleBankExtraChange, bankEx
                 [bankAccountNumberKey]: ""
             }))
             if (!queryMetadata.isForEdit) {
-                if (bankExtras && handleBankExtraChange) {
-                    for (const key in bankExtras) {
-                        handleBankExtraChange({ target: { name: key, value: "" } })
+                if (bankExtrasRef.current && handleBankExtraChangeRef.current) {
+                    for (const key in bankExtrasRef.current) {
+                        handleBankExtraChangeRef.current({ target: { name: key, value: "" } })
                     }
                 }
             }
@@ -82,9 +90,13 @@ const useBankDetails = ({ accNumType, setFormData, handleBankExtraChange, bankEx
             setBankDetailsError("")
             setWarning("")
         }
-    }, [debouncedValue, accNumType, bankNameKey, branchNameKey, bankBranchStreetKey, bankCityKey, bankProvinceKey, bankPostalCodeKey, queryMetadata.isForEdit, hasInputInteraction, setError, bankExtras, handleBankExtraChange, setFormData])
+    }, [debouncedValue, accNumType, bankNameKey, branchNameKey, bankBranchStreetKey, bankCityKey, bankProvinceKey, bankPostalCodeKey, queryMetadata.isForEdit, hasInputInteraction, setError, setFormData])
 
     useEffect(() => {
+        if (skipNextAccNumTypeResetRef.current) {
+            skipNextAccNumTypeResetRef.current = false
+            return;
+        }
         setIbanSwift("")
         setDebouncedValue("")
     }, [accNumType])
@@ -186,9 +198,9 @@ const useBankDetails = ({ accNumType, setFormData, handleBankExtraChange, bankEx
             })
 
             if (!queryMetadata.isForEdit) {
-                if (bankExtras && handleBankExtraChange) {
-                    for (const key in bankExtras) {
-                        handleBankExtraChange({ target: { name: key, value: "" } })
+                if (bankExtrasRef.current && handleBankExtraChangeRef.current) {
+                    for (const key in bankExtrasRef.current) {
+                        handleBankExtraChangeRef.current({ target: { name: key, value: "" } })
                     }
                 }
             }
@@ -206,7 +218,7 @@ const useBankDetails = ({ accNumType, setFormData, handleBankExtraChange, bankEx
             setBankCountryIsoCode(extractedCode)
             setIsValidIban(true)
         }
-    }, [rawData, accNumType, alpha3, countryName, setError, setFormData, queryMetadata, bankNameKey, branchNameKey, bankBranchStreetKey, bankCityKey, bankProvinceKey, bankPostalCodeKey, bypassCountryCheck, isErrorMode, bankExtras, handleBankExtraChange, debouncedValue])
+    }, [rawData, accNumType, alpha3, countryName, setError, setFormData, queryMetadata, bankNameKey, branchNameKey, bankBranchStreetKey, bankCityKey, bankProvinceKey, bankPostalCodeKey, bypassCountryCheck, isErrorMode, debouncedValue])
 
     // Process query errors
     useEffect(() => {
@@ -241,9 +253,9 @@ const useBankDetails = ({ accNumType, setFormData, handleBankExtraChange, bankEx
                 }))
 
                 if (!queryMetadata.isForEdit) {
-                    if (bankExtras && handleBankExtraChange) {
-                        for (const key in bankExtras) {
-                            handleBankExtraChange({ target: { name: key, value: "" } })
+                    if (bankExtrasRef.current && handleBankExtraChangeRef.current) {
+                        for (const key in bankExtrasRef.current) {
+                            handleBankExtraChangeRef.current({ target: { name: key, value: "" } })
                         }
                     }
                 }
@@ -258,11 +270,14 @@ const useBankDetails = ({ accNumType, setFormData, handleBankExtraChange, bankEx
                 setIsValidIban(true)
             }
         }
-    }, [queryError, isErrorMode, setError, setFormData, queryMetadata, bankNameKey, branchNameKey, bankBranchStreetKey, bankCityKey, bankProvinceKey, bankPostalCodeKey, bankExtras, handleBankExtraChange])
+    }, [queryError, isErrorMode, setError, setFormData, queryMetadata, bankNameKey, branchNameKey, bankBranchStreetKey, bankCityKey, bankProvinceKey, bankPostalCodeKey])
 
     const getBankDetails = useCallback((e, isForEdit = false, account_number = "") => {
         const value = e.target.value?.replace(/[^a-zA-Z0-9]/g, '')
 
+        if (isForEdit) {
+            skipNextAccNumTypeResetRef.current = true
+        }
         setHasInputInteraction(true)
         setFormData(prev => ({
             ...prev,
@@ -299,7 +314,8 @@ const useBankDetails = ({ accNumType, setFormData, handleBankExtraChange, bankEx
         setBankCountryCode,
         setBankCountryIsoCode,
         setBankCountry,
-        isFetchingBank: isFetching
+        isFetchingBank: isFetching,
+        skipNextAccNumTypeResetRef
     }
 }
 

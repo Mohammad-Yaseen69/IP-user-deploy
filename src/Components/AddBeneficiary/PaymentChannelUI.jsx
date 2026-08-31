@@ -41,7 +41,7 @@ const PaymentChannelUI = ({
     setBankCountryCode,
     bankCountryIsoCode,
     setBankCountryIsoCode,
-    errorOnInvalid = false,
+    errorOnInvalid = true,
     error = false,
     bankExtras,
     handleBankExtraChange,
