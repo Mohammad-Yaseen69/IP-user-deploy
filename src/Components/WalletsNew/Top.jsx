@@ -51,16 +51,25 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
     }, [userDetails])
 
     useEffect(() => {
-        if (action && wallet_address) {
+        if (wallet_address && userWallets?.length > 0) {
             const wallet = userWallets?.find(item => item?.wallet_id === wallet_address)
             const index = userWallets?.findIndex(item => item?.wallet_id === wallet_address)
-            console.log(index)
-            if (wallet?.wallet_id && action === "withdraw") {
+            if (wallet?.wallet_id && index !== -1) {
                 setActiveDot(index)
                 setCurrentWallet(wallet)
-                setShowWithdrawalModal(true)
+                if (swiperRef?.current?.swiper) {
+                    swiperRef.current.swiper.slideTo(index)
+                } else {
+                    setTimeout(() => {
+                        swiperRef?.current?.swiper?.slideTo(index)
+                    }, 100)
+                }
+                if (action === "withdraw") {
+                    setShowWithdrawalModal(true)
+                } else if (action === "download") {
+                    setShowDownloadStatementModal(true)
+                }
             }
-
         }
     }, [action, wallet_address, userWallets])
 
@@ -211,6 +220,11 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
                             }}
                             style={{ minWidth: "250px", cursor: "none" }}
                             className={`mySwiper ${styles.swiper}`}
+                            onSwiper={(swiper) => {
+                                if (activeDot > 0) {
+                                    swiper.slideTo(activeDot)
+                                }
+                            }}
                             onSlideChange={e => {
                                 setActiveDot(e.activeIndex)
                             }}
