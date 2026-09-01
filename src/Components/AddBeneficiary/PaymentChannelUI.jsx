@@ -386,7 +386,6 @@ const PaymentChannelUI = ({
                             name="bank_account_number"
                             onChange={e => {
                                 const value = e.target.value.replace(/[^a-zA-Z0-9]/g, '')
-                                console.log(value)
                                 inputChangeHandler({ target: { name: e.target.name, value } })
                             }}
                             disabled={isEdit ? !isValidIban || !isEditMode : !isValidIban}
