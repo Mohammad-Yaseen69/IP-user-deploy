@@ -139,15 +139,7 @@ const Signup = ({ country, setIsLoginForm, setHideLogo }) => {
     }, [agentReferralTokenId, allowedCountries]);
 
 
-    const isWhatsappDefault = useMemo(() => {
-        if (data.country) {
-            const whatsappDefaultCountries = ["KWT", "SAU", "ARE"]
-
-            if (whatsappDefaultCountries.includes(data.country)) {
-                return true
-            }
-        }
-    }, [data.country])
+    const isWhatsappDefault = true
 
     useEffect(() => {
         if (code?.trim()) {
@@ -243,7 +235,7 @@ const Signup = ({ country, setIsLoginForm, setHideLogo }) => {
         }
     }
 
-    const signupHandler = async (platform,) => {
+    const signupHandler = async (platform = "whatsapp") => {
         dataHandler("loading", true)
         const coun = allowedCountries.find(item => item.country_iso_code === data.country)
         try {
@@ -255,7 +247,7 @@ const Signup = ({ country, setIsLoginForm, setHideLogo }) => {
                 country_iso_code: data.country,
                 country_name: coun?.country_name,
                 country: coun?._id,
-                platform: platform
+                platform: platform || "whatsapp"
             }
 
             if (data.email.length > 0) {
@@ -414,7 +406,7 @@ const Signup = ({ country, setIsLoginForm, setHideLogo }) => {
                 dataHandler("step", data.step + 1)
                 break;
             case 5:
-                signupHandler(isWhatsappDefault ? "whatsapp" : "sms")
+                signupHandler("whatsapp")
                 break;
 
             default:

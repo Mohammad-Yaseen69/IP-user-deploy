@@ -95,7 +95,19 @@ const ActivityStep = ({ onNext, onBack, data = {} }) => {
         }
     }
 
-    const isFormValid = Boolean((form.industryReference || form.industry) && form.monthlyVolume && (form.purpose?.trim() || form.businessDescription?.trim() || true))
+    const isFormValid = Boolean(
+        (form.industryReference || form.industry) &&
+        form.monthlyVolume &&
+        form.purpose?.trim() &&
+        form.paymentNature?.trim() &&
+        form.originCountries?.length > 0 &&
+        form.destinationCountries?.length > 0 &&
+        form.averageTransaction &&
+        form.maximumTransaction &&
+        form.averageBalance &&
+        form.incomingPayments &&
+        form.outgoingPayments
+    )
 
     const set = (key) => (e) => setForm(prev => ({ ...prev, [key]: e.target.value }))
 
@@ -426,7 +438,7 @@ const ActivityStep = ({ onNext, onBack, data = {} }) => {
                             <div className={styles.formGrid} >
                                 <div className={styles.inputGroup}>
                                     <label className={styles.inputLabel}>
-                                        {t("PURPOSE OF THE IBAN")}
+                                        {t("PURPOSE OF THE IBAN")} <span style={{ color: "red", fontWeight: 600 }}>*</span>
                                     </label>
 
                                     <input
@@ -439,7 +451,7 @@ const ActivityStep = ({ onNext, onBack, data = {} }) => {
 
                                 <div className={styles.inputGroup}>
                                     <label className={styles.inputLabel}>
-                                        {t("NATURE OF EXPECTED PAYMENTS")}
+                                        {t("NATURE OF EXPECTED PAYMENTS")} <span style={{ color: "red", fontWeight: 600 }}>*</span>
                                     </label>
 
                                     <input
@@ -456,7 +468,7 @@ const ActivityStep = ({ onNext, onBack, data = {} }) => {
                             <div className={styles.formGrid}>
                                 <div className={styles.inputGroup}>
                                     <label className={styles.inputLabel}>
-                                        {t("COUNTRIES OF ORIGIN OF FUNDS")}
+                                        {t("COUNTRIES OF ORIGIN OF FUNDS")} <span style={{ color: "red", fontWeight: 600 }}>*</span>
                                     </label>
 
                                     <CountryDropDown
@@ -487,7 +499,7 @@ const ActivityStep = ({ onNext, onBack, data = {} }) => {
 
                                 <div className={styles.inputGroup}>
                                     <label className={styles.inputLabel}>
-                                        {t("COUNTRIES OF DESTINATION")}
+                                        {t("COUNTRIES OF DESTINATION")} <span style={{ color: "red", fontWeight: 600 }}>*</span>
                                     </label>
 
                                     <CountryDropDown
@@ -520,7 +532,7 @@ const ActivityStep = ({ onNext, onBack, data = {} }) => {
                             <div className={styles.formGrid}>
                                 <div className={styles.inputGroup}>
                                     <label className={styles.inputLabel}>
-                                        {t("AVERAGE TRANSACTION VALUE (EUR)")}
+                                        {t("AVERAGE TRANSACTION VALUE (EUR)")} <span style={{ color: "red", fontWeight: 600 }}>*</span>
                                     </label>
 
                                     <div className={styles.inputWrapper}>
@@ -539,7 +551,7 @@ const ActivityStep = ({ onNext, onBack, data = {} }) => {
 
                                 <div className={styles.inputGroup}>
                                     <label className={styles.inputLabel}>
-                                        {t("MAXIMUM TRANSACTION VALUE (EUR)")}
+                                        {t("MAXIMUM TRANSACTION VALUE (EUR)")} <span style={{ color: "red", fontWeight: 600 }}>*</span>
                                     </label>
 
                                     <div className={styles.inputWrapper}>
@@ -560,7 +572,7 @@ const ActivityStep = ({ onNext, onBack, data = {} }) => {
                             <div className={styles.formGrid}>
                                 <div className={styles.inputGroup}>
                                     <label className={styles.inputLabel}>
-                                        {t("EXPECTED AVERAGE BALANCE (EUR)")}
+                                        {t("EXPECTED AVERAGE BALANCE (EUR)")} <span style={{ color: "red", fontWeight: 600 }}>*</span>
                                     </label>
 
                                     <div className={styles.inputWrapper}>
@@ -579,7 +591,7 @@ const ActivityStep = ({ onNext, onBack, data = {} }) => {
 
                                 <div className={styles.inputGroup}>
                                     <label className={styles.inputLabel}>
-                                        {t("INCOMING PAYMENTS / MONTH (EUR)")}
+                                        {t("INCOMING PAYMENTS / MONTH (EUR)")} <span style={{ color: "red", fontWeight: 600 }}>*</span>
                                     </label>
 
                                     <div className={styles.inputWrapper}>
@@ -598,7 +610,7 @@ const ActivityStep = ({ onNext, onBack, data = {} }) => {
 
                                 <div className={styles.inputGroup}>
                                     <label className={styles.inputLabel}>
-                                        {t("OUTGOING PAYMENTS / MONTH (EUR)")}
+                                        {t("OUTGOING PAYMENTS / MONTH (EUR)")} <span style={{ color: "red", fontWeight: 600 }}>*</span>
                                     </label>
 
                                     <div className={styles.inputWrapper}>
