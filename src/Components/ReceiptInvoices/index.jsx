@@ -1,7 +1,8 @@
 import { useQuery } from '@tanstack/react-query'
-import { useContext, useMemo, useState } from 'react'
+import { useContext, useEffect, useMemo, useState } from 'react'
 import { Search } from 'react-feather'
 import { useTranslation } from 'react-i18next'
+import { useLocation } from 'react-router'
 import { UserContext } from '../../Context/UserContext'
 import useWindowWidth from '../../utils/useWindowWidth'
 import InstaPayLoader from '../Loader'
@@ -15,6 +16,16 @@ import { useDebounce } from '../../hooks/useDebounce/useDebounce'
 import Paginations from '../../Common/Component/Paginations'
 import { usePermission } from '../../hooks/GeneralUse/usePermission'
 import PricingsAndPlan from '../PaymentAddress/PricingsAndPlan'
+
+
+const TAB_PARAMS = {
+    invoice: "invoice",
+    invoices: "invoice",
+    plan: "plans",
+    plans: "plans",
+    direct_card: "direct_card",
+    "direct-card": "direct_card",
+}
 
 const ReceiptInvoice = () => {
     const { t } = useTranslation()
@@ -34,6 +45,23 @@ const ReceiptInvoice = () => {
         invoice: null
     })
     const { userDetails } = useContext(UserContext)
+
+ 
+    const location = useLocation()
+    useEffect(() => {
+        const params = new URLSearchParams(location.search)
+
+        // ?tab= so a link can land on plans or direct card invoices rather
+        // than always on the invoice list.
+        const tab = TAB_PARAMS[params.get("tab")?.toLowerCase()]
+        if (tab) setActiveTab(tab)
+
+      
+        if (params.get("action") === "create" && can("invoices.create")) {
+            if (tab === "direct_card") setShowDirectCardModal(true)
+            else if (tab !== "plans") setShowModal(true)
+        }
+    }, [location.search])
 
     const { isLoading, data, isRefetching } = useQuery({
         queryKey: ["GetInvoicesList", debouncedSearch.trim().toLowerCase(), page, limit],

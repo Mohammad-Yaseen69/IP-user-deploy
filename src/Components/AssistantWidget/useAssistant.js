@@ -1,5 +1,6 @@
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useContext, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { UserContext } from "../../Context/UserContext";
 import { usePermission } from "../../hooks/GeneralUse/usePermission";
 import { PAGES } from "./knowledge/pages";
 import { useNavigationTool } from "./useNavigationTool";
@@ -21,6 +22,9 @@ export const useAssistant = ({ authedFetch }) => {
     const { t } = useTranslation();
     const can = usePermission();
     const navigateToPage = useNavigationTool();
+    const { userDetails } = useContext(UserContext);
+    const isAgent = Boolean(userDetails?.isInstapayAgent);
+    const isBusiness = userDetails?.account_type === "business";
 
     const [messages, setMessages] = useState([]);
     const [isThinking, setIsThinking] = useState(false);
@@ -30,13 +34,20 @@ export const useAssistant = ({ authedFetch }) => {
      * Only the pages this user may open. Sent with every request so the agent
      * can never offer a destination their role forbids, and so the page list
      * lives in one place rather than being mirrored in the bot service.
+     *
+     * `agentOnly` and `businessOnly` are checked separately from `permission`:
+     * those pages are gated by who the account is rather than by a role
+     * permission, and usePermission answers true for every individual account.
      */
     const allowedPages = useMemo(
         () =>
-            PAGES.filter((page) => !page.permission || can(page.permission)).map(
-                ({ id, title, description }) => ({ id, title, description })
-            ),
-        [can]
+            PAGES.filter(
+                (page) =>
+                    (!page.agentOnly || isAgent) &&
+                    (!page.businessOnly || isBusiness) &&
+                    (!page.permission || can(page.permission))
+            ).map(({ id, title, description }) => ({ id, title, description })),
+        [can, isAgent, isBusiness]
     );
 
     const starterPrompts = useMemo(
@@ -144,7 +155,26 @@ export const useAssistant = ({ authedFetch }) => {
                 // The agent already asked and the user already agreed, so this
                 // navigates rather than offering another button. The allowlist
                 // and permission check still run before anything moves.
-                if (done?.navigateTo) navigateToPage(done.navigateTo);
+                if (done?.navigateTo) {
+                    const moved = navigateToPage(done.navigateTo);
+
+                    // The reply has already said it would take them there, so a
+                    // refusal has to be spoken. Silence leaves the user waiting
+                    // on a page that never changes. It goes into the history as
+                    // well, so the next turn knows the move did not happen.
+                    if (!moved?.ok) {
+                        const notice =
+                            moved?.reason === "not_permitted"
+                                ? t("That page isn't available on your account, so you're still where you were.")
+                                : t("I couldn't open that page. Try it from the menu, or email support@insta-pay.ch.");
+
+                        push({ id: nextId(), role: "assistant", text: notice });
+                        historyRef.current = [
+                            ...historyRef.current,
+                            { role: "assistant", content: notice },
+                        ];
+                    }
+                }
             } catch (error) {
                 console.error("Assistant request failed", error);
                 push({ id: nextId(), role: "assistant", text: FALLBACK, isError: true });
@@ -152,7 +182,7 @@ export const useAssistant = ({ authedFetch }) => {
                 setIsThinking(false);
             }
         },
-        [allowedPages, appendTo, authedFetch, isThinking, navigateToPage, push, replaceText]
+        [allowedPages, appendTo, authedFetch, isThinking, navigateToPage, push, replaceText, t]
     );
 
     const reset = useCallback(() => {
