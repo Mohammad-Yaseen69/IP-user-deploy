@@ -1,7 +1,7 @@
 import styles from "./styles/index.module.css"
 import LanguagePicker from '../LanguagePicker'
 import { useTranslation } from 'react-i18next'
-import { useContext, useEffect, useMemo, useReducer } from "react";
+import { useContext, useEffect, useMemo, useReducer, useRef, useState } from "react";
 import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { ChevronRight } from "react-feather";
 import Stepone from "./Signup/Stepone";
@@ -21,6 +21,7 @@ import { UserContext } from "../../Context/UserContext";
 import OtpConfirmation from "./Signup/OtpConfirmation";
 import success from "../PaymentsNewer/files/confirm.mp4"
 import Receipt from "./Signup/Receipt";
+import useSecurityShield from "../../hooks/useSecurityShield";
 
 const initialState = {
     loading: false,
@@ -74,6 +75,17 @@ const Signup = ({ country, setIsLoginForm, setHideLogo }) => {
     const [searchParams] = useSearchParams();
     const agentReferralTokenId = searchParams.get("agentReferralTokenId");
     const { allowedCountries } = useContext(UserContext)
+
+    // All-in-one Bot & reCAPTCHA Shield
+    const {
+        SecurityShield,
+        isSubmitting,
+        setIsSubmitting,
+        isHoneypotTriggered,
+        recordTelemetryKeypress,
+        recordTelemetryFocus,
+        resetRecaptcha
+    } = useSecurityShield();
 
     const dataHandler = (field, value) => {
         dispatch({ type: "UPDATE_FIELD", field, value });
@@ -148,6 +160,7 @@ const Signup = ({ country, setIsLoginForm, setHideLogo }) => {
     }, [code])
 
     const buttonDisabled = useMemo(() => {
+        if (isSubmitting) return true;
         switch (data.step) {
             case 1:
                 return !data.account_type
@@ -170,7 +183,7 @@ const Signup = ({ country, setIsLoginForm, setHideLogo }) => {
             default:
                 break;
         }
-    }, [data])
+    }, [data, isSubmitting])
 
     const checkIfPhoneIsValid = async () => {
         dataHandler("loading", true)
@@ -236,8 +249,12 @@ const Signup = ({ country, setIsLoginForm, setHideLogo }) => {
     }
 
     const signupHandler = async (platform = "whatsapp") => {
-        dataHandler("loading", true)
+        if (isHoneypotTriggered() || isSubmitting || data.loading) return;
+
+        setIsSubmitting(true);
+        dataHandler("loading", true);
         const coun = allowedCountries.find(item => item.country_iso_code === data.country)
+
         try {
             const payload = {
                 phone: data.phone,
@@ -264,19 +281,22 @@ const Signup = ({ country, setIsLoginForm, setHideLogo }) => {
                 delete payload.phone
                 payload.category_id = data.category_id
                 payload.company_name = data.company_name
-                payload.country_iso_code = data.country?.alpha3 ||data.country?.country_iso_code
+                payload.country_iso_code = data.country?.alpha3 || data.country?.country_iso_code
                 payload.country = data.country?._id
                 payload.country_name = data.country?.country_name
-
             }
 
-            console.log(payload)
-            const enc = encryptData(payload)
+            // Using apiWrapper with single capcheRequired param
+            const dec = await apiWrapper({
+                endpoint: `/api/account/registration/${data.account_type === "individual" ? "individual" : "business"}`,
+                method: "POST",
+                payload,
+                isEncrypted: true,
+                isPublic: true,
+                isDecrypted: true,
+                capcheRequired: true
+            });
 
-            const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/account/registration/${data.account_type === "individual" ? "individual" : "business"}`, {
-                data: enc
-            })
-            const dec = decryptData(res.data.data)
             dataHandler("signup_token", dec?.token)
             if (data.account_type === "individual") {
                 dataHandler("show_otp", true)
@@ -284,10 +304,12 @@ const Signup = ({ country, setIsLoginForm, setHideLogo }) => {
                 dataHandler("show_email_otp", true)
             }
         } catch (error) {
-            const dec = decryptData(error?.response?.data?.data)
-            dataHandler("error", dec?.message ?? "Something went wrong while sending OTP.")
+            const dec = error?.response?.data?.data ? decryptData(error.response.data.data) : null;
+            dataHandler("error", dec?.message ?? error?.message ?? t("Something went wrong while sending OTP."))
         } finally {
-            dataHandler("loading", false)
+            dataHandler("loading", false);
+            setIsSubmitting(false);
+            resetRecaptcha();
         }
     }
 
@@ -392,6 +414,10 @@ const Signup = ({ country, setIsLoginForm, setHideLogo }) => {
 
     const clickHandler = (e) => {
         e.preventDefault()
+        if (isHoneypotTriggered()) {
+            console.warn("Automated signup attempt detected via honeypot.");
+            return;
+        }
         switch (data.step) {
             case 1:
                 dataHandler("step", data.step + 1)
@@ -508,6 +534,8 @@ const Signup = ({ country, setIsLoginForm, setHideLogo }) => {
                                                     <Stepthree
                                                         data={data}
                                                         dataHandler={dataHandler}
+                                                        onKeyDown={recordTelemetryKeypress}
+                                                        onFocus={recordTelemetryFocus}
                                                     />
                                                 }
                                                 {
@@ -531,7 +559,7 @@ const Signup = ({ country, setIsLoginForm, setHideLogo }) => {
                                                     {
                                                         (data.step > 1 && window.innerWidth < 1000)
                                                         &&
-                                                        <button disabled={data.loading} type="button" onClick={() => dataHandler("step", data.step - 1)} className={styles.go_back_btn}>
+                                                        <button disabled={data.loading || isSubmitting} type="button" onClick={() => dataHandler("step", data.step - 1)} className={styles.go_back_btn}>
                                                             {t("Back")}
                                                         </button>
                                                     }
@@ -543,11 +571,11 @@ const Signup = ({ country, setIsLoginForm, setHideLogo }) => {
                                                         {
                                                             (data.step > 1 && window.innerWidth > 1000)
                                                             &&
-                                                            <button disabled={data.loading} type="button" className={styles.go_back_btn} onClick={() => dataHandler("step", data.step - 1)}>
+                                                            <button disabled={data.loading || isSubmitting} type="button" className={styles.go_back_btn} onClick={() => dataHandler("step", data.step - 1)}>
                                                                 {t("Back")}
                                                             </button>
                                                         }
-                                                        <button disabled={data.loading || buttonDisabled} type="submit" className={styles.form_btn}>
+                                                        <button disabled={data.loading || buttonDisabled || isSubmitting} type="submit" className={styles.form_btn}>
                                                             <span>
                                                                 {
                                                                     t("Continue")
@@ -557,6 +585,9 @@ const Signup = ({ country, setIsLoginForm, setHideLogo }) => {
                                                         </button>
                                                     </div>
                                                 </div>
+
+                                                {/* All-in-one Security Shield (Honeypot + Invisible reCAPTCHA + Attribution) */}
+                                                <SecurityShield />
                                             </div>
                                         </form>
                             }
