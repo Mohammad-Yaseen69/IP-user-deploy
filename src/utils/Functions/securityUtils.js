@@ -1,3 +1,5 @@
+import * as Sentry from "@sentry/react";
+
 let globalRecaptchaHandler = null;
 let keyCount = 0;
 let mouseMoved = false;
@@ -70,11 +72,63 @@ export const executeGlobalRecaptcha = async () => {
 };
 
 /**
+ * Case 1 Sentry Logger: Honeypot Triggered
+ */
+export const logHoneypotToSentry = (honeypotValue = "", customSignals = null) => {
+    try {
+        const signals = customSignals || getBotSignals();
+        Sentry.captureMessage("Bot Defense: Honeypot trap triggered (Case 1)", {
+            level: "warning",
+            tags: {
+                security_event: "HONEYPOT_TRIGGERED",
+                flow: "signup"
+            },
+            extra: {
+                honeypotValue,
+                signals,
+                timestamp: new Date().toISOString()
+            }
+        });
+    } catch (e) {
+        console.error("Failed to log honeypot to Sentry:", e);
+    }
+};
+
+/**
+ * Case 2 Sentry Logger: reCAPTCHA Failure / Bot Rejection
+ */
+export const logRecaptchaFailureToSentry = (reason, errorDetails = null, customSignals = null) => {
+    try {
+        const signals = customSignals || getBotSignals();
+        Sentry.captureMessage(`Bot Defense: reCAPTCHA verification failed (Case 2) - ${reason}`, {
+            level: "warning",
+            tags: {
+                security_event: "RECAPTCHA_FAILED",
+                failure_reason: reason,
+                flow: "signup"
+            },
+            extra: {
+                reason,
+                errorDetails: errorDetails ? String(errorDetails) : null,
+                signals,
+                timestamp: new Date().toISOString()
+            }
+        });
+    } catch (e) {
+        console.error("Failed to log reCAPTCHA failure to Sentry:", e);
+    }
+};
+
+/**
  * Checks if the honeypot field was populated by an automated bot.
  */
 export const isHoneypotTriggered = (fieldName = "instapay_hp_check") => {
     if (typeof document === "undefined") return false;
     const el = document.querySelector(`input[name="${fieldName}"]`);
     const val = el ? el.value : "";
-    return Boolean(val && val.trim().length > 0);
+    const triggered = Boolean(val && val.trim().length > 0);
+    if (triggered) {
+        logHoneypotToSentry(val);
+    }
+    return triggered;
 };

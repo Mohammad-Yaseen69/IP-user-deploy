@@ -6,7 +6,9 @@ import {
     recordTelemetryKeypress,
     recordTelemetryFocus,
     isHoneypotTriggered,
-    getBotSignals
+    getBotSignals,
+    logHoneypotToSentry,
+    logRecaptchaFailureToSentry
 } from "../utils/Functions/securityUtils";
 
 const SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY || "";
@@ -20,15 +22,24 @@ export const useSecurityShield = () => {
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     const executeRecaptcha = useCallback(async () => {
-        if (!SITE_KEY) return null;
+        if (!SITE_KEY) {
+            console.warn("VITE_RECAPTCHA_SITE_KEY is missing.");
+            return null;
+        }
         try {
             if (recaptchaRef.current) {
                 const token = await recaptchaRef.current.executeAsync();
+                if (!token) {
+                    logRecaptchaFailureToSentry("reCAPTCHA execution returned null token (Case 2)");
+                }
                 return token;
+            } else {
+                console.warn("reCAPTCHA ref is not yet mounted.");
+                return null;
             }
-            return null;
         } catch (error) {
             console.error("reCAPTCHA execution error:", error);
+            logRecaptchaFailureToSentry("reCAPTCHA execution exception (Case 2)", error);
             return null;
         }
     }, []);
@@ -62,6 +73,7 @@ export const useSecurityShield = () => {
         if (SITE_KEY) {
             token = await executeRecaptcha();
             if (!token) {
+                logRecaptchaFailureToSentry("validateSecurity: Token verification failed (Case 2)");
                 return {
                     isValid: false,
                     recaptchaToken: null,
@@ -76,7 +88,7 @@ export const useSecurityShield = () => {
     }, [executeRecaptcha]);
 
     /**
-     * Drop-in component rendering hidden reCAPTCHA, hidden honeypot, and Google attribution.
+     * Drop-in component rendering offscreen reCAPTCHA, hidden honeypot, and Google attribution.
      */
     const SecurityShield = useCallback(() => {
         return (
@@ -91,6 +103,7 @@ export const useSecurityShield = () => {
                     style={{
                         position: "absolute",
                         left: "-9999px",
+                        top: "-9999px",
                         width: "1px",
                         height: "1px",
                         opacity: 0,
@@ -98,9 +111,19 @@ export const useSecurityShield = () => {
                     }}
                 />
 
-                {/* Invisible reCAPTCHA instance */}
+                {/* Invisible reCAPTCHA instance (kept in layout flow offscreen so Google API can measure & execute it) */}
                 {SITE_KEY && (
-                    <div style={{ display: "none" }}>
+                    <div
+                        style={{
+                            position: "absolute",
+                            left: "-9999px",
+                            top: "-9999px",
+                            width: "1px",
+                            height: "1px",
+                            opacity: 0,
+                            pointerEvents: "none"
+                        }}
+                    >
                         <ReCAPTCHA
                             ref={recaptchaRef}
                             size="invisible"
