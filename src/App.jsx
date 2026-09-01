@@ -18,7 +18,7 @@ import LanguageAttributeSync from './Common/LanguageAttributeSync'
 import MaintenancePage from './Components/Maintenance/MaintenancePage'
 
 
-const underMaintaince = true
+const underMaintaince = false
 
 const App = () => {
   const [showOtherTabError, setShowOtherTabError] = useState(false)
