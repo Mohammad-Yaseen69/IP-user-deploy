@@ -22,6 +22,7 @@ const Channels = ({
   const { t } = useTranslation();
   const { userDetails } = useContext(UserContext);
   const [showCardMaintenanceModal, setShowCardMaintenanceModal] = useState(false);
+  const usePaytently = import.meta.env.VITE_TOPUP_CARD_PROVIDER === "paytently";
   console.log("user detail(18)", userDetails);
   const { data: methods, isLoading } = useQuery({
     queryKey: ["AvailableMethods"],
@@ -130,7 +131,7 @@ const Channels = ({
             style={{ marginBottom: 0, borderRadius: "12px" }}
             onClick={() => {
               if (item?.coming_soon) return;
-              if (item?.value === "card") {
+              if (item?.value === "card" && !usePaytently) {
                 setShowCardMaintenanceModal(true);
                 return;
               }

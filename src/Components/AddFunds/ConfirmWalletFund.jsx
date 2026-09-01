@@ -31,6 +31,8 @@ const sdk = new WidgetSDK({
 
 const isBig = window.innerWidth > 1000
 const base_url = window.location.origin || 'https://my.insta-pay.ch';
+// Topup card provider switch: 'paytently' redirects to a hosted authorize page; default keeps Trust.
+const usePaytently = import.meta.env.VITE_TOPUP_CARD_PROVIDER === "paytently";
 
 const ConfirmWalletFund = ({ setSubStep, wallet = {}, amount, payoutChannel, card_number, card_expiry, card_cvc, saveCard, type = "add_fund", paymentWithSavedCard = false, currentCard, merchant = "", payer = {}, setExternalLink = () => { }, paypalAmount, token, rate, reEnterCallback = () => { }, sendKybWalletOTP, kybFeeDets, partnerId, exchangeRate }) => {
     const navigate = useNavigate()
@@ -89,6 +91,35 @@ const ConfirmWalletFund = ({ setSubStep, wallet = {}, amount, payoutChannel, car
                         }
                     // console.log(data)
                     const enc = encryptData(data)
+
+                    // Paytently saved-card / save-new-card: hosted-forms redirect (cards live on Paytently).
+                    if (usePaytently && type === "add_fund" && (paymentWithSavedCard || saveCard)) {
+                        const hostedEnc = encryptData({ wallet_id: wallet?._id, amount: +amount * 100 })
+                        const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/paytently/initiat-hosted-topup`, {
+                            data: hostedEnc
+                        }, { headers: { ...authHeader, "idempotency-key": getKey() } })
+                        const dec = decryptData(res.data.data)
+                        if (dec?.hosted_forms_url) {
+                            window.location.href = dec.hosted_forms_url
+                            return
+                        }
+                        setError(dec?.message ?? "We cannot process your request at the moment, please try again later.")
+                        return
+                    }
+
+                    // Paytently new card (no save): create payment server-side, then redirect to authorize/3DS.
+                    if (usePaytently && type === "add_fund" && !paymentWithSavedCard && !saveCard) {
+                        const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/paytently/initiat-topup`, {
+                            data: enc
+                        }, { headers: { ...authHeader, "idempotency-key": getKey() } })
+                        const dec = decryptData(res.data.data)
+                        if (dec?.authorize_url) {
+                            window.location.href = dec.authorize_url
+                            return
+                        }
+                        setError(dec?.message ?? "We cannot process your request at the moment, please try again later.")
+                        return
+                    }
 
                     // api
                     const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/initiat${type === "add_fund" ? "" : partnerId ? "-partner-kyc" : type === 'kyc_fee' ? "-kyc" : "-kyb"}${paymentWithSavedCard ? "-pan" : ""}-transaction`, {
