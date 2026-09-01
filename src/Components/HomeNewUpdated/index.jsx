@@ -126,9 +126,16 @@ const HomeNewUpdated = () => {
         return "Good evening";
     };
 
-    const { userDetails, profileCompletedPercentage, userWallets, croppedImages, isAgentLogin, agentDetails } = useContext(UserContext)
+    const { userDetails, profileCompletedPercentage, userWallets, croppedImages, isAgentLogin, agentDetails, getUserBalances, getUserWallets } = useContext(UserContext)
     const [showCompletionModal, setShowCompletionModal] = useState(false)
     const [selectedWallet, setSelectedWallet] = useState(null)
+
+    useEffect(() => {
+        if (userDetails?._id) {
+            getUserBalances?.()
+            getUserWallets?.()
+        }
+    }, [userDetails?._id])
 
     const { t } = useTranslation()
 

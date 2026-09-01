@@ -533,7 +533,7 @@ const BusinessAccount = ({ isInternational, toggleHandler, errorOnInvalid = true
             </div>
             :
             <>
-                <SuccessModal isOpen={showSuccess} toggle={toggleSuccess} message={t("Beneficiary has been successfully added.")} subMessage={t("Beneficiary Updated.")} />
+                <SuccessModal isOpen={showSuccess} toggle={toggleSuccess} message={edit ? t("Beneficiary has been updated successfully.") : t("Beneficiary has been successfully added.")} subMessage={edit ? t("Beneficiary Updated.") : t("Beneficiary Added.")} />
 
                 <CardBody>
                     <FormGroup className="mb-3">

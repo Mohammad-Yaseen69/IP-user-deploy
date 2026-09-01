@@ -19,12 +19,12 @@ const OtpConfirmation = ({ verifyOTpHandler, resendHandler, timer = 120, type = 
             inputRefs?.current?.[0]?.focus()
         }
     }, [data])
+    const [currentMethod, setCurrentMethod] = useState("whatsapp")
     const [isAnyFieldEmpty, setIsAnyFieldEmpty] = useState(true);
-    const [currentMethod, setCurrentMethod] = useState()
     const [showToolTip, setShowTooltip] = useState()
 
     useEffect(() => {
-        if (isWhatsappDefault) {
+        if (isWhatsappDefault !== false) {
             setCurrentMethod("whatsapp")
         } else {
             setCurrentMethod("sms")
@@ -113,7 +113,7 @@ const OtpConfirmation = ({ verifyOTpHandler, resendHandler, timer = 120, type = 
                 verifyOTpHandler(otpValues.join(""), setOTPValues, numberOfFields)
             }} className={styles.otp} style={{ marginTop: 0 }}>
                 <div className={styles.left}>
-                    <h1>{t("SMS Verification").replace("SMS", type === "phone" ? "SMS" : "Email").replace("SMS", data?.phone?.slice(0, 3) === "971" ? "Whatsapp" : "SMS")}</h1>
+                    <h1>{type === "phone" ? (currentMethod === "whatsapp" ? t("WhatsApp Verification") : t("SMS Verification")) : t("Email Verification")}</h1>
                     <p>{t("Start Your InstaPay Journey Today!")}</p>
                     {
                         window.innerWidth < 1000
@@ -125,7 +125,7 @@ const OtpConfirmation = ({ verifyOTpHandler, resendHandler, timer = 120, type = 
                     <div className={styles.top}>
                         <div className={styles.otp_inp}>
                             {type === 'phone' ?
-                                <label>{t(`Enter the SMS code sent to +41********4053`).replace("+41********4053", `${data?.[type]?.slice(0, data?.[type]?.length - 4).split("").map(_ => "*").join("")}${data?.[type]?.slice(data?.[type]?.length - 4)}`).replace("SMS", currentMethod === "whatsapp" ? "Whatsapp" : "SMS")}</label> :
+                                <label>{t(`Enter the SMS code sent to +41********4053`).replace("+41********4053", `${data?.[type]?.slice(0, data?.[type]?.length - 4).split("").map(_ => "*").join("")}${data?.[type]?.slice(data?.[type]?.length - 4)}`).replace("SMS", currentMethod === "whatsapp" ? "WhatsApp" : "SMS")}</label> :
                                 <label>{t(`Enter the Email code sent to +41********4053`).replace("+41********4053", getMaskedEmail())}</label>
                             }
                             <div
@@ -190,7 +190,7 @@ const OtpConfirmation = ({ verifyOTpHandler, resendHandler, timer = 120, type = 
                                     style={{ display: 'flex', alignItems: "center", gap: "7px", padding: '10px 15px', boxShadow: "0px 0px 4px #0000002e", borderRadius: "6px", cursor: resendTimer !== 0 ? "not-allowed" : "pointer" }}>
                                     <img style={{ width: '24px' }} src={currentMethod === "sms" ? whatsappIcon : smsIcon} alt="" />
                                     <span style={{ fontWeight: 600, color: 'black' }}>
-                                        {t("Verify Using")} {currentMethod === "sms" ? "Whatsapp" : "SMS"}
+                                        {t("Verify Using")} {currentMethod === "sms" ? "WhatsApp" : "SMS"}
                                     </span>
                                 </span>
 
@@ -207,7 +207,7 @@ const OtpConfirmation = ({ verifyOTpHandler, resendHandler, timer = 120, type = 
                                         :
                                         <>{t("Didn't receive OTP?") + " "} <span style={{ color: "#5926f0", cursor: "pointer" }} onClick={() => {
                                             setOTPValues(Array(numberOfFields).fill(''))
-                                            resendHandler()
+                                            resendHandler(currentMethod || "whatsapp")
                                             setResendTimer(timer)
                                         }}>{t("Resend Now")}</span></>
                                 }
