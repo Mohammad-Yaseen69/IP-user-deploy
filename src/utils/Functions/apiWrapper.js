@@ -1,6 +1,7 @@
 import axios from "axios";
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
+import { executeGlobalRecaptcha, getBotSignals, isHoneypotTriggered } from "./securityUtils";
 
 const BASE_URL = import.meta.env.VITE_IP_DEV_API;
 const ECOM_BASE_URL = import.meta.env.VITE_IP_ECOM_API
@@ -26,17 +27,52 @@ export const apiWrapper = async ({
     isDecrypted = true,
     isFormData = false,
     server = "main",
-    idempotencyKey = null
+    idempotencyKey = null,
+    captchaRequired = false,
+    recaptchaToken = null,
+    signals = null
 }) => {
     try {
+        const isCaptchaNeeded = captchaRequired;
+        let token = recaptchaToken;
+        let telemetrySignals = signals;
+
+        // Security Guard: Check if honeypot was populated
+        if (isCaptchaNeeded && isHoneypotTriggered()) {
+            console.warn("API request blocked by honeypot.");
+            return { status: false, message: "Security check triggered" };
+        }
+
+        // Auto-fetch reCAPTCHA token & telemetry if capcheRequired is true
+        if (isCaptchaNeeded) {
+            if (!token) {
+                token = await executeGlobalRecaptcha();
+            }
+            if (!telemetrySignals) {
+                telemetrySignals = getBotSignals();
+            }
+        }
+
         let dataToSend;
 
         if (isFormData) {
             dataToSend = payload;
+            if (token && dataToSend instanceof FormData) {
+                dataToSend.append("recaptchaToken", token);
+                if (telemetrySignals) dataToSend.append("signals", JSON.stringify(telemetrySignals));
+            }
         } else if (isEncrypted) {
-            dataToSend = { data: encryptData(payload) };
+            dataToSend = {
+                data: encryptData(payload),
+                ...(token ? { recaptchaToken: token } : {}),
+                ...(telemetrySignals ? { signals: telemetrySignals } : {})
+            };
         } else {
-            dataToSend = payload;
+            dataToSend = {
+                ...(typeof payload === "object" ? payload : {}),
+                ...(token ? { recaptchaToken: token } : {}),
+                ...(telemetrySignals ? { signals: telemetrySignals } : {})
+            };
         }
 
         const authHeader = getAuthHeader()

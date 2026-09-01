@@ -59,6 +59,7 @@ import {
     maskIban
 } from "../Common/beneficiaryHelpers"
 import { formatCurrency } from "../../../../Helper/AmountFormat"
+import { decryptData } from "../../../../Helper/EssentilaMethods/Decryption"
 
 const DEFAULT_BENEFICIARY_FORM = {
     type: "individual",
@@ -496,6 +497,118 @@ const DoneStep = ({
     )
 }
 
+const FallbackStandardStep = ({ onSwitchToStandard, onCancel }) => {
+    const { t } = useTranslation()
+
+    return (
+        <div className={styles.doneStep}>
+            <div className={styles.doneHero} style={{ background: "#ffffff", borderColor: "#e1e5ee", padding: "36px 24px" }}>
+                <div style={{
+                    width: "60px",
+                    height: "60px",
+                    borderRadius: "50%",
+                    background: "rgba(89, 38, 240, 0.08)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    margin: "0 auto 16px auto",
+                    color: "#5926f0"
+                }}>
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#5926f0" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+                    </svg>
+                </div>
+                <h3 style={{ fontSize: "20px", fontWeight: 600, color: "#0c0a20", margin: 0 }}>
+                    {t("SEPA Instant Not Supported")}
+                </h3>
+                <p style={{ margin: "12px auto 0 auto", color: "#6e7687", fontSize: "14px", lineHeight: "1.6", maxWidth: "460px" }}>
+                    {t("SEPA Instant is not supported by the recipient's bank. Please try again using the standard SEPA method.")}
+                </p>
+                <div style={{
+                    marginTop: "24px",
+                    padding: "12px 20px",
+                    background: "#f4f3ff",
+                    borderRadius: "8px",
+                    border: "1px solid #e9e0ff",
+                    display: "inline-block",
+                    fontWeight: 600,
+                    fontSize: "14px",
+                    color: "#4a32e3"
+                }}>
+                    {t("Would you like to switch to SEPA Standard?")}
+                </div>
+            </div>
+
+            <div className={styles.doneActions} style={{ marginTop: "8px", justifyContent: "flex-end", display: "flex", gap: "12px" }}>
+                <button
+                    type="button"
+                    className={styles.backBtn}
+                    onClick={onCancel}
+                    style={{ minWidth: "120px" }}
+                >
+                    {t("No, Cancel")}
+                </button>
+                <button
+                    type="button"
+                    className={styles.nextBtn}
+                    onClick={onSwitchToStandard}
+                    style={{
+                        background: "linear-gradient(to right, #5926F0 0%, #4828A0 100%)",
+                        padding: "10px 20px"
+                    }}
+                >
+                    <CheckCircle size={16} />
+                    {t("Yes, Switch to Standard")}
+                </button>
+            </div>
+        </div>
+    )
+}
+
+const isInstantNotSupportedError = (errorOrMsg) => {
+    if (!errorOrMsg) return false
+    if (typeof errorOrMsg === "string") {
+        const lower = errorOrMsg.toLowerCase()
+        return (
+            lower.includes("instant is not supported") ||
+            (lower.includes("sepa instant") && lower.includes("standard")) ||
+            (lower.includes("instant") && lower.includes("standard sepa")) ||
+            lower.includes("recipient's bank") ||
+            lower.includes("recipient’s bank") ||
+            (lower.includes("sepa") && lower.includes("instant") && lower.includes("not supported"))
+        )
+    }
+    let decrypted = null
+    try {
+        if (errorOrMsg?.response?.data?.data) {
+            decrypted = decryptData(errorOrMsg.response.data.data)
+        }
+    } catch {
+        decrypted = null
+    }
+    const candidates = [
+        typeof decrypted === "string" ? decrypted : decrypted?.message,
+        decrypted?.error,
+        decrypted?.code,
+        errorOrMsg?.response?.data?.message,
+        errorOrMsg?.response?.data?.error,
+        typeof errorOrMsg?.response?.data === "string" ? errorOrMsg.response.data : null,
+        errorOrMsg?.message,
+    ]
+    return candidates.some((candidate) => {
+        if (typeof candidate !== "string") return false
+        const lower = candidate.toLowerCase()
+        return (
+            lower.includes("instant is not supported") ||
+            (lower.includes("sepa instant") && lower.includes("standard")) ||
+            (lower.includes("instant") && lower.includes("standard sepa")) ||
+            lower.includes("recipient's bank") ||
+            lower.includes("recipient’s bank") ||
+            (lower.includes("sepa") && lower.includes("instant") && lower.includes("not supported"))
+        )
+    })
+}
+
 const SepaTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, isPage = false, }) => {
     const { t } = useTranslation()
     const width = useWindowWidth()
@@ -527,6 +640,7 @@ const SepaTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, i
     const [feeDetails, setFeeDetails] = useState(null)
     const [otpToken, setOtpToken] = useState("")
     const [payoutResult, setPayoutResult] = useState(null)
+    const [showInstantFallback, setShowInstantFallback] = useState(false)
 
     const payoutFee = useVirtualIbanPayoutFee()
     const payoutDirect = useVirtualIbanPayoutDirect()
@@ -537,6 +651,10 @@ const SepaTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, i
             setCurrentStep(STEPS.OTP)
         },
         onError: (err) => {
+            if (isInstantNotSupportedError(err)) {
+                setShowInstantFallback(true)
+                return
+            }
             toast.error(err?.message || t("Unable to send OTP"))
         },
     })
@@ -545,7 +663,7 @@ const SepaTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, i
     const machineData = useMemo(() => ({ amount, availableBalance: sourceAvailableBalance, transferSpeed, selectedBeneficiary, beneficiaryForm, isAddingBeneficiary, purpose, description, confirmedDetails }), [amount, sourceAvailableBalance, transferSpeed, selectedBeneficiary, beneficiaryForm, isAddingBeneficiary, purpose, description, confirmedDetails])
     const isProcessing = payoutFee.isPending || isSendingOtp
     const disabled = getDisabledState(currentStep, machineData) || isProcessing
-    const showFooter = currentStep !== STEPS.OTP && currentStep !== STEPS.DONE
+    const showFooter = !showInstantFallback && currentStep !== STEPS.OTP && currentStep !== STEPS.DONE
 
     const handleBeneficiarySaved = (savedBeneficiary, isNew) => {
         if (isNew && savedBeneficiary) {
@@ -576,6 +694,7 @@ const SepaTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, i
         queryClient.invalidateQueries({ queryKey: virtualIbanQueryKeys.list() })
         queryClient.invalidateQueries({ queryKey: virtualIbanQueryKeys.all })
         queryClient.refetchQueries({ queryKey: virtualIbanQueryKeys.all })
+        setShowInstantFallback(false)
         setCurrentStep(STEPS.AMOUNT)
         setAmount("")
         setTransferSpeed("standard")
@@ -661,10 +780,24 @@ const SepaTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, i
             setPayoutResult(res?.data || res || null)
             setVerified(true)
         } catch (error) {
+            if (isInstantNotSupportedError(error)) {
+                setShowInstantFallback(true)
+                return
+            }
+
             handlePaymentApiError({
                 error,
                 navigate,
-                setError: setOtpError,
+                onInstantNotSupported: () => {
+                    setShowInstantFallback(true)
+                },
+                setError: (msg) => {
+                    if (isInstantNotSupportedError(msg)) {
+                        setShowInstantFallback(true)
+                        return
+                    }
+                    setOtpError(msg)
+                },
                 setProfileLockTime,
             })
         }
@@ -689,7 +822,25 @@ const SepaTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, i
                 await previewFee()
                 setCurrentStep(STEPS.REVIEW)
             } catch (error) {
-                handlePaymentApiError({ error, navigate, setError: (message) => toast.error(message), setProfileLockTime })
+                if (isInstantNotSupportedError(error)) {
+                    setShowInstantFallback(true)
+                    return
+                }
+                handlePaymentApiError({
+                    error,
+                    navigate,
+                    onInstantNotSupported: () => {
+                        setShowInstantFallback(true)
+                    },
+                    setError: (message) => {
+                        if (isInstantNotSupportedError(message)) {
+                            setShowInstantFallback(true)
+                            return
+                        }
+                        toast.error(message)
+                    },
+                    setProfileLockTime,
+                })
             }
             return
         }
@@ -711,6 +862,24 @@ const SepaTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, i
     }
 
     const renderStepContent = () => {
+        if (showInstantFallback) {
+            return (
+                <FallbackStandardStep
+                    onSwitchToStandard={() => {
+                        setTransferSpeed("standard")
+                        setFeeDetails(null)
+                        setOtpToken("")
+                        setShowInstantFallback(false)
+                        setCurrentStep(STEPS.AMOUNT)
+                    }}
+                    onCancel={() => {
+                        setShowInstantFallback(false)
+                        handleClose()
+                    }}
+                />
+            )
+        }
+
         switch (currentStep) {
             case STEPS.AMOUNT:
                 return <SepaAmountStep amount={amount} setAmount={setAmount} availableBalance={sourceAvailableBalance} currencyCode={currencyCode} sourceIban={sourceIban} transferSpeed={transferSpeed} setTransferSpeed={setTransferSpeed} />

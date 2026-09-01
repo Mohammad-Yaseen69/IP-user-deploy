@@ -40,7 +40,7 @@ const initialState = {
     },
     activity: {
         industry: '', businessDescription: '', monthlyVolume: '', transactionTypes: [],
-        purpose: '', paymentNature: '', originCountry: '', destinationCountry: '',
+        purpose: '', paymentNature: '', originCountries: [], destinationCountries: [],
         averageTransaction: '', maximumTransaction: '', averageBalance: '',
         incomingPayments: '', outgoingPayments: ''
     },

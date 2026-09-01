@@ -34,7 +34,7 @@ const RightContainer = ({ setCurrentWallet, showBusinessModal, setShowBusinessMo
 
     useEffect(() => {
         setCurrentWallet(userWallets?.[activeDot])
-    }, [userWallets])
+    }, [userWallets, activeDot])
 
     const optionsData = useMemo(() => ([
         {
@@ -65,7 +65,7 @@ const RightContainer = ({ setCurrentWallet, showBusinessModal, setShowBusinessMo
             link: `/wallets?wallet_address=${userWallets?.[activeDot]?.wallet_id}`,
             permission: "wallet.view"
         },
-    ]), [userWallets])
+    ]), [userWallets, activeDot])
 
 
     return (
