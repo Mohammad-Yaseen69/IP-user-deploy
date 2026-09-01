@@ -17,6 +17,16 @@ import Paginations from '../../Common/Component/Paginations'
 import { usePermission } from '../../hooks/GeneralUse/usePermission'
 import PricingsAndPlan from '../PaymentAddress/PricingsAndPlan'
 
+
+const TAB_PARAMS = {
+    invoice: "invoice",
+    invoices: "invoice",
+    plan: "plans",
+    plans: "plans",
+    direct_card: "direct_card",
+    "direct-card": "direct_card",
+}
+
 const ReceiptInvoice = () => {
     const { t } = useTranslation()
     const can = usePermission();
@@ -39,8 +49,18 @@ const ReceiptInvoice = () => {
  
     const location = useLocation()
     useEffect(() => {
-        const action = new URLSearchParams(location.search).get("action")
-        if (action === "create" && can("invoices.create")) setShowModal(true)
+        const params = new URLSearchParams(location.search)
+
+        // ?tab= so a link can land on plans or direct card invoices rather
+        // than always on the invoice list.
+        const tab = TAB_PARAMS[params.get("tab")?.toLowerCase()]
+        if (tab) setActiveTab(tab)
+
+      
+        if (params.get("action") === "create" && can("invoices.create")) {
+            if (tab === "direct_card") setShowDirectCardModal(true)
+            else if (tab !== "plans") setShowModal(true)
+        }
     }, [location.search])
 
     const { isLoading, data, isRefetching } = useQuery({

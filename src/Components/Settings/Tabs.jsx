@@ -44,6 +44,28 @@ import NextStepModal from './NextStepModal'
 
 
 
+const TAB_PARAMS = [
+    ["basic", "Basic Info"],
+    ["password", "Change Password"],
+    ["threshold", "Payment Threshold"],
+    ["financial", "Financial Info"],
+    ["security", "Security Questions"],
+    ["nominee", "Nominee Information"],
+    ["tfa", "Two Factor Authentication"],
+    ["find", "How Others Can Find You"],
+    ["social", "My Social Network Accounts"],
+    ["notification", "Notifications"],
+    ["apikey", "API Key"],
+    ["activity", "Login Activity"],
+    // "withdraw" rather than "withdrawal" so the shorter link in the app
+    // matches too; it never did under the old check.
+    ["withdraw", "Receiving Accounts"],
+    ["crypto", "Crypto Receiving Accounts"],
+    ["cards", "Manage Saved Cards"],
+    ["data", "Download Your Data"],
+    ["delete", "Delete Your Account"],
+]
+
 const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
     const can = usePermission()
 
@@ -177,27 +199,19 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
     const [showMissingModal, setShowMissingModal] = useState(false)
 
     useEffect(() => {
-        if (tab) {
-            if (tab?.toLowerCase()?.includes("basic")) {
-                setCurrentTab("Basic Info")
-            }
-            if (tab?.toLowerCase()?.includes("security")) {
-                setCurrentTab("Security Questions")
-            }
-            if (tab?.toLowerCase()?.includes("social")) {
-                setCurrentTab("My Social Network Accounts")
-            }
-            if (tab?.toLowerCase()?.includes("tfa")) {
-                setCurrentTab("Two Factor Authentication")
-            }
-            if (tab?.toLowerCase()?.includes("crypto")) {
-                setCurrentTab("Crypto Receiving Accounts")
-            }
-            if (tab?.toLowerCase()?.includes("withdrawal")) {
-                setCurrentTab("Receiving Accounts")
-            }
+        if (!tab) return
+
+        const value = tab.toLowerCase()
+        const match = TAB_PARAMS.find(([param]) => value.includes(param))
+        if (!match) return
+
+        // Only switch to a tab this account actually has. A tab the role
+        // denies, or one hidden for this account type, would otherwise leave
+        // the panel empty with nothing to click back to.
+        if (tabsData.some((item) => item.name === match[1])) {
+            setCurrentTab(match[1])
         }
-    }, [tab])
+    }, [tab, tabsData])
 
     const [navigatedTabs] = useState([
         { param: "tfa", name: "Two Factor Authentication" },

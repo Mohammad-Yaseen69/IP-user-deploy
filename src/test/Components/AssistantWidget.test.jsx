@@ -246,6 +246,18 @@ describe('AssistantWidget', () => {
             expect(location).toBe('/dashboard/default')
         })
 
+        it('says so when the destination is refused', async () => {
+            const user = userEvent.setup()
+            mockApi(reply({ reply: 'Taking you there.', navigateTo: 'steal_funds' }))
+            renderWidget()
+            await open(user)
+
+            await ask(user, 'go somewhere')
+
+            expect(await screen.findByText(/couldn't open that page/i)).toBeInTheDocument()
+            expect(location).toBe('/dashboard/default')
+        })
+
         it('renders the reply as it streams in', async () => {
             const user = userEvent.setup()
             mockApi(

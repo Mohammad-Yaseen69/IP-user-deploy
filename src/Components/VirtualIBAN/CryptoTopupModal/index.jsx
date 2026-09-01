@@ -162,7 +162,7 @@ const CryptoTopupModal = ({ isOpen, toggle, selectedIban }) => {
             iban_id: ibanId,
             token: feeDetails.token,
             returnUrl: `${base_url}/add-funds/crypto-success?isIban=true`,
-            idempotencyKey: getKey(),
+            idempotencyKey: getKey()
         })
 
         const checkoutUrl = res?.data?.checkout_url || res?.data?.data?.checkout_url

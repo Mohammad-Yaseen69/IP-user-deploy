@@ -312,28 +312,7 @@ const downloadSepaReceipt = ({
     t,
 }) => {
     const doc = new jsPDF()
-    const pageWidth = doc.internal.pageSize.getWidth()
-    const pageHeight = doc.internal.pageSize.getHeight()
     const margin = 14
-
-    const headerCanvas = document.createElement("canvas")
-    headerCanvas.width = 1000
-    headerCanvas.height = 140
-    const headerContext = headerCanvas.getContext("2d")
-    const headerGradient = headerContext.createLinearGradient(0, 0, headerCanvas.width, 0)
-    headerGradient.addColorStop(0, "#4B2AC7")
-    headerGradient.addColorStop(0.35, "#8C7DF2")
-    headerGradient.addColorStop(0.7, "#E9E5FB")
-    headerGradient.addColorStop(1, "#FFFFFF")
-    headerContext.fillStyle = headerGradient
-    headerContext.fillRect(0, 0, headerCanvas.width, headerCanvas.height)
-    doc.addImage(headerCanvas.toDataURL("image/png"), "PNG", 0, 0, pageWidth, 32)
-
-    doc.setFont("helvetica", "bold")
-    doc.setFontSize(14)
-    doc.setTextColor(255, 255, 255)
-    doc.text("InstaPay", pageWidth - margin, 18, { align: "right" })
-
     const speed =
         SEPA_TRANSFER_SPEEDS.find(
             (item) => item.id === transferSpeed

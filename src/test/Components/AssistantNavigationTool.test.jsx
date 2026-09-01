@@ -110,4 +110,48 @@ describe('useNavigationTool', () => {
             expect(getLocation()).toBe('/update-pin')
         })
     })
+
+    describe('agent portal', () => {
+        it('refuses an agent page to a user who is not an agent', () => {
+            const { go, getLocation } = setup()
+
+            const result = go('agent_leads')
+
+            expect(result.ok).toBe(false)
+            expect(result.reason).toBe('not_permitted')
+            expect(getLocation()).toBe('/dashboard/default')
+        })
+
+        it('allows an agent page to an agent', () => {
+            const { go, getLocation } = setup({
+                userDetails: { _id: 'u2', isInstapayAgent: true },
+            })
+
+            expect(go('agent_leads').ok).toBe(true)
+            expect(getLocation()).toBe('/leads')
+        })
+    })
+
+    describe('business-only tabs', () => {
+        it('refuses the API key tab to an individual account', () => {
+            const { go, getLocation } = setup({
+                userDetails: { _id: 'u3', account_type: 'individual' },
+            })
+
+            const result = go('api_key')
+
+            expect(result.ok).toBe(false)
+            expect(result.reason).toBe('not_permitted')
+            expect(getLocation()).toBe('/dashboard/default')
+        })
+
+        it('allows it to a business account', () => {
+            const { go, getLocation } = setup({
+                userDetails: { _id: 'u4', account_type: 'business' },
+            })
+
+            expect(go('api_key').ok).toBe(true)
+            expect(getLocation()).toBe('/settings?tab=apikey')
+        })
+    })
 })
