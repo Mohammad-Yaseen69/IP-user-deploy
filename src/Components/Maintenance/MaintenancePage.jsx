@@ -47,22 +47,7 @@ const MaintenancePage = () => {
                         {t("We are currently performing routine upgrades to improve your experience. We will be right back soon!")}
                     </p>
 
-                    <div className={styles.infoGrid}>
-                        <div className={styles.infoBox}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                                <Clock size={14} color="#64748B" />
-                                <span className={styles.infoLabel}>{t("Estimated Time")}</span>
-                            </div>
-                            <span className={styles.infoValue}>{t("1 Hour")}</span>
-                        </div>
-                        <div className={styles.infoBox}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                                <Shield size={14} color="#16A34A" />
-                                <span className={styles.infoLabel}>{t("Security & Funds")}</span>
-                            </div>
-                            <span className={styles.infoValue} style={{ color: '#16A34A' }}>{t("100% Safe & Secure")}</span>
-                        </div>
-                    </div>
+            
 
                     <div className={styles.actions}>
                         <button
