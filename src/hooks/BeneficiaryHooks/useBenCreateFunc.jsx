@@ -162,9 +162,7 @@ const useBenCreateFunc = ({
         const encrypted = encryptData(trimObj)
         setBenLoading(true)
 
-        axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/dt/check-number-public`, {
-            data: encryptData({ number: `+${mobileNumber}` })
-        }).then(() => {
+        const sendAddBeneficiary = () => {
             axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/beneficiary/add-beneficiary`, {
                 data: encrypted
             }, {
@@ -176,7 +174,7 @@ const useBenCreateFunc = ({
                     toggleSuccess(decrypted.beneficiaryData)
                 })
                 .catch(err => {
-                    const dec = decryptData(err.response.data.data)
+                    const dec = decryptData(err?.response?.data?.data)
                     if (dec?.message === "Unauthorize to access this route") {
                         const coun = localStorage.getItem("ip_country")
                         localStorage.clear()
@@ -187,8 +185,18 @@ const useBenCreateFunc = ({
                 .finally(() => {
                     setBenLoading(false)
                 })
+        }
+
+        axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/dt/check-number-public`, {
+            data: encryptData({ number: `+${mobileNumber}` })
+        }).then(() => {
+            sendAddBeneficiary()
         }).catch(err => {
-            const dec = decryptData(err.response.data.data)
+            if (err?.response?.status === 500) {
+                sendAddBeneficiary()
+                return
+            }
+            const dec = decryptData(err?.response?.data?.data)
             setMobileError("Incorrect phone number, please enter a valid number.")
             toast.error("Incorrect phone number, please enter a valid number.")
             console.log(dec)
@@ -209,7 +217,11 @@ const useBenCreateFunc = ({
                     data: encryptData({ number: `+${formData.mobile_wallet_account_number}` })
                 });
                 addBenFunc();
-            } catch {
+            } catch (err) {
+                if (err?.response?.status === 500) {
+                    addBenFunc()
+                    return
+                }
                 setWalletMobileError("Incorrect phone number, please enter a valid number.");
                 toast.error("Incorrect phone number, please enter a valid number.")
             }

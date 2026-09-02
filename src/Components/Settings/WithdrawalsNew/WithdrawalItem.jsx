@@ -732,11 +732,17 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
             userWithdrawals?._id ? updateWithdrawalFunc() : addWithDrawal()
             console.log(dec)
         } catch (error) {
-            const dec = decryptData(error?.response?.data?.data)
-            if (dec.toLowerCase().includes("invalid")) {
-                setBankError("Invalid phone number")
+            if (error?.response?.status === 500) {
+                userWithdrawals?._id ? updateWithdrawalFunc() : addWithDrawal()
+                return
+            } else {
+                const dec = decryptData(error?.response?.data?.data)
+                const decMsg = typeof dec === "string" ? dec : (dec?.message || "")
+                if (decMsg.toLowerCase().includes("invalid")) {
+                    setBankError("Invalid phone number")
+                }
+                console.log(dec)
             }
-            console.log(dec)
         }
         finally {
             setIsSaving(false)

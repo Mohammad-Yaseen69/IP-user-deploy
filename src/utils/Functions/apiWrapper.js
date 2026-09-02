@@ -1,10 +1,16 @@
 import axios from "axios";
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
-import { executeGlobalRecaptcha, getBotSignals, isHoneypotTriggered } from "./securityUtils";
+import {
+    executeGlobalRecaptcha,
+    getBotSignals,
+    isHoneypotTriggered,
+    logHoneypotToSentry,
+    logRecaptchaFailureToSentry
+} from "./securityUtils";
 
 const BASE_URL = import.meta.env.VITE_IP_DEV_API;
-const ECOM_BASE_URL = import.meta.env.VITE_IP_ECOM_API
+const ECOM_BASE_URL = import.meta.env.VITE_IP_ECOM_API;
 
 const METHODS = {
     GET: "GET",
@@ -28,18 +34,20 @@ export const apiWrapper = async ({
     isFormData = false,
     server = "main",
     idempotencyKey = null,
+    capcheRequired = false,
     captchaRequired = false,
     recaptchaToken = null,
     signals = null
 }) => {
     try {
-        const isCaptchaNeeded = captchaRequired;
+        const isCaptchaNeeded = Boolean(capcheRequired || captchaRequired);
         let token = recaptchaToken;
         let telemetrySignals = signals;
 
         // Security Guard: Check if honeypot was populated
         if (isCaptchaNeeded && isHoneypotTriggered()) {
             console.warn("API request blocked by honeypot.");
+            logHoneypotToSentry();
             return { status: false, message: "Security check triggered" };
         }
 
@@ -47,6 +55,10 @@ export const apiWrapper = async ({
         if (isCaptchaNeeded) {
             if (!token) {
                 token = await executeGlobalRecaptcha();
+                if (!token) {
+                    console.warn("reCAPTCHA execution returned no token.");
+                    logRecaptchaFailureToSentry("apiWrapper: Token generation returned null (Case 2)");
+                }
             }
             if (!telemetrySignals) {
                 telemetrySignals = getBotSignals();
@@ -75,10 +87,10 @@ export const apiWrapper = async ({
             };
         }
 
-        const authHeader = getAuthHeader()
+        const authHeader = getAuthHeader();
 
         if (server === "ecommerce") {
-            authHeader.source = "ecommerce"
+            authHeader.source = "ecommerce";
         }
 
         const res = await axios({
@@ -87,7 +99,7 @@ export const apiWrapper = async ({
             headers: {
                 ...(isPublic ? {} : authHeader),
                 ...(isFormData ? { "Content-Type": "multipart/form-data" } : {}),
-                ...(idempotencyKey ? { "Idempotency-Key": idempotencyKey } : {}),  // ← ADD THIS
+                ...(idempotencyKey ? { "Idempotency-Key": idempotencyKey } : {})
             },
             data: method === METHODS.GET ? undefined : dataToSend,
             ...(server === "ecommerce" ? {
@@ -97,6 +109,9 @@ export const apiWrapper = async ({
 
         return isDecrypted ? decryptData(res.data.data) : res.data;
     } catch (error) {
+        if (capcheRequired || captchaRequired) {
+            logRecaptchaFailureToSentry(`API call to ${endpoint} failed (Case 2)`, error?.message);
+        }
         console.error("API Wrapper Error:", error);
         throw error;
     }

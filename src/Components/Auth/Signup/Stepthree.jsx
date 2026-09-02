@@ -27,7 +27,7 @@ const Stepthree = ({ data, dataHandler, onKeyDown, onFocus }) => {
                             onFocus={onFocus}
                         />
 
-                        {data.phone && data.phone.length >= 3 && <p style={{ margin: "0", fontSize: "14px", fontWeight: 600 }}>{t("A verification code will be sent via")} <span style={{ color: "#25D366" }}>{t("WhatsApp")}</span>.</p>}
+                        {/* {data.phone && data.phone.length >= 3 && <p style={{ margin: "0", fontSize: "14px", fontWeight: 600 }}>{t("A verification code will be sent via")} <span style={{ color: "#25D366" }}>{t("WhatsApp")}</span>.</p>} */}
                     </div>
                     {
                         data?.phone_error

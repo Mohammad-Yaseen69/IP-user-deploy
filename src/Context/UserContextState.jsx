@@ -293,7 +293,12 @@ const UserState = ({ children }) => {
         }
     }
 
-    // check auth
+    useEffect(() => {
+        if (token) {
+            verifyToken();
+        }
+    }, [token]);
+
     const checkAuth = () => {
         const isAgentLoginCheck = localStorage.getItem("isAgentLogin")
         const url = isAgentLoginCheck ? `/api/business-agents/agents/auth/${token}` : `/api/account/auth/${token}`
