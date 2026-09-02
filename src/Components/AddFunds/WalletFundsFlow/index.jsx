@@ -61,6 +61,8 @@ const initialState = {
   show_confirmation: false,
   paypal_fx: {},
   plaid_fx: {},
+  card_fx: {},
+  card_unsupported_currency: false,
   exchange_rate_backup: {},
 };
 function reducer(state, action) {
@@ -155,7 +157,8 @@ const ExtraContentOnFee = ({ data, fxRate, fxCurrency, fxAmount }) => {
             letterSpacing: "-0.14px",
           }}
         >
-          {t("Amount in CHF")}
+          {t("Amount in")}{" "}
+          {data?.exchange_rate?.sendFromMobileWallet?.currency || fxCurrency || "USD"}
         </span>
         <strong
           style={{
@@ -187,6 +190,7 @@ const ExtraContentOnFee = ({ data, fxRate, fxCurrency, fxAmount }) => {
 
 const WalletFundsFlow = ({ setAction }) => {
   const { t } = useTranslation();
+  const usePaytently = true; // Paytently is the card provider (hosted-forms iframe).
   const [data, dispatch] = useReducer(reducer, initialState);
   const { userDetails, authHeader, userWallets } = useContext(UserContext);
   const navigate = useNavigate()
@@ -382,6 +386,22 @@ const WalletFundsFlow = ({ setAction }) => {
       dataHandler("loading", true);
       if (data.channel?.value === "card" || data.channel?.value === "bank") {
         try {
+          if (usePaytently && data.channel?.value === "card") {
+            const res = await axios.get(
+              `${import.meta.env.VITE_IP_DEV_API}/api/paytently/get-fee/${data.wallet?._id}/${parseFloat(data.amount)}`,
+              { headers: authHeader },
+            );
+            const dec = decryptData(res.data.data);
+            dataHandler("exchange_rate", {
+              fee: { amount: dec?.feeDetails },
+              sending: { currency: data.wallet?.currency?.code, amount: data.amount },
+              receiver: { currency: data.wallet?.currency?.code, amount: data.amount - dec?.feeDetails },
+              total: parseFloat(data.amount),
+            });
+            dataHandler("card_unsupported_currency", dec?.unsupported || false);
+            dataHandler("card_fx", { amount: dec?.converted_amount, exchange_rate: dec?.rate, currency: dec?.charge_currency });
+            return;
+          }
           const res = await axios.get(
             `${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/get-tbc-fee/${data.wallet?._id}/${parseFloat(data.amount)}?isBankFee=${data.channel?.value === "bank" ? true : false}`,
             {
@@ -676,7 +696,8 @@ const WalletFundsFlow = ({ setAction }) => {
         if (
           data.channel?.value === "paypal" ||
           data?.channel?.value === "crypto" ||
-          data?.channel?.value === "mobile_wallet"
+          data?.channel?.value === "mobile_wallet" ||
+          (usePaytently && data?.channel?.value === "card")
         ) {
           dataHandler("show_confirmation", true);
         } else {
@@ -886,6 +907,17 @@ const WalletFundsFlow = ({ setAction }) => {
                         sendingLabel="Sending"
                         totalLabel="Amount To Pay"
                       />
+                      {usePaytently && data.channel?.value === "card" && data.card_unsupported_currency && (
+                        <>
+                          <div style={{ display: "flex", alignItems: "flex-start", gap: ".7rem", padding: "12px", borderRadius: "6px", background: "rgba(89, 38, 240, 0.13)" }}>
+                            <Info color="#5926f0" size={20} />
+                            <span style={{ color: "#5926F0", fontFamily: "Manrope", fontSize: ".7rem", fontWeight: 700, lineHeight: 1.3, letterSpacing: "-0.28px" }}>
+                              {`${data.wallet?.currency?.code} is not supported for card payment, USD will be used as the default currency.`}
+                            </span>
+                          </div>
+                          <ExtraContentOnFee data={data} fxRate={data.card_fx?.exchange_rate} fxCurrency={data.card_fx?.currency} fxAmount={data.card_fx?.amount} />
+                        </>
+                      )}
                       {data.channel?.value === "paypal" &&
                         !PaypalCurrencies.some(
                           (item) => item === data.wallet?.currency?.code,
@@ -1187,6 +1219,17 @@ const WalletFundsFlow = ({ setAction }) => {
                     sendingLabel="Sending"
                     totalLabel="Amount To Pay"
                   />
+                  {usePaytently && data.channel?.value === "card" && data.card_unsupported_currency && (
+                    <>
+                      <div style={{ display: "flex", alignItems: "flex-start", gap: ".7rem", padding: "12px", borderRadius: "6px", background: "rgba(89, 38, 240, 0.13)" }}>
+                        <Info color="#5926f0" size={20} />
+                        <span style={{ color: "#5926F0", fontFamily: "Manrope", fontSize: ".7rem", fontWeight: 700, lineHeight: 1.3, letterSpacing: "-0.28px" }}>
+                          {`${data.wallet?.currency?.code} is not supported for card payment, USD will be used as the default currency.`}
+                        </span>
+                      </div>
+                      <ExtraContentOnFee data={data} fxRate={data.card_fx?.exchange_rate} fxCurrency={data.card_fx?.currency} fxAmount={data.card_fx?.amount} />
+                    </>
+                  )}
                   {data.channel?.value === "paypal" &&
                     !PaypalCurrencies.some(
                       (item) => item === data.wallet?.currency?.code,
@@ -1287,7 +1330,7 @@ const WalletFundsFlow = ({ setAction }) => {
                               letterSpacing: "-0.14px",
                             }}
                           >
-                            {t("Amount in US")}
+                            {t("Amount in USD")}
                           </span>
                           <strong
                             style={{

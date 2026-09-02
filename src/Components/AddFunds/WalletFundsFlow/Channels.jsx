@@ -22,7 +22,7 @@ const Channels = ({
   const { t } = useTranslation();
   const { userDetails } = useContext(UserContext);
   const [showCardMaintenanceModal, setShowCardMaintenanceModal] = useState(false);
-  const usePaytently = import.meta.env.VITE_TOPUP_CARD_PROVIDER === "paytently";
+  const usePaytently = true; // Paytently is the card provider.
   console.log("user detail(18)", userDetails);
   const { data: methods, isLoading } = useQuery({
     queryKey: ["AvailableMethods"],
