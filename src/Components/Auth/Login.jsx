@@ -654,15 +654,15 @@ const Login = ({ country, setIsLoginForm, }) => {
         } catch (err) {
             console.error("Login history creation failed:", err);
         } finally {
-            const savedPath = sessionStorage.getItem("path");
-            const targetPath = (savedPath && savedPath !== "undefined" && !savedPath.includes("login") && !savedPath.includes("auth")) 
-                ? savedPath 
-                : (redirect && !redirect.includes("login") ? redirect : "/");
-            sessionStorage.clear();
-            sessionStorage.setItem("force_auth_on_login", "true");
-            setIsPressed(false);
-            setBiometricLoading(false);
-            navigate(targetPath, { replace: true });
+            const path = sessionStorage.getItem("path") && sessionStorage.getItem("path") !== "undefined" ? sessionStorage.getItem("path") : redirect || ""
+            if (path && path !== "undefined") {
+                navigate(path)
+            } else {
+                navigate("/")
+            }
+            sessionStorage.clear()
+            setIsPressed(false)
+            setBiometricLoading(false)
         }
     }
     const [resendTimer, setResendTimer] = useState(0)
@@ -763,13 +763,12 @@ const Login = ({ country, setIsLoginForm, }) => {
                     .then(async res => {
                         const dec = decryptData(res.data.data)
                         setShowInactivityModal(false)
-                        if (dec?.country?.status !== false) {
+                        if (dec?.country?.status) {
                             completeLoginProcess(dec, token)
                         }
                         else {
                             setUserDetails(dec)
                             sessionStorage.setItem("country_status_error", "Service not available in your country!")
-                            setIsPressed(false)
                         }
                     })
                     .catch(err => {
