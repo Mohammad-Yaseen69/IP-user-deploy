@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import { FormGroup, Input, Label } from 'reactstrap'
 import { handleMonthKeyPress, handleYearKeyPress, serviceFieldInfoValidate } from '../../utils/Functions'
 import WalletDetails from './WalletDetails'
@@ -85,6 +85,7 @@ const PaymentChannelUI = ({
 }) => {
     const isErrorMode = typeof errorOnInvalid === 'boolean' ? errorOnInvalid : typeof error === 'boolean' ? error : false;
     const { userDetails } = useContext(UserContext)
+    const [firstTimeMobile, setFirstTimeMobile] = useState(true)
     const { t } = useTranslation()
     const handleInputChange = (index, value) => {
         const newOTPValues = [...instapayWallets];
@@ -98,7 +99,7 @@ const PaymentChannelUI = ({
         }
         return item.length === 8;
     };
-    console.log(getBankDetails, "getBankDetails")
+    console.log(countryIsoCode, "countryIsoCode ki value")
 
     return (
         <FormGroup className="mb-3">
@@ -519,7 +520,12 @@ const PaymentChannelUI = ({
                             }}
                             phone={formData.mobile_wallet_account_number}
                             country={countryIsoCode}
-                            setPhone={(e) => inputChangeHandler({ target: { value: e, name: "mobile_wallet_account_number" } })}
+                            setPhone={(e) => {
+                                setFirstTimeMobile(false)
+                                if (!firstTimeMobile) {
+                                    inputChangeHandler({ target: { value: e, name: "mobile_wallet_account_number" } })
+                                }
+                            }}
                             disabled={!country || !isEditMode}
                             disableDropdown={true}
                             error={walletNumberError}
