@@ -5783,5 +5783,6 @@
   "It looks like you are using an ad blocker or privacy shield (e.g.Brave Shields).Please disable it to continue using our platform.": "Inaonekana unatumia kizuia matangazo au ngao ya faragha (mfano Brave Shields). Tafadhali izime ili kuendelea kutumia jukwaa letu.",
   "Ad blockers and browser shields interfere with our crash reporting tool(Sentry), preventing us from detecting, tracking, and fixing bugs effectively.": "Vizuia matangazo na ngao za kivinjari huingilia zana yetu ya kuripoti hitilafu (Sentry), zikituzuia kugundua, kufuatilia, na kurekebisha hitilafu kwa ufanisi.",
   "on our payment platform.": "kwenye jukwaa letu la malipo.",
-  "I've disabled it - reload page": "Nimeizima - pakia upya ukurasa"
+  "I've disabled it - reload page": "Nimeizima - pakia upya ukurasa",
+  "Please note that your SWIFT transfer will be processed under Kemit Kingdom - K2 - SA, InstaPay’s parent company, and not under your personal name.": "Tafadhali kumbuka kuwa uhamisho wako wa SWIFT utachakatwa chini ya Kemit Kingdom - K2 - SA, kampuni mama ya InstaPay, na si chini ya jina lako binafsi."
 }

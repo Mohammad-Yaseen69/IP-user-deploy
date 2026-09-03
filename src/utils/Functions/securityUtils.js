@@ -121,14 +121,25 @@ export const logRecaptchaFailureToSentry = (reason, errorDetails = null, customS
 
 /**
  * Checks if the honeypot field was populated by an automated bot.
+ * Differentiates between browser autofill (human mouse/keystrokes) vs headless bots.
  */
 export const isHoneypotTriggered = (fieldName = "instapay_hp_check") => {
     if (typeof document === "undefined") return false;
     const el = document.querySelector(`input[name="${fieldName}"]`);
     const val = el ? el.value : "";
-    const triggered = Boolean(val && val.trim().length > 0);
-    if (triggered) {
-        logHoneypotToSentry(val);
+    if (!val || val.trim().length === 0) return false;
+
+    // Check if user had genuine human interactions
+    const signals = getBotSignals();
+    const isHumanAutofill = signals.moved || signals.keys >= 2;
+
+    // If a human is actively interacting with the form, it's browser autofill - clear it and pass
+    if (isHumanAutofill && !signals.webdriver) {
+        if (el) el.value = "";
+        return false;
     }
-    return triggered;
+
+    // Otherwise, it's a headless / automated bot
+    logHoneypotToSentry(val, signals);
+    return true;
 };

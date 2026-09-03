@@ -113,7 +113,10 @@ const IndividualAccount = ({ mobileView, handleChangeNumber, toggleSuccess, filt
     const [bankExtras, setBankExtras] = useState(bankExtrasInitial)
 
     const handleBankExtraChange = (e) => {
-        const { value, name } = e.target;
+        let { value, name } = e.target;
+        if (name === "account_number" || name === "bank_account_number") {
+            value = value.replace(/[^a-zA-Z0-9]/g, '');
+        }
         setBankExtras(prev => {
             return {
                 ...prev,
@@ -130,7 +133,10 @@ const IndividualAccount = ({ mobileView, handleChangeNumber, toggleSuccess, filt
     })
 
     const handleCardExtraChange = (e) => {
-        const { value, name } = e.target;
+        let { value, name } = e.target;
+        if (name === "account_number" || name === "bank_account_number") {
+            value = value.replace(/[^a-zA-Z0-9]/g, '');
+        }
         setCardExtras(prev => {
             return {
                 ...prev,
@@ -173,7 +179,10 @@ const IndividualAccount = ({ mobileView, handleChangeNumber, toggleSuccess, filt
 
 
     const inputChangeHandler = (e) => {
-        const { name, value } = e.target
+        let { name, value } = e.target
+        if (name === "account_number" || name === "bank_account_number") {
+            value = value.replace(/[^a-zA-Z0-9]/g, '');
+        }
         setFormData(prev => {
             return {
                 ...prev,
@@ -629,24 +638,24 @@ const IndividualAccount = ({ mobileView, handleChangeNumber, toggleSuccess, filt
                                             </FormGroup>
                                             <FormGroup style={{ flex: 1, margin: 0 }}>
                                                 <label className="col-form-label" htmlFor="relation">{t("Relationship With Beneficiary")} <span className="req_star">*</span></label>
-                                                <NestedDropdown
-                                                    child={friendsAndFamily}
-                                                    parent={BeneficiaryRelation}
-                                                    value={formData.relation}
-                                                    setter={(val) => {
-                                                        inputChangeHandler({ target: { name: "relation", value: val } })
-                                                    }}
-                                                    subKey="Friends & Family"
-                                                />
-                                                {/* {userDetails?.account_type === "individual" ?
-                                                     :
+                                                {userDetails?.account_type === "individual" ?
+                                                    <NestedDropdown
+                                                        child={friendsAndFamily}
+                                                        parent={BeneficiaryRelation}
+                                                        value={formData.relation}
+                                                        setter={(val) => {
+                                                            inputChangeHandler({ target: { name: "relation", value: val } })
+                                                        }}
+                                                        subKey="Friends & Family"
+                                                    />
+                                                    :
                                                     <Input type="select" name="relation" value={formData.relation} onChange={inputChangeHandler}>
                                                         <option value="">{t("Select Relationship")}</option>
                                                         {Object.keys(BUSINESS_RELATIONSHIPS).map((option, idx) => (
                                                             <option key={idx} value={option}> {BUSINESS_RELATIONSHIPS[option]} </option>
                                                         ))}
                                                     </Input>
-                                                } */}
+                                                }
                                             </FormGroup>
                                         </div>
                                     </FormGroup>

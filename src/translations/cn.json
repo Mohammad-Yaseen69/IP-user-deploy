@@ -5755,5 +5755,6 @@
   "It looks like you are using an ad blocker or privacy shield (e.g.Brave Shields).Please disable it to continue using our platform.": "您似乎正在使用广告拦截器或隐私防护（例如 Brave Shields）。请禁用它以继续使用我们的平台。",
   "Ad blockers and browser shields interfere with our crash reporting tool(Sentry), preventing us from detecting, tracking, and fixing bugs effectively.": "广告拦截器和浏览器防护会干扰我们的崩溃报告工具 (Sentry)，妨碍我们有效地检测、跟踪和修复错误。",
   "on our payment platform.": "在我们的支付平台上。",
-  "I've disabled it - reload page": "我已禁用它 - 重新加载页面"
+  "I've disabled it - reload page": "我已禁用它 - 重新加载页面",
+  "Please note that your SWIFT transfer will be processed under Kemit Kingdom - K2 - SA, InstaPay’s parent company, and not under your personal name.": "请注意，您的 SWIFT 转账将以 InstaPay 的母公司 Kemit Kingdom - K2 - SA 的名义进行处理，而非您的个人姓名。"
 }

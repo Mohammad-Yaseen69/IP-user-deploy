@@ -5398,5 +5398,6 @@
   "It looks like you are using an ad blocker or privacy shield (e.g.Brave Shields).Please disable it to continue using our platform.": "Det verkar som att du använder en annonsblockerare eller ett integritetsskydd (t.ex. Brave Shields). Inaktivera det för att fortsätta använda vår plattform.",
   "Ad blockers and browser shields interfere with our crash reporting tool(Sentry), preventing us from detecting, tracking, and fixing bugs effectively.": "Annonsblockerare och webbläsarskydd stör vårt kraschrapporteringsverktyg (Sentry), vilket hindrar oss från att upptäcka, spåra och åtgärda buggar på ett effektivt sätt.",
   "on our payment platform.": "på vår betalningsplattform.",
-  "I've disabled it - reload page": "Jag har inaktiverat det – ladda om sidan"
+  "I've disabled it - reload page": "Jag har inaktiverat det – ladda om sidan",
+  "Please note that your SWIFT transfer will be processed under Kemit Kingdom - K2 - SA, InstaPay’s parent company, and not under your personal name.": "Observera att din SWIFT-överföring kommer att behandlas under Kemit Kingdom - K2 - SA, InstaPays moderbolag, och inte under ditt personliga namn."
 }

@@ -77,7 +77,10 @@ const EditBeneficiary = ({ errorOnInvalid = true, error = false }) => {
 
 
     const handleBankExtraChange = (e) => {
-        const { value, name } = e.target;
+        let { value, name } = e.target;
+        if (name === "account_number" || name === "bank_account_number") {
+            value = value.replace(/[^a-zA-Z0-9]/g, '');
+        }
         setBankExtras(prev => {
             return {
                 ...prev,
@@ -152,7 +155,10 @@ const EditBeneficiary = ({ errorOnInvalid = true, error = false }) => {
     })
 
     const handleCardExtraChange = (e) => {
-        const { value, name } = e.target;
+        let { value, name } = e.target;
+        if (name === "account_number" || name === "bank_account_number") {
+            value = value.replace(/[^a-zA-Z0-9]/g, '');
+        }
         setCardExtras(prev => {
             return {
                 ...prev,
@@ -211,7 +217,10 @@ const EditBeneficiary = ({ errorOnInvalid = true, error = false }) => {
 
     const inputChangeHandler = (e) => {
         setClicked(false)
-        const { name, value } = e.target
+        let { name, value } = e.target
+        if (name === "account_number" || name === "bank_account_number") {
+            value = value.replace(/[^a-zA-Z0-9]/g, '');
+        }
         setFormData(prev => {
             return {
                 ...prev,
@@ -314,9 +323,15 @@ const EditBeneficiary = ({ errorOnInvalid = true, error = false }) => {
 
     const populateForm = (userData) => {
         if (!userData) return
+        const mobileWallet = Array.isArray(userData?.mobile_wallet)
+            ? userData?.mobile_wallet?.[0]
+            : (userData?.mobile_wallet || userData?.mobile_details?.[0] || {});
+
+        console.log(mobileWallet, "mobile wallet dets")
         setFirstName(userData?.first_name || "")
         setLastName(userData?.last_name || "")
-        setFormData({
+
+        const formDataObj = {
             postal_code: userData?.zip_code ?? userData?.postal_code ?? "",
             country: userData?.country ?? "",
             city: userData?.city ?? "",
@@ -332,10 +347,10 @@ const EditBeneficiary = ({ errorOnInvalid = true, error = false }) => {
             bank_city: userData?.bank_details?.[0]?.city ?? "",
             bank_province: userData?.bank_details?.[0]?.province ?? "",
             bank_postal_code: userData?.bank_details?.[0]?.postal_code ?? "",
-            mobile_wallet_provider: userData?.mobile_wallet?.[0]?.money_provider ?? "",
-            mobile_wallet_number: userData?.mobile_wallet?.[0]?.wallet_number ?? "",
-            mobile_wallet_name: userData?.mobile_wallet?.[0]?.wallet_name ?? `${userData?.first_name ?? ""} ${userData?.last_name ?? ""}`,
-            mobile_wallet_account_number: userData?.mobile_wallet?.[0]?.wallet_account_number ?? "",
+            mobile_wallet_provider: mobileWallet?.money_provider ?? mobileWallet?.provider ?? "",
+            mobile_wallet_number: mobileWallet?.wallet_number ?? mobileWallet?.wallet_account_number ?? mobileWallet?.account_number ?? "",
+            mobile_wallet_name: mobileWallet?.wallet_name ?? mobileWallet?.name ?? `${userData?.first_name ?? ""} ${userData?.last_name ?? ""}`,
+            mobile_wallet_account_number: mobileWallet?.wallet_account_number ?? mobileWallet?.wallet_number ?? mobileWallet?.account_number ?? mobileWallet?.phone ?? mobileWallet?.number ?? "",
             crypto_currency: userData?.crypto?.[0]?.currency ?? "Bitcoin",
             crypto_wallet_address: userData?.crypto?.[0]?.wallet_address ?? "",
             card_holder_one: userData?.card?.[0]?.card_name ?? "",
@@ -347,7 +362,10 @@ const EditBeneficiary = ({ errorOnInvalid = true, error = false }) => {
             card_holder_three: userData?.card?.[2]?.card_name ?? "",
             card_number_three: userData?.card?.[2]?.card_number ?? "",
             card_expiry_three: userData?.card?.[2]?.card_expiry ?? "",
-        })
+        }
+
+        console.log(formDataObj, "form data obj")
+        setFormData(formDataObj)
 
         setInstapayWallets(userData?.wallet?.length > 0 ? userData?.wallet : [""])
         setApiWallets(userData?.wallet?.length > 0 ? userData?.wallet : [""])

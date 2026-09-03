@@ -149,7 +149,7 @@ const buildBeneficiaryFromForm = (form) => {
     }
 }
 
-const TextField = ({ label, value, onChange, hint, type = "text", disabled = false, error = "", optional = false, placeholder = "" }) => (
+const TextField = ({ label, value, onChange, hint, type = "text", disabled = false, error = "", optional = false, placeholder = "", maxLength }) => (
     <label className={styles.field}>
         <span>
             {label}
@@ -160,6 +160,7 @@ const TextField = ({ label, value, onChange, hint, type = "text", disabled = fal
             value={value}
             disabled={disabled}
             placeholder={placeholder}
+            maxLength={maxLength}
             className={error ? styles.fieldError : ""}
             onChange={(e) => onChange(e.target.value)}
         />
@@ -397,7 +398,7 @@ const AddBeneficiaryStep = ({ amount, currencyCode, form, setForm }) => {
 
 const PurposeStep = ({ amount, currencyCode, purpose, setPurpose, description, setDescription, additionalInfo, setAdditionalInfo }) => {
     const { t } = useTranslation()
-    const descError = description && !isValidDescription(description) ? t("5–34 characters; letters, digits, space, comma, dot, hyphen only") : ""
+    const descError = description && !isValidDescription(description) ? t("5–120 characters; letters, digits, space, comma, dot, hyphen only") : ""
 
     return (
         <div className={styles.purposeStep}>
@@ -427,8 +428,9 @@ const PurposeStep = ({ amount, currencyCode, purpose, setPurpose, description, s
                 value={description}
                 onChange={(v) => setDescription(v)}
                 placeholder={t("e.g. Invoice payment, consultant fees, trade")}
-                hint={!descError ? t("5–34 characters; letters, digits, space, comma, dot, hyphen only") : ""}
+                hint={!descError ? t("5–120 characters; letters, digits, space, comma, dot, hyphen only") : ""}
                 error={descError}
+                maxLength={120}
             />
 
             <TextField
@@ -455,6 +457,8 @@ const ReviewStep = ({
     quoteExpiresAt,
     confirmedDetails,
     setConfirmedDetails,
+    confirmedParentCompany,
+    setConfirmedParentCompany,
     onRefreshQuote,
     isRefreshingQuote,
 }) => {
@@ -580,16 +584,29 @@ const ReviewStep = ({
                 ))}
             </div>
 
-            <label className={styles.confirmRow}>
-                <input
-                    type="checkbox"
-                    checked={confirmedDetails}
-                    onChange={(e) => setConfirmedDetails(e.target.checked)}
-                />
-                <span>
-                    {t("The recipient details are correct. I understand this SWIFT transfer, once initiated, may be irreversible. The USD amount shown is guaranteed for the quoted window.")}
-                </span>
-            </label>
+            <div style={{ display: "flex", flexDirection: "column", gap: "12px", marginTop: "16px" }}>
+                <label className={styles.confirmRow} style={{ cursor: "pointer" }}>
+                    <input
+                        type="checkbox"
+                        checked={confirmedDetails}
+                        onChange={(e) => setConfirmedDetails(e.target.checked)}
+                    />
+                    <span>
+                        {t("The recipient details are correct. I understand this SWIFT transfer, once initiated, may be irreversible. The USD amount shown is guaranteed for the quoted window.")}
+                    </span>
+                </label>
+
+                <label className={styles.confirmRow} style={{ cursor: "pointer" }}>
+                    <input
+                        type="checkbox"
+                        checked={confirmedParentCompany}
+                        onChange={(e) => setConfirmedParentCompany(e.target.checked)}
+                    />
+                    <span>
+                        {t("Please note that your SWIFT transfer will be processed under Kemit Kingdom - K2 - SA, InstaPay’s parent company, and not under your personal name.")}
+                    </span>
+                </label>
+            </div>
         </div>
     )
 }
@@ -798,6 +815,7 @@ const SwiftTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, 
     const [description, setDescription] = useState("")
     const [additionalInfo, setAdditionalInfo] = useState("")
     const [confirmedDetails, setConfirmedDetails] = useState(false)
+    const [confirmedParentCompany, setConfirmedParentCompany] = useState(false)
     const [authType, setAuthType] = useState(getDefaultAuthType)
     const [feeDetails, setFeeDetails] = useState(null)
     const [quoteToken, setQuoteToken] = useState("")
@@ -834,8 +852,9 @@ const SwiftTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, 
             purpose,
             description,
             confirmedDetails,
+            confirmedParentCompany,
         }),
-        [amount, sourceAvailableBalance, selectedBeneficiary, beneficiaryForm, isAddingBeneficiary, purpose, description, confirmedDetails]
+        [amount, sourceAvailableBalance, selectedBeneficiary, beneficiaryForm, isAddingBeneficiary, purpose, description, confirmedDetails, confirmedParentCompany]
     )
 
     const swiftBeneficiaries = useMemo(
@@ -897,6 +916,7 @@ const SwiftTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, 
         setDescription("")
         setAdditionalInfo("")
         setConfirmedDetails(false)
+        setConfirmedParentCompany(false)
         setAuthType(getDefaultAuthType())
         setFeeDetails(null)
         setQuoteToken("")
@@ -937,6 +957,7 @@ const SwiftTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, 
     const handleRefreshQuote = async () => {
         setIsRefreshingQuote(true)
         setConfirmedDetails(false)
+        setConfirmedParentCompany(false)
         try {
             await previewFee()
         } catch (error) {
@@ -1007,7 +1028,7 @@ const SwiftTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, 
         if (currentStep === STEPS.PURPOSE) {
             const currentDesc = (description || "").trim()
             if (!isValidDescription(currentDesc)) {
-                toast.error(t("Description must be 5–34 characters and contain only letters, numbers, spaces, commas, periods, and hyphens."))
+                toast.error(t("Description must be 5–120 characters and contain only letters, numbers, spaces, commas, periods, and hyphens."))
                 return
             }
             try {
@@ -1111,6 +1132,8 @@ const SwiftTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, 
                         quoteExpiresAt={quoteExpiresAt}
                         confirmedDetails={confirmedDetails}
                         setConfirmedDetails={setConfirmedDetails}
+                        confirmedParentCompany={confirmedParentCompany}
+                        setConfirmedParentCompany={setConfirmedParentCompany}
                         onRefreshQuote={handleRefreshQuote}
                         isRefreshingQuote={isRefreshingQuote}
                     />
