@@ -93,12 +93,17 @@ export const useSecurityShield = () => {
     const SecurityShield = useCallback(() => {
         return (
             <div className="security-shield-container" style={{ marginTop: "8px" }}>
-                {/* Hidden Honeypot Input */}
+                {/* Hidden Honeypot Input (Anti-Autofill protected) */}
                 <input
                     type="text"
                     name="instapay_hp_check"
+                    id="instapay_hp_check"
                     tabIndex={-1}
-                    autoComplete="off"
+                    autoComplete="new-password"
+                    autoCorrect="off"
+                    autoCapitalize="off"
+                    spellCheck="false"
+                    inputMode="none"
                     aria-hidden="true"
                     style={{
                         position: "absolute",
@@ -107,7 +112,8 @@ export const useSecurityShield = () => {
                         width: "1px",
                         height: "1px",
                         opacity: 0,
-                        pointerEvents: "none"
+                        pointerEvents: "none",
+                        visibility: "hidden"
                     }}
                 />
 
