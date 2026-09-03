@@ -259,7 +259,7 @@ export const useExecuteVirtualIbanCryptoTopup = () => {
                 queryClient.invalidateQueries({ queryKey: virtualIbanQueryKeys.detail(variables?.iban_id) })
                 queryClient.invalidateQueries({ queryKey: virtualIbanQueryKeys.balance(variables?.iban_id) })
             }
-        },fd
+        },
     })
 }
 
