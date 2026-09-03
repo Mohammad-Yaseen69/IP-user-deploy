@@ -77,16 +77,17 @@ const ForcedAuthenticatorModal = () => {
     return (
         <Modal
             isOpen={true}
+            centered
             backdrop="static"
             keyboard={false}
-            style={{ width: "96vw", maxWidth: "900px", margin: "1.5rem auto" }}
+            style={{ width: "96vw", maxWidth: "900px", margin: "1rem auto" }}
         >
             <div className={styles.modalHeader}>
                 <h5 className={styles.modalTitle}>{t("Link Google Authenticator")}</h5>
                 <div className={styles.topActions}>
                     <div className={styles.actionItem}>
                         <div className={styles.langWrapper}>
-                            <LanguagePicker size="16" />
+                            <LanguagePicker size="16" backgroundWhite={true} />
                         </div>
                     </div>
                     <div className={styles.actionItem} onClick={handleLogout}>
@@ -117,7 +118,7 @@ const ForcedAuthenticatorModal = () => {
                     </div>
                 </div>
             </ModalBody>
-            <ModalFooter style={{ display: "flex", gap: "1rem", justifyContent: "flex-end" }}>
+            <ModalFooter style={{ display: "flex", gap: "1rem", justifyContent: "flex-end", position: "relative", zIndex: 1 }}>
                 <Button
                     className={styles.btnPrimary}
                     disabled={enablingAuth}
