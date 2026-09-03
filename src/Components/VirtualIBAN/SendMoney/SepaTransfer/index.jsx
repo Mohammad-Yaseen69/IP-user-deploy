@@ -106,7 +106,7 @@ const buildBeneficiaryFromForm = (form) => {
     }
 }
 
-const TextField = ({ label, value, onChange, hint, type = "text", disabled = false, error = "", placeholder = "" }) => (
+const TextField = ({ label, value, onChange, hint, type = "text", disabled = false, error = "", placeholder = "", maxLength }) => (
     <label className={styles.field}>
         <span>{label}</span>
         <input
@@ -114,6 +114,7 @@ const TextField = ({ label, value, onChange, hint, type = "text", disabled = fal
             value={value}
             disabled={disabled}
             placeholder={placeholder}
+            maxLength={maxLength}
             className={error ? styles.fieldError : ""}
             onChange={(event) => onChange(event.target.value)}
         />
@@ -237,7 +238,7 @@ const AddBeneficiaryStep = ({ amount, currencyCode, form, setForm }) => {
 
 const PurposeStep = ({ amount, currencyCode, purpose, setPurpose, description, setDescription, additionalInfo, setAdditionalInfo }) => {
     const { t } = useTranslation()
-    const descError = description && !isValidDescription(description) ? t("5–34 characters; letters, digits, space, comma, dot, hyphen only") : ""
+    const descError = description && !isValidDescription(description) ? t("5–120 characters; letters, digits, space, comma, dot, hyphen only") : ""
 
     return (
         <div className={styles.purposeStep}>
@@ -256,8 +257,9 @@ const PurposeStep = ({ amount, currencyCode, purpose, setPurpose, description, s
                 value={description}
                 onChange={setDescription}
                 placeholder={t("e.g. Invoice payment, consultant fees, trade")}
-                hint={!descError ? t("5–34 characters; letters, digits, space, comma, dot, hyphen only") : ""}
+                hint={!descError ? t("5–120 characters; letters, digits, space, comma, dot, hyphen only") : ""}
                 error={descError}
+                maxLength={120}
             />
             <TextField label={t("Additional information (optional)")} value={additionalInfo} onChange={setAdditionalInfo} />
             <div className={styles.infoStrip}>{t("SEPA transfers deliver the full amount and carry no correspondent fees, so there is no OUR/SHA/BEN choice to make.")}</div>
@@ -793,7 +795,7 @@ const SepaTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, i
         if (currentStep === STEPS.PURPOSE) {
             const currentDesc = (description || "").trim()
             if (!isValidDescription(currentDesc)) {
-                toast.error(t("Description must be 5–34 characters and contain only letters, numbers, spaces, commas, periods, and hyphens."))
+                toast.error(t("Description must be 5–120 characters and contain only letters, numbers, spaces, commas, periods, and hyphens."))
                 return
             }
             try {
