@@ -414,10 +414,6 @@ const Signup = ({ country, setIsLoginForm, setHideLogo }) => {
 
     const clickHandler = (e) => {
         e.preventDefault()
-        if (isHoneypotTriggered()) {
-            console.warn("Automated signup attempt detected via honeypot.");
-            return;
-        }
         switch (data.step) {
             case 1:
                 dataHandler("step", data.step + 1)
