@@ -5398,5 +5398,6 @@
   "It looks like you are using an ad blocker or privacy shield (e.g.Brave Shields).Please disable it to continue using our platform.": "Φαίνεται ότι χρησιμοποιείτε ad blocker ή ασπίδα προστασίας απορρήτου (π.χ. Brave Shields). Απενεργοποιήστε το για να συνεχίσετε να χρησιμοποιείτε την πλατφόρμα μας.",
   "Ad blockers and browser shields interfere with our crash reporting tool(Sentry), preventing us from detecting, tracking, and fixing bugs effectively.": "Οι ad blockers και οι ασπίδες προγράμματος περιήγησης παρεμβαίνουν στο εργαλείο αναφοράς σφαλμάτων μας (Sentry), εμποδίζοντάς μας να εντοπίζουμε, να παρακολουθούμε και να διορθώνουμε σφάλματα αποτελεσματικά.",
   "on our payment platform.": "στην πλατφόρμα πληρωμών μας.",
-  "I've disabled it - reload page": "Το απενεργοποίησα - επαναφόρτωση σελίδας"
+  "I've disabled it - reload page": "Το απενεργοποίησα - επαναφόρτωση σελίδας",
+  "Please note that your SWIFT transfer will be processed under Kemit Kingdom - K2 - SA, InstaPay’s parent company, and not under your personal name.": "Λάβετε υπόψη ότι η μεταφορά SWIFT θα διεκπεραιωθεί υπό την Kemit Kingdom - K2 - SA, τη μητρική εταιρεία της InstaPay, και όχι με το προσωπικό σας όνομα."
 }

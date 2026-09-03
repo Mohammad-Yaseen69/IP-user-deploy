@@ -5457,5 +5457,6 @@
   "It looks like you are using an ad blocker or privacy shield (e.g.Brave Shields).Please disable it to continue using our platform.": "Ya bayyana kana amfani da mai toshe talla ko garkuwar sirri (misali Brave Shields). Don Allah kashe shi don ci gaba da amfani da dandalinmu.",
   "Ad blockers and browser shields interfere with our crash reporting tool(Sentry), preventing us from detecting, tracking, and fixing bugs effectively.": "Masu toshe talla da garkuwar burauza suna tsoma baki cikin kayan bayar da rahoton haɗari (Sentry), suna hana mu ganowa, bibiya, da gyara kurakurai yadda ya kamata.",
   "on our payment platform.": "a dandalin biyanmu.",
-  "I've disabled it - reload page": "Na kashe shi - sake loda shafi"
+  "I've disabled it - reload page": "Na kashe shi - sake loda shafi",
+  "Please note that your SWIFT transfer will be processed under Kemit Kingdom - K2 - SA, InstaPay’s parent company, and not under your personal name.": "Lura cewa za a aiwatar da canja wurin SWIFT ɗinku a ƙarƙashin Kemit Kingdom - K2 - SA, babban kamfanin InstaPay, ba a ƙarƙashin sunanku na kanku ba."
 }

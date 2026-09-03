@@ -5401,5 +5401,6 @@
   "It looks like you are using an ad blocker or privacy shield (e.g.Brave Shields).Please disable it to continue using our platform.": "Koʻrinishidan, siz reklama blokerlovchi yoki maxfiylik qalqonidan (masalan, Brave Shields) foydalanyapsiz. Platformamizdan foydalanishni davom ettirish uchun uni oʻchiring.",
   "Ad blockers and browser shields interfere with our crash reporting tool(Sentry), preventing us from detecting, tracking, and fixing bugs effectively.": "Reklama blokerlovchilari va brauzer qalqonlari bizning nosozliklarni xabar qilish vositamizga (Sentry) xalaqit beradi va bizga xatolarni samarali aniqlash, kuzatish va tuzatishga toʻsqinlik qiladi.",
   "on our payment platform.": "toʻlov platformamizda.",
-  "I've disabled it - reload page": "Men uni oʻchirdim - sahifani qayta yuklash"
+  "I've disabled it - reload page": "Men uni oʻchirdim - sahifani qayta yuklash",
+  "Please note that your SWIFT transfer will be processed under Kemit Kingdom - K2 - SA, InstaPay’s parent company, and not under your personal name.": "Iltimos, diqqat qiling: SWIFT o'tkazmangiz shaxsiy ismingiz ostida emas, InstaPay bosh kompaniyasi Kemit Kingdom - K2 - SA nomi ostida amalga oshiriladi."
 }
