@@ -6,6 +6,7 @@ import { AccountTypeData } from '../../../utils/Data';
 import InstaPayLoader from '../../Loader';
 import NeemaBenExtrasFields from '../../AddBeneficiary/NeemaBenExtrasFields';
 import useBankDetails from '../../../hooks/BeneficiaryHooks/useBankDetails';
+import CitiesDropDown from '../../CitiesDropDown';
 
 
 const Bank = ({ country, states, values, changeHandler, isEditMode, setBankDetails, setBankError, bankError, payers, bankExtras, serviceFieldInfoValidate, services, handleBankExtraChange, alpha3, payerLoading, basicExtras, fieldInfoValidate, setBasicExtras, handleBasicExtraChange, setBankCountryCode, isAfricanBank, errorOnInvalid = true, error = false }) => {
@@ -144,34 +145,43 @@ const Bank = ({ country, states, values, changeHandler, isEditMode, setBankDetai
                                     </FormGroup>
                                     <FormGroup style={{ flex: 1, margin: 0 }}>
                                         <Label className="col-form-label" >{t("Account Holder Name")} <span className="req_star">*</span></Label>
-                                        <Input disabled={!isEditMode} readOnly={!isEditMode} className="form-control" style={{ flex: 1, minWidth: "250px" }} name="bank_account_holder_name" type="text" required onChange={changeHandler} value={values.bank_account_holder_name} />
+                                        <Input disabled={!isEditMode} readOnly={!isEditMode} className="form-control" style={{ flex: 1, minWidth: "250px" }} name="bank_account_holder_name" type="text" required onChange={changeHandler} value={values.bank_account_holder_name || ""} />
+                                    </FormGroup>
+                                    <FormGroup style={{ flex: 1, margin: 0 }}>
+                                        <Label className="col-form-label" >{t("Address")} <span className="req_star">*</span></Label>
+                                        <Input disabled={!isEditMode} readOnly={!isEditMode} className="form-control" style={{ flex: 1, minWidth: "250px" }} name="address" type="text" required onChange={changeHandler} value={values.address || ""} />
                                     </FormGroup>
                                     <FormGroup style={{ flex: 1, margin: 0 }}>
                                         <Label className="col-form-label" >{t("Bank Name")} <span className="req_star">*</span></Label>
-                                        <Input disabled={!isEditMode} readOnly={!isEditMode} className="form-control" style={{ flex: 1, minWidth: "250px" }} name="bank_name" type="text" required onChange={changeHandler} value={values.bank_name} />
+                                        <Input disabled={!isEditMode} readOnly={!isEditMode} className="form-control" style={{ flex: 1, minWidth: "250px" }} name="bank_name" type="text" required onChange={changeHandler} value={values.bank_name || ""} />
                                     </FormGroup>
                                     <FormGroup style={{ flex: 1, margin: 0 }}>
                                         <Label className="col-form-label" >{t("Branch Name")} <span className="req_star">*</span></Label>
-                                        <Input disabled={!isEditMode} readOnly={!isEditMode} className="form-control" style={{ flex: 1, minWidth: "250px" }} name="bank_branch_name" type="text" required onChange={changeHandler} value={values.bank_branch_name} />
+                                        <Input disabled={!isEditMode} readOnly={!isEditMode} className="form-control" style={{ flex: 1, minWidth: "250px" }} name="bank_branch_name" type="text" required onChange={changeHandler} value={values.bank_branch_name || ""} />
                                     </FormGroup>
                                     <FormGroup style={{ flex: 1, margin: 0 }}>
                                         <Label className="col-form-label" >{t("Branch Street")} <span className="req_star">*</span></Label>
-                                        <Input disabled={!isEditMode} readOnly={!isEditMode} className="form-control" style={{ flex: 1, minWidth: "250px" }} type="text" name="bank_branch_street" required onChange={changeHandler} value={values.bank_branch_street} />
+                                        <Input disabled={!isEditMode} readOnly={!isEditMode} className="form-control" style={{ flex: 1, minWidth: "250px" }} type="text" name="bank_branch_street" required onChange={changeHandler} value={values.bank_branch_street || ""} />
                                     </FormGroup>
-                                    <FormGroup style={{ flex: 1, margin: 0 }}>
+                                    <FormGroup style={{ flex: 1, margin: 0, minWidth: "250px" }}>
                                         <Label className="col-form-label" >{t("City")} <span className="req_star">*</span></Label>
-                                        <Input disabled={!isEditMode} readOnly={!isEditMode} className="form-control" style={{ flex: 1, minWidth: "250px" }} type="text" name="bank_city" required onChange={changeHandler} value={values.bank_city} />
+                                        <CitiesDropDown
+                                            userCity={values.bank_city}
+                                            setUserCity={(val) => changeHandler({ target: { name: "bank_city", value: val } })}
+                                            disabled={!isEditMode}
+                                            iso_3={bankCountryCode || alpha3}
+                                        />
                                     </FormGroup>
                                     <FormGroup style={{ flex: 1, margin: 0 }}>
                                         <Label className="col-form-label" >{t("Province")} <span className="req_star">*</span></Label>
-                                        <Input disabled={!isEditMode} readOnly={!isEditMode} className="form-control" style={{ flex: 1, minWidth: "250px" }} type="text" required name="bank_province" value={values.bank_province} onChange={changeHandler} />
+                                        <Input disabled={!isEditMode} readOnly={!isEditMode} className="form-control" style={{ flex: 1, minWidth: "250px" }} type="text" required name="bank_province" value={values.bank_province || ""} onChange={changeHandler} />
                                     </FormGroup>
                                     <FormGroup style={{ flex: 1, margin: 0 }}>
                                         <Label className="col-form-label" >{t("Postal Code")} {!isAfricanBank && <span className="req_star">*</span>}</Label>
-                                        <Input disabled={!isEditMode} readOnly={!isEditMode} className="form-control" style={{ flex: 1, minWidth: "250px" }} type="text" required name="bank_postal_code" onChange={e => {
+                                        <Input disabled={!isEditMode} readOnly={!isEditMode} className="form-control" style={{ flex: 1, minWidth: "250px" }} type="text" required={!isAfricanBank} name="bank_postal_code" onChange={e => {
                                             const value = e.target.value.replace(/[^a-zA-Z0-9]/g, '')
                                             changeHandler({ target: { name: e.target.name, value } })
-                                        }} value={values.bank_postal_code} />
+                                        }} value={values.bank_postal_code || ""} />
                                     </FormGroup>
                                     {
                                         Object.keys(bankExtras).map(item => {

@@ -113,7 +113,10 @@ const IndividualAccount = ({ mobileView, handleChangeNumber, toggleSuccess, filt
     const [bankExtras, setBankExtras] = useState(bankExtrasInitial)
 
     const handleBankExtraChange = (e) => {
-        const { value, name } = e.target;
+        let { value, name } = e.target;
+        if (name === "account_number" || name === "bank_account_number") {
+            value = value.replace(/[^a-zA-Z0-9]/g, '');
+        }
         setBankExtras(prev => {
             return {
                 ...prev,
@@ -130,7 +133,10 @@ const IndividualAccount = ({ mobileView, handleChangeNumber, toggleSuccess, filt
     })
 
     const handleCardExtraChange = (e) => {
-        const { value, name } = e.target;
+        let { value, name } = e.target;
+        if (name === "account_number" || name === "bank_account_number") {
+            value = value.replace(/[^a-zA-Z0-9]/g, '');
+        }
         setCardExtras(prev => {
             return {
                 ...prev,
@@ -173,7 +179,10 @@ const IndividualAccount = ({ mobileView, handleChangeNumber, toggleSuccess, filt
 
 
     const inputChangeHandler = (e) => {
-        const { name, value } = e.target
+        let { name, value } = e.target
+        if (name === "account_number" || name === "bank_account_number") {
+            value = value.replace(/[^a-zA-Z0-9]/g, '');
+        }
         setFormData(prev => {
             return {
                 ...prev,

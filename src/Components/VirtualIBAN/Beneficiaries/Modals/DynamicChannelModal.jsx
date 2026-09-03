@@ -375,7 +375,10 @@ const DynamicChannelModal = ({ open, handleClose, beneficiaryData, onSaveSuccess
                                                 name="bank_account_number"
                                                 placeholder="1234567890"
                                                 value={bankFormState.bank_account_number}
-                                                onChange={(e) => setBankFormState(prev => ({ ...prev, bank_account_number: e.target.value }))}
+                                                onChange={(e) => {
+                                                    const val = e.target.value.replace(/[^a-zA-Z0-9]/g, '');
+                                                    setBankFormState(prev => ({ ...prev, bank_account_number: val }));
+                                                }}
                                                 sx={commonInputStyles}
                                             />
                                         </div>

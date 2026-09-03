@@ -5,9 +5,11 @@ import { service_name_formatter } from '../../TransactionsNewApi/TransactionItem
 import InstaPayLoader from '../../Loader';
 import { UserContext } from '../../../Context/UserContext';
 import NeemaBenExtrasFields from '../../AddBeneficiary/NeemaBenExtrasFields';
+import citiesData from '../../CitiesDropDown/CitiesData.json';
 
 const CardP = ({ values, changeHandler, isEditMode, payers, cardExtras, serviceFieldInfoValidate, services, handleCardExtraChange, setBankError, bankError, payerLoading, basicExtras, fieldInfoValidate, setBasicExtras, handleBasicExtraChange, alpha3, country }) => {
     const { t } = useTranslation()
+    const isAfricanCountry = citiesData.find(item => item.iso3 === country?.alpha3 || item.iso3 === alpha3)?.region === "Africa"
 
     const handleMonthKeyPress = (event) => {
         const { key } = event;
@@ -121,6 +123,21 @@ const CardP = ({ values, changeHandler, isEditMode, payers, cardExtras, serviceF
                                                 required
                                             />
                                         </div>
+                                    </FormGroup>
+                                    <FormGroup style={{ flex: 1, margin: 0 }}>
+                                        <Label className="col-form-label" >{t("Address")} <span className="req_star">*</span></Label>
+                                        <Input disabled={!isEditMode} readOnly={!isEditMode} className="form-control" style={{ flex: 1, minWidth: "250px" }} type="text" required name="address" value={values.address || ""} onChange={changeHandler} />
+                                    </FormGroup>
+                                    <FormGroup style={{ flex: 1, margin: 0 }}>
+                                        <Label className="col-form-label" >{t("City")} <span className="req_star">*</span></Label>
+                                        <Input disabled={!isEditMode} readOnly={!isEditMode} className="form-control" style={{ flex: 1, minWidth: "250px" }} type="text" required name="city" value={values.city || ""} onChange={changeHandler} />
+                                    </FormGroup>
+                                    <FormGroup style={{ flex: 1, margin: 0 }}>
+                                        <Label className="col-form-label" >{t("Postal Code")} {!isAfricanCountry && <span className="req_star">*</span>}</Label>
+                                        <Input disabled={!isEditMode} readOnly={!isEditMode} className="form-control" style={{ flex: 1, minWidth: "250px" }} type="text" required={!isAfricanCountry} name="postal_code" onChange={e => {
+                                            const value = e.target.value.replace(/[^a-zA-Z0-9]/g, '')
+                                            changeHandler({ target: { name: e.target.name, value } })
+                                        }} value={values.postal_code || ""} />
                                     </FormGroup>
                                     {
                                         Object.keys(cardExtras).map(item => (
