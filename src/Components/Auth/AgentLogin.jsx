@@ -633,7 +633,6 @@ const AgentLogin = ({ country, setIsLoginForm, setIsAgentForm }) => {
                 navigate("/")
             }
             sessionStorage.clear()
-            sessionStorage.setItem("force_auth_on_login", "true")
             setIsPressed(false)
             setBiometricLoading(false)
         }

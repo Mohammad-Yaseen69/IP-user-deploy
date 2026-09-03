@@ -520,20 +520,12 @@ const UserState = ({ children }) => {
                 if (decrypted.fieldsInformation) {
                     const { completedBasicFields, totalBasicFields, completedProfilePercent } = decrypted.fieldsInformation
                     setProfileIncompleteReason(completedBasicFields !== totalBasicFields ? "basic" : "")
-                    const isComplete = completedProfilePercent === 100
-                    if (!isComplete) {
-                        sessionStorage.removeItem("force_auth_on_login")
-                        sessionStorage.setItem("profile_initially_incomplete", "true")
-                    }
-                    setProfileCompleted(isComplete)
+                    setProfileCompleted(completedProfilePercent === 100)
                     setProfileCompletedPercentage(completedProfilePercent)
                 }
             })
 
     }
-
-    const forceAuthOnLogin = sessionStorage.getItem("force_auth_on_login") === "true";
-    const shouldForceAuthenticator = Boolean(userDetails?._id) && profileCompleted === true && !userDetails?.tfa && forceAuthOnLogin;
     useEffect(() => {
         if (userDetails?._id) {
             getProfileCompletionDetails()
@@ -718,7 +710,7 @@ const UserState = ({ children }) => {
         <UserContext.Provider value={{
             selectedAccount,
             setSelectedAccount,
-            userDetails, setUserDetails, userWallets, setUserWallets, token, authHeader, beneficiaries, setBeneficiaries, userTransactions, setUserTransactions, searchQuery, setSearchQuery, apiDates, setApiDates, userSecurityQues, referralLink, userSessions, allowedFeatures, verifyToken, userWithdrawals, setUserWithdrawals, cryptoWithdrawals, setCryptoWithdrawals, allowedWithdrawals, registeredBeneficiaries, profileCompleted, allowedCountries, userPortfolio, profileIncompleteReason, setUserPortfolio, setUserVideos, getUserVideos, userVideos, checkRegisteredBenficiaries, getAllActiveCountries, getUserWallets, getUserBeneficiaries, getUserDocuments, checkAuth, getSecurityQuestions, getInvitationLink, getSessions, profileCompletedPercentage, getWithdrawals, getReferralCommission, totalReferralAmount, validateSendingLimits, validateReceivingLimits, validateTransactionsCount, profileLockTIme, setProfileLockTime, showInactivityModal, setShowInactivityModal, is30Days, setIs30Days, threeDaysReminder, set3DaysReminder, is30DaysInfo, setIs30DaysInfo, threeDaysReminderInfo, set3DaysReminderInfo, clearData, croppedImages, updateCoordinates, setCroppedImages, missingTabsData, setMissingTabsData, setAvailable, available, setBlocked, blocked, benLoading, balanceLoading, getUserBalances, refetchBalances, showModalState, setShowModalState, processReceivingNonIpFunds: processReceivingNonIpFunds.mutateAsync, showAnotherLoginModal, setShowAnotherLoginModal, isAgentLogin, setIsAgentLogin, agentDetails, setAgentDetails, commisions, shouldForceAuthenticator
+            userDetails, setUserDetails, userWallets, setUserWallets, token, authHeader, beneficiaries, setBeneficiaries, userTransactions, setUserTransactions, searchQuery, setSearchQuery, apiDates, setApiDates, userSecurityQues, referralLink, userSessions, allowedFeatures, verifyToken, userWithdrawals, setUserWithdrawals, cryptoWithdrawals, setCryptoWithdrawals, allowedWithdrawals, registeredBeneficiaries, profileCompleted, allowedCountries, userPortfolio, profileIncompleteReason, setUserPortfolio, setUserVideos, getUserVideos, userVideos, checkRegisteredBenficiaries, getAllActiveCountries, getUserWallets, getUserBeneficiaries, getUserDocuments, checkAuth, getSecurityQuestions, getInvitationLink, getSessions, profileCompletedPercentage, getWithdrawals, getReferralCommission, totalReferralAmount, validateSendingLimits, validateReceivingLimits, validateTransactionsCount, profileLockTIme, setProfileLockTime, showInactivityModal, setShowInactivityModal, is30Days, setIs30Days, threeDaysReminder, set3DaysReminder, is30DaysInfo, setIs30DaysInfo, threeDaysReminderInfo, set3DaysReminderInfo, clearData, croppedImages, updateCoordinates, setCroppedImages, missingTabsData, setMissingTabsData, setAvailable, available, setBlocked, blocked, benLoading, balanceLoading, getUserBalances, refetchBalances, showModalState, setShowModalState, processReceivingNonIpFunds: processReceivingNonIpFunds.mutateAsync, showAnotherLoginModal, setShowAnotherLoginModal, isAgentLogin, setIsAgentLogin, agentDetails, setAgentDetails, commisions
         }}>
             {((showModalState || Boolean(isSessionExpired)) && !location.pathname.startsWith("/pay/")) &&
                 <SessionExpireModal
