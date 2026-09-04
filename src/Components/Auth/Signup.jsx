@@ -199,8 +199,11 @@ const Signup = ({ country, setIsLoginForm, setHideLogo }) => {
             return true
         }
         catch (error) {
+            if (error?.response?.status === 500) {
+                dataHandler("phone_error", null)
+                return true
+            }
             dataHandler("phone_error", "Incorrect phone number, please enter a valid number.")
-            // dataHandler("error", typeof dec === "string" ? dec : dec?.message ?? "Something went wrong while verifying details.")
             return false
         }
         finally {

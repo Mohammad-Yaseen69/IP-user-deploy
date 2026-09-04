@@ -19,6 +19,8 @@ const DEFAULT_FEE_ITEMS = [
     { id: "fx_margin", name: "FX Margin", flatEuro: 0, percentAmount: 0.5 },
 ];
 
+const NO_PERCENT_FEE_IDS = ['iban_activation', 'monthly_iban_fee'];
+
 const FeeModelRequestModal = ({ isOpen, toggle }) => {
     const { t } = useTranslation();
     const { userDetails, authHeader } = useContext(UserContext);
@@ -58,7 +60,12 @@ const FeeModelRequestModal = ({ isOpen, toggle }) => {
 
     const handleFeeChange = (index, field, value) => {
         const updated = [...feeSchedule];
-        updated[index] = { ...updated[index], [field]: parseFloat(value) || 0 };
+        const targetItem = updated[index];
+        if (field === 'percentAmount' && NO_PERCENT_FEE_IDS.includes(targetItem.id)) {
+            updated[index] = { ...targetItem, percentAmount: 0 };
+        } else {
+            updated[index] = { ...targetItem, [field]: parseFloat(value) || 0 };
+        }
         setFeeSchedule(updated);
     };
 
@@ -71,10 +78,17 @@ const FeeModelRequestModal = ({ isOpen, toggle }) => {
 
         setSubmitting(true);
         try {
+            const sanitizedSchedule = feeSchedule.map(item => {
+                if (NO_PERCENT_FEE_IDS.includes(item.id)) {
+                    return { ...item, percentAmount: 0 };
+                }
+                return item;
+            });
+
             const payload = {
                 account_id: userDetails?._id,
                 title: title.trim(),
-                fee_schedule: feeSchedule,
+                fee_schedule: sanitizedSchedule,
                 agent_revenue_model: revenueModel,
             };
 
@@ -150,7 +164,7 @@ const FeeModelRequestModal = ({ isOpen, toggle }) => {
                             gap: '6px'
                         }}
                     >
-                        <Plus size={16} /> {t("New Request")}
+                        <Plus size={15} /> {t("New Request")}
                     </button>
                 </div>
 
@@ -158,37 +172,29 @@ const FeeModelRequestModal = ({ isOpen, toggle }) => {
                     <div>
                         {loadingRequests ? (
                             <div style={{ padding: '40px', textAlign: 'center' }}>
-                                <Spinner style={{ color: '#5926F0' }} />
+                                <Spinner color="primary" />
                                 <div style={{ marginTop: '8px', fontSize: '13px', color: '#6B7280' }}>
-                                    {t("Loading your fee model requests...")}
+                                    {t("Loading requests...")}
                                 </div>
                             </div>
                         ) : requests.length === 0 ? (
-                            <div style={{ padding: '40px', textAlign: 'center', background: '#F9FAFB', borderRadius: '12px', border: '1px solid #F3F4F6' }}>
-                                <div style={{ fontSize: '15px', fontWeight: 600, color: '#374151', marginBottom: '4px' }}>
-                                    {t("No Fee Model Requests Yet")}
-                                </div>
-                                <p style={{ fontSize: '13px', color: '#6B7280', marginBottom: '16px' }}>
-                                    {t("Request custom fee models for your clients with tailored pricing and rates.")}
+                            <div style={{ textAlign: 'center', padding: '40px 20px', color: '#6B7280' }}>
+                                <p style={{ fontSize: '15px', fontWeight: 600, color: '#374151' }}>
+                                    {t("No Fee Requests Submitted Yet")}
                                 </p>
-                                <Button
-                                    style={{ background: '#5926F0', border: 'none' }}
-                                    onClick={() => setActiveTab('create')}
-                                >
-                                    <Plus size={16} style={{ marginRight: '6px' }} />
-                                    {t("Create New Request")}
-                                </Button>
+                                <p style={{ fontSize: '13px' }}>
+                                    {t("Click 'New Request' above to create custom fee models for your clients.")}
+                                </p>
                             </div>
                         ) : (
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', maxHeight: '500px', overflowY: 'auto' }}>
                                 {requests.map((req) => (
                                     <div
                                         key={req._id}
                                         style={{
-                                            background: '#FFFFFF',
                                             border: '1px solid #E5E7EB',
-                                            borderRadius: '12px',
-                                            padding: '18px',
+                                            borderRadius: '10px',
+                                            padding: '16px',
                                             display: 'flex',
                                             flexDirection: 'column',
                                             gap: '12px'
@@ -196,12 +202,12 @@ const FeeModelRequestModal = ({ isOpen, toggle }) => {
                                     >
                                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                             <div>
-                                                <h4 style={{ fontSize: '16px', fontWeight: 700, margin: 0, color: '#111827' }}>
+                                                <h4 style={{ margin: 0, fontSize: '16px', fontWeight: 700, color: '#111827' }}>
                                                     {req.title}
                                                 </h4>
-                                                <div style={{ fontSize: '12px', color: '#6B7280', marginTop: '2px' }}>
+                                                <span style={{ fontSize: '12px', color: '#6B7280' }}>
                                                     {t("Submitted")}: {new Date(req.createdAt).toLocaleDateString()}
-                                                </div>
+                                                </span>
                                             </div>
                                             <div>
                                                 {req.status === 'pending' && (
@@ -222,31 +228,36 @@ const FeeModelRequestModal = ({ isOpen, toggle }) => {
                                             </div>
                                         </div>
 
-                                        <div style={{ fontSize: '13px', color: '#4B5563', background: '#F9FAFB', padding: '10px 14px', borderRadius: '8px' }}>
-                                            <strong>{t("Pricing Summary")}:</strong> {req.pricing_summary || 'Custom Schedule'}
+                                        <div style={{ background: '#F9FAFB', padding: '10px 14px', borderRadius: '8px', border: '1px solid #F3F4F6' }}>
+                                            <div style={{ fontSize: '11px', color: '#6B7280', fontWeight: 600 }}>
+                                                {t("PRICING SUMMARY")}
+                                            </div>
+                                            <div style={{ fontSize: '13px', fontWeight: 600, color: '#111827' }}>
+                                                {req.pricing_summary || 'Custom Rates'}
+                                            </div>
                                         </div>
 
-                                         {req.status === 'approved' && req.model_code && (
-                                            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', background: '#EEF2FF', padding: '12px 14px', borderRadius: '8px', border: '1px solid #C7D2FE' }}>
-                                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '8px' }}>
-                                                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                                        <div style={{ fontSize: '13px', color: '#3730A3', fontWeight: 600 }}>
-                                                            {t("Assigned Referral Code")}:
+                                        {req.status === 'approved' && req.model_code && (
+                                            <div style={{ background: '#EEF2FF', padding: '12px 14px', borderRadius: '8px', border: '1px solid #C7D2FE', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                                    <div>
+                                                        <div style={{ fontSize: '11px', color: '#4338CA', fontWeight: 600 }}>
+                                                            {t("Client Referral Code")}
                                                         </div>
-                                                        <Badge color="primary" style={{ fontSize: '13px', padding: '6px 10px', letterSpacing: '0.5px' }}>
+                                                        <div style={{ fontSize: '16px', fontWeight: 800, color: '#4F46E5', letterSpacing: '0.5px' }}>
                                                             {req.model_code}
-                                                        </Badge>
+                                                        </div>
                                                     </div>
-                                                    <button
-                                                        type="button"
+                                                    <Button
+                                                        size="sm"
+                                                        style={{ background: '#4F46E5', border: 'none', display: 'flex', alignItems: 'center', gap: '4px' }}
                                                         onClick={() => copyToClipboard(req.model_code, "code")}
-                                                        style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#4F46E5', display: 'flex', alignItems: 'center', gap: '4px', fontSize: '12px', fontWeight: 600 }}
                                                     >
-                                                        <Copy size={14} /> {t("Copy Code")}
-                                                    </button>
+                                                        <Copy size={13} /> {t("Copy Code")}
+                                                    </Button>
                                                 </div>
 
-                                                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '8px', borderTop: '1px solid #C7D2FE', paddingTop: '8px' }}>
+                                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid #C7D2FE', paddingTop: '8px' }}>
                                                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px', overflow: 'hidden', maxWidth: '70%' }}>
                                                         <div style={{ fontSize: '13px', color: '#3730A3', fontWeight: 600, whiteSpace: 'nowrap' }}>
                                                             {t("Full Signup Link")}:
@@ -304,29 +315,36 @@ const FeeModelRequestModal = ({ isOpen, toggle }) => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {feeSchedule.map((item, idx) => (
-                                    <tr key={item.id}>
-                                        <td style={{ verticalAlign: 'middle', fontWeight: 500, fontSize: '13px' }}>{item.name}</td>
-                                        <td>
-                                            <Input
-                                                type="number"
-                                                step="any"
-                                                value={item.flatEuro}
-                                                onChange={(e) => handleFeeChange(idx, 'flatEuro', e.target.value)}
-                                                style={{ width: '110px' }}
-                                            />
-                                        </td>
-                                        <td>
-                                            <Input
-                                                type="number"
-                                                step="any"
-                                                value={item.percentAmount}
-                                                onChange={(e) => handleFeeChange(idx, 'percentAmount', e.target.value)}
-                                                style={{ width: '110px' }}
-                                            />
-                                        </td>
-                                    </tr>
-                                ))}
+                                {feeSchedule.map((item, idx) => {
+                                    const isNoPercent = NO_PERCENT_FEE_IDS.includes(item.id);
+                                    return (
+                                        <tr key={item.id}>
+                                            <td style={{ verticalAlign: 'middle', fontWeight: 500, fontSize: '13px' }}>{item.name}</td>
+                                            <td>
+                                                <Input
+                                                    type="number"
+                                                    step="any"
+                                                    value={item.flatEuro}
+                                                    onChange={(e) => handleFeeChange(idx, 'flatEuro', e.target.value)}
+                                                    style={{ width: '110px' }}
+                                                />
+                                            </td>
+                                            <td style={{ verticalAlign: 'middle' }}>
+                                                {isNoPercent ? (
+                                                    <span style={{ color: '#9CA3AF', fontWeight: 600, paddingLeft: '8px' }}>—</span>
+                                                ) : (
+                                                    <Input
+                                                        type="number"
+                                                        step="any"
+                                                        value={item.percentAmount}
+                                                        onChange={(e) => handleFeeChange(idx, 'percentAmount', e.target.value)}
+                                                        style={{ width: '110px' }}
+                                                    />
+                                                )}
+                                            </td>
+                                        </tr>
+                                    );
+                                })}
                             </tbody>
                         </Table>
 

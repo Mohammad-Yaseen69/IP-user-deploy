@@ -41,12 +41,17 @@ const ReferralsNew = () => {
     const [selectedReferral, setSelectedReferral] = useState(null)
 
     const handleCopy = () => {
-        const textField = document.createElement('textarea');
-        textField.innerText = referralLink;
-        document.body.appendChild(textField);
-        textField.select();
-        document.execCommand('copy');
-        textField.remove();
+        const linkToCopy = `${referralLink || ''}${userDetails?.username || ''}`;
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(linkToCopy);
+        } else {
+            const textField = document.createElement('textarea');
+            textField.innerText = linkToCopy;
+            document.body.appendChild(textField);
+            textField.select();
+            document.execCommand('copy');
+            textField.remove();
+        }
 
         setCopied(true);
 
