@@ -862,7 +862,7 @@ const WalletFundsFlow = ({ setAction }) => {
               minHeight: "auto",
             }}
           >
-            <div className={styles.left}>
+            <div className={styles.left} style={{ justifyContent: "flex-start" }}>
               <div className={styles.l_top}>
                 <h1>{t("Top-Up Wallet")}</h1>
                 <h2>
