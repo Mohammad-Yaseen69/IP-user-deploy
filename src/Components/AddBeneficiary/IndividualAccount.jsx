@@ -24,7 +24,7 @@ import citiesData from "../CitiesDropDown/CitiesData.json"
 
 
 
-const IndividualAccount = ({ mobileView, handleChangeNumber, toggleSuccess, filteringCountries, errorOnInvalid = true, error = false }) => {
+const IndividualAccount = ({ nameRegex, mobileView, handleChangeNumber, toggleSuccess, filteringCountries, errorOnInvalid = true, error = false }) => {
     const { t } = useTranslation()
     const [active, setActive] = useState(5)
     const [totalCards, setTotalCards] = useState(1)
@@ -346,19 +346,17 @@ const IndividualAccount = ({ mobileView, handleChangeNumber, toggleSuccess, filt
                                         }}>
                                             <FormGroup style={{ flex: 1, margin: 0 }}>
                                                 <Label className="col-form-label" htmlFor="first-name">{t("First Name")} <span className="req_star">*</span></Label>
-                                                <Input className="form-control" style={{ flex: 1, minWidth: "250px" }} id="first-name" type="text" placeholder={t("First Name")} required pattern="[A-Za-z]+" title="(A to Z | a to z)" value={firstName} onChange={e => setFirstName(e.target.value)} />
-                                            </FormGroup>
+                                                <Input className="form-control" style={{ flex: 1, minWidth: "250px" }} id="first-name" type="text" placeholder={t("First Name")} required minLength={3} pattern="[A-Za-z\s]+" title={t("Only letters and spaces are allowed")} value={firstName} onChange={(e) => setFirstName(e.target.value.replace(/[^A-Za-z\s]/g, ""))} />                                            </FormGroup>
                                             {
                                                 fieldInfoValidate("required_receiving_entity_fields", "middlename")
                                                 &&
                                                 <FormGroup style={{ flex: 1, margin: 0 }}>
                                                     <Label className="col-form-label" htmlFor="middlename">{t("Middle Name")} <span className="req_star">*</span></Label>
-                                                    <Input className="form-control" style={{ flex: 1, minWidth: "250px" }} name="middlename" id="middlename" type="text" placeholder={t('Middle Name')} value={basicExtras.middlename} onChange={handleBasicExtraChange} />
-                                                </FormGroup>
+                                                    <Input className="form-control" style={{ flex: 1, minWidth: "250px" }} name="middlename" id="middlename" type="text" placeholder={t("Middle Name")} value={basicExtras.middlename} onChange={handleBasicExtraChange} />                                                </FormGroup>
                                             }
                                             <FormGroup style={{ flex: 1, margin: 0 }}>
                                                 <Label className="col-form-label" htmlFor="last-name">{t("Last Name")} <span className="req_star">*</span></Label>
-                                                <Input className="form-control" style={{ flex: 1, minWidth: "250px" }} id="last-name" type="text" placeholder={t('Last Name')} required pattern="[A-Za-z]+" title="(A to Z | a to z)" value={lastName} onChange={e => setLastName(e.target.value)} />
+                                                <Input className="form-control" style={{ flex: 1, minWidth: "250px" }} id="last-name" type="text" placeholder={t("Last Name")} required minLength={3} pattern="[A-Za-z\s]+" title={t("Only letters and spaces are allowed")} value={lastName} onChange={(e) => setLastName(e.target.value.replace(/[^A-Za-z\s]/g, ""))} />
                                             </FormGroup>
                                         </div>
                                     </FormGroup>
@@ -849,7 +847,7 @@ const IndividualAccount = ({ mobileView, handleChangeNumber, toggleSuccess, filt
                                     }}
                                         className="i_t_button"
                                         disabled={
-                                            benLoading || duplicateWallet || walletError || !firstName || !lastName || !country || !city || mobileNumber.length < 9 || (!completedBank && !completedCard && !completedCrypto && !completedWallet && !cashPickupCompleted && instapayWallets.some(item => item.length < 8 || item.length > 8)) || !formData.relation || (isAddressRequired ? !formData.address : false)
+                                            benLoading || duplicateWallet || walletError || !firstName.trim() || !lastName.trim() || !country || !city || mobileNumber.length < 9 || (!completedBank && !completedCard && !completedCrypto && !completedWallet && !cashPickupCompleted && instapayWallets.some(item => item.length < 8 || item.length > 8)) || !formData.relation || (isAddressRequired ? !formData.address : false)
                                         }
                                         onClick={addBeneficiaryHandler}
                                     >
