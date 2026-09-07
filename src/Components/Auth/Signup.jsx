@@ -172,8 +172,14 @@ const Signup = ({ country, setIsLoginForm, setHideLogo }) => {
                     (typeof data.country === 'string' && data.country.trim())
                 );
                 return data.account_type === "individual"
-                    ? !data.first_name?.trim() || !data.last_name?.trim() || !individualNameRegex.test(data.first_name) || !individualNameRegex.test(data.last_name)
-                    : !data.category_id || !data.company_name?.trim() || !hasValidCountry || !companyNameRegex.test(data.company_name);
+                    ? data.first_name?.trim().length < 3 ||
+                    data.last_name?.trim().length < 3 ||
+                    !individualNameRegex.test(data.first_name) ||
+                    !individualNameRegex.test(data.last_name)
+                    : !data.category_id ||
+                    !data.company_name?.trim() ||
+                    !hasValidCountry ||
+                    !companyNameRegex.test(data.company_name);
             }
             case 3:
                 return data.account_type === "individual" ? !data.phone || data.phone.length < 9 || !/^\d{9,20}$/g.test(data.phone) : (!emailRegex.test(data.email))

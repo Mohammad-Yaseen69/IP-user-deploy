@@ -1446,6 +1446,7 @@ const Login = ({ country, setIsLoginForm, }) => {
                                                     background: "#FFF",
                                                     overflow: "hidden",
                                                     width: "100%",
+                                                    fontWeight: 600,
                                                 }}
                                                 disabled={biometricLoading}
                                             >

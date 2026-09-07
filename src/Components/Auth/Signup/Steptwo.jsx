@@ -52,7 +52,9 @@ const Steptwo = ({ data, dataHandler }) => {
                         <div className={styles.dp}>
                             <img src={data.dp_preview || placeholder_dp} alt="" />
                             <label htmlFor="dp">{t("Add Photo Or Logo")}</label>
-                            <input type="file" id="dp" name="dp" hidden onChange={handleFileChange} accept="image/*" />
+                            <input type="file" id="dp" name="dp" hidden onChange={handleFileChange}
+                                accept="image/png, image/jpeg"
+                            />
                         </div>
                     </div>
                     <div className={styles.inp}>
