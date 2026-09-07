@@ -66,7 +66,7 @@ const TopRight = ({ data, reports, currentWallet, setApiDates, isLoading }) => {
     const [total, setTotal] = useState(0);
     const [categories, setCategories] = useState([])
     const [categoriesType, setCategoriesType] = useState([])
-
+    // console.log(data, "data")
 
     useEffect(() => {
         if (reports) {
@@ -239,7 +239,8 @@ const TopRight = ({ data, reports, currentWallet, setApiDates, isLoading }) => {
                             </div>
                         </div>
                     }
-                    <h4>{currentWallet?.currency?.code} {total?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</h4>
+                    <h4>{currentWallet?.currency?.code}
+                        {total?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</h4>
                     {
                         window.innerWidth > 1000
                         &&
