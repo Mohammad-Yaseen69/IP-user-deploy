@@ -8,6 +8,7 @@ import ConfigDB from "../Config/ThemeConfig";
 import Loader from "./Loader";
 import SidebarNew from "./SidebarNew/SidebarNew";
 import ProfileCompletionModal from "../Components/ProfileCompletionModal";
+import ForcedAuthenticatorModal from "../Components/ForcedAuthenticatorModal";
 import { UserContext } from "../Context/UserContext";
 import styles from "./Layout.module.css"
 import BottomNav from "./BottomNav";
@@ -117,6 +118,7 @@ const Layout = ({ children, classNames, ...rest }) => {
     setShowAnotherLoginModal,
     isAgentLogin,
     agentDetails,
+    shouldForceAuthenticator,
   } = useContext(UserContext)
   const [showSuccessModal, setShowSuccessModal] = useState()
   const [showAdditionalFilesModal, setShowAdditionalModal] = useState(false)
@@ -373,10 +375,15 @@ const Layout = ({ children, classNames, ...rest }) => {
                 &&
                 <ProfileCompletionModal setShowModal={setShowModal} profileIncompleteReason={profileIncompleteReason} kyc={showKyc && profileCompleted} />
               }
+              {
+                (shouldForceAuthenticator && !showModal)
+                &&
+                <ForcedAuthenticatorModal />
+              }
               <Loader />
               <TapTop />
               <div style={{
-                pointerEvents: ((is30Days || showModal) && userDetails?.account_type === "individual") && !window.location.pathname.toLowerCase().includes("/profile/") ? "none" : "all"
+                pointerEvents: ((is30Days || showModal || shouldForceAuthenticator) && userDetails?.account_type === "individual") && !window.location.pathname.toLowerCase().includes("/profile/") ? "none" : "all"
               }} className={`page-wrapper ${sidebar_types1} `} id="pageWrapper">
                 {/* <Header /> */}
                 <div className="page-body-wrapper">
@@ -411,8 +418,13 @@ const Layout = ({ children, classNames, ...rest }) => {
                 &&
                 <ProfileCompletionModal setShowModal={setShowModal} profileIncompleteReason={profileIncompleteReason} kyc={showKyc && profileCompleted} />
               }
+              {
+                (shouldForceAuthenticator && !showModal)
+                &&
+                <ForcedAuthenticatorModal />
+              }
               <div style={{
-                // pointerEvents: userDetails && (is30Days || showModal) ? "none" : "all",
+                // pointerEvents: userDetails && (is30Days || showModal || shouldForceAuthenticator) ? "none" : "all",
                 paddingBottom: location.pathname.includes("pin") && 0
               }} className={styles.mobile_layout}>
                 <Loader />

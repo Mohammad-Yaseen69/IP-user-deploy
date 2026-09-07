@@ -181,40 +181,44 @@ const BankDeposit = ({ data, dataHandler, type = "add_funds", guestDetails, togg
                         :
                         <div className={styles.bankList}>
                             <h4>{t("Select the InstaPay bank account that you want to transfer the funds to")}:</h4>
-                            {isLoading &&
+                            {isLoading ? (
                                 <div style={{ width: "200px", margin: "2rem auto" }}>
                                     <InstaPayLoader />
                                 </div>
-                            }
-                            <div className={styles.list}>
-                                {bankList?.map((item, idx) => (
-                                    <div
-                                        key={idx}
-                                        onClick={() =>
-                                            setSelectedBank({
-                                                'Bank Name': item.bank_name,
-                                                'Holder Name': item.holder_name,
-                                                'Account Number': item.account_number,
-                                                ...(item.iban && { IBAN: item.iban }),
-                                                ...(item.swift_code && { 'SWIFT/BIC': item.swift_code }),
-                                                'Address': item.bank_address,
-                                                'Country Name': item.country_name,
-                                                'Currency': item.currency,
-                                                _id: item?._id
-                                            })
-                                        }
-                                        className={`${styles.item} ${selectedBank?._id === item?._id && styles.selected}`}
-                                    >
-                                        <span>
-                                            {item.bank_name}, {item.country_name}
-                                        </span>
+                            ) : bankList?.length > 0 ? (
 
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
-                                            <path d="M6 12L10 8L6 4" stroke="#5926F0" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                                        </svg>
-                                    </div>
-                                ))}
+                                <div className={styles.list}>
+                                    {bankList?.map((item, idx) => (
+                                        <div
+                                            key={idx}
+                                            onClick={() =>
+                                                setSelectedBank({
+                                                    'Bank Name': item.bank_name,
+                                                    'Holder Name': item.holder_name,
+                                                    'Account Number': item.account_number,
+                                                    ...(item.iban && { IBAN: item.iban }),
+                                                    ...(item.swift_code && { 'SWIFT/BIC': item.swift_code }),
+                                                    'Address': item.bank_address,
+                                                    'Country Name': item.country_name,
+                                                    'Currency': item.currency,
+                                                    _id: item?._id
+                                                })
+                                            }
+                                            className={`${styles.item} ${selectedBank?._id === item?._id && styles.selected}`}
+                                        >
+                                            <span>
+                                                {item.bank_name}, {item.country_name}
+                                            </span>
+
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                                <path d="M6 12L10 8L6 4" stroke="#5926F0" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                                            </svg>
+                                        </div>
+                                    ))}
+                                </div>) : <div style={{ textAlign: "center", padding: "2rem", color: "#666" }}>
+                                {t("Sorry, no InstaPay bank accounts are available.")}
                             </div>
+                            }
                         </div>}
                 </>
             }
