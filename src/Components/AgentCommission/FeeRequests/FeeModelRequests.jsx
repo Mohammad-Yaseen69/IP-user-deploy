@@ -22,12 +22,14 @@ const DEFAULT_FEE_ITEMS = [
     { id: "fx_margin", name: "FX Margin", flatEuro: 0, percentAmount: 0.5 },
 ];
 
+const NO_PERCENT_FEE_IDS = ['iban_activation', 'monthly_iban_fee'];
+
 const FeeModelRequests = () => {
     const { t } = useTranslation();
     const width = useWindowWidth();
     const { userDetails, authHeader } = useContext(UserContext);
 
-    const [activeTab, setActiveTab] = useState('list'); 
+    const [activeTab, setActiveTab] = useState('list');
     const [title, setTitle] = useState('');
     const [revenueModel, setRevenueModel] = useState('markup');
     const [feeSchedule, setFeeSchedule] = useState(DEFAULT_FEE_ITEMS);
@@ -62,7 +64,12 @@ const FeeModelRequests = () => {
 
     const handleFeeChange = (index, field, value) => {
         const updated = [...feeSchedule];
-        updated[index] = { ...updated[index], [field]: parseFloat(value) || 0 };
+        const targetItem = updated[index];
+        if (field === 'percentAmount' && NO_PERCENT_FEE_IDS.includes(targetItem.id)) {
+            updated[index] = { ...targetItem, percentAmount: 0 };
+        } else {
+            updated[index] = { ...targetItem, [field]: parseFloat(value) || 0 };
+        }
         setFeeSchedule(updated);
     };
 
@@ -75,10 +82,17 @@ const FeeModelRequests = () => {
 
         setSubmitting(true);
         try {
+            const sanitizedSchedule = feeSchedule.map(item => {
+                if (NO_PERCENT_FEE_IDS.includes(item.id)) {
+                    return { ...item, percentAmount: 0 };
+                }
+                return item;
+            });
+
             const payload = {
                 account_id: userDetails?._id,
                 title: title.trim(),
-                fee_schedule: feeSchedule,
+                fee_schedule: sanitizedSchedule,
                 agent_revenue_model: revenueModel,
             };
 
@@ -243,7 +257,7 @@ const FeeModelRequests = () => {
                                                     </div>
                                                 </div>
 
-                                                 {req.status === 'approved' && req.model_code && (
+                                                {req.status === 'approved' && req.model_code && (
                                                     <div style={{ background: '#EEF2FF', padding: '14px 16px', borderRadius: '8px', border: '1px solid #C7D2FE', display: 'flex', flexDirection: 'column', gap: '10px' }}>
                                                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                                             <div>
@@ -263,7 +277,7 @@ const FeeModelRequests = () => {
                                                             </Button>
                                                         </div>
 
-                                                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid #C7D2FE', paddingTop: '10px' }}>
+                                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid #C7D2FE', paddingTop: '10px' }}>
                                                             <div style={{ overflow: 'hidden', maxWidth: '70%' }}>
                                                                 <div style={{ fontSize: '11px', color: '#4338CA', fontWeight: 600 }}>
                                                                     {t("FULL SIGNUP LINK")}
@@ -295,11 +309,11 @@ const FeeModelRequests = () => {
                                                         {t("Fee Breakdown")}:
                                                     </div>
                                                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: '8px' }}>
-                                                        {req.fee_schedule?.slice(0, 4).map((f, i) => (
+                                                        {req.fee_schedule?.filter(item => !NO_PERCENT_FEE_IDS.includes(item.id))?.map((f, i) => (
                                                             <div key={i} style={{ fontSize: '12px', background: '#FFFFFF', padding: '6px 10px', borderRadius: '6px', border: '1px solid #E5E7EB' }}>
                                                                 <div style={{ color: '#6B7280', fontSize: '11px' }}>{f.name}</div>
                                                                 <div style={{ fontWeight: 600, color: '#111827' }}>
-                                                                    €{f.flatEuro || 0} {f.percentAmount ? `+ ${f.percentAmount}%` : ''}
+                                                                    €{f.flatEuro || 0} {f.percentAmount && !NO_PERCENT_FEE_IDS.includes(f.id) ? `+ ${f.percentAmount}%` : ''}
                                                                 </div>
                                                             </div>
                                                         ))}
@@ -348,29 +362,36 @@ const FeeModelRequests = () => {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {feeSchedule.map((item, idx) => (
-                                        <tr key={item.id}>
-                                            <td style={{ verticalAlign: 'middle', fontWeight: 600, fontSize: '13px', color: '#374151' }}>{item.name}</td>
-                                            <td>
-                                                <Input
-                                                    type="number"
-                                                    step="any"
-                                                    value={item.flatEuro}
-                                                    onChange={(e) => handleFeeChange(idx, 'flatEuro', e.target.value)}
-                                                    style={{ width: '130px' }}
-                                                />
-                                            </td>
-                                            <td>
-                                                <Input
-                                                    type="number"
-                                                    step="any"
-                                                    value={item.percentAmount}
-                                                    onChange={(e) => handleFeeChange(idx, 'percentAmount', e.target.value)}
-                                                    style={{ width: '130px' }}
-                                                />
-                                            </td>
-                                        </tr>
-                                    ))}
+                                    {feeSchedule.map((item, idx) => {
+                                        const isNoPercent = NO_PERCENT_FEE_IDS.includes(item.id);
+                                        return (
+                                            <tr key={item.id}>
+                                                <td style={{ verticalAlign: 'middle', fontWeight: 600, fontSize: '13px', color: '#374151' }}>{item.name}</td>
+                                                <td>
+                                                    <Input
+                                                        type="number"
+                                                        step="any"
+                                                        value={item.flatEuro}
+                                                        onChange={(e) => handleFeeChange(idx, 'flatEuro', e.target.value)}
+                                                        style={{ width: '130px' }}
+                                                    />
+                                                </td>
+                                                <td style={{ verticalAlign: 'middle' }}>
+                                                    {isNoPercent ? (
+                           <></>
+                                                    ) : (
+                                                        <Input
+                                                            type="number"
+                                                            step="any"
+                                                            value={item.percentAmount}
+                                                            onChange={(e) => handleFeeChange(idx, 'percentAmount', e.target.value)}
+                                                            style={{ width: '130px' }}
+                                                        />
+                                                    )}
+                                                </td>
+                                            </tr>
+                                        );
+                                    })}
                                 </tbody>
                             </Table>
 

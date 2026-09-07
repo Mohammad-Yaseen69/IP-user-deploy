@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect, useContext } from 'react';
 import otp_icon from '../PaymentsNewer/files/otp_icon.png';
 import { Button } from 'reactstrap';
-import { ChevronRight } from 'react-feather';
+import { ChevronLeft, ChevronRight } from 'react-feather';
 import { InactivityContext } from '../../InactivityWrapper';
 import { useTranslation } from 'react-i18next';
 import auth_icon from "../PaymentsNewer/files/auth.png"
@@ -14,7 +14,8 @@ const formatTime = (seconds) => {
     const remainingSeconds = seconds % 60;
     return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
 };
-const OTPConfirmation = ({ setter, callback, setterValue, hideOtp, type = "", processing = false, resendHandler = () => { }, authType, setAuthType, hideTfaSwitch = false, showAuthToggle = true, inBasic, fullHeight }) => {
+const OTPConfirmation = ({ setter, callback, setterValue, hideOtp, type = "", processing = false, resendHandler = () => { }, authType, setAuthType, hideTfaSwitch = false, showAuthToggle = true, inBasic, fullHeight, showBackButton = false,
+    onBack = () => { } }) => {
     const { t } = useTranslation()
     const { userDetails } = useContext(UserContext)
     const navigate = useNavigate()
@@ -322,24 +323,51 @@ const OTPConfirmation = ({ setter, callback, setterValue, hideOtp, type = "", pr
                             }
 
                         </span>
-                        <Button size="lg" style={{
-                            border: "none",
-                            outline: "none",
-                            background: " linear-gradient(to right, rgba(0, 0, 0, 0.40) 0%, rgba(0, 0, 0, 0.40) 100%), linear-gradient(to left, #E64067 0%, #5926F0 55.65%, #4828A0",
-                            backgroundBlendMode: "overlay, normal",
-                            boxShadow: "0px 11.90068244934082px 8.655041694641113px -5.409400939941406px rgba(89, 38, 240, 0.17)",
-                            borderRadius: "6px",
+                        <div style={{
                             display: "flex",
-                            alignItems: "center",
-                            fontSize: "18px",
-                            opacity: (isAnyFieldEmpty || isSaving || processing) ? 0.5 : 1,
-                            pointerEvents: (isAnyFieldEmpty || isSaving || processing) ? 'none' : 'auto'
-                        }}
-                            className="i_t_button"
-                            disabled={isAnyFieldEmpty || isSaving || processing}
-                        >
-                            {isSaving ? t("Verifing") : t("Verify")} <ChevronRight size={24} />
-                        </Button>
+                            justifyContent: "space-between",
+                            width: "100%",
+                            marginTop: "1rem"
+                        }}>
+                            {showBackButton && (
+                                <button
+                                    type="button"
+                                    size="lg"
+                                    onClick={onBack}
+                                    style={{
+                                        border: "none",
+                                        outline: "none",
+                                        background: "#fff",
+                                        color: "#000",
+                                        borderRadius: "6px",
+                                        display: "flex",
+                                        alignItems: "center",
+                                        fontSize: "18px",
+                                    }}
+                                >
+                                    <ChevronLeft size={24} />
+                                    {t("Back")}
+                                </button>
+                            )}
+                            <Button size="lg" style={{
+                                border: "none",
+                                outline: "none",
+                                background: " linear-gradient(to right, rgba(0, 0, 0, 0.40) 0%, rgba(0, 0, 0, 0.40) 100%), linear-gradient(to left, #E64067 0%, #5926F0 55.65%, #4828A0",
+                                backgroundBlendMode: "overlay, normal",
+                                boxShadow: "0px 11.90068244934082px 8.655041694641113px -5.409400939941406px rgba(89, 38, 240, 0.17)",
+                                borderRadius: "6px",
+                                display: "flex",
+                                alignItems: "center",
+                                fontSize: "18px",
+                                opacity: (isAnyFieldEmpty || isSaving || processing) ? 0.5 : 1,
+                                pointerEvents: (isAnyFieldEmpty || isSaving || processing) ? 'none' : 'auto'
+                            }}
+                                className="i_t_button"
+                                disabled={isAnyFieldEmpty || isSaving || processing}
+                            >
+                                {isSaving ? t("Verifing") : t("Verify")} <ChevronRight size={24} />
+                            </Button>
+                        </div>
                     </>
                 </div>
             </div>
