@@ -40,7 +40,7 @@ const RecentTransactions = ({ dataHandler, type, setShowRecent = () => { }, setS
         queryFn: () => getRecentTransaction(authHeader, userDetails?._id, type),
         staleTime: 0,
         gcTime: 0,
-    }) 
+    })
     const width = useWindowWidth()
     const payoutChannelData = usePayoutChannel(userDetails)
 
@@ -185,6 +185,7 @@ const RecentTransactions = ({ dataHandler, type, setShowRecent = () => { }, setS
     const handleModalBlur = (e) => {
         formatCurrency(e.target.value, true, setModalValue);
     };
+    console.log(dataCurrency, "dataCurrency")
     return (
         <div style={{ minWidth: width < 1000 && "100%" }} className={styles.container}>
             <div style={{ justifyContent: width < 1000 && "center" }} className={styles.top}>
@@ -271,7 +272,7 @@ const RecentTransactions = ({ dataHandler, type, setShowRecent = () => { }, setS
                                     fontSize: "18px"
                                 }}>
                                     {dataCurrency?.beneficiary_wallet?.currency?.code ||
-                                        dataCurrency?.currency?.currency?.code ||
+                                        dataCurrency?.currency?.currency?.code || modalData.tx?.currency?.code ||
                                         "USD"}                                </span>
                                 <input
 
