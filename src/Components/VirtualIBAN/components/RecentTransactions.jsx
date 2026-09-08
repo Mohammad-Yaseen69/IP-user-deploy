@@ -153,7 +153,7 @@ const TransactionRow = ({ tx, selectedIban }) => {
                   <DetailItem label={t("Country")} value={beneficiaryCountry} />
                 )}
                 <DetailItem label={t("Amount")}
-                   value={`${tx.currency} ${tx.amount?.toFixed(2)}`} />
+                  value={`${tx.currency} ${tx.amount?.toFixed(2)}`} />
                 {tx.fee != null && (
                   <DetailItem label={t("Fee")}
                     value={`${tx.currency} ${tx.fee?.toFixed(2)}`} />
