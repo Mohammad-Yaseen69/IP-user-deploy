@@ -30,6 +30,7 @@ const MyMasterCard = () => {
   const location = useLocation()
   const queryParams = new URLSearchParams(location.search)
   const addFundsMobile = queryParams.get("addFundsMobile")
+  const [searchQuery, setSearchQuery] = useState("");
   const ctcMobile = queryParams.get("ctcMobile")
   const ctwMobile = queryParams.get("ctwMobile")
   const showT = queryParams.get("showT")
@@ -89,24 +90,32 @@ const MyMasterCard = () => {
   }, [userDetails, reRender])
 
   useEffect(() => {
-    const getTransactions = async () => {
-      console.log(cards[current])
-      try {
-        const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/mastercard/get-card-transcations`, { data: encryptData({ cardId: cards[current].card_id, account_id: userDetails._id }) }, {
-          headers: authHeader
-        })
-
-        const dec = decryptData(res.data.data)
-        setTransactions(dec.data)
-
-      } catch (error) {
-        const dec = decryptData(error?.response?.data?.data)
-        console.log(dec)
+    const timer = setTimeout(() => {
+      const getTransactions = async () => {
+        try {
+          const res = await axios.post(
+            `${import.meta.env.VITE_IP_DEV_API}/api/mastercard/get-card-transcations`,
+            {
+              data: encryptData({
+                cardId: cards[current].card_id,
+                account_id: userDetails._id,
+                search: searchQuery.trim()
+              })
+            },
+            { headers: authHeader }
+          )
+          const dec = decryptData(res.data.data)
+          setTransactions(dec.data)
+        } catch (error) {
+          const dec = decryptData(error?.response?.data?.data)
+          console.log(dec)
+        }
       }
-    }
-
-    getTransactions()
-  }, [current, cards, userDetails, reRender])
+      if (cards[current]) getTransactions()
+    }, 400)
+  
+    return () => clearTimeout(timer)
+  }, [current, cards, userDetails, reRender, searchQuery])
 
   return (
     <div style={{ minHeight: "100vh" }} className={styles.container}>
@@ -140,7 +149,11 @@ const MyMasterCard = () => {
                   setCardPurchased={setCardPurchased}
                   transactions={transactions}
                 />
-                {((!addFundsMobile && !ctcMobile && !ctwMobile) || width > 1000) && <TransactionsTable ref={ref} cardNo={currentCardDetails?.card_number} transactions={transactions} isLoading={loading} />}
+                {((!addFundsMobile && !ctcMobile && !ctwMobile) || width > 1000) && <TransactionsTable
+                  ref={ref} cardNo={currentCardDetails?.card_number}
+                  transactions={transactions} isLoading={loading}
+                  searchQuery={searchQuery}
+                  setSearchQuery={setSearchQuery} />}
               </>
               : <OnBoarding alreadyHaveCard={cards.length !== 0} setReRender={setReRender} setCardPurchased={setCardPurchased} />
 
