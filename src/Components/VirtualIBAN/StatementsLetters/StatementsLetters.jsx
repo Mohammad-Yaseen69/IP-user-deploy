@@ -228,7 +228,7 @@ const StatementsLetters = () => {
 
                         <div className={styles.innerBalanceBox}>
                             <span className={styles.balanceLabel}>{t("BIC / SWIFT Status")} — {currency}</span>
-                            <span className={styles.balanceAmount}>{t("Updated")} {lastUpdated}</span>
+                            <span className={styles.balanceAmount}> {t("Updated")} {lastUpdated}</span>
                         </div>
                     </div>
 
