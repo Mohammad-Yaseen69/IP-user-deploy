@@ -185,13 +185,14 @@ const RecentTransactions = ({ dataHandler, type, setShowRecent = () => { }, setS
     const handleModalBlur = (e) => {
         formatCurrency(e.target.value, true, setModalValue);
     };
-    console.log(dataCurrency, "dataCurrency")
     return (
         <div style={{ minWidth: width < 1000 && "100%" }} className={styles.container}>
-            <div style={{ justifyContent: width < 1000 && "center" }} className={styles.top}>
-                <h4>{t("RECENT TRANSFERS")}</h4>
-                {width > 1000 && <span>{t("See all")}</span>}
-            </div>
+            {data?.length > 0 &&
+                <div style={{ justifyContent: width < 1000 && "center" }} className={styles.top}>
+                    <h4>{t("RECENT TRANSFERS")}</h4>
+                    {width > 1000 && <span>{t("See all")}</span>}
+                </div>
+            }
 
             <div className={styles.transCont}>
                 {data?.map((tx) => {
