@@ -43,7 +43,6 @@ const IndividualAccount = ({ nameRegex, mobileView, handleChangeNumber, toggleSu
     const [mobileNumber, setMobileNumber] = useState("")
 
     const [walletError, setWalletError] = useState("")
-    // instapay wallet
     const [instapayWalletsLength] = useState(1)
     const [instapayWallets, setInstapayWallets] = useState(Array(instapayWalletsLength).fill(''))
     const [walletIds, setWalletIds] = useState([])
@@ -78,7 +77,6 @@ const IndividualAccount = ({ nameRegex, mobileView, handleChangeNumber, toggleSu
 
     const { authHeader, userDetails } = useContext(UserContext)
 
-    // basic extra fields
     const [basicExtras, setBasicExtras] = useState(basicExtrasInitial)
 
     const [showAdditional, setShowAdditional] = useState(false)
@@ -127,7 +125,6 @@ const IndividualAccount = ({ nameRegex, mobileView, handleChangeNumber, toggleSu
 
 
 
-    // card extra fields
     const [cardExtras, setCardExtras] = useState({
         bank_account_number: ""
     })
@@ -144,10 +141,8 @@ const IndividualAccount = ({ nameRegex, mobileView, handleChangeNumber, toggleSu
             }
         })
     }
-    // card extra fields
 
 
-    // cash extra fields
     const [cashExtras, setCashxtras] = useState({
         msisdn: ""
     })
@@ -161,7 +156,6 @@ const IndividualAccount = ({ nameRegex, mobileView, handleChangeNumber, toggleSu
             }
         })
     }
-    // cash extra fields
     const { getBankDetails, bankCountry, bankCountryCode, bankCountryIsoCode, setBankCountry, setBankCountryCode, setBankCountryIsoCode, bankDetailsError, warning, isValidIban, ibanSwift, } = useBankDetails({ accNumType, setFormData, handleBankExtraChange, bankExtras, errorOnInvalid, error })
     const { fieldsInfo, services, mobileProviders, selectedCountryDetails, getCountryFields } = useChannels({ setLoading, setActive, countryIsoCode, countryId })
 
@@ -202,7 +196,6 @@ const IndividualAccount = ({ nameRegex, mobileView, handleChangeNumber, toggleSu
 
 
 
-    // bank details
     const isAfricanBank = useMemo(() => {
         if (country) {
             return citiesData.find(item => item.iso3 === bankCountryCode)?.region === "Africa"
@@ -249,7 +242,6 @@ const IndividualAccount = ({ nameRegex, mobileView, handleChangeNumber, toggleSu
         }
     }, [cashPickupType, cashPickupNumber, cashExtras, services])
 
-    // mobile wallet details
     useEffect(() => {
         if (formData.mobile_wallet_name && formData.mobile_wallet_account_number?.length > 8 && formData.mobile_wallet_provider) {
             setCompletedWallet(true)
@@ -258,7 +250,6 @@ const IndividualAccount = ({ nameRegex, mobileView, handleChangeNumber, toggleSu
         }
     }, [formData])
 
-    // card details
     useEffect(() => {
         if (formData.card_holder_one && formData.card_number_one && Object.keys(cardExtras).filter(item => serviceFieldInfoValidate(services?.find(item => item?.method?.toLowerCase()?.includes("card")), "credit_party_identifiers_accepted", item, fieldsInfo)).every(item => cardExtras?.[item]?.length > 0)) {
             setCompletedCard(true)
@@ -468,11 +459,31 @@ const IndividualAccount = ({ nameRegex, mobileView, handleChangeNumber, toggleSu
                                                     ...prev, postal_code: false
                                                 }))}
                                             >
-                                                <Label className="col-form-label" htmlFor="postal_code">{t("Postal Code")}</Label>
-                                                <Input disabled={!country} readOnly={!country} className="form-control" style={{ flex: 1, minWidth: "250px" }} name="postal_code" id="postal_code" type="text" placeholder={t('Postal Code')} value={formData.postal_code} onChange={e => {
-                                                    const value = e.target.value.replace(/[^a-zA-Z0-9]/g, '')
-                                                    inputChangeHandler({ target: { name: e.target.name, value } })
-                                                }} />
+                                                <Label className="col-form-label" htmlFor="postal_code">{t("Postal Code")}
+                                                    <span className="req_star">*</span>
+                                                </Label>
+                                                <Input
+                                                    disabled={!country}
+                                                    readOnly={!country}
+                                                    required
+                                                    className="form-control"
+                                                    style={{ flex: 1, minWidth: "250px" }}
+                                                    name="postal_code"
+                                                    id="postal_code"
+                                                    type="text"
+                                                    placeholder={t('Postal Code')}
+                                                    value={formData.postal_code}
+                                                    onChange={e => {
+                                                        const value = e.target.value.replace(/[^a-zA-Z0-9]/g, '');
+
+                                                        inputChangeHandler({
+                                                            target: {
+                                                                name: e.target.name,
+                                                                value
+                                                            }
+                                                        });
+                                                    }}
+                                                />
                                                 {
                                                     hoverErrors.postal_code
                                                     &&
@@ -847,11 +858,14 @@ const IndividualAccount = ({ nameRegex, mobileView, handleChangeNumber, toggleSu
                                     }}
                                         className="i_t_button"
                                         disabled={
-                                            benLoading || duplicateWallet || walletError || !firstName.trim() || !lastName.trim() || !country || !city || mobileNumber.length < 9 || (!completedBank && !completedCard && !completedCrypto && !completedWallet && !cashPickupCompleted && instapayWallets.some(item => item.length < 8 || item.length > 8)) || !formData.relation || (isAddressRequired ? !formData.address : false)
+                                            benLoading || duplicateWallet || walletError || !firstName.trim() || !lastName.trim() ||
+                                            !country || !city || mobileNumber.length < 9 || !formData.postal_code ||
+                                            (!completedBank && !completedCard && !completedCrypto && !completedWallet && !cashPickupCompleted && instapayWallets.some(item => item.length < 8 || item.length > 8))
+                                            || !formData.relation || (isAddressRequired ? !formData.address : false)
                                         }
                                         onClick={addBeneficiaryHandler}
                                     >
-                                        {benLoading ? t("Adding") + "..." : t("Add Beneficiary")} {/* Add loading state text */}
+                                        {benLoading ? t("Adding") + "..." : t("Add Beneficiary")}
                                     </Button>
                                     {/* <ConfirmationModal isOpen={showConfirmation} toggle={() => setShowConfirmation(!showConfirmation)} onConfirm={changeUserDetailsAsPerBankDetails} onCancel={onCancelHandler} /> */}
                                 </CardFooter>
