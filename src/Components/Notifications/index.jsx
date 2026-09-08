@@ -32,30 +32,39 @@ const Notifications = () => {
     }, []);
 
 
-    // getnotifcations
-    const { userDetails, authHeader } = useContext(UserContext)
-    const [notifications, setNotifications] = useState([])
+    const { userDetails, authHeader } = useContext(UserContext);
+    const [notifications, setNotifications] = useState([]);
 
     useEffect(() => {
-        const getNotifcations = async () => {
+        const getNotifications = async () => {
             try {
                 const response = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/notification/get-notifications/${userDetails?._id}`, {
                     headers: authHeader
-                })
+                });
 
-                const decrypted = await decryptData(response?.data?.data)
-
-                // console.log(decrypted)
-                setNotifications(decrypted?.notification)
-            } catch (error) {
-                // console.log(decryptData(error?.response?.data?.data))
-            }
-        }
+                const decrypted = await decryptData(response?.data?.data);
+                setNotifications(decrypted?.notification || []);
+            } catch (error) {}
+        };
 
         if (userDetails) {
-            getNotifcations()
+            getNotifications();
         }
-    }, [userDetails])
+    }, [userDetails]);
+
+    useEffect(() => {
+        const handleNewNotification = (event) => {
+            const newNotif = event.detail;
+            if (newNotif) {
+                setNotifications((prev) => [newNotif, ...(prev || [])]);
+            }
+        };
+
+        window.addEventListener('instapay:new_notification', handleNewNotification);
+        return () => {
+            window.removeEventListener('instapay:new_notification', handleNewNotification);
+        };
+    }, []);
 
     return (
         <div ref={dropdownRef}>

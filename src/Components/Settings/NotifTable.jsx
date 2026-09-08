@@ -7,9 +7,18 @@ import { decryptData } from '../../Helper/EssentilaMethods/Decryption'
 import axios from 'axios'
 import { encryptData } from '../../Helper/EssentilaMethods/Encryption'
 import { Button } from 'reactstrap'
-import { CheckCircle } from 'react-feather'
+import { CheckCircle, Bell } from 'react-feather'
+import { toast } from 'react-toastify'
 import InstaPayLoader from '../Loader'
 import { usePermission } from "../../hooks/GeneralUse/usePermission"
+import {
+    isPushSupported,
+    getPushPermissionState,
+    getExistingSubscription,
+    subscribeToPush,
+    unsubscribeFromPush
+} from '../../Services/PushNotificationService'
+
 const NotifTable = () => {
     const { t, i18n } = useTranslation()
     const { userDetails, authHeader, verifyToken } = useContext(UserContext)
@@ -83,7 +92,6 @@ const NotifTable = () => {
                 setSqTelegram(n?.login?.telegram ?? false)
                 setRefTelegram(n?.referrals?.telegram ?? false)
             } catch (error) {
-                // console.log(decryptData(error?.response?.data?.data))
             } finally {
                 setIsLoading(false)
             }
@@ -93,6 +101,54 @@ const NotifTable = () => {
             getNotificationsDetails()
         }
     }, [userDetails])
+
+    const [pushEnabled, setPushEnabled] = useState(false)
+    const [pushLoading, setPushLoading] = useState(false)
+    const [isSupported, setIsSupported] = useState(true)
+
+    useEffect(() => {
+        const checkPush = async () => {
+            if (!isPushSupported()) {
+                setIsSupported(false)
+                return
+            }
+            const sub = await getExistingSubscription()
+            const perm = getPushPermissionState()
+            setPushEnabled(Boolean(sub) && perm === 'granted')
+        }
+        checkPush()
+    }, [])
+
+    const handlePushSwitchToggle = async () => {
+        setPushLoading(true)
+        try {
+            if (pushEnabled) {
+                await unsubscribeFromPush(authHeader)
+                setPushEnabled(false)
+                toast.info(t("Browser push alerts disabled on this device."))
+            } else {
+                const res = await subscribeToPush(userDetails?._id, authHeader)
+                if (res.success) {
+                    setPushEnabled(true)
+                    toast.success(t("Browser push alerts enabled successfully!"))
+                } else {
+                    toast.error(res.error || t("Failed to enable push alerts."))
+                }
+            }
+        } catch (e) {
+            toast.error(e.message || t("An error occurred."))
+        } finally {
+            setPushLoading(false)
+        }
+    }
+
+    const getPushStatusText = () => {
+        if (!isSupported) return t("Not supported by this browser")
+        const perm = getPushPermissionState()
+        if (perm === 'denied') return t("Blocked in browser settings")
+        if (pushEnabled) return t("Active - receiving alerts on this device")
+        return t("Disabled - click to enable alerts on this device")
+    }
 
     const [editMode, setEditMode] = useState(false)
     const [isSaving, setIsSaving] = useState(false)
@@ -154,7 +210,6 @@ const NotifTable = () => {
             })
 
             const decrypted = decryptData(res.data.data)
-            // console.log(decrypted)
             setSaved(true)
             verifyToken()
             setTimeout(() => {
@@ -162,8 +217,6 @@ const NotifTable = () => {
                 setEditMode(false)
             }, 2000);
         } catch (error) {
-            // console.log(error)
-            // console.log(decryptData(error?.response?.data?.data))
         } finally {
             setIsSaving(false)
         }
@@ -179,6 +232,26 @@ const NotifTable = () => {
                     </div>
                     :
                     <>
+                        <div className={styles.devices} style={{ marginBottom: "1.5rem" }}>
+                            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                                <Bell size={18} color="#5926F0" />
+                                <h4 style={{ margin: 0 }}>{t("Web Push Notifications")}</h4>
+                            </div>
+                            <div className={styles.device}>
+                                <div>
+                                    <p>{t("Browser Push Alerts")}</p>
+                                    <span style={{ fontSize: "12px", color: pushEnabled ? "#16a34a" : "#64748b" }}>
+                                        {getPushStatusText()}
+                                    </span>
+                                </div>
+                                <Switch
+                                    checked={pushEnabled}
+                                    callback={handlePushSwitchToggle}
+                                    disabled={pushLoading || !isSupported}
+                                />
+                            </div>
+                        </div>
+
                         <table className={styles.table}>
                             <thead>
                                 <tr>

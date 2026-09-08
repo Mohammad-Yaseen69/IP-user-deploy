@@ -31,6 +31,9 @@ import AdditionalDocumentModal from "./AdditionalDocumentModal";
 import NewMenu from "../Common/NewMenu";
 import AssistantWidget from "../Components/AssistantWidget";
 import { useVirtualIbans } from "../hooks/useVirtualIban";
+import PushConsentModal from "../Components/PushConsentModal";
+import { isPushSupported, getPushPermissionState } from "../Services/PushNotificationService";
+
 
 
 
@@ -119,6 +122,7 @@ const Layout = ({ children, classNames, ...rest }) => {
     isAgentLogin,
     agentDetails,
     shouldForceAuthenticator,
+    authHeader,
   } = useContext(UserContext)
   const [showSuccessModal, setShowSuccessModal] = useState()
   const [showAdditionalFilesModal, setShowAdditionalModal] = useState(false)
@@ -242,11 +246,40 @@ const Layout = ({ children, classNames, ...rest }) => {
         queryClient.invalidateQueries({ queryKey: ['receivedQuotations'] })
         queryClient.invalidateQueries({ queryKey: ['sentQuotations'] })
       }
+      socketsService.onNewNotification = () => {
+        queryClient.invalidateQueries({ queryKey: ['notifications'] });
+        queryClient.invalidateQueries({ queryKey: ['userWallets'] });
+        queryClient.invalidateQueries({ queryKey: ['userTransactions'] });
+      };
       return () => {
         socketsService.disconnect();
       };
     }
   }, [socketsService, userDetails?._id]);
+
+  const [showPushConsent, setShowPushConsent] = useState(false);
+
+  useEffect(() => {
+    if (!userDetails?._id) return;
+    if (!isPushSupported()) return;
+
+    const permission = getPushPermissionState();
+    if (permission !== 'default') return;
+
+    const dismissedTime = localStorage.getItem('instapay_push_prompt_dismissed');
+    if (dismissedTime) {
+      const sevenDays = 7 * 24 * 60 * 60 * 1000;
+      if (Date.now() - Number(dismissedTime) < sevenDays) {
+        return;
+      }
+    }
+
+    const timer = setTimeout(() => {
+      setShowPushConsent(true);
+    }, 2500);
+
+    return () => clearTimeout(timer);
+  }, [userDetails?._id]);
 
   useEffect(() => {
     if (location.pathname === "/" || location.pathname.toLowerCase() === "/dashboard/default") {
@@ -441,6 +474,12 @@ const Layout = ({ children, classNames, ...rest }) => {
             toggle={() => setShowAnotherLoginModal(false)}
           />
         }
+        <PushConsentModal
+          isOpen={showPushConsent}
+          onClose={() => setShowPushConsent(false)}
+          accountId={userDetails?._id}
+          authHeader={authHeader}
+        />
         <AssistantWidget />
       </MobileSbContextProvider>
     </Fragment>
