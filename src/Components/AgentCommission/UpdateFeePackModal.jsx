@@ -3,8 +3,8 @@ import { useTranslation } from 'react-i18next';
 import { Modal, ModalBody, Spinner } from 'reactstrap';
 import { X, Check, Shield } from 'react-feather';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { apiWrapper } from '../../../utils/Functions/apiWrapper';
 import { toast } from 'react-toastify';
+import { apiWrapper } from '../../utils/Functions/apiWrapper';
 
 const UpdateFeePackModal = ({ isOpen, onClose, target }) => {
     const { t } = useTranslation();
