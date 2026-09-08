@@ -328,6 +328,14 @@ const OnboardingIBAN = ({ onCreated }) => {
             {state.step === 'landing' && (
                 <div className={styles.mainContent}>
                     <div className={styles.leftSection}>
+                        <div>
+                            <h1 className={styles.mobileHeading}>
+                                {t("My virtual bank")}
+                            </h1>
+                            <p className={styles.mobileDescription}>
+                                {t("Open a dedicated IBAN to receive and hold funds.")}
+                            </p>
+                        </div>
                         <p className={styles.subHeading}>{t("NEW · BUSINESS IBAN")}</p>
                         <h1 className={styles.heading}>
                             {t("Get a dedicated business IBAN")} <br /> {t("for your company.")}
@@ -349,6 +357,26 @@ const OnboardingIBAN = ({ onCreated }) => {
                     </div>
                     <div className={styles.rightSection}>
                         <img src={imageCard} alt="Business IBAN card" />
+                    </div>
+                    <div className={styles.mobileContent}>
+                        <h2 className={styles.mobileHeading}>
+                            {t("Get a dedicated business IBAN for your company.")}
+                        </h2>
+                        <p className={styles.mobileDescription}>
+                            {t("Submit your request to activate Business IBAN services. Our onboarding team will review your business profile, confirm eligibility, and send you your personalized activation pack with the applicable terms and next steps.")}
+                        </p>
+                        <div className={styles.buttonGroup}>
+                            <h5>{t("SEPA + SWIFT")}</h5>
+                            <p>{t("Receive worldwide")}</p>
+                        </div>
+                    </div>
+
+                     <div className={styles.footerContainer}>
+                        <button
+                            className={styles.buttonGroup1}
+                        >
+                            {t("Request IBAN Activation")}
+                        </button>
                     </div>
                 </div>
             )}
@@ -397,6 +425,7 @@ const OnboardingIBAN = ({ onCreated }) => {
                     onBack={goBack}
                     userType={state.userType}
                     data={state.company}
+                    currentStep={state.step}
                 />
             )}
 
