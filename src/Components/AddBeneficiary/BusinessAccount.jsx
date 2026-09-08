@@ -650,8 +650,8 @@ const BusinessAccount = ({ isInternational, toggleHandler, errorOnInvalid = true
                                 }
                             </FormGroup>
                             <FormGroup style={{ flex: 1, margin: 0, minWidth: "250px" }}>
-                                <Label className="col-form-label" htmlFor="postal_code">{t("Postal Code")}</Label>
-                                <Input className="form-control" style={{ flex: 1, minWidth: "250px" }} name="postal_code" id="postal_code" type="text" placeholder={t('Address line')} value={formData.postal_code} onChange={inputChangeHandler} disabled={isFieldsDisabled} readOnly={isFieldsDisabled} />
+                                <Label className="col-form-label" htmlFor="postal_code">{t("Postal Code")} <span className="req_star">*</span></Label>
+                                <Input className="form-control" style={{ flex: 1, minWidth: "250px" }} name="postal_code" id="postal_code" type="text" placeholder={t('Address line')} value={formData.postal_code} onChange={inputChangeHandler} disabled={isFieldsDisabled} readOnly={isFieldsDisabled} required />
                             </FormGroup>
                         </div>
                     </FormGroup>
@@ -1044,6 +1044,7 @@ const BusinessAccount = ({ isInternational, toggleHandler, errorOnInvalid = true
                                 !companyName ||
                                 !country ||
                                 !city ||
+                                !formData.postal_code ||
                                 mobileNumber.length < 9 ||
                                 !formData.address ||
                                 !(userDetails?.account_type === "individual" ? formData.relationC2B : formData.relation) ||
