@@ -7,9 +7,7 @@
   <body style="font-family: system-ui, sans-serif; text-align: center; padding: 2rem; color: #333">
     <p>Card details received. Continuing to verification…</p>
     <script>
-      // Reached after the hosted-forms iframe collects the card. The hosted page
-      // redirects at _top, so this may load as the top window. Continue to the 3DS
-      // authorize URL (saved by the app before opening the iframe).
+     
       (function () {
         try {
           var url = localStorage.getItem("paytently_authorize_url");
@@ -19,6 +17,7 @@
             return;
           }
         } catch (e) {}
+
         try { window.parent.postMessage({ type: "paytently_card_collected" }, "*"); } catch (e) {}
       })();
     </script>

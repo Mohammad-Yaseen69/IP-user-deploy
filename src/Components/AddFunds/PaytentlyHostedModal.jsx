@@ -20,12 +20,12 @@ const PaytentlyHostedModal = ({ isOpen, hostedUrl, authorizeUrl, onClose }) => {
 
     return (
         <Modal isOpen={isOpen} toggle={onClose} centered size="md">
-            <ModalBody style={{ padding: 0, minHeight: "480px", borderRadius: "12px", overflow: "hidden" }}>
+            <ModalBody style={{ padding: 0, minHeight: "600px", borderRadius: "12px", overflow: "hidden" , maxHeight: "750px"}}>
                 {hostedUrl ? (
                     <iframe
                         title={t("Card payment")}
                         src={hostedUrl}
-                        style={{ width: "100%", height: "480px", border: 0 }}
+                        style={{ width: "100%", height: "600px", border: 0 }}
                         allow="payment"
                     />
                 ) : null}

@@ -12,6 +12,8 @@ import { decryptData } from "../../../Helper/EssentilaMethods/Decryption"
 import { encryptData } from "../../../Helper/EssentilaMethods/Encryption"
 import useVendorBalance from "../../../hooks/Payments/useVendorBalance"
 import { apiWrapper } from "../../../utils/Functions/apiWrapper"
+import { initiatePaytentlyPayment, usePaytently } from "../../../utils/Functions/paytently"
+import PaytentlyHostedModal from "../../AddFunds/PaytentlyHostedModal"
 import AddBeneficiaryAddressModal from "../../AddBeneficiaryAddressModal"
 import AddBeneficiaryRequiredFields from "../../AddBeneficiaryRequiredFields"
 import errors from "../../AddFunds/TrustPaymentErrors.json"
@@ -325,7 +327,8 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                 return !internationalData.payment_type?.value || (internationalData.payment_type.value !== "wallet" ? false : !internationalData?.wallet?._id) || internationalData.ex_extra_error
 
             case 5:
-                if (internationalData.payment_type?.value === "card") {
+                // Paytently collects the card on its own page, so there is nothing to validate here.
+                if (internationalData.payment_type?.value === "card" && !usePaytently) {
                     const [contentMonth, contentYear] = internationalData.expiry.split("/").map(Number);
                     const currentDate = new Date();
                     const currentMonth = currentDate.getMonth() + 1;
@@ -799,6 +802,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
     }
 
     const [showCardModal, setShowCardModal] = useState(false)
+    const [paytentlyHosted, setPaytentlyHosted] = useState(null)
 
     const initiateCardPayment = async (otp) => {
         setLoading(true)
@@ -812,10 +816,34 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                 return
             }
 
-            const data = {
+            const otpFields = {
                 token: internationalData.created_transaction?.token,
                 otp: otp,
                 type: internationalData.codeType,
+            }
+
+            // Paytently collects the card itself, so no card data is built here. The intl
+            // payload rides inside the OTP token, so only the wallet is sent.
+            if (usePaytently) {
+                const dec = await initiatePaytentlyPayment({
+                    walletId: internationalData.currency_wallet?._id,
+                    flow: "international",
+                    otp: otpFields,
+                    idempotencyKey: getKey(),
+                })
+
+                if (!dec?.hosted_forms_url) {
+                    updateInternationalData("otpError", apiErrorMessage(dec?.message) ? t(apiErrorMessage(dec?.message)) : (dec?.message ?? "We cannot process your request at the moment, please try again later."))
+                    return
+                }
+
+                setPaytentlyHosted({ hostedUrl: dec.hosted_forms_url, authorizeUrl: dec.authorize_url })
+                updateInternationalData("showOtpModal", false)
+                return
+            }
+
+            const data = {
+                ...otpFields,
                 panData: {
                     wallet_id: internationalData.currency_wallet?._id,
                     amount: internationalData.exchange_rate?.total * 100,
@@ -1093,7 +1121,8 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                 break;
             case 4:
                 if (internationalData.payment_type?.value === "card") {
-                    updateInternationalData("showCard", true)
+                    // Paytently collects the card on its own hosted form, so our card step is skipped.
+                    if (!usePaytently) updateInternationalData("showCard", true)
 
                     if (internationalData.payoutChannel?.vendor === "thunes") {
                         createQuotation(Number(String(internationalData.amount)?.replaceAll(",", "")))
@@ -1317,6 +1346,12 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
     // console.log("international.otpError",internationalData)
     return (
         <>
+            <PaytentlyHostedModal
+                isOpen={!!paytentlyHosted?.hostedUrl}
+                hostedUrl={paytentlyHosted?.hostedUrl}
+                authorizeUrl={paytentlyHosted?.authorizeUrl}
+                onClose={() => setPaytentlyHosted(null)}
+            />
             {
                 showCardModal
                 &&
