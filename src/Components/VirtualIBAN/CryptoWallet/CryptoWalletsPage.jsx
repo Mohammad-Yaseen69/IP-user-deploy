@@ -1,0 +1,27 @@
+import { useTranslation } from "react-i18next"
+import useWindowWidth from "../../../utils/useWindowWidth"
+import TopRight from "../../topRight"
+import CryptoStablecoins from "./CryptoStablecoins"
+import styles from "./cryptoPage.module.scss"
+
+/** Route page for /crypto-wallets. */
+const CryptoWalletsPage = () => {
+    const { t } = useTranslation()
+    const width = useWindowWidth()
+
+    return (
+        <div className={styles.routePage}>
+            <div className={styles.routeTop}>
+                <div>
+                    <h1 className={styles.routeTitle}>{t("Crypto Wallets")}</h1>
+                    <p className={styles.routeSub}>{t("Portfolio overview and crypto insights.")}</p>
+                </div>
+                {width > 1000 && <TopRight />}
+            </div>
+
+            <CryptoStablecoins />
+        </div>
+    )
+}
+
+export default CryptoWalletsPage
