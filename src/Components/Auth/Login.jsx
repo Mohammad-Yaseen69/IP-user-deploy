@@ -1215,6 +1215,9 @@ const Login = ({ country, setIsLoginForm, }) => {
                                                         onClick={() => {
                                                             setShowQuickLogin(false)
                                                             setEmail("")
+                                                            setPassword("")
+                                                            setEmailVerified(false)
+                                                            setProfileLockTime(0)
                                                         }}
                                                         style={{ position: "relative", top: "0", left: "0px", flexShrink: 0 }}
                                                     >
@@ -1229,6 +1232,9 @@ const Login = ({ country, setIsLoginForm, }) => {
                                                     onClick={() => {
                                                         setShowQuickLogin(false)
                                                         setEmail("")
+                                                        setPassword("")
+                                                        setEmailVerified(false)
+                                                        setProfileLockTime(0)
                                                     }}
                                                     style={{ position: "relative", top: "0", left: "0px", margin: "20px auto" }}
                                                 >
@@ -1348,6 +1354,7 @@ const Login = ({ country, setIsLoginForm, }) => {
                                     onClick={() => {
                                         setPassword("")
                                         setEmailVerified(false)
+                                        setProfileLockTime(0)
 
                                     }}
                                 >
