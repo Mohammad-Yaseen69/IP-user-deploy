@@ -1,5 +1,5 @@
 import { useContext, useMemo, useState } from 'react';
-import { Copy, Download, Share2, FileText, ChevronLeft, Eye, Loader, File, Globe } from 'react-feather';
+import { Copy, Download, Share2, FileText, ChevronLeft, Eye, Loader, File, Globe, Check } from 'react-feather';
 import styles from './StatementsLetters.module.css';
 import IbanBreadcrumb from '../components/IbanBreadcrumb';
 import { useTranslation } from 'react-i18next';
@@ -37,13 +37,11 @@ const StatementsLetters = () => {
     const [downloading, setDownloading] = useState(false);
     const [previewing, setPreviewing] = useState(false);
     const [showStatementModal, setShowStatementModal] = useState(false);
-
-    // SWIFT Letter state
+    const [ibanCopied, setIbanCopied] = useState(false);
     const [showSwiftModal, setShowSwiftModal] = useState(false);
     const [swiftActionType, setSwiftActionType] = useState('preview');
     const [swiftProcessing, setSwiftProcessing] = useState(false);
 
-    // Fetch IBANs
     const { data: rawIbans = [] } = useVirtualIbans(userDetails?._id);
 
     const selectedIban = useMemo(() => {
@@ -59,9 +57,24 @@ const StatementsLetters = () => {
         [ibanDetailData, selectedIban]
     );
 
-    const handleCopy = (text) => {
-        navigator.clipboard.writeText(text);
-        toast.success(t('Copied to clipboard!'));
+    const handleCopy = async (text, isIban = false) => {
+        try {
+            await navigator.clipboard.writeText(text);
+
+            if (isIban) {
+                setIbanCopied(true);
+
+                setTimeout(() => {
+                    setIbanCopied(false);
+                }, 2000);
+
+                return;
+            }
+
+        } catch (error) {
+            console.error('Failed to copy:', error);
+            toast.error(t('Failed to copy to clipboard.'));
+        }
     };
 
     const handlePreviewPdf = async () => {
@@ -144,7 +157,6 @@ const StatementsLetters = () => {
         }
     };
 
-    // Derived display values
     const holderName = getSafeString(iban?.account_holder_name || iban?.accountHolderName || userDetails?.fullName || userDetails?.companyName || userDetails?.name, 'HEAVYMORE LTD');
     const holderType = getSafeString(iban?.holderType || userDetails?.accountType, (userDetails?.companyName ? 'Business / Company' : 'Individual / Personal'));
     const companyType = getSafeString(iban?.companyType || userDetails?.companyType, (userDetails?.companyName ? 'Limited Liability Company' : 'Individual Account'));
@@ -201,14 +213,22 @@ const StatementsLetters = () => {
 
                         <div className={styles.ibanRow}>
                             <span>{ibanNumber}</span>
-                            <button className={styles.copyBtnWhite} onClick={() => handleCopy(ibanNumber)}>
-                                <Copy size={14} />
+                            <button
+                                className={styles.copyBtnWhite}
+                                onClick={() => handleCopy(ibanNumber, true)}
+                                aria-label={ibanCopied ? t('Copied') : t('Copy IBAN')}
+                            >
+                                {ibanCopied ? (
+                                    <Check size={20} color='#32CD32' />
+                                ) : (
+                                    <Copy size={14} />
+                                )}
                             </button>
                         </div>
 
                         <div className={styles.innerBalanceBox}>
                             <span className={styles.balanceLabel}>{t("BIC / SWIFT Status")} — {currency}</span>
-                            <span className={styles.balanceAmount}>{t("Updated")} {lastUpdated}</span>
+                            <span className={styles.balanceAmount}> {t("Updated")} {lastUpdated}</span>
                         </div>
                     </div>
 

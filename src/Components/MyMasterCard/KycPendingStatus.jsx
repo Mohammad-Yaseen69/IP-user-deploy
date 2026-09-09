@@ -15,12 +15,12 @@ const KycPendingStatus = () => {
                 background: 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)',
                 overflow: 'hidden'
             }}>
-                <CardBody style={{ 
-                    padding: '40px 24px', 
-                    display: 'flex', 
-                    flexDirection: 'column', 
-                    alignItems: 'center', 
-                    textAlign: 'center' 
+                <CardBody style={{
+                    padding: '40px 24px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    textAlign: 'center'
                 }}>
                     <div style={{
                         width: '80px',
@@ -36,34 +36,34 @@ const KycPendingStatus = () => {
                     }}>
                         <AiOutlineClockCircle size={40} style={{ color: '#d97706' }} />
                     </div>
-                    
-                    <h3 style={{ 
-                        fontSize: '20px', 
-                        fontWeight: '700', 
-                        color: '#1e293b', 
-                        marginBottom: '12px' 
+
+                    <h3 style={{
+                        fontSize: '20px',
+                        fontWeight: '700',
+                        color: '#1e293b',
+                        marginBottom: '12px'
                     }}>
                         {t("Mastercard Verification Pending")}
                     </h3>
-                    
-                    <p style={{ 
-                        fontSize: '14px', 
-                        color: '#64748b', 
-                        maxWidth: '460px', 
+
+                    <p style={{
+                        fontSize: '14px',
+                        color: '#64748b',
+                        maxWidth: '460px',
                         lineHeight: '1.6',
                         margin: '0 auto 8px auto'
                     }}>
                         {t("Your Mastercard request is currently pending. It will take 2 - 3 business days to get approved.")}
                     </p>
-                    
-                    <span style={{ 
-                        fontSize: '12px', 
-                        color: '#94a3b8', 
-                        fontWeight: '500' 
+
+                    <span style={{
+                        fontSize: '12px',
+                        color: '#94a3b8',
+                        fontWeight: '500'
                     }}>
                         {t("Thank you for your patience.")}
                     </span>
-                    
+
                     <style>{`
                         @keyframes pulse-slow {
                             0% { transform: scale(1); }

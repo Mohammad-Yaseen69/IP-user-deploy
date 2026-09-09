@@ -8,7 +8,7 @@ import CitiesDropDown from '../../../CitiesDropDown';
 import PhoneInput from '../../../PhoneInput';
 import { toast } from 'react-toastify';
 import { UserContext } from '../../../../Context/UserContext';
-
+const nameRegex = /^[A-Za-z\s]+$/;
 const AddBeneficiaryModal = ({ open, handleClose, onSaveSuccess, beneficiaryToEdit }) => {
     const { t } = useTranslation();
     const [loading, setLoading] = useState(false);
@@ -78,14 +78,29 @@ const AddBeneficiaryModal = ({ open, handleClose, onSaveSuccess, beneficiaryToEd
         e.preventDefault();
 
         if (beneficiaryType === 'individual') {
-            if (!formData.first_name || !formData.first_name.trim()) {
+            const firstName = formData.first_name?.trim() || '';
+            const lastName = formData.last_name?.trim() || '';
+
+            if (!firstName) {
                 toast.error(t("First name is required for individual beneficiaries"));
                 return;
             }
-            if (!formData.last_name || !formData.last_name.trim()) {
+
+            if (!lastName) {
                 toast.error(t("Last name is required for individual beneficiaries"));
                 return;
             }
+
+            if (!nameRegex.test(firstName)) {
+                toast.error(t("First name can only contain letters and spaces"));
+                return;
+            }
+
+            if (!nameRegex.test(lastName)) {
+                toast.error(t("Last name can only contain letters and spaces"));
+                return;
+            }
+
             if (!formData.phone || !formData.phone.trim()) {
                 toast.error(t("Phone number is required for individual beneficiaries"));
                 return;
