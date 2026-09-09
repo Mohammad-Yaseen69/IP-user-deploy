@@ -1112,13 +1112,15 @@ const WalletFundsFlow = ({ setAction }) => {
                           {/* {
                                                             data.step > 1
                                                             && */}
-                          <button
+                      {data.step > 2 && <button
                             className={styles.transparent}
                             onClick={onBackClickHandler}
                             disabled={data.loading}
                           >
                             {t("Back")}
                           </button>
+
+                      }
                           {/* } */}
                           {!data.loading &&
                             <button
