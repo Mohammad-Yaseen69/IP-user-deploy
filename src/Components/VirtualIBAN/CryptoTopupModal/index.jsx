@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState } from "react"
 import { useTranslation } from "react-i18next"
-import { Modal, ModalBody } from "reactstrap"
+import { Modal, ModalBody, ModalHeader } from "reactstrap"
 import { toast } from "react-toastify"
 import useWindowWidth from "../../../utils/useWindowWidth"
 import ContactBox from "../../MyMasterCard/PaymentModal/ContactBox"
@@ -85,6 +85,7 @@ const CryptoTopupModal = ({ isOpen, toggle, selectedIban }) => {
     const [amount, setAmount] = useState("")
     const [feeDetails, setFeeDetails] = useState(null)
     const [confirmData, setConfirmData] = useState(null)
+    const [checkoutUrl, setCheckoutUrl] = useState("")
     const { getKey, reset } = useIdempotency();
 
     const feeMutation = useVirtualIbanCryptoTopupFee()
@@ -109,6 +110,7 @@ const CryptoTopupModal = ({ isOpen, toggle, selectedIban }) => {
         setAmount("")
         setFeeDetails(null)
         setConfirmData(null)
+        setCheckoutUrl("")
     }
 
     const handleClose = () => {
@@ -165,9 +167,9 @@ const CryptoTopupModal = ({ isOpen, toggle, selectedIban }) => {
             idempotencyKey: getKey()
         })
 
-        const checkoutUrl = res?.data?.checkout_url || res?.data?.data?.checkout_url
-        if (checkoutUrl) {
-            window.location.href = checkoutUrl
+        const nextCheckoutUrl = res?.data?.checkout_url || res?.data?.data?.checkout_url
+        if (nextCheckoutUrl) {
+            setCheckoutUrl(nextCheckoutUrl)
         } else if (res?.message) {
             toast.error(res.message)
         } else {
@@ -238,6 +240,7 @@ const CryptoTopupModal = ({ isOpen, toggle, selectedIban }) => {
                     <DoneStep
                         confirmData={confirmData}
                         selectedIban={selectedIban}
+                        onOpenCheckout={setCheckoutUrl}
                     />
                 )
             default:
@@ -339,6 +342,7 @@ const CryptoTopupModal = ({ isOpen, toggle, selectedIban }) => {
     )
 
     return (
+        <>
         <Modal
             isOpen={isOpen}
             style={{
@@ -348,6 +352,17 @@ const CryptoTopupModal = ({ isOpen, toggle, selectedIban }) => {
         >
             <ModalBody style={{ padding: "20px" }}>{renderBody()}</ModalBody>
         </Modal>
+        <Modal isOpen={Boolean(checkoutUrl)} toggle={() => setCheckoutUrl("")} size="xl">
+            <ModalHeader toggle={() => setCheckoutUrl("")}>{t("Payment Checkout")}</ModalHeader>
+            <ModalBody style={{ padding: 0 }}>
+                <iframe
+                    title={t("Payment Checkout")}
+                    src={checkoutUrl}
+                    style={{ width: "100%", height: "75vh", border: 0, display: "block" }}
+                />
+            </ModalBody>
+        </Modal>
+        </>
     )
 }
 
