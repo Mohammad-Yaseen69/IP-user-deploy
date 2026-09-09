@@ -1470,7 +1470,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                                             <div className={styles.l_top}>
                                                 <h1>{t("Send Money")}</h1>
                                                 <h2>{subStep === 5 && internationalData.showCard ? t("Select Or Add Payment Card") : t(leftSideContent?.[subStep - 1])}</h2>
-                                                {subStep === 1 && <RecentTransactions dataHandler={updateInternationalData} setSubStep={setSubStep} type={"international"}  />}
+                                                {subStep === 1 && <RecentTransactions dataHandler={updateInternationalData} setSubStep={setSubStep} type={"international"} />}
                                             </div>
                                             {
                                                 subStep !== 4
