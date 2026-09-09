@@ -68,7 +68,7 @@ export const useCryptoWallets = () => {
             })
 
             if (data?.status) {
-                toast.success(t("Crypto wallet creation started. It will appear shortly."))
+                // No toast here: the flow shows a confirmation step instead.
                 getUserWallets?.()
                 return true
             }
