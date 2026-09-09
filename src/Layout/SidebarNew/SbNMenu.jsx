@@ -10,8 +10,8 @@ import analytics from "./files/analytics.svg";
 import analytics_a from "./files/analytics_a.svg";
 import ben from "./files/ben.svg";
 import ben_a from "./files/ben_a.svg";
-import chips from "./files/chips.svg";
-import chips_a from "./files/chips_a.svg";
+import crypto_icon from "./files/crypto.svg";
+import crypto_icon_a from "./files/crypto_a.svg";
 import dash from "./files/dash.svg";
 import dash_a from "./files/dash_a.svg";
 import location from "./files/location.svg";
@@ -80,8 +80,8 @@ export const MENU = [
             },
             {
                 title: "Crypto Wallets",
-                icon: <img loading="lazy" src={chips} style={{ marginRight: "12px" }} />,
-                activeIcon: <img loading="lazy" src={chips_a} style={{ marginRight: "12px" }} />,
+                icon: <img loading="lazy" src={crypto_icon} style={{ marginRight: "12px" }} />,
+                activeIcon: <img loading="lazy" src={crypto_icon_a} style={{ marginRight: "12px" }} />,
                 type: "link",
                 url: `${window.location.origin}/crypto-wallets`,
                 permission: "wallet.view"

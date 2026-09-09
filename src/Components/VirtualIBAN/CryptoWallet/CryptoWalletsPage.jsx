@@ -10,13 +10,13 @@ const CryptoWalletsPage = () => {
     const width = useWindowWidth()
 
     return (
-        <div className={styles.routePage}>
+        <div style={{ position: "relative" }} className={styles.routePage}>
             <div className={styles.routeTop}>
                 <div>
                     <h1 className={styles.routeTitle}>{t("Crypto Wallets")}</h1>
                     <p className={styles.routeSub}>{t("Portfolio overview and crypto insights.")}</p>
                 </div>
-                {width > 1000 && <TopRight />}
+                {width > 1000 && <TopRight position="relative" />}
             </div>
 
             <CryptoStablecoins />
