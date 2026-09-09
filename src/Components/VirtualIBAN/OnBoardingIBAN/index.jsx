@@ -371,11 +371,15 @@ const OnboardingIBAN = ({ onCreated }) => {
                         </div>
                     </div>
 
-                     <div className={styles.footerContainer}>
+                     <div className={styles.footerContainer}>                         
                         <button
                             className={styles.buttonGroup1}
+                            onClick={() => handleTypeSelect('business')}
                         >
-                            {t("Request IBAN Activation")}
+                           <span>{t("Request IBAN Activation")}</span>
+                            <div className={styles.forwardBtnIcon}>
+                                <ArrowRight size={18}/>
+                            </div>
                         </button>
                     </div>
                 </div>
@@ -435,6 +439,7 @@ const OnboardingIBAN = ({ onCreated }) => {
                     onBack={goBack}
                     userType={state.userType}
                     data={state.activity}
+                    currentStep={state.step}
                 />
             )}
 
@@ -445,6 +450,7 @@ const OnboardingIBAN = ({ onCreated }) => {
                     userType={state.userType}
                     data={{ owners: state.ownership.owners }}
                     userDetails={userDetails}
+                    currentStep={state.step}
                 />
             )}
 

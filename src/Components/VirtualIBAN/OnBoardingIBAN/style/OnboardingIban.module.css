@@ -498,7 +498,24 @@
         height: auto;
         background: linear-gradient(180deg, #7040FF 0%, #5926F0 100%);
         box-shadow: 0px 6px 18px -5px #5926F06B;
+        height: 52px;
+        border-radius: 14px;
+        span{
+            font-size: 15px;
+            font-weight: 600;
+            flex: 1;
+        }
+    }
 
+    .forwardBtnIcon{
+        background: #FFFFFF2E;
+        width: 30px;
+        height: 30px;
+        border-radius: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        
     }
 
     .statsRow {

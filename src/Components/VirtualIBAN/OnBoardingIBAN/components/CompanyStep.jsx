@@ -8,6 +8,7 @@ import styles from '../style/onboardingSteps.module.css'
 import SidebarProgress from './SidebarProgress'
 import { BsDot } from 'react-icons/bs'
 import AiIcon from "../../../../assets/icons/ai-icon.svg";
+import StepProgress from './StepProgress'
 
 const formatDateForInput = (val) => {
     if (!val) return '';
@@ -51,6 +52,7 @@ const formatDateForInput = (val) => {
 const CompanyStep = ({ onNext, onBack, userType, data = {}, currentStep }) => {
     const { t } = useTranslation()
     const { userDetails } = useContext(UserContext)
+
     const agentDefault = userDetails?.parentIdAgent?.username || userDetails?.parentIdAgent?.agentCode || ''
 
     const initialDate = userDetails?.company?.date_of_incorporation || data.dateOfIncorporation || ''
@@ -69,6 +71,7 @@ const CompanyStep = ({ onNext, onBack, userType, data = {}, currentStep }) => {
         mainContact: data.mainContact || '',
         agent: agentDefault,
     })
+
 
     useEffect(() => {
         window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
@@ -93,8 +96,6 @@ const CompanyStep = ({ onNext, onBack, userType, data = {}, currentStep }) => {
         form.registeredAddress?.trim() &&
         form.dateOfIncorporation?.trim()
     )
-
-    console.log(form, "form")
 
     const set = (key) => (e) => {
         let value = e.target.value;
@@ -123,9 +124,6 @@ const CompanyStep = ({ onNext, onBack, userType, data = {}, currentStep }) => {
         { num: '06', label: t('Review'), active: false, key:'review' }
     ]
 
-    const totalSteps = steps.length;
-    const currentStepNo = steps.findIndex( x => x.key === currentStep ) + 1;
-
     return (
         <div className={styles.onboardingLayout}>
             <div>
@@ -145,18 +143,11 @@ const CompanyStep = ({ onNext, onBack, userType, data = {}, currentStep }) => {
                             </div>
                         </div>
                     ))}
-                </div>
-                <div className={styles.mobileStepContainer}>
-                    <p className={styles.stepCount}>Step {currentStepNo} of {totalSteps}<span> · {currentStep}</span></p>
-                    <div className={styles.dropdownPill}>
-                        <div className={styles.addIconContainer}>
-                            <Plus size={10}/>
-                        </div>
-                        <span className={styles.readyPercentage}>50%</span> 
-                        <span className={styles.stepsLeft}>· {totalSteps - currentStepNo} left</span>
-                        <ChevronUp size={12} />
-                    </div>
-                </div>
+                </div>                
+                <StepProgress
+                  percent={30} 
+                  currentStep={currentStep} 
+                />
             </div>
             <div className={styles.upperlayout}>
                 <p>
@@ -473,7 +464,6 @@ const CompanyStep = ({ onNext, onBack, userType, data = {}, currentStep }) => {
                     {t("Continue")}
                 </button>
             </div>
-
         </div>
     )
 }
