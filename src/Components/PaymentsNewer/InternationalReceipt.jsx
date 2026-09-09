@@ -1,17 +1,40 @@
 import { Card, CardBody } from "reactstrap";
 import w from "./files/where.png"
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { takeScreenshot } from "../../Helper/takeScreenshot";
 import download from "../Profile/files/download.svg"
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import gif from "../Auth/files/success.gif"
 import { formatCurrency } from "../../Helper/AmountFormat";
 
 const Receipt = ({ beneficiary, amount, currency, country, payoutChannel, isExternalWithdrawal, transactionDetails, type = "transferring" }) => {
     const { t } = useTranslation()
     const [downloading, setDownloading] = useState(false)
+    const [redirectSeconds, setRedirectSeconds] = useState(10);
+    const navigate = useNavigate();
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setRedirectSeconds(prev => {
+                if (prev <= 1) {
+                    clearInterval(interval);
+                    return 0;
+                }
+
+                return prev - 1;
+            });
+        }, 1000);
+
+        const redirectTimer = setTimeout(() => {
+            navigate("/transactions", { replace: true });
+        }, 10000);
+
+        return () => {
+            clearInterval(interval);
+            clearTimeout(redirectTimer);
+        };
+    }, [navigate]);
     return (
         <Card className="" style={{
             height: "100%",
@@ -31,6 +54,16 @@ const Receipt = ({ beneficiary, amount, currency, country, payoutChannel, isExte
             }} className="conf_cont">
                 <div style={{ width: "200px", margin: "auto" }}>
                     <img src={gif} style={{ width: "100%" }} alt="" />
+                </div>
+                <div
+                    style={{
+                        textAlign: "center",
+                        fontSize: ".8rem",
+                        color: "#8a8a8a",
+                        marginTop: "8px"
+                    }}
+                >
+                    {t("Redirecting to Wallets in")} {redirectSeconds}s...
                 </div>
                 <div style={{ display: "flex", flexDirection: "column", padding: "14px" }} className="conf_cont transaction-receipt">
                     <div style={{ textAlign: 'center' }}>
@@ -73,7 +106,6 @@ const Receipt = ({ beneficiary, amount, currency, country, payoutChannel, isExte
                             </div>
                         }
                     </div>
-                    {/* recipient */}
                     {
                         type === "transferring"
                         &&
@@ -118,7 +150,6 @@ const Receipt = ({ beneficiary, amount, currency, country, payoutChannel, isExte
                             </Swiper>
                         </div>
                     }
-                    {/* country */}
                     <div style={{
                         background: "rgba(89,38,240,0.06)",
                         padding: "16px",
@@ -133,7 +164,6 @@ const Receipt = ({ beneficiary, amount, currency, country, payoutChannel, isExte
                             <span style={{ fontWeight: 600, fontSize: ".8rem" }}>{country.name}</span>
                         </div>
                     </div>
-                    {/* payout channel */}
                     <div style={{
                         background: "rgba(89,38,240,0.06)",
                         padding: "16px",
@@ -164,7 +194,6 @@ const Receipt = ({ beneficiary, amount, currency, country, payoutChannel, isExte
                         </div>
                     </div>
                 </div>
-                {/* bottom */}
                 <div style={{ display: 'flex', alignItems: "center", gap: ".5rem", justifyContent: "center", padding: "14px" }}>
                     <Link to={`/transactions?current-index=1`} style={{ display: "flex", alignItems: "center", background: "#fff", borderRadius: "50px", padding: "10px", gap: ".3rem", cursor: "pointer" }}>
                         <img src={w} alt="w" style={{ height: "25px", width: "25px", objectFit: "contain" }} />
@@ -187,6 +216,8 @@ const Receipt = ({ beneficiary, amount, currency, country, payoutChannel, isExte
                             </div>
                     }
                 </div>
+
+
             </CardBody>
         </Card>
     );
