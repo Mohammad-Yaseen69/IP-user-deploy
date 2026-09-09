@@ -465,6 +465,8 @@ const TwoFactorAuth = () => {
                                             <p style={{ marginBottom: "0", textAlign: "left" }}>{t("Register Biometric Passkey")}</p>
                                         </button>
                                     </div>
+
+                                    
                                 }
                             </td>
                         </tr>
