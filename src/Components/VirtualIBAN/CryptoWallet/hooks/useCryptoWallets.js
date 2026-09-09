@@ -17,11 +17,6 @@ const CRYPTO_WALLET_EVENTS = [
     "instapay:crypto_wallet:deposit_completed",
 ]
 
-/**
- * Crypto wallets owned by the user, plus the helpers the Crypto & Stablecoins
- * page needs to create a new one. Keeps itself fresh on the socket events
- * dispatched from Services/Socket.jsx.
- */
 export const useCryptoWallets = () => {
     const { t } = useTranslation()
     const { userWallets, getUserWallets, userDetails } = useContext(UserContext)
@@ -37,7 +32,6 @@ export const useCryptoWallets = () => {
         [userWallets]
     )
 
-    // The activation fee is charged to the default fiat wallet.
     const feeWallet = useMemo(
         () => fiatWallets.find((w) => w?.default === true) || fiatWallets[0],
         [fiatWallets]

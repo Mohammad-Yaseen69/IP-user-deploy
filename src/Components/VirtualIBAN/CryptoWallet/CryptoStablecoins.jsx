@@ -10,12 +10,7 @@ import useCryptoWallets from "./hooks/useCryptoWallets"
 import useWalletBalance from "./hooks/useWalletBalance"
 import styles from "./cryptoPage.module.scss"
 
-/**
- * Crypto & Stablecoins: portfolio overview, the user's crypto accounts, and
- * the Send/Request/Convert rail. Opening a wallet swaps the accounts list for
- * that wallet's networks and switches the value header to its balance —
- * the header and the rail stay in place.
- */
+
 const CryptoStablecoins = () => {
     const { t } = useTranslation()
     const { cryptoWallets } = useCryptoWallets()
@@ -26,7 +21,6 @@ const CryptoStablecoins = () => {
     const selectedWallet = cryptoWallets.find((w) => w?._id === selectedWalletId)
     const balance = useWalletBalance(selectedWallet)
 
-    // Drop the selection if the wallet disappears (e.g. after a refresh).
     useEffect(() => {
         if (selectedWalletId && !selectedWallet) setSelectedWalletId(null)
     }, [selectedWalletId, selectedWallet])
