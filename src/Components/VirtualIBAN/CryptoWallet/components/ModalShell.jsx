@@ -4,6 +4,9 @@ import { CloseIcon } from "./icons"
 /**
  * Card chrome shared by every step: header, optional step progress bar,
  * scrollable body and a footer with a back/secondary and a primary action.
+ *
+ * `locked` is used while a request is in flight — it hides the close button
+ * and the secondary action so the step cannot be abandoned mid-request.
  */
 const ModalShell = ({
     title,
@@ -16,6 +19,8 @@ const ModalShell = ({
     primaryLabel,
     onPrimary,
     primaryDisabled = false,
+    hideSecondary = false,
+    locked = false,
 }) => (
     <div className={styles.shell}>
         <div className={styles.header}>
@@ -23,9 +28,11 @@ const ModalShell = ({
                 <h2 className={styles.title}>{title}</h2>
                 {subtitle ? <p className={styles.subtitle}>{subtitle}</p> : null}
             </div>
-            <button type="button" className={styles.closeBtn} onClick={onClose} aria-label="Close">
-                <CloseIcon />
-            </button>
+            {!locked && (
+                <button type="button" className={styles.closeBtn} onClick={onClose} aria-label="Close">
+                    <CloseIcon />
+                </button>
+            )}
         </div>
 
         {step ? (
@@ -40,10 +47,12 @@ const ModalShell = ({
 
         <div className={styles.body}>{children}</div>
 
-        <div className={styles.footer}>
-            <button type="button" className={`${styles.btn} ${styles.btnGhost}`} onClick={onSecondary}>
-                {secondaryLabel}
-            </button>
+        <div className={`${styles.footer} ${hideSecondary || locked ? styles.footerSingle : ""}`}>
+            {!hideSecondary && !locked && (
+                <button type="button" className={`${styles.btn} ${styles.btnGhost}`} onClick={onSecondary}>
+                    {secondaryLabel}
+                </button>
+            )}
             <button
                 type="button"
                 className={`${styles.btn} ${styles.btnPrimary}`}
