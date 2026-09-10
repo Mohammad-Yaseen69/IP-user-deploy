@@ -6,6 +6,7 @@ import styles from "../style/Pricing.module.css"
 import { UserContext } from "../../../../Context/UserContext"
 import { decryptData } from "../../../../Helper/EssentilaMethods/Decryption"
 import AlertBox from "./AlertBox"
+import { CheckBoxOutline } from "./SvgIcons"
 
 const ICON_MAP = {
     activation_fee: DollarSign,
@@ -138,6 +139,7 @@ const Pricing = ({ onBack, t, onNext }) => {
                             <Checkbox
                                 sx={{ p: isMobile ? 0 : '9px' }}
                                 checked={acceptedTerms}
+                                icon={<CheckBoxOutline />}
                                 onChange={(e) => setAcceptedTerms(e.target.checked)}
                             />
                             <p>{t(

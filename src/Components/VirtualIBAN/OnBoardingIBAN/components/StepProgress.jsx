@@ -40,7 +40,7 @@ const StepProgress = ({ currentStep, percent }) => {
         </div>
       </div>
 
-      <AssistantDrawer open={openAIDrawer} toggleDrawer={toggleAiDrawer} />
+      <AssistantDrawer open={openAIDrawer} toggleDrawer={toggleAiDrawer} percent={percent} stepsLeft={stepsLeft} currentStep={currentStep} />
     </>
   );
 };

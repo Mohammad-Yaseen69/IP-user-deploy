@@ -291,7 +291,7 @@ const OwnershipStep = ({ onNext, onBack, userType, data = {}, userDetails, curre
                     style={{ opacity: owners.length === 0 ? 0.5 : 1, cursor: owners.length === 0 ? 'not-allowed' : 'pointer' }}
                 >
                     {t("Continue")}
-                    <ArrowRight size={16} />
+                    {!isMobile && <ArrowRight size={16} />}
                 </button>
             </div>
 

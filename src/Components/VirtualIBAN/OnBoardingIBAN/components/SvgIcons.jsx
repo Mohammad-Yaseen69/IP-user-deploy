@@ -50,3 +50,26 @@ export const CryptoIcon = ({ color = "#6E7687" }) => {
     </svg>
   );
 };
+
+export const CheckBoxOutline = () => {
+  return (
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 20 20"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <rect width="20" height="20" rx="6" fill="white" />
+      <rect
+        x="0.5"
+        y="0.5"
+        width="19"
+        height="19"
+        rx="5.5"
+        stroke="#141220"
+        stroke-opacity="0.12"
+      />
+    </svg>
+  );
+};

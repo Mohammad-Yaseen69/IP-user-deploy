@@ -388,5 +388,6 @@
         background: linear-gradient(180deg, #7040FF 0%, #5926F0 100%) !important;
         box-shadow: 0px 6px 18px -5px #5926F06B !important;
         border-radius: 12px;
+        width: 100%;
     }
 }

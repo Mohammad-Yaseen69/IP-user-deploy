@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { useContext, useEffect, useReducer, useState } from 'react'
+import { forwardRef, useContext, useEffect, useImperativeHandle, useReducer, useState } from 'react'
 import { Activity, ArrowRight, Cpu, CreditCard, Globe, Zap } from 'react-feather'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
@@ -24,6 +24,7 @@ import { decryptData } from '../../../Helper/EssentilaMethods/Decryption'
 import { encryptData } from '../../../Helper/EssentilaMethods/Encryption'
 import useSendOtp from '../../../hooks/GeneralUse/useSendOtp'
 import OTPConfirmation from '../../UserSettingsNew/OTPConfirmation'
+import { useMediaQuery } from '@mui/material'
 
 const STEPS_BUSINESS = ['landing', 'selection', 'account', 'company', 'activity', 'ownership', 'documents', 'review']
 const STEPS_INDIVIDUAL = ['landing', 'selection', 'account', 'review']
@@ -82,11 +83,10 @@ function onboardingReducer(state, action) {
     }
 }
 
-const OnboardingIBAN = ({ onCreated }) => {
+const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
     const { t } = useTranslation()
     const can = usePermission()
-    const width = useWindowWidth()
-    const navigate = useNavigate()
+    const isMobile = useMediaQuery('(max-width:600px)');
 
     const canCreateIban = can("virtual-iban.account.create")
     const { userDetails, authHeader } = useContext(UserContext)
@@ -315,6 +315,16 @@ const OnboardingIBAN = ({ onCreated }) => {
         documents: state.documents.files,
     }
 
+    useImperativeHandle(ref, () => ({
+        back() {
+            return goBack()
+        }
+    }), [state.step])
+
+    useEffect(() => {
+        onStepChange?.(state.step)
+    }, [state.step, onStepChange])
+
     if (loadingStatus) {
         return (
             <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '350px', width: '100%' }}>
@@ -462,6 +472,7 @@ const OnboardingIBAN = ({ onCreated }) => {
                     data={{ files: state.documents.files }}
                     userDetails={userDetails}
                     companyDetails={state.company}
+                    currentStep={state.step}
                 />
             )}
 
@@ -473,6 +484,7 @@ const OnboardingIBAN = ({ onCreated }) => {
                     onBack={(target) => goBack(target)}
                     allData={fullFormData}
                     userType={state.userType}
+                    currentStep={state.step}
                 />
             )}
 
@@ -518,7 +530,7 @@ const OnboardingIBAN = ({ onCreated }) => {
                 />
             )}
 
-            <Modal isOpen={showOtpModal} toggle={() => setShowOtpModal(false)} centered>
+            <Modal style={{maxWidth: isMobile ? '90%' : 'auto'}} isOpen={showOtpModal} toggle={() => setShowOtpModal(false)} centered>
                 <ModalBody>
                     <OTPConfirmation
                         authType={codeType}
@@ -532,6 +544,6 @@ const OnboardingIBAN = ({ onCreated }) => {
             </Modal>
         </div>
     )
-}
+})
 
 export default OnboardingIBAN

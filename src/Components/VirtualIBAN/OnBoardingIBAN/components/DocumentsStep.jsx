@@ -388,7 +388,7 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {}, userDetails, compa
                     style={{ opacity: !isDocsValid ? 0.5 : 1, cursor: !isDocsValid ? 'not-allowed' : 'pointer' }}
                 >
                     {t("Continue to Review")}
-                    <ArrowRight size={16} />
+                    {!isMobile && <ArrowRight size={16} />}
                 </button>
             </div>
         </div>

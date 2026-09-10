@@ -2,7 +2,7 @@ import { SwipeableDrawer } from "@mui/material";
 import React from "react";
 import SidebarProgress from "./SidebarProgress";
 
-const AssistantDrawer = ({ open, toggleDrawer }) => {
+const AssistantDrawer = ({ open, toggleDrawer, percent, stepsLeft, currentStep }) => {
   return (
     <SwipeableDrawer
       anchor={"bottom"}
@@ -19,9 +19,9 @@ const AssistantDrawer = ({ open, toggleDrawer }) => {
     >
       <SidebarProgress
         mobileView={true}
-        percent={30}
-        stepsLeft={4}
-        currentStepKey="company"
+        percent={percent}
+        stepsLeft={stepsLeft}
+        currentStepKey={currentStep}
         assistantMessage="Great start! Now let's capture your company's legal identity. This helps us verify your registration."
       />
     </SwipeableDrawer>
