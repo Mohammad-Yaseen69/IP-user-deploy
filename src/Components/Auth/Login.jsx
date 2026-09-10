@@ -655,8 +655,8 @@ const Login = ({ country, setIsLoginForm, }) => {
             console.error("Login history creation failed:", err);
         } finally {
             const savedPath = sessionStorage.getItem("path");
-            const targetPath = (savedPath && savedPath !== "undefined" && !savedPath.includes("login") && !savedPath.includes("auth")) 
-                ? savedPath 
+            const targetPath = (savedPath && savedPath !== "undefined" && !savedPath.includes("login") && !savedPath.includes("auth"))
+                ? savedPath
                 : (redirect && !redirect.includes("login") ? redirect : "/");
             sessionStorage.clear();
             sessionStorage.setItem("force_auth_on_login", "true");
@@ -1215,6 +1215,9 @@ const Login = ({ country, setIsLoginForm, }) => {
                                                         onClick={() => {
                                                             setShowQuickLogin(false)
                                                             setEmail("")
+                                                            setPassword("")
+                                                            setEmailVerified(false)
+                                                            setProfileLockTime(0)
                                                         }}
                                                         style={{ position: "relative", top: "0", left: "0px", flexShrink: 0 }}
                                                     >
@@ -1229,6 +1232,9 @@ const Login = ({ country, setIsLoginForm, }) => {
                                                     onClick={() => {
                                                         setShowQuickLogin(false)
                                                         setEmail("")
+                                                        setPassword("")
+                                                        setEmailVerified(false)
+                                                        setProfileLockTime(0)
                                                     }}
                                                     style={{ position: "relative", top: "0", left: "0px", margin: "20px auto" }}
                                                 >
@@ -1348,6 +1354,7 @@ const Login = ({ country, setIsLoginForm, }) => {
                                     onClick={() => {
                                         setPassword("")
                                         setEmailVerified(false)
+                                        setProfileLockTime(0)
 
                                     }}
                                 >
@@ -1446,6 +1453,8 @@ const Login = ({ country, setIsLoginForm, }) => {
                                                     background: "#FFF",
                                                     overflow: "hidden",
                                                     width: "100%",
+                                                    fontWeight: 600,
+                                                    fontSize: "12px"
                                                 }}
                                                 disabled={biometricLoading}
                                             >

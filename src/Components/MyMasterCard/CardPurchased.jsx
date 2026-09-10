@@ -856,7 +856,13 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
                                 {can("mastercard.details.balance") && !cardLoading &&
                                     <>
                                         <h2>
-                                            ${currentCardDetails?.balance >= 0.01 ? Number(currentCardDetails?.balance)?.toFixed(2) : Number(currentCardDetails?.balance).toFixed(getDecimalPointIndex(+currentCardDetails?.balance))}
+                                            {Number.isNaN(Number(currentCardDetails?.balance))
+                                                ? "0.00"
+                                                : Number(currentCardDetails?.balance) >= 0.01
+                                                    ? Number(currentCardDetails?.balance).toFixed(2)
+                                                    : Number(currentCardDetails?.balance).toFixed(
+                                                        getDecimalPointIndex(+currentCardDetails?.balance)
+                                                    )}
                                         </h2>
 
                                         <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>

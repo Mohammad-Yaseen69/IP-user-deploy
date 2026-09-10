@@ -6,6 +6,7 @@ import CountryDropDown from "../../AddBeneficiary/CountryDropDown"
 import { useQuery } from "@tanstack/react-query"
 import axios from "axios"
 import { decryptData } from "../../../Helper/EssentilaMethods/Decryption"
+import { preventEdgeSpaces } from "../../../hooks/useTrimInput"
 
 const getBusinessCategories = async () => {
     const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/account-settings/get-business-categories`)
@@ -51,22 +52,32 @@ const Steptwo = ({ data, dataHandler }) => {
                         <div className={styles.dp}>
                             <img src={data.dp_preview || placeholder_dp} alt="" />
                             <label htmlFor="dp">{t("Add Photo Or Logo")}</label>
-                            <input type="file" id="dp" name="dp" hidden onChange={handleFileChange} accept="image/*" />
+                            <input type="file" id="dp" name="dp" hidden onChange={handleFileChange}
+                                accept="image/png, image/jpeg"
+                            />
                         </div>
                     </div>
                     <div className={styles.inp}>
                         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                             <label>{t("First Name")}</label>
-                            <span style={{ fontSize: "12px", fontWeight: 600, color: "#8A8A8A" }}>{(data.first_name || "").length}/30</span>
+                            <span style={{ fontSize: "12px", fontWeight: 600, color: "#8A8A8A" }}>
+                                {(data.first_name || "").length}/30</span>
                         </div>
-                        <input type="text" value={data.first_name} maxLength={30} onChange={e => dataHandler("first_name", sanitizeIndividualName(e.target.value))} placeholder={t("Enter Your First Name")} />
+                        <input type="text" value={data.first_name} maxLength={30} onChange={e => dataHandler("first_name", sanitizeIndividualName(e.target.value))} placeholder={t("Enter Your First Name")}
+                            onBlur={() =>
+                                dataHandler("first_name", (data.first_name || "").trim())
+                            }
+                            onKeyDown={preventEdgeSpaces}
+                        />
                     </div>
                     <div className={styles.inp}>
                         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                             <label>{t("Last Name")}</label>
                             <span style={{ fontSize: "12px", fontWeight: 600, color: "#8A8A8A" }}>{(data.last_name || "").length}/30</span>
                         </div>
-                        <input type="text" value={data.last_name} maxLength={30} onChange={e => dataHandler("last_name", sanitizeIndividualName(e.target.value))} placeholder={t("Enter Your Last Name")} />
+                        <input type="text"
+                            onKeyDown={preventEdgeSpaces}
+                            value={data.last_name} maxLength={30} onChange={e => dataHandler("last_name", sanitizeIndividualName(e.target.value))} placeholder={t("Enter Your Last Name")} />
                     </div>
                 </> :
                 <>
@@ -75,7 +86,9 @@ const Steptwo = ({ data, dataHandler }) => {
                             <label>{t("Company Name")}:</label>
                             <span style={{ fontSize: "12px", fontWeight: 600, color: "#8A8A8A" }}>{(data.company_name || "").length}/80</span>
                         </div>
-                        <input type="text" value={data.company_name} maxLength={80} onChange={e => dataHandler("company_name", sanitizeCompanyName(e.target.value))} placeholder={t("Enter Your Company Name")} />
+                        <input type="text"
+                            onKeyDown={preventEdgeSpaces}
+                            value={data.company_name} maxLength={80} onChange={e => dataHandler("company_name", sanitizeCompanyName(e.target.value))} placeholder={t("Enter Your Company Name")} />
                     </div>
                     <div className={styles.inp}>
                         <label>{t("Select Country")}:</label>
@@ -93,7 +106,7 @@ const Steptwo = ({ data, dataHandler }) => {
                     <div className={styles.inp}>
                         <label>{t("Select Business Category")}:</label>
 
-                        <select  value={data.category_id} onChange={(e) => dataHandler("category_id", e.target.value)}  >
+                        <select value={data.category_id} onChange={(e) => dataHandler("category_id", e.target.value)}  >
                             <option disabled value={''}>
                                 {t("Select Category")}
                             </option>

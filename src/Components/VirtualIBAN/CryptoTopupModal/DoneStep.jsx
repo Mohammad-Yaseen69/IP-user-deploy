@@ -5,7 +5,7 @@ import { QRCodeSVG } from "qrcode.react"
 import { Copy, ExternalLink, Check } from "react-feather"
 import styles from "../ConvertFundsModal/convertFunds.module.scss"
 
-const DoneStep = ({ confirmData, selectedIban }) => {
+const DoneStep = ({ confirmData, selectedIban, onOpenCheckout }) => {
     const { t } = useTranslation()
     const [copied, setCopied] = useState(false)
 
@@ -25,7 +25,7 @@ const DoneStep = ({ confirmData, selectedIban }) => {
 
     const handleOpenCheckout = () => {
         if (checkoutUrl) {
-            window.open(checkoutUrl, "_blank", "noopener,noreferrer")
+            onOpenCheckout?.(checkoutUrl)
         }
     }
 

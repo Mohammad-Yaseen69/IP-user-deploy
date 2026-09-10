@@ -591,8 +591,8 @@ const WithdrawOldFlow = ({
                         country={country}
                         payoutChannel={payoutChannel}
                         paymentType={""}
-                        setShowStatus={() => "a"} // console.log("er")}
-                        setIsInternational={() => "a"}// console.log("er")}
+                        setShowStatus={() => "a"} 
+                        setIsInternational={() => "a"}
                         transactionDetails={transactionDetails}
                         type='withdrawn'
                         isExternalWithdrawal={isExternalWithdrawal}

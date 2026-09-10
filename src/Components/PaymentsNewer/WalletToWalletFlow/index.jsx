@@ -170,16 +170,11 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, show
     const subscriptionId = queryParams.get('subscriptionId')
     const isShipping = queryParams.get("isShipping")
     const phone = queryParams.get("phone")
-
     useEffect(() => {
-        if (userDetails?._id) {
-            if (userDetails?.tfa) {
-                dataHandler("codeType", "authenticator")
-            } else {
-                dataHandler("codeType", "sms")
-            }
-            dataHandler("timezone", userDetails?.timezone)
-        }
+        if (!userDetails) return
+
+        dataHandler("codeType", userDetails.tfa ? "authenticator" : "sms")
+        dataHandler("timezone", userDetails.timezone)
     }, [userDetails])
 
 
@@ -373,14 +368,9 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, show
         reset()
         dataHandler("loading", true)
         try {
-            const payload = generatePayload(codeType)
-
-            console.log("SendOTP Debug:", {
-                payload,
-                codeType,
-                dataCodeType: data.codeType,
-                finalType: codeType || data.codeType
-            })
+            const resolvedCodeType = codeType || (userDetails?.tfa ? "authenticator" : data.codeType)
+            dataHandler("codeType", resolvedCodeType)
+            const payload = generatePayload(resolvedCodeType)
             const encrypted = encryptData(payload)
             const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/send-otp`, {
                 data: encrypted

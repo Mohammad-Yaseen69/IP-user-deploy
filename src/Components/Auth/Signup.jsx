@@ -1,27 +1,27 @@
-import styles from "./styles/index.module.css"
-import LanguagePicker from '../LanguagePicker'
-import { useTranslation } from 'react-i18next'
-import { useContext, useEffect, useMemo, useReducer, useRef, useState } from "react";
-import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
-import { ChevronRight } from "react-feather";
-import Stepone from "./Signup/Stepone";
-import gs from "./files/gs.svg"
-import as from "./files/as.svg"
-import authenticator from "./files/authenticator.webp"
-import Stepfour, { passwordRegex } from "./Signup/Stepfour";
-import Steptwo from "./Signup/Steptwo";
-import Stepthree from "./Signup/Stepthree";
-import Stepfive from "./Signup/Stepfive";
-import ErrorModal from "../PaymentsNewer/InternationalFlow/ErrorModal";
-import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
-import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
-import { apiWrapper } from "../../utils/Functions/apiWrapper";
 import axios from "axios";
+import { useContext, useEffect, useMemo, useReducer } from "react";
+import { ChevronRight } from "react-feather";
+import { useTranslation } from 'react-i18next';
+import { Link, useParams, useSearchParams } from "react-router-dom";
 import { UserContext } from "../../Context/UserContext";
-import OtpConfirmation from "./Signup/OtpConfirmation";
-import success from "../PaymentsNewer/files/confirm.mp4"
-import Receipt from "./Signup/Receipt";
+import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
+import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
 import useSecurityShield from "../../hooks/useSecurityShield";
+import { apiWrapper } from "../../utils/Functions/apiWrapper";
+import LanguagePicker from '../LanguagePicker';
+import success from "../PaymentsNewer/files/confirm.mp4";
+import ErrorModal from "../PaymentsNewer/InternationalFlow/ErrorModal";
+import as from "./files/as.svg";
+import authenticator from "./files/authenticator.webp";
+import gs from "./files/gs.svg";
+import OtpConfirmation from "./Signup/OtpConfirmation";
+import Receipt from "./Signup/Receipt";
+import Stepfive from "./Signup/Stepfive";
+import Stepfour, { passwordRegex } from "./Signup/Stepfour";
+import Stepone from "./Signup/Stepone";
+import Stepthree from "./Signup/Stepthree";
+import Steptwo from "./Signup/Steptwo";
+import styles from "./styles/index.module.css";
 
 const initialState = {
     loading: false,
@@ -172,8 +172,14 @@ const Signup = ({ country, setIsLoginForm, setHideLogo }) => {
                     (typeof data.country === 'string' && data.country.trim())
                 );
                 return data.account_type === "individual"
-                    ? !data.first_name?.trim() || !data.last_name?.trim() || !individualNameRegex.test(data.first_name) || !individualNameRegex.test(data.last_name)
-                    : !data.category_id || !data.company_name?.trim() || !hasValidCountry || !companyNameRegex.test(data.company_name);
+                    ? data.first_name?.trim().length < 3 ||
+                    data.last_name?.trim().length < 3 ||
+                    !individualNameRegex.test(data.first_name) ||
+                    !individualNameRegex.test(data.last_name)
+                    : !data.category_id ||
+                    !data.company_name?.trim() ||
+                    !hasValidCountry ||
+                    !companyNameRegex.test(data.company_name);
             }
             case 3:
                 return data.account_type === "individual" ? !data.phone || data.phone.length < 9 || !/^\d{9,20}$/g.test(data.phone) : (!emailRegex.test(data.email))

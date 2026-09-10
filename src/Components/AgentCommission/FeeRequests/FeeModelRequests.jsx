@@ -257,6 +257,34 @@ const FeeModelRequests = () => {
                                                     </div>
                                                 </div>
 
+                                                {req.status === 'approved' && (
+                                                    <div style={{ background: '#ECFDF5', padding: '14px 16px', borderRadius: '8px', border: '1px solid #A7F3D0', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                                            <div>
+                                                                <div style={{ fontSize: '11px', color: '#065F46', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                                                                    {t("APPROVED COMMISSION")}
+                                                                </div>
+                                                                <div style={{ fontSize: '18px', fontWeight: 800, color: '#047857', marginTop: '2px' }}>
+                                                                    {(() => {
+                                                                        const cType = req.comissionType || req.created_pack_id?.comissionType || 'percentage';
+                                                                        const cVal = req.feesCommisionValue ?? req.created_pack_id?.feesCommisionValue ?? 0;
+                                                                        const cFix = req.feesCommisionFixed ?? req.created_pack_id?.feesCommisionFixed ?? 0;
+                                                                        if (cType === 'both') return `${cVal}% + €${cFix}`;
+                                                                        if (cType === 'fixed') return `€${cFix > 0 ? cFix : cVal}`;
+                                                                        return `${cVal}%`;
+                                                                    })()}
+                                                                </div>
+                                                            </div>
+                                                            <Badge color="success" pill style={{ padding: '6px 12px', fontSize: '11px' }}>
+                                                                {t("Commission Active")}
+                                                            </Badge>
+                                                        </div>
+                                                        <div style={{ fontSize: '12px', color: '#047857' }}>
+                                                            {t("You earn this commission payout on all fees collected from clients under this referral model.")}
+                                                        </div>
+                                                    </div>
+                                                )}
+
                                                 {req.status === 'approved' && req.model_code && (
                                                     <div style={{ background: '#EEF2FF', padding: '14px 16px', borderRadius: '8px', border: '1px solid #C7D2FE', display: 'flex', flexDirection: 'column', gap: '10px' }}>
                                                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -309,12 +337,26 @@ const FeeModelRequests = () => {
                                                         {t("Fee Breakdown")}:
                                                     </div>
                                                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: '8px' }}>
-                                                        {req.fee_schedule?.filter(item => !NO_PERCENT_FEE_IDS.includes(item.id))?.map((f, i) => (
-                                                            <div key={i} style={{ fontSize: '12px', background: '#FFFFFF', padding: '6px 10px', borderRadius: '6px', border: '1px solid #E5E7EB' }}>
+                                                        {req.fee_schedule?.map((f, i) => (
+                                                            <div key={i} style={{ fontSize: '12px', background: '#FFFFFF', padding: '8px 10px', borderRadius: '6px', border: '1px solid #E5E7EB' }}>
                                                                 <div style={{ color: '#6B7280', fontSize: '11px' }}>{f.name}</div>
-                                                                <div style={{ fontWeight: 600, color: '#111827' }}>
+                                                                <div style={{ fontWeight: 600, color: '#111827', marginTop: '2px' }}>
                                                                     €{f.flatEuro || 0} {f.percentAmount && !NO_PERCENT_FEE_IDS.includes(f.id) ? `+ ${f.percentAmount}%` : ''}
                                                                 </div>
+                                                                {req.status === 'approved' && (
+                                                                    <div style={{ fontSize: '11px', color: '#059669', fontWeight: 600, marginTop: '4px' }}>
+                                                                        {t("Commission")}: {
+                                                                            (() => {
+                                                                                const iType = f.comissionType || req.comissionType || req.created_pack_id?.comissionType || 'percentage';
+                                                                                const iVal = typeof f.feesCommisionValue === 'number' ? f.feesCommisionValue : (req.feesCommisionValue ?? req.created_pack_id?.feesCommisionValue ?? 0);
+                                                                                const iFix = typeof f.feesCommisionFixed === 'number' ? f.feesCommisionFixed : (req.feesCommisionFixed ?? req.created_pack_id?.feesCommisionFixed ?? 0);
+                                                                                if (iType === 'both') return `${iVal}% + €${iFix}`;
+                                                                                if (iType === 'fixed') return `€${iFix > 0 ? iFix : iVal}`;
+                                                                                return `${iVal}%`;
+                                                                            })()
+                                                                        }
+                                                                    </div>
+                                                                )}
                                                             </div>
                                                         ))}
                                                     </div>
