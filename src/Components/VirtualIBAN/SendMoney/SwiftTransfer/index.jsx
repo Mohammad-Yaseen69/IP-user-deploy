@@ -75,6 +75,7 @@ import {
     hasBeneficiarySwiftCode,
     maskIban
 } from "../Common/beneficiaryHelpers"
+import MobileStepProgress from "../../VirtualIbanModal/MobileStepProgress"
 
 const DEFAULT_BENEFICIARY_FORM = {
     type: "individual",
@@ -828,6 +829,7 @@ const SwiftTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, 
     const [isRefreshingQuote, setIsRefreshingQuote] = useState(false)
     const [otpToken, setOtpToken] = useState("")
     const [payoutResult, setPayoutResult] = useState(null)
+    const isMobile = width <= 600;
 
     const payoutFee = useVirtualIbanSwiftPayoutFee()
     const payoutDirect = useVirtualIbanSwiftPayoutDirect()
@@ -1178,6 +1180,7 @@ const SwiftTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, 
 
     const content = (
         <div className={styles.modalLayout} style={{ flexDirection: width < 1000 ? "column" : "row" }}>
+            <MobileStepProgress currentStep={currentStep} />
             <aside className={styles.leftPanel}>
                 <div>
                     <div className={styles.flowHeader}>
@@ -1189,7 +1192,6 @@ const SwiftTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, 
                             <p>{t("International Wire — EUR → USD")}</p>
                         </div>
                     </div>
-
                     <div style={{ marginTop: "2rem" }} className={withdrawStyles.progressEffect}>
                         {SIDEBAR_STEPS.map((item, index) => {
                             const IconComponent = sidebarIcons[item.stepName]
@@ -1218,7 +1220,7 @@ const SwiftTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, 
             <section className={styles.rightPanel}>
                 <div className={styles.content}>{renderStepContent()}</div>
 
-                {showFooter && (
+                {(showFooter && !isMobile) && (
                     <div className={styles.footer}>
                         <button type="button" className={styles.cancelBtn} onClick={handleClose}>
                             {t("Cancel")}
@@ -1241,6 +1243,23 @@ const SwiftTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, 
                     </div>
                 )}
             </section>
+            {isMobile && 
+            <div className={`${styles.footer} ${styles.mobileFooter}`}>
+                <div className={styles.footerNav}>
+                    <button type="button" className={styles.backBtn} onClick={handleBack}>
+                        <ChevronLeft size={24} />
+                    </button>
+                    <button
+                        type="button"
+                        className={styles.nextBtn}
+                        disabled={disabled}
+                        onClick={handleContinue}
+                    >
+                        {isProcessing ? t("Processing...") : getContinueLabel(currentStep, t)}
+                    </button>
+                </div>
+            </div>
+            }
         </div>
     )
 

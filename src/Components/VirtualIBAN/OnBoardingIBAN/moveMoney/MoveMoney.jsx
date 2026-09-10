@@ -13,7 +13,8 @@ import {
     CreditCard,
     Cpu,
     ArrowLeft,
-    Search
+    Search,
+    ChevronLeft
 } from 'react-feather';
 import SepaTransfer from '../../SendMoney/SepaTransfer';
 import SwiftTransfer from '../../SendMoney/SwiftTransfer';
@@ -55,8 +56,22 @@ const MoveMoney = () => {
 
     const currentBalance = syncedBalance?.balance ?? selectedIban?.balance ?? 0
 
+    const handleClose = () => setShowSwiftPage(false);
+
     return (
-        <div className={styles.container}>
+        <>
+         <div className={styles.mobileHeader}>
+            <div className={styles.headerContent}>
+                <ChevronLeft size={22} onClick={handleClose} />
+                <span>
+                    {t("SWIFT International")}
+                </span>
+            </div>
+            <button className={styles.cancelButton} onClick={handleClose}>
+                {t("Cancel")}
+            </button>
+        </div>
+        <div className={styles.container}>           
             <div className={styles.top}>
                 <div className={styles.headerTitle}>
                     <h1>{t("Move money")}</h1>
@@ -85,20 +100,22 @@ const MoveMoney = () => {
                         </>
                     : showSwiftPage ?
                         <>
+                        {width > 600 &&
                             <IbanBreadcrumb items={[
                                 { label: "My virtual bank", path: "/virtual-IBAN" },
-                                { label: "Move money", onClick: () => setShowSwiftPage(false) },
+                                { label: "Move money", onClick: handleClose },
                                 { label: "SWIFT Transfer" }
                             ]} />
+                        }
                             <SwiftTransfer
                                 isPage={true}
                                 selectedIban={selectedIban}
                                 availableBalance={currentBalance}
-                                toggle={() => setShowSwiftPage(false)}
+                                toggle={handleClose}
                             />
                         </>
 
-                        : <>
+                        : <>                            
                             <div className={styles.headerTitle}>
                                 <IbanBreadcrumb items={[
                                     { label: "My virtual bank", path: "/virtual-IBAN" },
@@ -255,7 +272,8 @@ const MoveMoney = () => {
                 selectedIban={selectedIban}
             />
 
-        </div >
+        </div>
+        </>
     );
 };
 

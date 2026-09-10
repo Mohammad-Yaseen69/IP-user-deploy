@@ -576,7 +576,7 @@
     .rightPanel {
         min-height: auto;
     }
-
+    
     .footer {
         flex-direction: column-reverse;
 
@@ -595,5 +595,52 @@
                 text-align: center;
             }
         }
+    }
+
+    .amountLabel{
+        font-size: 10px;
+        color: #9793A8;
+        text-transform: uppercase;
+        font-weight: 600;
+    }
+
+    .amountInputBox {
+        box-shadow: 0px 0px 0px 1px #14122012 inset;
+        background: linear-gradient(0deg, #F3F3F7, #F3F3F7), radial-gradient(120% 140% at 50% -20%, rgba(112, 64, 255, 0.1) 0%, rgba(112, 64, 255, 0) 62%);
+        padding: 20px 0;
+        gap: 20px;
+    }
+
+    .amountInput{
+        font-size: 40px;
+    }
+
+    .currencySymbol{
+        font-size: 24px;
+        color: #9793A8;
+    }
+
+    .availableText{
+        flex-direction: row !important;
+        gap: 3px;
+        span {
+            opacity: 1 !important;
+            margin: 0 !important;
+            color: #9793A8;
+            font-size: 11.5px;
+        }
+    }
+
+    .quickBtn{
+        border-radius: 10px;
+        box-shadow: 0px 1px 2px 0px #1412200D;
+        color: #65627A;
+        padding: 8px 14px;
+        font-weight: 500;
+        font-size: 12.5px;
+    }
+
+    .quickBtn.active{
+        box-shadow: 0px 1px 0px 1px #FFFFFF38 inset;
     }
 }
