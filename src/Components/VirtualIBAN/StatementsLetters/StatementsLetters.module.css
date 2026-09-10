@@ -204,6 +204,7 @@
     align-items: center;
     align-self: stretch;
     border-radius: 8px;
+    gap: 5px;
 }
 
 .balanceLabel {
@@ -380,8 +381,13 @@
 }
 
 @keyframes spin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 .shareBtn {

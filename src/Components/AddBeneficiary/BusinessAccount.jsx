@@ -28,7 +28,7 @@ import SuccessModal from "./SuccessModal";
 import NestedDropdown from "../NestedDropdown";
 
 
-const BusinessAccount = ({ isInternational, toggleHandler, errorOnInvalid = true, error = false }) => {
+const BusinessAccount = ({ isInternational, toggleHandler, errorOnInvalid = true, error = false, nameRegex }) => {
     const { t } = useTranslation()
     const navigate = useNavigate()
     const [active, setActive] = useState(1)
@@ -299,7 +299,10 @@ const BusinessAccount = ({ isInternational, toggleHandler, errorOnInvalid = true
     })
 
     const handleRepresentativeFieldChange = (e) => {
-        const { value, name } = e.target;
+        const { name } = e.target;
+        const value = ["first_name", "last_name"].includes(name)
+            ? e.target.value.replace(/[^A-Za-z\s]/g, "")
+            : e.target.value;
         setRepresentativeFields(prev => ({
             ...prev,
             [name]: value
@@ -560,10 +563,10 @@ const BusinessAccount = ({ isInternational, toggleHandler, errorOnInvalid = true
                                     type="text"
                                     placeholder={t('Enter the company name')}
                                     required
-                                    pattern="[A-Za-z]+"
-                                    title="(A to Z | a to z)"
+                                    pattern="[A-Za-z\\s]+"
+                                    title={t("Only alphabetic characters are allowed")}
                                     value={companyName}
-                                    onChange={e => setCompanyName(e.target.value)}
+                                    onChange={e => setCompanyName(e.target.value.replace(/[^A-Za-z\s]/g, ""))}
                                     disabled={isFieldsDisabled}
                                     readOnly={isFieldsDisabled}
                                 />
@@ -647,8 +650,8 @@ const BusinessAccount = ({ isInternational, toggleHandler, errorOnInvalid = true
                                 }
                             </FormGroup>
                             <FormGroup style={{ flex: 1, margin: 0, minWidth: "250px" }}>
-                                <Label className="col-form-label" htmlFor="postal_code">{t("Postal Code")}</Label>
-                                <Input className="form-control" style={{ flex: 1, minWidth: "250px" }} name="postal_code" id="postal_code" type="text" placeholder={t('Address line')} value={formData.postal_code} onChange={inputChangeHandler} disabled={isFieldsDisabled} readOnly={isFieldsDisabled} />
+                                <Label className="col-form-label" htmlFor="postal_code">{t("Postal Code")} <span className="req_star">*</span></Label>
+                                <Input className="form-control" style={{ flex: 1, minWidth: "250px" }} name="postal_code" id="postal_code" type="text" placeholder={t('Address line')} value={formData.postal_code} onChange={inputChangeHandler} disabled={isFieldsDisabled} readOnly={isFieldsDisabled} required />
                             </FormGroup>
                         </div>
                     </FormGroup>
@@ -779,6 +782,8 @@ const BusinessAccount = ({ isInternational, toggleHandler, errorOnInvalid = true
                                                 value={representativeFields[item]}
                                                 maxLength={50}
                                                 name={item}
+                                                pattern={item === "first_name" || item === "last_name" ? "[A-Za-z\\s]+" : undefined}
+                                                title={item === "first_name" || item === "last_name" ? t("Only alphabetic characters are allowed") : undefined}
                                                 disabled={isFieldsDisabled}
                                                 readOnly={isFieldsDisabled}
                                                 onChange={handleRepresentativeFieldChange}
@@ -1039,6 +1044,7 @@ const BusinessAccount = ({ isInternational, toggleHandler, errorOnInvalid = true
                                 !companyName ||
                                 !country ||
                                 !city ||
+                                !formData.postal_code ||
                                 mobileNumber.length < 9 ||
                                 !formData.address ||
                                 !(userDetails?.account_type === "individual" ? formData.relationC2B : formData.relation) ||
