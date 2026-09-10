@@ -1,14 +1,18 @@
 import { useEffect, useRef, useState } from 'react'
-import { ArrowLeft, ArrowRight, Upload } from 'react-feather'
+import { ArrowLeft, ArrowRight, Shield, Upload } from 'react-feather'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
 import styles from '../style/onboardingSteps.module.css'
 import SidebarProgress from './SidebarProgress'
+import StepProgress from './StepProgress'
+import { useMediaQuery } from '@mui/material'
+import AlertBox from './AlertBox'
 
-const DocumentsStep = ({ onNext, onBack, userType, data = {}, userDetails, companyDetails }) => {
+const DocumentsStep = ({ onNext, onBack, userType, data = {}, userDetails, companyDetails, currentStep }) => {
     const { t } = useTranslation()
     const [files, setFiles] = useState(data.files || {})
     const inputRefs = useRef({})
+    const isMobile = useMediaQuery('(max-width:600px)');
 
     useEffect(() => {
         window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
@@ -70,7 +74,7 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {}, userDetails, compa
             <div className={styles.right}>
                 {selectedFile ? (
                     <>
-                        <span className={styles.provided}>{selectedFile.name}</span>
+                        <span className={styles.provided}>{isMobile ? t('PROVIDED') : selectedFile.name}</span>
                         <button type="button" className={styles.uploadBtn} onClick={() => openFilePicker(key)}>
                             <Upload size={10} /> {t('Replace')}
                         </button>
@@ -106,39 +110,45 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {}, userDetails, compa
 
     return (
         <div className={styles.onboardingLayout}>
-            <div className={styles.wizardSteps}>
-                {steps.map((step, index) => (
-                    <div
-                        key={index}
-                        className={`${styles.step} ${step.active ? styles.active : ""
-                            } ${step.completed ? styles.completed : ""}`}
-                    >
-                        <div className={styles.stepLine}></div>
+            <div>
+                <div className={styles.wizardSteps}>
+                    {steps.map((step, index) => (
+                        <div
+                            key={index}
+                            className={`${styles.step} ${step.active ? styles.active : ""
+                                } ${step.completed ? styles.completed : ""}`}
+                        >
+                            <div className={styles.stepLine}></div>
 
-                        <div className={styles.stepContent}>
-                            <span className={styles.stepNumber}>{step.num}</span>
-                            <span className={styles.stepLabel}>{step.label}</span>
+                            <div className={styles.stepContent}>
+                                <span className={styles.stepNumber}>{step.num}</span>
+                                <span className={styles.stepLabel}>{step.label}</span>
+                            </div>
                         </div>
-                    </div>
-                ))}
+                    ))}
+                </div>
+                <StepProgress
+                    percent={80} 
+                    currentStep={currentStep} 
+                />
             </div>
-            <div style={{
+            <div className={styles.activityHeader} style={{
                 width: "100%"
             }}>
                 <h2 className={styles.formHeading}>{t("Drop your documents - we'll sort them out")}</h2>
-                <p className={styles.formSubheading}>
+                 <p className={styles.formSubheading}>
                     {t("Your checklist adapts to your profile. Scan or upload; we detect the type automatically. Provide sensitive files through the secure channel - never by ordinary email.")}
                 </p>
             </div>
             <div className={styles.mainArea}>
-                <div className={styles.onboardingForm}>
+                <div className={`${styles.onboardingForm} ${styles.documentForm}`}>
                     <div className={styles.progressCard}>
                         <div className={styles.progressTop}>
                             <div className={styles.progressCount}>{uploadedCount} / {requiredDocKeys.length}</div>
 
                             <div className={styles.progressContent}>
                                 <h4>{t('Required documents provided')}</h4>
-                                <p>{t('Optional and not listed docs are listed below too. Upload them whenever you have them ready.')}</p>
+                                {!isMobile && <p>{t('Optional and not listed docs are listed below too. Upload them whenever you have them ready.')}</p>}
 
                                 <div className={styles.progressBar}>
                                     <div className={styles.progressFill} style={{ width: `${progressPercent}%` }}></div>
@@ -199,11 +209,17 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {}, userDetails, compa
                     <div className={styles.section}>
                         <div className={styles.sectionHeader}>
                             <div className={styles.sectionNumber}>{t('2')}</div>
-                            <h3>{t('Company proof of address')}</h3>
+                            {!isMobile &&<h3>{t('Company proof of address')}</h3>}
+                            {isMobile &&
+                            <div className={styles.headerContent}>
+                                <h3>{t('Company proof of address')}</h3>
+                                <p className={styles.subtitle}>{t('Provide ONE of the following')}</p>
+                            </div>
+                            }
                         </div>
-
+                    {!isMobile &&
                         <p className={styles.subtitle}>{t('Provide ONE of the following')}</p>
-
+                    }
                         <div className={styles.documentList}>
                             <div className={styles.documentRow}>
                                 <div className={styles.left}>
@@ -272,13 +288,19 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {}, userDetails, compa
                     <div className={styles.section}>
                         <div className={styles.sectionHeader}>
                             <div className={styles.sectionNumber}>{t('3')}</div>
-                            <h3>{t('Ultimate Beneficial Owners (UBO)')}</h3>
+                            {!isMobile &&<h3>{t('Ultimate Beneficial Owners (UBO)')}</h3>}
+                            {isMobile &&
+                                <div className={styles.headerContent}>
+                                    <h3>{t('Ultimate Beneficial Owners (UBO)')}</h3>
+                                    <p className={styles.subtitle}>{t('For each UBO holding directly or indirectly 25% or more')}</p>
+                                </div>
+                            }
                         </div>
-
+                    {!isMobile &&
                         <p className={styles.subtitle}>
                             {t('For each UBO holding directly or indirectly 25% or more')}
                         </p>
-
+                    }
                         <div className={styles.documentList}>
                             <div className={styles.documentRow}>
                                 <div className={styles.left}>
@@ -337,11 +359,23 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {}, userDetails, compa
                 </div>
 
             </div>
-            <div className={styles.noticeStrip}>
-                {t(
-                    "Secure handling: don't send sensitive KYC/KYB files by ordinary email. Where a CRM reference is used, share only the reference - never the document itself."
-                )}
-            </div>
+            {isMobile ?
+                            <div className={styles.alertWrapper}>
+                                <AlertBox
+                                    variant='warning'
+                                    containerClass={styles.alertContainer}
+                                    descClass={styles.alertDesc}
+                                    icon={<Shield size={12} color='#8A5A00' />}
+                                    description={"Secure handling: don't send sensitive KYC/KYB files by ordinary email. Where a CRM reference is used, share only the reference - never the document itself."}
+                                />
+                            </div>
+                            :    
+                            <div className={styles.noticeStrip}>
+                                {t(
+                                    "Secure handling: don't send sensitive KYC/KYB files by ordinary email. Where a CRM reference is used, share only the reference - never the document itself."
+                                )}
+                            </div>
+                }
             <div className={styles.navigationFooter}>
                 <button onClick={onBack} className={styles.backButton}>
                     <ArrowLeft size={16} />

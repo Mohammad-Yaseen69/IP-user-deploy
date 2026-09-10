@@ -2562,6 +2562,122 @@
         letter-spacing: -0.25px;
         border: none !important;
     }
+
+    .progressCard {
+        border-radius: 16px;
+        padding: 12px;
+        margin-bottom: 5px;
+        margin-bottom: 20px;
+    }
+
+    .progressContent {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+
+        h4 {
+            color: #3B2694;
+            font-size: 12px;
+            font-weight: 600;
+        }
+    }
+
+    .progressCount {
+        background: transparent;
+        font-size: 22px;
+        font-weight: 600;
+        width: auto;
+        height: auto;
+        letter-spacing: -3px;
+    }
+
+    .section {
+        border-radius: 16px;
+        padding: 0;
+        margin-bottom: 0;
+    }
+
+    .sectionHeader {
+        background-color: #F8F8FB;
+        padding: 15px;
+        margin: 0;
+        align-items: start;
+
+        .sectionNumber {
+            background: #FFFFFF;
+            color: #65627A;
+            box-shadow: 0px 1px 2px 0px #1412200D;
+
+        }
+    }
+
+    .documentRow {
+        flex-direction: column;
+        justify-content: start;
+        align-items: start;
+        padding: 15px 17px;
+        gap: 10px;
+
+        .left {
+            span {
+                font-size: 13px;
+                font-weight: 500;
+            }
+
+            .empty {
+                min-width: 22px;
+                min-height: 22px;
+            }
+        }
+
+        .required {
+            background: #FDEDED;
+            color: #B4232B;
+            font-weight: 600;
+        }
+
+        .right {
+            justify-content: space-between;
+            width: 100%;
+
+            .uploadBtn {
+                border-radius: 100px;
+            }
+
+            .oneof {
+                background: #F3F3F7;
+                color: #9793A8;
+            }
+        }
+    }
+
+    .documentForm {
+        gap: 0;
+        width: 100%;
+
+        div:nth-child(2) {
+            border-bottom-right-radius: 0;
+            border-bottom-left-radius: 0;
+        }
+
+        div:nth-child(3) {
+            border-top: 0;
+            border-radius: 0;
+        }
+
+        div:nth-child(4) {
+            border-top-right-radius: 0;
+            border-top-left-radius: 0;
+            border-top: 0;
+        }
+    }
+    .headerContent{
+        p{
+            color: #9793A8;
+            font-size: 11px !important;
+            margin: 0;
+        }
+    }
 }
 
 @media (max-width:900px) {

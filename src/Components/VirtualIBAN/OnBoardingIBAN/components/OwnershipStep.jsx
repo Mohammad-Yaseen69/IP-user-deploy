@@ -22,6 +22,13 @@ const EMPTY_FORM = {
     isPep: false
 }
 
+export const getInitials = (name) => {
+    if (!name) return 'UB'
+    const parts = name.trim().split(' ')
+    if (parts.length >= 2) return `${parts[0][0]}${parts[1][0]}`.toUpperCase()
+    return name.substring(0, 2).toUpperCase()
+}
+
 const OwnershipStep = ({ onNext, onBack, userType, data = {}, userDetails, currentStep }) => {
     const { t } = useTranslation()
     const isMobile = useMediaQuery('(max-width:600px)');
@@ -151,12 +158,6 @@ const OwnershipStep = ({ onNext, onBack, userType, data = {}, userDetails, curre
         { num: '06', label: t('Review'), active: false }
     ]
 
-    const getInitials = (name) => {
-        if (!name) return 'UB'
-        const parts = name.trim().split(' ')
-        if (parts.length >= 2) return `${parts[0][0]}${parts[1][0]}`.toUpperCase()
-        return name.substring(0, 2).toUpperCase()
-    }
 
     return (
         <div className={styles.onboardingLayout}>
@@ -197,7 +198,7 @@ const OwnershipStep = ({ onNext, onBack, userType, data = {}, userDetails, curre
                 <div className={styles.onboardingFormOwnership}>
                     {owners.map((owner) => 
                         isMobile?
-                        <OwnerCard owner={owner} key={owner.id} />
+                        <OwnerCard owner={owner} key={owner.id} handleDelete={handleDeleteOwner}/>
                             :
                         <div key={owner.id} className={styles.card} style={{ marginBottom: "15px", padding: "16px", borderRadius: "10px", border: "1px solid #e5e7eb", background: "#ffffff", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                             <div className={styles.left} style={{ display: "flex", alignItems: "center", gap: "15px" }}>
@@ -294,7 +295,7 @@ const OwnershipStep = ({ onNext, onBack, userType, data = {}, userDetails, curre
                 </button>
             </div>
 
-            <Modal isOpen={isModalOpen} toggle={() => setIsModalOpen(false)} centered>
+            <Modal isOpen={isModalOpen} toggle={() => setIsModalOpen(false)} centered style={{maxWidth: isMobile ? '90%' : 'auto'}}>
                 <ModalHeader toggle={() => setIsModalOpen(false)}>
                     {isEditing ? 'Edit Beneficial Owner / Director' : 'Add Beneficial Owner / Director'}
                 </ModalHeader>
