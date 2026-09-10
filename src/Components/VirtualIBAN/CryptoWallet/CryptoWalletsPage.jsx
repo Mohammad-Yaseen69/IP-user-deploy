@@ -14,7 +14,7 @@ const CryptoWalletsPage = () => {
             <div className={styles.routeTop}>
                 <div>
                     <h1 className={styles.routeTitle}>{t("Crypto Wallets")}</h1>
-                    <p className={styles.routeSub}>{t("Portfolio overview and crypto insights.")}</p>
+                    <p className={styles.routeSub}>{t("Create and manage your crypto wallets in one place.")}</p>
                 </div>
                 {width > 1000 && <TopRight position="relative" />}
             </div>
