@@ -23,6 +23,7 @@ import { usePermission } from '../../hooks/GeneralUse/usePermission';
 import { useQuery } from '@tanstack/react-query';
 import { apiWrapper } from '../../utils/Functions/apiWrapper';
 import { POSTAL_CODE_FORMATS, postalCodeRegex } from '../../Data/CountriesWithTranslations/PostalCode';
+import { preventEdgeSpaces } from '../../hooks/useTrimInput';
 
 
 export const currentDate = new Date();
@@ -524,7 +525,7 @@ const Basic = ({ setCurrentTab }) => {
             return false;
         }
 
-        
+
         return true
     }, [postalCode, countryAlpha2, isAfricanCountry]);
 
@@ -686,9 +687,11 @@ const Basic = ({ setCurrentTab }) => {
                             {!username && <span style={{ color: "red" }}>{t("(Required)")}</span>}
                         </Label>
                         <div style={{ position: "relative" }}>
-                            <Input disabled={!isEditMode || isVerified} readOnly={!isEditMode || isVerified} style={{
-                                borderColor: (!isEditMode || isVerified) ? "#eeeeee" : usernameValid ? "green" : "red",
-                            }} value={username} onChange={handleUsernameChange} onFocus={() => setShowUsernameGuide(true)} onBlur={() => setShowUsernameGuide(false)} />
+                            <Input
+                                onKeyDown={preventEdgeSpaces}
+                                disabled={!isEditMode || isVerified} readOnly={!isEditMode || isVerified} style={{
+                                    borderColor: (!isEditMode || isVerified) ? "#eeeeee" : usernameValid ? "green" : "red",
+                                }} value={username} onChange={handleUsernameChange} onFocus={() => setShowUsernameGuide(true)} onBlur={() => setShowUsernameGuide(false)} />
 
 
                             {loading &&
@@ -734,7 +737,9 @@ const Basic = ({ setCurrentTab }) => {
                         }}></div>
                     } */}
                         <Label>{t("About Me")}</Label>
-                        <Input disabled={!isEditMode} readOnly={!isEditMode} type='textarea' value={aboutMe} onChange={e => setAboutMe(e.target.value)} />
+                        <Input disabled={!isEditMode} readOnly={!isEditMode} type='textarea'
+                            onKeyDown={preventEdgeSpaces}
+                            value={aboutMe} onChange={e => setAboutMe(e.target.value)} />
                     </FormGroup>
                     {
                         userDetails?.gender
@@ -1074,6 +1079,7 @@ const Basic = ({ setCurrentTab }) => {
                         <Input
                             disabled={!isEditMode || isVerified}
                             readOnly={!isEditMode || isVerified}
+                            onKeyDown={preventEdgeSpaces}
                             value={postalCode || ""}
                             onChange={(e) => {
                                 setPostalCode(e.target.value);

@@ -11,6 +11,7 @@ import SuccessModal from '../AddBeneficiary/SuccessModal';
 import { useLocation, useNavigate } from 'react-router';
 import { toast } from 'react-toastify';
 import { usePermission } from '../../hooks/GeneralUse/usePermission';
+import { preventEdgeSpaces } from '../../hooks/useTrimInput';
 
 const SecurityQuestions = () => {
     const { userSecurityQues, authHeader, userDetails, verifyToken, getSecurityQuestions, setProfileLockTime, profileCompletedPercentage, setUserDetails } = useContext(UserContext)
@@ -183,10 +184,12 @@ const SecurityQuestions = () => {
                                 }}></div>
                             }
                             <Label className="form-label">{t("Security Question")} 1 {(!answerOne || !selectedQuesOne) && <span style={{ color: "red" }}>{t("(Required)")}</span>}</Label>
-                            <Input disabled={!isEditable} type='select' value={selectedQuesOne} onChange={e => {
-                                setSelectedQuesOne(e.target.value)
-                                setAnswerOne("")
-                            }}>
+                            <Input disabled={!isEditable} type='select'
+                                value={selectedQuesOne} onChange={e => {
+                                    setSelectedQuesOne(e.target.value)
+                                    setAnswerOne("")
+                                }}
+                            >
                                 <option value="">{t("Select your question")}</option>
                                 {
                                     userSecurityQues.map(que => (
@@ -197,7 +200,10 @@ const SecurityQuestions = () => {
                             <Input disabled={!isEditable} className="form-control mt-2" type="text" placeholder={t("Answer To The Question")} value={answerOne} onChange={e => {
                                 const value = e.target.value.slice(0, 50);
                                 setAnswerOne(value);
-                            }} maxLength={50} style={{ borderColor: isValidAnswer(answerOne) ? "#eeeeee" : "red" }} />
+                            }}
+                                onKeyDown={preventEdgeSpaces}
+
+                                maxLength={50} style={{ borderColor: isValidAnswer(answerOne) ? "#eeeeee" : "red" }} />
                             <div style={{ fontSize: "12px", color: "#666", marginTop: "4px", textAlign: "right" }}>
                                 {(answerOne?.length || 0)}/50
                             </div>
@@ -233,7 +239,9 @@ const SecurityQuestions = () => {
                             <Input disabled={!isEditable} className="form-control mt-2" type="text" placeholder={t("Answer To The Question")} value={answerTwo} onChange={e => {
                                 const value = e.target.value.slice(0, 50);
                                 setAnswerTwo(value);
-                            }} maxLength={50} style={{ borderColor: isValidAnswer(answerTwo) ? "#eeeeee" : "red" }} />
+                            }}
+                                onKeyDown={preventEdgeSpaces}
+                                maxLength={50} style={{ borderColor: isValidAnswer(answerTwo) ? "#eeeeee" : "red" }} />
                             <div style={{ fontSize: "12px", color: "#666", marginTop: "4px", textAlign: "right" }}>
                                 {(answerTwo?.length || 0)}/50
                             </div>
@@ -269,7 +277,9 @@ const SecurityQuestions = () => {
                             <Input disabled={!isEditable} className="form-control mt-2" type="text" placeholder={t("Answer To The Question")} value={answerThree} onChange={e => {
                                 const value = e.target.value.slice(0, 50);
                                 setAnswerThree(value);
-                            }} maxLength={50} style={{ borderColor: isValidAnswer(answerThree) ? "#eeeeee" : "red" }} />
+                            }}
+                                onKeyDown={preventEdgeSpaces}
+                                maxLength={50} style={{ borderColor: isValidAnswer(answerThree) ? "#eeeeee" : "red" }} />
                             <div style={{ fontSize: "12px", color: "#666", marginTop: "4px", textAlign: "right" }}>
                                 {(answerThree?.length || 0)}/50
                             </div>

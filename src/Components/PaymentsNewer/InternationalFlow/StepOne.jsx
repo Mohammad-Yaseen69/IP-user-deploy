@@ -269,6 +269,7 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
     const handleKeyUp = (e) => {
         const cursor = e.target.selectionStart;
         const prevLen = e.target.value.length;
+        const rawValue = e.target.value
         formatCurrency(e.target.value, false, setValue);
         requestAnimationFrame(() => {
             const newLen = e.target.value.length;
@@ -286,15 +287,18 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
                 setLoading(r)
                 setIsReceivingAmountLoading(r)
             }
-
+            const amountForRequest = rawValue?.replaceAll(",", "")
             api_timeout = setTimeout(() => {
-                getExchangeRate(String(data?.amount)?.replaceAll(",", ""), setLimitType, "", data.currency, true, setter)
+                getExchangeRate(amountForRequest, setLimitType, "",
+                    data.currency, true, setter)
             }, 1000)
         }
     };
 
     const handleKeyUpR = (e) => {
-        formatCurrency(e.target.value, false, setValueR);
+        const rawValue = e.target.value;
+
+        formatCurrency(rawValue, false, setValueR);
 
         if (data?.currency && data?.payer?.id && data?.country?.id && data?.payoutChannel?.id) {
             dataHandler("exchange_rate", {})
@@ -307,9 +311,9 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
                 setLoading(r)
                 setIsAmountLoading(r)
             }
-
+            const amountForRequest = rawValue?.replaceAll(",", "")
             api_timeout = setTimeout(() => {
-                getExchangeRate(String(data?.receiving_amount)?.replaceAll(",", ""), setLimitType, "", data.currency, true, setter, "to")
+                getExchangeRate(amountForRequest, setLimitType, "", data.currency, true, setter, "to")
             }, 1000)
         }
     };
@@ -595,8 +599,8 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
                                     dataHandler("country", item)
                                     dataHandler("payoutChannel", {})
                                     dataHandler("payer", {})
-                                    dataHandler("receiving_amount", "")  
-                                    dataHandler("exchange_rate", {})    
+                                    dataHandler("receiving_amount", "")
+                                    dataHandler("exchange_rate", {})
                                     dataHandler("exchange_rate_error", "")
                                 }}
                                 toggle={() => toggleModalHandler("country")}

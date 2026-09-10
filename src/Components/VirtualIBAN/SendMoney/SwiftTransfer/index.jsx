@@ -172,7 +172,10 @@ const TextField = ({ label, value, onChange, hint, type = "text", disabled = fal
 const SwiftAmountStep = ({ amount, setAmount, availableBalance, currencyCode, sourceIban }) => {
     const { t } = useTranslation()
     const sourceBalance = getAmountNumber(availableBalance)
+    const MIN_USD_AMOUNT = 11
+    const EUR_USD_RATE = 1.17
 
+    const MIN_AMOUNT_EUR = MIN_USD_AMOUNT / EUR_USD_RATE
     return (
         <div className={styles.stepStack}>
             <AmountStep
@@ -181,8 +184,10 @@ const SwiftAmountStep = ({ amount, setAmount, availableBalance, currencyCode, so
                 currencyCode={currencyCode}
                 availableBalance={sourceBalance}
                 label="Amount to send (EUR)"
-                min={MIN_AMOUNT}
+                min={MIN_AMOUNT_EUR}
                 max={MAX_AMOUNT}
+                minQuickAmount={10}
+
             />
 
             <div>

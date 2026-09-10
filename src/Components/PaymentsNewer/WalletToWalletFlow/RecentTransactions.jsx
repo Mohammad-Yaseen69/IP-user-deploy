@@ -40,7 +40,7 @@ const RecentTransactions = ({ dataHandler, type, setShowRecent = () => { }, setS
         queryFn: () => getRecentTransaction(authHeader, userDetails?._id, type),
         staleTime: 0,
         gcTime: 0,
-    }) 
+    })
     const width = useWindowWidth()
     const payoutChannelData = usePayoutChannel(userDetails)
 
@@ -187,10 +187,12 @@ const RecentTransactions = ({ dataHandler, type, setShowRecent = () => { }, setS
     };
     return (
         <div style={{ minWidth: width < 1000 && "100%" }} className={styles.container}>
-            <div style={{ justifyContent: width < 1000 && "center" }} className={styles.top}>
-                <h4>{t("RECENT TRANSFERS")}</h4>
-                {width > 1000 && <span>{t("See all")}</span>}
-            </div>
+            {data?.length > 0 &&
+                <div style={{ justifyContent: width < 1000 && "center" }} className={styles.top}>
+                    <h4>{t("RECENT TRANSFERS")}</h4>
+                    {width > 1000 && <span>{t("See all")}</span>}
+                </div>
+            }
 
             <div className={styles.transCont}>
                 {data?.map((tx) => {
@@ -271,7 +273,7 @@ const RecentTransactions = ({ dataHandler, type, setShowRecent = () => { }, setS
                                     fontSize: "18px"
                                 }}>
                                     {dataCurrency?.beneficiary_wallet?.currency?.code ||
-                                        dataCurrency?.currency?.currency?.code ||
+                                        dataCurrency?.currency?.currency?.code || modalData.tx?.currency?.code ||
                                         "USD"}                                </span>
                                 <input
 

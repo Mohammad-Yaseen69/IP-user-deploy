@@ -5,7 +5,7 @@ import PhoneInput from "../../PhoneInput"
 const Stepthree = ({ data, dataHandler, onKeyDown, onFocus }) => {
     const { t } = useTranslation()
 
-    console.log(data.phone)
+    console.log(data.country, "country")
     return (
         <div className={styles.container}>
             {data.account_type === "individual" &&
@@ -13,8 +13,13 @@ const Stepthree = ({ data, dataHandler, onKeyDown, onFocus }) => {
                     <div className={styles.inp}>
                         <label>{t("Phone Number")}</label>
                         <PhoneInput
-                            country={data.country}
-                            setPhone={(e) => {
+                            country={
+                                data.country?.alpha3 ||
+                                data.country?.country_iso_code ||
+                                data.country ||
+                                ""
+                            }
+                             setPhone={(e) => {
                                 dataHandler("phone", e)
                                 dataHandler("phone_error", null)
                             }}
