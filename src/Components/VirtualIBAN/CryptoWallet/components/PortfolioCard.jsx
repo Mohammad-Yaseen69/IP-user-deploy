@@ -27,7 +27,7 @@ const PortfolioCard = ({ wallet, walletBalance, onSyncWallet, syncing }) => {
 
 
 
-    const label = isWalletView ? t("Wallet balance") : t("Total portfolio value")
+    const label = isWalletView ? t("Wallet balance") : t("Total crypto portfolio value")
     const currency = isWalletView ? code : "EUR"
     const value = isWalletView ? formatCryptoAmount(walletBalance) : formatCurrency(data?.total, true, false)
 
