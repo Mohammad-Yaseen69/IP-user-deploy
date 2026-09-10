@@ -206,7 +206,7 @@ const ConfirmSend = ({ beneficiary, amount, currency, country, payoutChannel, se
             }
         }
     }, [isSlided])
-
+    console.log(userWithdrawals, "userWithdrawals")
     return (
         <Card style={{
             height: "100%",
@@ -221,7 +221,42 @@ const ConfirmSend = ({ beneficiary, amount, currency, country, payoutChannel, se
                 <ModalBody style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
                     <XCircle size={70} color="red" />
                     <p color="red" style={{ fontSize: "1.1rem", fontWeight: "600", color: "red", marginTop: ".3rem" }}>{t(errorMessage || "Oops! Something went wrong.")}</p>
-                    <p style={{ fontSize: ".6rem", marginTop: ".5rem" }}>{t("We're sorry about that.")} <Link to={userWithdrawals?._id ? "/wallets" : "/payments"} style={{ textDecoration: "underline" }}>{t(userWithdrawals?._id ? "Go back to Wallet Page." : "Go back to Payments Page.")}</Link></p>
+                    <p style={{ fontSize: ".6rem", marginTop: ".5rem" }}>{t("We're sorry about that.")}
+
+                        <button
+                            type="button"
+                            onClick={() => {
+                                setShowError(false);
+
+                                setIsSlided(false);
+                                setLoading(false);
+
+                                const path = userWithdrawals?._id
+                                    ? "/wallets"
+                                    : "/payments";
+
+                                navigate(path, { replace: true });
+                            }}
+                            style={{
+                                border: "none",
+                                background: "transparent",
+                                padding: 0,
+                                textDecoration: "underline",
+                                cursor: "pointer",
+                                color: "inherit",
+                                fontSize: ".6rem",
+                                color: "blue",
+                            }}
+                        >
+                            {t(
+                                userWithdrawals?._id
+                                    ? "Go back to Wallet Page."
+                                    : "Go back to Payments Page."
+                            )}
+                        </button>
+
+
+                    </p>
                 </ModalBody>
             </Modal>
 
