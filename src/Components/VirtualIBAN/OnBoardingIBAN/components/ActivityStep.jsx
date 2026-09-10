@@ -674,7 +674,7 @@ const ActivityStep = ({ onNext, onBack, data = {}, currentStep}) => {
                     style={{ opacity: !isFormValid ? 0.5 : 1, cursor: !isFormValid ? 'not-allowed' : 'pointer' }}
                 >
                     {t("Continue")}
-                    <ArrowRight size={16} />
+                    {!isMobile && <ArrowRight size={16} />}
                 </button>
             </div>
         </div>

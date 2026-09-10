@@ -178,14 +178,14 @@ const VirtualBank = () => {
         </div>
         {onboardingStep === 'landing' ?
           <div className={styles.mobileTopRight}>
-            <div className={styles.notificationContainer}>
+            {/* <div className={styles.notificationContainer}>
               <Badge badgeContent='3' color="secondary" classes={{ anchorOriginTopRightRectangular: styles.notificationBadge }}>
                 <Bell size={20} />
               </Badge>
             </div>
             <div className={styles.notificationContainer}>
               <Avatar alt="User Avatar" src={userDetails?.profile_image} sx={{ width: 28, height: 28 }} />
-            </div>
+            </div> */}
         </div>
         :
         (onboardingStep !== 'pricing' && onboardingStep !== 'ActivateAccount') &&

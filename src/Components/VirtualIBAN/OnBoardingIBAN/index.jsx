@@ -182,8 +182,8 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
         if (currentStep === 'documents') return 'ownership'
         if (currentStep === 'ownership') return 'activity'
         if (currentStep === 'activity') return 'company'
-        if (currentStep === 'company') return 'selection'
-        if (currentStep === 'account') return 'selection'
+        if (currentStep === 'company') return 'landing'
+        if (currentStep === 'account') return 'landing'
         if (currentStep === 'selection') return 'landing'
         return 'landing'
     }
