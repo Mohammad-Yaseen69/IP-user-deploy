@@ -2671,11 +2671,49 @@
             border-top: 0;
         }
     }
-    .headerContent{
-        p{
+
+    .headerContent {
+        p {
             color: #9793A8;
             font-size: 11px !important;
             margin: 0;
+        }
+    }
+
+    .summaryWrapper {
+        .edit {
+            background: #F3EFFE;
+            border-radius: 100px;
+            padding: 5px 11px;
+            font-weight: 600;
+            font-size: 12px;
+        }
+
+        .grid {
+            grid-template-columns: 1fr;
+        }
+
+        .item {
+            flex-direction: row;
+            justify-content: space-between;
+            gap: 10px;
+            border-bottom: 1px solid #14122012;
+
+            span {
+                font-weight: 600;
+            }
+        }
+
+        .grid .item:last-of-type {
+            border-bottom: none;
+        }
+
+
+        .confirmRow {
+            box-shadow: 0px 0px 0px 1px #14122012 inset;
+            background: #F8F8FB;
+            border-radius: 16px;
+            padding: 16px;
         }
     }
 }
