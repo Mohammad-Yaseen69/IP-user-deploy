@@ -21,7 +21,6 @@ const verificationMethods = [
     { id: 'sms', label: 'SMS / Email', Icon: Smartphone },
 ]
 
-/* ============ VARIANT 1: signup (was Signup/OtpConfirmation.jsx) ============ */
 const SignupOtp = ({ verifyOTpHandler, resendHandler, timer = 120, type = 'phone', data, dataHandler, isWhatsappDefault, numberOfFields = 6 }) => {
     const { t } = useTranslation()
     const { values: otpValues, setValues: setOTPValues, refs: inputRefs, handleChange, handleKeyDown, focusFirst, isComplete } = useOtpFields(numberOfFields)
@@ -155,7 +154,6 @@ const SignupOtp = ({ verifyOTpHandler, resendHandler, timer = 120, type = 'phone
     )
 }
 
-/* ============ VARIANT 2: card (was UserSettingsNew/OTPConfirmation.jsx) ============ */
 const CardOtp = ({
     setter, callback, setterValue, hideOtp, type = '', processing = false,
     resendHandler = () => { }, authType, setAuthType, hideTfaSwitch = false,
@@ -302,7 +300,6 @@ const CardOtp = ({
     )
 }
 
-/* ============ VARIANT 3: modal (was InternationalFlow/OtpConfirmation.jsx) ============ */
 const ModalOtp = ({ isOpen, toggle, callback, data, dataHandler, resendHandler, isLoading, error = '', resetIdempotency = () => { }, numberOfFields = 6 }) => {
     const { t } = useTranslation()
     const navigate = useNavigate()
@@ -438,7 +435,6 @@ const ModalOtp = ({ isOpen, toggle, callback, data, dataHandler, resendHandler, 
     )
 }
 
-/* ============ VARIANT 4: buttons (was WithdrawBalanceModal/OTPConfirmation.jsx) ============ */
 const ButtonsOtp = ({
     setter, callback, setterValue, hideOtp, type = '', processing = false,
     resendHandler = () => { }, authType, setAuthType, hideTfaSwitch = false,

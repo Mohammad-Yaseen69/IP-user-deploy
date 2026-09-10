@@ -17,7 +17,9 @@ import useWindowWidth from '../../utils/useWindowWidth';
 import CardtoCard from './CardtoCardModal';
 import { Modal, ModalBody, ModalHeader, Input, ModalFooter } from 'reactstrap';
 import { encryptData } from '../../Helper/EssentilaMethods/Encryption';
-import OTPConfirmation from "../UserSettingsNew/OTPConfirmation"
+// import OTPConfirmation from "../UserSettingsNew/OTPConfirmation"
+import OTPConfirmation from "../../Common/Component/OtpVerification"
+
 import { getDecimalPointIndex } from '../../Helper/getDecimalIndex';
 import CardtoWallet from './CardtoWallet';
 import { useTranslation } from 'react-i18next';
