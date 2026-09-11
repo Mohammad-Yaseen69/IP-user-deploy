@@ -1,5 +1,5 @@
 export const BIC_REGEX = /^[A-Za-z]{4}[A-Za-z]{2}[A-Za-z0-9]{2}([A-Za-z0-9]{3})?$/;
-export const DESCRIPTION_REGEX = /^[a-zA-Z0-9\s,.-]{5,120}$/;
+export const DESCRIPTION_REGEX = /^[a-zA-Z0-9\s,.-]{5,34}$/;
 export const ISO3_REGEX = /^[A-Za-z]{3}$/;
 export const NON_EMPTY_REGEX = /^(?!\s*$).+/;
 

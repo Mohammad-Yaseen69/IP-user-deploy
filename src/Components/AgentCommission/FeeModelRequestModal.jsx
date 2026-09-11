@@ -237,6 +237,29 @@ const FeeModelRequestModal = ({ isOpen, toggle }) => {
                                             </div>
                                         </div>
 
+                                        {req.status === 'approved' && (
+                                            <div style={{ background: '#ECFDF5', padding: '12px 14px', borderRadius: '8px', border: '1px solid #A7F3D0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                                <div>
+                                                    <div style={{ fontSize: '11px', color: '#065F46', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                                                        {t("Approved Commission")}
+                                                    </div>
+                                                    <div style={{ fontSize: '16px', fontWeight: 800, color: '#047857', marginTop: '2px' }}>
+                                                        {(() => {
+                                                            const cType = req.comissionType || req.created_pack_id?.comissionType || 'percentage';
+                                                            const cVal = req.feesCommisionValue ?? req.created_pack_id?.feesCommisionValue ?? 0;
+                                                            const cFix = req.feesCommisionFixed ?? req.created_pack_id?.feesCommisionFixed ?? 0;
+                                                            if (cType === 'both') return `${cVal}% + €${cFix}`;
+                                                            if (cType === 'fixed') return `€${cFix > 0 ? cFix : cVal}`;
+                                                            return `${cVal}%`;
+                                                        })()}
+                                                    </div>
+                                                </div>
+                                                <Badge color="success" pill style={{ padding: '5px 10px', fontSize: '11px' }}>
+                                                    {t("Active")}
+                                                </Badge>
+                                            </div>
+                                        )}
+
                                         {req.status === 'approved' && req.model_code && (
                                             <div style={{ background: '#EEF2FF', padding: '12px 14px', borderRadius: '8px', border: '1px solid #C7D2FE', display: 'flex', flexDirection: 'column', gap: '8px' }}>
                                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
