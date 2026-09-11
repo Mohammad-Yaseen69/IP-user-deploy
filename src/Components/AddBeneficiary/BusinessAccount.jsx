@@ -26,6 +26,7 @@ import InstaPayLoader from "../Loader";
 import { useLocation, useNavigate, useParams } from "react-router";
 import SuccessModal from "./SuccessModal";
 import NestedDropdown from "../NestedDropdown";
+import { preventEdgeSpaces, preventEmailSpaces } from "../../hooks/useTrimInput";
 
 
 const BusinessAccount = ({ isInternational, toggleHandler, errorOnInvalid = true, error = false, nameRegex }) => {
@@ -561,6 +562,7 @@ const BusinessAccount = ({ isInternational, toggleHandler, errorOnInvalid = true
                                     style={{ flex: 1, minWidth: "250px" }}
                                     id="last-name"
                                     type="text"
+                                    onKeyDown={preventEdgeSpaces}
                                     placeholder={t('Enter the company name')}
                                     required
                                     pattern="[A-Za-z\\s]+"
@@ -579,6 +581,7 @@ const BusinessAccount = ({ isInternational, toggleHandler, errorOnInvalid = true
                                     id="email"
                                     name="email"
                                     type="email"
+                                    onKeyDown={preventEmailSpaces}
                                     placeholder={t('Email Address')}
                                     title="abc@xyz.com"
                                     value={formData.email}
