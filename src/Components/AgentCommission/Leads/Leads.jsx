@@ -3,9 +3,10 @@ import useWindowWidth from '../../../utils/useWindowWidth';
 import { useTranslation } from 'react-i18next';
 import styles from "../styles/leads.module.css";
 import TopRight from '../../topRight';
-import { AlertTriangle, Search, Send, Trash2, X, UserPlus, Eye } from 'react-feather';
+import { AlertTriangle, Search, Send, Trash2, X, UserPlus, Eye, Edit2 } from 'react-feather';
 import LeadModal from './LeadModal';
 import AddByNameModal from './AddByNameModal';
+import UpdateFeePackModal from '../UpdateFeePackModal';
 import { Modal, ModalBody } from 'reactstrap';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiWrapper } from '../../../utils/Functions/apiWrapper';
@@ -36,6 +37,7 @@ const Leads = () => {
     const [isAddByNameOpen, setIsAddByNameOpen] = useState(false);
     const [initialEntityType, setInitialEntityType] = useState('business');
     const [selectedLead, setSelectedLead] = useState(null);
+    const [editingFeePackLead, setEditingFeePackLead] = useState(null);
 
     const isManager = Boolean(userDetails?.isInstapayAgent && userDetails?.isInstapayManager);
 
@@ -213,6 +215,8 @@ const Leads = () => {
                                 leads.map((row) => {
                                     const displayName = row.company_name || `${row.first_name || ''} ${row.last_name || ''}`.trim() || t("Unnamed Lead");
                                     const avatarText = displayName.substring(0, 2).toUpperCase();
+                                    const feePackName = row.fee_pack?.name || t("Standard");
+                                    const feePackSummary = row.fee_pack?.pricing_summary || feePackName;
 
                                     return (
                                         <div key={row._id} className={styles.tableDataRow}>
@@ -243,9 +247,15 @@ const Leads = () => {
                                                 </span>
                                             </div>
 
-                                            <div className={styles.tdCell} title={row.fee_pack?.name || 'Standard'}>
-                                                <span className={`${styles.textIndicator} ${styles.statusGreen}`}>
-                                                    {truncateStr(row.fee_pack?.name || 'Standard', 18)}
+                                            <div
+                                                className={styles.tdCell}
+                                                title={feePackSummary}
+                                                style={{ cursor: 'pointer' }}
+                                                onClick={() => setEditingFeePackLead(row)}
+                                            >
+                                                <span className={`${styles.textIndicator} ${styles.statusGreen}`} style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                                                    {truncateStr(feePackName, 18)}
+                                                    <Edit2 size={11} style={{ opacity: 0.7 }} />
                                                 </span>
                                             </div>
 
@@ -257,6 +267,15 @@ const Leads = () => {
                                                     title={t("View Details")}
                                                 >
                                                     <Eye size={13} />
+                                                </button>
+
+                                                <button
+                                                    onClick={() => setEditingFeePackLead(row)}
+                                                    className={styles.secondaryBtn}
+                                                    style={{ padding: '4px 8px', fontSize: '12px', display: 'flex', alignItems: 'center', gap: '4px', cursor: 'pointer' }}
+                                                    title={t("Update Fee Pack")}
+                                                >
+                                                    <Edit2 size={13} />
                                                 </button>
 
                                                 {!row.addedByManager && (row.stage === 'not-registered' || row.stage === 'claim-pending') && (
@@ -341,7 +360,7 @@ const Leads = () => {
                                 color: '#4F46E5',
                                 display: 'flex',
                                 alignItems: 'center',
-                                justifyContent: 'center',
+                                justifyCenter: 'center',
                                 fontWeight: 700,
                                 fontSize: '16px'
                             }}>
@@ -409,7 +428,32 @@ const Leads = () => {
                             </div>
                             <div>
                                 <span style={{ fontSize: '11px', color: '#64748B', display: 'block' }}>{t("Assigned Fee Model")}</span>
-                                <span style={{ fontSize: '13px', fontWeight: 700, color: '#15803D' }}>{selectedLead?.fee_pack?.name || 'Standard'}</span>
+                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '2px' }}>
+                                    <span style={{ fontSize: '13px', fontWeight: 700, color: '#15803D' }}>{selectedLead?.fee_pack?.name || 'Standard'}</span>
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            const current = selectedLead;
+                                            setSelectedLead(null);
+                                            setEditingFeePackLead(current);
+                                        }}
+                                        style={{
+                                            display: 'inline-flex',
+                                            alignItems: 'center',
+                                            gap: '4px',
+                                            padding: '3px 8px',
+                                            fontSize: '11px',
+                                            fontWeight: 600,
+                                            color: '#4F46E5',
+                                            backgroundColor: '#EEF2FF',
+                                            border: '1px solid #C7D2FE',
+                                            borderRadius: '6px',
+                                            cursor: 'pointer'
+                                        }}
+                                    >
+                                        <Edit2 size={11} /> {t("Change")}
+                                    </button>
+                                </div>
                                 {selectedLead?.fee_pack?.pricing_summary && (
                                     <div style={{ fontSize: '11px', color: '#64748B', marginTop: '2px' }}>{selectedLead.fee_pack.pricing_summary}</div>
                                 )}
@@ -537,6 +581,12 @@ const Leads = () => {
                     </div>
                 </ModalBody>
             </Modal>
+
+            <UpdateFeePackModal
+                isOpen={Boolean(editingFeePackLead)}
+                onClose={() => setEditingFeePackLead(null)}
+                target={{ type: 'lead', data: editingFeePackLead }}
+            />
         </div>
     );
 };

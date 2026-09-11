@@ -12,11 +12,12 @@ import {
 } from "../utils/amount"
 import styles from "./convertFunds.module.scss"
 
-const AmountStep = ({ amount, setAmount, currencyCode = "EUR", availableBalance = 0, label = "Amount to convert", min = null, max = null }) => {
+const AmountStep = ({ amount, setAmount, currencyCode = "EUR", availableBalance = 0, label = "Amount to convert", min = null, max = null, minQuickAmount = 0, }) => {
     const { t } = useTranslation()
     const numericAmount = getAmountNumber(amount)
     const sourceBalance = getAmountNumber(availableBalance)
     const quickAmounts = getQuickAmountsFromBalance(sourceBalance)
+        .filter(({ value }) => value >= minQuickAmount)
     const symbol = getCurrencySymbol(currencyCode)
 
     const amountEntered = numericAmount > 0
@@ -55,7 +56,7 @@ const AmountStep = ({ amount, setAmount, currencyCode = "EUR", availableBalance 
                         autoFocus
                     />
                 </div>
-                <div style={{display: "flex", flexDirection: "column"}} className={styles.availableText}>
+                <div style={{ display: "flex", flexDirection: "column" }} className={styles.availableText}>
                     <span>
                         {t("Available")} &middot; {symbol}{formatAmountValue(sourceBalance)}
                     </span>
