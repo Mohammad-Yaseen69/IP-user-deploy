@@ -1180,7 +1180,7 @@ const SwiftTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, 
 
     const content = (
         <div className={styles.modalLayout} style={{ flexDirection: width < 1000 ? "column" : "row" }}>
-            <MobileStepProgress currentStep={currentStep} />
+            {isMobile && <MobileStepProgress currentStep={currentStep} />}
             <aside className={styles.leftPanel}>
                 <div>
                     <div className={styles.flowHeader}>
@@ -1243,22 +1243,22 @@ const SwiftTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, 
                     </div>
                 )}
             </section>
-            {isMobile && 
-            <div className={`${styles.footer} ${styles.mobileFooter}`}>
-                <div className={styles.footerNav}>
-                    <button type="button" className={styles.backBtn} onClick={handleBack}>
-                        <ChevronLeft size={24} />
-                    </button>
-                    <button
-                        type="button"
-                        className={styles.nextBtn}
-                        disabled={disabled}
-                        onClick={handleContinue}
-                    >
-                        {isProcessing ? t("Processing...") : getContinueLabel(currentStep, t)}
-                    </button>
+            {isMobile &&
+                <div className={`${styles.footer} ${styles.mobileFooter}`}>
+                    <div className={styles.footerNav}>
+                        <button type="button" className={styles.backBtn} onClick={handleBack}>
+                            <ChevronLeft size={24} />
+                        </button>
+                        <button
+                            type="button"
+                            className={styles.nextBtn}
+                            disabled={disabled}
+                            onClick={handleContinue}
+                        >
+                            {isProcessing ? t("Processing...") : getContinueLabel(currentStep, t)}
+                        </button>
+                    </div>
                 </div>
-            </div>
             }
         </div>
     )
