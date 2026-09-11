@@ -13,7 +13,7 @@ import SuccessModal from '../AddBeneficiary/SuccessModal'
 import InstaPayLoader from '../Loader'
 import ErrorModal from '../PaymentsNewer/InternationalFlow/ErrorModal'
 import { LimitsErrorMessage } from '../PaymentsNewer/OTPConfirmation'
-import OTPConfirmation from '../UserSettingsNew/OTPConfirmation'
+import OTPConfirmation from '../../Common/Component/OtpVerification'
 
 const AcceptModal = ({ isOpen, toggle, item }) => {
     const { userWallets, authHeader, userDetails, verifyToken } = useContext(UserContext)
@@ -184,6 +184,7 @@ const AcceptModal = ({ isOpen, toggle, item }) => {
                         <>
                             <ModalBody>
                                 <OTPConfirmation
+                                    variant="card"
                                     callback={acceptRequest}
                                     setter={setShowSuccess}
                                     setterValue={true}
