@@ -170,3 +170,52 @@
     font-family: Inter, sans-serif;
     font-size: 14px;
 }
+
+
+@media (max-width: 480px) {
+    .beneficiaryStep {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        grid-template-areas:
+            "header header"
+            "search button"
+            "list list";
+        gap: 12px;
+        align-items: center;
+    }
+
+    .beneficiaryHeader {
+        display: contents;
+    }
+    .beneficiaryList {
+    min-height: 100px;
+}
+    .beneficiaryHeader h3 {
+        grid-area: header;
+        padding-bottom: 12px;
+        padding-top: 20px;
+        margin-bottom: 0;
+        font-size: 22px;
+        font-weight: 700;
+    }
+
+    .searchBox {
+        grid-area: search;
+        margin-bottom: 0;
+        height: 40px;
+    }
+    .searchBox input {
+        line-height: normal; 
+        width: 35vw;  
+    }
+    .primarySmallBtn {
+        grid-area: button;
+        height: 40px;
+        white-space: nowrap;
+        margin-bottom: 0;
+    }
+
+    .beneficiaryList {
+        grid-area: list;
+    }
+}

@@ -597,3 +597,34 @@
         }
     }
 }
+
+@media (max-width: 480px) {
+    .amountInputBox {
+        padding: 20px 14px 20px; // Choti screen par padding kam kar di hai
+        gap: 16px;
+    }
+
+    .currencySymbol {
+        font-size: 32px; // Symbol ka size chota kar diya
+    }
+
+    .amountInput {
+        font-size: 40px; // Input text font size chota kiya taake lamba number fit aa jaye
+    }
+
+    .availableText {
+        font-size: 14px; // Available balance text size adjust kiya
+    }
+
+    .quickAmounts {
+        gap: 6px;
+    }
+
+    .quickBtn {
+        min-width: 75px;
+        min-height: 36px;
+        padding: 0 10px;
+        font-size: 13px; 
+        border-radius: 15px;
+    }
+}
