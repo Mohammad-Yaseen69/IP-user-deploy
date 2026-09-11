@@ -1,10 +1,11 @@
 import axios from "axios"
-import { useContext, useEffect, useMemo, useRef, useState } from "react"
+import { forwardRef, useContext, useEffect, useImperativeHandle, useMemo, useRef, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { useNavigate } from "react-router"
 import { toast } from "react-toastify"
 import { Modal, ModalBody } from "reactstrap"
 import {
+    Check,
     CheckCircle,
     ChevronDown,
     ChevronLeft,
@@ -532,7 +533,7 @@ const ReviewStep = ({
                         {exchangeRate && (
                             <>
                                 <br />
-                                <p style={{ marginTop: "4px" }}>{t("Rate")}</p>
+                                <p style={{ marginTop: "4px" }}>{t("Rate")}&nbsp;</p>
                                 <strong>
                                     1 EUR = {exchangeRate.value.toFixed(4)} USD
                                 </strong>
@@ -712,6 +713,8 @@ const DoneStep = ({
 }) => {
     const { t } = useTranslation()
     const navigate = useNavigate()
+    const width = useWindowWidth()
+    const isMobile = width <= 600;
 
     const recipientAmount = feeDetails?.recipient
     const feeAmount = feeDetails?.fee
@@ -728,7 +731,10 @@ const DoneStep = ({
         <div className={styles.doneStep}>
             <div className={styles.doneHero}>
                 <img src={success} alt="" />
-                <h3>{t("Payment submitted")}</h3>
+                <div className={styles.doneIcon}>
+                    <Check size={32} />
+                </div>
+                <h3>{t(isMobile ? "Payment on its way 🎉" : "Payment submitted")}</h3>
                 <p>
                     {t("You sent")} {formatMoney(amount, currencyCode)} {t("to")}{" "}
                     {getBeneficiaryName(selectedBeneficiary)}
@@ -765,7 +771,7 @@ const DoneStep = ({
                     <Send size={15} />
                     {t("Send again")}
                 </button>
-                <div>
+                <div className={styles.doneActionsRight}>
                     <button
                         type="button"
                         className={styles.backBtn}
@@ -782,12 +788,12 @@ const DoneStep = ({
                             })
                         }
                     >
-                        <Download size={15} />
-                        {t("Download receipt")}
+                        {!isMobile && <Download size={15} />}
+                        {t(isMobile ? "Download" : "Download receipt")}
                     </button>
                     <button type="button" className={styles.nextBtn} onClick={() => navigate("/virtual-IBAN")}>
-                        <Home size={15} />
-                        {t("Back to dashboard")}
+                        {!isMobile && <Home size={15} />}
+                        {t(isMobile ? "Dashboard" : "Back to dashboard")}
                     </button>
                 </div>
             </div>
@@ -795,7 +801,7 @@ const DoneStep = ({
     )
 }
 
-const SwiftTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, isPage = false }) => {
+const SwiftTransfer = forwardRef(({ isOpen = true, toggle, selectedIban, availableBalance, isPage = false }, ref) => {
     const { t } = useTranslation()
     const width = useWindowWidth()
     const navigate = useNavigate()
@@ -1072,6 +1078,10 @@ const SwiftTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, 
         else setCurrentStep(prevStep)
     }
 
+    useImperativeHandle(ref, () => ({
+        back: handleBack,
+    }), [handleBack])
+
     const renderStepContent = () => {
         switch (currentStep) {
             case STEPS.AMOUNT:
@@ -1243,7 +1253,7 @@ const SwiftTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, 
                     </div>
                 )}
             </section>
-            {isMobile &&
+            {(isMobile && currentStep !== STEPS.DONE) &&
                 <div className={`${styles.footer} ${styles.mobileFooter}`}>
                     <div className={styles.footerNav}>
                         <button type="button" className={styles.backBtn} onClick={handleBack}>
@@ -1295,6 +1305,6 @@ const SwiftTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, 
             />
         </>
     )
-}
+})
 
 export default SwiftTransfer

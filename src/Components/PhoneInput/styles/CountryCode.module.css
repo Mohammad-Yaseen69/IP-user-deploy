@@ -67,7 +67,8 @@
 }
 
 @media screen and (max-width: 600px) {
-    .selected img {
+    .selected img,
+    .dropdown_item img {
         width: 26px;
         height: 19px;
         border-radius: 4px;
@@ -78,5 +79,10 @@
         font-weight: 500;
         font-size: 12px;
         white-space: nowrap;
+    }
+
+    .dropdown {
+        top: 43px;
+        padding: 3px;
     }
 }

@@ -1,4 +1,4 @@
-import React, { useContext, useMemo, useState } from 'react';
+import React, { useContext, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import useWindowWidth from '../../../../utils/useWindowWidth';
 import TopRight from '../../../topRight';
@@ -30,7 +30,8 @@ const MoveMoney = () => {
     const [showSepaPage, setShowSepaPage] = useState(false);
     const [showSwiftPage, setShowSwiftPage] = useState(false);
     const [showCryptoTopupModal, setShowCryptoTopupModal] = useState(false);
-    const navigate = useNavigate();
+    const btnRef = useRef(null);
+
     const {
         userDetails,
         selectedAccount,
@@ -62,7 +63,7 @@ const MoveMoney = () => {
         <>
          <div className={styles.mobileHeader}>
             <div className={styles.headerContent}>
-                <ChevronLeft size={22} onClick={handleClose} />
+                <ChevronLeft size={22} onClick={() => btnRef.current?.back()} />
                 <span>
                     {t("SWIFT International")}
                 </span>
@@ -112,6 +113,7 @@ const MoveMoney = () => {
                                 selectedIban={selectedIban}
                                 availableBalance={currentBalance}
                                 toggle={handleClose}
+                                ref={btnRef}
                             />
                         </>
 

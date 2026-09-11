@@ -371,9 +371,10 @@
     .container {
         margin: 0;
         padding: 0;
+        min-height: auto;
     }
 
-    .mainContent{
+    .mainContent {
         padding: 0;
     }
 

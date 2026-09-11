@@ -147,7 +147,7 @@ const CountryDropDown = ({ onSelect, country = "", disabled = false, padding = "
                                     width="41"
                                     height="27"
                                     loading="lazy"
-                                    style={{ borderRadius: "4px", boxShadow: "0 0 10px rgba(0,0,0,.3)", width: "41px", height: "27px" }}
+                                    style={{ borderRadius: "4px", boxShadow: "0 0 10px rgba(0,0,0,.3)", width: isMobile ? '26px' : "41px", height: isMobile ? '19px' : "27px" }}
                                     className="i_t_flag"
                                     draggable="false"
                                 />

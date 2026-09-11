@@ -1,7 +1,6 @@
-import React from "react";
-import { BsDot } from "react-icons/bs";
 import styles from "../styles/MobileStepProgress.module.css";
 import {
+  getSidebarStepName,
   isSidebarStepActive,
   isSidebarStepCompleted,
   SIDEBAR_STEPS,
@@ -12,6 +11,10 @@ import { useTranslation } from "react-i18next";
 
 const MobileStepProgress = ({ currentStep }) => {
   const { t } = useTranslation();
+
+  const order = SIDEBAR_STEPS.map((item) => item.stepName);
+  const currentSidebarStep = getSidebarStepName(currentStep);
+
   return (
     <>
       <div className={styles.container}>
@@ -21,9 +24,7 @@ const MobileStepProgress = ({ currentStep }) => {
           return (
             <div
               key={index}
-              className={`${styles.step} ${isActive ? styles.active : ""} ${
-                isCompleted ? styles.completed : ""
-              }`}
+              className={`${styles.step} ${isActive ? styles.active : ""} ${isCompleted ? styles.completed : ""}`}
             >
               <div className={styles.stepLine}></div>
             </div>
@@ -32,8 +33,8 @@ const MobileStepProgress = ({ currentStep }) => {
       </div>
       <div className={styles.mobileStepContainer}>
         <p className={styles.stepCount}>
-          Step {1} of {SIDEBAR_STEPS.length}
-          <span> · {currentStep}</span>
+          Step {order.indexOf(currentSidebarStep) + 1} of {SIDEBAR_STEPS.length}
+          <span> · {currentSidebarStep?.toLowerCase()}</span>
         </p>
         <div className={styles.dropdownPill}>
           <div className={styles.addIconContainer}>

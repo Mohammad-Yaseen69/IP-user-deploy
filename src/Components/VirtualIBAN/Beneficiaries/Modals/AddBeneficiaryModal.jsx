@@ -256,7 +256,7 @@ const AddBeneficiaryModal = ({ open, handleClose, onSaveSuccess, beneficiaryToEd
             >
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: isMobile ? '15px 20px' : '20px 24px', borderBottom: '1px solid #F3F4F6', flexShrink: 0, gap: '10px' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                        <div style={{ minWidth: '40px', minHeight: '40px', borderRadius: isMobile ? '20px' : '12px', background: isMobile ? '#7040FF' : '#EEF2FF', display: 'flex', alignItems: 'center', justifyContent: 'center', color: isMobile ? 'white' : '#4F46E5' }}>
+                        <div style={{ minWidth: '40px', minHeight: '40px', borderRadius: '12px', background: isMobile ? '#7040FF' : '#EEF2FF', display: 'flex', alignItems: 'center', justifyContent: 'center', color: isMobile ? 'white' : '#4F46E5' }}>
                             <User size={20} />
                         </div>
                         <div>
