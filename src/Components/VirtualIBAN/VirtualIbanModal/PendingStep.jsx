@@ -15,7 +15,7 @@ const PendingStep = ({ transactionRef }) => {
                 {t("We've successfully received your request and are processing it. We'll notify you as soon as your Virtual IBAN is ready to use.")}
             </p>
             <button onClick={() => navigate("/dashboard/default")}
-                style={{ marginTop: "20px", padding: "10px 20px", backgroundColor: "#007bff", color: "#fff", border: "none", borderRadius: "4px", cursor: "pointer" }}
+                style={{ marginTop: "20px", padding: "10px 20px", backgroundColor: "#5626e6", color: "#fff", border: "none", borderRadius: "4px", cursor: "pointer" }}
             >{t("Go To Dashboard")}</button>
         </div>
     )

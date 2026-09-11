@@ -117,6 +117,7 @@ const DelegateAccess = () => {
                             </button>
                         )
                     ))}
+                   {width < 700 &&
                     <div className={styles.mobileAddBtn}>
                         {
                             width < 700 && <button className={styles.addBtn2} onClick={() => naviagte("/activity")}>
@@ -137,6 +138,7 @@ const DelegateAccess = () => {
                             )
                         ))}
                     </div>
+                    }
                 </div>
                 <div className={styles.searchCont}>
                     <div className={styles.searchBox}>
