@@ -19,11 +19,24 @@ const statusColors = {
   FAILED: { bg: "rgba(239,68,68,0.1)", color: "#dc2626" },
 };
 
+const typeLabels = {
+  iban_payin: "IBAN Pay-In",
+  iban_payout: "IBAN Pay-Out",
+};
+
 const formatType = (type = "") =>
+  typeLabels[String(type).toLowerCase()] ||
   type
     .split("_")
     .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
     .join(" ");
+
+const formatSignedAmount = (tx) => {
+  if (tx?.amount == null) return "N/A";
+  const txType = String(tx.transaction_type || "").toLowerCase();
+  const sign = txType === "credit" ? "+" : txType === "debit" ? "-" : "";
+  return `${sign}${Math.abs(Number(tx.amount)).toFixed(2)} ${tx.currency ?? ""}`.trim();
+};
 
 const formatPaymentRail = (method) => {
   if (!method) return null;
@@ -103,10 +116,17 @@ const TransactionRow = ({ tx, selectedIban }) => {
 
         <td className={styles.txId}>{tx.reference_id || tx.external_reference || "N/A"}</td>
 
-        <td>{tx?.beneficiary?.name || tx.virtual_iban?.account_holder_name || "N/A"}</td>
+        <td>{tx?.type === "iban_payin" ? tx?.originator?.name : tx?.beneficiary?.name || tx.virtual_iban?.account_holder_name || "N/A"}</td>
 
-        <td className={styles.amount}>
-          {tx.currency} {tx.amount?.toFixed(2)}
+        <td
+          className={`${styles.amount} ${String(tx.transaction_type || "").toLowerCase() === "credit"
+            ? styles.amountCredit
+            : String(tx.transaction_type || "").toLowerCase() === "debit"
+              ? styles.amountDebit
+              : ""
+            }`}
+        >
+          {formatSignedAmount(tx)}
         </td>
 
         <td>
@@ -153,7 +173,7 @@ const TransactionRow = ({ tx, selectedIban }) => {
                   <DetailItem label={t("Country")} value={beneficiaryCountry} />
                 )}
                 <DetailItem label={t("Amount")}
-                  value={`${tx.currency} ${tx.amount?.toFixed(2)}`} />
+                  value={formatSignedAmount(tx)} />
                 {tx.fee != null && (
                   <DetailItem label={t("Fee")}
                     value={`${tx.currency} ${tx.fee?.toFixed(2)}`} />
@@ -173,6 +193,8 @@ const TransactionRow = ({ tx, selectedIban }) => {
                   <DetailItem label={t("Service Type")}
                     value={t(formatType(tx.type))} />
                 )}
+                <DetailItem label={t("Reference")} value={tx?.remittance_information} />
+
 
               </div>
 
@@ -324,7 +346,7 @@ const RecentTransactions = ({
                 <th>{t("Date & Time")}</th>
                 <th>{t("Type")}</th>
                 <th>{t("Transaction ID")}</th>
-                <th>{t("Recipient")}</th>
+                <th>{t("Name")}</th>
                 <th>{t("Amount")}</th>
                 <th>{t("Status")}</th>
                 <th>{t("")}</th>
