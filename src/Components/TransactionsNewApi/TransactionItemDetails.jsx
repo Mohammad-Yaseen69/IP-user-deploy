@@ -184,7 +184,7 @@ const TransactionItemDetails = ({ item, badgeColor, desc, internationalReceiver,
                         </div>
                 }
                 <div className={styles.er_item}>
-                    <span>{t("Fees")}: {formatCurrency(item?.fee, true)} {item?.currency?.code || item?.currency} </span>
+                    <span>{t("Fees")}: {formatCurrency(item?.fee, true)} {item?.billCurrency ? item?.billCurrency : item?.currency?.code || item?.currency} </span>
                 </div>
                 {
                     item?.payment_type?.toLowerCase() === "commission" && item?.replacement_currency?.value
