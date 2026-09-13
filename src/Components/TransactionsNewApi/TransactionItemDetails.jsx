@@ -163,7 +163,7 @@ const TransactionItemDetails = ({ item, badgeColor, desc, internationalReceiver,
                                 </>
                                 :
                                 <>
-                                    {Number((item?.total || item?.billAmount))?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} {item?.currency?.code || item?.currency}
+                                    {Number((item?.billAmount ? item?.billAmount : item?.total))?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} {item?.billCurrency ? item?.billCurrency : item?.currency?.code || item?.currency}
                                 </>
                         }
 
