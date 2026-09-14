@@ -96,7 +96,7 @@ const MobileTransactionItem = ({ item, activeItem, setActiveItem, index, cardNo 
                     </div>
                     <div className={styles.tmdr_item}>
                         <span>{t("Card No")}</span>
-                        <h4>{`•• ${cardNo?.slice(-4)}` || "N/A"}</h4>
+                        <h4>{`•• ${cardNo?.slice(-4)}`}</h4>
                     </div>
                     <div className={styles.tmdr_item}>
                         <span>{t("Type")}</span>
@@ -114,17 +114,17 @@ const MobileTransactionItem = ({ item, activeItem, setActiveItem, index, cardNo 
                     }
                     <div className={styles.tmdr_item}>
                         <span>{t("Total Amount")}</span>
-                        <h4>{item?.currency || "$"} {(item?.amount || item?.billAmount + item?.fee)?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</h4>
+                        <h4>{item?.billCurrency ? item?.billCurrency : item?.currency || "$"} {(item?.billAmount ? item?.billAmount : item?.amount)?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</h4>
                     </div>
 
                     <div className={styles.tmdr_item}>
                         <span>{t("Fees")}</span>
-                        <h4>{item?.currency || "$"} {(item?.fee ?? 0)?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</h4>
+                        <h4>{item?.billCurrency ? item?.billCurrency : item?.currency || "$"} {(item?.fee ?? 0)?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</h4>
                     </div>
 
                     <div className={styles.tmdr_item}>
                         <span>{t("Transact Amount")}</span>
-                        <h4>{item?.currency || "$"} {(item?.txAmount + item?.fee)?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</h4>
+                        <h4>{item?.currency || "$"} {(item?.txAmount)?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</h4>
                     </div>
 
 
