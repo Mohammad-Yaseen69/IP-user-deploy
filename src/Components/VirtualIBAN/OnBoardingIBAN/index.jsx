@@ -23,7 +23,7 @@ import { Modal, ModalBody, Spinner } from 'reactstrap'
 import { decryptData } from '../../../Helper/EssentilaMethods/Decryption'
 import { encryptData } from '../../../Helper/EssentilaMethods/Encryption'
 import useSendOtp from '../../../hooks/GeneralUse/useSendOtp'
-import OTPConfirmation from '../../UserSettingsNew/OTPConfirmation'
+import OTPConfirmation from '../../../Common/Component/OtpVerification'
 
 const STEPS_BUSINESS = ['landing', 'selection', 'account', 'company', 'activity', 'ownership', 'documents', 'review']
 const STEPS_INDIVIDUAL = ['landing', 'selection', 'account', 'review']
@@ -486,6 +486,7 @@ const OnboardingIBAN = ({ onCreated }) => {
             <Modal isOpen={showOtpModal} toggle={() => setShowOtpModal(false)} centered>
                 <ModalBody>
                     <OTPConfirmation
+                        variant="card"
                         authType={codeType}
                         setAuthType={setCodeType}
                         callback={handleVerifyOtpSubmit}

@@ -8,7 +8,7 @@ import { decryptData } from '../../Helper/EssentilaMethods/Decryption'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
 import { encryptData } from '../../Helper/EssentilaMethods/Encryption'
-import OTPConfirmation from '../UserSettingsNew/OTPConfirmation'
+import OTPConfirmation from '../../Common/Component/OtpVerification'
 import { useLocation, useNavigate } from 'react-router'
 import LinkToInstagramModal from '../LinkToInstagramModal'
 import LinktoTelegramModal from "../LinkToTelegramModal"
@@ -367,6 +367,7 @@ const AccountItem = ({ data }) => {
                         <ModalHeader toggle={() => setShowDelOtp(!showDelOtp)}>{t("Confirm")}</ModalHeader>
                         <ModalBody>
                             <OTPConfirmation
+                                variant="card"
                                 callback={(setter) => setter(true)}
                                 setter={() => { }}
                                 setterValue={false}
@@ -459,6 +460,7 @@ const AccountItem = ({ data }) => {
                 }}>{t("Confirm")}</ModalHeader>
                 <ModalBody>
                     <OTPConfirmation
+                        variant="card"
                         callback={showChannelOtp ? channelOtpCallback : otpCallback}
                         setter={() => { }}
                         setterValue={true}

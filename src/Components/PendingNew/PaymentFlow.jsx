@@ -9,7 +9,7 @@ import { encryptData } from "../../Helper/EssentilaMethods/Encryption"
 import Wizard from "./Wizard"
 import confirmationVideo from "../PaymentsNewer/files/confirm.mp4"
 import SuccessModal from "../AddBeneficiary/SuccessModal"
-import OTPConfirmation from "../UserSettingsNew/OTPConfirmation"
+import OTPConfirmation from "../../Common/Component/OtpVerification"
 import { useTranslation } from "react-i18next"
 import { LimitsErrorMessage } from "../PaymentsNewer/OTPConfirmation"
 import { Link, useNavigate } from "react-router-dom"
@@ -196,6 +196,7 @@ const PaymentFlow = ({ item, step, setStep, setStatus, verifyToken }) => {
                 <ModalHeader toggle={() => setShowOtp(!showOtp)}>{t("Confirm")}</ModalHeader>
                 <ModalBody>
                     <OTPConfirmation
+                        variant="card"
                         callback={acceptRequest}
                         setter={setShowSuccess}
                         setterValue={true}

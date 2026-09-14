@@ -37,7 +37,7 @@ import useSendOtp from "../../../../hooks/GeneralUse/useSendOtp"
 import { useQueryClient } from "@tanstack/react-query"
 import { useVirtualIbanPayoutDirect, useVirtualIbanPayoutFee, useSyncVirtualIbanBalance, virtualIbanQueryKeys } from "../../../../hooks/useVirtualIban"
 import { handlePaymentApiError } from "../../../../utils/Functions/handlePaymentApiError"
-import OTPConfirmation from "../../../UserSettingsNew/OTPConfirmation"
+import OTPConfirmation from "../../../../Common/Component/OtpVerification"
 import sepaCountries from "./sepaCountries.json"
 import { Tooltip } from "@mui/material"
 import jsPDF from "jspdf"
@@ -390,26 +390,33 @@ const downloadSepaReceipt = ({
     doc.setTextColor(130, 130, 138)
     doc.text(
         `Generated: ${new Date().toLocaleString()}`,
-        14,
-        28
+        margin,
+        56
     )
 
     autoTable(doc, {
-        startY: 36,
+        startY: 64,
         head: [["Details", "Information"]],
         body: rows,
-        theme: "grid",
+        theme: "plain",
         styles: {
             fontSize: 9,
             cellPadding: 4,
+            textColor: [35, 35, 40],
         },
         headStyles: {
             fontStyle: "bold",
+            fillColor: [89, 38, 240],
+            textColor: [255, 255, 255],
+        },
+        alternateRowStyles: {
+            fillColor: [246, 245, 252],
         },
         columnStyles: {
             0: {
                 cellWidth: 55,
                 fontStyle: "bold",
+                textColor: [130, 130, 138],
             },
             1: {
                 cellWidth: 125,
@@ -421,19 +428,32 @@ const downloadSepaReceipt = ({
 
     doc.setFontSize(9)
     doc.setFont("helvetica", "normal")
+    doc.setTextColor(90, 90, 95)
 
     doc.text(
         "The recipient receives the full amount - no correspondent-bank deductions in SEPA.",
-        14,
+        margin,
         finalY
     )
 
     doc.setFontSize(8)
+    doc.setTextColor(130, 130, 138)
     doc.text(
         "This receipt is generated electronically.",
-        14,
+        margin,
         finalY + 8
     )
+
+    doc.setDrawColor(225, 222, 240)
+    doc.line(margin, pageHeight - 16, pageWidth - margin, pageHeight - 16)
+    doc.setFont("helvetica", "bold")
+    doc.setFontSize(9)
+    doc.setTextColor(35, 35, 40)
+    doc.text("InstaPay Swiss", margin, pageHeight - 10)
+    doc.setFont("helvetica", "normal")
+    doc.setFontSize(8)
+    doc.setTextColor(89, 38, 240)
+    doc.text("www.insta-pay.ch", pageWidth - margin, pageHeight - 10, { align: "right" })
 
     doc.save(
         `SEPA-Transfer-Receipt-${trackingReference}.pdf`
@@ -471,7 +491,9 @@ const DoneStep = ({
             </div>
             <div className={styles.doneActions}>
                 <button type="button" className={styles.backBtn} onClick={onSendAgain}><Send size={15} />{t("Send again")}</button>
-                <div><button type="button" className={styles.backBtn} onClick={() => downloadSepaReceipt({ amount, currencyCode, transferSpeed, selectedBeneficiary, purpose, additionalInfo, feeDetails, payoutResult, t })}><Download size={15} />{t("Download receipt")}</button><button type="button" className={styles.nextBtn} onClick={() => navigate('/virtual-IBAN')}><Home size={15} />{t("Back to dashboard")}</button></div>
+                <div>
+                    <button type="button" className={styles.backBtn} onClick={() => downloadSepaReceipt({ amount, currencyCode, transferSpeed, selectedBeneficiary, purpose, additionalInfo, feeDetails, payoutResult, t })}><Download size={15} />{t("Download receipt")}</button>
+                    <button type="button" className={styles.nextBtn} onClick={() => navigate('/virtual-IBAN')}><Home size={15} />{t("Back to dashboard")}</button></div>
             </div>
         </div>
     )
@@ -880,7 +902,7 @@ const SepaTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, i
             case STEPS.REVIEW:
                 return <ReviewStep amount={amount} currencyCode={currencyCode} transferSpeed={transferSpeed} selectedBeneficiary={selectedBeneficiary} purpose={purpose} additionalInfo={additionalInfo} feeDetails={feeDetails} confirmedDetails={confirmedDetails} setConfirmedDetails={setConfirmedDetails} />
             case STEPS.OTP:
-                return <OTPConfirmation fullHeight setter={setCurrentStep} setterValue={STEPS.DONE} hideOtp={() => { }} callback={verifyOtp} processing={payoutDirect.isPending} resendHandler={handleSendOtp} authType={authType} setAuthType={setAuthType}
+                return <OTPConfirmation variant="card" fullHeight setter={setCurrentStep} setterValue={STEPS.DONE} hideOtp={() => { }} callback={verifyOtp} processing={payoutDirect.isPending} resendHandler={handleSendOtp} authType={authType} setAuthType={setAuthType}
                     showBackButton={true}
                     onBack={handleBack}
                 />
