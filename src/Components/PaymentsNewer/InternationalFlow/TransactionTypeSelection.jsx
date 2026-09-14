@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 
 const TransactionTypeSelection = ({ data, dataHandler }) => {
     const { userDetails } = useContext(UserContext)
-    const {t} = useTranslation()
+    const { t } = useTranslation()
     const selected = data?.transactionType;
 
     const handleSelect = (type) => {

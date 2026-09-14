@@ -43,11 +43,24 @@ const OnBoarding = ({ alreadyHaveCard, setCardPurchased, setReRender }) => {
 
     const files = useMemo(() => {
         if (userDetails) {
-            if (userDetails?.account_type === "individual") {
-                return userDetails?.user?.kyc_additional_file?.filter(file => file?.purpose === "mastercard_kyc")
-            } else {
-                return userDetails?.company?.kyb_additional_file?.filter(file => file?.purpose === "mastercard_kyc")
-            }
+            const rawFiles = userDetails?.account_type === "individual"
+                ? userDetails?.user?.kyc_additional_file
+                : userDetails?.company?.kyb_additional_file
+
+            return (rawFiles || []).filter(file => {
+                if (file?.purpose !== "mastercard_kyc") return false
+
+                const source = file?.source?.trim().toLowerCase()
+                const status = file?.status?.trim().toLowerCase()
+
+                if (source === "admin" || source === "system") {
+                    return false
+                }
+                if (status === "approved") {
+                    return false
+                }
+                return true
+            })
         }
     }, [userDetails])
 
