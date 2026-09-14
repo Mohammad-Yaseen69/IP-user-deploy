@@ -70,6 +70,7 @@
     justify-content: space-between;
     align-items: center;
     gap: 1rem;
+
 }
 
 .bottom a {
@@ -220,6 +221,15 @@
     font-size: 1.1rem;
     color: #5926f0;
     margin-bottom: 0;
+}
+@media screen and (min-width: 1001px) and (max-width: 1300px) and (max-height: 600px) {
+    .right {
+        padding: 1.5rem 30px;
+    }
+
+    .bottom {
+        padding: 0 25px;
+    }
 }
 
 @media screen and (max-width: 1000px) {
