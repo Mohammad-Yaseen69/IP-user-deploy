@@ -6,6 +6,7 @@ const VARIANTS = {
     warning: { className: styles.calloutWarning, Icon: WarningIcon },
     success: { className: styles.calloutSuccess, Icon: CheckCircleIcon },
     note: { className: styles.calloutInfoBlue, Icon: InfoIcon },
+    brand: { className: styles.calloutBrand, Icon: InfoIcon },
 }
 
 const Callout = ({ variant = "info", title, children }) => {

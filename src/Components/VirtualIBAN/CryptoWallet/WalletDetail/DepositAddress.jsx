@@ -26,7 +26,7 @@ const DepositAddress = ({ currencyCode, network }) => {
 
             <div className={styles.addressMain}>
                 <div className={styles.sectionLabel}>
-                    {currencyCode} {t("Deposit Address")} ({network?.network} / {network?.protocol})
+                    {currencyCode} {t("Deposit Address")} ({network?.network}{network?.protocol ? ` / ${network.protocol}` : ""})
                 </div>
 
                 <div className={styles.addressRow}>
@@ -48,7 +48,7 @@ const DepositAddress = ({ currencyCode, network }) => {
                     <div>
                         <strong>{t("Important")}: </strong>
                         {t("Send only")} <strong>{currencyCode}</strong> {t("to this deposit address using the")}{" "}
-                        <strong>{network?.network} ({network?.protocol})</strong>{" "}
+                        <strong>{network?.network}{network?.protocol ? ` (${network.protocol})` : ""}</strong>{" "}
                         {t("network. Sending any other currency or using the wrong network will result in irreversible loss of funds.")}
                     </div>
                 </div>
