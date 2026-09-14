@@ -61,27 +61,31 @@ const MoveMoney = () => {
 
     return (
         <>
-         <div className={styles.mobileHeader}>
-            <div className={styles.headerContent}>
-                <ChevronLeft size={22} onClick={() => btnRef.current?.back()} />
-                <span>
-                    {t("SWIFT International")}
-                </span>
-            </div>
-            <button className={styles.cancelButton} onClick={handleClose}>
-                {t("Cancel")}
-            </button>
-        </div>
-        <div className={styles.container}>           
-            <div className={styles.top}>
-                <div className={styles.headerTitle}>
-                    <h1>{t("Move money")}</h1>
-                    <p>{t("Choose how to pay, get paid and manage your balances — pick one to begin.")}</p>
+        {showSwiftPage &&
+            <div className={styles.mobileHeader}>
+                <div className={styles.headerContent}>
+                    <ChevronLeft size={22} onClick={() => btnRef.current?.back()} />
+                    <span>
+                        {t("SWIFT International")}
+                    </span>
                 </div>
-                <div className={styles.topright}>
-                    {width > 1000 && <TopRight />}
-                </div>
+                <button className={styles.cancelButton} onClick={handleClose}>
+                    {t("Cancel")}
+                </button>
             </div>
+        }
+        <div className={styles.container}>      
+            {width > 600 &&     
+                <div className={styles.top}>
+                    <div className={styles.headerTitle}>
+                        <h1>{t("Move money")}</h1>
+                        <p>{t("Choose how to pay, get paid and manage your balances — pick one to begin.")}</p>
+                    </div>
+                    <div className={styles.topright}>
+                        {width > 1000 && <TopRight />}
+                    </div>
+                </div>
+            }
 
             <div className={styles.mainContent}>
                 {
