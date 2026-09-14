@@ -559,3 +559,147 @@
         padding-right: 0;
     }
 }
+
+@media (max-width: 600px) {
+    .mainContent {
+        padding: 0;
+    }
+
+    .container {
+        padding: 0;
+    }
+
+    .subHeaderFlex h1 {
+        font-size: 24px;
+        font-weight: 700;
+    }
+
+    .lefHeader {
+        padding: 24px 20px 16px;
+    }
+
+    .beneficiariesList {
+        padding: 0 20px;
+    }
+
+    .addBeneficiaryBtn {
+        background: #4A32E3;
+        height: 36px;
+    }
+
+    .searchBarWrapper {
+        border: 1px solid #ECE9F5;
+        padding: 9px 12px;
+        background-color: #FAF9FD;
+
+        input {
+            font-size: 13px;
+            background-color: transparent;
+        }
+    }
+
+    .beneficiaryItem {
+        border-radius: 12px;
+        padding: 12px;
+        background: transparent;
+
+
+    }
+
+    .beneficiaryItem.activeItem {
+        background: #F5F2FF;
+
+        .channelBadge {
+            color: #FFFFFF;
+            background: #4A32E3;
+            border: 1px solid #4A32E3
+        }
+    }
+
+    .avatarCircle {
+        border-radius: 12px;
+        width: 38px;
+        height: 38px;
+        font-weight: 800;
+    }
+
+    .itemMeta {
+        h4 {
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: -3%;
+            text-transform: capitalize;
+        }
+
+        p {
+            font-size: 12px !important;
+            color: #8B88A0;
+            font-weight: 400;
+            margin-top: 2px;
+        }
+    }
+
+    .beneficiaryItemWrapper {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        align-items: center;
+    }
+
+    .beneficiaryItem {
+        justify-content: space-between;
+    }
+
+    .channelBadge {
+        border: 1px solid #E9E0FF;
+        padding: 2px 8px;
+        border-radius: 100px;
+        color: #4A32E3;
+        font-size: 11px;
+        font-weight: 700;
+    }
+
+    .rightColumn {
+        padding: 20px;
+
+        .profileLeftGroup {
+            gap: 12px;
+        }
+
+        .avatarCircleBig {
+            border-radius: 11px;
+            font-weight: 800;
+        }
+
+        .nameBadgeRow {
+            h2 {
+                font-size: 14px;
+                letter-spacing: -3%;
+                text-transform: capitalize;
+            }
+        }
+
+        .subTextDetail {
+            font-size: 12px !important;
+            color: #8B88A0;
+            font-weight: 400;
+        }
+
+        .profileTitleBlock>div {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .editIconButton {
+            padding: 5px;
+        }
+
+        .channelTypeLabel {
+            gap: 12px;
+        }
+        .networkActive{
+            margin: 0;
+        }
+    }
+}
