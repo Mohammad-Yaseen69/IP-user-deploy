@@ -498,3 +498,30 @@
         }
     }
 }
+
+
+@media (max-width: 480px) {
+    .section {
+        padding: 12px;
+    }
+
+    .toolbarRight {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .toolbarRight div {
+        width: 100%;
+    }
+
+    .toolBtn {
+        width: 100% !important;
+        justify-content: center !important;
+    }
+
+    .table thead tr th,
+    .row td {
+        font-size: 12px;
+        padding: 8px 6px;
+    }
+}
