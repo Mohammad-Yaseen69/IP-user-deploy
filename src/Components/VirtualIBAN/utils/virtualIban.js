@@ -79,6 +79,12 @@ export const asVirtualIbanArray = (value) => {
     return data.map(normalizeVirtualIban).filter(Boolean)
 }
 
+export const isVirtualIbanInactive = (iban) => {
+    if (!iban) return false
+
+    return Boolean(iban?.adminBlocked) || String(iban?.status || "").toUpperCase() === "INACTIVE"
+}
+
 export const asVirtualIban = (value) => {
     const unwrapped = unwrapVirtualIbanResponse(value)
     const nestedIban = unwrapped?.iban
