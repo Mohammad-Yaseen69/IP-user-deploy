@@ -23,6 +23,7 @@ import { useSyncVirtualIbanBalance, useVirtualIbans } from '../../../../hooks/us
 import { asVirtualIbanArray } from '../../utils/virtualIban';
 import { UserContext } from '../../../../Context/UserContext';
 import { useNavigate } from 'react-router';
+import MobileHeader from '../../../../Common/Component/MobileHeader';
 
 const MoveMoney = () => {
     const { t } = useTranslation();
@@ -61,19 +62,13 @@ const MoveMoney = () => {
 
     return (
         <>
-        {showSwiftPage &&
-            <div className={styles.mobileHeader}>
-                <div className={styles.headerContent}>
-                    <ChevronLeft size={22} onClick={() => btnRef.current?.back()} />
-                    <span>
-                        {t("SWIFT International")}
-                    </span>
-                </div>
-                <button className={styles.cancelButton} onClick={handleClose}>
-                    {t("Cancel")}
-                </button>
-            </div>
-        }
+            {showSwiftPage &&
+                <MobileHeader 
+                    title={"SWIFT International"}
+                    handleAction={handleClose}
+                    handleBack={() => btnRef.current?.back()}
+                />
+            }
         <div className={styles.container}>      
             {width > 600 &&     
                 <div className={styles.top}>

@@ -1,19 +1,22 @@
 import styles from "../styles/MobileStepProgress.module.css";
-import {
-  getSidebarStepName,
-  isSidebarStepActive,
-  isSidebarStepCompleted,
-  SIDEBAR_STEPS,
-} from "../../../stateMachines/swiftTransfer";
 import { ChevronUp } from "react-feather";
 import { FaQuestion } from "react-icons/fa6";
 import { useTranslation } from "react-i18next";
 
-const MobileStepProgress = ({ currentStep }) => {
+const MobileStepProgress = ({
+  currentStep,
+  getSidebarStepName,
+  isSidebarStepActive,
+  isSidebarStepCompleted,
+  SIDEBAR_STEPS,
+  handleClick
+}) => {
   const { t } = useTranslation();
 
   const order = SIDEBAR_STEPS.map((item) => item.stepName);
-  const currentSidebarStep = getSidebarStepName(currentStep);
+  const currentSidebarStep = getSidebarStepName
+    ? getSidebarStepName(currentStep)
+    : currentStep;
 
   return (
     <>
@@ -31,7 +34,7 @@ const MobileStepProgress = ({ currentStep }) => {
           );
         })}
       </div>
-      <div className={styles.mobileStepContainer}>
+      <div className={styles.mobileStepContainer} onClick={handleClick}>
         <p className={styles.stepCount}>
           Step {order.indexOf(currentSidebarStep) + 1} of {SIDEBAR_STEPS.length}
           <span> · {currentSidebarStep?.toLowerCase()}</span>
@@ -40,7 +43,7 @@ const MobileStepProgress = ({ currentStep }) => {
           <div className={styles.addIconContainer}>
             <FaQuestion size={8} />
           </div>
-          <span className={styles.readyPercentage}>{t('Help')}</span>
+          <span className={styles.readyPercentage}>{t("Help")}</span>
           <ChevronUp size={12} />
         </div>
       </div>

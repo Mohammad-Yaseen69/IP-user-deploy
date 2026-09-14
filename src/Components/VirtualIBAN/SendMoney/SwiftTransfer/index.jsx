@@ -43,6 +43,7 @@ import {
     SIDEBAR_STEPS,
     SIDEBAR_STEP_NAMES,
     STEPS,
+    getSidebarStepName,
 } from "../../../../stateMachines/swiftTransfer"
 import SidebarProgress from "../../VirtualIbanModal/SidebarProgress"
 import AmountStep from "../../ConvertFundsModal/AmountStep"
@@ -77,6 +78,7 @@ import {
     maskIban
 } from "../Common/beneficiaryHelpers"
 import MobileStepProgress from "../../VirtualIbanModal/MobileStepProgress"
+import MobileFooter from '../../../../Common/Component/MobileFooter';
 
 const DEFAULT_BENEFICIARY_FORM = {
     type: "individual",
@@ -1190,7 +1192,6 @@ const SwiftTransfer = forwardRef(({ isOpen = true, toggle, selectedIban, availab
 
     const content = (
         <div className={styles.modalLayout} style={{ flexDirection: width < 1000 ? "column" : "row" }}>
-            {isMobile && <MobileStepProgress currentStep={currentStep} />}
             <aside className={styles.leftPanel}>
                 <div>
                     <div className={styles.flowHeader}>
@@ -1252,23 +1253,14 @@ const SwiftTransfer = forwardRef(({ isOpen = true, toggle, selectedIban, availab
                         </div>
                     </div>
                 )}
-            </section>
+            </section>           
             {(isMobile && currentStep !== STEPS.DONE) &&
-                <div className={`${styles.footer} ${styles.mobileFooter}`}>
-                    <div className={styles.footerNav}>
-                        <button type="button" className={styles.backBtn} onClick={handleBack}>
-                            <ChevronLeft size={24} />
-                        </button>
-                        <button
-                            type="button"
-                            className={styles.nextBtn}
-                            disabled={disabled}
-                            onClick={handleContinue}
-                        >
-                            {isProcessing ? t("Processing...") : getContinueLabel(currentStep, t)}
-                        </button>
-                    </div>
-                </div>
+                <MobileFooter 
+                    label={isProcessing ? t("Processing...") : getContinueLabel(currentStep, t)}
+                    handleBack={handleBack}
+                    handleAction={handleContinue}
+                    disabled={disabled}
+                />
             }
         </div>
     )
@@ -1276,7 +1268,16 @@ const SwiftTransfer = forwardRef(({ isOpen = true, toggle, selectedIban, availab
     return (
         <>
             {isPage ? (
-                <div className={styles.pageContainer}>{content}</div>
+                <div className={styles.pageContainer}>
+                {isMobile && <MobileStepProgress 
+                                currentStep={currentStep} 
+                                isSidebarStepActive={isSidebarStepActive}
+                                isSidebarStepCompleted={isSidebarStepCompleted}
+                                SIDEBAR_STEPS={SIDEBAR_STEPS}
+                                getSidebarStepName={getSidebarStepName}
+                            />}
+                    {content}
+                </div>
             ) : (
                 <Modal
                     isOpen={isOpen}
