@@ -260,46 +260,96 @@ const CryptoTopupModal = ({ isOpen, toggle, selectedIban }) => {
             <div className={addFundsStyles.left}>
                 <div style={{ width: "100%" }}>
                     <div className={styles.bankHeader}>
-                        <div className={styles.bankIcon}>
-                            <CryptoIcon />
-                        </div>
-                        {width > 700 ? (
-                            <h2>
-                                {t("Top up Virtual IBAN")}
-                                <br />
-                                {t("with Crypto")}
-                            </h2>
+                        {width >= 700 ? (
+                            <>
+                                <div className={styles.bankIcon}>
+                                    <CryptoIcon />
+                                </div>
+                                <h2>
+                                    {t("Top up Virtual IBAN")}
+                                    <br />
+                                    {t("with Crypto")}
+                                </h2>
+                            </>
                         ) : (
-                            <h2>{t("Top up Virtual IBAN with Crypto")}</h2>
+                            <div className={styles.mobileHeaderRow}>
+                                {!isDone && (
+                                    <button
+                                        type="button"
+                                        className={styles.backIconButton}
+                                        disabled={isProcessing}
+                                        onClick={handleBack}
+                                    >
+                                        <ChevronLeft size={24} />
+                                    </button>
+                                )}
+                                <h2>{t("Top up Virtual IBAN with Crypto")}</h2>
+                            </div>
                         )}
+                        {width <= 480 && (
+                            <div className={styles.headerRightGroup}>
+                                <button
+                                    type="button"
+                                    className={styles.cancelBtn}
+                                    onClick={handleClose}
+                                >
+                                    {t("Cancel")}
+                                </button>
+                                <ContactBox isMobile={true} />
+                            </div>
+                        )
+                        }
                     </div>
                     <div
                         className={addFundsStyles.progressEffect}
                         style={{ marginTop: "2rem" }}
                     >
-                        {SIDEBAR_STEPS.map((item, index) => {
-                            const IconComponent = SIDEBAR_ICONS[item.stepName]
-                            return (
-                                <SidebarProgress
-                                    key={item.stepName}
-                                    stepLabel={item.stepLabel}
-                                    label={item.label}
-                                    Icon={IconComponent}
-                                    isActive={isSidebarStepActive(item, currentStep)}
-                                    isCompleted={isSidebarStepCompleted(item, currentStep)}
-                                    showBar={index < SIDEBAR_STEPS.length - 1}
-                                />
-                            )
-                        })}
+                        {width < 480 ? (
+                            <div style={{ display: "flex", gap: "6px", width: "100%" }}>
+                                {SIDEBAR_STEPS.map((item) => {
+                                    const isActive = isSidebarStepActive(item, currentStep)
+                                    const isCompleted = isSidebarStepCompleted(item, currentStep)
+                                    const isDoneOrActive = isActive || isCompleted
+
+                                    return (
+                                        <div
+                                            key={item.stepName}
+                                            style={{
+                                                flex: 1,
+                                                height: "6px",
+                                                borderRadius: "3px",
+                                                backgroundColor: isDoneOrActive ? "#10B981" : "#EAECF0",
+                                                transition: "background-color 0.2s ease",
+                                            }}
+                                        />
+                                    )
+                                })}
+                            </div>
+                        ) : (
+                            SIDEBAR_STEPS.map((item, index) => {
+                                const IconComponent = SIDEBAR_ICONS[item.stepName]
+                                return (
+                                    <SidebarProgress
+                                        key={item.stepName}
+                                        stepLabel={item.stepLabel}
+                                        label={item.label}
+                                        Icon={IconComponent}
+                                        isActive={isSidebarStepActive(item, currentStep)}
+                                        isCompleted={isSidebarStepCompleted(item, currentStep)}
+                                        showBar={index < SIDEBAR_STEPS.length - 1}
+                                    />
+                                )
+                            })
+                        )}
                     </div>
                 </div>
                 {width > 700 && (
                     <div className={addFundsStyles.contactBox}>
                         <ContactBox />
                     </div>
-                )}
+                )
+                }
             </div>
-
             <div
                 className={styles.rightPanel}
                 style={{ width: width < 1000 ? "100%" : undefined }}
@@ -307,13 +357,15 @@ const CryptoTopupModal = ({ isOpen, toggle, selectedIban }) => {
                 <div className={styles.content}>{renderStepContent()}</div>
 
                 <div className={styles.footer}>
-                    <button
-                        type="button"
-                        className={styles.cancelBtn}
-                        onClick={handleClose}
-                    >
-                        {t("Cancel")}
-                    </button>
+                    {width >= 480 && (
+                        <button
+                            type="button"
+                            className={styles.cancelBtn}
+                            onClick={handleClose}
+                        >
+                            {t("Cancel")}
+                        </button>
+                    )}
                     <div className={styles.footerNav}>
                         {!isDone && (
                             <button
@@ -343,25 +395,25 @@ const CryptoTopupModal = ({ isOpen, toggle, selectedIban }) => {
 
     return (
         <>
-        <Modal
-            isOpen={isOpen}
-            style={{
-                minWidth: width > 1000 ? "900px" : "0px",
-            }}
-            toggle={handleClose}
-        >
-            <ModalBody style={{ padding: "20px" }}>{renderBody()}</ModalBody>
-        </Modal>
-        <Modal isOpen={Boolean(checkoutUrl)} toggle={() => setCheckoutUrl("")} size="xl">
-            <ModalHeader toggle={() => setCheckoutUrl("")}>{t("Payment Checkout")}</ModalHeader>
-            <ModalBody style={{ padding: 0 }}>
-                <iframe
-                    title={t("Payment Checkout")}
-                    src={checkoutUrl}
-                    style={{ width: "100%", height: "75vh", border: 0, display: "block" }}
-                />
-            </ModalBody>
-        </Modal>
+            <Modal
+                isOpen={isOpen}
+                style={{
+                    minWidth: width > 1000 ? "900px" : "0px",
+                }}
+                toggle={handleClose}
+            >
+                <ModalBody style={{ padding: "20px" }}>{renderBody()}</ModalBody>
+            </Modal>
+            <Modal isOpen={Boolean(checkoutUrl)} toggle={() => setCheckoutUrl("")} size="xl">
+                <ModalHeader toggle={() => setCheckoutUrl("")}>{t("Payment Checkout")}</ModalHeader>
+                <ModalBody style={{ padding: 0 }}>
+                    <iframe
+                        title={t("Payment Checkout")}
+                        src={checkoutUrl}
+                        style={{ width: "100%", height: "75vh", border: 0, display: "block" }}
+                    />
+                </ModalBody>
+            </Modal>
         </>
     )
 }
