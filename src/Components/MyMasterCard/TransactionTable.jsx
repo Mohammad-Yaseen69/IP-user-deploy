@@ -15,7 +15,7 @@ import TransactionItem from "../TransactionsNewApi/TransactionItem";
 import MobileTransactionItem from "./MobileTransactionItem";
 import useWindowWidth from "../../utils/useWindowWidth";
 
-const TransactionsTable = ({ transactions = [], isLoading = false, cardNo, ref }) => {
+const TransactionsTable = ({ transactions = [], isLoading = false, cardNo, ref , searchQuery, setSearchQuery}) => {
     const { t } = useTranslation()
     const [active, setActive] = useState("All")
     const [activeItem, setActiveItem] = useState(0)
@@ -26,7 +26,7 @@ const TransactionsTable = ({ transactions = [], isLoading = false, cardNo, ref }
     });
     const [showDatePicker, setShowDatePicker] = useState(false);
     const datePickerRef = useRef(null);
-    const [searchQuery, setSearchQuery] = useState("")
+    // const [searchQuery, setSearchQuery] = useState("")
     const [filteredTransactions, setFilteredTransactions] = useState(transactions)
     const width = useWindowWidth()
 

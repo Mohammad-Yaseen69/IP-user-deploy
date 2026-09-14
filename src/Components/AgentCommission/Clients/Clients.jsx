@@ -1,12 +1,13 @@
-import { Search } from 'react-feather';
+import { Search, ChevronLeft, ChevronRight, ArrowUp, ArrowDown, Edit2 } from 'react-feather';
 import { useTranslation } from 'react-i18next';
 import useWindowWidth from '../../../utils/useWindowWidth';
 import TopRight from '../../topRight';
 import styles from '../styles/clients.module.css';
 import { apiWrapper } from '../../../utils/Functions/apiWrapper';
-import { ChevronLeft, ChevronRight, ArrowUp, ArrowDown } from 'react-feather';
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
+import UpdateFeePackModal from '../UpdateFeePackModal';
+
 const Clients = () => {
     const { t } = useTranslation();
     const width = useWindowWidth();
@@ -17,6 +18,7 @@ const Clients = () => {
     const [sortBy, setSortBy] = useState('createdAt');
     const [sortOrder, setSortOrder] = useState('desc');
     const [page, setPage] = useState(1);
+    const [editingFeePackClient, setEditingFeePackClient] = useState(null);
     const limit = 10;
 
     const queryParams = new URLSearchParams({
@@ -70,7 +72,6 @@ const Clients = () => {
 
     return (
         <div className={styles.container}>
-            {/* Top Header */}
             <div className={styles.top}>
                 <div className={styles.headerTitle}>
                     <h1>{t("Referred Clients")}</h1>
@@ -82,9 +83,7 @@ const Clients = () => {
             </div>
 
             <div className={styles.main}>
-                {/* Search & Filter Control Panel */}
                 <div className={styles.controlsRow} style={{ flexWrap: 'wrap', gap: '12px', marginBottom: '20px' }}>
-                    {/* Search Bar */}
                     <div className={styles.searchWrapper} style={{ minWidth: '260px', flex: 1 }}>
                         <Search className={styles.searchIcon} size={16} />
                         <input
@@ -96,9 +95,7 @@ const Clients = () => {
                         />
                     </div>
 
-                    {/* Filters & Sorting */}
                     <div className={styles.actionGroup} style={{ gap: '10px', flexWrap: 'wrap' }}>
-                        {/* Account Type Filter */}
                         <select
                             value={typeFilter}
                             onChange={handleTypeFilterChange}
@@ -117,7 +114,6 @@ const Clients = () => {
                             <option value="individual">{t("Individual")}</option>
                         </select>
 
-                        {/* Status Filter */}
                         <select
                             value={statusFilter}
                             onChange={handleStatusFilterChange}
@@ -137,7 +133,6 @@ const Clients = () => {
                             <option value="blocked">{t("Blocked")}</option>
                         </select>
 
-                        {/* Sort By Field */}
                         <select
                             value={sortBy}
                             onChange={handleSortChange}
@@ -156,7 +151,6 @@ const Clients = () => {
                             <option value="status">{t("Sort by Status")}</option>
                         </select>
 
-                        {/* Sort Order Toggle */}
                         <button
                             type="button"
                             onClick={toggleSortOrder}
@@ -170,15 +164,16 @@ const Clients = () => {
                     </div>
                 </div>
 
-                {/* Clients Data Table */}
                 <div className={styles.tableContainer}>
                     <div className={styles.tableHeaderRow}>
                         <div>{t("CLIENT")}</div>
                         <div>{t("ACCOUNT TYPE")}</div>
                         <div>{t("REGION / COUNTRY")}</div>
+                        <div>{t("FEE PACK")}</div>
                         <div>{t("IBAN STATUS")}</div>
                         <div>{t("ACCOUNT STATUS")}</div>
                         <div>{t("REGISTERED DATE")}</div>
+                        <div style={{ textAlign: 'center' }}>{t("ACTIONS")}</div>
                     </div>
 
                     {isLoading ? (
@@ -195,10 +190,11 @@ const Clients = () => {
                             const avatarColor = idx % 3 === 0 ? styles.avatarPurple : idx % 3 === 1 ? styles.avatarBlue : styles.avatarGreen;
                             const ibanStatusUpper = client.ibanStatus ? client.ibanStatus.toUpperCase() : 'NOT REQUESTED';
                             const statusUpper = client.status ? client.status.toUpperCase() : 'ACTIVE';
+                            const feePackName = client.fee_pack?.name || t("Standard Plan");
+                            const feePackSummary = client.fee_pack?.pricing_summary || feePackName;
 
                             return (
                                 <div key={client._id || idx} className={styles.tableDataRow}>
-                                    {/* Client Avatar & Name */}
                                     <div className={styles.clientCell}>
                                         <span className={`${styles.avatar} ${avatarColor}`}>
                                             {client.initials}
@@ -213,7 +209,6 @@ const Clients = () => {
                                         </div>
                                     </div>
 
-                                    {/* Account Type */}
                                     <div>
                                         <span style={{
                                             padding: '4px 10px',
@@ -227,12 +222,23 @@ const Clients = () => {
                                         </span>
                                     </div>
 
-                                    {/* Country */}
                                     <div style={{ fontWeight: 500, color: '#374151' }}>
                                         {client.country || 'Europe'}
                                     </div>
 
-                                    {/* IBAN Status */}
+                                    <div>
+                                        <span
+                                            className={styles.feePackBadge}
+                                            onClick={() => setEditingFeePackClient(client)}
+                                            title={feePackSummary}
+                                        >
+                                            <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                                                {feePackName}
+                                            </span>
+                                            <Edit2 size={11} style={{ opacity: 0.7, flexShrink: 0 }} />
+                                        </span>
+                                    </div>
+
                                     <div>
                                         <span style={{
                                             padding: '4px 10px',
@@ -246,16 +252,26 @@ const Clients = () => {
                                         </span>
                                     </div>
 
-                                    {/* Account Status */}
                                     <div>
                                         <span className={statusUpper === 'ACTIVE' ? styles.badgePaid : styles.badgePending}>
                                             {statusUpper}
                                         </span>
                                     </div>
 
-                                    {/* Registered Date */}
                                     <div style={{ color: '#6B7280', fontSize: '13px' }}>
                                         {client.createdAt ? new Date(client.createdAt).toLocaleDateString() : '-'}
+                                    </div>
+
+                                    <div style={{ display: 'flex', justifyContent: 'center' }}>
+                                        <button
+                                            type="button"
+                                            className={styles.actionEditBtn}
+                                            onClick={() => setEditingFeePackClient(client)}
+                                            title={t("Update Fee Pack")}
+                                        >
+                                            <Edit2 size={12} />
+                                            <span>{t("Edit")}</span>
+                                        </button>
                                     </div>
                                 </div>
                             );
@@ -267,11 +283,10 @@ const Clients = () => {
                     )}
                 </div>
 
-                {/* Pagination Controls */}
                 {!isLoading && pagination.totalPages > 1 && (
                     <div style={{
                         display: 'flex',
-                        justify: 'space-between',
+                        justifyContent: 'space-between',
                         alignItems: 'center',
                         marginTop: '20px',
                         padding: '12px 16px',
@@ -324,13 +339,19 @@ const Clients = () => {
                                     fontWeight: 500
                                 }}
                             >
-                                {t("Next")}
                                 <ChevronRight size={16} />
+                                {t("Next")}
                             </button>
                         </div>
                     </div>
                 )}
             </div>
+
+            <UpdateFeePackModal
+                isOpen={Boolean(editingFeePackClient)}
+                onClose={() => setEditingFeePackClient(null)}
+                target={{ type: 'client', data: editingFeePackClient }}
+            />
         </div>
     );
 };

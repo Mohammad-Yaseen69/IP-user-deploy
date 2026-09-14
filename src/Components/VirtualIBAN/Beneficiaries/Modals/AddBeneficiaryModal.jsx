@@ -8,7 +8,8 @@ import CitiesDropDown from '../../../CitiesDropDown';
 import PhoneInput from '../../../PhoneInput';
 import { toast } from 'react-toastify';
 import { UserContext } from '../../../../Context/UserContext';
-
+import { handleEmailInput, handleNameInput, preventEdgeSpaces, preventEmailSpaces } from '../../../../hooks/useTrimInput';
+const nameRegex = /^[A-Za-z\s]+$/;
 const AddBeneficiaryModal = ({ open, handleClose, onSaveSuccess, beneficiaryToEdit }) => {
     const { t } = useTranslation();
     const [loading, setLoading] = useState(false);
@@ -78,14 +79,29 @@ const AddBeneficiaryModal = ({ open, handleClose, onSaveSuccess, beneficiaryToEd
         e.preventDefault();
 
         if (beneficiaryType === 'individual') {
-            if (!formData.first_name || !formData.first_name.trim()) {
+            const firstName = formData.first_name?.trim() || '';
+            const lastName = formData.last_name?.trim() || '';
+
+            if (!firstName) {
                 toast.error(t("First name is required for individual beneficiaries"));
                 return;
             }
-            if (!formData.last_name || !formData.last_name.trim()) {
+
+            if (!lastName) {
                 toast.error(t("Last name is required for individual beneficiaries"));
                 return;
             }
+
+            if (!nameRegex.test(firstName)) {
+                toast.error(t("First name can only contain letters and spaces"));
+                return;
+            }
+
+            if (!nameRegex.test(lastName)) {
+                toast.error(t("Last name can only contain letters and spaces"));
+                return;
+            }
+
             if (!formData.phone || !formData.phone.trim()) {
                 toast.error(t("Phone number is required for individual beneficiaries"));
                 return;
@@ -296,8 +312,13 @@ const AddBeneficiaryModal = ({ open, handleClose, onSaveSuccess, beneficiaryToEd
                                         fullWidth size="small" variant="outlined" required
                                         placeholder={t("e.g. Arnold")}
                                         value={formData.first_name}
-                                        onChange={(e) => handleChange('first_name', e.target.value)}
-                                        sx={commonInputStyles}
+                                        onChange={(e) =>
+                                            handleChange(
+                                                'first_name',
+                                                handleNameInput(e.target.value)
+                                            )
+                                        } sx={commonInputStyles}
+                                        onKeyDown={preventEdgeSpaces}
                                     />
                                 </div>
                                 <div>
@@ -306,8 +327,9 @@ const AddBeneficiaryModal = ({ open, handleClose, onSaveSuccess, beneficiaryToEd
                                         fullWidth size="small" variant="outlined" required
                                         placeholder={t("e.g. Mbuka")}
                                         value={formData.last_name}
-                                        onChange={(e) => handleChange('last_name', e.target.value)}
+                                        onChange={(e) => handleChange('last_name', handleNameInput(e.target.value))}
                                         sx={commonInputStyles}
+                                        onKeyDown={preventEdgeSpaces}
                                     />
                                 </div>
                             </div>
@@ -318,7 +340,8 @@ const AddBeneficiaryModal = ({ open, handleClose, onSaveSuccess, beneficiaryToEd
                                     fullWidth size="small" variant="outlined" required
                                     placeholder={t("e.g. System Pay Services Solutions")}
                                     value={formData.company_name}
-                                    onChange={(e) => handleChange('company_name', e.target.value)}
+                                    onKeyDown={preventEdgeSpaces}
+                                    onChange={(e) => handleChange('company_name', handleNameInput(e.target.value))}
                                     sx={commonInputStyles}
                                 />
                             </div>
@@ -359,7 +382,13 @@ const AddBeneficiaryModal = ({ open, handleClose, onSaveSuccess, beneficiaryToEd
                                     required={beneficiaryType === 'business'}
                                     placeholder="name@example.com"
                                     value={formData.email}
-                                    onChange={(e) => handleChange('email', e.target.value)}
+                                    onKeyDown={preventEmailSpaces}
+                                     onChange={(e) =>
+                                        handleChange(
+                                            'email',
+                                            handleEmailInput(e.target.value)
+                                        )
+                                    }
                                     sx={commonInputStyles}
                                 />
                             </div>
