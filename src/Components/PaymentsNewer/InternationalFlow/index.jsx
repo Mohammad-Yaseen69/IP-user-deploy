@@ -29,7 +29,7 @@ import CreditCard from "./CreditCard"
 import ErrorModal from "./ErrorModal"
 import FeesComponent from "./FeesComponent"
 import MobileWalletServices from "./MobileWalletServices"
-import OtpConfirmation from "./OtpConfirmation"
+import OtpConfirmation from "../../../Common/Component/OtpVerification"
 import Receipt from "./Receipt"
 import SelectedCard from "./SelectedCard"
 import ServiceDetails from "./ServiceDetails"
@@ -1658,6 +1658,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                                                             internationalData.showOtpModal
                                                             &&
                                                             <OtpConfirmation
+                                                                variant="modal"
                                                                 callback={internationalData.payment_type?.value === "card" ? initiateCardPayment : internationalData.payment_type?.value === "paypal" ? initiatePaypalPayment : internationalData?.payment_type?.value === "mobile_wallet" ? initiateMobileWalletPayment : verifyOtp}
                                                                 data={internationalData}
                                                                 dataHandler={updateInternationalData}
@@ -1920,6 +1921,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                                                                                 internationalData.showOtpModal
                                                                                 &&
                                                                                 <OtpConfirmation
+                                                                                    variant="modal"
                                                                                     callback={internationalData.payment_type?.value === "card" ? initiateCardPayment : internationalData.payment_type?.value === "paypal" ? initiatePaypalPayment : internationalData?.payment_type?.value === "mobile_wallet" ? initiateMobileWalletPayment : verifyOtp}
                                                                                     data={internationalData}
                                                                                     dataHandler={updateInternationalData}

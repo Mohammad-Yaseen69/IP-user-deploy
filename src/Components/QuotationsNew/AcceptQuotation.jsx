@@ -12,7 +12,7 @@ import FeesComponent from "../PaymentsNewer/InternationalFlow/FeesComponent";
 import StepFour from "../PaymentsNewer/InternationalFlow/StepFour";
 import CreditCard from "../PaymentsNewer/InternationalFlow/CreditCard";
 import StepFive from "../PaymentsNewer/WalletToWalletFlow/StepFive";
-import OtpConfirmation from "../PaymentsNewer/InternationalFlow/OtpConfirmation";
+import OtpConfirmation from "../../Common/Component/OtpVerification";
 import { Link } from "react-router-dom";
 import { ChevronLeft, ChevronRight, HelpCircle, Info, X } from "react-feather";
 import WalletsComponent from "../PaymentsNewer/InternationalFlow/WalletsComponent";
@@ -852,6 +852,7 @@ const AcceptQuotation = ({ isOpen, toggle, item, type = "receive" }) => {
                                                 data.show_otp
                                                 &&
                                                 <OtpConfirmation
+                                                    variant="modal"
                                                     callback={data.payment_type?.value === "card" ? initiateCardPayment : data.payment_type?.value === "paypal" ? initiatePaypalPayment : acceptRequest}
                                                     data={data}
                                                     dataHandler={dataHandler}
@@ -1058,6 +1059,7 @@ const AcceptQuotation = ({ isOpen, toggle, item, type = "receive" }) => {
                                                         data.show_otp
                                                         &&
                                                         <OtpConfirmation
+                                                            variant="modal"
                                                             callback={data.payment_type?.value === "card" ? initiateCardPayment : data.payment_type?.value === "paypal" ? initiatePaypalPayment : acceptRequest}
                                                             data={data}
                                                             dataHandler={dataHandler}

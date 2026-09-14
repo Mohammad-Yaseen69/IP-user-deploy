@@ -37,7 +37,7 @@ import useSendOtp from "../../../../hooks/GeneralUse/useSendOtp"
 import { useQueryClient } from "@tanstack/react-query"
 import { useVirtualIbanPayoutDirect, useVirtualIbanPayoutFee, useSyncVirtualIbanBalance, virtualIbanQueryKeys } from "../../../../hooks/useVirtualIban"
 import { handlePaymentApiError } from "../../../../utils/Functions/handlePaymentApiError"
-import OTPConfirmation from "../../../UserSettingsNew/OTPConfirmation"
+import OTPConfirmation from "../../../../Common/Component/OtpVerification"
 import sepaCountries from "./sepaCountries.json"
 import { Tooltip } from "@mui/material"
 import jsPDF from "jspdf"
@@ -238,7 +238,7 @@ const AddBeneficiaryStep = ({ amount, currencyCode, form, setForm }) => {
 
 const PurposeStep = ({ amount, currencyCode, purpose, setPurpose, description, setDescription, additionalInfo, setAdditionalInfo }) => {
     const { t } = useTranslation()
-    const descError = description && !isValidDescription(description) ? t("5–120 characters; letters, digits, space, comma, dot, hyphen only") : ""
+    const descError = description && !isValidDescription(description) ? t("5–34 characters; letters, digits, space, comma, dot, hyphen only") : ""
 
     return (
         <div className={styles.purposeStep}>
@@ -257,9 +257,9 @@ const PurposeStep = ({ amount, currencyCode, purpose, setPurpose, description, s
                 value={description}
                 onChange={setDescription}
                 placeholder={t("e.g. Invoice payment, consultant fees, trade")}
-                hint={!descError ? t("5–120 characters; letters, digits, space, comma, dot, hyphen only") : ""}
+                hint={!descError ? t("5–34 characters; letters, digits, space, comma, dot, hyphen only") : ""}
                 error={descError}
-                maxLength={120}
+                maxLength={34}
             />
             <TextField label={t("Additional information (optional)")} value={additionalInfo} onChange={setAdditionalInfo} />
             <div className={styles.infoStrip}>{t("SEPA transfers deliver the full amount and carry no correspondent fees, so there is no OUR/SHA/BEN choice to make.")}</div>
@@ -817,7 +817,7 @@ const SepaTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, i
         if (currentStep === STEPS.PURPOSE) {
             const currentDesc = (description || "").trim()
             if (!isValidDescription(currentDesc)) {
-                toast.error(t("Description must be 5–120 characters and contain only letters, numbers, spaces, commas, periods, and hyphens."))
+                toast.error(t("Description must be 34 characters and contain only letters, numbers, spaces, commas, periods, and hyphens."))
                 return
             }
             try {
@@ -902,7 +902,7 @@ const SepaTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, i
             case STEPS.REVIEW:
                 return <ReviewStep amount={amount} currencyCode={currencyCode} transferSpeed={transferSpeed} selectedBeneficiary={selectedBeneficiary} purpose={purpose} additionalInfo={additionalInfo} feeDetails={feeDetails} confirmedDetails={confirmedDetails} setConfirmedDetails={setConfirmedDetails} />
             case STEPS.OTP:
-                return <OTPConfirmation fullHeight setter={setCurrentStep} setterValue={STEPS.DONE} hideOtp={() => { }} callback={verifyOtp} processing={payoutDirect.isPending} resendHandler={handleSendOtp} authType={authType} setAuthType={setAuthType}
+                return <OTPConfirmation variant="card" fullHeight setter={setCurrentStep} setterValue={STEPS.DONE} hideOtp={() => { }} callback={verifyOtp} processing={payoutDirect.isPending} resendHandler={handleSendOtp} authType={authType} setAuthType={setAuthType}
                     showBackButton={true}
                     onBack={handleBack}
                 />

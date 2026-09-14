@@ -54,7 +54,7 @@ import useSendOtp from "../../../../hooks/GeneralUse/useSendOtp"
 import { useQueryClient } from "@tanstack/react-query"
 import { useVirtualIbanSwiftPayoutFee, useVirtualIbanSwiftPayoutDirect, useSyncVirtualIbanBalance, virtualIbanQueryKeys } from "../../../../hooks/useVirtualIban"
 import { handlePaymentApiError } from "../../../../utils/Functions/handlePaymentApiError"
-import OTPConfirmation from "../../../UserSettingsNew/OTPConfirmation"
+import OTPConfirmation from "../../../../Common/Component/OtpVerification"
 import jsPDF from "jspdf"
 import autoTable from "jspdf-autotable"
 import AddBeneficiary from "../../../AddBeneficiary"
@@ -403,7 +403,7 @@ const AddBeneficiaryStep = ({ amount, currencyCode, form, setForm }) => {
 
 const PurposeStep = ({ amount, currencyCode, purpose, setPurpose, description, setDescription, additionalInfo, setAdditionalInfo }) => {
     const { t } = useTranslation()
-    const descError = description && !isValidDescription(description) ? t("5–120 characters; letters, digits, space, comma, dot, hyphen only") : ""
+    const descError = description && !isValidDescription(description) ? t("5–34 characters; letters, digits, space, comma, dot, hyphen only") : ""
 
     return (
         <div className={styles.purposeStep}>
@@ -433,9 +433,9 @@ const PurposeStep = ({ amount, currencyCode, purpose, setPurpose, description, s
                 value={description}
                 onChange={(v) => setDescription(v)}
                 placeholder={t("e.g. Invoice payment, consultant fees, trade")}
-                hint={!descError ? t("5–120 characters; letters, digits, space, comma, dot, hyphen only") : ""}
+                hint={!descError ? t("5–34 characters; letters, digits, space, comma, dot, hyphen only") : ""}
                 error={descError}
-                maxLength={120}
+                maxLength={34}
             />
 
             <TextField
@@ -1033,7 +1033,7 @@ const SwiftTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, 
         if (currentStep === STEPS.PURPOSE) {
             const currentDesc = (description || "").trim()
             if (!isValidDescription(currentDesc)) {
-                toast.error(t("Description must be 5–120 characters and contain only letters, numbers, spaces, commas, periods, and hyphens."))
+                toast.error(t("Description must be 5–34 characters and contain only letters, numbers, spaces, commas, periods, and hyphens."))
                 return
             }
             try {
@@ -1146,6 +1146,7 @@ const SwiftTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, 
             case STEPS.OTP:
                 return (
                     <OTPConfirmation
+                        variant="card"
                         fullHeight
                         setter={setCurrentStep}
                         setterValue={STEPS.DONE}
