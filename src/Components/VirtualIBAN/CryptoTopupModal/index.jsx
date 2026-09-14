@@ -117,18 +117,15 @@ const CryptoTopupModal = ({ isOpen, toggle, selectedIban }) => {
         resetState()
         toggle?.()
     }
-
     const previewFee = async () => {
         if (!ibanId) {
             toast.error(t("Please select a virtual IBAN first"))
             return
         }
-
         const res = await feeMutation.mutateAsync({
             iban_id: ibanId,
             amount: getAmountNumber(amount),
         })
-
         if (res?.data) {
             setFeeDetails(res.data)
             setCurrentStep(STEPS.REVIEW)
@@ -136,7 +133,6 @@ const CryptoTopupModal = ({ isOpen, toggle, selectedIban }) => {
             toast.error(res.message)
         }
     }
-
     const refreshFeeDetails = useCallback(async () => {
         if (!ibanId || !amount) return
         try {
@@ -159,14 +155,12 @@ const CryptoTopupModal = ({ isOpen, toggle, selectedIban }) => {
             toast.error(t("Invalid quote details"))
             return
         }
-
         const res = await confirmMutation.mutateAsync({
             iban_id: ibanId,
             token: feeDetails.token,
             returnUrl: `${base_url}/add-funds/crypto-success?isIban=true`,
             idempotencyKey: getKey()
         })
-
         const nextCheckoutUrl = res?.data?.checkout_url || res?.data?.data?.checkout_url
         if (nextCheckoutUrl) {
             setCheckoutUrl(nextCheckoutUrl)
@@ -176,29 +170,24 @@ const CryptoTopupModal = ({ isOpen, toggle, selectedIban }) => {
             toast.error(t("Unable to obtain payment checkout URL"))
         }
     }
-
     const handleContinue = async () => {
         if (!selectedIban) {
             toast.error(t("Please select a virtual IBAN first"))
             return
         }
-
         try {
             if (currentStep === STEPS.AMOUNT) {
                 await previewFee()
                 return
             }
-
             if (currentStep === STEPS.REVIEW) {
                 await confirmTopup()
                 return
             }
-
             if (currentStep === STEPS.DONE) {
                 handleClose()
                 return
             }
-
             const { nextStep } = goNext(currentStep, machineData)
             if (nextStep) {
                 setCurrentStep(nextStep)

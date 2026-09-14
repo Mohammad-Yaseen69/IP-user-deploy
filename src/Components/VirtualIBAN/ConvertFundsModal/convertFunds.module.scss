@@ -609,12 +609,9 @@
 
         .backIconButton {
             background: transparent;
-            /* Background color hata diya */
             border: none;
-            /* Border bhi hata diya */
             cursor: pointer;
             padding: 4px;
-            /* Padding kam kardi */
             display: flex;
             align-items: center;
             justify-content: center;
@@ -630,7 +627,6 @@
                 height: 24px !important;
             }
         }
-
     }
 
     .modalLayout {
@@ -649,7 +645,6 @@
         align-items: stretch;
     }
 
-    /* Progress Bar Lines View */
     .progressEffect {
         width: 100%;
         flex-direction: row;
@@ -662,7 +657,6 @@
         }
     }
 
-    /* Amount Input & Quick Buttons */
     .amountInputBox {
         padding: 20px 14px;
         gap: 16px;
@@ -692,7 +686,6 @@
         border-radius: 15px;
     }
 
-    /* Review Table Fix: Destination IBAN aur long values ke liye column layout */
     .reviewRow {
         flex-direction: column;
         align-items: flex-start;
@@ -709,7 +702,6 @@
         width: 100%;
         text-align: left;
         word-break: break-all;
-        /* Lamba IBAN text break hokar next line mein safe rahega */
         font-size: 13px;
     }
 
@@ -777,6 +769,7 @@
         align-items: center;
         justify-content: center;
         transition: background-color 0.2s ease;
+
         &:hover {
             background-color: #e5e7eb;
         }
