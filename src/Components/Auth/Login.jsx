@@ -654,15 +654,15 @@ const Login = ({ country, setIsLoginForm, }) => {
         } catch (err) {
             console.error("Login history creation failed:", err);
         } finally {
-            const path = sessionStorage.getItem("path") && sessionStorage.getItem("path") !== "undefined" ? sessionStorage.getItem("path") : redirect || ""
-            if (path && path !== "undefined") {
-                navigate(path)
-            } else {
-                navigate("/")
-            }
-            sessionStorage.clear()
-            setIsPressed(false)
-            setBiometricLoading(false)
+            const savedPath = sessionStorage.getItem("path");
+            const targetPath = (savedPath && savedPath !== "undefined" && !savedPath.includes("login") && !savedPath.includes("auth"))
+                ? savedPath
+                : (redirect && !redirect.includes("login") ? redirect : "/");
+            sessionStorage.clear();
+            sessionStorage.setItem("force_auth_on_login", "true");
+            setIsPressed(false);
+            setBiometricLoading(false);
+            navigate(targetPath, { replace: true });
         }
     }
     const [resendTimer, setResendTimer] = useState(0)
@@ -763,12 +763,13 @@ const Login = ({ country, setIsLoginForm, }) => {
                     .then(async res => {
                         const dec = decryptData(res.data.data)
                         setShowInactivityModal(false)
-                        if (dec?.country?.status) {
+                        if (dec?.country?.status !== false) {
                             completeLoginProcess(dec, token)
                         }
                         else {
                             setUserDetails(dec)
                             sessionStorage.setItem("country_status_error", "Service not available in your country!")
+                            setIsPressed(false)
                         }
                     })
                     .catch(err => {
@@ -1214,6 +1215,9 @@ const Login = ({ country, setIsLoginForm, }) => {
                                                         onClick={() => {
                                                             setShowQuickLogin(false)
                                                             setEmail("")
+                                                            setPassword("")
+                                                            setEmailVerified(false)
+                                                            setProfileLockTime(0)
                                                         }}
                                                         style={{ position: "relative", top: "0", left: "0px", flexShrink: 0 }}
                                                     >
@@ -1228,6 +1232,9 @@ const Login = ({ country, setIsLoginForm, }) => {
                                                     onClick={() => {
                                                         setShowQuickLogin(false)
                                                         setEmail("")
+                                                        setPassword("")
+                                                        setEmailVerified(false)
+                                                        setProfileLockTime(0)
                                                     }}
                                                     style={{ position: "relative", top: "0", left: "0px", margin: "20px auto" }}
                                                 >
@@ -1347,6 +1354,7 @@ const Login = ({ country, setIsLoginForm, }) => {
                                     onClick={() => {
                                         setPassword("")
                                         setEmailVerified(false)
+                                        setProfileLockTime(0)
 
                                     }}
                                 >
@@ -1445,6 +1453,8 @@ const Login = ({ country, setIsLoginForm, }) => {
                                                     background: "#FFF",
                                                     overflow: "hidden",
                                                     width: "100%",
+                                                    fontWeight: 600,
+                                                    fontSize: "12px"
                                                 }}
                                                 disabled={biometricLoading}
                                             >

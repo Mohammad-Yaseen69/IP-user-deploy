@@ -5435,5 +5435,6 @@
   "It looks like you are using an ad blocker or privacy shield (e.g.Brave Shields).Please disable it to continue using our platform.": "Es sieht so aus, als würden Sie einen Werbeblocker oder Datenschutzschild verwenden (z. B. Brave Shields). Bitte deaktivieren Sie ihn, um unsere Plattform weiterhin zu nutzen.",
   "Ad blockers and browser shields interfere with our crash reporting tool(Sentry), preventing us from detecting, tracking, and fixing bugs effectively.": "Werbeblocker und Browser-Schilde stören unser Absturzberichtstool (Sentry) und hindern uns daran, Fehler effektiv zu erkennen, zu verfolgen und zu beheben.",
   "on our payment platform.": "auf unserer Zahlungsplattform.",
-  "I've disabled it - reload page": "Ich habe ihn deaktiviert – Seite neu laden"
+  "I've disabled it - reload page": "Ich habe ihn deaktiviert – Seite neu laden",
+  "Please note that your SWIFT transfer will be processed under Kemit Kingdom - K2 - SA, InstaPay’s parent company, and not under your personal name.": "Bitte beachten Sie, dass Ihre SWIFT-Überweisung unter Kemit Kingdom - K2 - SA, der Muttergesellschaft von InstaPay, und nicht unter Ihrem persönlichen Namen abgewickelt wird."
 }

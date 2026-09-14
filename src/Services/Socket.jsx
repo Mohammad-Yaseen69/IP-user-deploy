@@ -46,6 +46,24 @@ class SocketsService {
             }
         });
 
+        this.socket.on('new_notification', (data) => {
+            try {
+                const sound = new Audio(notification_sound);
+                sound.play().catch(() => {});
+            } catch (e) {}
+
+            if (data?.title || data?.desc) {
+                toast.info(data.title || data.desc);
+            }
+
+            if (typeof window !== 'undefined') {
+                window.dispatchEvent(new CustomEvent('instapay:new_notification', { detail: data }));
+            }
+
+            if (this.onNewNotification) {
+                this.onNewNotification(data);
+            }
+        });
 
         this.socket.on("txn:update", (data) => {
             const status = data.status // COMPLETED, PROCESSING, FAILED

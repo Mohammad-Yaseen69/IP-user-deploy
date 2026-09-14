@@ -156,7 +156,7 @@ const useBenEditFunc = ({
         const trimObj = trimObjectValues(data)
         const encrypted = encryptData(trimObj)
 
-        axios.put(`${import.meta.env.VITE_IP_DEV_API}/api/beneficiary/update-beneficiary/${user._id}`, {
+        return axios.put(`${import.meta.env.VITE_IP_DEV_API}/api/beneficiary/update-beneficiary/${user._id}`, {
             data: encrypted
         }, {
             headers: authHeader
@@ -192,36 +192,6 @@ const useBenEditFunc = ({
             if (!formData[field]?.trim() && field !== 'city' && field !== 'phone' && field !== 'country' && field !== 'first_name' && field !== 'last_name') missing.push(field)
         })
 
-        // switch (active) {
-        //     case 1: // Bank
-        //         requiredFields.bank.forEach(field => {
-        //             if (!formData[field]) missing.push(field)
-        //         })
-        //         break;
-        //     case 2: // Mobile
-        //         requiredFields.mobile.forEach(field => {
-        //             if (!formData[field]) missing.push(field)
-        //         })
-        //         break;
-        //     case 3: // Card
-        //         requiredFields.card.forEach(field => {
-        //             if (!formData[field]) missing.push(field)
-        //         })
-        //         break;
-        //     case 4: // Crypto
-        //         requiredFields.crypto.forEach(field => {
-        //             if (!formData[field]) missing.push(field)
-        //         })
-        //         break;
-        //     case 6: // Cash
-        //         if (!cashPickupType) missing.push("document_type")
-        //         if (!cashPickupNumber) missing.push("document_number")
-        //         break;
-        //     default:
-        //         break;
-        // }
-
-
         setMissingFields(missing)
 
         // Focus on first missing field
@@ -242,21 +212,26 @@ const useBenEditFunc = ({
                 })
             }
 
-
             await editBenFun()
         } catch (error) {
             console.log(error)
-            const decrypt = decryptData(error.response?.data?.data)
+            if (error?.response?.status === 500) {
+                await editBenFun()
+                return
+            }
+            const decrypt = decryptData(error?.response?.data?.data)
+            const decryptMsg = typeof decrypt === "string" ? decrypt : (decrypt?.message || "")
 
-            if (decrypt.includes("phone") && formData.mobile_wallet_account_number) {
+            if (decryptMsg.includes("phone") && formData.mobile_wallet_account_number) {
                 setWalletNumberError("Incorrect phone number, please enter a valid number")
             }
-            else if (decrypt.includes("phone")) {
+            else if (decryptMsg.includes("phone")) {
                 setMobileNumberError("Incorrect phone number, please enter a valid number")
             }
             console.log(decrypt)
+        } finally {
+            setsaveloading(false)
         }
-        setsaveloading(false)
     }
 
     return { editBeneficiaryHandler, editBenFun, mobileNumberError, walletNumberError, saveloading }

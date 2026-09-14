@@ -2,10 +2,10 @@ import { useTranslation } from "react-i18next"
 import styles from "./styles/steptwo.module.css"
 import PhoneInput from "../../PhoneInput"
 
-const Stepthree = ({ data, dataHandler }) => {
+const Stepthree = ({ data, dataHandler, onKeyDown, onFocus }) => {
     const { t } = useTranslation()
 
-    console.log(data.phone)
+    console.log(data.country, "country")
     return (
         <div className={styles.container}>
             {data.account_type === "individual" &&
@@ -13,8 +13,13 @@ const Stepthree = ({ data, dataHandler }) => {
                     <div className={styles.inp}>
                         <label>{t("Phone Number")}</label>
                         <PhoneInput
-                            country={data.country}
-                            setPhone={(e) => {
+                            country={
+                                data.country?.alpha3 ||
+                                data.country?.country_iso_code ||
+                                data.country ||
+                                ""
+                            }
+                             setPhone={(e) => {
                                 dataHandler("phone", e)
                                 dataHandler("phone_error", null)
                             }}
@@ -23,9 +28,11 @@ const Stepthree = ({ data, dataHandler }) => {
                                 dataHandler("country", e?.alpha3 ?? "")
                                 dataHandler("phone_error", null)
                             }}
+                            onKeyDown={onKeyDown}
+                            onFocus={onFocus}
                         />
 
-                        {data.phone && data.phone.length >= 3 && <p style={{ margin: "0", fontSize: "14px", fontWeight: 600 }}>{t("A verification code will be sent via")} <span style={{ color: "#25D366" }}>{t("WhatsApp")}</span>.</p>}
+                        {/* {data.phone && data.phone.length >= 3 && <p style={{ margin: "0", fontSize: "14px", fontWeight: 600 }}>{t("A verification code will be sent via")} <span style={{ color: "#25D366" }}>{t("WhatsApp")}</span>.</p>} */}
                     </div>
                     {
                         data?.phone_error
@@ -40,7 +47,15 @@ const Stepthree = ({ data, dataHandler }) => {
                 data.account_type === "business" &&
                 <div className={styles.inp}>
                     <label>{t("Business Email")}:</label>
-                    <input placeholder={t("Enter your business email")} value={data.email} onChange={e => dataHandler("email", e.target.value)} style={{ background: "transparent", border: "none", outline: "none" }} type="email" />
+                    <input
+                        placeholder={t("Enter your business email")}
+                        value={data.email}
+                        onChange={e => dataHandler("email", e.target.value)}
+                        onKeyDown={onKeyDown}
+                        onFocus={onFocus}
+                        style={{ background: "transparent", border: "none", outline: "none" }}
+                        type="email"
+                    />
                 </div>
             }
         </div>

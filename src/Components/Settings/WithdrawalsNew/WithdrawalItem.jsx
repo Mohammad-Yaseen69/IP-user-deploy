@@ -85,7 +85,10 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
     }
 
     const handleBankExtraChange = useCallback((e) => {
-        const { value, name } = e.target;
+        let { value, name } = e.target;
+        if (name === "account_number" || name === "bank_account_number") {
+            value = value.replace(/[^a-zA-Z0-9]/g, '');
+        }
         setBankExtras(prev => {
             return {
                 ...prev,
@@ -110,7 +113,10 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
     })
 
     const handleCardExtraChange = (e) => {
-        const { value, name } = e.target;
+        let { value, name } = e.target;
+        if (name === "account_number" || name === "bank_account_number") {
+            value = value.replace(/[^a-zA-Z0-9]/g, '');
+        }
         setCardExtras(prev => {
             return {
                 ...prev,
@@ -196,10 +202,16 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
 
     const [bankMobCrypto, setbankMobCrypto] = useState({
         ...withdrawlsFields,
+        address: "",
+        city: "",
+        postal_code: "",
         bank_account_holder_name: `${userDetails?.user?.first_name ?? userDetails?.company_name} ${userDetails?.user?.last_name ?? ""}`,
     })
 
     const [card, setCard] = useState({
+        address: "",
+        city: "",
+        postal_code: "",
         card_holder_one: "",
         card_number_one: "",
         card_expiry_one: "",
@@ -213,7 +225,10 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
     })
 
     const bmcHandler = (e) => {
-        const { name, value } = e.target;
+        let { name, value } = e.target;
+        if (name === "bank_account_number" || name === "account_number") {
+            value = value.replace(/[^a-zA-Z0-9]/g, '');
+        }
         setbankMobCrypto(prev => {
             return {
                 ...prev,
@@ -240,6 +255,13 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
         }
     }, [bankCountryCode])
 
+    const isAfricanCountry = useMemo(() => {
+        if (country?.alpha3) {
+            return citiesData.find(item => item.iso3 === country?.alpha3)?.region === "Africa"
+        }
+        return false
+    }, [country])
+
     useEffect(() => {
         if (current?.value === "bank") {
             const isAllBankFieldsFilled =
@@ -253,6 +275,7 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
                 (isAfricanBank ? true : bankMobCrypto.bank_postal_code) &&
                 bankMobCrypto.bank_account_holder_name &&
                 bankMobCrypto.bank_payer &&
+                bankMobCrypto.address &&
                 Object.keys(bankExtras)
                     .filter(item => serviceFieldInfoValidate(
                         services?.find(item => item?.method?.toLowerCase()?.includes("bank")),
@@ -269,12 +292,16 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
     useEffect(() => {
         if (bankMobCrypto.mobile_money_provider &&
             bankMobCrypto.mobile_wallet_name &&
-            bankMobCrypto.mobile_wallet_account_number?.slice(CountryBasedPhone[country?.alpha3]?.dial_code?.replace("+", "").length) !== "" ? true : false) {
+            bankMobCrypto.mobile_wallet_account_number?.slice(CountryBasedPhone[country?.alpha3]?.dial_code?.replace("+", "").length) !== "" &&
+            bankMobCrypto.address &&
+            bankMobCrypto.city &&
+            (isAfricanCountry ? true : bankMobCrypto.postal_code)
+        ) {
             setMobileCompleted(true)
         } else {
             setMobileCompleted(false)
         }
-    }, [bankMobCrypto, country])
+    }, [bankMobCrypto, country, isAfricanCountry])
 
     useEffect(() => {
         if (bankMobCrypto.crypto_currency &&
@@ -286,19 +313,29 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
     useEffect(() => {
         if (bankMobCrypto.document_number &&
             bankMobCrypto.document_type &&
+            bankMobCrypto.address &&
+            bankMobCrypto.city &&
+            (isAfricanCountry ? true : bankMobCrypto.postal_code) &&
             Object.keys(cashExtras).filter(item => serviceFieldInfoValidate(services?.find(item => item?.method?.toLowerCase()?.includes("cash")), "credit_party_identifiers_accepted", item)).every(item => cashExtras?.[item]?.length > 0)) {
             setCashCompleted(true)
+        } else {
+            setCashCompleted(false)
         }
-    }, [bankMobCrypto, cashExtras, services])
+    }, [bankMobCrypto, cashExtras, services, isAfricanCountry])
 
     useEffect(() => {
         if (card.card_expiry_one &&
             card.card_number_one &&
             card.card_holder_one &&
+            card.address &&
+            card.city &&
+            (isAfricanCountry ? true : card.postal_code) &&
             Object.keys(cardExtras).filter(item => serviceFieldInfoValidate(services?.find(item => item?.method?.toLowerCase()?.includes("card")), "credit_party_identifiers_accepted", item)).every(item => cardExtras?.[item]?.length > 0)) {
             setCardCompleted(true)
+        } else {
+            setCardCompleted(false)
         }
-    }, [card, cardExtras, services])
+    }, [card, cardExtras, services, isAfricanCountry])
 
     const [payers, setPayers] = useState([])
     const [payerLoading, setPayerLoading] = useState(false)
@@ -334,6 +371,9 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
         if (userWithdrawals?._id) {
             setbankMobCrypto(prev => ({
                 ...prev,
+                address: userWithdrawals?.address ?? "",
+                city: userWithdrawals?.city ?? "",
+                postal_code: userWithdrawals?.postal_code ?? userWithdrawals?.postalCode ?? "",
                 bank_payer: userWithdrawals?.bank_details?.[0]?.payer_id,
                 bank_iban: userWithdrawals?.bank_details?.[0]?.iban || userWithdrawals?.bank_details?.[0]?.swift_code,
                 bank_account_number: userWithdrawals?.bank_details?.[0]?.account_number ?? "",
@@ -357,6 +397,9 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
             }))
             setCard(prev => ({
                 ...prev,
+                address: userWithdrawals?.address ?? "",
+                city: userWithdrawals?.city ?? "",
+                postal_code: userWithdrawals?.postal_code ?? userWithdrawals?.postalCode ?? "",
                 card_payer: userWithdrawals?.card?.[0]?.payer_id,
                 card_holder_one: userWithdrawals?.card?.[0]?.card_name,
                 card_number_one: userWithdrawals?.card?.[0]?.card_number,
@@ -398,14 +441,31 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
             cryptoCompleted ? "crypto" : null,
             cashCompleted ? "cash" : null,
         ].filter(item => item !== null)
+        const address = current?.value === "card"
+            ? (card.address || bankMobCrypto.address || "")
+            : (bankMobCrypto.address || "")
+
+        const city = current?.value === "bank"
+            ? (bankMobCrypto.bank_city || "")
+            : current?.value === "card"
+                ? (card.city || bankMobCrypto.city || "")
+                : (bankMobCrypto.city || "")
+
+        const postal_code = current?.value === "bank"
+            ? (bankMobCrypto.bank_postal_code || "")
+            : current?.value === "card"
+                ? (card.postal_code || bankMobCrypto.postal_code || "")
+                : (bankMobCrypto.postal_code || "")
+
         const data = {
             first_name: userDetails?.user?.first_name ?? "",
             last_name: userDetails?.user?.last_name ?? "",
             company_name: userDetails?.company_name ?? "",
             email: userDetails?.email ?? "",
             phone: userDetails?.phone ?? "",
-            address: userDetails?.address ?? "",
-            city: userDetails?.city ?? "",
+            address: address,
+            city: city,
+            postal_code: postal_code,
             country: country?.id ?? "",
             iso_code: countries.filter(item => item.name.toLowerCase().includes(country?.name?.toLowerCase()))?.[0]?.alpha3,
             account: userDetails._id,
@@ -529,14 +589,31 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
             cashCompleted ? "cash" : null,
         ].filter(item => item !== null)
 
+        const address = current?.value === "card"
+            ? (card.address || bankMobCrypto.address || "")
+            : (bankMobCrypto.address || "")
+
+        const city = current?.value === "bank"
+            ? (bankMobCrypto.bank_city || "")
+            : current?.value === "card"
+                ? (card.city || bankMobCrypto.city || "")
+                : (bankMobCrypto.city || "")
+
+        const postal_code = current?.value === "bank"
+            ? (bankMobCrypto.bank_postal_code || "")
+            : current?.value === "card"
+                ? (card.postal_code || bankMobCrypto.postal_code || "")
+                : (bankMobCrypto.postal_code || "")
+
         const data = {
             first_name: userDetails?.user?.first_name ?? "",
             last_name: userDetails?.user?.last_name ?? "",
             company_name: userDetails?.company_name ?? "",
             email: userDetails?.email ?? "",
             phone: userDetails?.phone ?? "",
-            address: userDetails?.address ?? "",
-            city: userDetails?.city ?? "",
+            address: address,
+            city: city,
+            postal_code: postal_code,
             country: country?.id ?? "",
             iso_code: countries.filter(item => item.name.toLowerCase().includes(country?.name?.toLowerCase()))?.[0]?.alpha3,
             account: userDetails._id,
@@ -664,11 +741,17 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
             userWithdrawals?._id ? updateWithdrawalFunc() : addWithDrawal()
             console.log(dec)
         } catch (error) {
-            const dec = decryptData(error?.response?.data?.data)
-            if (dec.toLowerCase().includes("invalid")) {
-                setBankError("Invalid phone number")
+            if (error?.response?.status === 500) {
+                userWithdrawals?._id ? updateWithdrawalFunc() : addWithDrawal()
+                return
+            } else {
+                const dec = decryptData(error?.response?.data?.data)
+                const decMsg = typeof dec === "string" ? dec : (dec?.message || "")
+                if (decMsg.toLowerCase().includes("invalid")) {
+                    setBankError("Invalid phone number")
+                }
+                console.log(dec)
             }
-            console.log(dec)
         }
         finally {
             setIsSaving(false)

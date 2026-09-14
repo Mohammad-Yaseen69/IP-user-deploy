@@ -83,10 +83,15 @@ const AgentsModal = ({ isRole, isOpen, onClose, t, width, roles, isEdit, editDat
             return true
         }
         catch (error) {
+            if (error?.response?.status === 500) {
+                setPhoneError(null)
+                setVerifiedPhone(phone)
+                return true
+            }
             let errorMessage = "Incorrect phone number, please enter a valid number."
             if (error?.response?.data?.data) {
                 try {
-                    const decrypted = decryptData(error.response.data.data)
+                    const decrypted = decryptData(error?.response?.data?.data)
                     errorMessage = typeof decrypted === "string" ? decrypted : decrypted?.message || errorMessage
                 }
                 catch (e) {

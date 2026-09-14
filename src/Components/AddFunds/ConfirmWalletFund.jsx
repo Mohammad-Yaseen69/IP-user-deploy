@@ -34,7 +34,7 @@ const base_url = window.location.origin || 'https://my.insta-pay.ch';
 // Paytently is the card provider (hosted-forms iframe).
 const usePaytently = true;
 
-const ConfirmWalletFund = ({ setSubStep, wallet = {}, amount, payoutChannel, card_number, card_expiry, card_cvc, saveCard, type = "add_fund", paymentWithSavedCard = false, currentCard, merchant = "", payer = {}, setExternalLink = () => { }, paypalAmount, token, rate, reEnterCallback = () => { }, sendKybWalletOTP, kybFeeDets, partnerId, exchangeRate }) => {
+const ConfirmWalletFund = ({ setSubStep, wallet = {}, amount, payoutChannel, card_number, card_expiry, card_cvc, saveCard, type = "add_fund", paymentWithSavedCard = false, currentCard, merchant = "", payer = {}, setExternalLink = () => { }, paypalAmount, token, rate, reEnterCallback = () => { }, sendKybWalletOTP, kybFeeDets, partnerId, exchangeRate, }) => {
     const navigate = useNavigate()
     const { t } = useTranslation()
     const [complete, setComplete] = useState(false);
@@ -413,6 +413,9 @@ const ConfirmWalletFund = ({ setSubStep, wallet = {}, amount, payoutChannel, car
                     }} className="conf_cont">
                         {!(isPaytentlyCard && paytentlyHosted?.hostedUrl) && (
                         <div>
+                            <button onClick={() => setSubStep(3)} className="btn btn-link">
+                                &larr; {t("Back")}
+                            </button>
                             <h4 style={{ fontSize: "1.25rem", fontWeight: 700, textAlign: "center" }}>{t("Your Details")}</h4>
                             <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
                                 {

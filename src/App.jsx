@@ -15,8 +15,10 @@ import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import DateMomentUtils from '@date-io/moment';
 import AdBlockCheck from './Components/AdBlockCheck/AdBlockCheck'
 import LanguageAttributeSync from './Common/LanguageAttributeSync'
+import MaintenancePage from './Components/Maintenance/MaintenancePage'
 
 
+const underMaintaince = false
 
 const App = () => {
   const [showOtherTabError, setShowOtherTabError] = useState(false)
@@ -131,34 +133,38 @@ const App = () => {
     <div className='App' id='main_app'>
       <AdBlockCheck />
       {
-        showOtherTabError
+        underMaintaince
           ?
-          <BroadcastPage />
+          <MaintenancePage />
           :
-          <ErrorBoundary>
-            <Suspense fallback={<InstaPayLoader opacity={1} fallback={true} />}>
-              <TimezonesProvider>
-                <LanguageAttributeSync>
-                  <QueryClientProvider client={client}>
-                    <UserState>
-                      <InactivityWrapper>
-                        <CustomizerProvider>
-                          <AnimationThemeProvider>
-                            <MuiPickersUtilsProvider utils={DateMomentUtils}>
-                              {" "}
-                              <Routers />
-                              {" "}
-                            </MuiPickersUtilsProvider>
-                          </AnimationThemeProvider>
-                        </CustomizerProvider>
-                      </InactivityWrapper>
-                    </UserState>
-                  </QueryClientProvider>
-                </LanguageAttributeSync>
+          showOtherTabError
+            ?
+            <BroadcastPage />
+            :
+            <ErrorBoundary>
+              <Suspense fallback={<InstaPayLoader opacity={1} fallback={true} />}>
+                <TimezonesProvider>
+                  <LanguageAttributeSync>
+                    <QueryClientProvider client={client}>
+                      <UserState>
+                        <InactivityWrapper>
+                          <CustomizerProvider>
+                            <AnimationThemeProvider>
+                              <MuiPickersUtilsProvider utils={DateMomentUtils}>
+                                {" "}
+                                <Routers />
+                                {" "}
+                              </MuiPickersUtilsProvider>
+                            </AnimationThemeProvider>
+                          </CustomizerProvider>
+                        </InactivityWrapper>
+                      </UserState>
+                    </QueryClientProvider>
+                  </LanguageAttributeSync>
 
-              </TimezonesProvider>
-            </Suspense>
-          </ErrorBoundary>
+                </TimezonesProvider>
+              </Suspense>
+            </ErrorBoundary>
       }
       <ToastContainer />
     </div>

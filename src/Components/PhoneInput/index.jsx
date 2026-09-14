@@ -9,7 +9,7 @@ function extractNumber(value) {
     return digits;
 }
 
-const PhoneInput = ({ setPhone, country, setCountry = () => { }, disabled = false, phone = "", customStyles = {}, error, setError, inputStyles, disableDropdown, inThirdParty = false, onBlur }) => {
+const PhoneInput = ({ setPhone, country, setCountry = () => { }, disabled = false, phone = "", customStyles = {}, error, setError, inputStyles, disableDropdown, inThirdParty = false, onBlur, onKeyDown, onFocus }) => {
     const [selectedCountry, setSelectedCountry] = useState({})
     const [number, setNumber] = useState("")
     const { t } = useTranslation()
@@ -59,6 +59,8 @@ const PhoneInput = ({ setPhone, country, setCountry = () => { }, disabled = fals
                     styles={inputStyles}
                     selectedCountry={selectedCountry}
                     onBlur={onBlur}
+                    onKeyDown={onKeyDown}
+                    onFocus={onFocus}
                 />
             </div>
 

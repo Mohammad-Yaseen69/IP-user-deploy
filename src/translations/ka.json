@@ -4061,5 +4061,6 @@
   "How much the recipient receives:": "რამდენს იღებს მიმღები:",
   "Please select a date after one month from ${pass}.": "გთხოვთ, აირჩიოთ თარიღი ${pass}-დან ერთი თვის შემდეგ.",
   "Are you sure, you want to remove this card details ending with these": "დარწმუნებული ხართ, რომ გსურთ ამ ბარათის დეტალების წაშლა, რომელიც მთავრდება ამ",
-  "Whatsap:": "Whatsap:"
+  "Whatsap:": "Whatsap:",
+  "Please note that your SWIFT transfer will be processed under Kemit Kingdom - K2 - SA, InstaPay’s parent company, and not under your personal name.": "გთხოვთ გაითვალისწინოთ, რომ თქვენი SWIFT გადარიცხვა დამუშავდება InstaPay-ის მშობელი კომპანიის, Kemit Kingdom - K2 - SA-ს სახელით და არა თქვენი პირადი სახელით."
 }

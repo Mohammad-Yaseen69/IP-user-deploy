@@ -8,6 +8,7 @@ import ConfigDB from "../Config/ThemeConfig";
 import Loader from "./Loader";
 import SidebarNew from "./SidebarNew/SidebarNew";
 import ProfileCompletionModal from "../Components/ProfileCompletionModal";
+import ForcedAuthenticatorModal from "../Components/ForcedAuthenticatorModal";
 import { UserContext } from "../Context/UserContext";
 import styles from "./Layout.module.css"
 import BottomNav from "./BottomNav";
@@ -30,6 +31,9 @@ import AdditionalDocumentModal from "./AdditionalDocumentModal";
 import NewMenu from "../Common/NewMenu";
 import AssistantWidget from "../Components/AssistantWidget";
 import { useVirtualIbans } from "../hooks/useVirtualIban";
+import PushConsentModal from "../Components/PushConsentModal";
+import { isPushSupported, getPushPermissionState } from "../Services/PushNotificationService";
+
 
 
 
@@ -117,6 +121,8 @@ const Layout = ({ children, classNames, ...rest }) => {
     setShowAnotherLoginModal,
     isAgentLogin,
     agentDetails,
+    shouldForceAuthenticator,
+    authHeader,
   } = useContext(UserContext)
   const [showSuccessModal, setShowSuccessModal] = useState()
   const [showAdditionalFilesModal, setShowAdditionalModal] = useState(false)
@@ -240,11 +246,40 @@ const Layout = ({ children, classNames, ...rest }) => {
         queryClient.invalidateQueries({ queryKey: ['receivedQuotations'] })
         queryClient.invalidateQueries({ queryKey: ['sentQuotations'] })
       }
+      socketsService.onNewNotification = () => {
+        queryClient.invalidateQueries({ queryKey: ['notifications'] });
+        queryClient.invalidateQueries({ queryKey: ['userWallets'] });
+        queryClient.invalidateQueries({ queryKey: ['userTransactions'] });
+      };
       return () => {
         socketsService.disconnect();
       };
     }
   }, [socketsService, userDetails?._id]);
+
+  const [showPushConsent, setShowPushConsent] = useState(false);
+
+  useEffect(() => {
+    if (!userDetails?._id) return;
+    if (!isPushSupported()) return;
+
+    const permission = getPushPermissionState();
+    if (permission !== 'default') return;
+
+    const dismissedTime = localStorage.getItem('instapay_push_prompt_dismissed');
+    if (dismissedTime) {
+      const sevenDays = 7 * 24 * 60 * 60 * 1000;
+      if (Date.now() - Number(dismissedTime) < sevenDays) {
+        return;
+      }
+    }
+
+    const timer = setTimeout(() => {
+      setShowPushConsent(true);
+    }, 2500);
+
+    return () => clearTimeout(timer);
+  }, [userDetails?._id]);
 
   useEffect(() => {
     if (location.pathname === "/" || location.pathname.toLowerCase() === "/dashboard/default") {
@@ -373,10 +408,15 @@ const Layout = ({ children, classNames, ...rest }) => {
                 &&
                 <ProfileCompletionModal setShowModal={setShowModal} profileIncompleteReason={profileIncompleteReason} kyc={showKyc && profileCompleted} />
               }
+              {
+                (shouldForceAuthenticator && !showModal)
+                &&
+                <ForcedAuthenticatorModal />
+              }
               <Loader />
               <TapTop />
               <div style={{
-                pointerEvents: ((is30Days || showModal) && userDetails?.account_type === "individual") && !window.location.pathname.toLowerCase().includes("/profile/") ? "none" : "all"
+                pointerEvents: ((is30Days || showModal || shouldForceAuthenticator) && userDetails?.account_type === "individual") && !window.location.pathname.toLowerCase().includes("/profile/") ? "none" : "all"
               }} className={`page-wrapper ${sidebar_types1} `} id="pageWrapper">
                 {/* <Header /> */}
                 <div className="page-body-wrapper">
@@ -411,8 +451,13 @@ const Layout = ({ children, classNames, ...rest }) => {
                 &&
                 <ProfileCompletionModal setShowModal={setShowModal} profileIncompleteReason={profileIncompleteReason} kyc={showKyc && profileCompleted} />
               }
+              {
+                (shouldForceAuthenticator && !showModal)
+                &&
+                <ForcedAuthenticatorModal />
+              }
               <div style={{
-                // pointerEvents: userDetails && (is30Days || showModal) ? "none" : "all",
+                // pointerEvents: userDetails && (is30Days || showModal || shouldForceAuthenticator) ? "none" : "all",
                 paddingBottom: location.pathname.includes("pin") && 0
               }} className={styles.mobile_layout}>
                 <Loader />
@@ -429,6 +474,12 @@ const Layout = ({ children, classNames, ...rest }) => {
             toggle={() => setShowAnotherLoginModal(false)}
           />
         }
+        <PushConsentModal
+          isOpen={showPushConsent}
+          onClose={() => setShowPushConsent(false)}
+          accountId={userDetails?._id}
+          authHeader={authHeader}
+        />
         <AssistantWidget />
       </MobileSbContextProvider>
     </Fragment>

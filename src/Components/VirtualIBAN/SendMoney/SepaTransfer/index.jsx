@@ -106,7 +106,7 @@ const buildBeneficiaryFromForm = (form) => {
     }
 }
 
-const TextField = ({ label, value, onChange, hint, type = "text", disabled = false, error = "", placeholder = "" }) => (
+const TextField = ({ label, value, onChange, hint, type = "text", disabled = false, error = "", placeholder = "", maxLength }) => (
     <label className={styles.field}>
         <span>{label}</span>
         <input
@@ -114,6 +114,7 @@ const TextField = ({ label, value, onChange, hint, type = "text", disabled = fal
             value={value}
             disabled={disabled}
             placeholder={placeholder}
+            maxLength={maxLength}
             className={error ? styles.fieldError : ""}
             onChange={(event) => onChange(event.target.value)}
         />
@@ -258,6 +259,7 @@ const PurposeStep = ({ amount, currencyCode, purpose, setPurpose, description, s
                 placeholder={t("e.g. Invoice payment, consultant fees, trade")}
                 hint={!descError ? t("5–34 characters; letters, digits, space, comma, dot, hyphen only") : ""}
                 error={descError}
+                maxLength={34}
             />
             <TextField label={t("Additional information (optional)")} value={additionalInfo} onChange={setAdditionalInfo} />
             <div className={styles.infoStrip}>{t("SEPA transfers deliver the full amount and carry no correspondent fees, so there is no OUR/SHA/BEN choice to make.")}</div>
@@ -793,7 +795,7 @@ const SepaTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, i
         if (currentStep === STEPS.PURPOSE) {
             const currentDesc = (description || "").trim()
             if (!isValidDescription(currentDesc)) {
-                toast.error(t("Description must be 5–34 characters and contain only letters, numbers, spaces, commas, periods, and hyphens."))
+                toast.error(t("Description must be 34 characters and contain only letters, numbers, spaces, commas, periods, and hyphens."))
                 return
             }
             try {
@@ -878,7 +880,10 @@ const SepaTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, i
             case STEPS.REVIEW:
                 return <ReviewStep amount={amount} currencyCode={currencyCode} transferSpeed={transferSpeed} selectedBeneficiary={selectedBeneficiary} purpose={purpose} additionalInfo={additionalInfo} feeDetails={feeDetails} confirmedDetails={confirmedDetails} setConfirmedDetails={setConfirmedDetails} />
             case STEPS.OTP:
-                return <OTPConfirmation fullHeight setter={setCurrentStep} setterValue={STEPS.DONE} hideOtp={() => { }} callback={verifyOtp} processing={payoutDirect.isPending} resendHandler={handleSendOtp} authType={authType} setAuthType={setAuthType} />
+                return <OTPConfirmation fullHeight setter={setCurrentStep} setterValue={STEPS.DONE} hideOtp={() => { }} callback={verifyOtp} processing={payoutDirect.isPending} resendHandler={handleSendOtp} authType={authType} setAuthType={setAuthType}
+                    showBackButton={true}
+                    onBack={handleBack}
+                />
             case STEPS.DONE:
                 return <DoneStep amount={amount} currencyCode={currencyCode} transferSpeed={transferSpeed} selectedBeneficiary={selectedBeneficiary} feeDetails={feeDetails} payoutResult={payoutResult} onSendAgain={resetState} onClose={handleClose} />
             default:

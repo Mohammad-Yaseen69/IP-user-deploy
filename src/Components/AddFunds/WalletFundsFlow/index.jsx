@@ -87,7 +87,6 @@ const headings = [
 
 const ExtraContentOnFee = ({ data, fxRate, fxCurrency, fxAmount }) => {
   const { t } = useTranslation();
-
   return (
     <div
       style={{
@@ -1141,17 +1140,14 @@ const WalletFundsFlow = ({ setAction }) => {
                           {t("Trouble Sending Money")}
                         </Link>
                         <div className={styles?.buttons}>
-                          {/* {
-                                                            data.step > 1
-                                                            && */}
-                          <button
-                            className={styles.transparent}
-                            onClick={onBackClickHandler}
-                            disabled={data.loading}
-                          >
-                            {t("Back")}
-                          </button>
-                          {/* } */}
+                          {data.step > 2 && (
+                            <button
+                              className={styles.transparent}
+                              onClick={onBackClickHandler}
+                              disabled={data.loading}
+                            >
+                              {t("Back")}
+                            </button>)}
                           {!data.loading &&
                             <button
                               disabled={data.loading || disabledButton}

@@ -159,6 +159,9 @@ export const basicExtrasInitial = {
 
 
 export const withdrawlsFields = {
+    address: "",
+    city: "",
+    postal_code: "",
     bank_iban: "",
     bank_account_number: "",
     bank_name: "",
