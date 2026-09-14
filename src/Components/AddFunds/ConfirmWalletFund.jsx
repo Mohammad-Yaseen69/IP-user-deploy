@@ -77,7 +77,7 @@ const ConfirmWalletFund = ({ setSubStep, wallet = {}, amount, payoutChannel, car
                     // Paytently collects the card in its hosted-forms iframe, so run before building card data.
                     if (usePaytently && type === "add_fund") {
                         const hostedEnc = encryptData({ wallet_id: wallet?._id, amount: +amount * 100 })
-                        const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/paytently/initiat-hosted-topup`, {
+                        const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/paytently/initiate-topup`, {
                             data: hostedEnc
                         }, { headers: { ...authHeader, "idempotency-key": getKey() } })
                         const dec = decryptData(res.data.data)
@@ -113,20 +113,6 @@ const ConfirmWalletFund = ({ setSubStep, wallet = {}, amount, payoutChannel, car
                         }
                     // console.log(data)
                     const enc = encryptData(data)
-
-                    // Paytently new card (no save): create payment server-side, then redirect to authorize/3DS.
-                    if (usePaytently && type === "add_fund" && !paymentWithSavedCard && !saveCard) {
-                        const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/paytently/initiat-topup`, {
-                            data: enc
-                        }, { headers: { ...authHeader, "idempotency-key": getKey() } })
-                        const dec = decryptData(res.data.data)
-                        if (dec?.authorize_url) {
-                            window.location.href = dec.authorize_url
-                            return
-                        }
-                        setError(dec?.message ?? "We cannot process your request at the moment, please try again later.")
-                        return
-                    }
 
                     // api
                     const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/initiat${type === "add_fund" ? "" : partnerId ? "-partner-kyc" : type === 'kyc_fee' ? "-kyc" : "-kyb"}${paymentWithSavedCard ? "-pan" : ""}-transaction`, {

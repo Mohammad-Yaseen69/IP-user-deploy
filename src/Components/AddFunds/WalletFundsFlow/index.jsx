@@ -387,7 +387,7 @@ const WalletFundsFlow = ({ setAction }) => {
         try {
           if (usePaytently && data.channel?.value === "card") {
             const res = await axios.get(
-              `${import.meta.env.VITE_IP_DEV_API}/api/paytently/get-fee/${data.wallet?._id}/${parseFloat(data.amount)}`,
+              `${import.meta.env.VITE_IP_DEV_API}/api/paytently/fee/${data.wallet?._id}/${parseFloat(data.amount)}`,
               { headers: authHeader },
             );
             const dec = decryptData(res.data.data);
