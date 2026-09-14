@@ -662,6 +662,10 @@
     .rightColumn {
         padding: 20px;
 
+        .profileTitleBlock {
+            width: 100%;
+        }
+
         .profileLeftGroup {
             gap: 12px;
         }
@@ -698,7 +702,8 @@
         .channelTypeLabel {
             gap: 12px;
         }
-        .networkActive{
+
+        .networkActive {
             margin: 0;
         }
     }

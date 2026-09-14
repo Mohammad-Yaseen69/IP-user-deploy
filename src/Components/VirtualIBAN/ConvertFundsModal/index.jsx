@@ -28,7 +28,7 @@ import { getErrorMessage } from "../../../Helper/getErrorMessage"
 import MobileHeader from "../../../Common/Component/MobileHeader"
 import MobileStepProgress from "../VirtualIbanModal/MobileStepProgress"
 import MobileFooter from "../../../Common/Component/MobileFooter"
-import StepsDrawer from "./StepsDrawer"
+import StepsDrawer from "../../../Common/Component/StepsDrawer"
 
 const CoinsIcon = () => (
     <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
@@ -395,6 +395,9 @@ const ConvertFundsModal = ({ isOpen, toggle, selectedIban, availableBalance }) =
             <StepsDrawer 
                 open={showDrawer}
                 currentStep={currentStep} 
+                isSidebarStepActive={isSidebarStepActive}
+                isSidebarStepCompleted={isSidebarStepCompleted}
+                SIDEBAR_STEPS={SIDEBAR_STEPS}
                 toggleDrawer={()=>setShowDrawer(false)}
             />
         </>

@@ -79,6 +79,7 @@ import {
 } from "../Common/beneficiaryHelpers"
 import MobileStepProgress from "../../VirtualIbanModal/MobileStepProgress"
 import MobileFooter from '../../../../Common/Component/MobileFooter';
+import StepsDrawer from "../../../../Common/Component/StepsDrawer"
 
 const DEFAULT_BENEFICIARY_FORM = {
     type: "individual",
@@ -838,6 +839,7 @@ const SwiftTransfer = forwardRef(({ isOpen = true, toggle, selectedIban, availab
     const [otpToken, setOtpToken] = useState("")
     const [payoutResult, setPayoutResult] = useState(null)
     const isMobile = width <= 600;
+    const [showDrawer, setShowDrawer] = useState(false);
 
     const payoutFee = useVirtualIbanSwiftPayoutFee()
     const payoutDirect = useVirtualIbanSwiftPayoutDirect()
@@ -1275,6 +1277,7 @@ const SwiftTransfer = forwardRef(({ isOpen = true, toggle, selectedIban, availab
                                 isSidebarStepCompleted={isSidebarStepCompleted}
                                 SIDEBAR_STEPS={SIDEBAR_STEPS}
                                 getSidebarStepName={getSidebarStepName}
+                                handleClick={()=>setShowDrawer(true)}
                             />}
                     {content}
                 </div>
@@ -1303,6 +1306,14 @@ const SwiftTransfer = forwardRef(({ isOpen = true, toggle, selectedIban, availab
                 beneficiaryData={channelModalBeneficiary}
                 lockChannelType="bank"
                 onSaveSuccess={handleChannelSaved}
+            />
+            <StepsDrawer
+                open={showDrawer}
+                currentStep={currentStep} 
+                isSidebarStepActive={isSidebarStepActive}
+                isSidebarStepCompleted={isSidebarStepCompleted}
+                SIDEBAR_STEPS={SIDEBAR_STEPS}
+                toggleDrawer={()=>setShowDrawer(false)}
             />
         </>
     )

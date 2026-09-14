@@ -3,50 +3,53 @@ import React from "react";
 import styles from "./StepsDrawer.module.css";
 import { useTranslation } from "react-i18next";
 import { Chip } from "@mui/material";
-import AskAiIcon from "../../../assets/icons/ask-icon.svg";
+import AskAiIcon from "../../assets/icons/ask-icon.svg";
 import { ArrowRight, Check } from "react-feather";
-import {
+
+const getIcon = (status) => {
+  let icon;
+  let statusBgColor = "#FEF7E9";
+  let iconBgColor = "#fff";
+  let textColor = "#8A5A00";
+  let label = "To do";
+  switch (status) {
+    case "done":
+      label = "Done";
+      icon = <Check size={14} />;
+      statusBgColor = "#E6F8F1";
+      iconBgColor = "#10B981";
+      textColor = "#04795A";
+      break;
+    case "inprogress":
+      label = "In progress";
+      icon = <ArrowRight size={14} />;
+      statusBgColor = "#F3EFFE";
+      iconBgColor = "#5926F0";
+      textColor = "#5926F0";
+      break;
+    default:
+      break;
+  }
+  return {
+    icon,
+    label,
+    statusBgColor,
+    textColor,
+    iconBgColor,
+  };
+};
+
+const StepsDrawer = ({
+  open,
+  toggleDrawer,
+  currentStep,
   isSidebarStepActive,
   isSidebarStepCompleted,
-  SIDEBAR_STEPS,
-} from "../../../stateMachines/convertFunds";
-
-  const getIcon = (status) => {
-    let icon;
-    let statusBgColor = "#FEF7E9";
-    let iconBgColor = "#fff";
-    let textColor = "#8A5A00";
-    let label = "To do";
-    switch (status) {
-      case "done":
-        label = "Done";
-        icon = <Check size={14} />;
-        statusBgColor = "#E6F8F1";
-        iconBgColor = "#10B981";
-        textColor = "#04795A";
-        break;
-      case "inprogress":
-        label = "In progress";
-        icon = <ArrowRight size={14} />;
-        statusBgColor = "#F3EFFE";
-        iconBgColor = "#5926F0";
-        textColor = "#5926F0";
-        break;
-      default:
-        break;
-    }
-    return {
-      icon,
-      label,
-      statusBgColor,
-      textColor,
-      iconBgColor,
-    };
-  };
-
-const StepsDrawer = ({ open, toggleDrawer, currentStep }) => {
+  SIDEBAR_STEPS = [],
+}) => {
   const { t } = useTranslation();
-  const doneCount = SIDEBAR_STEPS.findIndex((x) => x.stepName === currentStep) + 1;
+  const doneCount =
+    SIDEBAR_STEPS.findIndex((x) => x.stepName === currentStep) + 1;
 
   return (
     <SwipeableDrawer
@@ -112,12 +115,7 @@ const StepsDrawer = ({ open, toggleDrawer, currentStep }) => {
             )
           }
         >
-          <img
-            src={AskAiIcon}
-            alt="Contact Icon"
-            width={16}
-            height={16}
-          />
+          <img src={AskAiIcon} alt="Contact Icon" width={16} height={16} />
           <span>{t("Contact us")}</span>
         </button>
       </div>

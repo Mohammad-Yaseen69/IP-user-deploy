@@ -194,7 +194,7 @@ const BeneficiariesVirtual = () => {
                                                         </p>
                                                     </div>
                                                 </div>
-                                                <div className={styles.channelBadge}>4</div>
+                                                <div className={styles.channelBadge}>{totalChannels}</div>
                                             </div>
                                             :
                                             <div
