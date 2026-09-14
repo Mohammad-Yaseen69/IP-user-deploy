@@ -85,11 +85,11 @@ const ForcedAuthenticatorModal = () => {
             <div className={styles.modalHeader}>
                 <h5 className={styles.modalTitle}>{t("Link Google Authenticator")}</h5>
                 <div className={styles.topActions}>
-                    <div className={styles.actionItem}>
+                    {/* <div className={styles.actionItem}>
                         <div className={styles.langWrapper}>
                             <LanguagePicker size="16" backgroundWhite={true} />
                         </div>
-                    </div>
+                    </div> */}
                     <div className={styles.actionItem} onClick={handleLogout}>
                         <img src={logoutIcon} alt="Logout" style={{ height: "20px", width: "20px", objectFit: "contain" }} />
                         <span>{t("Logout")}</span>
