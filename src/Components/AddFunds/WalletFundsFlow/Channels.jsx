@@ -1,17 +1,18 @@
-import React, { useContext, useMemo, useState } from "react";
+import { Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
+import { useQuery } from "@tanstack/react-query";
+import { useContext, useMemo, useState } from "react";
+import { Check } from "react-feather";
 import { useTranslation } from "react-i18next";
+import { Badge, Card, CardBody } from "reactstrap";
 import { UserContext } from "../../../Context/UserContext";
+import { apiWrapper } from "../../../utils/Functions/apiWrapper";
+import CardMaintenanceModal from "../../CardMaintenanceModal";
+import InstaPayLoader from "../../Loader";
 import bd from "../../PaymentsNewer/files/bd.png";
+import i from "../../PaymentsNewer/files/i.svg";
 import mw from "../../PaymentsNewer/files/mw.png";
 import pc from "../../PaymentsNewer/files/pc.png";
-import i from "../../PaymentsNewer/files/i.svg";
-import { Badge, Card, CardBody } from "reactstrap";
 import TypingSpan from "../../TypingSpan";
-import { Check } from "react-feather";
-import { useQuery } from "@tanstack/react-query";
-import { apiWrapper } from "../../../utils/Functions/apiWrapper";
-import InstaPayLoader from "../../Loader";
-import CardMaintenanceModal from "../../CardMaintenanceModal";
 
 const Channels = ({
   setChannel,
@@ -22,7 +23,7 @@ const Channels = ({
   const { t } = useTranslation();
   const { userDetails } = useContext(UserContext);
   const [showCardMaintenanceModal, setShowCardMaintenanceModal] = useState(false);
-  console.log("user detail(18)", userDetails);
+  const [showVerificationModal, setShowVerificationModal] = useState(false);
   const { data: methods, isLoading } = useQuery({
     queryKey: ["AvailableMethods"],
     queryFn: () =>
@@ -115,114 +116,154 @@ const Channels = ({
         toggle={() => setShowCardMaintenanceModal(false)}
       />
       <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        gap: "1rem",
-        maxHeight: "550px",
-        overflowY: "auto",
-      }}
-    >
-      {!isLoading ?
-        filteredChannels.map((item) => (
-          <Card
-            key={item?.name}
-            style={{ marginBottom: 0, borderRadius: "12px" }}
-            onClick={() => {
-              if (item?.coming_soon) return;
-              if (item?.value === "card") {
-                setShowCardMaintenanceModal(true);
-                return;
-              }
-              setChannel(item);
-            }}
-          >
-            <CardBody
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: ".5rem",
-                padding: "15px",
-                justifyContent: "space-between",
-                cursor: item?.coming_soon ? "not-allowed" : "pointer",
-                position: "relative",
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: "1rem",
+          maxHeight: "550px",
+          overflowY: "auto",
+        }}
+      >
+        {!isLoading ?
+          filteredChannels.map((item) => (
+            <Card
+              key={item?.name}
+              style={{ marginBottom: 0, borderRadius: "12px" }}
+              onClick={() => {
+                if (item?.coming_soon) return;
+                if (item?.value === "crypto") {
+                  const isApproved = userDetails?.company?.kyb_status || userDetails?.company?.kyb_status === "approved";
+
+
+                  if (isApproved) {
+                    setShowVerificationModal(true);
+                    return;
+                  }
+                }
+                if (item?.value === "card") {
+                  setShowCardMaintenanceModal(true);
+                  return;
+                }
+                setChannel(item);
               }}
             >
-              <div
+              <CardBody
                 style={{
                   display: "flex",
                   alignItems: "center",
-                  gap: "20px",
+                  gap: ".5rem",
+                  padding: "15px",
+                  justifyContent: "space-between",
+                  cursor: item?.coming_soon ? "not-allowed" : "pointer",
+                  position: "relative",
                 }}
               >
                 <div
                   style={{
-                    height: "35px",
-                    width: "35px",
-                    background:
-                      "linear-gradient(-24deg, rgb(210, 60, 122) 0%, rgb(164, 52, 167) 43.66%, rgb(88, 38, 239) 100%)",
                     display: "flex",
-                    justifyContent: "center",
                     alignItems: "center",
-                    borderRadius: "12px",
-                    boxShadow: "0px 4px 7px rgba(172, 53, 159, 0.31)",
+                    gap: "20px",
                   }}
                 >
-                  <img
-                    src={item?.icon}
-                    draggable="false"
-                    alt={item?.name?.[0]}
+                  <div
                     style={{
-                      width: "19px",
-                      objectFit: "contain",
-                      aspectRatio: 1,
+                      height: "35px",
+                      width: "35px",
+                      background:
+                        "linear-gradient(-24deg, rgb(210, 60, 122) 0%, rgb(164, 52, 167) 43.66%, rgb(88, 38, 239) 100%)",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      borderRadius: "12px",
+                      boxShadow: "0px 4px 7px rgba(172, 53, 159, 0.31)",
+                    }}
+                  >
+                    <img
+                      src={item?.icon}
+                      draggable="false"
+                      alt={item?.name?.[0]}
+                      style={{
+                        width: "19px",
+                        objectFit: "contain",
+                        aspectRatio: 1,
+                      }}
+                    />
+                  </div>
+                  <h5 style={{ marginBottom: 0, fontSize: "1.2rem" }}>
+                    {t(item?.name) + " "}
+                    {window.innerWidth < 1000 && <br />}
+                    {thunesProviders?.length > 0 && item?.sub_name === "wallet" ? (
+                      <>
+                        (
+                        <TypingSpan
+                          words={thunesProviders.map((item) => item?.name ?? "")}
+                        />
+                        )
+                      </>
+                    ) : (
+                      ""
+                    )}
+                  </h5>
+                </div>
+                {item?.coming_soon ? (
+                  <Badge color="primary">{t("Coming Soon")}</Badge>
+                ) : channel?.name === item?.name ? (
+                  <Check
+                    color="green"
+                    size={24}
+                    style={{ position: "absolute", right: "20px" }}
+                  />
+                ) : (
+                  <img
+                    src={i}
+                    alt="i"
+                    style={{
+                      objectFit: "cover",
+                      position: "absolute",
+                      right: "14px",
+                      top: "19px",
                     }}
                   />
-                </div>
-                <h5 style={{ marginBottom: 0, fontSize: "1.2rem" }}>
-                  {t(item?.name) + " "}
-                  {window.innerWidth < 1000 && <br />}
-                  {thunesProviders?.length > 0 && item?.sub_name === "wallet" ? (
-                    <>
-                      (
-                      <TypingSpan
-                        words={thunesProviders.map((item) => item?.name ?? "")}
-                      />
-                      )
-                    </>
-                  ) : (
-                    ""
-                  )}
-                </h5>
-              </div>
-              {item?.coming_soon ? (
-                <Badge color="primary">{t("Coming Soon")}</Badge>
-              ) : channel?.name === item?.name ? (
-                <Check
-                  color="green"
-                  size={24}
-                  style={{ position: "absolute", right: "20px" }}
-                />
-              ) : (
-                <img
-                  src={i}
-                  alt="i"
-                  style={{
-                    objectFit: "cover",
-                    position: "absolute",
-                    right: "14px",
-                    top: "19px",
-                  }}
-                />
-              )}
-            </CardBody>
-          </Card>
-        )) :
-        <>
-          <InstaPayLoader />
-        </>
-      }
-      </div>
+                )}
+              </CardBody>
+            </Card>
+          )) :
+          <>
+            <InstaPayLoader />
+          </>
+        }
+        <Dialog
+          open={showVerificationModal}
+          onClose={() => setShowVerificationModal(false)}
+          maxWidth="sm"
+          fullWidth
+        >
+          <DialogTitle>{t("Verification Required")}</DialogTitle>
+
+          <DialogContent>
+            {t("Please complete and get your KYC and KYB approved before using Crypto Transfer.")}
+          </DialogContent>
+
+          <DialogActions>
+            <button
+              onClick={() => setShowVerificationModal(false)}
+              style={{
+                backgroundColor: "#5926f0",
+                color: "white",
+                borderRadius: "8px",
+                border: "none",
+                padding: "8px 16px",
+                margin: "8px",
+                "&:hover": {
+                  backgroundColor: "#5926f0",
+                },
+              }}
+            >
+              {t("OK")}
+            </button>
+          </DialogActions>
+        </Dialog>
+      </div >
     </>
   );
 };
