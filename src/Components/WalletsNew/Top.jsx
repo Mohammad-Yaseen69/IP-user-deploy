@@ -99,7 +99,7 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
         else if (action === "withdraw") setShowWithdrawalModal(true)
         else if (action === "add-currency") setShowAddCurrencyModal(true)
         else if (action === "statement") setShowDownloadStatementModal(true)
-        
+
     }, [action])
 
     useEffect(() => {
