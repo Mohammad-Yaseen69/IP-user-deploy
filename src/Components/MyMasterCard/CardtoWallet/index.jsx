@@ -15,7 +15,7 @@ import { toast } from 'react-toastify'
 import axios from 'axios'
 import { encryptData } from '../../../Helper/EssentilaMethods/Encryption.jsx'
 import { feeCol } from '../CardtoCardModal/index.jsx'
-import OtpConfirmation from '../../PaymentsNewer/InternationalFlow/OtpConfirmation.jsx'
+import OtpConfirmation from '../../../Common/Component/OtpVerification'
 import StepOne from '../../PaymentsNewer/WalletToWalletFlow/StepOne.jsx'
 import useWindowWidth from '../../../utils/useWindowWidth.jsx'
 import { useLocation, useNavigate } from 'react-router'
@@ -423,6 +423,7 @@ const CardtoWallet = ({ isOpen, setOpen, card, setCurrentCardDetails, currentCar
 
 
             <OtpConfirmation
+                variant="modal"
                 data={{
                     codeType,
                     otpError
