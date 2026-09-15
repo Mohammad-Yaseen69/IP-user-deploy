@@ -104,7 +104,7 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
         else if (action === "withdraw") setShowWithdrawalModal(true)
         else if (action === "add-currency") setShowAddCurrencyModal(true)
         else if (action === "statement") setShowDownloadStatementModal(true)
-        
+
     }, [action])
 
     useEffect(() => {
@@ -232,8 +232,11 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
                                 rotate: false,
                                 slideShadows: false,
                             }}
-                            style={{ minWidth: "250px", cursor: "none" }}
-                            className={`mySwiper ${styles.swiper}`}
+                            style={{
+                                minWidth: userWallets?.length === 1 ? "22vw" : "250px",
+                                width: userWallets?.length === 1 ? "100%" : "auto",
+                                cursor: "none"
+                            }} className={`mySwiper ${styles.swiper}`}
                             onSwiper={(swiper) => {
                                 if (activeDot > 0) {
                                     swiper.slideTo(activeDot)

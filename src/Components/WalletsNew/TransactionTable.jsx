@@ -119,8 +119,14 @@ const TransactionsTable = ({ currentWallet, filtered, setFiltered }) => {
         })
             .then(res => {
                 const decrypted = decryptData(res.data.data)
+                const newTransactions = decrypted?.transactionList || [];
                 setFiltered(prev => page === 1 ? decrypted?.transactionList : [...prev, ...decrypted.transactionList])
                 setTransactions(prev => page === 1 ? decrypted?.transactionList : [...prev, ...decrypted.transactionList])
+                if (newTransactions.length < 15) {
+                    setStopLoader(true);
+                } else {
+                    setStopLoader(false);
+                }
                 setIsLoading(false)
             })
             .catch(err => {

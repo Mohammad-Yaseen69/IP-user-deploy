@@ -443,20 +443,11 @@ const downloadSepaReceipt = ({
         margin,
         finalY + 8
     )
-
-    doc.setDrawColor(225, 222, 240)
-    doc.line(margin, pageHeight - 16, pageWidth - margin, pageHeight - 16)
-    doc.setFont("helvetica", "bold")
-    doc.setFontSize(9)
-    doc.setTextColor(35, 35, 40)
-    doc.text("InstaPay Swiss", margin, pageHeight - 10)
-    doc.setFont("helvetica", "normal")
-    doc.setFontSize(8)
-    doc.setTextColor(89, 38, 240)
-    doc.text("www.insta-pay.ch", pageWidth - margin, pageHeight - 10, { align: "right" })
-
+    const safeTrackingReference = String(trackingReference || "receipt")
+        .replace(/[<>:"/\\|?*\u0000-\u001F]/g,"-")
+        .replace(/\s+/g, "-");
     doc.save(
-        `SEPA-Transfer-Receipt-${trackingReference}.pdf`
+        `SEPA-Transfer-Receipt-${safeTrackingReference}.pdf`
     )
 }
 const DoneStep = ({
