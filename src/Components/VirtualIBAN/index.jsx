@@ -11,6 +11,7 @@ import TopRight from '../topRight'
 import AccountsSidebar from './components/AccountsSidebar'
 import BalanceHeader from './components/BalanceHeader'
 import Empty from './components/Empty'
+import InactiveIban from './components/InactiveIban'
 import MonthlyExpenses from './components/MonthlyExpenses'
 import QuickActions from './components/QuickActions'
 import RecentTransactions from './components/RecentTransactions'
@@ -19,7 +20,7 @@ import IBAN from './IBAN/IBAN'
 import IBANDetails from './IBAN/IBANDetails'
 import Manage from './Manage/Manage'
 import styles from "./styles/index.module.css"
-import { asVirtualIbanArray } from './utils/virtualIban'
+import { asVirtualIbanArray, isVirtualIbanInactive } from './utils/virtualIban'
 import VirtualIbanModal from './VirtualIbanModal'
 import OnboardingIBAN from './OnBoardingIBAN'
 
@@ -54,6 +55,7 @@ const VirtualBank = () => {
         () => ibans.find((iban) => (iban?._id || iban?.id) === selectedAccount) || ibans[0],
         [ibans, selectedAccount]
     )
+    const selectedIbanInactive = isVirtualIbanInactive(selectedIban)
     const [page, setPage] = useState(1);
     const [limit, setLimit] = useState(10);
     const [statusFilter, setStatusFilter] = useState('');
@@ -172,6 +174,10 @@ const VirtualBank = () => {
                         userDetails?.account_type === "business" ?
                             <OnboardingIBAN /> :
                             <IBAN onCreated={handleBackToDashboard} />
+                        : selectedIbanInactive ?
+                            <div className={styles.main}>
+                                <InactiveIban />
+                            </div>
                         :
                         <div className={styles.main}>
                             <div className={styles.topPanel}>
