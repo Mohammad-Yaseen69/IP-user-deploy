@@ -13,7 +13,6 @@ const Compliance = () => {
             case 'restricted':
             case 'blocked': 
                 return <AccountRestrictedView restrictedData={data.restrictedData} />;
-
             case 'all_clear':
             case 'verified':
                 return <AllCaughtUpView lastReviewed={data.lastReviewed} />;
