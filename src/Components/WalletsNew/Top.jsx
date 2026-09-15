@@ -227,7 +227,7 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
                                 rotate: false,
                                 slideShadows: false,
                             }}
-                            style={{ minWidth: "250px", cursor: "none" }}
+                            style={{ minWidth: "370px", cursor: "none" }}
                             className={`mySwiper ${styles.swiper}`}
                             onSwiper={(swiper) => {
                                 if (activeDot > 0) {
