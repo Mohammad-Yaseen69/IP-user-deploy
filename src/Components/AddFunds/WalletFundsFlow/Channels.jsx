@@ -132,10 +132,10 @@ const Channels = ({
               onClick={() => {
                 if (item?.coming_soon) return;
                 if (item?.value === "crypto") {
-                  const isApproved = userDetails?.company?.kyb_status || userDetails?.company?.kyb_status === "approved";
+                  const isApproved = userDetails?.company?.kyb_status || userDetails?.company?.kyc_status === "approved";
 
 
-                  if (isApproved) {
+                  if (!isApproved) {
                     setShowVerificationModal(true);
                     return;
                   }
