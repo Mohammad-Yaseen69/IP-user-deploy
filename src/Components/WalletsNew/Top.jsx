@@ -227,8 +227,11 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
                                 rotate: false,
                                 slideShadows: false,
                             }}
-                            style={{ minWidth: "370px", cursor: "none" }}
-                            className={`mySwiper ${styles.swiper}`}
+                            style={{
+                                minWidth: userWallets?.length === 1 ? "22vw" : "250px",
+                                width: userWallets?.length === 1 ? "100%" : "auto",
+                                cursor: "none"
+                            }} className={`mySwiper ${styles.swiper}`}
                             onSwiper={(swiper) => {
                                 if (activeDot > 0) {
                                     swiper.slideTo(activeDot)
