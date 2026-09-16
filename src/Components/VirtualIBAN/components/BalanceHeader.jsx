@@ -44,7 +44,13 @@ const BalanceHeader = ({ iban, isLoading, setActiveTab, onShowDetails }) => {
   const shouldMaskBalance = !canViewBalance || isHiddenByUser
   const handleEyeClick = () => {
     if (!ibanId || isToggling) return
-    setShowPasswordModal(true)
+
+    if (isHiddenByUser) {
+      setShowPasswordModal(true)
+      return
+    }
+
+    toggleHideBalance(ibanId)
   }
 
   const handlePasswordVerified = () => {
