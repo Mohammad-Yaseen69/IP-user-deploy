@@ -36,7 +36,8 @@ export const serviceFieldInfoValidate = (service, field_name, sub_field_name, fi
     if (fieldsInfo === null) return false;
     let isInThere = false;
 
-    if (fieldsInfo?.[service === "bank_country_fields" ? "bank_country_fields" : service?.method?.split(" ")[0]]?.[field_name]?.some(item => item.name === sub_field_name)) {
+    const matches = (item) => item.name === sub_field_name || (sub_field_name === "aba_routing_number" && item.name === "routing_code")
+    if (fieldsInfo?.[service === "bank_country_fields" ? "bank_country_fields" : service?.method?.split(" ")[0]]?.[field_name]?.some(matches)) {
         isInThere = true
     }
     return isInThere;

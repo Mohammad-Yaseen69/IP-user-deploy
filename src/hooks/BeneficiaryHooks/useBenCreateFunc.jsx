@@ -4,7 +4,7 @@ import axios from 'axios'
 import { decryptData } from '../../Helper/EssentilaMethods/Decryption'
 import { UserContext } from '../../Context/UserContext'
 import { getExtractedPhone } from '../../utils/Functions'
-import { trimObjectValues } from '../../utils/Data'
+import { trimObjectValues, buildBankExtrasPayload } from '../../utils/Data'
 import { toast } from 'react-toastify'
 
 const useBenCreateFunc = ({
@@ -105,7 +105,7 @@ const useBenCreateFunc = ({
                     province: formData.bank_province,
                     postal_code: formData.bank_postal_code,
                     account_holder_name: formData.account_holder_name,
-                    extras: bankExtras
+                    extras: buildBankExtrasPayload(bankExtras)
                 }
             ] : [],
             mobile_wallet: services.some(item => item?.method?.toLowerCase()?.includes("mobile")) && completedWallet ? [
