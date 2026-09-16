@@ -11,6 +11,7 @@ import TopRight from '../topRight'
 import AccountsSidebar from './components/AccountsSidebar'
 import BalanceHeader from './components/BalanceHeader'
 import Empty from './components/Empty'
+import InactiveIban from './components/InactiveIban'
 import MonthlyExpenses from './components/MonthlyExpenses'
 import QuickActions from './components/QuickActions'
 import RecentTransactions from './components/RecentTransactions'
@@ -19,7 +20,7 @@ import IBAN from './IBAN/IBAN'
 import IBANDetails from './IBAN/IBANDetails'
 import Manage from './Manage/Manage'
 import styles from "./styles/index.module.css"
-import { asVirtualIbanArray } from './utils/virtualIban'
+import { asVirtualIbanArray, isVirtualIbanInactive } from './utils/virtualIban'
 import VirtualIbanModal from './VirtualIbanModal'
 import OnboardingIBAN from './OnBoardingIBAN'
 
@@ -54,6 +55,7 @@ const VirtualBank = () => {
         () => ibans.find((iban) => (iban?._id || iban?.id) === selectedAccount) || ibans[0],
         [ibans, selectedAccount]
     )
+    const selectedIbanInactive = isVirtualIbanInactive(selectedIban)
     const [page, setPage] = useState(1);
     const [limit, setLimit] = useState(10);
     const [statusFilter, setStatusFilter] = useState('');
@@ -172,104 +174,108 @@ const VirtualBank = () => {
                         userDetails?.account_type === "business" ?
                             <OnboardingIBAN /> :
                             <IBAN onCreated={handleBackToDashboard} />
-                        :
-                        <div className={styles.main}>
-                            <div className={styles.topPanel}>
-                                <AccountsSidebar
-                                    selectedAccount={selectedAccount}
-                                    onSelect={setSelectedAccount}
-                                    setShowGetIBAN={handleOpenIBAN}
-                                    accounts={ibans}
-                                    isLoading={ibansLoading}
-                                />
-                                <div className={styles.panelDivider} />
-                                <BalanceHeader
-                                    iban={selectedIban}
-                                    isLoading={ibansLoading}
-                                    onShowDetails={handleShowIbanDetails}
-                                />
+                        : selectedIbanInactive ?
+                            <div className={styles.main}>
+                                <InactiveIban />
                             </div>
+                            :
+                            <div className={styles.main}>
+                                <div className={styles.topPanel}>
+                                    <AccountsSidebar
+                                        selectedAccount={selectedAccount}
+                                        onSelect={setSelectedAccount}
+                                        setShowGetIBAN={handleOpenIBAN}
+                                        accounts={ibans}
+                                        isLoading={ibansLoading}
+                                    />
+                                    <div className={styles.panelDivider} />
+                                    <BalanceHeader
+                                        iban={selectedIban}
+                                        isLoading={ibansLoading}
+                                        onShowDetails={handleShowIbanDetails}
+                                    />
+                                </div>
 
-                            <div className={styles.section}>
-                                <QuickActions selectedIban={selectedIban} />
+                                <div className={styles.section}>
+                                    <QuickActions selectedIban={selectedIban} />
+                                </div>
+
+                                <div className={styles.section}>
+                                    <TabsNav activeTab={activeTab} onTabChange={setActiveTab} />
+                                </div>
+
+                                {activeTab === "overview" && (
+                                    <div className={styles.tabContent}>
+                                        {canViewTransactions ? (
+                                            transactionsLoading ? (
+                                                <InstaPayLoader />
+                                            ) : (
+                                                <>
+                                                    <MonthlyExpenses />
+                                                    <div className={styles.section}>
+                                                        <RecentTransactions
+                                                            transactions={transactions.items ?? []}
+                                                            setActiveTab={setActiveTab}
+                                                            loading={transactionsLoading}
+                                                            page={page}
+                                                            setPage={setPage}
+                                                            limit={limit}
+                                                            setLimit={setLimit}
+                                                            totalPages={transactions?.totalPages ?? 1}
+                                                            setStatusFilter={setStatusFilter}
+                                                            setTypeFilter={setTypeFilter}
+                                                            setQ={setQ}
+                                                            selectedIban={selectedIban}
+                                                            setOrder={setOrder}
+                                                        />
+                                                    </div>
+                                                </>
+                                            )
+                                        ) : null}
+                                    </div>
+                                )}
+
+                                {activeTab === "transaction-history" && canViewTransactions && (
+                                    <div className={styles.tabContent}>
+                                        <div className={styles.section}>
+                                            {transactionsLoading ? (
+                                                <InstaPayLoader />
+                                            ) : (
+                                                <RecentTransactions
+                                                    transactions={transactions.items ?? []}
+                                                    setActiveTab={setActiveTab}
+                                                    loading={transactionsLoading}
+                                                    page={page}
+                                                    setPage={setPage}
+                                                    limit={limit}
+                                                    setLimit={setLimit}
+                                                    totalPages={transactions?.totalPages ?? 1}
+                                                    setStatusFilter={setStatusFilter}
+                                                    setTypeFilter={setTypeFilter}
+                                                    setQ={setQ}
+                                                    setOrder={setOrder}
+                                                    selectedIban={selectedIban}
+                                                />
+                                            )}
+                                        </div>
+                                    </div>
+                                )}
+
+                                {activeTab === "ibanassets" && canViewDetails && (
+                                    <div className={styles.tabContent} ref={ibanDetailsRef}>
+                                        <div className={styles.section}>
+                                            <IBANDetails ibanId={selectedIban?._id || selectedIban?.id} fallbackIban={selectedIban} />
+                                        </div>
+                                    </div>
+                                )}
+                                {activeTab === "manage" && canUpdateStatus && (
+                                    <div className={styles.tabContent}>
+                                        <div className={styles.section}>
+                                            <Manage />
+                                        </div>
+                                    </div>
+                                )}
                             </div>
-
-                            <div className={styles.section}>
-                                <TabsNav activeTab={activeTab} onTabChange={setActiveTab} />
-                            </div>
-
-                            {activeTab === "overview" && (
-                                <div className={styles.tabContent}>
-                                    {canViewTransactions ? (
-                                        transactionsLoading ? (
-                                            <InstaPayLoader />
-                                        ) : (
-                                            <>
-                                                <MonthlyExpenses />
-                                                <div className={styles.section}>
-                                                    <RecentTransactions
-                                                        transactions={transactions.items ?? []}
-                                                        setActiveTab={setActiveTab}
-                                                        loading={transactionsLoading}
-                                                        page={page}
-                                                        setPage={setPage}
-                                                        limit={limit}
-                                                        setLimit={setLimit}
-                                                        totalPages={transactions?.totalPages ?? 1}
-                                                        setStatusFilter={setStatusFilter}
-                                                        setTypeFilter={setTypeFilter}
-                                                        setQ={setQ}
-                                                        selectedIban={selectedIban}
-                                                        setOrder={setOrder}
-                                                    />
-                                                </div>
-                                            </>
-                                        )
-                                    ) : null}
-                                </div>
-                            )}
-
-                            {activeTab === "transaction-history" && canViewTransactions && (
-                                <div className={styles.tabContent}>
-                                    <div className={styles.section}>
-                                        {transactionsLoading ? (
-                                            <InstaPayLoader />
-                                        ) : (
-                                            <RecentTransactions
-                                                transactions={transactions.items ?? []}
-                                                setActiveTab={setActiveTab}
-                                                loading={transactionsLoading}
-                                                page={page}
-                                                setPage={setPage}
-                                                limit={limit}
-                                                setLimit={setLimit}
-                                                totalPages={transactions?.totalPages ?? 1}
-                                                setStatusFilter={setStatusFilter}
-                                                setTypeFilter={setTypeFilter}
-                                                setQ={setQ}
-                                                setOrder={setOrder}
-                                                selectedIban={selectedIban}
-                                            />
-                                        )}
-                                    </div>
-                                </div>
-                            )}
-
-                            {activeTab === "ibanassets" && canViewDetails && (
-                                <div className={styles.tabContent} ref={ibanDetailsRef}>
-                                    <div className={styles.section}>
-                                        <IBANDetails ibanId={selectedIban?._id || selectedIban?.id} fallbackIban={selectedIban} />
-                                    </div>
-                                </div>
-                            )}
-                            {activeTab === "manage" && canUpdateStatus && (
-                                <div className={styles.tabContent}>
-                                    <div className={styles.section}>
-                                        <Manage />
-                                    </div>
-                                </div>
-                            )}
-                        </div>
             }
             {canCreateIban && (
                 <VirtualIbanModal

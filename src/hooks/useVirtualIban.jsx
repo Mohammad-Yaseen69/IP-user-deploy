@@ -142,6 +142,29 @@ export const useSyncVirtualIbanBalance = (ibanId) =>
         refetchOnWindowFocus: false,
     })
 
+export const useBalanceHideApi = () => {
+    const queryClient = useQueryClient()
+
+    return useMutation({
+        mutationFn: (ibanId) =>
+            apiWrapper({
+                endpoint: `/api/virtual-iban/balance/hide/${ibanId}`,
+                method: "PUT",
+                isDecrypted: true,
+            }),
+        onSuccess: (res, ibanId) => {
+            const updated = unwrapVirtualIbanResponse(res)
+
+            queryClient.setQueryData(virtualIbanQueryKeys.balance(ibanId), (old) => ({
+                ...old,
+                isHideBalance: updated?.isHideBalance,
+            }))
+
+            queryClient.invalidateQueries({ queryKey: virtualIbanQueryKeys.list() })
+        },
+    })
+}
+
 export const useCreateVirtualIban = () => {
     return useMutation({
         mutationFn: (payload) =>

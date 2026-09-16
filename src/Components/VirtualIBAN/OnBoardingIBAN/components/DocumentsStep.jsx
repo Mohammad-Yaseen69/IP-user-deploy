@@ -59,12 +59,88 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {}, userDetails, compa
         { num: '05', label: t('Documents'), active: true },
         { num: '06', label: t('Review'), active: false }
     ]
+    const DOCUMENT_VERIFICATION_MAP = {
+        commercial_register: [
+            'registry extract',
+            'certificate of incorporation',
+            'registration document'
+        ],
 
+        articles_association: [
+            'articles of association'
+        ],
+
+        authority_letter: [
+            'power of attorney',
+            'authority',
+            'delegation'
+        ],
+
+        good_standing: [
+            'good standing'
+        ],
+
+        // REMOVE registry extract from here
+        registered_extract: [
+            'registered office'
+        ],
+
+        domiciliation_certificate: [
+            'domiciliation'
+        ],
+
+        lease_agreement: [
+            'lease agreement'
+        ],
+
+        utility_bill: [
+            'utility bill'
+        ],
+
+        bank_statement: [
+            'bank statement'
+        ],
+
+        shareholders_register: [
+            'shareholders register'
+        ],
+
+        ownership_chart: [
+            'ownership structure',
+            'ownership chart'
+        ],
+
+        ubo_declaration: [
+            'ubo declaration'
+        ],
+
+        ubo_passport: [
+            'identification documents',
+            'passport'
+        ],
+
+        ubo_address_proof: [
+            'proof of address'
+        ],
+    }
+    const kybFiles = userDetails?.company?.kyb_files || []
+
+    const isKeyVerifiedFromKyb = (key) => {
+        const keywords = DOCUMENT_VERIFICATION_MAP[key]
+
+        if (!keywords || !keywords.length) return false
+
+        return kybFiles.some(f => {
+            const name = (f.document_name || '').toLowerCase()
+
+            return keywords.some(kw => name.includes(kw))
+        })
+    }
     const uploadedCount = Object.keys(files).length
     const progressPercent = Math.min(100, Math.round((uploadedCount / requiredDocKeys.length) * 100))
-
-    const renderUploadControl = (key, badgeClassName = styles.optional, badgeText = t('OPTIONAL')) => {
+    const renderUploadControl = (key) => {
         const selectedFile = files[key]
+        const isVerified = isKeyVerifiedFromKyb(key)
 
         return (
             <div className={styles.right}>
@@ -75,25 +151,23 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {}, userDetails, compa
                             <Upload size={10} /> {t('Replace')}
                         </button>
                     </>
-                ) : isKybDone ? (
-                    <>
-                        <span className={styles.optional} style={{ background: '#E0F2FE', color: '#0369A1', border: '1px solid #BAE6FD' }}>{t('VERIFIED (KYB)')}</span>
-                        <button type="button" className={styles.uploadBtn} onClick={() => openFilePicker(key)}>
-                            <Upload size={10} /> {t('Upload')}
-                        </button>
-                    </>
+                ) : isVerified ? (
+                    <span
+                        className={styles.optional}
+                        style={{ background: '#E0F2FE', color: '#0369A1', border: '1px solid #BAE6FD' }}
+                    >
+                        {t('VERIFIED')}
+                    </span>
                 ) : (
                     <>
-                        <span className={badgeClassName}>{badgeText}</span>
+                        <span className={styles.required}>{t('REQUIRED')}</span>
                         <button type="button" className={styles.uploadBtn} onClick={() => openFilePicker(key)}>
                             <Upload size={10} /> {t('Upload')}
                         </button>
                     </>
                 )}
                 <input
-                    ref={(el) => {
-                        inputRefs.current[key] = el
-                    }}
+                    ref={(el) => { inputRefs.current[key] = el }}
                     type="file"
                     style={{ display: 'none' }}
                     onChange={(e) => handleFileChange(key, e)}
@@ -102,8 +176,7 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {}, userDetails, compa
         )
     }
 
-    const isDocsValid = isKybDone || requiredDocKeys.every(k => Boolean(files[k]))
-
+    const isDocsValid = requiredDocKeys.every(k => Boolean(files[k]) || isKeyVerifiedFromKyb(k))
     return (
         <div className={styles.onboardingLayout}>
             <div className={styles.wizardSteps}>
@@ -162,7 +235,7 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {}, userDetails, compa
                                     </span>
                                 </div>
 
-                                {renderUploadControl('commercial_register', styles.required, 'REQUIRED')}
+                                {renderUploadControl('commercial_register')}
                             </div>
 
                             <div className={styles.documentRow}>
@@ -171,7 +244,7 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {}, userDetails, compa
                                     <span>{t('Company articles of association')}</span>
                                 </div>
 
-                                {renderUploadControl('articles_association', styles.required, 'REQUIRED')}
+                                {renderUploadControl('articles_association')}
                             </div>
 
                             <div className={styles.documentRow}>
@@ -191,7 +264,7 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {}, userDetails, compa
                                     <span>{t('Certificate of good standing')}</span>
                                 </div>
 
-                                {renderUploadControl('good_standing', styles.optional, 'OPTIONAL')}
+                                {renderUploadControl('good_standing',)}
                             </div>
                         </div>
                     </div>
@@ -213,7 +286,7 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {}, userDetails, compa
                                     </span>
                                 </div>
 
-                                {renderUploadControl('registered_extract', styles.oneof, 'ONE OF')}
+                                {renderUploadControl('registered_extract')}
                             </div>
 
                             <div className={styles.documentRow}>
@@ -222,7 +295,7 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {}, userDetails, compa
                                     <span>{t('Official certificate of domiciliation')}</span>
                                 </div>
 
-                                {renderUploadControl('domiciliation_certificate', styles.oneof, 'ONE OF')}
+                                {renderUploadControl('domiciliation_certificate')}
                             </div>
 
                             <div className={styles.documentRow}>
@@ -231,7 +304,7 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {}, userDetails, compa
                                     <span>{t('Professional lease agreement')}</span>
                                 </div>
 
-                                {renderUploadControl('lease_agreement', styles.oneof, 'ONE OF')}
+                                {renderUploadControl('lease_agreement')}
                             </div>
 
                             <div className={styles.documentRow}>
@@ -242,7 +315,7 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {}, userDetails, compa
                                     </span>
                                 </div>
 
-                                {renderUploadControl('utility_bill', styles.oneof, 'ONE OF')}
+                                {renderUploadControl('utility_bill')}
                             </div>
 
                             <div className={styles.documentRow}>
@@ -253,7 +326,7 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {}, userDetails, compa
                                     </span>
                                 </div>
 
-                                {renderUploadControl('bank_statement', styles.required, 'REQUIRED')}
+                                {renderUploadControl('bank_statement')}
                             </div>
 
                             <div className={styles.documentRow}>
@@ -264,7 +337,7 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {}, userDetails, compa
                                     </span>
                                 </div>
 
-                                {renderUploadControl('authority_letter', styles.oneof, 'ONE OF')}
+                                {renderUploadControl('authority_letter')}
                             </div>
                         </div>
                     </div>
@@ -286,7 +359,7 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {}, userDetails, compa
                                     <span>{t('Shareholders register')}</span>
                                 </div>
 
-                                {renderUploadControl('shareholders_register', styles.required, 'REQUIRED')}
+                                {renderUploadControl('shareholders_register')}
                             </div>
 
                             <div className={styles.documentRow}>
@@ -295,7 +368,7 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {}, userDetails, compa
                                     <span>{t('Ownership structure chart')}</span>
                                 </div>
 
-                                {renderUploadControl('ownership_chart', styles.required, 'REQUIRED')}
+                                {renderUploadControl('ownership_chart')}
                             </div>
 
                             <div className={styles.documentRow}>
@@ -304,7 +377,7 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {}, userDetails, compa
                                     <span>{t('UBO declaration (including corporate UBO if applicable)')}</span>
                                 </div>
 
-                                {renderUploadControl('ubo_declaration', styles.required, 'REQUIRED')}
+                                {renderUploadControl('ubo_declaration')}
                             </div>
 
                             <div className={styles.documentRow}>
@@ -313,7 +386,7 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {}, userDetails, compa
                                     <span>{t('Valid passport / ID for each UBO')}</span>
                                 </div>
 
-                                {renderUploadControl('ubo_passport', styles.required, 'REQUIRED')}
+                                {renderUploadControl('ubo_passport')}
                             </div>
 
                             <div className={styles.documentRow}>
@@ -322,7 +395,7 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {}, userDetails, compa
                                     <span>{t('Private proof of address under 3 months for each UBO')}</span>
                                 </div>
 
-                                {renderUploadControl('ubo_address_proof', styles.required, 'REQUIRED')}
+                                {renderUploadControl('ubo_address_proof')}
                             </div>
                         </div>
                     </div>
