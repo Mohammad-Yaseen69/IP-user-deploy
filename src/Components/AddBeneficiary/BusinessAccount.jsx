@@ -26,6 +26,7 @@ import InstaPayLoader from "../Loader";
 import { useLocation, useNavigate, useParams } from "react-router";
 import SuccessModal from "./SuccessModal";
 import NestedDropdown from "../NestedDropdown";
+import { handleNameInput, preventEdgeSpaces, preventEmailSpaces } from "../../hooks/useTrimInput";
 
 
 const BusinessAccount = ({ isInternational, toggleHandler, errorOnInvalid = true, error = false, nameRegex }) => {
@@ -300,14 +301,17 @@ const BusinessAccount = ({ isInternational, toggleHandler, errorOnInvalid = true
 
     const handleRepresentativeFieldChange = (e) => {
         const { name } = e.target;
-        const value = ["first_name", "last_name"].includes(name)
-            ? e.target.value.replace(/[^A-Za-z\s]/g, "")
-            : e.target.value;
+        let value = e.target.value;
+
+        if (name === "first_name" || name === "last_name") {
+            value = handleNameInput(value);
+        }
+
         setRepresentativeFields(prev => ({
             ...prev,
             [name]: value
-        }))
-    }
+        }));
+    };
 
     const handleAdditionalFieldChange = (e) => {
         const { value, name } = e.target;
@@ -561,6 +565,7 @@ const BusinessAccount = ({ isInternational, toggleHandler, errorOnInvalid = true
                                     style={{ flex: 1, minWidth: "250px" }}
                                     id="last-name"
                                     type="text"
+                                    onKeyDown={preventEdgeSpaces}
                                     placeholder={t('Enter the company name')}
                                     required
                                     pattern="[A-Za-z\\s]+"
@@ -579,6 +584,7 @@ const BusinessAccount = ({ isInternational, toggleHandler, errorOnInvalid = true
                                     id="email"
                                     name="email"
                                     type="email"
+                                    onKeyDown={preventEmailSpaces}
                                     placeholder={t('Email Address')}
                                     title="abc@xyz.com"
                                     value={formData.email}
@@ -651,7 +657,7 @@ const BusinessAccount = ({ isInternational, toggleHandler, errorOnInvalid = true
                             </FormGroup>
                             <FormGroup style={{ flex: 1, margin: 0, minWidth: "250px" }}>
                                 <Label className="col-form-label" htmlFor="postal_code">{t("Postal Code")} <span className="req_star">*</span></Label>
-                                <Input className="form-control" style={{ flex: 1, minWidth: "250px" }} name="postal_code" id="postal_code" type="text" placeholder={t('Address line')} value={formData.postal_code} onChange={inputChangeHandler} disabled={isFieldsDisabled} readOnly={isFieldsDisabled} required />
+                                <Input className="form-control" style={{ flex: 1, minWidth: "250px" }} name="postal_code" id="postal_code" type="text" placeholder={t('Address line')} onKeyDown={preventEdgeSpaces} value={formData.postal_code} onChange={inputChangeHandler} disabled={isFieldsDisabled} readOnly={isFieldsDisabled} required />
                             </FormGroup>
                         </div>
                     </FormGroup>
@@ -786,6 +792,7 @@ const BusinessAccount = ({ isInternational, toggleHandler, errorOnInvalid = true
                                                 title={item === "first_name" || item === "last_name" ? t("Only alphabetic characters are allowed") : undefined}
                                                 disabled={isFieldsDisabled}
                                                 readOnly={isFieldsDisabled}
+                                                onKeyDown={item === "id_number" ? preventEdgeSpaces : undefined}
                                                 onChange={handleRepresentativeFieldChange}
                                             />
                                         </FormGroup>
@@ -854,6 +861,7 @@ const BusinessAccount = ({ isInternational, toggleHandler, errorOnInvalid = true
                                             value={additionFields[item]}
                                             name={item}
                                             required
+                                            onKeyDown={preventEdgeSpaces}
                                             onChange={handleAdditionalFieldChange}
                                         />
                                     </FormGroup>
@@ -885,6 +893,7 @@ const BusinessAccount = ({ isInternational, toggleHandler, errorOnInvalid = true
                             placeholder={t('Address Line')}
                             disabled={!country || isFieldsDisabled}
                             readOnly={!country || isFieldsDisabled}
+                            onKeyDown={preventEdgeSpaces}
                             value={formData.address}
                             onChange={inputChangeHandler}
                             onFocus={() => setAddressInFocus(true)}

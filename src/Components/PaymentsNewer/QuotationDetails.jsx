@@ -7,6 +7,7 @@ import { ChevronRight, HelpCircle, Plus, Trash2 } from 'react-feather'
 import ImagePreviewModal from '../ImagePreviewModal.jsx'
 import { FaRegFileVideo, FaRegFilePdf } from "react-icons/fa";
 import { formatCurrency } from '../../Helper/AmountFormat.js'
+import { preventEdgeSpaces } from '../../hooks/useTrimInput.jsx'
 
 let timeout;
 
@@ -165,12 +166,16 @@ const QuotationDetails = ({ amount, currency, setAmount, setCurrency, title, set
                         }
                     </Input>
                 </div>
-                <Input value={title} onChange={e => setTitle(e.target.value)} placeholder={t('Enter the Title for Your Quotation.')} maxLength={120} />
+                <Input value={title} onChange={e => setTitle(e.target.value)}
+                    onKeyDown={preventEdgeSpaces}
+                    placeholder={t('Enter the Title for Your Quotation.')} maxLength={120} />
                 <div className="text-end" style={{ fontSize: '0.8rem', color: '#666', marginBottom: '1rem' }}>{title.length}/120</div>
-                <Input value={description} onChange={e => setDescription(e.target.value)} type='textarea' placeholder={t('Enter the Description for Your Quotation')} maxLength={500} style={{
-                    resize: "none",
-                    height: "100%"
-                }} />
+                <Input value={description}
+                    onKeyDown={preventEdgeSpaces}
+                    onChange={e => setDescription(e.target.value)} type='textarea' placeholder={t('Enter the Description for Your Quotation')} maxLength={500} style={{
+                        resize: "none",
+                        height: "100%"
+                    }} />
                 <div className="text-end" style={{ fontSize: '0.8rem', color: '#666', marginBottom: '1rem' }}>{description.length}/500</div>
                 <div style={{ display: "flex", flexDirection: "column" }}>
                     <Label>{t("Attachments")}: </Label>

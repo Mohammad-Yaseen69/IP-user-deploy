@@ -31,8 +31,13 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
     const navigate = useNavigate()
     const { t } = useTranslation()
     const swiperRef = useRef(null)
-    const { userWallets, authHeader, getUserWallets, userDetails, getWithdrawals, userWithdrawals } = useContext(UserContext)
+    const { userWallets: allWallets, authHeader, getUserWallets, userDetails, getWithdrawals, userWithdrawals } = useContext(UserContext)
     const can = usePermission()
+    // Crypto wallets live on the Crypto & Stablecoins page, not here.
+    const userWallets = useMemo(
+        () => (allWallets || []).filter((w) => w?.provider !== "bvnk" && w?.wallet_type !== "crypto"),
+        [allWallets]
+    )
     const [activeDot, setActiveDot] = useState(0)
     const [currentDefault, setCurrentDefault] = useState(false)
     const [currentActive, setCurrentActive] = useState(false)
@@ -99,7 +104,7 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
         else if (action === "withdraw") setShowWithdrawalModal(true)
         else if (action === "add-currency") setShowAddCurrencyModal(true)
         else if (action === "statement") setShowDownloadStatementModal(true)
-        
+
     }, [action])
 
     useEffect(() => {
@@ -227,8 +232,11 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
                                 rotate: false,
                                 slideShadows: false,
                             }}
-                            style={{ minWidth: "250px", cursor: "none" }}
-                            className={`mySwiper ${styles.swiper}`}
+                            style={{
+                                minWidth: userWallets?.length === 1 ? "22vw" : "250px",
+                                width: userWallets?.length === 1 ? "100%" : "auto",
+                                cursor: "none"
+                            }} className={`mySwiper ${styles.swiper}`}
                             onSwiper={(swiper) => {
                                 if (activeDot > 0) {
                                     swiper.slideTo(activeDot)

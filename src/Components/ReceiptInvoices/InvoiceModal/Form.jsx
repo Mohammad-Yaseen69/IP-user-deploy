@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { formatCurrency } from '../../../Helper/AmountFormat'
 import { UserContext } from '../../../Context/UserContext'
 import CountryDropDown from '../../AddBeneficiary/CountryDropDown'
+import { preventEdgeSpaces } from '../../../hooks/useTrimInput'
 
 const Form = ({ data, inputFieldChange, dataHandler, directCard = false }) => {
     const { t } = useTranslation()
@@ -22,7 +23,9 @@ const Form = ({ data, inputFieldChange, dataHandler, directCard = false }) => {
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
             <Field label={t('Title')} required={!data.title}>
                 <div style={{ width: '100%' }}>
-                    <TextInput value={data.title} onChange={inputFieldChange('title')} placeholder={t('Enter title')} maxLength={100} />
+                    <TextInput value={data.title} onChange={inputFieldChange('title')}
+                        onKeyDown={preventEdgeSpaces}
+                        placeholder={t('Enter title')} maxLength={100} />
                     <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 4 }}>
                         <span style={{ fontSize: 12, color: '#6b7280' }}>{(data?.title?.length ?? 0)}/100</span>
                     </div>
@@ -31,6 +34,7 @@ const Form = ({ data, inputFieldChange, dataHandler, directCard = false }) => {
             <Field label={t('Description')} required={!data.description}>
                 <div style={{ width: '100%' }}>
                     <TextArea
+                        onKeyDown={preventEdgeSpaces}
                         value={data.description}
                         onChange={inputFieldChange('description')}
                         placeholder={t('Enter description')}
@@ -53,6 +57,7 @@ const Form = ({ data, inputFieldChange, dataHandler, directCard = false }) => {
             <Field label={t('Amount')} required={!data.amount || Number(data.amount.replaceAll(",", "")) === 0}>
                 <TextInput
                     value={data.amount}
+
                     onChange={(e) => {
                         const format = formatCurrency(e.target.value, false)
                         dataHandler("amount", format)

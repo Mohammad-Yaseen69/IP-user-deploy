@@ -9,7 +9,7 @@ import { UserContext } from '../../Context/UserContext'
 import { decryptData } from '../../Helper/EssentilaMethods/Decryption'
 import axios from 'axios'
 import { encryptData } from '../../Helper/EssentilaMethods/Encryption'
-import OTPConfirmation from '../UserSettingsNew/OTPConfirmation'
+import OTPConfirmation from '../../Common/Component/OtpVerification'
 import SuccessModal from '../AddBeneficiary/SuccessModal'
 import { toast } from 'react-toastify'
 import CardDetails from '../AddFunds/WalletFund/CardDetails'
@@ -582,6 +582,7 @@ const VerificationPayment = ({ isOpen, toggle, verify, desc, occupation, loading
                 <ModalHeader toggle={() => setShowOtp(!showOtp)}>{t("Confirm")}</ModalHeader>
                 <ModalBody>
                     <OTPConfirmation
+                        variant="card"
                         callback={chargeKYC}
                         setter={setShowSuccess}
                         setterValue={true}
