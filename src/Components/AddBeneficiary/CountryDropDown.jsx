@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import Fuse from 'fuse.js';
 import { countriesInDiffLangs } from '../../Data/CountriesWithTranslations/countries';
 
-const CountryDropDown = ({ onSelect, country = "", disabled = false, padding = ".7rem .5rem", disabledColor = "#e9ecef", countryNameSize = {}, filteringList = [], setIsCountryInFocus = () => { }, background = "#fff", shadow }) => {
+const CountryDropDown = ({ onSelect, country = "", disabled = false, padding = ".7rem .5rem", disabledColor = "#e9ecef", countryNameSize = {}, filteringList = [], setIsCountryInFocus = () => { }, background = "#fff", shadow, containerStyle = {} }) => {
     const { t, i18n } = useTranslation()
     const [isOpen, setIsOpen] = useState(false);
     const [selectedCountry, setSelectedCountry] = useState("");
@@ -100,7 +100,7 @@ const CountryDropDown = ({ onSelect, country = "", disabled = false, padding = "
     }, [isOpen])
     return (
         <Dropdown isOpen={isOpen} toggle={toggleDropdown}>
-            <DropdownToggle color='white' style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", border: "1px solid rgba(0,0,0,.05)", borderRadius: "5px", padding: padding, background: disabled ? disabledColor : background, boxShadow: shadow ? "0px -0.5px 7.2px 0px rgba(0, 0, 0, 0.20), 0px 0px 4px 6px #FDFDFD inset" : "" }} disabled={disabled}>
+            <DropdownToggle className='countrySelect' color='white' style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", border: "1px solid rgba(0,0,0,.05)", borderRadius: "5px", padding: padding, background: disabled ? disabledColor : background, boxShadow: shadow ? "0px -0.5px 7.2px 0px rgba(0, 0, 0, 0.20), 0px 0px 4px 6px #FDFDFD inset" : "", ...containerStyle }} disabled={disabled}>
                 {
                     isOpen
                         ?

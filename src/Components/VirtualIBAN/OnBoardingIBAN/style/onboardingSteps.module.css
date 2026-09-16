@@ -2212,6 +2212,90 @@
     text-decoration: underline;
 }
 
+
+.mobileStepContainer {
+    display: none;
+    align-items: center;
+    justify-content: space-between;
+    padding: 5px 40px 30px;
+    background-color: #FFFFFF01;
+    box-shadow: 0px 6px 20px -14px #14122047;
+}
+
+.stepCount {
+    font-weight: 700;
+    font-size: 12px !important;
+    margin: 0;
+    color: #141220;
+
+    span {
+        font-weight: 500;
+        color: #9793A8;
+        text-transform: capitalize;
+    }
+}
+
+.dropdownPill {
+    border: 1px solid #5926F021;
+    box-shadow: 0px 2px 8px -3px #5926F047;
+    padding: 6px;
+    border-radius: 100px;
+    background-color: #EFE9FE;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #5926F0;
+}
+
+.addIconContainer {
+    box-shadow: 0px 3px 8px -3px #5926F0BF;
+    width: 20px;
+    height: 20px;
+    border-radius: 150px;
+    background-color: #5f49eb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    svg {
+        color: white;
+    }
+}
+
+.readyPercentage {
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.stepsLeft {
+    color: #7B5BD6;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.lookupBtn {
+    height: 44px;
+    border-radius: 12px;
+    border: 1px solid #1412201F;
+    box-shadow: 0px 1px 2px 0px #1412200D;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    font-weight: 600;
+    font-size: 13px;
+    background: #FFFFFF;
+}
+
+.twoInputRow {
+    display: none;
+}
+
+.activityAlert {
+    display: none;
+    margin-top: 20px;
+}
+
 @media (max-width: 960px) {
     .onboardingLayout {
         flex-direction: column;
@@ -2260,6 +2344,377 @@
     .helpBox {
         margin: 0 20px 20px;
         flex-direction: column;
+    }
+
+    .onboardingLayout {
+        padding: 0;
+        gap: 20px;
+    }
+
+    .wizardSteps {
+        gap: 3px;
+        padding: 10px 20px 10px 25px;
+    }
+
+    .stepLine {
+        height: 5px;
+        width: 16.66;
+        border-radius: 100px;
+    }
+
+    .stepLabel,
+    .stepNumber {
+        display: none;
+    }
+
+    .mobileStepContainer {
+        display: flex;
+    }
+
+    .upperlayout {
+        padding: 10px 20px 0px 25px;
+        gap: 18px;
+
+        p {
+            color: #65627A;
+            font-size: 12px !important;
+            margin: 0;
+        }
+    }
+
+    .infoCard {
+        background: linear-gradient(107.22deg, #F6F2FF 0%, #EFE9FE 100%);
+        box-shadow: 0px 8px 20px -14px #5926F099;
+
+        p {
+            font-size: 12px;
+            color: #3B2694;
+        }
+    }
+
+    .infoIcon {
+        display: none;
+    }
+
+    .infoTitle {
+        font-size: 10px;
+    }
+
+    .noticeCard {
+        align-items: start;
+
+        img {
+            margin-top: 5px;
+        }
+
+        svg {
+            display: none;
+        }
+
+        p {
+            color: #3B2694;
+        }
+    }
+
+    .sidebarArea {
+        display: none;
+    }
+
+    .inputIcon {
+        display: none;
+    }
+
+    .formContainer2 {
+        padding: 18px;
+    }
+
+    .onboardingForm2 {
+        gap: 8px;
+    }
+
+    .legalFormField1,
+    .dateIncoField1 {
+        display: none;
+    }
+
+    .twoInputRow {
+        display: flex;
+        gap: 11px;
+        align-items: center;
+        margin-top: 5px;
+
+        .inputGroup {
+            width: 50%;
+        }
+    }
+
+    .lookupBtn {
+        display: flex;
+    }
+
+    .formRow {
+        gap: 16px;
+    }
+
+    .inputLabel {
+        color: #9793A8;
+        font-size: 10px;
+        margin: 0;
+    }
+
+    .textInput {
+        height: 51px;
+        padding: 15px;
+        border: 1px solid #1412201F;
+        border-radius: 12px;
+        font-size: 14px;
+        font-weight: 500;
+        color: #141220;
+        background: #FFFFFF;
+        box-shadow: 0px 1px 2px 0px #1412200D;
+    }
+
+    .mainArea {
+        padding: 0px 20px 10px 25px;
+    }
+
+    .navigationFooter {
+        border-top: 1px solid #14122012;
+        padding: 20px;
+    }
+
+    .continueButton {
+        width: 100%;
+        background: linear-gradient(180deg, #7040FF 0%, #5926F0 100%);
+        box-shadow: 0px 6px 18px -5px #5926F06B;
+    }
+
+    .activityHeader {
+        padding: 10px 20px 0px 25px;
+
+        p {
+            margin-top: 15px;
+        }
+    }
+
+    .activityAlert {
+        display: block;
+    }
+
+    .activityFormWrapper {
+        gap: 13px;
+
+        textarea {
+            background-color: white;
+            box-shadow: 0px 1px 2px 0px #1412200D;
+            max-height: 94px;
+        }
+
+        .charCount {
+            display: none;
+        }
+
+        .activeChip {
+            background: linear-gradient(180deg, #7040FF 0%, #5926F0 100%);
+            box-shadow: 0px 4px 12px -4px #5926F08C;
+            border-radius: 10px;
+
+            svg {
+                display: none;
+            }
+        }
+
+        .chip,
+        .addChip {
+            padding: 10px 13px;
+            border: 1px solid #1412201F;
+            box-shadow: 0px 1px 2px 0px #1412200D;
+            border-radius: 10px;
+            font-size: 13px;
+        }
+
+        .addChip {
+            color: #9793A8;
+        }
+    }
+
+    .alertWrapper {
+        padding: 0px 20px 0px 25px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .backButton {
+        display: none;
+    }
+
+    .formSubheading {
+        color: #65627A;
+    }
+
+    .addBtn {
+        border-radius: 12px !important;
+        height: 44px;
+        width: 100%;
+        justify-content: center;
+        color: #141220;
+        letter-spacing: -0.25px;
+        border: none !important;
+    }
+
+    .progressCard {
+        border-radius: 16px;
+        padding: 12px;
+        margin-bottom: 5px;
+        margin-bottom: 20px;
+    }
+
+    .progressContent {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+
+        h4 {
+            color: #3B2694;
+            font-size: 12px;
+            font-weight: 600;
+        }
+    }
+
+    .progressCount {
+        background: transparent;
+        font-size: 22px;
+        font-weight: 600;
+        width: auto;
+        height: auto;
+        letter-spacing: -3px;
+    }
+
+    .section {
+        border-radius: 16px;
+        padding: 0;
+        margin-bottom: 0;
+    }
+
+    .sectionHeader {
+        background-color: #F8F8FB;
+        padding: 15px;
+        margin: 0;
+        align-items: start;
+
+        .sectionNumber {
+            background: #FFFFFF;
+            color: #65627A;
+            box-shadow: 0px 1px 2px 0px #1412200D;
+
+        }
+    }
+
+    .documentRow {
+        flex-direction: column;
+        justify-content: start;
+        align-items: start;
+        padding: 15px 17px;
+        gap: 10px;
+
+        .left {
+            span {
+                font-size: 13px;
+                font-weight: 500;
+            }
+
+            .empty {
+                min-width: 22px;
+                min-height: 22px;
+            }
+        }
+
+        .required {
+            background: #FDEDED;
+            color: #B4232B;
+            font-weight: 600;
+        }
+
+        .right {
+            justify-content: space-between;
+            width: 100%;
+
+            .uploadBtn {
+                border-radius: 100px;
+            }
+
+            .oneof {
+                background: #F3F3F7;
+                color: #9793A8;
+            }
+        }
+    }
+
+    .documentForm {
+        gap: 0;
+        width: 100%;
+
+        div:nth-child(2) {
+            border-bottom-right-radius: 0;
+            border-bottom-left-radius: 0;
+        }
+
+        div:nth-child(3) {
+            border-top: 0;
+            border-radius: 0;
+        }
+
+        div:nth-child(4) {
+            border-top-right-radius: 0;
+            border-top-left-radius: 0;
+            border-top: 0;
+        }
+    }
+
+    .headerContent {
+        p {
+            color: #9793A8;
+            font-size: 11px !important;
+            margin: 0;
+        }
+    }
+
+    .summaryWrapper {
+        .edit {
+            background: #F3EFFE;
+            border-radius: 100px;
+            padding: 5px 11px;
+            font-weight: 600;
+            font-size: 12px;
+        }
+
+        .grid {
+            grid-template-columns: 1fr;
+        }
+
+        .item {
+            flex-direction: row;
+            justify-content: space-between;
+            gap: 10px;
+            border-bottom: 1px solid #14122012;
+
+            span {
+                font-weight: 600;
+            }
+        }
+
+        .grid .item:last-of-type {
+            border-bottom: none;
+        }
+
+
+        .confirmRow {
+            box-shadow: 0px 0px 0px 1px #14122012 inset;
+            background: #F8F8FB;
+            border-radius: 16px;
+            padding: 16px;
+        }
     }
 }
 

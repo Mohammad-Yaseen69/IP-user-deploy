@@ -3,6 +3,7 @@ import html2canvas from 'html2canvas';
 import QRCodeStyling from 'qr-code-styling';
 import logoImg from '../../../assets/images/logo/logo2.webp';
 import signatureImg from './signatur.png';
+import { getPaymentReference } from '../utils/virtualIban';
 
 export const INTL_SWIFT_DATA = {
     usd: {
@@ -14,7 +15,6 @@ export const INTL_SWIFT_DATA = {
         bankCode: 'BBVAESMMXXX',
         bankName: 'Banco Bilbao Vizcaya Argentaria, S.A.',
         bankAddress: 'Plaza De San Nicolas 4, Bilbao, 48005, ES',
-        paymentReference: 'REF PY9F4G3',
     },
     eur: {
         currencyCode: 'EUR',
@@ -25,7 +25,6 @@ export const INTL_SWIFT_DATA = {
         bankCode: 'BBVAESMMXXX',
         bankName: 'Banco Bilbao Vizcaya Argentaria, S.A.',
         bankAddress: 'De San Nicolas 4, Bilboa, 48005, ES',
-        paymentReference: 'REF 6JL69V3',
     },
 };
 
@@ -167,6 +166,7 @@ const buildSwiftLetterPagesHtml = ({ logoBase64, qrBase64, signatureBase64, iban
     const orgNumber = getSafeString(userDetails?.company?.registration_number || userDetails?.company?.tax_id, '---');
     const virtualIbanId = getSafeString(iban?.virtualIbanId || iban?._id || iban?.id, '');
     const customerId = virtualIbanId
+    const paymentReference = getPaymentReference(iban, userDetails);
 
     const todayDate = formatDate(new Date());
     const refCode = `ISCL-${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, '0')}${String(new Date().getDate()).padStart(2, '0')}-${customerId.slice(-4)}`;
@@ -262,7 +262,7 @@ const buildSwiftLetterPagesHtml = ({ logoBase64, qrBase64, signatureBase64, iban
                     ${renderTableRow('BIC / SWIFT', intl.bankCode, false, true)}
                     ${renderTableRow('Bank name', intl.bankName)}
                     ${renderTableRow('Bank address', intl.bankAddress)}
-                    ${renderTableRow('Payment reference', `${intl.paymentReference}-${virtualIbanId}`, true, true)}
+                    ${renderTableRow('Payment reference', paymentReference, true, true)}
                 </tbody>
             </table>
         </div>

@@ -24,6 +24,8 @@ import styles from "./styles/index.module.css"
 import { asVirtualIbanArray, isVirtualIbanInactive } from './utils/virtualIban'
 import VirtualIbanModal from './VirtualIbanModal'
 import OnboardingIBAN from './OnBoardingIBAN'
+import { Bell, ChevronLeft } from 'react-feather'
+import { Avatar, Badge } from '@mui/material'
 
 
 const VirtualBank = () => {
@@ -32,17 +34,21 @@ const VirtualBank = () => {
         selectedAccount,
         setSelectedAccount,
     } = useContext(UserContext);
-    const { t } = useTranslation();
-    const can = usePermission();
-    const width = useWindowWidth();
+  const { t } = useTranslation();
+  const can = usePermission();
+  const width = useWindowWidth();
     const { data: rawIbans = [], isLoading: ibansLoading } = useVirtualIbans(userDetails?._id)
     const {
         data: ibanCreationStatus,
         isLoading: ibanCreationStatusLoading,
     } = useVirtualIbanProcessingStatus()
-    const [activeTab, setActiveTab] = useState("overview");
-    const [showGetIBAN, setShowGetIBAN] = useState(false);
-    const ibanDetailsRef = useRef(null);
+  const [activeTab, setActiveTab] = useState("overview");
+  const [showGetIBAN, setShowGetIBAN] = useState(false);
+  const ibanDetailsRef = useRef(null);
+  const onboardingRef = useRef(null)
+  const [onboardingStep, setOnboardingStep] = useState('landing')
+
+
 
     const ibans = useMemo(() => asVirtualIbanArray(rawIbans), [rawIbans])
     const creationInProgress = ibanCreationStatus === true
@@ -52,7 +58,7 @@ const VirtualBank = () => {
     const canViewTransactions = can("virtual-iban.transactions.view")
     const canUpdateStatus = can("virtual-iban.status.update")
 
-    const selectedIban = useMemo(
+  const selectedIban = useMemo(
         () => ibans.find((iban) => (iban?._id || iban?.id) === selectedAccount) || ibans[0],
         [ibans, selectedAccount]
     )
@@ -64,24 +70,24 @@ const VirtualBank = () => {
     const [q, setQ] = useState('');
     const [order, setOrder] = useState('desc');
 
-    const skip = (page - 1) * limit;
+  const skip = (page - 1) * limit;
 
-    const { data: transactions = [], isLoading: transactionsLoading } = useQuery({
-        queryKey: [
+  const { data: transactions = [], isLoading: transactionsLoading } = useQuery({
+    queryKey: [
             'virtual-iban-transactions',
-            selectedIban?._id || selectedIban?.id,
-            page,
-            limit,
-            statusFilter,
-            typeFilter,
-            q,
-            order,
-        ],
-        queryFn: async () => {
-            const id = selectedIban?._id || selectedIban?.id;
-            if (!id) return { items: [], total: 0 };
+      selectedIban?._id || selectedIban?.id,
+      page,
+      limit,
+      statusFilter,
+      typeFilter,
+      q,
+      order,
+    ],
+    queryFn: async () => {
+      const id = selectedIban?._id || selectedIban?.id;
+      if (!id) return { items: [], total: 0 };
 
-            const params = new URLSearchParams();
+      const params = new URLSearchParams();
             params.append('iban_id', id);
             if (statusFilter) params.append('status', statusFilter);
             if (typeFilter) params.append('type', typeFilter);
@@ -91,119 +97,147 @@ const VirtualBank = () => {
             params.append('limit', String(limit));
             params.append('skip', String(skip));
 
-            const res = await apiWrapper({
-                endpoint: `/api/virtual-iban/transactions??${params.toString()}`,
+      const res = await apiWrapper({
+        endpoint: `/api/virtual-iban/transactions??${params.toString()}`,
                 method: 'GET'
-            });
+      });
 
-            if (Array.isArray(res)) return { items: res, total: res.length };
+      if (Array.isArray(res)) return { items: res, total: res.length };
             if (res && res.data && Array.isArray(res.data)) return { items: res.data, total: res.total ?? res.data.length };
-            return { items: [], total: 0 };
-        },
-        enabled: !!(selectedIban && canViewTransactions),
-        keepPreviousData: true,
+      return { items: [], total: 0 };
+    },
+    enabled: !!(selectedIban && canViewTransactions),
+    keepPreviousData: true,
     })
 
-    useEffect(() => {
-        if (!selectedAccount && ibans?.length) {
+  useEffect(() => {
+    if (!selectedAccount && ibans?.length) {
             setSelectedAccount(ibans[0]?._id || ibans[0]?.id)
-        }
-        if (ibans?.length) {
+    }
+    if (ibans?.length) {
             setShowGetIBAN(false)
-        }
+    }
     }, [ibans, selectedAccount])
 
-    const handleOpenIBAN = () => {
+  const handleOpenIBAN = () => {
         if (!canCreateIban) return
-        setShowGetIBAN(true);
-        setSelectedAccount(null);
-    };
+    setShowGetIBAN(true);
+    setSelectedAccount(null);
+  };
 
-    const handleBackToDashboard = () => {
-        setShowGetIBAN(false);
-        setSelectedAccount(ibans[0]?._id || ibans[0]?.id || null);
-    };
+  const handleBackToDashboard = () => {
+    setShowGetIBAN(false);
+    setSelectedAccount(ibans[0]?._id || ibans[0]?.id || null);
+  };
 
-    const scrollToIbanDetails = () => {
-        const scroll = () => {
+  const scrollToIbanDetails = () => {
+    const scroll = () => {
             ibanDetailsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
         }
 
-        if (typeof window !== "undefined" && window.requestAnimationFrame) {
+    if (typeof window !== "undefined" && window.requestAnimationFrame) {
             window.requestAnimationFrame(scroll)
-        } else {
+    } else {
             setTimeout(scroll, 0)
         }
     }
 
-    const handleShowIbanDetails = () => {
+  const handleShowIbanDetails = () => {
         if (!canViewDetails) return
         setActiveTab("ibanassets")
         scrollToIbanDetails()
     }
 
-    useEffect(() => {
-        if (activeTab === "ibanassets") {
+  useEffect(() => {
+    if (activeTab === "ibanassets") {
             scrollToIbanDetails()
-        }
-    }, [activeTab, selectedAccount]);
-    return (
-        <div className={styles.container}>
-            <div className={styles.top}>
-                <div className={styles.headerTitle}>
-                    <h1>
+    }
+  }, [activeTab, selectedAccount]);
+
+  return (
+    <div className={styles.container}>
+      <div className={styles.top}>
+        <div className={styles.headerTitle}>
+          <h1>
                         {userDetails?.account_type === "business" ? t("Business IBAN") : t("My virtual bank")}
-                    </h1>
+          </h1>
                     <p>{userDetails?.account_type === "business" ? t("Activate a dedicated business account to receive and hold company funds.") : t("Manage and monitor your InstaPay Virtual Bank Account.")}</p>
-                </div>
+        </div>
 
-                <div className={styles.topright}>
-                    {width > 1000 && <TopRight />}
-                </div>
-
-
+        <div className={styles.topright}>{width > 1000 && <TopRight />}</div>
+      </div>
+      <div className={styles.mobileTop}>
+        <div className={styles.headerTitle}>
+          <ChevronLeft size={22} onClick={() => onboardingRef.current?.back()} />
+          <h1>
+            {onboardingStep === 'pricing'
+            ? t("Your pricing")
+            : onboardingStep === 'ActivateAccount'
+            ? t("Activate your account")
+            : userDetails?.account_type === "business"
+              ? t("Business IBAN")
+              : t("My virtual bank")}
+          </h1>
+        </div>
+        {onboardingStep === 'landing' ?
+          <div className={styles.mobileTopRight}>
+            {/* <div className={styles.notificationContainer}>
+              <Badge badgeContent='3' color="secondary" classes={{ anchorOriginTopRightRectangular: styles.notificationBadge }}>
+                <Bell size={20} />
+              </Badge>
             </div>
+            <div className={styles.notificationContainer}>
+              <Avatar alt="User Avatar" src={userDetails?.profile_image} sx={{ width: 28, height: 28 }} />
+            </div> */}
+        </div>
+        :
+        (onboardingStep !== 'pricing' && onboardingStep !== 'ActivateAccount') &&
+          <button disabled className={styles.saveButton}>
+            {t("Save & exit")}
+          </button>
+        }
+      </div>
             {
                 isInitialLoading ? (
-                    <div style={{ minHeight: "520px", width: "100%" }}>
-                        <InstaPayLoader fallback transparent fullHeight />
-                    </div>
-                ) : creationInProgress ? (
-                    <div style={{ minHeight: "520px", width: "100%" }} />
+        <div style={{ minHeight: "520px", width: "100%" }}>
+          <InstaPayLoader fallback transparent fullHeight />
+        </div>
+      ) : creationInProgress ? (
+        <div style={{ minHeight: "520px", width: "100%" }} />
                 ) :
                     (showGetIBAN || (ibans.length === 0 && canCreateIban)) ?
                         userDetails?.account_type === "business" ?
-                            <OnboardingIBAN /> :
+                            <OnboardingIBAN ref={onboardingRef} onStepChange={setOnboardingStep} /> :
                             <IBAN onCreated={handleBackToDashboard} />
                         : selectedIbanInactive ?
                             <div className={styles.main}>
                                 <InactiveIban />
                             </div>
                         :
-                        <div className={styles.main}>
-                            <div className={styles.topPanel}>
-                                <AccountsSidebar
-                                    selectedAccount={selectedAccount}
-                                    onSelect={setSelectedAccount}
-                                    setShowGetIBAN={handleOpenIBAN}
-                                    accounts={ibans}
-                                    isLoading={ibansLoading}
-                                />
-                                <div className={styles.panelDivider} />
-                                <BalanceHeader
-                                    iban={selectedIban}
-                                    isLoading={ibansLoading}
-                                    onShowDetails={handleShowIbanDetails}
-                                />
-                            </div>
+        <div className={styles.main}>
+          <div className={styles.topPanel}>
+            <AccountsSidebar
+              selectedAccount={selectedAccount}
+              onSelect={setSelectedAccount}
+              setShowGetIBAN={handleOpenIBAN}
+              accounts={ibans}
+              isLoading={ibansLoading}
+            />
+            <div className={styles.panelDivider} />
+            <BalanceHeader
+              iban={selectedIban}
+              isLoading={ibansLoading}
+              onShowDetails={handleShowIbanDetails}
+            />
+          </div>
 
-                            <div className={styles.section}>
-                                <QuickActions selectedIban={selectedIban} />
-                            </div>
+          <div className={styles.section}>
+            <QuickActions selectedIban={selectedIban} />
+          </div>
 
-                            <div className={styles.section}>
-                                <TabsNav activeTab={activeTab} onTabChange={setActiveTab} />
-                            </div>
+          <div className={styles.section}>
+            <TabsNav activeTab={activeTab} onTabChange={setActiveTab} />
+          </div>
 
                             {activeTab === "overview" && (
                                 <div className={styles.tabContent}>
@@ -236,35 +270,35 @@ const VirtualBank = () => {
                                 </div>
                             )}
 
-                            {activeTab === "transaction-history" && canViewTransactions && (
-                                <div className={styles.tabContent}>
-                                    <div className={styles.section}>
-                                        {transactionsLoading ? (
-                                            <InstaPayLoader />
-                                        ) : (
-                                            <RecentTransactions
-                                                transactions={transactions.items ?? []}
-                                                setActiveTab={setActiveTab}
-                                                loading={transactionsLoading}
-                                                page={page}
-                                                setPage={setPage}
-                                                limit={limit}
-                                                setLimit={setLimit}
-                                                totalPages={transactions?.totalPages ?? 1}
-                                                setStatusFilter={setStatusFilter}
-                                                setTypeFilter={setTypeFilter}
-                                                setQ={setQ}
-                                                setOrder={setOrder}
-                                                selectedIban={selectedIban}
-                                            />
-                                        )}
-                                    </div>
-                                </div>
-                            )}
+          {activeTab === "transaction-history" && canViewTransactions && (
+            <div className={styles.tabContent}>
+              <div className={styles.section}>
+                {transactionsLoading ? (
+                  <InstaPayLoader />
+                ) : (
+                  <RecentTransactions
+                    transactions={transactions.items ?? []}
+                    setActiveTab={setActiveTab}
+                    loading={transactionsLoading}
+                    page={page}
+                    setPage={setPage}
+                    limit={limit}
+                    setLimit={setLimit}
+                    totalPages={transactions?.totalPages ?? 1}
+                    setStatusFilter={setStatusFilter}
+                    setTypeFilter={setTypeFilter}
+                    setQ={setQ}
+                    setOrder={setOrder}
+                    selectedIban={selectedIban}
+                  />
+                )}
+              </div>
+            </div>
+          )}
 
-                            {activeTab === "ibanassets" && canViewDetails && (
-                                <div className={styles.tabContent} ref={ibanDetailsRef}>
-                                    <div className={styles.section}>
+          {activeTab === "ibanassets" && canViewDetails && (
+            <div className={styles.tabContent} ref={ibanDetailsRef}>
+              <div className={styles.section}>
                                         <IBANDetails ibanId={selectedIban?._id || selectedIban?.id} fallbackIban={selectedIban} />
                                     </div>
                                 </div>
@@ -295,6 +329,7 @@ const VirtualBank = () => {
                 />
             )}
         </div>
+    
     )
 }
 
