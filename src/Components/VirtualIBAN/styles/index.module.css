@@ -13,6 +13,10 @@
     padding: 0px;
 }
 
+.mobileTop {
+    display: none;
+}
+
 .headerTitle {
 
     margin: 0px;
@@ -95,19 +99,78 @@
 
 @media (max-width: 600px) {
     .container {
-        padding: 12px;
+        padding: 0px;
         gap: 14px;
     }
 
-    .headerTitle h1 {
-        font-size: 17px;
+    .mobileTop {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 20px 15px 20px 20px;
+
+        .headerTitle {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+
+            svg {
+                color: #17151F;
+            }
+
+            h1 {
+                font-size: 16px;
+                color: #141220;
+                font-weight: 700;
+            }
+        }
+
+        .saveButton {
+            padding: 5px 8px;
+            color: var(--Greyscale-0, #FFF);
+            background: var(--Primary-600---Base, #4A32E3);
+            font-family: Inter;
+            font-size: 13px;
+            font-weight: 600;
+            border: none;
+            border-radius: 100px;
+        }
+
+        .saveButton:disabled {
+            background-color: #F3F3F7;
+            color: #65627A;
+        }
+
+        .mobileTopRight {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .notificationContainer {
+            border: 1px solid #E4E3E5;
+            width: 40px;
+            height: 40px;
+            border-radius: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .notificationBadge {
+            background-color: #4A32E3 !important;
+            width: 12px !important;
+            height: 12px !important;
+            min-width: auto !important;
+            min-height: auto !important;
+            font-size: 7px !important;
+            top: 2px !important;
+            right: 3px !important;
+            border: 1px solid #FFFFFF !important;
+        }
     }
 
     .top {
-        padding: 16px;
-    }
-
-    .topright {
-        margin-top: 0px;
+        display: none;
     }
 }

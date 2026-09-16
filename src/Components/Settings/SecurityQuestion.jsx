@@ -6,7 +6,7 @@ import { encryptData } from '../../Helper/EssentilaMethods/Encryption';
 import axios from 'axios';
 import { decryptData } from '../../Helper/EssentilaMethods/Decryption';
 import { useTranslation } from 'react-i18next';
-import OTPConfirmation from '../UserSettingsNew/OTPConfirmation';
+import OTPConfirmation from '../../Common/Component/OtpVerification';
 import SuccessModal from '../AddBeneficiary/SuccessModal';
 import { useLocation, useNavigate } from 'react-router';
 import { toast } from 'react-toastify';
@@ -330,6 +330,7 @@ const SecurityQuestions = () => {
                     <ModalHeader toggle={() => setShowOtp(!showOtp)}>{t("Confirm")}</ModalHeader>
                     <ModalBody>
                         <OTPConfirmation
+                            variant="card"
                             callback={UpdateQuestionHandler}
                             setter={setShowSuccess}
                             setterValue={true}

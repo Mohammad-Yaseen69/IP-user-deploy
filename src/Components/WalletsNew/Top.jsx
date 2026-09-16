@@ -31,8 +31,13 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
     const navigate = useNavigate()
     const { t } = useTranslation()
     const swiperRef = useRef(null)
-    const { userWallets, authHeader, getUserWallets, userDetails, getWithdrawals, userWithdrawals } = useContext(UserContext)
+    const { userWallets: allWallets, authHeader, getUserWallets, userDetails, getWithdrawals, userWithdrawals } = useContext(UserContext)
     const can = usePermission()
+    // Crypto wallets live on the Crypto & Stablecoins page, not here.
+    const userWallets = useMemo(
+        () => (allWallets || []).filter((w) => w?.provider !== "bvnk" && w?.wallet_type !== "crypto"),
+        [allWallets]
+    )
     const [activeDot, setActiveDot] = useState(0)
     const [currentDefault, setCurrentDefault] = useState(false)
     const [currentActive, setCurrentActive] = useState(false)

@@ -16,7 +16,7 @@ import countryAlpha2Map from "../AddFunds/WalletFund/countries_iso2.json";
 import countriesData from "../PaymentsNewer/CountriesData.json";
 import PhoneInput from '../PhoneInput';
 import CountryBasedPhone from "../PhoneInput/PhoneNumberBasedOnCountry.json";
-import OTPConfirmation from '../UserSettingsNew/OTPConfirmation';
+import OTPConfirmation from '../../Common/Component/OtpVerification';
 import NextStepModal from './NextStepModal';
 import QrGenerate from './QrGenerate';
 import { usePermission } from '../../hooks/GeneralUse/usePermission';

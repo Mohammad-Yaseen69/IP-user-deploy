@@ -24,6 +24,7 @@ const Channels = ({
   const { userDetails } = useContext(UserContext);
   const [showCardMaintenanceModal, setShowCardMaintenanceModal] = useState(false);
   const [showVerificationModal, setShowVerificationModal] = useState(false);
+  const usePaytently = true;
   const { data: methods, isLoading } = useQuery({
     queryKey: ["AvailableMethods"],
     queryFn: () =>

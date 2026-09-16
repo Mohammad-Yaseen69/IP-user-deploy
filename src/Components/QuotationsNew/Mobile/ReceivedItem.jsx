@@ -1,27 +1,14 @@
-import React, { useContext, useEffect, useMemo, useState } from 'react'
-import styles from "../../PendingNew/Item.module.css"
+import { useEffect, useMemo, useState } from 'react'
+import { ChevronDown, ChevronRight } from 'react-feather'
 import { useTranslation } from 'react-i18next'
-import { Check, ChevronRight, RotateCcw, X, ChevronDown } from 'react-feather'
-import { decryptData } from '../../../Helper/EssentilaMethods/Decryption'
-import axios from 'axios'
-import { encryptData } from '../../../Helper/EssentilaMethods/Encryption'
-import { Badge, Button, FormGroup, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap'
-import { UserContext } from '../../../Context/UserContext'
-import { useLocation, useNavigate } from 'react-router'
-import { SwiperSlide, Swiper } from "swiper/react"
-import ImagePreviewModal from '../../ImagePreviewModal.jsx'
-import { service_name_formatter } from '../../TransactionsNewApi/TransactionItem.jsx'
-import SuccessModal from '../../AddBeneficiary/SuccessModal.jsx'
-import OTPConfirmation from '../../UserSettingsNew/OTPConfirmation.jsx'
-import { toast } from 'react-toastify'
-import InstaPayLoader from '../../Loader/index.jsx'
-import { LimitsErrorMessage } from '../../PaymentsNewer/OTPConfirmation.jsx'
-import { Link } from 'react-router-dom'
-import QuoteDetails from '../QuoteDetails.jsx'
-import DeclineQuotation from '../DeclineQuotation.jsx'
-import BargainQuotation from '../BargainQuotation.jsx'
-import AcceptQuotation from '../AcceptQuotation.jsx'
+import { useLocation } from 'react-router'
+import { Button } from 'reactstrap'
+import styles from "../../PendingNew/Item.module.css"
 import { capitalizeStatus } from '../../PendingNew/ItemMobile.jsx'
+import AcceptQuotation from '../AcceptQuotation.jsx'
+import BargainQuotation from '../BargainQuotation.jsx'
+import DeclineQuotation from '../DeclineQuotation.jsx'
+import QuoteDetails from '../QuoteDetails.jsx'
 
 const ReceivedItemMobile = ({ item, activeItem, setActiveItem, index }) => {
     const { t } = useTranslation()

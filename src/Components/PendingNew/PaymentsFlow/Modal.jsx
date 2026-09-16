@@ -7,7 +7,7 @@ import { useContext, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import WalletsComponent from '../../PaymentsNewer/InternationalFlow/WalletsComponent'
 import CreditCard from '../../PaymentsNewer/InternationalFlow/CreditCard'
-import OtpConfirmation from '../../PaymentsNewer/InternationalFlow/OtpConfirmation'
+import OtpConfirmation from '../../../Common/Component/OtpVerification'
 import Receipt from '../../PaymentsNewer/InternationalFlow/Receipt'
 import StepFive from '../../PaymentsNewer/WalletToWalletFlow/StepFive'
 import InstaPayLoader from '../../Loader'
@@ -609,6 +609,7 @@ const PaymentsFlowModal = ({ isOpen, toggle, data, dataHandler, item }) => {
                                                 data.show_otp
                                                 &&
                                                 <OtpConfirmation
+                                                    variant="modal"
                                                     callback={data.payment_type?.value === "card" ? initiateCardPayment : data.payment_type?.value === "paypal" ? initiatePaypalPayment : acceptRequest}
                                                     data={data}
                                                     dataHandler={dataHandler}
@@ -787,6 +788,7 @@ const PaymentsFlowModal = ({ isOpen, toggle, data, dataHandler, item }) => {
                                                     data.show_otp
                                                     &&
                                                     <OtpConfirmation
+                                                        variant="modal"
                                                         callback={data.payment_type?.value === "card" ? initiateCardPayment : data.payment_type?.value === "paypal" ? initiatePaypalPayment : acceptRequest}
                                                         data={data}
                                                         dataHandler={dataHandler}
