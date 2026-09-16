@@ -292,6 +292,7 @@
 @media screen and (max-width: 1600px) and (min-width: 1001px) {
     .container {
         gap: 1rem;
+        padding: 0px 20px;
     }
 
     .amount_and_currency {

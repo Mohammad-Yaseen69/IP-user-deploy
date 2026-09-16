@@ -434,9 +434,11 @@ const downloadSepaReceipt = ({
         14,
         finalY + 8
     )
-
+    const safeTrackingReference = String(trackingReference || "receipt")
+        .replace(/[<>:"/\\|?*\u0000-\u001F]/g,"-")
+        .replace(/\s+/g, "-");
     doc.save(
-        `SEPA-Transfer-Receipt-${trackingReference}.pdf`
+        `SEPA-Transfer-Receipt-${safeTrackingReference}.pdf`
     )
 }
 const DoneStep = ({
