@@ -17,7 +17,7 @@ import useChannels from "../../hooks/BeneficiaryHooks/useChannels";
 import DateMomentUtils from '@date-io/moment';
 import { MuiPickersUtilsProvider, DatePicker } from '@material-ui/pickers';
 import { service_name_formatter } from "../TransactionsNewApi/TransactionItem";
-import { bankExtrasInitial, BUSINESS_RELATIONSHIPS, idTypeData, friendsAndFamily, BeneficiaryRelation, C2B_RELATIONSHIPS } from "../../utils/Data";
+import { bankExtrasInitial, BUSINESS_RELATIONSHIPS, idTypeData, friendsAndFamily, BeneficiaryRelation, C2B_RELATIONSHIPS, normalizeBankExtras } from "../../utils/Data";
 import useAddress from "../../hooks/BeneficiaryHooks/useAddress";
 import useBenCreateFunc from "../../hooks/BeneficiaryHooks/useBenCreateFunc";
 import useBenEditFunc from "../../hooks/BeneficiaryHooks/useBenEditFunc";
@@ -261,7 +261,7 @@ const BusinessAccount = ({ isInternational, toggleHandler, errorOnInvalid = true
             if (bankDetail?.extras) {
                 setBankExtras(prev => ({
                     ...prev,
-                    ...bankDetail.extras
+                    ...normalizeBankExtras(bankDetail.extras)
                 }))
             }
 

@@ -4,7 +4,7 @@ import { encryptData } from '../../Helper/EssentilaMethods/Encryption'
 import axios from 'axios'
 import { decryptData } from '../../Helper/EssentilaMethods/Decryption'
 import { requiredFields } from '../../Components/AddBeneficiary/requiredFields'
-import { trimObjectValues } from '../../utils/Data'
+import { trimObjectValues, buildBankExtrasPayload } from '../../utils/Data'
 
 const useBenEditFunc = ({
     services,
@@ -100,7 +100,7 @@ const useBenEditFunc = ({
                     province: formData.bank_province ?? "",
                     postal_code: formData.bank_postal_code ?? "",
                     account_holder_name: formData.account_holder_name ?? "",
-                    extras: bankExtras
+                    extras: buildBankExtrasPayload(bankExtras)
                 }
             ] : [],
             mobile_wallet: services.some(item => item?.method?.toLowerCase()?.includes("mobile")) && completedWallet ? [
