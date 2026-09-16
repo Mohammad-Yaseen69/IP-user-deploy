@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Processing…</title>
+  </head>
+  <body style="font-family: system-ui, sans-serif; text-align: center; padding: 2rem; color: #333">
+    <p>Card details received. Continuing to verification…</p>
+    <script>
+     
+      (function () {
+        try {
+          var url = localStorage.getItem("paytently_authorize_url");
+          if (url) {
+            localStorage.removeItem("paytently_authorize_url");
+            (window.top || window).location.href = url;
+            return;
+          }
+        } catch (e) {}
+
+        try { window.parent.postMessage({ type: "paytently_card_collected" }, "*"); } catch (e) {}
+      })();
+    </script>
+  </body>
+</html>

@@ -86,6 +86,7 @@ const TransactionsTable = ({ currentWallet, filtered, setFiltered }) => {
         if (page === 1) {
             setIsLoading(true)
         }
+        
         // axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/transaction/get-all-transactions-by-wallet/${currentWallet?.wallet_id}/${(page - 1) * 15}/15`, {
         axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/transaction/get-all-transactions-by-wallet/${currentWallet?.wallet_id}/${page}/15`, {
             headers: authHeader
@@ -111,14 +112,21 @@ const TransactionsTable = ({ currentWallet, filtered, setFiltered }) => {
         if (page === 1) {
             setIsLoading(true)
         }
+        
         // axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/transaction/search-wallet-transactions/${currentWallet?.wallet_id}/${(page - 1) * 15}/15/${debouncedSearchQuery}`, {
         axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/transaction/search-wallet-transactions/${currentWallet?.wallet_id}/${page}/15/${debouncedSearchQuery}`, {
             headers: authHeader
         })
             .then(res => {
                 const decrypted = decryptData(res.data.data)
+                const newTransactions = decrypted?.transactionList || [];
                 setFiltered(prev => page === 1 ? decrypted?.transactionList : [...prev, ...decrypted.transactionList])
                 setTransactions(prev => page === 1 ? decrypted?.transactionList : [...prev, ...decrypted.transactionList])
+                if (newTransactions.length < 15) {
+                    setStopLoader(true);
+                } else {
+                    setStopLoader(false);
+                }
                 setIsLoading(false)
             })
             .catch(err => {

@@ -117,6 +117,12 @@ const CryptoTopupModal = ({ isOpen, toggle, selectedIban }) => {
         resetState()
         toggle?.()
     }
+
+    const handleCheckoutClose = () => {
+        setCheckoutUrl("")
+        handleClose()
+    }
+
     const previewFee = async () => {
         if (!ibanId) {
             toast.error(t("Please select a virtual IBAN first"))
@@ -384,25 +390,29 @@ const CryptoTopupModal = ({ isOpen, toggle, selectedIban }) => {
 
     return (
         <>
-            <Modal
-                isOpen={isOpen}
-                style={{
-                    minWidth: width > 1000 ? "900px" : "0px",
-                }}
-                toggle={handleClose}
-            >
-                <ModalBody style={{ padding: "20px" }}>{renderBody()}</ModalBody>
-            </Modal>
-            <Modal isOpen={Boolean(checkoutUrl)} toggle={() => setCheckoutUrl("")} size="xl">
-                <ModalHeader toggle={() => setCheckoutUrl("")}>{t("Payment Checkout")}</ModalHeader>
-                <ModalBody style={{ padding: 0 }}>
-                    <iframe
-                        title={t("Payment Checkout")}
-                        src={checkoutUrl}
-                        style={{ width: "100%", height: "75vh", border: 0, display: "block" }}
-                    />
-                </ModalBody>
-            </Modal>
+        <Modal
+            isOpen={isOpen}
+            style={{
+                minWidth: width > 1000 ? "900px" : "0px",
+            }}
+            toggle={handleClose}
+        >
+            <ModalBody style={{ padding: "20px" }}>{renderBody()}</ModalBody>
+        </Modal>
+        <Modal
+            isOpen={Boolean(checkoutUrl)}
+            toggle={handleCheckoutClose}
+            style={{ width: "700px", maxWidth: "calc(100% - 2rem)" }}
+        >
+            <ModalHeader toggle={handleCheckoutClose}>{t("Payment Checkout")}</ModalHeader>
+            <ModalBody style={{ padding: 0 }}>
+                <iframe
+                    title={t("Payment Checkout")}
+                    src={checkoutUrl}
+                    style={{ width: "100%", height: "75vh", border: 0, display: "block" }}
+                />
+            </ModalBody>
+        </Modal>
         </>
     )
 }

@@ -16,6 +16,7 @@ import MonthlyExpenses from './components/MonthlyExpenses'
 import QuickActions from './components/QuickActions'
 import RecentTransactions from './components/RecentTransactions'
 import TabsNav from './components/TabsNav'
+import CryptoChannels from './CryptoChannels'
 import IBAN from './IBAN/IBAN'
 import IBANDetails from './IBAN/IBANDetails'
 import Manage from './Manage/Manage'
@@ -265,6 +266,13 @@ const VirtualBank = () => {
                                 <div className={styles.tabContent} ref={ibanDetailsRef}>
                                     <div className={styles.section}>
                                         <IBANDetails ibanId={selectedIban?._id || selectedIban?.id} fallbackIban={selectedIban} />
+                                    </div>
+                                </div>
+                            )}
+                            {activeTab === "crypto-channels" && canViewDetails && (
+                                <div className={styles.tabContent}>
+                                    <div className={styles.section}>
+                                        <CryptoChannels selectedIban={selectedIban} />
                                     </div>
                                 </div>
                             )}

@@ -10,7 +10,7 @@ import axios from 'axios'
 import { decryptData } from '../../Helper/EssentilaMethods/Decryption'
 import { toast } from 'react-toastify'
 import faded_lines from "../PaymentsNewer/files/faded_lines.png"
-import OTPConfirmation from '../UserSettingsNew/OTPConfirmation'
+import OTPConfirmation from '../../Common/Component/OtpVerification'
 import { useNavigate } from 'react-router'
 import InstaPayLoader from '../Loader'
 import { LimitsErrorMessage } from '../PaymentsNewer/OTPConfirmation'
@@ -333,6 +333,7 @@ const CommissionConversion = ({ isOpen, toggle, referralBalance = 0, defaultCurr
                         </>
                         :
                         <OTPConfirmation
+                            variant="card"
                             callback={convertCommission}
                             setter={setSuccess}
                             setterValue={true}

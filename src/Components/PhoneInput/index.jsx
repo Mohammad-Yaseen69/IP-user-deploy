@@ -13,7 +13,6 @@ const PhoneInput = ({ setPhone, country, setCountry = () => { }, disabled = fals
     const [selectedCountry, setSelectedCountry] = useState({})
     const [number, setNumber] = useState("")
     const { t } = useTranslation()
-
     // useEffect(() => {
     //     if (!phone) {
     //         setNumber("")
