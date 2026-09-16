@@ -16,7 +16,7 @@ const AddBeneficiary = ({ inInternationalModal, toggleHandler, errorOnInvalid = 
     const [showSuccess, setShowSuccess] = useState(false)
     const navigate = useNavigate()
     const { allowedCountries } = useContext(UserContext)
-
+    const nameRegex = /^[A-Za-z\s]+$/;
     const toggleSuccess = (benData) => {
         if (toggleHandler) {
             toggleHandler(benData)
@@ -145,10 +145,10 @@ const AddBeneficiary = ({ inInternationalModal, toggleHandler, errorOnInvalid = 
                     isIndividual
                         ?
                         // <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <IndividualAccount mobileView={mobileView} handleChangeAlpha={handleChangeAlpha} handleChangeNumber={handleChangeNumber} sii={setIsIndividual} toggleSuccess={toggleSuccess} filteringCountries={filteringCountries} inInternationalModal={inInternationalModal} errorOnInvalid={errorOnInvalid} error={error} />
+                        <IndividualAccount nameRegex={nameRegex} mobileView={mobileView} handleChangeAlpha={handleChangeAlpha} handleChangeNumber={handleChangeNumber} sii={setIsIndividual} toggleSuccess={toggleSuccess} filteringCountries={filteringCountries} inInternationalModal={inInternationalModal} errorOnInvalid={errorOnInvalid} error={error} />
                         // </LocalizationProvider>
                         :
-                        <BusinessAccount toggleHandler={toggleHandler} isInternational={inInternationalModal} mobileView={mobileView} handleChangeAlpha={handleChangeAlpha} handleChangeNumber={handleChangeNumber} sii={setIsIndividual} toggleSuccess={toggleSuccess} filteringCountries={filteringCountries} errorOnInvalid={errorOnInvalid} error={error} />
+                        <BusinessAccount nameRegex={nameRegex} toggleHandler={toggleHandler} isInternational={inInternationalModal} mobileView={mobileView} handleChangeAlpha={handleChangeAlpha} handleChangeNumber={handleChangeNumber} sii={setIsIndividual} toggleSuccess={toggleSuccess} filteringCountries={filteringCountries} errorOnInvalid={errorOnInvalid} error={error} />
                 }
             </Form >
             <SuccessModal isOpen={showSuccess} toggle={toggleSuccess} message={t("Beneficiary has been successfully added.")} subMessage={t("Beneficiary Updated.")} />

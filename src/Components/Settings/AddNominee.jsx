@@ -16,6 +16,7 @@ import { toast } from 'react-toastify'
 import { encryptData } from '../../Helper/EssentilaMethods/Encryption'
 import DateMomentUtils from '@date-io/moment';
 import { MuiPickersUtilsProvider, DatePicker } from '@material-ui/pickers';
+import { preventEdgeSpaces } from '../../hooks/useTrimInput'
 
 const currentDate = new Date();
 const maxDate = currentDate;
@@ -61,7 +62,7 @@ const AddNominee = ({ setNominee, setAddNominee }) => {
 
 
     const handleImageSelect = (e) => {
-        
+
         const file = e.target.files[0]
         setFile(file)
         const reader = new FileReader();
@@ -198,7 +199,10 @@ const AddNominee = ({ setNominee, setAddNominee }) => {
                     <div className={styles.top_right}>
                         <div className={styles.inp_con}>
                             <Label style={{ display: "flex", alignItems: 'center' }}>{t("Name")} <span style={{ color: "red", fontSize: '13px', display: "inline" }}>*</span></Label>
-                            <Input placeholder={t(`Nominee's Full Name`)} value={fullName} onChange={e => setFullName(e.target.value)} />
+                            <Input
+                                onKeyDown={preventEdgeSpaces}
+
+                                placeholder={t(`Nominee's Full Name`)} value={fullName} onChange={e => setFullName(e.target.value)} />
                         </div>
                         <div className={styles.mul_inp}>
                             <div className={styles.inp_con}>
@@ -297,6 +301,7 @@ const AddNominee = ({ setNominee, setAddNominee }) => {
                     <Label>{t("Nominee Address")}  <span style={{ color: "red", fontSize: '13px', display: "inline" }}>*</span></Label>
                     <Input
                         type='textarea'
+                        onKeyDown={preventEdgeSpaces}
                         placeholder={t('Nominee Permanent Address')}
                         value={address}
                         onChange={e => setAddress(e.target.value)}

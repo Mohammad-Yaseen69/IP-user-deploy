@@ -11,6 +11,7 @@ import TopRight from '../topRight'
 import AccountsSidebar from './components/AccountsSidebar'
 import BalanceHeader from './components/BalanceHeader'
 import Empty from './components/Empty'
+import InactiveIban from './components/InactiveIban'
 import MonthlyExpenses from './components/MonthlyExpenses'
 import QuickActions from './components/QuickActions'
 import RecentTransactions from './components/RecentTransactions'
@@ -19,7 +20,7 @@ import IBAN from './IBAN/IBAN'
 import IBANDetails from './IBAN/IBANDetails'
 import Manage from './Manage/Manage'
 import styles from "./styles/index.module.css"
-import { asVirtualIbanArray } from './utils/virtualIban'
+import { asVirtualIbanArray, isVirtualIbanInactive } from './utils/virtualIban'
 import VirtualIbanModal from './VirtualIbanModal'
 import OnboardingIBAN from './OnBoardingIBAN'
 import { Bell, ChevronLeft } from 'react-feather'
@@ -60,8 +61,9 @@ const VirtualBank = () => {
         () => ibans.find((iban) => (iban?._id || iban?.id) === selectedAccount) || ibans[0],
         [ibans, selectedAccount]
     )
-  const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(10);
+    const selectedIbanInactive = isVirtualIbanInactive(selectedIban)
+    const [page, setPage] = useState(1);
+    const [limit, setLimit] = useState(10);
     const [statusFilter, setStatusFilter] = useState('');
     const [typeFilter, setTypeFilter] = useState('');
     const [q, setQ] = useState('');
@@ -205,7 +207,11 @@ const VirtualBank = () => {
                     (showGetIBAN || (ibans.length === 0 && canCreateIban)) ?
                         userDetails?.account_type === "business" ?
                             <OnboardingIBAN ref={onboardingRef} onStepChange={setOnboardingStep} /> :
-          <IBAN onCreated={handleBackToDashboard} />
+                            <IBAN onCreated={handleBackToDashboard} />
+                        : selectedIbanInactive ?
+                            <div className={styles.main}>
+                                <InactiveIban />
+                            </div>
                         :
         <div className={styles.main}>
           <div className={styles.topPanel}>
@@ -232,38 +238,36 @@ const VirtualBank = () => {
             <TabsNav activeTab={activeTab} onTabChange={setActiveTab} />
           </div>
 
-          {activeTab === "overview" && (
-            <div className={styles.tabContent}>
-              {canViewTransactions ? (
-                transactionsLoading ? (
-                  <InstaPayLoader />
-                ) : (transactions?.items?.length ?? 0) === 0 ? (
-                  <Empty selectedIban={selectedIban} />
-                ) : (
-                  <>
-                    <MonthlyExpenses />
-                    <div className={styles.section}>
-                      <RecentTransactions
-                        transactions={transactions.items ?? []}
-                        setActiveTab={setActiveTab}
-                        loading={transactionsLoading}
-                        page={page}
-                        setPage={setPage}
-                        limit={limit}
-                        setLimit={setLimit}
-                        totalPages={transactions?.totalPages ?? 1}
-                        setStatusFilter={setStatusFilter}
-                        setTypeFilter={setTypeFilter}
-                        setQ={setQ}
-                        selectedIban={selectedIban}
-                        setOrder={setOrder}
-                      />
-                    </div>
-                  </>
-                )
-              ) : null}
-            </div>
-          )}
+                            {activeTab === "overview" && (
+                                <div className={styles.tabContent}>
+                                    {canViewTransactions ? (
+                                        transactionsLoading ? (
+                                            <InstaPayLoader />
+                                        ) : (
+                                            <>
+                                                <MonthlyExpenses />
+                                                <div className={styles.section}>
+                                                    <RecentTransactions
+                                                        transactions={transactions.items ?? []}
+                                                        setActiveTab={setActiveTab}
+                                                        loading={transactionsLoading}
+                                                        page={page}
+                                                        setPage={setPage}
+                                                        limit={limit}
+                                                        setLimit={setLimit}
+                                                        totalPages={transactions?.totalPages ?? 1}
+                                                        setStatusFilter={setStatusFilter}
+                                                        setTypeFilter={setTypeFilter}
+                                                        setQ={setQ}
+                                                        selectedIban={selectedIban}
+                                                        setOrder={setOrder}
+                                                    />
+                                                </div>
+                                            </>
+                                        )
+                                    ) : null}
+                                </div>
+                            )}
 
           {activeTab === "transaction-history" && canViewTransactions && (
             <div className={styles.tabContent}>
