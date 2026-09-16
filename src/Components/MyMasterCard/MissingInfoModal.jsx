@@ -2,7 +2,7 @@ import React, { useContext, useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Modal, ModalHeader, ModalBody, ModalFooter, Input, Label, Button, FormGroup } from 'reactstrap'
 import { UserContext } from '../../Context/UserContext'
-import OTPConfirmation from '../UserSettingsNew/OTPConfirmation'
+import OTPConfirmation from '../../Common/Component/OtpVerification'
 import axios from 'axios'
 import { encryptData } from '../../Helper/EssentilaMethods/Encryption'
 import { decryptData } from '../../Helper/EssentilaMethods/Decryption'
@@ -175,6 +175,7 @@ const MissingInfoModal = ({ isOpen, toggle, missingType, onSuccess }) => {
                 ) : (
                     <div style={{ marginTop: "-1rem" }}>
                         <OTPConfirmation
+                            variant="card"
                             type={otpType}
                             callback={verifyOTP}
                             setter={() => { }}

@@ -8,7 +8,7 @@ import { decryptData } from '../../Helper/EssentilaMethods/Decryption'
 import axios from 'axios'
 import { encryptData } from '../../Helper/EssentilaMethods/Encryption'
 import { toast } from 'react-toastify'
-import OTPConfirmation from '../UserSettingsNew/OTPConfirmation'
+import OTPConfirmation from '../../Common/Component/OtpVerification'
 
 const CommissionWithdraw = ({ isOpen, toggle, referralBalance = 0, defaultCurrency, setSuccess, getReferralCommission }) => {
     const { t } = useTranslation()
@@ -157,6 +157,7 @@ const CommissionWithdraw = ({ isOpen, toggle, referralBalance = 0, defaultCurren
                         </>
                         :
                         <OTPConfirmation
+                            variant="card"
                             callback={createRequest}
                             setter={setSuccess}
                             setterValue={true}

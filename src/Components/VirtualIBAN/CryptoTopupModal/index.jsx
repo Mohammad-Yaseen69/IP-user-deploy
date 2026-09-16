@@ -118,17 +118,20 @@ const CryptoTopupModal = ({ isOpen, toggle, selectedIban }) => {
         toggle?.()
     }
 
+    const handleCheckoutClose = () => {
+        setCheckoutUrl("")
+        handleClose()
+    }
+
     const previewFee = async () => {
         if (!ibanId) {
             toast.error(t("Please select a virtual IBAN first"))
             return
         }
-
         const res = await feeMutation.mutateAsync({
             iban_id: ibanId,
             amount: getAmountNumber(amount),
         })
-
         if (res?.data) {
             setFeeDetails(res.data)
             setCurrentStep(STEPS.REVIEW)
@@ -136,7 +139,6 @@ const CryptoTopupModal = ({ isOpen, toggle, selectedIban }) => {
             toast.error(res.message)
         }
     }
-
     const refreshFeeDetails = useCallback(async () => {
         if (!ibanId || !amount) return
         try {
@@ -159,14 +161,12 @@ const CryptoTopupModal = ({ isOpen, toggle, selectedIban }) => {
             toast.error(t("Invalid quote details"))
             return
         }
-
         const res = await confirmMutation.mutateAsync({
             iban_id: ibanId,
             token: feeDetails.token,
             returnUrl: `${base_url}/add-funds/crypto-success?isIban=true`,
             idempotencyKey: getKey()
         })
-
         const nextCheckoutUrl = res?.data?.checkout_url || res?.data?.data?.checkout_url
         if (nextCheckoutUrl) {
             setCheckoutUrl(nextCheckoutUrl)
@@ -176,29 +176,24 @@ const CryptoTopupModal = ({ isOpen, toggle, selectedIban }) => {
             toast.error(t("Unable to obtain payment checkout URL"))
         }
     }
-
     const handleContinue = async () => {
         if (!selectedIban) {
             toast.error(t("Please select a virtual IBAN first"))
             return
         }
-
         try {
             if (currentStep === STEPS.AMOUNT) {
                 await previewFee()
                 return
             }
-
             if (currentStep === STEPS.REVIEW) {
                 await confirmTopup()
                 return
             }
-
             if (currentStep === STEPS.DONE) {
                 handleClose()
                 return
             }
-
             const { nextStep } = goNext(currentStep, machineData)
             if (nextStep) {
                 setCurrentStep(nextStep)
@@ -260,46 +255,96 @@ const CryptoTopupModal = ({ isOpen, toggle, selectedIban }) => {
             <div className={addFundsStyles.left}>
                 <div style={{ width: "100%" }}>
                     <div className={styles.bankHeader}>
-                        <div className={styles.bankIcon}>
-                            <CryptoIcon />
-                        </div>
-                        {width > 700 ? (
-                            <h2>
-                                {t("Top up Virtual IBAN")}
-                                <br />
-                                {t("with Crypto")}
-                            </h2>
+                        {width >= 700 ? (
+                            <>
+                                <div className={styles.bankIcon}>
+                                    <CryptoIcon />
+                                </div>
+                                <h2>
+                                    {t("Top up Virtual IBAN")}
+                                    <br />
+                                    {t("with Crypto")}
+                                </h2>
+                            </>
                         ) : (
-                            <h2>{t("Top up Virtual IBAN with Crypto")}</h2>
+                            <div className={styles.mobileHeaderRow}>
+                                {!isDone && (
+                                    <button
+                                        type="button"
+                                        className={styles.backIconButton}
+                                        disabled={isProcessing}
+                                        onClick={handleBack}
+                                    >
+                                        <ChevronLeft size={24} />
+                                    </button>
+                                )}
+                                <h2>{t("Top up Virtual IBAN with Crypto")}</h2>
+                            </div>
                         )}
+                        {width <= 480 && (
+                            <div className={styles.headerRightGroup}>
+                                <button
+                                    type="button"
+                                    className={styles.cancelBtn}
+                                    onClick={handleClose}
+                                >
+                                    {t("Cancel")}
+                                </button>
+                                <ContactBox isMobile={true} />
+                            </div>
+                        )
+                        }
                     </div>
                     <div
                         className={addFundsStyles.progressEffect}
                         style={{ marginTop: "2rem" }}
                     >
-                        {SIDEBAR_STEPS.map((item, index) => {
-                            const IconComponent = SIDEBAR_ICONS[item.stepName]
-                            return (
-                                <SidebarProgress
-                                    key={item.stepName}
-                                    stepLabel={item.stepLabel}
-                                    label={item.label}
-                                    Icon={IconComponent}
-                                    isActive={isSidebarStepActive(item, currentStep)}
-                                    isCompleted={isSidebarStepCompleted(item, currentStep)}
-                                    showBar={index < SIDEBAR_STEPS.length - 1}
-                                />
-                            )
-                        })}
+                        {width < 480 ? (
+                            <div style={{ display: "flex", gap: "6px", width: "100%" }}>
+                                {SIDEBAR_STEPS.map((item) => {
+                                    const isActive = isSidebarStepActive(item, currentStep)
+                                    const isCompleted = isSidebarStepCompleted(item, currentStep)
+                                    const isDoneOrActive = isActive || isCompleted
+
+                                    return (
+                                        <div
+                                            key={item.stepName}
+                                            style={{
+                                                flex: 1,
+                                                height: "6px",
+                                                borderRadius: "3px",
+                                                backgroundColor: isDoneOrActive ? "#10B981" : "#EAECF0",
+                                                transition: "background-color 0.2s ease",
+                                            }}
+                                        />
+                                    )
+                                })}
+                            </div>
+                        ) : (
+                            SIDEBAR_STEPS.map((item, index) => {
+                                const IconComponent = SIDEBAR_ICONS[item.stepName]
+                                return (
+                                    <SidebarProgress
+                                        key={item.stepName}
+                                        stepLabel={item.stepLabel}
+                                        label={item.label}
+                                        Icon={IconComponent}
+                                        isActive={isSidebarStepActive(item, currentStep)}
+                                        isCompleted={isSidebarStepCompleted(item, currentStep)}
+                                        showBar={index < SIDEBAR_STEPS.length - 1}
+                                    />
+                                )
+                            })
+                        )}
                     </div>
                 </div>
                 {width > 700 && (
                     <div className={addFundsStyles.contactBox}>
                         <ContactBox />
                     </div>
-                )}
+                )
+                }
             </div>
-
             <div
                 className={styles.rightPanel}
                 style={{ width: width < 1000 ? "100%" : undefined }}
@@ -307,13 +352,15 @@ const CryptoTopupModal = ({ isOpen, toggle, selectedIban }) => {
                 <div className={styles.content}>{renderStepContent()}</div>
 
                 <div className={styles.footer}>
-                    <button
-                        type="button"
-                        className={styles.cancelBtn}
-                        onClick={handleClose}
-                    >
-                        {t("Cancel")}
-                    </button>
+                    {width >= 480 && (
+                        <button
+                            type="button"
+                            className={styles.cancelBtn}
+                            onClick={handleClose}
+                        >
+                            {t("Cancel")}
+                        </button>
+                    )}
                     <div className={styles.footerNav}>
                         {!isDone && (
                             <button
@@ -352,8 +399,12 @@ const CryptoTopupModal = ({ isOpen, toggle, selectedIban }) => {
         >
             <ModalBody style={{ padding: "20px" }}>{renderBody()}</ModalBody>
         </Modal>
-        <Modal isOpen={Boolean(checkoutUrl)} toggle={() => setCheckoutUrl("")} size="xl">
-            <ModalHeader toggle={() => setCheckoutUrl("")}>{t("Payment Checkout")}</ModalHeader>
+        <Modal
+            isOpen={Boolean(checkoutUrl)}
+            toggle={handleCheckoutClose}
+            style={{ width: "700px", maxWidth: "calc(100% - 2rem)" }}
+        >
+            <ModalHeader toggle={handleCheckoutClose}>{t("Payment Checkout")}</ModalHeader>
             <ModalBody style={{ padding: 0 }}>
                 <iframe
                     title={t("Payment Checkout")}

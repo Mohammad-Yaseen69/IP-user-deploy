@@ -1,14 +1,18 @@
 import { useEffect, useRef, useState } from 'react'
-import { ArrowLeft, ArrowRight, Upload } from 'react-feather'
+import { ArrowLeft, ArrowRight, Shield, Upload } from 'react-feather'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
 import styles from '../style/onboardingSteps.module.css'
 import SidebarProgress from './SidebarProgress'
+import StepProgress from './StepProgress'
+import { useMediaQuery } from '@mui/material'
+import AlertBox from './AlertBox'
 
-const DocumentsStep = ({ onNext, onBack, userType, data = {}, userDetails, companyDetails }) => {
+const DocumentsStep = ({ onNext, onBack, userType, data = {}, userDetails, companyDetails, currentStep }) => {
     const { t } = useTranslation()
     const [files, setFiles] = useState(data.files || {})
     const inputRefs = useRef({})
+    const isMobile = useMediaQuery('(max-width:600px)');
 
     useEffect(() => {
         window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
@@ -59,41 +63,115 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {}, userDetails, compa
         { num: '05', label: t('Documents'), active: true },
         { num: '06', label: t('Review'), active: false }
     ]
+    const DOCUMENT_VERIFICATION_MAP = {
+        commercial_register: [
+            'registry extract',
+            'certificate of incorporation',
+            'registration document'
+        ],
 
+        articles_association: [
+            'articles of association'
+        ],
+
+        authority_letter: [
+            'power of attorney',
+            'authority',
+            'delegation'
+        ],
+
+        good_standing: [
+            'good standing'
+        ],
+
+        // REMOVE registry extract from here
+        registered_extract: [
+            'registered office'
+        ],
+
+        domiciliation_certificate: [
+            'domiciliation'
+        ],
+
+        lease_agreement: [
+            'lease agreement'
+        ],
+
+        utility_bill: [
+            'utility bill'
+        ],
+
+        bank_statement: [
+            'bank statement'
+        ],
+
+        shareholders_register: [
+            'shareholders register'
+        ],
+
+        ownership_chart: [
+            'ownership structure',
+            'ownership chart'
+        ],
+
+        ubo_declaration: [
+            'ubo declaration'
+        ],
+
+        ubo_passport: [
+            'identification documents',
+            'passport'
+        ],
+
+        ubo_address_proof: [
+            'proof of address'
+        ],
+    }
+    const kybFiles = userDetails?.company?.kyb_files || []
+
+    const isKeyVerifiedFromKyb = (key) => {
+        const keywords = DOCUMENT_VERIFICATION_MAP[key]
+
+        if (!keywords || !keywords.length) return false
+
+        return kybFiles.some(f => {
+            const name = (f.document_name || '').toLowerCase()
+
+            return keywords.some(kw => name.includes(kw))
+        })
+    }
     const uploadedCount = Object.keys(files).length
     const progressPercent = Math.min(100, Math.round((uploadedCount / requiredDocKeys.length) * 100))
-
-    const renderUploadControl = (key, badgeClassName = styles.optional, badgeText = t('OPTIONAL')) => {
+    const renderUploadControl = (key) => {
         const selectedFile = files[key]
+        const isVerified = isKeyVerifiedFromKyb(key)
 
         return (
             <div className={styles.right}>
                 {selectedFile ? (
                     <>
-                        <span className={styles.provided}>{selectedFile.name}</span>
+                        <span className={styles.provided}>{isMobile ? t('PROVIDED') : selectedFile.name}</span>
                         <button type="button" className={styles.uploadBtn} onClick={() => openFilePicker(key)}>
                             <Upload size={10} /> {t('Replace')}
                         </button>
                     </>
-                ) : isKybDone ? (
-                    <>
-                        <span className={styles.optional} style={{ background: '#E0F2FE', color: '#0369A1', border: '1px solid #BAE6FD' }}>{t('VERIFIED (KYB)')}</span>
-                        <button type="button" className={styles.uploadBtn} onClick={() => openFilePicker(key)}>
-                            <Upload size={10} /> {t('Upload')}
-                        </button>
-                    </>
+                ) : isVerified ? (
+                    <span
+                        className={styles.optional}
+                        style={{ background: '#E0F2FE', color: '#0369A1', border: '1px solid #BAE6FD' }}
+                    >
+                        {t('VERIFIED')}
+                    </span>
                 ) : (
                     <>
-                        <span className={badgeClassName}>{badgeText}</span>
+                        <span className={styles.required}>{t('REQUIRED')}</span>
                         <button type="button" className={styles.uploadBtn} onClick={() => openFilePicker(key)}>
                             <Upload size={10} /> {t('Upload')}
                         </button>
                     </>
                 )}
                 <input
-                    ref={(el) => {
-                        inputRefs.current[key] = el
-                    }}
+                    ref={(el) => { inputRefs.current[key] = el }}
                     type="file"
                     style={{ display: 'none' }}
                     onChange={(e) => handleFileChange(key, e)}
@@ -102,43 +180,48 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {}, userDetails, compa
         )
     }
 
-    const isDocsValid = isKybDone || requiredDocKeys.every(k => Boolean(files[k]))
-
+    const isDocsValid = requiredDocKeys.every(k => Boolean(files[k]) || isKeyVerifiedFromKyb(k))
     return (
         <div className={styles.onboardingLayout}>
-            <div className={styles.wizardSteps}>
-                {steps.map((step, index) => (
-                    <div
-                        key={index}
-                        className={`${styles.step} ${step.active ? styles.active : ""
-                            } ${step.completed ? styles.completed : ""}`}
-                    >
-                        <div className={styles.stepLine}></div>
+            <div>
+                <div className={styles.wizardSteps}>
+                    {steps.map((step, index) => (
+                        <div
+                            key={index}
+                            className={`${styles.step} ${step.active ? styles.active : ""
+                                } ${step.completed ? styles.completed : ""}`}
+                        >
+                            <div className={styles.stepLine}></div>
 
-                        <div className={styles.stepContent}>
-                            <span className={styles.stepNumber}>{step.num}</span>
-                            <span className={styles.stepLabel}>{step.label}</span>
+                            <div className={styles.stepContent}>
+                                <span className={styles.stepNumber}>{step.num}</span>
+                                <span className={styles.stepLabel}>{step.label}</span>
+                            </div>
                         </div>
-                    </div>
-                ))}
+                    ))}
+                </div>
+                <StepProgress
+                    percent={80} 
+                    currentStep={currentStep} 
+                />
             </div>
-            <div style={{
+            <div className={styles.activityHeader} style={{
                 width: "100%"
             }}>
                 <h2 className={styles.formHeading}>{t("Drop your documents - we'll sort them out")}</h2>
-                <p className={styles.formSubheading}>
+                 <p className={styles.formSubheading}>
                     {t("Your checklist adapts to your profile. Scan or upload; we detect the type automatically. Provide sensitive files through the secure channel - never by ordinary email.")}
                 </p>
             </div>
             <div className={styles.mainArea}>
-                <div className={styles.onboardingForm}>
+                <div className={`${styles.onboardingForm} ${styles.documentForm}`}>
                     <div className={styles.progressCard}>
                         <div className={styles.progressTop}>
                             <div className={styles.progressCount}>{uploadedCount} / {requiredDocKeys.length}</div>
 
                             <div className={styles.progressContent}>
                                 <h4>{t('Required documents provided')}</h4>
-                                <p>{t('Optional and not listed docs are listed below too. Upload them whenever you have them ready.')}</p>
+                                {!isMobile && <p>{t('Optional and not listed docs are listed below too. Upload them whenever you have them ready.')}</p>}
 
                                 <div className={styles.progressBar}>
                                     <div className={styles.progressFill} style={{ width: `${progressPercent}%` }}></div>
@@ -162,7 +245,7 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {}, userDetails, compa
                                     </span>
                                 </div>
 
-                                {renderUploadControl('commercial_register', styles.required, 'REQUIRED')}
+                                {renderUploadControl('commercial_register')}
                             </div>
 
                             <div className={styles.documentRow}>
@@ -171,7 +254,7 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {}, userDetails, compa
                                     <span>{t('Company articles of association')}</span>
                                 </div>
 
-                                {renderUploadControl('articles_association', styles.required, 'REQUIRED')}
+                                {renderUploadControl('articles_association')}
                             </div>
 
                             <div className={styles.documentRow}>
@@ -191,7 +274,7 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {}, userDetails, compa
                                     <span>{t('Certificate of good standing')}</span>
                                 </div>
 
-                                {renderUploadControl('good_standing', styles.optional, 'OPTIONAL')}
+                                {renderUploadControl('good_standing',)}
                             </div>
                         </div>
                     </div>
@@ -199,11 +282,17 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {}, userDetails, compa
                     <div className={styles.section}>
                         <div className={styles.sectionHeader}>
                             <div className={styles.sectionNumber}>{t('2')}</div>
-                            <h3>{t('Company proof of address')}</h3>
+                            {!isMobile &&<h3>{t('Company proof of address')}</h3>}
+                            {isMobile &&
+                            <div className={styles.headerContent}>
+                                <h3>{t('Company proof of address')}</h3>
+                                <p className={styles.subtitle}>{t('Provide ONE of the following')}</p>
+                            </div>
+                            }
                         </div>
-
+                    {!isMobile &&
                         <p className={styles.subtitle}>{t('Provide ONE of the following')}</p>
-
+                    }
                         <div className={styles.documentList}>
                             <div className={styles.documentRow}>
                                 <div className={styles.left}>
@@ -213,7 +302,7 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {}, userDetails, compa
                                     </span>
                                 </div>
 
-                                {renderUploadControl('registered_extract', styles.oneof, 'ONE OF')}
+                                {renderUploadControl('registered_extract')}
                             </div>
 
                             <div className={styles.documentRow}>
@@ -222,7 +311,7 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {}, userDetails, compa
                                     <span>{t('Official certificate of domiciliation')}</span>
                                 </div>
 
-                                {renderUploadControl('domiciliation_certificate', styles.oneof, 'ONE OF')}
+                                {renderUploadControl('domiciliation_certificate')}
                             </div>
 
                             <div className={styles.documentRow}>
@@ -231,7 +320,7 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {}, userDetails, compa
                                     <span>{t('Professional lease agreement')}</span>
                                 </div>
 
-                                {renderUploadControl('lease_agreement', styles.oneof, 'ONE OF')}
+                                {renderUploadControl('lease_agreement')}
                             </div>
 
                             <div className={styles.documentRow}>
@@ -242,7 +331,7 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {}, userDetails, compa
                                     </span>
                                 </div>
 
-                                {renderUploadControl('utility_bill', styles.oneof, 'ONE OF')}
+                                {renderUploadControl('utility_bill')}
                             </div>
 
                             <div className={styles.documentRow}>
@@ -253,7 +342,7 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {}, userDetails, compa
                                     </span>
                                 </div>
 
-                                {renderUploadControl('bank_statement', styles.required, 'REQUIRED')}
+                                {renderUploadControl('bank_statement')}
                             </div>
 
                             <div className={styles.documentRow}>
@@ -264,7 +353,7 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {}, userDetails, compa
                                     </span>
                                 </div>
 
-                                {renderUploadControl('authority_letter', styles.oneof, 'ONE OF')}
+                                {renderUploadControl('authority_letter')}
                             </div>
                         </div>
                     </div>
@@ -272,13 +361,19 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {}, userDetails, compa
                     <div className={styles.section}>
                         <div className={styles.sectionHeader}>
                             <div className={styles.sectionNumber}>{t('3')}</div>
-                            <h3>{t('Ultimate Beneficial Owners (UBO)')}</h3>
+                            {!isMobile &&<h3>{t('Ultimate Beneficial Owners (UBO)')}</h3>}
+                            {isMobile &&
+                                <div className={styles.headerContent}>
+                                    <h3>{t('Ultimate Beneficial Owners (UBO)')}</h3>
+                                    <p className={styles.subtitle}>{t('For each UBO holding directly or indirectly 25% or more')}</p>
+                                </div>
+                            }
                         </div>
-
+                    {!isMobile &&
                         <p className={styles.subtitle}>
                             {t('For each UBO holding directly or indirectly 25% or more')}
                         </p>
-
+                    }
                         <div className={styles.documentList}>
                             <div className={styles.documentRow}>
                                 <div className={styles.left}>
@@ -286,7 +381,7 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {}, userDetails, compa
                                     <span>{t('Shareholders register')}</span>
                                 </div>
 
-                                {renderUploadControl('shareholders_register', styles.required, 'REQUIRED')}
+                                {renderUploadControl('shareholders_register')}
                             </div>
 
                             <div className={styles.documentRow}>
@@ -295,7 +390,7 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {}, userDetails, compa
                                     <span>{t('Ownership structure chart')}</span>
                                 </div>
 
-                                {renderUploadControl('ownership_chart', styles.required, 'REQUIRED')}
+                                {renderUploadControl('ownership_chart')}
                             </div>
 
                             <div className={styles.documentRow}>
@@ -304,7 +399,7 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {}, userDetails, compa
                                     <span>{t('UBO declaration (including corporate UBO if applicable)')}</span>
                                 </div>
 
-                                {renderUploadControl('ubo_declaration', styles.required, 'REQUIRED')}
+                                {renderUploadControl('ubo_declaration')}
                             </div>
 
                             <div className={styles.documentRow}>
@@ -313,7 +408,7 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {}, userDetails, compa
                                     <span>{t('Valid passport / ID for each UBO')}</span>
                                 </div>
 
-                                {renderUploadControl('ubo_passport', styles.required, 'REQUIRED')}
+                                {renderUploadControl('ubo_passport')}
                             </div>
 
                             <div className={styles.documentRow}>
@@ -322,7 +417,7 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {}, userDetails, compa
                                     <span>{t('Private proof of address under 3 months for each UBO')}</span>
                                 </div>
 
-                                {renderUploadControl('ubo_address_proof', styles.required, 'REQUIRED')}
+                                {renderUploadControl('ubo_address_proof')}
                             </div>
                         </div>
                     </div>
@@ -337,11 +432,23 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {}, userDetails, compa
                 </div>
 
             </div>
-            <div className={styles.noticeStrip}>
-                {t(
-                    "Secure handling: don't send sensitive KYC/KYB files by ordinary email. Where a CRM reference is used, share only the reference - never the document itself."
-                )}
-            </div>
+            {isMobile ?
+                            <div className={styles.alertWrapper}>
+                                <AlertBox
+                                    variant='warning'
+                                    containerClass={styles.alertContainer}
+                                    descClass={styles.alertDesc}
+                                    icon={<Shield size={12} color='#8A5A00' />}
+                                    description={"Secure handling: don't send sensitive KYC/KYB files by ordinary email. Where a CRM reference is used, share only the reference - never the document itself."}
+                                />
+                            </div>
+                            :    
+                            <div className={styles.noticeStrip}>
+                                {t(
+                                    "Secure handling: don't send sensitive KYC/KYB files by ordinary email. Where a CRM reference is used, share only the reference - never the document itself."
+                                )}
+                            </div>
+                }
             <div className={styles.navigationFooter}>
                 <button onClick={onBack} className={styles.backButton}>
                     <ArrowLeft size={16} />
@@ -354,7 +461,7 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {}, userDetails, compa
                     style={{ opacity: !isDocsValid ? 0.5 : 1, cursor: !isDocsValid ? 'not-allowed' : 'pointer' }}
                 >
                     {t("Continue to Review")}
-                    <ArrowRight size={16} />
+                    {!isMobile && <ArrowRight size={16} />}
                 </button>
             </div>
         </div>

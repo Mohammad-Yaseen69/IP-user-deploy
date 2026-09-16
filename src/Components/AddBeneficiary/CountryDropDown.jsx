@@ -7,7 +7,7 @@ import Fuse from 'fuse.js';
 import { countriesInDiffLangs } from '../../Data/CountriesWithTranslations/countries';
 import { useMediaQuery } from '@mui/material';
 
-const CountryDropDown = ({ onSelect, country = "", disabled = false, padding = ".7rem .5rem", disabledColor = "#e9ecef", countryNameSize = {}, filteringList = [], setIsCountryInFocus = () => { }, background = "#fff", shadow }) => {
+const CountryDropDown = ({ onSelect, country = "", disabled = false, padding = ".7rem .5rem", disabledColor = "#e9ecef", countryNameSize = {}, filteringList = [], setIsCountryInFocus = () => { }, background = "#fff", shadow, containerStyle = {} }) => {
     const { t, i18n } = useTranslation()
     const [isOpen, setIsOpen] = useState(false);
     const [selectedCountry, setSelectedCountry] = useState("");

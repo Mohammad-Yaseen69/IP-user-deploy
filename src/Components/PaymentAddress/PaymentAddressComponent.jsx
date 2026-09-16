@@ -25,6 +25,7 @@ import useWindowWidth from '../../utils/useWindowWidth'
 import QrGenerate from '../Settings/QrGenerate'
 import { usePermission } from '../../hooks/GeneralUse/usePermission'
 import PricingsAndPlan from './PricingsAndPlan'
+import { preventEdgeSpaces } from '../../hooks/useTrimInput'
 
 const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
     const { t } = useTranslation()
@@ -412,6 +413,7 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
                                                             disabled={!editMode}
                                                             style={{ background: !editMode && "#e9ecef", width: "90%" }}
                                                             placeholder='Title' value={title}
+                                                            onKeyDown={preventEdgeSpaces}
                                                             onChange={e => setTitle(e.target.value)}
                                                             maxLength={80}
 
@@ -435,6 +437,7 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
                                                             value={description}
                                                             maxLength={200}
                                                             draggable="false"
+                                                            onKeyDown={preventEdgeSpaces}
                                                             onChange={e => setDescription(e.target.value)}
                                                         />
 

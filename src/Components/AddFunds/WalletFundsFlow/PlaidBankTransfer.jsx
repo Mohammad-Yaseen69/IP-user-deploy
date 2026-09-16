@@ -18,7 +18,9 @@ import { PlaidCurrencies } from ".";
 import BankIbanSelection from "./BankIbanSelection";
 import BankTransferReview from "./BankTransferReview";
 import useSendOtp from "../../../hooks/GeneralUse/useSendOtp";
-import OTPConfirmation from "../../UserSettingsNew/OTPConfirmation";
+// import OTPConfirmation from "../../UserSettingsNew/OTPConfirmation";
+import OTPConfirmation from "../../../Common/Component/OtpVerification";
+
 import { Modal, ModalBody, ModalHeader } from "reactstrap";
 
 const PlaidBankTransfer = ({
@@ -32,7 +34,6 @@ const PlaidBankTransfer = ({
   successMessage,
   closeBtnText
 }) => {
-  console.log("successMessages ", successMessage)
   const { userDetails, authHeader, setProfileLockTime } = useContext(UserContext);
   const { t } = useTranslation();
   const navigate = useNavigate();

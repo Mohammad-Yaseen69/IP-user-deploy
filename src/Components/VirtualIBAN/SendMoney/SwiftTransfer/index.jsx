@@ -56,7 +56,7 @@ import useSendOtp from "../../../../hooks/GeneralUse/useSendOtp"
 import { useQueryClient } from "@tanstack/react-query"
 import { useVirtualIbanSwiftPayoutFee, useVirtualIbanSwiftPayoutDirect, useSyncVirtualIbanBalance, virtualIbanQueryKeys } from "../../../../hooks/useVirtualIban"
 import { handlePaymentApiError } from "../../../../utils/Functions/handlePaymentApiError"
-import OTPConfirmation from "../../../UserSettingsNew/OTPConfirmation"
+import OTPConfirmation from "../../../../Common/Component/OtpVerification"
 import jsPDF from "jspdf"
 import autoTable from "jspdf-autotable"
 import AddBeneficiary from "../../../AddBeneficiary"
@@ -1162,6 +1162,7 @@ const SwiftTransfer = forwardRef(({ isOpen = true, toggle, selectedIban, availab
             case STEPS.OTP:
                 return (
                     <OTPConfirmation
+                        variant="card"
                         fullHeight
                         setter={setCurrentStep}
                         setterValue={STEPS.DONE}
