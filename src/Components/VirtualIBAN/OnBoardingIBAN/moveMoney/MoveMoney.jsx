@@ -1,39 +1,129 @@
-import { useContext, useMemo, useState } from "react";
-import { useTranslation } from "react-i18next";
-import useWindowWidth from "../../../../utils/useWindowWidth";
-import TopRight from "../../../topRight";
+import React, { useContext, useMemo, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import useWindowWidth from '../../../../utils/useWindowWidth';
+import TopRight from '../../../topRight';
 import styles from "../style/moveMoney.module.css";
 import IbanBreadcrumb from "../../components/IbanBreadcrumb";
 import Tooltip from "@mui/material/Tooltip";
 import {
-  Compass,
-  Globe,
-  Briefcase,
-  RefreshCw,
-  CreditCard,
-  Cpu,
-  ArrowLeft,
-  Search,
-} from "react-feather";
-import SepaTransfer from "../../SendMoney/SepaTransfer";
-import SwiftTransfer from "../../SendMoney/SwiftTransfer";
-import CryptoTopupModal from "../../CryptoTopupModal";
-import {
-  useSyncVirtualIbanBalance,
-  useVirtualIbans,
-} from "../../../../hooks/useVirtualIban";
-import { asVirtualIbanArray } from "../../utils/virtualIban";
-import { UserContext } from "../../../../Context/UserContext";
-import { useNavigate } from "react-router";
+    Compass,
+    Globe,
+    Briefcase,
+    RefreshCw,
+    CreditCard,
+    Cpu,
+    ArrowLeft,
+    Search,
+    ChevronLeft
+} from 'react-feather';
+import SepaTransfer from '../../SendMoney/SepaTransfer';
+import SwiftTransfer from '../../SendMoney/SwiftTransfer';
+import CryptoTopupModal from '../../CryptoTopupModal';
+import { useSyncVirtualIbanBalance, useVirtualIbans } from '../../../../hooks/useVirtualIban';
+import { asVirtualIbanArray } from '../../utils/virtualIban';
+import { UserContext } from '../../../../Context/UserContext';
+import { useNavigate } from 'react-router';
+import MobileHeader from '../../../../Common/Component/MobileHeader';
 
 const MoveMoney = () => {
-  const { t } = useTranslation();
-  const width = useWindowWidth();
-  const [showSepaPage, setShowSepaPage] = useState(false);
-  const [showSwiftPage, setShowSwiftPage] = useState(false);
-  const [showCryptoTopupModal, setShowCryptoTopupModal] = useState(false);
-  const navigate = useNavigate();
-  const { userDetails, selectedAccount } = useContext(UserContext);
+    const { t } = useTranslation();
+    const width = useWindowWidth();
+    const [showSepaPage, setShowSepaPage] = useState(false);
+    const [showSwiftPage, setShowSwiftPage] = useState(false);
+    const [showCryptoTopupModal, setShowCryptoTopupModal] = useState(false);
+    const btnRef = useRef(null);
+
+    const {
+        userDetails,
+        selectedAccount,
+    } = useContext(UserContext);
+
+    const { data: rawIbans = [], isLoading: ibansLoading } =
+        useVirtualIbans(userDetails?._id);
+    const ibans = useMemo(
+        () => asVirtualIbanArray(rawIbans),
+        [rawIbans]
+    );
+    const selectedIban = useMemo(
+        () =>
+            ibans.find(
+                (iban) => (iban?._id || iban?.id) === selectedAccount
+            ) || ibans[0],
+        [ibans, selectedAccount]
+    );
+
+    const ibanId = selectedIban?._id || selectedIban?.id;
+
+    const { data: syncedBalance } = useSyncVirtualIbanBalance(ibanId);
+
+    const currentBalance = syncedBalance?.balance ?? selectedIban?.balance ?? 0
+
+    const handleClose = () => setShowSwiftPage(false);
+
+    return (
+        <>
+            {showSwiftPage &&
+                <MobileHeader 
+                    title={"SWIFT International"}
+                    handleAction={handleClose}
+                    handleBack={() => btnRef.current?.back()}
+                />
+            }
+        <div className={styles.container}>      
+            {width > 600 &&     
+                <div className={styles.top}>
+                    <div className={styles.headerTitle}>
+                        <h1>{t("Move money")}</h1>
+                        <p>{t("Choose how to pay, get paid and manage your balances — pick one to begin.")}</p>
+                    </div>
+                    <div className={styles.topright}>
+                        {width > 1000 && <TopRight />}
+                    </div>
+                </div>
+            }
+
+            <div className={styles.mainContent}>
+                {
+                    showSepaPage ?
+                        <>
+                            <IbanBreadcrumb items={[
+                                { label: "My virtual bank", path: "/virtual-IBAN" },
+                                { label: "Move money", onClick: () => setShowSepaPage(false) },
+                                { label: "SEPA Transfer" }
+                            ]} />
+                            <SepaTransfer
+                                isPage={true}
+                                selectedIban={selectedIban}
+                                availableBalance={currentBalance}
+                                toggle={() => setShowSepaPage(false)}
+                            />
+                        </>
+                    : showSwiftPage ?
+                        <>
+                        {width > 600 &&
+                            <IbanBreadcrumb items={[
+                                { label: "My virtual bank", path: "/virtual-IBAN" },
+                                { label: "Move money", onClick: handleClose },
+                                { label: "SWIFT Transfer" }
+                            ]} />
+                        }
+                            <SwiftTransfer
+                                isPage={true}
+                                selectedIban={selectedIban}
+                                availableBalance={currentBalance}
+                                toggle={handleClose}
+                                ref={btnRef}
+                            />
+                        </>
+
+                        : <>                            
+                            <div className={styles.headerTitle}>
+                                <IbanBreadcrumb items={[
+                                    { label: "My virtual bank", path: "/virtual-IBAN" },
+                                    { label: "Move money" }
+                                ]} />
+                                <h1>{t("How would you like to move money?")}</h1>
+                                <p>{t("Six ways to pay, get paid and manage your balances — pick one to begin.")}</p>
 
   const { data: rawIbans = [], isLoading: ibansLoading } = useVirtualIbans(
     userDetails?._id,
@@ -299,73 +389,9 @@ const MoveMoney = () => {
                       <CreditCard size={20} />
                     </div>
 
-                    <div className={styles.cardBody}>
-                      <h3 className={styles.cardTitle}>{t("Balances")}</h3>
-                      <p className={styles.cardDesc}>
-                        {t(
-                          "All your money in one place — hold EUR, USD, CHF and crypto, and convert instantly at live FX.",
-                        )}
-                      </p>
-                      <div className={styles.badgeRow}>
-                        <span
-                          className={`${styles.tag} ${styles.tagBlue} ${styles.tagEuro}`}
-                        >
-                          {t("Multi-currency")}
-                        </span>
-                        <span
-                          className={`${styles.tag} ${styles.tagGray} ${styles.tagEuro}`}
-                        >
-                          {t("Fiat/Crypto")}
-                        </span>
-                        <span
-                          className={`${styles.tag} ${styles.tagGray} ${styles.tagEuro}`}
-                        >
-                          {t("Accounts")}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </Tooltip>
-                <Tooltip title={t("Coming Soon")} arrow>
-                  <div className={`${styles.card} ${styles.cryptoCard}`}>
-                    <div className={`${styles.iconBox} ${styles.bgOrange}`}>
-                      <Cpu size={20} />
-                    </div>
-                    <div className={styles.cardBody}>
-                      <h3 className={styles.cardTitle}>
-                        {t("Crypto & Stablecoins")}
-                      </h3>
-                      <p className={styles.cardDesc}>
-                        {t(
-                          "Receive, send, convert, request and mass-pay in crypto — auto-settle to your IBAN. Powered by BVNK.",
-                        )}
-                      </p>
-                      <div className={styles.badgeRow}>
-                        <span className={`${styles.tag} ${styles.tagBlue}`}>
-                          {t("Assets")}
-                        </span>
-                        <span className={`${styles.tag} ${styles.tagGray}`}>
-                          {t("Payouts")}
-                        </span>
-                        <span className={`${styles.tag} ${styles.tagGray}`}>
-                          {t("Gateways")}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </Tooltip>
-              </div>
-            </div>
-          </>
-        )}
-      </div>
-      <CryptoTopupModal
-        isOpen={showCryptoTopupModal}
-        toggle={() => setShowCryptoTopupModal(false)}
-        selectedIban={selectedIban}
-      />
-    </div>
-  );
+        </div>
+        </>
+    );
 };
 
 export default MoveMoney;
