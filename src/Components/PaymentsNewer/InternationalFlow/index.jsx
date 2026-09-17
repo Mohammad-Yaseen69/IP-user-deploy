@@ -1323,7 +1323,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                     toggle={() => setShowCardModal(false)}
                     buttonText="Close"
                     messages={[
-                        `Oops! It looks like the card you entered isn’t recognized as being issued in ${userDetails?.country_name}.`,
+                        `Oops!p It looks like the card you entered isn’t recognized as being issued in ${userDetails?.country_name}.`,
                         `For security and compatibility, we currently accept only cards issued in the same country as your InstaPay account. Please use a card issued in ${userDetails?.country_name} to complete your transaction.`,
                         `Thank you for your understanding!`
                     ]}
@@ -1592,6 +1592,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                                                     loading={loading}
                                                     data={internationalData}
                                                     dataHandler={updateInternationalData}
+                                                    bankComingSoon={true}
                                                 />
                                             }
                                             {
