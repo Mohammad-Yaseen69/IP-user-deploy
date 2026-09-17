@@ -347,8 +347,7 @@ const ModalOtp = ({ isOpen, toggle, callback, data, dataHandler, resendHandler, 
     const hasAuthenticator = availableMethods.includes('authenticator')
     const nonAuthMethods = availableMethods.filter((m) => m !== 'authenticator')
     const activeNonAuthMethod = nonAuthMethods[0] || 'sms'
-    const activeNonAuthLabel = t(OTP_METHOD_CONFIG[activeNonAuthMethod].label)
-    console.log(availableMethods, "availableMethods")
+    const [selectedMethod, setSelectedMethod] = useState(activeNonAuthMethod)
 
     useLayoutEffect(() => {
         const timeout = setTimeout(() => {
@@ -390,10 +389,10 @@ const ModalOtp = ({ isOpen, toggle, callback, data, dataHandler, resendHandler, 
             style={{ borderRadius: '1rem', width: '100vw', maxWidth: window.innerWidth > 1000 ? '800px' : '96vw', overflow: 'hidden' }}>
             <ModalBody className={modalStyles.body} style={{ WebkitTransform: 'translateZ(0)', transform: 'translateZ(0)' }}>
                 <div className={modalStyles.left}>
-                    <h5>{data.codeType === 'sms' ? t('SMS/Email Verification Code').replace('SMS', activeNonAuthLabel) : t('Google Authenticator')}</h5>
+                    <h5>{data.codeType === 'sms' ? `${t(OTP_METHOD_CONFIG[selectedMethod]?.label)} ${t('Verification Code')}` : t('Google Authenticator')}</h5>
                 </div>
                 <div className={modalStyles.right}>
-                    <label>{data.codeType === 'sms' ? t('OTP Verification Code') : t('Two Factor Authentication Code')}</label>
+                    <label>{data.codeType === 'sms' ? `${t(OTP_METHOD_CONFIG[selectedMethod]?.label)} ${t('OTP Verification Code')}` : t('Two Factor Authentication Code')}</label>
                     <div className={modalStyles.inputs}>
                         {otpValues.map((value, index) => (
                             <input key={index} maxLength={1} value={value} onPaste={handlePaste}
@@ -403,54 +402,27 @@ const ModalOtp = ({ isOpen, toggle, callback, data, dataHandler, resendHandler, 
                         ))}
                     </div>
 
-                    {hasAuthenticator ? (
-                        <div className={modalStyles.resend_and_switch}>
-                            <span>
-                                {data.codeType === 'sms'
-                                    ? (resendTimer > 0
-                                        ? t('Resend available in ') + resendTimer + ' ' + t('seconds')
-                                        : (
-                                            <>
-                                                {t("Didn't receive the verification code?")}
-                                                <span style={{ color: '#5926f0', fontWeight: 800, cursor: 'pointer' }} onClick={() => {
-                                                    setOTPValues(Array(numberOfFields).fill(''))
-                                                    resendHandler()
-                                                    setResendTimer(120)
-                                                }}>{t('Resend Now')}</span>
-                                            </>
-                                        ))
-                                    : t('Problem with the token?')}
-                            </span>
-                            <button onClick={() => {
-                                if (data.codeType !== 'sms') {
-                                    inputRefs?.current?.[0]?.focus()
-                                    setOTPValues(Array(numberOfFields).fill(''))
-                                    setResendTimer(120)
-                                    if (resendTimer === 0) resendHandler(activeNonAuthMethod)
-                                }
-                                dataHandler('codeType', data.codeType === 'sms' ? 'authenticator' : 'sms')
-                            }}>
-                                {data.codeType !== 'sms' ? t('Verify Using Sms/Email').replace('SMS', activeNonAuthLabel) : t('Verify Using Authenticator')}
-                            </button>
-                        </div>
-                    ) : (
-                        <div className={modalStyles.resend_and_switch}>
-                            <span>
-                                {resendTimer > 0 ? t('Resend available in ') + resendTimer + ' seconds' : (
-                                    <>
-                                        {t("Didn't receive the verification code?")}
-                                        <span style={{ color: '#5926f0', fontWeight: 800, cursor: 'pointer' }} onClick={() => {
-                                            inputRefs?.current?.[0]?.focus()
-                                            setOTPValues(Array(numberOfFields).fill(''))
-                                            resendHandler()
-                                            setResendTimer(120)
-                                        }}>{t('Resend Now')}</span>
-                                    </>
-                                )}
-                            </span>
+                    <div className={modalStyles.resend_and_switch}>
+                        <span>
+                            {data.codeType === 'sms'
+                                ? (resendTimer > 0
+                                    ? t('Resend available in ') + resendTimer + ' ' + t('seconds')
+                                    : (
+                                        <>
+                                            {t("Didn't receive the verification code?")}
+                                            <span style={{ color: '#5926f0', fontWeight: 800, cursor: 'pointer' }} onClick={() => {
+                                                setOTPValues(Array(numberOfFields).fill(''))
+                                                resendHandler(selectedMethod)
+                                                setResendTimer(selectedMethod === 'email' ? 300 : 120)
+                                            }}>{t('Resend Now')}</span>
+                                        </>
+                                    ))
+                                : t('Problem with the token?')}
+                        </span>
+                        {!hasAuthenticator && (
                             <button onClick={() => navigate('/settings?tab=tfa')}>{t('Setup Authenticator')}</button>
-                        </div>
-                    )}
+                        )}
+                    </div>
                     <div className={modalStyles.otpMethodsWrap}>
                         <div className={modalStyles.resend_and_switch}>
                             {t('Choose your preferred method to receive your verification code:')}
@@ -480,6 +452,7 @@ const ModalOtp = ({ isOpen, toggle, callback, data, dataHandler, resendHandler, 
 
                                             setOTPValues(Array(numberOfFields).fill(''))
 
+                                            setSelectedMethod(methodId)
                                             dataHandler('codeType', 'sms')
 
                                             if (resendTimer === 0) {
