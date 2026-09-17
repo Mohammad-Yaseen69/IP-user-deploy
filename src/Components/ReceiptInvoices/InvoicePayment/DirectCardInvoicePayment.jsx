@@ -23,9 +23,12 @@ import { flagCheck } from "../../../utils/Functions"
 import { apiWrapper } from "../../../utils/Functions/apiWrapper"
 import { useQuery } from "@tanstack/react-query"
 import CardMaintenanceModal from "../../CardMaintenanceModal"
+import { initiatePaytentlyGuestPayment, precheckPaytentlyGuestPayment, usePaytently } from "../../../utils/Functions/paytently"
+import PaytentlyHostedModal from "../../AddFunds/PaytentlyHostedModal"
 
 const initialState = {
-    step: 3,
+    // Paytently collects the card on its own hosted form, so start on the summary.
+    step: usePaytently ? 5 : 3,
     loading: false,
     payment_type: {
         value: "card"
@@ -51,7 +54,9 @@ const initialState = {
     exchange_rate_error: "",
     error: "",
     showCardModal: false,
-    showCardMaintenanceModal: true
+    // Card payment on this page is paused while Trust is unavailable.
+    showCardMaintenanceModal: !usePaytently,
+    paytentlyHosted: null
 }
 
 function reducer(state, action) {
@@ -220,7 +225,7 @@ const DirectCardInvoicePayment = ({ invoice, username }) => {
 
         try {
             const payload = {
-                se_shambey: createShambeToken(state),
+                ...(!usePaytently && { se_shambey: createShambeToken(state) }),
                 token: state.exchange_rate?.token,
                 name: state.fullName,
                 email: state.email,
@@ -235,6 +240,17 @@ const DirectCardInvoicePayment = ({ invoice, username }) => {
                 invoice_id: invoice.invoiceId
             }
 
+            if (usePaytently) {
+                const dec = await initiatePaytentlyGuestPayment(payload, getKey())
+                if (dec?.hosted_forms_url) {
+                    dataHandler("paytentlyHosted", { hostedUrl: dec.hosted_forms_url, paymentId: dec.payment_id })
+                } else {
+                    dataHandler("error", dec?.message || "We cannot process your request at the moment, please try again later.")
+                }
+                dataHandler("loading", false)
+                return
+            }
+
             const res = await axios.post(
                 `${import.meta.env.VITE_IP_DEV_API}/api/guest-pay/initiate-card-payment`,
                 { data: encryptData(payload) },
@@ -243,18 +259,34 @@ const DirectCardInvoicePayment = ({ invoice, username }) => {
 
             dataHandler("cardTransactionDetails", decryptData(res.data.data))
         } catch (error) {
-            const dec = error?.response?.data?.data ? decryptData(error.response.data.data) : {}
-            const limitError = LimitsErrorMessage(dec.code)
+            showCardPaymentError(error)
+        }
+    }
 
-            if (dec?.message === "invalid_card_details") {
-                dataHandler("showCardModal", true)
-            } else {
-                dataHandler(
-                    "error",
-                    limitError || dec?.message || "We cannot process your request at the moment, please try again later."
-                )
-            }
-            dataHandler("loading", false)
+    const showCardPaymentError = (error) => {
+        const dec = error?.response?.data?.data ? decryptData(error.response.data.data) : {}
+        const limitError = LimitsErrorMessage(dec.code)
+
+        if (dec?.message === "invalid_card_details") {
+            dataHandler("showCardModal", true)
+        } else {
+            dataHandler(
+                "error",
+                limitError || dec?.message || "We cannot process your request at the moment, please try again later."
+            )
+        }
+        dataHandler("loading", false)
+    }
+
+    // Paytently has collected the card: run the card checks, and only go on to 3DS if they pass.
+    const onPaytentlyCardCollected = async () => {
+        const paymentId = state.paytentlyHosted?.paymentId
+        dataHandler("paytentlyHosted", null)
+        dataHandler("loading", true)
+        try {
+            window.location.href = await precheckPaytentlyGuestPayment(paymentId)
+        } catch (error) {
+            showCardPaymentError(error)
         }
     }
 
@@ -271,6 +303,10 @@ const DirectCardInvoicePayment = ({ invoice, username }) => {
         : `${t("Pay")} ${state.exchange_rate?.sending?.currency || invoice?.currency || ""} ${formatCurrency(state.exchange_rate?.total || amount, true)}`
 
     const goNext = () => {
+        if (usePaytently) {
+            initiateCardPayment()
+            return
+        }
         dataHandler("showCardMaintenanceModal", true)
         // initiateCardPayment()
     }
@@ -305,6 +341,13 @@ const DirectCardInvoicePayment = ({ invoice, username }) => {
                 isOpen={state.showCardMaintenanceModal}
                 toggle={() => dataHandler("showCardMaintenanceModal", false)}
             />
+            <PaytentlyHostedModal
+                isOpen={!!state.paytentlyHosted?.hostedUrl}
+                hostedUrl={state.paytentlyHosted?.hostedUrl}
+                authorizeUrl={state.paytentlyHosted?.authorizeUrl}
+                onClose={() => dataHandler("paytentlyHosted", null)}
+                onCardCollected={onPaytentlyCardCollected}
+            />
             {state.cardTransactionDetails?.transaction_ref && (
                 <TrustpaymentPage
                     transaction={state.cardTransactionDetails}
@@ -331,7 +374,7 @@ const DirectCardInvoicePayment = ({ invoice, username }) => {
                     `Thank you for your understanding!`,
                 ]}
                 title="Payment Failed"
-                reEnter={() => dataHandler("step", 3)}
+                reEnter={() => dataHandler("step", usePaytently ? 5 : 3)}
             />
 
             <ErrorModal
@@ -527,7 +570,7 @@ const DirectCardInvoicePayment = ({ invoice, username }) => {
                     </div>
 
                     <footer className={styles.directCardFooter}>
-                        {state.step === 5 && (
+                        {state.step === 5 && !usePaytently && (
                             <button
                                 type="button"
                                 className={styles.secondaryButton}

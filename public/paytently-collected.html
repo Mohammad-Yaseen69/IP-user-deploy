@@ -7,7 +7,6 @@
   <body style="font-family: system-ui, sans-serif; text-align: center; padding: 2rem; color: #333">
     <p>Card details received. Continuing to verification…</p>
     <script>
-     
       (function () {
         try {
           var url = localStorage.getItem("paytently_authorize_url");
@@ -18,7 +17,19 @@
           }
         } catch (e) {}
 
-        try { window.parent.postMessage({ type: "paytently_card_collected" }, "*"); } catch (e) {}
+       
+        var topLevel = true;
+        try { topLevel = window.top === window; } catch (e) { topLevel = false; }
+        if (topLevel) {
+          var guestPayment = null;
+          try { guestPayment = localStorage.getItem("paytently_guest_payment_id"); } catch (e) {}
+          if (guestPayment) {
+            window.location.replace("/paytently/card-collected");
+            return;
+          }
+        }
+
+        try { window.parent.postMessage({ type: "paytently_card_collected" }, window.location.origin); } catch (e) {}
       })();
     </script>
   </body>
