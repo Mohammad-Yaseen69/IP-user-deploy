@@ -177,13 +177,17 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card, setCurrentCardDetai
     const [cardTransactionDetails, setCardTransactionDetails] = useState({})
 
 
-    const sendOtp = async () => {
+    const sendOtp = async (methodId) => {
+        const otpMethod = typeof methodId === 'string' ? methodId : codeType
+        if (typeof methodId === 'string' && methodId !== codeType) {
+            setCodeType(methodId)
+        }
         const data = {
             data: {
                 token: feeDetails?.token,
                 accountId: userDetails?._id
             },
-            type: codeType
+            type: otpMethod
         }
 
         setDisabled(true)

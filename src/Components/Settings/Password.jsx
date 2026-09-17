@@ -73,9 +73,16 @@ const Password = () => {
         setCodeType(userDetails?.tfa ? "authenticator" : "sms")
     }, [userDetails])
 
-    const sendOtp = async (e) => {
-        e.preventDefault()
+    const sendOtp = async (eventOrMethod) => {
+        let method
+        if (eventOrMethod && typeof eventOrMethod.preventDefault === 'function') {
+            eventOrMethod.preventDefault()
+        } else if (typeof eventOrMethod === 'string') {
+            method = eventOrMethod
+        }
         setSaving(true)
+        const type = method || codeType
+        if (method) setCodeType(method)
         try {
             const data = {
                 data: {
@@ -84,7 +91,7 @@ const Password = () => {
                     newPassword: state.new,
                     isAgent: isAgentLogin ? true : false
                 },
-                type: codeType
+                type
             }
             const encrypted = encryptData(data)
             const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/send-otp`, {

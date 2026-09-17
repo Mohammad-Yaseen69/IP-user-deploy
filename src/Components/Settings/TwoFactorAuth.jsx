@@ -257,16 +257,23 @@ const TwoFactorAuth = () => {
         }
     }, [redirect, userDetails])
 
-    const sendOtp = async (e, isDevice) => {
+    const sendOtp = async (eventOrMethod, isDevice) => {
         setShowBioModal(false)
-        e && e.preventDefault()
+        let method
+        if (eventOrMethod && typeof eventOrMethod.preventDefault === 'function') {
+            eventOrMethod.preventDefault()
+        } else if (typeof eventOrMethod === 'string') {
+            method = eventOrMethod
+        }
         setIsSaving(true)
+        const type = method || codeType
+        if (method) setCodeType(method)
         try {
             const data = {
                 data: {
                     account_id: userDetails?._id
                 },
-                type: codeType
+                type
             }
             const encrypted = encryptData(data)
             const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/send-otp`, {

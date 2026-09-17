@@ -492,7 +492,11 @@ const OnboardingIBAN = ({ onCreated }) => {
                         callback={handleVerifyOtpSubmit}
                         hideOtp={() => setShowOtpModal(false)}
                         setter={() => { }}
-                        resendHandler={() => sendOtp({ wallet_id: state.selectedWallet?._id }, codeType)}
+                        resendHandler={(method) => {
+                            const nextCodeType = method || codeType
+                            if (method) setCodeType(method)
+                            return sendOtp({ wallet_id: state.selectedWallet?._id }, nextCodeType)
+                        }}
                     />
                 </ModalBody>
             </Modal>

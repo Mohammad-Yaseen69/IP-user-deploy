@@ -45,8 +45,9 @@ const SecurityQuestions = () => {
         setCodeType(userDetails?.tfa ? "authenticator" : "sms")
     }, [userDetails])
 
-    const sendOtp = async () => {
+    const sendOtp = async (method) => {
         setSaving(true)
+        if (method) setCodeType(method)
         const data = {
             data: {
                 question1: selectedQuesOne,
@@ -56,7 +57,7 @@ const SecurityQuestions = () => {
                 question3: selectedQuesThree,
                 answer3: answerThree?.trim() || "",
             },
-            type: codeType
+            type: method || codeType
         }
 
         if (userDetails?.user?.question1 || userDetails?.user?.question2 || userDetails?.user?.question3) {

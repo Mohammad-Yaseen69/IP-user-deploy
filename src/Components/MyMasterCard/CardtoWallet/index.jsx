@@ -140,7 +140,8 @@ const CardtoWallet = ({ isOpen, setOpen, card, setCurrentCardDetails, currentCar
         }
     }
 
-    const sendOtp = async () => {
+    const sendOtp = async (methodId) => {
+        const otpMethod = typeof methodId === 'string' ? methodId : codeType
         setLoading(true)
         try {
             const data = {
@@ -149,7 +150,7 @@ const CardtoWallet = ({ isOpen, setOpen, card, setCurrentCardDetails, currentCar
                     cardId: card._id,
                     walletId: (userWallet?._id || recipient?.wallet?._id),
                 },
-                type: codeType,
+                type: otpMethod,
             }
 
             console.log(data)

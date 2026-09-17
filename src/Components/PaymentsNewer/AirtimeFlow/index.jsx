@@ -256,6 +256,9 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
 
     const createTransaction = async (codeType = "") => {
         try {
+            if (codeType) {
+                updateDataHandler("codeType", codeType)
+            }
             const isOpenRange = +String(data?.airtime_amount)?.replaceAll(",", "") > 0 && data.service_type?.name?.toLowerCase()?.includes("airtime");
 
             const payload = {

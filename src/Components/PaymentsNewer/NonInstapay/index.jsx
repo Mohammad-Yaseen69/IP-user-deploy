@@ -755,8 +755,11 @@ const NonInstapayPayment = ({ sendPaymentType, setSendPaymentType, setStep }) =>
                                         dataHandler("showOtpModal", false)
                                         reset()
                                     }}
-                                    resendHandler={() => {
-                                        sendOtp()
+                                    resendHandler={(codeType) => {
+                                        if (codeType) {
+                                            dataHandler("codeType", codeType)
+                                        }
+                                        sendOtp(codeType)
                                         reset()
                                     }}
                                     error={data.otpError}

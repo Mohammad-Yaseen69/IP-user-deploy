@@ -232,6 +232,9 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
         dataHandler("loading", true)
         console.log(data.amount, data.recipient_amount)
         try {
+            if (codeType) {
+                dataHandler("codeType", codeType)
+            }
             let payload = {
                 data: {
                     "receiver_wallet_id": data.beneficiary_wallet?.wallet_id,

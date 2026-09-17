@@ -136,8 +136,9 @@ const VerificationPayment = ({ isOpen, toggle, verify, desc, occupation, loading
 
     const wallets = useMemo(() => filteredWallets, [filteredWallets]);
 
-    const sendOtp = async () => {
+    const sendOtp = async (method) => {
         setSaving(true)
+        if (method) setCodeType(method)
         try {
             const data = {
                 data: {
@@ -146,7 +147,7 @@ const VerificationPayment = ({ isOpen, toggle, verify, desc, occupation, loading
                     occupation,
                     source_of_funds
                 },
-                type: codeType
+                type: method || codeType
             }
             // console.log(data)
 

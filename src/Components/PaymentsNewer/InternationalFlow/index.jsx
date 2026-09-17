@@ -719,6 +719,9 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
     const createTransaction = async (codeType = "", isResend = true) => {
         setLoading(true)
         try {
+            if (codeType) {
+                updateInternationalData("codeType", codeType)
+            }
             let payload = {}
             const transaction_data = {
                 additional_information: internationalData.comment,

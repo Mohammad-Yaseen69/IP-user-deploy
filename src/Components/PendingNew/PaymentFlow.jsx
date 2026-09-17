@@ -90,7 +90,9 @@ const PaymentFlow = ({ item, step, setStep, setStatus, verifyToken }) => {
         }
     }, [currentWallet])
 
-    const sendOtp = async () => {
+    const sendOtp = async (method) => {
+        const resolvedType = typeof method === 'string' ? method : codeType
+        if (typeof method === 'string' && method !== codeType) setCodeType(method)
         setSending(true)
         try {
             const data = {
@@ -101,7 +103,7 @@ const PaymentFlow = ({ item, step, setStep, setStatus, verifyToken }) => {
                     purpose: "xyz",
                     payment_type: "payment_request",
                 },
-                type: codeType
+                type: resolvedType
             }
             const encrypted = encryptData(data)
             const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/send-otp`, {

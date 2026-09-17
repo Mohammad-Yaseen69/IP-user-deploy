@@ -51,13 +51,15 @@ const AccountItem = ({ data }) => {
         }
     }
 
-    const sendOtp = async () => {
+    const sendOtp = async (method) => {
         setSaving(true)
+        const type = method || codeType
+        if (method) setCodeType(method)
         const payload = {
             data: {
                 type: data.name.toLowerCase().includes("whatsapp") ? "unlink-whatsapp" : "unlink-insta"
             },
-            type: codeType
+            type
         }
         const enc = encryptData(payload)
         try {
@@ -179,12 +181,13 @@ const AccountItem = ({ data }) => {
             }
         }
     }, [redirect, userDetails])
-    const sendChannelOtp = async () => {
+    const sendChannelOtp = async (method) => {
         try {
             setSaving(true)
+            if (method) setCodeType(method)
 
             const payload = {
-                type: codeType,
+                type: method || codeType,
                 data: {
                     channel:
                         data.name.toLowerCase().includes("insta")

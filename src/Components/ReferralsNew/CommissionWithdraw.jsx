@@ -27,7 +27,9 @@ const CommissionWithdraw = ({ isOpen, toggle, referralBalance = 0, defaultCurren
         setCodeType(userDetails?.tfa ? "authenticator" : "sms")
     }, [userDetails])
 
-    const sendOtp = async () => {
+    const sendOtp = async (method) => {
+        const resolvedType = typeof method === 'string' ? method : codeType
+        if (typeof method === 'string' && method !== codeType) setCodeType(method)
         setSaving(true)
         setError("")
         try {
@@ -38,7 +40,7 @@ const CommissionWithdraw = ({ isOpen, toggle, referralBalance = 0, defaultCurren
                     payer_id: +userWithdrawals?.[withdrawal]?.[0]?.payer_id,
                     service_id: +userWithdrawals?.[withdrawal]?.[0]?.service_id,
                 },
-                type: codeType
+                type: resolvedType
             }
             const encrypted = encryptData(data)
             const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/send-otp`, {

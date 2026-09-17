@@ -219,7 +219,8 @@ const CardtoCard = ({ setOpen, isOpen, card, currentCardDetails, setCurrentCardD
   }
 
 
-  const sendOtp = async () => {
+  const sendOtp = async (methodId) => {
+    const otpMethod = typeof methodId === 'string' ? methodId : data.codeType
     const apiData = {
       data: {
         senderCardId: card._id,
@@ -228,7 +229,7 @@ const CardtoCard = ({ setOpen, isOpen, card, currentCardDetails, setCurrentCardD
         note: data.note,
         token: data.feeToken,
       },
-      type: data.codeType
+      type: otpMethod
     }
 
 

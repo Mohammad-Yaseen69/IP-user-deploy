@@ -135,13 +135,19 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay,
 
   console.log(googlePay, applePay)
 
-  const sendOtp = async (e) => {
-    
+  const sendOtp = async (methodId) => {
+    if (methodId && typeof methodId.preventDefault === 'function') {
+      methodId.preventDefault()
+    }
+    const otpMethod = typeof methodId === 'string' ? methodId : codeType
+    if (typeof methodId === 'string' && methodId !== codeType) {
+      setCodeType(methodId)
+    }
+
     if (paymentType !== "wallet") {
       if (!feeDetails.token) return false
     }
 
-    e && e.preventDefault()
     setLoading(true)
     try {
       const twoYearsAhead = new Date();
@@ -159,7 +165,7 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay,
           apple_pay: false,
           google_pay: false
         },
-        type: codeType
+        type: otpMethod
       }
 
       if (applePay === true || googlePay === true) {
@@ -194,7 +200,7 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay,
           google_pay: false
 
         },
-        type: codeType
+        type: otpMethod
       }
 
       if (paymentType === "paypal") {
