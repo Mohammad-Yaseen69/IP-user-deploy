@@ -429,19 +429,19 @@ const ModalOtp = ({ isOpen, toggle, callback, data, dataHandler, resendHandler, 
                         </div>
 
                         <div className={modalStyles.otpMethods}>
-                            {availableMethods.map((methodId) => {
-                                const { label, Icon } = OTP_METHOD_CONFIG[methodId]
-
+                            {availableMethods.filter((methodId) => {
                                 const isSelected =
                                     (methodId === 'authenticator' && data.codeType === 'authenticator') ||
-                                    (methodId !== 'authenticator' && data.codeType === 'sms')
+                                    (methodId !== 'authenticator' && data.codeType === 'sms' && methodId === selectedMethod)
+                                return !isSelected
+                            }).map((methodId) => {
+                                const { label, Icon } = OTP_METHOD_CONFIG[methodId]
 
                                 return (
                                     <button
                                         type="button"
                                         key={methodId}
-                                        className={`${modalStyles.otpMethod} ${isSelected ? modalStyles.selectedOtpMethod : ''
-                                            }`}
+                                        className={modalStyles.otpMethod}
                                         onClick={() => {
 
                                             if (methodId === 'authenticator') {
@@ -597,12 +597,11 @@ const ButtonsOtp = ({
                     <div className={buttonStyles.otpMethodsWrap}>
                         <div className={buttonStyles.otpMethodsLabel}>{t('Choose your preferred method to receive your verification code:')}</div>
                         <div className={buttonStyles.otpMethods}>
-                            {availableMethods.map((methodId) => {
+                            {availableMethods.filter((methodId) => methodId !== authType).map((methodId) => {
                                 const { label, Icon } = OTP_METHOD_CONFIG[methodId]
-                                const isSelected = authType === methodId
                                 return (
                                     <button type="button" key={methodId}
-                                        className={`${buttonStyles.otpMethod} ${isSelected ? buttonStyles.selectedOtpMethod : ''}`}
+                                        className={buttonStyles.otpMethod}
                                         onClick={() => handleAuthTypeChange(methodId)}>
                                         <Icon size={14} /><span>{t(label)}</span>
                                     </button>
