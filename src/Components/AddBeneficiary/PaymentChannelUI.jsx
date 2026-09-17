@@ -9,6 +9,7 @@ import { UserContext } from '../../Context/UserContext'
 import { useTranslation } from 'react-i18next'
 import PhoneInput from '../PhoneInput'
 import CountryDropDown from './CountryDropDown'
+import { preventEdgeSpaces } from '../../hooks/useTrimInput'
 
 const PaymentChannelUI = ({
     services,
@@ -702,7 +703,10 @@ const PaymentChannelUI = ({
                     </FormGroup>
                     <FormGroup style={{ flex: 1, margin: 0 }}>
                         <Label className="col-form-label" htmlFor="card-number">{t("Wallet Address")} <span className="req_star">*</span></Label>
-                        <Input disabled={!isEditMode} className="form-control" value={formData.crypto_wallet_address} onChange={inputChangeHandler} name="crypto_wallet_address" style={{ flex: 1, minWidth: "250px" }} placeholder="ABCD12345WAD2" />
+                        <Input disabled={!isEditMode} className="form-control"
+
+                            onKeyDown={preventEdgeSpaces}
+                            value={formData.crypto_wallet_address} onChange={inputChangeHandler} name="crypto_wallet_address" style={{ flex: 1, minWidth: "250px" }} placeholder="ABCD12345WAD2" />
                     </FormGroup>
                 </div>
             }
@@ -719,6 +723,7 @@ const PaymentChannelUI = ({
                                         <Input
                                             className="form-control"
                                             style={{ flex: 1, minWidth: "250px" }}
+                                            onKeyDown={preventEdgeSpaces}
                                             value={isEdit && typeof value === "object" ? value.wallet_id : value}
                                             onChange={(e) => handleInputChange(index, isEdit ? { ...value, wallet_id: e.target.value } : e.target.value)}
                                             maxLength={8}

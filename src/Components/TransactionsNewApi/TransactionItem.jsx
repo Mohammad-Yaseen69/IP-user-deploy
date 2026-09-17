@@ -17,7 +17,7 @@ import { usePermission } from "../../hooks/GeneralUse/usePermission";
 export const service_name_formatter = (itemName) => {
     if (itemName) {
         const nameArr = itemName.split("_")
-        const newName = nameArr.map(item => item = `${item[0].toUpperCase()}${item?.slice(1)}`).join(" ")
+        const newName = nameArr.map(item => item?.toLowerCase() === "aba" ? "ABA" : `${item[0].toUpperCase()}${item?.slice(1)}`).join(" ")
         return newName;
     }
 }
@@ -77,6 +77,8 @@ const TransactionItem = ({ item, activeItem, setActiveItem, index, fromReferral 
                 return "#9f83f2"
             case "reverted":
                 return "#9f83f2"
+            case "abandoned":
+                return "#FFA500"
             default:
                 break;
         }
