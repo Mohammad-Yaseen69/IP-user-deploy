@@ -5,6 +5,7 @@ import { X, Search, Check, AlertCircle, ArrowLeft, User, Shield, CreditCard, Cal
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiWrapper } from '../../../utils/Functions/apiWrapper';
 import { toast } from 'react-toastify';
+import { handlePaymentApiError } from '../../../utils/Functions/handlePaymentApiError';
 
 const AddByNameModal = ({ open, onClose }) => {
     const { t } = useTranslation();
@@ -70,7 +71,10 @@ const AddByNameModal = ({ open, onClose }) => {
             setSelectedUser(null);
             setStep(2);
         } catch (err) {
-            toast.error(err?.message || t("Error searching for clients"));
+            handlePaymentApiError({
+                error: err,
+                setError: (msg) => toast.error(msg),
+            })
         } finally {
             setIsSearching(false);
         }
@@ -97,7 +101,10 @@ const AddByNameModal = ({ open, onClose }) => {
             handleClose();
         },
         onError: (err) => {
-            toast.error(err?.message || t("Failed to assign client"));
+            handlePaymentApiError({
+                error: err,
+                setError: (msg) => toast.error(msg),
+            })
         }
     });
 
@@ -120,7 +127,10 @@ const AddByNameModal = ({ open, onClose }) => {
             handleClose();
         },
         onError: (err) => {
-            toast.error(err?.message || t("Failed to register pending lead"));
+            handlePaymentApiError({
+                error: err,
+                setError: (msg) => toast.error(msg),
+            })
         }
     });
 
@@ -148,6 +158,8 @@ const AddByNameModal = ({ open, onClose }) => {
             return String(dateVal);
         }
     };
+
+    console.log(feePacks, "feepacks")
 
     return (
         <Modal isOpen={open} toggle={handleClose} centered size={step === 2 ? "lg" : "md"}>
@@ -227,7 +239,7 @@ const AddByNameModal = ({ open, onClose }) => {
                                     <>
                                         <option value="">{t("Select an approved fee pack...")}</option>
                                         {feePacks.map((pack) => (
-                                            <option key={pack._id} value={pack._id}>
+                                            <option key={pack._id?._id || pack?._id} value={pack._id?._id || pack?._id}>
                                                 {pack.name} ({pack.pricing_summary || pack.model_code || 'Approved Model'})
                                             </option>
                                         ))}
