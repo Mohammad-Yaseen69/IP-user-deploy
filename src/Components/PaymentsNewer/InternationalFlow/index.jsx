@@ -1117,7 +1117,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                 }
                 // })
                 else {
-                    if (internationalData?.wallet?._id) {
+                    if (internationalData.payment_type?.value !== "wallet" || internationalData?.wallet?._id) {
                         if (internationalData.payoutChannel?.vendor === "thunes") {
                             createQuotation(Number(String(internationalData.amount)?.replaceAll(",", "")))
                         } else {
