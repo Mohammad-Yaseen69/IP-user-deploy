@@ -21,6 +21,7 @@ import { BeneficiaryRelation, friendsAndFamily, gendersData, idTypeData, occupat
 import PaymentChannelUI from "./PaymentChannelUI";
 import NeemaBenExtrasFields from "./NeemaBenExtrasFields";
 import citiesData from "../CitiesDropDown/CitiesData.json"
+import { preventEdgeSpaces, preventEmailSpaces } from "../../hooks/useTrimInput";
 
 
 
@@ -337,7 +338,10 @@ const IndividualAccount = ({ nameRegex, mobileView, handleChangeNumber, toggleSu
                                         }}>
                                             <FormGroup style={{ flex: 1, margin: 0 }}>
                                                 <Label className="col-form-label" htmlFor="first-name">{t("First Name")} <span className="req_star">*</span></Label>
-                                                <Input className="form-control" style={{ flex: 1, minWidth: "250px" }} id="first-name" type="text" placeholder={t("First Name")} required minLength={3} pattern="[A-Za-z\s]+" title={t("Only letters and spaces are allowed")} value={firstName} onChange={(e) => setFirstName(e.target.value.replace(/[^A-Za-z\s]/g, ""))} />                                            </FormGroup>
+                                                <Input className="form-control" style={{ flex: 1, minWidth: "250px" }}
+                                                onKeyDown={preventEdgeSpaces}
+
+                                                id="first-name" type="text" placeholder={t("First Name")} required minLength={3} pattern="[A-Za-z\s]+" title={t("Only letters and spaces are allowed")} value={firstName} onChange={(e) => setFirstName(e.target.value.replace(/[^A-Za-z\s]/g, ""))} />                                            </FormGroup>
                                             {
                                                 fieldInfoValidate("required_receiving_entity_fields", "middlename")
                                                 &&
@@ -347,7 +351,9 @@ const IndividualAccount = ({ nameRegex, mobileView, handleChangeNumber, toggleSu
                                             }
                                             <FormGroup style={{ flex: 1, margin: 0 }}>
                                                 <Label className="col-form-label" htmlFor="last-name">{t("Last Name")} <span className="req_star">*</span></Label>
-                                                <Input className="form-control" style={{ flex: 1, minWidth: "250px" }} id="last-name" type="text" placeholder={t("Last Name")} required minLength={3} pattern="[A-Za-z\s]+" title={t("Only letters and spaces are allowed")} value={lastName} onChange={(e) => setLastName(e.target.value.replace(/[^A-Za-z\s]/g, ""))} />
+                                                <Input className="form-control" style={{ flex: 1, minWidth: "250px" }} 
+                                                onKeyDown={preventEdgeSpaces}
+                                                id="last-name" type="text" placeholder={t("Last Name")} required minLength={3} pattern="[A-Za-z\s]+" title={t("Only letters and spaces are allowed")} value={lastName} onChange={(e) => setLastName(e.target.value.replace(/[^A-Za-z\s]/g, ""))} />
                                             </FormGroup>
                                         </div>
                                     </FormGroup>
@@ -530,6 +536,7 @@ const IndividualAccount = ({ nameRegex, mobileView, handleChangeNumber, toggleSu
                                             name="address"
                                             id="address"
                                             type="textarea"
+                                            onKeyDown={preventEdgeSpaces}
                                             placeholder={t('Address Line')}
                                             disabled={!country}
                                             readOnly={!country}
@@ -627,7 +634,9 @@ const IndividualAccount = ({ nameRegex, mobileView, handleChangeNumber, toggleSu
                                         }}>
                                             <FormGroup style={{ flex: 1, margin: 0 }}>
                                                 <Label className="col-form-label" htmlFor="email">{t("Email Address")}</Label>
-                                                <Input className="form-control" style={{ flex: 1, minWidth: "250px" }} id="email" name="email" type="email" placeholder={t('Email Address')} title="abc@xyz.com" value={formData.email} onChange={inputChangeHandler} />
+                                                <Input className="form-control" style={{ flex: 1, minWidth: "250px" }} 
+                                                onKeyDown={preventEmailSpaces}
+                                                id="email" name="email" type="email" placeholder={t('Email Address')} title="abc@xyz.com" value={formData.email} onChange={inputChangeHandler} />
                                             </FormGroup>
                                             <FormGroup style={{ flex: 1, margin: 0, transform: "translateY(-4px)" }}>
                                                 <Label className="col-form-label" htmlFor="mobile_number">{t("Mobile Number")} <span className="req_star">*</span></Label>

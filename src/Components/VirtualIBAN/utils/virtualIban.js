@@ -2,6 +2,22 @@ export const unwrapVirtualIbanResponse = (res) => res?.data?.data ?? res?.data ?
 
 export const getVirtualIbanId = (iban) => iban?._id || iban?.id || ""
 
+export const getPaymentReference = (iban, userDetails) => {
+    const rawVirtualIbanId = iban?.virtualIbanId ? String(iban.virtualIbanId).trim() : ""
+    if (rawVirtualIbanId) {
+        `Ref ${rawVirtualIbanId}`
+    }
+
+    const username = userDetails?.username
+    if (username) {
+        const trimmed = String(username).trim()
+        return `Ref ${trimmed}`
+    }
+
+    const fallbackId = iban?._id || iban?.id || ""
+    return fallbackId ? `Ref ${fallbackId}` : "Ref"
+}
+
 export const getVirtualIbanCountry = (iban) => {
     const rawCountry = iban?.country || iban?.jurisdiction || iban?.bank?.address?.country
     const country = String(rawCountry || iban?.iban || "").slice(0, 2).toUpperCase()

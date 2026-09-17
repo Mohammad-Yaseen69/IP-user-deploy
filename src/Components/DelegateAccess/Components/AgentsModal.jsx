@@ -10,6 +10,7 @@ import userFour from "../images/UsersFour.svg"
 import s from "../styles/AgentsModal.module.css"
 import PermissionTree from './PermissionTree'
 import { Button, Modal, ModalBody, ModalHeader, Spinner } from 'reactstrap'
+import { preventEdgeSpaces, preventEmailSpaces } from "../../../hooks/useTrimInput"
 
 const STEPS = [
     { id: 1, label: "Profile", icon: <User size={14} /> },
@@ -362,6 +363,7 @@ const AgentsModal = ({ isRole, isOpen, onClose, t, width, roles, isEdit, editDat
                                 <label>{t("First Name")}</label>
                                 <input
                                     name="first_name"
+                                    onKeyDown={preventEdgeSpaces}
                                     value={form.first_name}
                                     onChange={handleChange}
                                     placeholder={t("First Name")}
@@ -373,6 +375,7 @@ const AgentsModal = ({ isRole, isOpen, onClose, t, width, roles, isEdit, editDat
                                 <label>{t("Last Name")}</label>
                                 <input
                                     name="last_name"
+                                    onKeyDown={preventEdgeSpaces}
                                     value={form.last_name}
                                     onChange={handleChange}
                                     placeholder={t("Last Name")}
@@ -485,11 +488,15 @@ const AgentsModal = ({ isRole, isOpen, onClose, t, width, roles, isEdit, editDat
                                                 <div className={s.nameInput}>
                                                     <div className={s.formGroup}>
                                                         <label className={s.formLabel}>{t("First Name")}</label>
-                                                        <input className={s.formInput} name="first_name" value={form.first_name} onChange={handleChange} placeholder={t("Enter first name")} required />
+                                                        <input className={s.formInput}
+                                                            onKeyDown={preventEdgeSpaces}
+                                                            name="first_name" value={form.first_name} onChange={handleChange} placeholder={t("Enter first name")} required />
                                                     </div>
                                                     <div className={s.formGroup}>
                                                         <label className={s.formLabel}>{t("Last Name")}</label>
-                                                        <input className={s.formInput} name="last_name" value={form.last_name} onChange={handleChange} placeholder={t("Enter last name")} required />
+                                                        <input className={s.formInput}
+                                                            onKeyDown={preventEdgeSpaces}
+                                                            name="last_name" value={form.last_name} onChange={handleChange} placeholder={t("Enter last name")} required />
                                                     </div>
                                                 </div>
                                                 <div className={s.formGroup}>
@@ -520,7 +527,9 @@ const AgentsModal = ({ isRole, isOpen, onClose, t, width, roles, isEdit, editDat
                                                 </div>
                                                 <div className={s.formGroup}>
                                                     <label className={s.formLabel}>{t("Email")}</label>
-                                                    <input className={s.formInput} name="email" type="email" value={form.email} onChange={handleChange} placeholder={t("Enter email address")} required={!isEdit} disabled={isEdit} />
+                                                    <input className={s.formInput} name="email"
+                                                        onKeyDown={preventEmailSpaces}
+                                                        type="email" value={form.email} onChange={handleChange} placeholder={t("Enter email address")} required={!isEdit} disabled={isEdit} />
                                                 </div>
                                             </>
                                         )}

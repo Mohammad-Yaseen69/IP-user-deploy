@@ -5,6 +5,7 @@ import { Field, TextInput, Select, TextArea, ButtonForRequests } from '../Receip
 import { UserContext } from '../../Context/UserContext'
 import { formatCurrency } from '../../Helper/AmountFormat'
 import { Toggle } from '../MyMasterCard/CardPurchased'
+import { preventEdgeSpaces } from '../../hooks/useTrimInput'
 
 const PricingsAddModal = ({ isOpen, toggle, editMode = false, plan = null, onEditSave, onAddSave, submitting = false }) => {
     const { t } = useTranslation()
@@ -92,6 +93,7 @@ const PricingsAddModal = ({ isOpen, toggle, editMode = false, plan = null, onEdi
                         <TextInput
                             value={title}
                             maxLength={100}
+                            onKeyDown={preventEdgeSpaces}
                             onChange={(e) => setTitle(e.target.value)}
                             placeholder={t("Short name of your plan (e.g. Starter)")}
                             styles={{ boxShadow: "0 2px 4px 0 rgba(27, 28, 29, 0.04)" }}
@@ -103,6 +105,7 @@ const PricingsAddModal = ({ isOpen, toggle, editMode = false, plan = null, onEdi
                         <TextInput
                             value={description}
                             maxLength={350}
+                            onKeyDown={preventEdgeSpaces}
                             onChange={e => setDescription(e.target.value)}
                             placeholder={t("Short line for your customer")}
                         />
@@ -158,6 +161,7 @@ const PricingsAddModal = ({ isOpen, toggle, editMode = false, plan = null, onEdi
                             as="textarea"
                             rows={6}
                             value={tAndC}
+                            onKeyDown={preventEdgeSpaces}
                             maxLength={1500}
                             onChange={e => setTAndC(e.target.value)}
                             placeholder={t("Type in your Terms and Conditions")}

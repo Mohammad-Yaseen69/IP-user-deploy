@@ -305,6 +305,15 @@ const Layout = ({ children, classNames, ...rest }) => {
       setShowKyc(true)
     }
   }, [userDetails])
+
+  const isFinancialQuestionModalOpen =
+    (is30DaysInfo && userDetails?.account_type === "individual" && profileCompleted === true) ||
+    (threeDaysReminderInfo && userDetails?.account_type === "individual" && profileCompleted === true) ||
+    is30Days ||
+    (threeDaysReminder && !threeDaysReminderInfo && profileCompleted === true && !is30DaysInfo);
+
+  const canShowForcedAuthenticator = shouldForceAuthenticator && !showModal && !isFinancialQuestionModalOpen;
+
   return (
     <Fragment>
       {
@@ -409,7 +418,7 @@ const Layout = ({ children, classNames, ...rest }) => {
                 <ProfileCompletionModal setShowModal={setShowModal} profileIncompleteReason={profileIncompleteReason} kyc={showKyc && profileCompleted} />
               }
               {
-                (shouldForceAuthenticator && !showModal)
+                canShowForcedAuthenticator
                 &&
                 <ForcedAuthenticatorModal />
               }
@@ -452,7 +461,7 @@ const Layout = ({ children, classNames, ...rest }) => {
                 <ProfileCompletionModal setShowModal={setShowModal} profileIncompleteReason={profileIncompleteReason} kyc={showKyc && profileCompleted} />
               }
               {
-                (shouldForceAuthenticator && !showModal)
+                canShowForcedAuthenticator
                 &&
                 <ForcedAuthenticatorModal />
               }
