@@ -14,7 +14,8 @@ import { usePermission } from '../../hooks/GeneralUse/usePermission'
 
 const WalletsMobile = ({ setCurrentWallet }) => {
     const { t } = useTranslation()
-    const { userWallets, totalReferralAmount, available: totalBalance, balanceLoading: isLoading } = useContext(UserContext)
+    const { userWallets: allWallets, totalReferralAmount, available: totalBalance, balanceLoading: isLoading } = useContext(UserContext)
+    const userWallets = allWallets.filter(w => w?.provider !== 'bvnk')
     const [activeDot, setActiveDot] = useState(0)
     const can = usePermission()
 
@@ -48,13 +49,6 @@ const WalletsMobile = ({ setCurrentWallet }) => {
                         &&
                         <OtherBalance />
                     }
-                    {/* <div className={styles.ref_dets}>
-                        <div className={styles.ref_amount}>
-                            <img src={per} alt="%" />
-                            <span>${totalReferralAmount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
-                        </div>
-                        <Link to={"/referrals"}>{t("Referrals")} {">"}</Link>
-                    </div> */}
                 </div>
                 <div className={styles.cards}>
                     <Swiper
@@ -68,7 +62,6 @@ const WalletsMobile = ({ setCurrentWallet }) => {
                         style={{ minWidth: "250px", cursor: "none", height: "100%", maxWidth: "400px" }}
                         className="mySwiper"
                         onSlideChange={e => setActiveDot(e.activeIndex)}
-                    // ref={swiperRef}
                     >
                         {
                             userWallets.length > 0
