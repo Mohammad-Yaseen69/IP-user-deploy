@@ -48,6 +48,7 @@ const PlaidBankTransfer = ({
   const [pendingTransactionId, setPendingTransactionId] = useState(null);
   const [autoOpen, setAutoOpen] = useState(false);
   const [otpToken, setOtpToken] = useState(null);
+  const [otpMethods, setOtpMethods] = useState(null);
   const [showOtp, setShowOtp] = useState(false);
   const [codeType, setCodeType] = useState("sms")
   const [redirectTimer, setRedirectTimer] = useState(10);
@@ -56,6 +57,11 @@ const PlaidBankTransfer = ({
       console.log(token, data)
       setShowOtp(true)
       setOtpToken(token)
+      setOtpMethods(data)
+      if (data?.authenticator) setCodeType('authenticator')
+      else if (data?.email) setCodeType('email')
+      else if (data?.whatsapp) setCodeType('whatsapp')
+      else if (data?.phone) setCodeType('sms')
     },
     onError: (err) => {
       dataHandler("error", err?.message || "We are unable to process your request at the moment, please try again later!")
@@ -507,6 +513,7 @@ const PlaidBankTransfer = ({
             resendHandler={sendOtpHandler}
             authType={codeType}
             setAuthType={setCodeType}
+            methods={otpMethods}
           />
         </ModalBody>
       </Modal>
