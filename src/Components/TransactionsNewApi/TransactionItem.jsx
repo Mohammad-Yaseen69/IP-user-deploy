@@ -77,6 +77,8 @@ const TransactionItem = ({ item, activeItem, setActiveItem, index, fromReferral 
                 return "#9f83f2"
             case "reverted":
                 return "#9f83f2"
+            case "abandoned":
+                return "#FFA500"
             default:
                 break;
         }
