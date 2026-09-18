@@ -222,7 +222,7 @@ const OnboardingIBAN = ({ onCreated }) => {
             return
         }
 
-        const selectedType = userDetails?.tfa ? 'authenticator' : 'sms'
+        const selectedType = userDetails?.tfa ? 'authenticator' : userDetails?.email_verification ? 'email' : userDetails?.whatsapp_verification ? 'whatsapp' : 'sms'
         setCodeType(selectedType)
 
         const payload = {

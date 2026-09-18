@@ -58,10 +58,14 @@ const PlaidBankTransfer = ({
       setShowOtp(true)
       setOtpToken(token)
       setOtpMethods(data)
-      if (data?.authenticator) setCodeType('authenticator')
-      else if (data?.email) setCodeType('email')
-      else if (data?.whatsapp) setCodeType('whatsapp')
-      else if (data?.phone) setCodeType('sms')
+      if (!showOtp) {
+        setCodeType(
+          data?.authenticator ? 'authenticator'
+            : data?.email ? 'email'
+              : data?.whatsapp ? 'whatsapp'
+                : 'sms'
+        )
+      }
     },
     onError: (err) => {
       dataHandler("error", err?.message || "We are unable to process your request at the moment, please try again later!")
@@ -73,7 +77,12 @@ const PlaidBankTransfer = ({
       if (type !== "verification_payment") {
         fetchSavedBanks();
       }
-      setCodeType(userDetails?.tfa ? "authenticator" : "sms")
+      setCodeType(
+        userDetails?.tfa ? "authenticator"
+          : userDetails?.email_verification ? "email"
+            : userDetails?.whatsapp_verification ? "whatsapp"
+              : "sms"
+      )
     }
   }, [userDetails?._id, type]);
   useEffect(() => {

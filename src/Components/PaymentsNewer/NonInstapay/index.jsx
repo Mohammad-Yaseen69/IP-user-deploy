@@ -140,8 +140,14 @@ const NonInstapayPayment = ({ sendPaymentType, setSendPaymentType, setStep }) =>
     })
 
     const { sendOtp: sendOtpFunction } = useSendOtp({
-        onSuccess: (token) => {
+        onSuccess: (token, dec) => {
             dataHandler("loading", false)
+            if (dec?.authenticator || dec?.email || dec?.whatsapp || dec?.phone) {
+                dataHandler("otpMethods", dec)
+                if (!data.showOtpModal) {
+                    dataHandler("codeType", dec?.authenticator ? "authenticator" : dec?.email ? "email" : dec?.whatsapp ? "whatsapp" : "sms")
+                }
+            }
             dataHandler("showOtpModal", true)
             dataHandler("otp_token", token)
         },
@@ -539,6 +545,10 @@ const NonInstapayPayment = ({ sendPaymentType, setSendPaymentType, setStep }) =>
         if (userDetails?._id) {
             if (userDetails?.tfa) {
                 dataHandler("codeType", "authenticator")
+            } else if (userDetails?.email_verification) {
+                dataHandler("codeType", "email")
+            } else if (userDetails?.whatsapp_verification) {
+                dataHandler("codeType", "whatsapp")
             } else {
                 dataHandler("codeType", "sms")
             }
@@ -756,12 +766,10 @@ const NonInstapayPayment = ({ sendPaymentType, setSendPaymentType, setStep }) =>
                                         reset()
                                     }}
                                     resendHandler={(codeType) => {
-                                        if (codeType) {
-                                            dataHandler("codeType", codeType)
-                                        }
                                         sendOtp(codeType)
                                         reset()
                                     }}
+                                    methods={data.otpMethods}
                                     error={data.otpError}
                                 />
                             }

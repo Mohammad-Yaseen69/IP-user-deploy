@@ -603,7 +603,7 @@ const SepaTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, i
     const liveBalance = syncedBalance?.balance ?? availableBalance ?? selectedIban?.balance ?? 0
     const currencyCode = selectedIban?.currency || "EUR"
     const sourceAvailableBalance = getSourceBalance(liveBalance, selectedIban)
-    const getDefaultAuthType = () => (userDetails?.tfa ? "authenticator" : "sms")
+    const getDefaultAuthType = () => (userDetails?.tfa ? "authenticator" : userDetails?.email_verification ? "email" : userDetails?.whatsapp_verification ? "whatsapp" : "sms")
     const [currentStep, setCurrentStep] = useState(STEPS.AMOUNT)
     const [amount, setAmount] = useState("")
     const [transferSpeed, setTransferSpeed] = useState("standard")
@@ -619,6 +619,8 @@ const SepaTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, i
     const [additionalInfo, setAdditionalInfo] = useState("")
     const [confirmedDetails, setConfirmedDetails] = useState(false)
     const [authType, setAuthType] = useState(getDefaultAuthType)
+    const [otpChannel, setOtpChannel] = useState(getDefaultAuthType)
+    const [otpMethods, setOtpMethods] = useState(null)
     const [feeDetails, setFeeDetails] = useState(null)
     const [otpToken, setOtpToken] = useState("")
     const [payoutResult, setPayoutResult] = useState(null)
@@ -628,8 +630,14 @@ const SepaTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, i
     const payoutDirect = useVirtualIbanPayoutDirect()
 
     const { sendOtp, isSendingOtp } = useSendOtp({
-        onSuccess: (token) => {
+        onSuccess: (token, dec) => {
             setOtpToken(token)
+            setOtpMethods(dec)
+            if (currentStep !== STEPS.OTP) {
+                const initialAuthType = dec?.authenticator ? "authenticator" : dec?.email ? "email" : dec?.whatsapp ? "whatsapp" : "sms"
+                setAuthType(initialAuthType)
+                setOtpChannel(initialAuthType)
+            }
             setCurrentStep(STEPS.OTP)
         },
         onError: (err) => {
@@ -688,6 +696,8 @@ const SepaTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, i
         setAdditionalInfo("")
         setConfirmedDetails(false)
         setAuthType(getDefaultAuthType())
+        setOtpChannel(getDefaultAuthType())
+        setOtpMethods(null)
         setFeeDetails(null)
         setOtpToken("")
         setPayoutResult(null)
@@ -695,7 +705,9 @@ const SepaTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, i
 
     useEffect(() => {
         if (userDetails?.tfa) setAuthType("authenticator")
-    }, [userDetails?.tfa])
+        else if (userDetails?.email_verification) setAuthType("email")
+        else if (userDetails?.whatsapp_verification) setAuthType("whatsapp")
+    }, [userDetails?.tfa, userDetails?.email_verification, userDetails?.whatsapp_verification])
 
     useEffect(() => {
         if (beneficiaries && beneficiaries.length > 0) {
@@ -746,9 +758,10 @@ const SepaTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, i
     }
 
     const handleSendOtp = async (otpCodeType) => {
-        const nextAuthType = otpCodeType || authType
-        setAuthType(nextAuthType)
-        await sendOtp(buildPayoutPayload(), nextAuthType)
+        const nextChannel = otpCodeType || otpChannel
+        setOtpChannel(nextChannel)
+        setAuthType(nextChannel)
+        await sendOtp(buildPayoutPayload(), nextChannel)
     }
 
     const verifyOtp = async (setVerified, type, otp, setOtpError) => {
@@ -882,7 +895,7 @@ const SepaTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, i
             case STEPS.REVIEW:
                 return <ReviewStep amount={amount} currencyCode={currencyCode} transferSpeed={transferSpeed} selectedBeneficiary={selectedBeneficiary} purpose={purpose} additionalInfo={additionalInfo} feeDetails={feeDetails} confirmedDetails={confirmedDetails} setConfirmedDetails={setConfirmedDetails} />
             case STEPS.OTP:
-                return <OTPConfirmation variant="card" fullHeight setter={setCurrentStep} setterValue={STEPS.DONE} hideOtp={() => { }} callback={verifyOtp} processing={payoutDirect.isPending} resendHandler={handleSendOtp} authType={authType} setAuthType={setAuthType}
+                return <OTPConfirmation variant="card" fullHeight setter={setCurrentStep} setterValue={STEPS.DONE} hideOtp={() => { }} callback={verifyOtp} processing={payoutDirect.isPending} resendHandler={handleSendOtp} authType={authType} setAuthType={setAuthType} methods={otpMethods}
                     showBackButton={true}
                     onBack={handleBack}
                 />

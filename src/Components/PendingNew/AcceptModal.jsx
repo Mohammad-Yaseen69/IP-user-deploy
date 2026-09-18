@@ -25,11 +25,12 @@ const AcceptModal = ({ isOpen, toggle, item }) => {
     const [showSuccess, setShowSuccess] = useState(false)
     const [showOtp, setShowOtp] = useState(false)
     const [codeType, setCodeType] = useState("sms")
+    const [otpMethods, setOtpMethods] = useState(null)
     const [error, setError] = useState("")
     const queryClient = useQueryClient()
 
     useEffect(() => {
-        setCodeType(userDetails?.tfa ? "authenticator" : "sms")
+        setCodeType(userDetails?.tfa ? "authenticator" : userDetails?.email_verification ? "email" : userDetails?.whatsapp_verification ? "whatsapp" : "sms")
     }, [userDetails])
 
     useEffect(() => {
@@ -40,7 +41,6 @@ const AcceptModal = ({ isOpen, toggle, item }) => {
 
     const sendOtp = async (method) => {
         const resolvedType = typeof method === 'string' ? method : codeType
-        if (typeof method === 'string' && method !== codeType) setCodeType(method)
         setSaving(true)
         try {
             const data = {
@@ -62,6 +62,8 @@ const AcceptModal = ({ isOpen, toggle, item }) => {
 
             const dec = decryptData(res.data.data)
             // console.log(dec)
+            setOtpMethods(dec)
+            if (typeof method !== 'string') setCodeType(dec?.authenticator ? "authenticator" : dec?.email ? "email" : dec?.whatsapp ? "whatsapp" : "sms")
             setShowOtp(true)
             setToken(dec?.token)
             await queryClient.invalidateQueries({ queryKey: ['receivedPaymentRequests', userDetails?._id] })
@@ -195,6 +197,7 @@ const AcceptModal = ({ isOpen, toggle, item }) => {
                                     authType={codeType}
                                     setAuthType={setCodeType}
                                     resendHandler={sendOtp}
+                                    methods={otpMethods}
                                 />
                             </ModalBody>
                         </>

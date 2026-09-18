@@ -78,13 +78,14 @@ const VerificationPayment = ({ isOpen, toggle, verify, desc, occupation, loading
     const [currentCard, setCurrentCard] = useState(null)
     const [cardError, setCardError] = useState('');
     const [codeType, setCodeType] = useState("sms")
+    const [otpMethods, setOtpMethods] = useState(null)
     const [feeDetails, setFeeDetails] = useState({})
     const { isLoading, methods } = useAvailableMethods()
     const [createdTransactionId, setCreatedTransactionId] = useState(null)
     const [error, setError] = useState(null)
 
     useEffect(() => {
-        setCodeType(userDetails?.tfa ? "authenticator" : "sms")
+        setCodeType(userDetails?.tfa ? "authenticator" : userDetails?.email_verification ? "email" : userDetails?.whatsapp_verification ? "whatsapp" : "sms")
     }, [userDetails])
 
     useEffect(() => {
@@ -138,7 +139,6 @@ const VerificationPayment = ({ isOpen, toggle, verify, desc, occupation, loading
 
     const sendOtp = async (method) => {
         setSaving(true)
-        if (method) setCodeType(method)
         try {
             const data = {
                 data: {
@@ -168,6 +168,8 @@ const VerificationPayment = ({ isOpen, toggle, verify, desc, occupation, loading
 
             const dec = decryptData(res.data.data)
             setToken(dec?.token)
+            setOtpMethods(dec)
+            if (!showOtp) setCodeType(dec?.authenticator ? "authenticator" : dec?.email ? "email" : dec?.whatsapp ? "whatsapp" : "sms")
             setShowOtp(true)
             if (!isKYB) {
                 toggle()
@@ -592,6 +594,7 @@ const VerificationPayment = ({ isOpen, toggle, verify, desc, occupation, loading
                         resendHandler={sendOtp}
                         authType={codeType}
                         setAuthType={setCodeType}
+                        methods={otpMethods}
                     />
                 </ModalBody>
             </Modal>

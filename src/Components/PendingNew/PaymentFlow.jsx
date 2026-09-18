@@ -26,11 +26,12 @@ const PaymentFlow = ({ item, step, setStep, setStatus, verifyToken }) => {
     const [sending, setSending] = useState(false)
     const [token, setToken] = useState("")
     const [codeType, setCodeType] = useState("sms")
+    const [otpMethods, setOtpMethods] = useState(null)
     const [fx, setFx] = useState({})
     const queryClient = useQueryClient()
 
     useEffect(() => {
-        setCodeType(userDetails?.tfa ? "authenticator" : "sms")
+        setCodeType(userDetails?.tfa ? "authenticator" : userDetails?.email_verification ? "email" : userDetails?.whatsapp_verification ? "whatsapp" : "sms")
     }, [userDetails])
     useEffect(() => setStep(1), [])
 
@@ -92,7 +93,6 @@ const PaymentFlow = ({ item, step, setStep, setStatus, verifyToken }) => {
 
     const sendOtp = async (method) => {
         const resolvedType = typeof method === 'string' ? method : codeType
-        if (typeof method === 'string' && method !== codeType) setCodeType(method)
         setSending(true)
         try {
             const data = {
@@ -114,6 +114,8 @@ const PaymentFlow = ({ item, step, setStep, setStatus, verifyToken }) => {
 
             const dec = decryptData(res.data.data)
             // console.log(dec)
+            setOtpMethods(dec)
+            if (typeof method !== 'string') setCodeType(dec?.authenticator ? "authenticator" : dec?.email ? "email" : dec?.whatsapp ? "whatsapp" : "sms")
             setShowOtp(true)
             setToken(dec?.token)
         } catch (error) {
@@ -207,6 +209,7 @@ const PaymentFlow = ({ item, step, setStep, setStatus, verifyToken }) => {
                         authType={codeType}
                         setAuthType={setCodeType}
                         resendHandler={sendOtp}
+                        methods={otpMethods}
                     />
                 </ModalBody>
             </Modal>

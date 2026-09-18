@@ -68,9 +68,10 @@ const Password = () => {
     const [token, setToken] = useState("")
     const [saving, setSaving] = useState("")
     const [codeType, setCodeType] = useState("sms")
+    const [otpMethods, setOtpMethods] = useState(null)
 
     useEffect(() => {
-        setCodeType(userDetails?.tfa ? "authenticator" : "sms")
+        setCodeType(userDetails?.tfa ? "authenticator" : userDetails?.email_verification ? "email" : userDetails?.whatsapp_verification ? "whatsapp" : "sms")
     }, [userDetails])
 
     const sendOtp = async (eventOrMethod) => {
@@ -82,7 +83,6 @@ const Password = () => {
         }
         setSaving(true)
         const type = method || codeType
-        if (method) setCodeType(method)
         try {
             const data = {
                 data: {
@@ -102,6 +102,8 @@ const Password = () => {
 
             const dec = decryptData(res.data.data)
             setToken(dec?.token)
+            setOtpMethods(dec)
+            if (!showOtp) setCodeType(dec?.authenticator ? "authenticator" : dec?.email ? "email" : dec?.whatsapp ? "whatsapp" : "sms")
             setShowOtp(true)
         } catch (error) {
             toast.error("Something went wrong while changing the password!")
@@ -258,6 +260,7 @@ const Password = () => {
                         resendHandler={sendOtp}
                         authType={codeType}
                         setAuthType={setCodeType}
+                        methods={otpMethods}
                     />
                 </ModalBody>
             </Modal>

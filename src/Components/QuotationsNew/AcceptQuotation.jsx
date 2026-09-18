@@ -104,6 +104,10 @@ const AcceptQuotation = ({ isOpen, toggle, item, type = "receive" }) => {
     useEffect(() => {
         if (userDetails?.tfa) {
             dataHandler("codeType", "authenticator")
+        } else if (userDetails?.email_verification) {
+            dataHandler("codeType", "email")
+        } else if (userDetails?.whatsapp_verification) {
+            dataHandler("codeType", "whatsapp")
         }
     }, [userDetails])
 
@@ -350,6 +354,8 @@ const AcceptQuotation = ({ isOpen, toggle, item, type = "receive" }) => {
 
             const dec = decryptData(res.data.data)
             // console.log(dec)
+            dataHandler("otpMethods", dec)
+            if (!codeType) dataHandler("codeType", dec?.authenticator ? "authenticator" : dec?.email ? "email" : dec?.whatsapp ? "whatsapp" : "sms")
             dataHandler("show_otp", true)
             dataHandler("payment_token", dec?.token)
         } catch (error) {
@@ -863,6 +869,7 @@ const AcceptQuotation = ({ isOpen, toggle, item, type = "receive" }) => {
                                                         dataHandler("show_otp", false)
                                                     }}
                                                     resendHandler={sendOtp}
+                                                    methods={data.otpMethods}
                                                     error={data.otp_error}
                                                     resetIdempotency={reset}
 
@@ -1070,6 +1077,7 @@ const AcceptQuotation = ({ isOpen, toggle, item, type = "receive" }) => {
                                                                 dataHandler("show_otp", false)
                                                             }}
                                                             resendHandler={sendOtp}
+                                                            methods={data.otpMethods}
                                                             error={data.otp_error}
                                                             resetIdempotency={reset}
 

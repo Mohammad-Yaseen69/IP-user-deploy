@@ -189,7 +189,6 @@ const CardOtp = ({
     const navigate = useNavigate()
     const { userDetails } = useContext(UserContext)
     const inactivityCtx = useContext(InactivityContext)
-
     const { values: otpValues, setValues: setOTPValues, refs: inputRefs, handleChange, handleKeyDown, focusFirst, isComplete } = useOtpFields(numberOfFields)
     const { seconds: resendTimer, setSeconds: setResendTimer, formatMMSS } = useCountdown(type === 'email' ? 300 : 90)
 
@@ -268,13 +267,15 @@ const CardOtp = ({
                         {!hideTfaSwitch && (
                             hasAuthenticator ? (
                                 <span style={{ fontSize: '12px' }} onClick={() => {
-                                    if (authType !== 'sms') {
+                                    if (authType === 'authenticator') {
                                         focusFirst()
                                         setOTPValues(Array(numberOfFields).fill(''))
-                                        setResendTimer(type === 'email' ? 300 : 120)
+                                        setResendTimer(activeNonAuthMethod === 'email' ? 300 : 120)
                                         resendHandler(activeNonAuthMethod)
+                                        setAuthType(activeNonAuthMethod)
+                                    } else {
+                                        setAuthType('authenticator')
                                     }
-                                    setAuthType(authType === 'sms' ? 'authenticator' : 'sms')
                                 }}>
                                     <span style={{ color: '#5926f0', fontWeight: 600, textDecoration: 'underline', cursor: 'pointer' }}>
                                         {authType === 'sms'
@@ -340,7 +341,8 @@ const ModalOtp = ({ isOpen, toggle, callback, data, dataHandler, resendHandler, 
     const navigate = useNavigate()
     const { userDetails } = useContext(UserContext)
     const { values: otpValues, setValues: setOTPValues, refs: inputRefs, handleChange, handleKeyDown, isComplete } = useOtpFields(numberOfFields)
-    const { seconds: resendTimer, setSeconds: setResendTimer } = useCountdown(data.codeType === 'sms' ? 120 : 0)
+    const initialSeconds = data.codeType === 'authenticator' ? 0 : (data.codeType === 'email' ? 300 : 120)
+    const { seconds: resendTimer, setSeconds: setResendTimer } = useCountdown(initialSeconds)
     const buttonRef = useRef(null)
 
     const { available: availableMethods } = getAvailableOtpMethods(userDetails, methods)
@@ -389,8 +391,7 @@ const ModalOtp = ({ isOpen, toggle, callback, data, dataHandler, resendHandler, 
             style={{ borderRadius: '1rem', width: '100vw', maxWidth: window.innerWidth > 1000 ? '800px' : '96vw', overflow: 'hidden' }}>
             <ModalBody className={modalStyles.body} style={{ WebkitTransform: 'translateZ(0)', transform: 'translateZ(0)' }}>
                 <div className={modalStyles.left}>
-                    <h5>{data.codeType === 'sms' ? `${t(OTP_METHOD_CONFIG[selectedMethod]?.label)} ${t('Verification Code')}` : t('Google Authenticator')}</h5>
-                </div>
+                    <h5>{data.codeType !== 'authenticator' ? `${t(OTP_METHOD_CONFIG[data.codeType]?.label)} ${t('Verification Code')}` : t('Google Authenticator')}</h5>                </div>
                 <div className={modalStyles.right}>
                     <label>{data.codeType === 'sms' ? `${t(OTP_METHOD_CONFIG[selectedMethod]?.label)} ${t('OTP Verification Code')}` : t('Two Factor Authentication Code')}</label>
                     <div className={modalStyles.inputs}>
@@ -404,7 +405,7 @@ const ModalOtp = ({ isOpen, toggle, callback, data, dataHandler, resendHandler, 
 
                     <div className={modalStyles.resend_and_switch}>
                         <span>
-                            {data.codeType === 'sms'
+                            {data.codeType !== 'authenticator'
                                 ? (resendTimer > 0
                                     ? t('Resend available in ') + resendTimer + ' ' + t('seconds')
                                     : (
@@ -429,12 +430,7 @@ const ModalOtp = ({ isOpen, toggle, callback, data, dataHandler, resendHandler, 
                         </div>
 
                         <div className={modalStyles.otpMethods}>
-                            {availableMethods.filter((methodId) => {
-                                const isSelected =
-                                    (methodId === 'authenticator' && data.codeType === 'authenticator') ||
-                                    (methodId !== 'authenticator' && data.codeType === 'sms' && methodId === selectedMethod)
-                                return !isSelected
-                            }).map((methodId) => {
+                            {availableMethods.filter((methodId) => methodId !== data.codeType).map((methodId) => {
                                 const { label, Icon } = OTP_METHOD_CONFIG[methodId]
 
                                 return (
@@ -442,6 +438,7 @@ const ModalOtp = ({ isOpen, toggle, callback, data, dataHandler, resendHandler, 
                                         type="button"
                                         key={methodId}
                                         className={modalStyles.otpMethod}
+                                        disabled={methodId !== 'authenticator' && resendTimer > 0}
                                         onClick={() => {
 
                                             if (methodId === 'authenticator') {
@@ -453,7 +450,7 @@ const ModalOtp = ({ isOpen, toggle, callback, data, dataHandler, resendHandler, 
                                             setOTPValues(Array(numberOfFields).fill(''))
 
                                             setSelectedMethod(methodId)
-                                            dataHandler('codeType', 'sms')
+                                            dataHandler('codeType', methodId)
 
                                             if (resendTimer === 0) {
                                                 resendHandler(methodId)

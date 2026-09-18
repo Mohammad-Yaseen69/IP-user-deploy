@@ -22,14 +22,14 @@ const CommissionWithdraw = ({ isOpen, toggle, referralBalance = 0, defaultCurren
     const [complete, setComplete] = useState(false);
     const [token, setToken] = useState("")
     const [codeType, setCodeType] = useState("sms")
+    const [otpMethods, setOtpMethods] = useState(null)
 
     useEffect(() => {
-        setCodeType(userDetails?.tfa ? "authenticator" : "sms")
+        setCodeType(userDetails?.tfa ? "authenticator" : userDetails?.email_verification ? "email" : userDetails?.whatsapp_verification ? "whatsapp" : "sms")
     }, [userDetails])
 
     const sendOtp = async (method) => {
         const resolvedType = typeof method === 'string' ? method : codeType
-        if (typeof method === 'string' && method !== codeType) setCodeType(method)
         setSaving(true)
         setError("")
         try {
@@ -51,6 +51,8 @@ const CommissionWithdraw = ({ isOpen, toggle, referralBalance = 0, defaultCurren
 
             const dec = decryptData(res.data.data)
             // console.log(dec)
+            setOtpMethods(dec)
+            if (typeof method !== 'string') setCodeType(dec?.authenticator ? "authenticator" : dec?.email ? "email" : dec?.whatsapp ? "whatsapp" : "sms")
             setComplete(true)
             setToken(dec?.token)
         } catch (error) {
@@ -168,6 +170,7 @@ const CommissionWithdraw = ({ isOpen, toggle, referralBalance = 0, defaultCurren
                             resendHandler={sendOtp}
                             authType={codeType}
                             setAuthType={setCodeType}
+                            methods={otpMethods}
                         />
                 }
             </ModalBody>

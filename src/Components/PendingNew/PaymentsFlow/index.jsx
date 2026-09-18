@@ -95,6 +95,10 @@ const PaymentsFlow = ({ item }) => {
     useEffect(() => {
         if (userDetails?.tfa) {
             updateData("codeType", "authenticator")
+        } else if (userDetails?.email_verification) {
+            updateData("codeType", "email")
+        } else if (userDetails?.whatsapp_verification) {
+            updateData("codeType", "whatsapp")
         }
     }, [userDetails])
 

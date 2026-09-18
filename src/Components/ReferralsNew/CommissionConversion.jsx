@@ -30,10 +30,11 @@ const CommissionConversion = ({ isOpen, toggle, referralBalance = 0, defaultCurr
     const chevRef = useRef(null)
     const [saving, setSaving] = useState(false)
     const [codeType, setCodeType] = useState("sms")
+    const [otpMethods, setOtpMethods] = useState(null)
     const [loading, setLoading] = useState("")
 
     useEffect(() => {
-        setCodeType(userDetails?.tfa ? "authenticator" : "sms")
+        setCodeType(userDetails?.tfa ? "authenticator" : userDetails?.email_verification ? "email" : userDetails?.whatsapp_verification ? "whatsapp" : "sms")
     }, [userDetails])
 
     const handleDrag = (e, ui) => {
@@ -68,6 +69,8 @@ const CommissionConversion = ({ isOpen, toggle, referralBalance = 0, defaultCurr
 
             const dec = decryptData(res.data.data)
             console.log(dec)
+            setOtpMethods(dec)
+            if (!codeTypeArg) setCodeType(dec?.authenticator ? "authenticator" : dec?.email ? "email" : dec?.whatsapp ? "whatsapp" : "sms")
             setConfirmed(true)
             setToken(dec?.token)
         } catch (error) {
@@ -342,6 +345,7 @@ const CommissionConversion = ({ isOpen, toggle, referralBalance = 0, defaultCurr
                             resendHandler={sendOtp}
                             authType={codeType}
                             setAuthType={setCodeType}
+                            methods={otpMethods}
                         />
                 }
             </ModalBody>

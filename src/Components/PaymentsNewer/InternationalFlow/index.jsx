@@ -268,6 +268,10 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
     useEffect(() => {
         if (userDetails?.tfa) {
             updateInternationalData("codeType", "authenticator")
+        } else if (userDetails?.email_verification) {
+            updateInternationalData("codeType", "email")
+        } else if (userDetails?.whatsapp_verification) {
+            updateInternationalData("codeType", "whatsapp")
         }
         if (userDetails?.account_type && !internationalData.sendingType) {
             const defaultSendingType = userDetails.account_type === "individual" ? "C" : "B";
@@ -719,9 +723,6 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
     const createTransaction = async (codeType = "", isResend = true) => {
         setLoading(true)
         try {
-            if (codeType) {
-                updateInternationalData("codeType", codeType)
-            }
             let payload = {}
             const transaction_data = {
                 additional_information: internationalData.comment,
@@ -779,6 +780,12 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
             console.log(dec)
             if (!isResend) {
                 updateInternationalData("thunesCreateTransactionToken", dec?.token)
+            }
+            if (dec?.authenticator || dec?.email || dec?.whatsapp || dec?.phone) {
+                updateInternationalData("otpMethods", dec)
+                if (!internationalData.showOtpModal) {
+                    updateInternationalData("codeType", dec?.authenticator ? "authenticator" : dec?.email ? "email" : dec?.whatsapp ? "whatsapp" : "sms")
+                }
             }
             updateInternationalData("created_transaction", dec)
             updateInternationalData("showOtpModal", true)
@@ -1656,6 +1663,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                                                                     updateInternationalData("showOtpModal", false)
                                                                 }}
                                                                 resendHandler={createTransaction}
+                                                                methods={internationalData.otpMethods}
                                                                 error={internationalData.otpError}
                                                                 resetIdempotency={reset}
                                                             />
@@ -1916,6 +1924,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                                                                                         updateInternationalData("showOtpModal", false)
                                                                                     }}
                                                                                     resendHandler={createTransaction}
+                                                                                    methods={internationalData.otpMethods}
                                                                                     error={internationalData.otpError}
                                                                                     resetIdempotency={reset}
                                                                                 />

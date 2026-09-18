@@ -119,6 +119,10 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
     useEffect(() => {
         if (userDetails?.tfa) {
             updateDataHandler("codeType", "authenticator")
+        } else if (userDetails?.email_verification) {
+            updateDataHandler("codeType", "email")
+        } else if (userDetails?.whatsapp_verification) {
+            updateDataHandler("codeType", "whatsapp")
         }
     }, [userDetails])
 
@@ -256,9 +260,6 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
 
     const createTransaction = async (codeType = "") => {
         try {
-            if (codeType) {
-                updateDataHandler("codeType", codeType)
-            }
             const isOpenRange = +String(data?.airtime_amount)?.replaceAll(",", "") > 0 && data.service_type?.name?.toLowerCase()?.includes("airtime");
 
             const payload = {
@@ -286,6 +287,12 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
 
             const dec = decryptData(res.data.data)
             updateDataHandler("created_transaction", dec)
+            if (dec?.authenticator || dec?.email || dec?.whatsapp || dec?.phone) {
+                updateDataHandler("otpMethods", dec)
+                if (!data.show_otp) {
+                    updateDataHandler("codeType", dec?.authenticator ? "authenticator" : dec?.email ? "email" : dec?.whatsapp ? "whatsapp" : "sms")
+                }
+            }
             console.log("otpshow", "transactioncreated")
             updateDataHandler("show_otp", true)
         } catch (error) {
@@ -538,6 +545,7 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
                 updateDataHandler("show_otp", false)
             }}
             resendHandler={createTransaction}
+            methods={data.otpMethods}
             error={data.otpError}
             resetIdempotency={reset}
         />

@@ -253,6 +253,10 @@ const VirtualIbanModal = ({
     useEffect(() => {
         if (userDetails?.tfa) {
             setCodeType("authenticator")
+        } else if (userDetails?.email_verification) {
+            setCodeType("email")
+        } else if (userDetails?.whatsapp_verification) {
+            setCodeType("whatsapp")
         }
     }, [userDetails])
 

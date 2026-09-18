@@ -44,6 +44,7 @@ const TwoFactorAuth = () => {
     const [showFinger, setShowFinger] = useState(false)
     const [showSuccess, setShowSuccess] = useState(false)
     const [codeType, setCodeType] = useState("sms")
+    const [otpMethods, setOtpMethods] = useState(null)
     const [token, setToken] = useState(null)
     const [showBioModal, setShowBioModal] = useState(false)
 
@@ -267,7 +268,6 @@ const TwoFactorAuth = () => {
         }
         setIsSaving(true)
         const type = method || codeType
-        if (method) setCodeType(method)
         try {
             const data = {
                 data: {
@@ -283,6 +283,8 @@ const TwoFactorAuth = () => {
             })
 
             const dec = decryptData(res.data.data)
+            setOtpMethods(dec)
+            if (!showFinger) setCodeType(dec?.authenticator ? "authenticator" : dec?.email ? "email" : dec?.whatsapp ? "whatsapp" : "sms")
             setShowFinger(true)
 
             setToken(dec?.token)
@@ -634,6 +636,7 @@ const TwoFactorAuth = () => {
                             resendHandler={sendOtp}
                             authType={codeType}
                             setAuthType={setCodeType}
+                            methods={otpMethods}
                         // showAuthToggle={true}
                         />
                     </ModalBody>
