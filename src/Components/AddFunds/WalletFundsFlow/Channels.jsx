@@ -118,37 +118,6 @@ const Channels = ({
         toggle={() => setShowCardMaintenanceModal(false)}
       />
       <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        gap: "1rem",
-        maxHeight: "550px",
-        overflowY: "auto",
-      }}
-    >
-      {!isLoading ?
-        filteredChannels.map((item) => (
-          <Card
-            key={item?.name}
-            style={{ marginBottom: 0, borderRadius: "12px" }}
-            onClick={() => {
-              if (item?.coming_soon) return;
-              if (item?.value === "card" && !usePaytently) {
-                setShowCardMaintenanceModal(true);
-                return;
-              }
-              setChannel(item);
-            }}
-          >
-            <CardBody
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: ".5rem",
-                padding: "15px",
-                justifyContent: "space-between",
-                cursor: item?.coming_soon ? "not-allowed" : "pointer",
-                position: "relative",
         style={{
           display: "flex",
           flexDirection: "column",
@@ -173,7 +142,7 @@ const Channels = ({
                     return;
                   }
                 }
-                if (item?.value === "card") {
+                if (item?.value === "card" && !usePaytently) {
                   setShowCardMaintenanceModal(true);
                   return;
                 }

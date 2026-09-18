@@ -2,11 +2,6 @@ import { useEffect, useRef } from "react";
 import { Modal, ModalBody } from "reactstrap";
 import { useTranslation } from "react-i18next";
 
-// Renders Paytently's hosted-forms card page inside an iframe. Once the card is
-// collected the iframe signals us (via paytently-collected.html) and we redirect
-// the whole page to the authorize URL to complete 3DS.
-// Pass onCardCollected to run something first instead (guest pay runs its card checks
-// and only then gets the authorize URL back from the server).
 const PaytentlyHostedModal = ({ isOpen, hostedUrl, authorizeUrl, onClose, onCardCollected }) => {
     const { t } = useTranslation();
     const handled = useRef(false);

@@ -108,7 +108,8 @@ function reducer(state, action) {
 const NonInstapayPayment = ({ sendPaymentType, setSendPaymentType, setStep }) => {
     const [data, dispatch] = useReducer(reducer, initialState)
     const { userDetails, userWallets, setProfileLockTime } = useContext(UserContext)
-    const { limitStatus, clearStatus } = useTopupLimitCheck(data?.currency?.currency?.code, +String(data?.amount)?.replaceAll(",", ""), data?.payment_type?.value)
+    // The quoted sending amount, not data.amount: typing in "They Receive" leaves that stale.
+    const { limitStatus, clearStatus } = useTopupLimitCheck(data?.currency?.currency?.code, +String(data?.exchange_rate?.sending?.amount ?? data?.amount)?.replaceAll(",", ""), data?.payment_type?.value)
     const [showCardModal, setShowCardModal] = useState(false)
     const [paytentlyHosted, setPaytentlyHosted] = useState(null)
     const { getExchangeRate: getPlainExchangeRate } = usePlainFx()

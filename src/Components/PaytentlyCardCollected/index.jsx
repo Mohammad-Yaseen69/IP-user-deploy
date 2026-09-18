@@ -3,8 +3,6 @@ import { useTranslation } from "react-i18next"
 import InstaPayLoader from "../Loader"
 import { getPaytentlyGuestReturn, precheckPaytentlyGuestPayment } from "../../utils/Functions/paytently"
 
-// Paytently sent the whole window here after collecting a guest's card (instead of staying
-// inside our iframe). Run the card checks ourselves, then go on to 3DS or to the failed page.
 const PaytentlyCardCollected = () => {
     const { t } = useTranslation()
 

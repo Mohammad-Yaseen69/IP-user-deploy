@@ -144,7 +144,8 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, show
     const navigate = useNavigate()
     const { userDetails, authHeader, setProfileLockTime, userWallets } = useContext(UserContext)
     const [data, dispatch] = useReducer(reducer, initialState)
-    const { limitStatus, clearStatus } = useTopupLimitCheck(data?.currency?.currency?.code, +String(data?.amount)?.replaceAll(",", ""), data?.payment_type?.value)
+    // The quoted sending amount, not data.amount: typing in "They Receive" leaves that stale.
+    const { limitStatus, clearStatus } = useTopupLimitCheck(data?.currency?.currency?.code, +String(data?.exchange_rate?.sending?.amount ?? data?.amount)?.replaceAll(",", ""), data?.payment_type?.value)
     const { getKey, reset } = useIdempotency()
     const dataHandler = (field, value) => {
         dispatch({ type: "UPDATE_FIELD", field, value });
