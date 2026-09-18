@@ -228,7 +228,7 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay,
       const dec = decryptData(res.data.data)
       setOtpMethods(dec)
       if (!showOtpModal) {
-        setCodeType(dec?.authenticator ? "authenticator" : dec?.email ? "email" : dec?.whatsapp ? "whatsapp" : "sms")
+        setCodeType(dec?.otp_sent_on || "sms")
       }
       setToken(dec?.token)
       setshowOtpModal(true)

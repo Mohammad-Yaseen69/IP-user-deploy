@@ -220,7 +220,7 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card, setCurrentCardDetai
             const dec = decryptData(res?.data?.data)
             setOtpMethods(dec)
             if (!showOtpModal) {
-                setCodeType(dec?.authenticator ? "authenticator" : dec?.email ? "email" : dec?.whatsapp ? "whatsapp" : "sms")
+                setCodeType(dec?.otp_sent_on || "sms")
             }
             setshowOtpModal(true)
             setToken(dec?.token)

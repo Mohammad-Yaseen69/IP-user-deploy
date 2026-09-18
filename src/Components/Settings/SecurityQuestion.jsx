@@ -72,7 +72,7 @@ const SecurityQuestions = () => {
                 const dec = decryptData(res.data.data)
                 setToken(dec?.token)
                 setOtpMethods(dec)
-                if (!showOtp) setCodeType(dec?.authenticator ? "authenticator" : dec?.email ? "email" : dec?.whatsapp ? "whatsapp" : "sms")
+                if (!showOtp) setCodeType(dec?.otp_sent_on || "sms")
                 setShowOtp(true)
             } catch (error) {
                 toast.error("Something went wrong while sending otp!")

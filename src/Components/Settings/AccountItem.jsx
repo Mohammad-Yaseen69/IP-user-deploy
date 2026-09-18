@@ -69,7 +69,7 @@ const AccountItem = ({ data }) => {
             const dec = decryptData(res.data.data)
             setToken(dec?.token)
             setOtpMethods(dec)
-            if (!showOtp) setCodeType(dec?.authenticator ? "authenticator" : dec?.email ? "email" : dec?.whatsapp ? "whatsapp" : "sms")
+            if (!showOtp) setCodeType(dec?.otp_sent_on || "sms")
             setShowOtp(true)
         } catch (error) {
             const dec = decryptData(error?.response?.data?.data)
@@ -218,7 +218,7 @@ const AccountItem = ({ data }) => {
 
             setOtpToken(dec?.token)
             setOtpMethods(dec)
-            if (!showChannelOtp) setCodeType(dec?.authenticator ? "authenticator" : dec?.email ? "email" : dec?.whatsapp ? "whatsapp" : "sms")
+            if (!showChannelOtp) setCodeType(dec?.otp_sent_on || "sms")
             setShowChannelOtp(true)
 
         } catch (error) {

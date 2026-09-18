@@ -287,10 +287,10 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
 
             const dec = decryptData(res.data.data)
             updateDataHandler("created_transaction", dec)
-            if (dec?.authenticator || dec?.email || dec?.whatsapp || dec?.phone) {
+            if (dec?.otp_sent_on || dec?.available_methods) {
                 updateDataHandler("otpMethods", dec)
                 if (!data.show_otp) {
-                    updateDataHandler("codeType", dec?.authenticator ? "authenticator" : dec?.email ? "email" : dec?.whatsapp ? "whatsapp" : "sms")
+                    updateDataHandler("codeType", dec?.otp_sent_on || "sms")
                 }
             }
             console.log("otpshow", "transactioncreated")

@@ -142,10 +142,10 @@ const NonInstapayPayment = ({ sendPaymentType, setSendPaymentType, setStep }) =>
     const { sendOtp: sendOtpFunction } = useSendOtp({
         onSuccess: (token, dec) => {
             dataHandler("loading", false)
-            if (dec?.authenticator || dec?.email || dec?.whatsapp || dec?.phone) {
+            if (dec?.otp_sent_on || dec?.available_methods) {
                 dataHandler("otpMethods", dec)
                 if (!data.showOtpModal) {
-                    dataHandler("codeType", dec?.authenticator ? "authenticator" : dec?.email ? "email" : dec?.whatsapp ? "whatsapp" : "sms")
+                    dataHandler("codeType", dec?.otp_sent_on || "sms")
                 }
             }
             dataHandler("showOtpModal", true)

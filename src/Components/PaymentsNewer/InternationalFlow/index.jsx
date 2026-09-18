@@ -781,10 +781,10 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
             if (!isResend) {
                 updateInternationalData("thunesCreateTransactionToken", dec?.token)
             }
-            if (dec?.authenticator || dec?.email || dec?.whatsapp || dec?.phone) {
+            if (dec?.otp_sent_on || dec?.available_methods) {
                 updateInternationalData("otpMethods", dec)
                 if (!internationalData.showOtpModal) {
-                    updateInternationalData("codeType", dec?.authenticator ? "authenticator" : dec?.email ? "email" : dec?.whatsapp ? "whatsapp" : "sms")
+                    updateInternationalData("codeType", dec?.otp_sent_on || "sms")
                 }
             }
             updateInternationalData("created_transaction", dec)

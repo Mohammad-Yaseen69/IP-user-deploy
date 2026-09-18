@@ -257,10 +257,10 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
             })
 
             const dec = decryptData(res.data.data)
-            if (dec?.authenticator || dec?.email || dec?.whatsapp || dec?.phone) {
+            if (dec?.otp_sent_on || dec?.available_methods) {
                 dataHandler("otpMethods", dec)
                 if (!data.showOtpModal) {
-                    dataHandler("codeType", dec?.authenticator ? "authenticator" : dec?.email ? "email" : dec?.whatsapp ? "whatsapp" : "sms")
+                    dataHandler("codeType", dec?.otp_sent_on || "sms")
                 }
             }
             if (!dec?.skipOtp) {

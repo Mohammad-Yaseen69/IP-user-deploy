@@ -115,7 +115,7 @@ const PaymentFlow = ({ item, step, setStep, setStatus, verifyToken }) => {
             const dec = decryptData(res.data.data)
             // console.log(dec)
             setOtpMethods(dec)
-            if (typeof method !== 'string') setCodeType(dec?.authenticator ? "authenticator" : dec?.email ? "email" : dec?.whatsapp ? "whatsapp" : "sms")
+            if (typeof method !== 'string') setCodeType(dec?.otp_sent_on || "sms")
             setShowOtp(true)
             setToken(dec?.token)
         } catch (error) {

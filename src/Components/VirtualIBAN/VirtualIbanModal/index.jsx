@@ -123,6 +123,7 @@ const VirtualIbanModal = ({
     const [showOtp, setShowOtp] = useState(false)
     const [otpToken, setOtpToken] = useState("")
     const [codeType, setCodeType] = useState("sms")
+    const [otpMethods, setOtpMethods] = useState(null)
     const [createdIban, setCreatedIban] = useState(null)
     const [pendingTransactionId, setPendingTransactionId] = useState("")
     const [pendingTransactionRef, setPendingTransactionRef] = useState("")
@@ -164,8 +165,9 @@ const VirtualIbanModal = ({
     })
 
     const { sendOtp, isSendingOtp } = useSendOtp({
-        onSuccess: (token) => {
+        onSuccess: (token, dec) => {
             setOtpToken(token)
+            setOtpMethods(dec)
             setShowOtp(true)
         },
         onError: (err) => {
@@ -938,6 +940,7 @@ const VirtualIbanModal = ({
                         resendHandler={handleSendOtp}
                         authType={codeType}
                         setAuthType={setCodeType}
+                        methods={otpMethods}
                     />
                 </ModalBody>
             </Modal>

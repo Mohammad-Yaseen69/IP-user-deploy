@@ -70,7 +70,7 @@ const CommissionConversion = ({ isOpen, toggle, referralBalance = 0, defaultCurr
             const dec = decryptData(res.data.data)
             console.log(dec)
             setOtpMethods(dec)
-            if (!codeTypeArg) setCodeType(dec?.authenticator ? "authenticator" : dec?.email ? "email" : dec?.whatsapp ? "whatsapp" : "sms")
+            if (!codeTypeArg) setCodeType(dec?.otp_sent_on || "sms")
             setConfirmed(true)
             setToken(dec?.token)
         } catch (error) {

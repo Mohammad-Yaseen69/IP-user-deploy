@@ -168,7 +168,7 @@ const CardtoWallet = ({ isOpen, setOpen, card, setCurrentCardDetails, currentCar
             const dec = decryptData(res.data.data)
             setOtpMethods(dec)
             if (!showotp) {
-                setCodeType(dec?.authenticator ? "authenticator" : dec?.email ? "email" : dec?.whatsapp ? "whatsapp" : "sms")
+                setCodeType(dec?.otp_sent_on || "sms")
             }
             setOtpToken(dec?.token)
             setshowotp(true)

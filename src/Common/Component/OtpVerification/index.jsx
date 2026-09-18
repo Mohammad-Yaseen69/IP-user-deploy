@@ -26,12 +26,14 @@ const OTP_METHOD_CONFIG = {
 }
 
 const getAvailableOtpMethods = (userDetails, apiMethods) => {
-    const flags = apiMethods
+    // Accepts either the raw send-otp response or its `available_methods` object.
+    const apiFlags = apiMethods?.available_methods || apiMethods
+    const flags = apiFlags
         ? {
-            authenticator: apiMethods.authenticator,
-            email: apiMethods.email,
-            whatsapp: apiMethods.whatsapp,
-            sms: apiMethods.phone,
+            authenticator: apiFlags.authenticator,
+            email: apiFlags.email,
+            whatsapp: apiFlags.whatsapp,
+            sms: apiFlags.sms ?? apiFlags.phone,
         }
         : {
             authenticator: userDetails?.tfa,

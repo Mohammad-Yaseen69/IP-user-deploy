@@ -95,6 +95,7 @@ const OnboardingIBAN = ({ onCreated }) => {
     const [showOtpModal, setShowOtpModal] = useState(false)
     const [otpToken, setOtpToken] = useState('')
     const [codeType, setCodeType] = useState('sms')
+    const [otpMethods, setOtpMethods] = useState(null)
     const [loadingStatus, setLoadingStatus] = useState(true)
 
     const checkRequestStatus = async () => {
@@ -149,8 +150,9 @@ const OnboardingIBAN = ({ onCreated }) => {
     }, [state.step]);
 
     const { sendOtp } = useSendOtp({
-        onSuccess: (token) => {
+        onSuccess: (token, dec) => {
             setOtpToken(token)
+            setOtpMethods(dec)
             setShowOtpModal(true)
         },
         onError: (err) => {
@@ -489,6 +491,7 @@ const OnboardingIBAN = ({ onCreated }) => {
                         variant="card"
                         authType={codeType}
                         setAuthType={setCodeType}
+                        methods={otpMethods}
                         callback={handleVerifyOtpSubmit}
                         hideOtp={() => setShowOtpModal(false)}
                         setter={() => { }}

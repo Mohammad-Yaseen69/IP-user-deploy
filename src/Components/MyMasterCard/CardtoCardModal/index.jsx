@@ -251,7 +251,7 @@ const CardtoCard = ({ setOpen, isOpen, card, currentCardDetails, setCurrentCardD
 
       updateHandler("otpMethods", dec)
       if (!data.showOtpModal) {
-        updateHandler("codeType", dec?.authenticator ? "authenticator" : dec?.email ? "email" : dec?.whatsapp ? "whatsapp" : "sms")
+        updateHandler("codeType", dec?.otp_sent_on || "sms")
       }
       updateHandler("showOtpModal", true)
       updateHandler("token", dec?.token)

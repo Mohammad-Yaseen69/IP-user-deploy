@@ -633,11 +633,10 @@ const SepaTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, i
         onSuccess: (token, dec) => {
             setOtpToken(token)
             setOtpMethods(dec)
-            // if (currentStep !== STEPS.OTP) {
-            //     const initialAuthType = dec?.authenticator ? "authenticator" : dec?.email ? "email" : dec?.whatsapp ? "whatsapp" : "sms"
-            //     setAuthType(initialAuthType)
-            //     setOtpChannel(initialAuthType)
-            // }
+            if (currentStep !== STEPS.OTP && dec?.otp_sent_on) {
+                setAuthType(dec.otp_sent_on)
+                setOtpChannel(dec.otp_sent_on)
+            }
             setCurrentStep(STEPS.OTP)
         },
         onError: (err) => {

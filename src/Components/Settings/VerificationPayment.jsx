@@ -169,7 +169,7 @@ const VerificationPayment = ({ isOpen, toggle, verify, desc, occupation, loading
             const dec = decryptData(res.data.data)
             setToken(dec?.token)
             setOtpMethods(dec)
-            if (!showOtp) setCodeType(dec?.authenticator ? "authenticator" : dec?.email ? "email" : dec?.whatsapp ? "whatsapp" : "sms")
+            if (!showOtp) setCodeType(dec?.otp_sent_on || "sms")
             setShowOtp(true)
             if (!isKYB) {
                 toggle()

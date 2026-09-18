@@ -59,12 +59,7 @@ const PlaidBankTransfer = ({
       setOtpToken(token)
       setOtpMethods(data)
       if (!showOtp) {
-        setCodeType(
-          data?.authenticator ? 'authenticator'
-            : data?.email ? 'email'
-              : data?.whatsapp ? 'whatsapp'
-                : 'sms'
-        )
+        setCodeType(data?.otp_sent_on || 'sms')
       }
     },
     onError: (err) => {

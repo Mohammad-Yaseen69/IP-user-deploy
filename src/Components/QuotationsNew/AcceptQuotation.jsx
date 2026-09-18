@@ -355,7 +355,7 @@ const AcceptQuotation = ({ isOpen, toggle, item, type = "receive" }) => {
             const dec = decryptData(res.data.data)
             // console.log(dec)
             dataHandler("otpMethods", dec)
-            if (!codeType) dataHandler("codeType", dec?.authenticator ? "authenticator" : dec?.email ? "email" : dec?.whatsapp ? "whatsapp" : "sms")
+            if (!codeType) dataHandler("codeType", dec?.otp_sent_on || "sms")
             dataHandler("show_otp", true)
             dataHandler("payment_token", dec?.token)
         } catch (error) {

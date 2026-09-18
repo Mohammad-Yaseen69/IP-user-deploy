@@ -284,7 +284,7 @@ const TwoFactorAuth = () => {
 
             const dec = decryptData(res.data.data)
             setOtpMethods(dec)
-            if (!showFinger) setCodeType(dec?.authenticator ? "authenticator" : dec?.email ? "email" : dec?.whatsapp ? "whatsapp" : "sms")
+            if (!showFinger) setCodeType(dec?.otp_sent_on || "sms")
             setShowFinger(true)
 
             setToken(dec?.token)
