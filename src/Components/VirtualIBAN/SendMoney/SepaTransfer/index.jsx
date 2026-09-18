@@ -435,7 +435,7 @@ const downloadSepaReceipt = ({
         finalY + 8
     )
     const safeTrackingReference = String(trackingReference || "receipt")
-        .replace(/[<>:"/\\|?*\u0000-\u001F]/g,"-")
+        .replace(/[<>:"/\\|?*\u0000-\u001F]/g, "-")
         .replace(/\s+/g, "-");
     doc.save(
         `SEPA-Transfer-Receipt-${safeTrackingReference}.pdf`
@@ -633,11 +633,11 @@ const SepaTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, i
         onSuccess: (token, dec) => {
             setOtpToken(token)
             setOtpMethods(dec)
-            if (currentStep !== STEPS.OTP) {
-                const initialAuthType = dec?.authenticator ? "authenticator" : dec?.email ? "email" : dec?.whatsapp ? "whatsapp" : "sms"
-                setAuthType(initialAuthType)
-                setOtpChannel(initialAuthType)
-            }
+            // if (currentStep !== STEPS.OTP) {
+            //     const initialAuthType = dec?.authenticator ? "authenticator" : dec?.email ? "email" : dec?.whatsapp ? "whatsapp" : "sms"
+            //     setAuthType(initialAuthType)
+            //     setOtpChannel(initialAuthType)
+            // }
             setCurrentStep(STEPS.OTP)
         },
         onError: (err) => {

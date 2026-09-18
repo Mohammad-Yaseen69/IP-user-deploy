@@ -198,10 +198,8 @@ const CardOtp = ({
 
     const { available: availableMethods } = getAvailableOtpMethods(userDetails, methods)
     const hasAuthenticator = availableMethods.includes('authenticator')
-    const nonAuthMethods = availableMethods.filter((m) => m !== 'authenticator')
-    const activeNonAuthMethod = nonAuthMethods[0] || 'sms'
-    const activeNonAuthConfig = OTP_METHOD_CONFIG[activeNonAuthMethod]
-
+    const canSwitchMethod = typeof setAuthType === 'function'
+    console.log(availableMethods)
     useEffect(() => { focusFirst() }, [])
     useEffect(() => { inactivityCtx?.setIsExtended?.(true) }, [])
     useEffect(() => {
@@ -237,18 +235,18 @@ const CardOtp = ({
             <div style={{ borderRadius: '20px', flex: '1', display: 'flex', alignItems: 'center', overflow: 'hidden', padding: '14px', paddingBottom: '1rem', boxShadow: '0px 18px 15.348464965820312px -15px rgba(89, 38, 240, 0.16)' }} className="otp_cont">
                 <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center', maxHeight: '420px', flexDirection: 'column', width: '100%', height: '100%' }}>
                     <div style={{ border: '2px solid rgba(0, 0, 0, 0.04)', borderRadius: '30px', background: 'rgba(255, 255, 255, 0.04)', boxShadow: '0px 11.233247756958008px 19.658184051513672px 0px rgba(172, 53, 159, 0.09)', height: '120px', width: '120px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                        <img src={authType === 'sms' ? otpIcon : authIcon} alt="otp" style={{ width: '42px', height: '42px', borderRadius: '12px', filter: 'drop-shadow(0px 4px 7px 0px rgba(172, 53, 159, 0.31))' }} />
+                        <img src={authType !== 'authenticator' ? otpIcon : authIcon} alt="otp" style={{ width: '42px', height: '42px', borderRadius: '12px', filter: 'drop-shadow(0px 4px 7px 0px rgba(172, 53, 159, 0.31))' }} />
                     </div>
                     <div className="text-center">
                         <h4 style={{ fontSize: '24px', fontWeight: 700 }}>
                             {verified
-                                ? (authType === 'sms' ? t('Verification Code Verified') : (showAuthToggle ? t('Authenticator Code Verified') : null))
-                                : (authType === 'sms' ? t('Enter Code') : t('Authenticator Code'))}
+                                ? (authType !== 'authenticator' ? t('Verification Code Verified') : (showAuthToggle ? t('Authenticator Code Verified') : null))
+                                : (authType !== 'authenticator' ? t('Enter Code') : t('Authenticator Code'))}
                         </h4>
                         <p style={{ maxWidth: '212px', fontSize: '14px', fontWeight: 600 }}>
                             {verified
-                                ? (authType === 'sms' ? t("Verification code has been verified, You'll be redirected to the next step.") : t('The code was verified and you’re good to go!'))
-                                : (authType === 'sms'
+                                ? (authType !== 'authenticator' ? t("Verification code has been verified, You'll be redirected to the next step.") : t('The code was verified and you’re good to go!'))
+                                : (authType !== 'authenticator'
                                     ? `${t('A one-time verification code has been sent to your')} ${(userDetails?.email || type === 'email') ? 'email address' : ''}${!inBasic ? ' and ' : ' '} ${type === 'phone' ? (userDetails?.phone?.slice(0, 3) === '971' ? t('whatsapp number.') : t('phone number.')) : t('SMS')}`
                                     : t('Enter a code shown in the app to make sure everything works fine.'))}
                         </p>
@@ -264,38 +262,58 @@ const CardOtp = ({
                             ))}
                         </div>
 
-                        {!hideTfaSwitch && (
-                            hasAuthenticator ? (
-                                <span style={{ fontSize: '12px' }} onClick={() => {
-                                    if (authType === 'authenticator') {
-                                        focusFirst()
-                                        setOTPValues(Array(numberOfFields).fill(''))
-                                        setResendTimer(activeNonAuthMethod === 'email' ? 300 : 120)
-                                        resendHandler(activeNonAuthMethod)
-                                        setAuthType(activeNonAuthMethod)
-                                    } else {
-                                        setAuthType('authenticator')
-                                    }
-                                }}>
-                                    <span style={{ color: '#5926f0', fontWeight: 600, textDecoration: 'underline', cursor: 'pointer' }}>
-                                        {authType === 'sms'
-                                            ? (showAuthToggle ? t('Verify Using Authenticator') : null)
-                                            : `${t('Verify Using')} ${t(activeNonAuthConfig.label)}`}
-                                    </span>
-                                </span>
-                            ) : (
-                                !userDetails?.tfa && (
-                                    <span onClick={() => navigate('/settings?tab=tfa')} style={{ color: '#5926f0', fontWeight: 600, textDecoration: 'underline', cursor: 'pointer' }}>
-                                        {t('Setup Authenticator')}
-                                    </span>
-                                )
-                            )
+                        {!hideTfaSwitch && showAuthToggle && canSwitchMethod && availableMethods.length > 1 && (
+                            <div className={modalStyles.otpMethodsWrap} style={{ alignItems: 'center', width: '100%' }}>
+                                <div style={{ fontSize: '12px', fontWeight: 600, color: '#545454', textAlign: 'center' }}>
+                                    {t('Choose your preferred method to receive your verification code:')}
+                                </div>
+                                <div className={modalStyles.otpMethods} style={{ justifyContent: 'center' }}>
+                                    {availableMethods.filter((methodId) => methodId !== authType).map((methodId) => {
+                                        const { label, Icon } = OTP_METHOD_CONFIG[methodId]
+
+                                        return (
+                                            <button
+                                                type="button"
+                                                key={methodId}
+                                                className={modalStyles.otpMethod}
+                                                disabled={methodId !== 'authenticator' && resendTimer > 0}
+                                                onClick={() => {
+                                                    focusFirst()
+                                                    setOTPValues(Array(numberOfFields).fill(''))
+                                                    setOtpError('')
+
+                                                    if (methodId === 'authenticator') {
+                                                        setAuthType('authenticator')
+                                                        return
+                                                    }
+
+                                                    setAuthType(methodId)
+
+                                                    if (resendTimer === 0) {
+                                                        resendHandler(methodId)
+                                                        setResendTimer((methodId === 'email' || type === 'email') ? 300 : 90)
+                                                    }
+                                                }}
+                                            >
+                                                <Icon size={14} />
+                                                <span>{t(label)}</span>
+                                            </button>
+                                        )
+                                    })}
+                                </div>
+                            </div>
+                        )}
+
+                        {!hideTfaSwitch && !hasAuthenticator && !userDetails?.tfa && (
+                            <span onClick={() => navigate('/settings?tab=tfa')} style={{ color: '#5926f0', fontWeight: 600, textDecoration: 'underline', cursor: 'pointer' }}>
+                                {t('Setup Authenticator')}
+                            </span>
                         )}
 
                         {otpError && <span style={{ fontSize: '.8rem', fontWeight: 700, color: 'red' }}>{t(otpError)}</span>}
 
                         <span style={{ fontSize: '12px', color: '#aeaeae', fontWeight: 600 }}>
-                            {authType === 'sms' && (
+                            {authType !== 'authenticator' && (
                                 resendTimer > 0
                                     ? t('Resend available in ') + formatMMSS() + ' '
                                     : (
@@ -303,8 +321,8 @@ const CardOtp = ({
                                             {"Didn't receive OTP? "}
                                             <span style={{ color: '#5926f0', fontWeight: 800, cursor: 'pointer' }} onClick={() => {
                                                 setOTPValues(Array(numberOfFields).fill(''))
-                                                resendHandler()
-                                                setResendTimer(type === 'email' ? 300 : 90)
+                                                resendHandler(authType)
+                                                setResendTimer((authType === 'email' || type === 'email') ? 300 : 90)
                                             }}>{t('Resend Now')}</span>
                                         </>
                                     )
@@ -347,9 +365,6 @@ const ModalOtp = ({ isOpen, toggle, callback, data, dataHandler, resendHandler, 
 
     const { available: availableMethods } = getAvailableOtpMethods(userDetails, methods)
     const hasAuthenticator = availableMethods.includes('authenticator')
-    const nonAuthMethods = availableMethods.filter((m) => m !== 'authenticator')
-    const activeNonAuthMethod = nonAuthMethods[0] || 'sms'
-    const [selectedMethod, setSelectedMethod] = useState(activeNonAuthMethod)
 
     useLayoutEffect(() => {
         const timeout = setTimeout(() => {
@@ -393,7 +408,7 @@ const ModalOtp = ({ isOpen, toggle, callback, data, dataHandler, resendHandler, 
                 <div className={modalStyles.left}>
                     <h5>{data.codeType !== 'authenticator' ? `${t(OTP_METHOD_CONFIG[data.codeType]?.label)} ${t('Verification Code')}` : t('Google Authenticator')}</h5>                </div>
                 <div className={modalStyles.right}>
-                    <label>{data.codeType === 'sms' ? `${t(OTP_METHOD_CONFIG[selectedMethod]?.label)} ${t('OTP Verification Code')}` : t('Two Factor Authentication Code')}</label>
+                    <label>{data.codeType !== 'authenticator' ? `${t(OTP_METHOD_CONFIG[data.codeType]?.label)} ${t('OTP Verification Code')}` : t('Two Factor Authentication Code')}</label>
                     <div className={modalStyles.inputs}>
                         {otpValues.map((value, index) => (
                             <input key={index} maxLength={1} value={value} onPaste={handlePaste}
@@ -413,8 +428,8 @@ const ModalOtp = ({ isOpen, toggle, callback, data, dataHandler, resendHandler, 
                                             {t("Didn't receive the verification code?")}
                                             <span style={{ color: '#5926f0', fontWeight: 800, cursor: 'pointer' }} onClick={() => {
                                                 setOTPValues(Array(numberOfFields).fill(''))
-                                                resendHandler(selectedMethod)
-                                                setResendTimer(selectedMethod === 'email' ? 300 : 120)
+                                                resendHandler(data.codeType)
+                                                setResendTimer(data.codeType === 'email' ? 300 : 120)
                                             }}>{t('Resend Now')}</span>
                                         </>
                                     ))
@@ -449,7 +464,6 @@ const ModalOtp = ({ isOpen, toggle, callback, data, dataHandler, resendHandler, 
 
                                             setOTPValues(Array(numberOfFields).fill(''))
 
-                                            setSelectedMethod(methodId)
                                             dataHandler('codeType', methodId)
 
                                             if (resendTimer === 0) {
@@ -574,23 +588,25 @@ const ButtonsOtp = ({
                                 inputMode="numeric" />
                         ))}
                     </div>
-                    <div className={buttonStyles.otpResend}>
-                        {t("Didn't receive the code?")}{' '}
-                        {resendTimer > 0 ? (
-                            <span>{t('Resend in')} {formatMMSS()}</span>
-                        ) : (
-                            <button type="button" onClick={() => {
-                                setOTPValues(Array(numberOfFields).fill(''))
-                                resendHandler()
-                                setResendTimer(type === 'email' ? 300 : 90)
-                            }}>{t('Resend now')}</button>
-                        )}
-                    </div>
+                    {authType !== 'authenticator' && (
+                        <div className={buttonStyles.otpResend}>
+                            {t("Didn't receive the code?")}{' '}
+                            {resendTimer > 0 ? (
+                                <span>{t('Resend in')} {formatMMSS()}</span>
+                            ) : (
+                                <button type="button" onClick={() => {
+                                    setOTPValues(Array(numberOfFields).fill(''))
+                                    resendHandler(authType)
+                                    setResendTimer((authType === 'email' || type === 'email') ? 300 : 90)
+                                }}>{t('Resend now')}</button>
+                            )}
+                        </div>
+                    )}
                 </div>
 
                 {otpError && <div className={buttonStyles.otpError}>{t(otpError)}</div>}
 
-                {showAuthToggle && availableMethods.length > 1 && (
+                {!hideTfaSwitch && showAuthToggle && typeof setAuthType === 'function' && availableMethods.length > 1 && (
                     <div className={buttonStyles.otpMethodsWrap}>
                         <div className={buttonStyles.otpMethodsLabel}>{t('Choose your preferred method to receive your verification code:')}</div>
                         <div className={buttonStyles.otpMethods}>
@@ -599,6 +615,7 @@ const ButtonsOtp = ({
                                 return (
                                     <button type="button" key={methodId}
                                         className={buttonStyles.otpMethod}
+                                        disabled={methodId !== 'authenticator' && resendTimer > 0}
                                         onClick={() => handleAuthTypeChange(methodId)}>
                                         <Icon size={14} /><span>{t(label)}</span>
                                     </button>
