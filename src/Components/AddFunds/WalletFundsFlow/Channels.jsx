@@ -23,6 +23,8 @@ const Channels = ({
   const { t } = useTranslation();
   const { userDetails } = useContext(UserContext);
   const [showCardMaintenanceModal, setShowCardMaintenanceModal] = useState(false);
+  const usePaytently = true; // Paytently is the card provider.
+  console.log("user detail(18)", userDetails);
   const [showVerificationModal, setShowVerificationModal] = useState(false);
   const usePaytently = true;
   const { data: methods, isLoading } = useQuery({
@@ -141,7 +143,7 @@ const Channels = ({
                     return;
                   }
                 }
-                if (item?.value === "card") {
+                if (item?.value === "card" && !usePaytently) {
                   setShowCardMaintenanceModal(true);
                   return;
                 }

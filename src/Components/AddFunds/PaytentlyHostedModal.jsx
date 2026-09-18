@@ -1,22 +1,31 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { Modal, ModalBody } from "reactstrap";
 import { useTranslation } from "react-i18next";
 
-// Renders Paytently's hosted-forms card page inside an iframe. Once the card is
-// collected the iframe signals us (via paytently-collected.html) and we redirect
-// the whole page to the authorize URL to complete 3DS.
-const PaytentlyHostedModal = ({ isOpen, hostedUrl, authorizeUrl, onClose }) => {
+const PaytentlyHostedModal = ({ isOpen, hostedUrl, authorizeUrl, onClose, onCardCollected }) => {
     const { t } = useTranslation();
+    const handled = useRef(false);
+
+    useEffect(() => {
+        handled.current = false;
+    }, [hostedUrl]);
 
     useEffect(() => {
         const onMessage = (e) => {
-            if (e?.data?.type === "paytently_card_collected") {
-                if (authorizeUrl) window.location.href = authorizeUrl;
+            if (e?.data?.type !== "paytently_card_collected") return;
+   
+            if (e.origin !== window.location.origin || handled.current) return;
+            handled.current = true;
+
+            if (onCardCollected) {
+                onCardCollected();
+            } else if (authorizeUrl) {
+                window.location.href = authorizeUrl;
             }
         };
         window.addEventListener("message", onMessage);
         return () => window.removeEventListener("message", onMessage);
-    }, [authorizeUrl]);
+    }, [authorizeUrl, onCardCollected]);
 
     return (
         <Modal isOpen={isOpen} toggle={onClose} centered size="md">
