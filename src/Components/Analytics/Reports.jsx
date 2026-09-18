@@ -21,7 +21,11 @@ const Reports = () => {
         from: "2023-12-01",
         to: "2023-12-31",
     })
-
+    useEffect(() => {
+        if (!currentWallet?.wallet_id && userWallets?.length > 0) {
+            setCurrentWallet(userWallets[0])
+        }
+    }, [userWallets, currentWallet?.wallet_id])
     const selectedSummary = useMemo(() => {
         const selectedCurrency = currentWallet?.currency?.code
 

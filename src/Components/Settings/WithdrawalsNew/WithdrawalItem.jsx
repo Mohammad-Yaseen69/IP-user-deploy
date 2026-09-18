@@ -28,7 +28,7 @@ import SuccessModal from "../../AddBeneficiary/SuccessModal"
 import { useLocation, useNavigate } from "react-router"
 import CountryBasedPhone from "../../PhoneInput/PhoneNumberBasedOnCountry.json"
 import useChannels from "../../../hooks/BeneficiaryHooks/useChannels"
-import { bankExtrasInitial, basicExtrasInitial, withdrawlsFields } from "../../../utils/Data"
+import { bankExtrasInitial, basicExtrasInitial, withdrawlsFields, normalizeBankExtras, buildBankExtrasPayload } from "../../../utils/Data"
 import citiesData from "../../CitiesDropDown/CitiesData.json"
 
 
@@ -50,7 +50,8 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
         let isInThere = false;
 
 
-        if (fieldsInfo?.[service?.method?.split(" ")?.[0]]?.[field_name]?.some(item => item.name === sub_field_name)) {
+        const matches = (item) => item.name === sub_field_name || (sub_field_name === "aba_routing_number" && item.name === "routing_code")
+        if (fieldsInfo?.[service?.method?.split(" ")?.[0]]?.[field_name]?.some(matches)) {
             isInThere = true
         }
         return isInThere;
@@ -411,7 +412,7 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
                 card_number_three: userWithdrawals?.card?.[2]?.card_number,
                 card_expiry_three: userWithdrawals?.card?.[2]?.card_expiry,
             }))
-            setBankExtras(prev => userWithdrawals?.bank_details?.[0]?.extras ?? prev)
+            setBankExtras(prev => userWithdrawals?.bank_details?.[0]?.extras ? normalizeBankExtras(userWithdrawals.bank_details[0].extras) : prev)
             setMobileExtras(prev => userWithdrawals?.mobile_wallet?.[0]?.extras ?? prev)
             setCashxtras(prev => userWithdrawals?.cash_pickup?.[0]?.extras ?? prev)
             setCardExtras(prev => userWithdrawals?.card?.[0]?.extras ?? prev)
@@ -490,7 +491,7 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
                     province: bankMobCrypto.bank_province,
                     postal_code: bankMobCrypto.bank_postal_code,
                     account_holder_name: bankMobCrypto.bank_account_holder_name,
-                    extras: bankExtras,
+                    extras: buildBankExtrasPayload(bankExtras),
                     vendor: current.vendor,
                 }
             ] : [],
@@ -638,7 +639,7 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
                     province: bankMobCrypto.bank_province,
                     postal_code: bankMobCrypto.bank_postal_code,
                     account_holder_name: bankMobCrypto.bank_account_holder_name,
-                    extras: bankExtras,
+                    extras: buildBankExtrasPayload(bankExtras),
                     vendor: current.vendor,
                 }
             ] : [],
