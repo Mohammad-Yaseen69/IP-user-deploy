@@ -5,6 +5,7 @@ import iso2 from "../AddFunds/WalletFund/countries_iso2.json"
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { decryptData } from '../../Helper/EssentilaMethods/Decryption';
+import { useMediaQuery } from '@mui/material';
 
 const getCities = async (iso2, stateCode) => {
     const stateQuery = iso2 === 'US' && stateCode
@@ -19,6 +20,8 @@ const CitiesDropDown = ({ userCity, setUserCity, disabled = false, iso_3 = "", i
     const [isOpen, setIsOpen] = useState(false);
     const cityInputRef = useRef()
     const [searchTerm, setSearchTerm] = useState('');
+    const isMobile = useMediaQuery('(max-width: 600px)');
+
     const iso2Value = useMemo(() => {
         return iso2[iso_3?.toUpperCase()]
     }, [iso2, iso_3])
@@ -89,10 +92,10 @@ const CitiesDropDown = ({ userCity, setUserCity, disabled = false, iso_3 = "", i
         setRenderCount(100);
         setReachedEnd(false);
     }, [searchTerm, cities]);
-
+ 
     return (
         <Dropdown isOpen={isOpen} toggle={toggleDropdown}>
-            <DropdownToggle color='white' style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", border: "1px solid rgba(0,0,0,.05)", borderRadius: "5px", padding: ".75rem", background: disabled || isWaitingForState ? "#eee" : background }} disabled={disabled || isWaitingForState}>
+            <DropdownToggle color='white' style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", border: isMobile ? '1px solid #1412201F' : "1px solid rgba(0,0,0,.05)", borderRadius: isMobile ? '10px' : "5px", padding: ".75rem", background: disabled || isWaitingForState ? "#e9ecef" : background, boxShadow: isMobile ? '0px 1px 2px 0px #1412200D' : 'none' }} disabled={disabled || isWaitingForState}>
                 {
                     isOpen
                         ?

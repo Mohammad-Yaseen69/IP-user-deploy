@@ -14,7 +14,7 @@ import cardStyles from "../styles/SendActionCard.module.scss"
 import StepThree from "./StepThree";
 import StepFour from "./StepFour";
 import StepFive from "./StepFive";
-import OtpConfirmation from "../InternationalFlow/OtpConfirmation";
+import OtpConfirmation from "../../../Common/Component/OtpVerification";
 import { encryptData } from "../../../Helper/EssentilaMethods/Encryption";
 import { LimitsErrorMessage } from "../OTPConfirmation";
 import { useLocation, useNavigate } from "react-router";
@@ -556,6 +556,7 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
         data.show_otp
         &&
         <OtpConfirmation
+            variant="modal"
             callback={data.payment_type?.value === "card" ? initiateCardPayment : verifyOtp}
             // callback={verifyOtp}
             data={data}

@@ -17,7 +17,7 @@ import { CARD_TYPES } from '../../CreditInput/CreditCardTypes'
 import { apiErrorMessage } from '../../PaymentsNewer/InternationalFlow'
 import ErrorModal from '../../PaymentsNewer/InternationalFlow/ErrorModal'
 import { LimitsErrorMessage } from '../../PaymentsNewer/OTPConfirmation'
-import OTPConfirmation from '../../UserSettingsNew/OTPConfirmation'
+import OTPConfirmation from '../../../Common/Component/OtpVerification'
 import { AddFunds, CircleCheck, Currency, Receipt } from '../files'
 import ConfirmationStep from '../PaymentModal/ConfirmationStep'
 import ContactBox from '../PaymentModal/ContactBox'
@@ -652,6 +652,7 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card, setCurrentCardDetai
                 <ModalHeader toggle={() => setshowOtpModal(false)}> {t("Confirm")} </ModalHeader>
                 <ModalBody>
                     <OTPConfirmation
+                        variant="card"
                         callback={paymentType === "wallet" ? walletTopup : paymentType === "paypal" ? paypalTopup : cardTopup}
                         setterValue={true}
                         hideOtp={() => setshowOtpModal(false)}

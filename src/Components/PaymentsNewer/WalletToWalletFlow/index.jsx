@@ -27,7 +27,7 @@ import CreditCard from "../InternationalFlow/CreditCard";
 import ErrorModal from "../InternationalFlow/ErrorModal";
 import FeesComponent from "../InternationalFlow/FeesComponent";
 import MobileWalletServices from "../InternationalFlow/MobileWalletServices";
-import OtpConfirmation from "../InternationalFlow/OtpConfirmation";
+import OtpConfirmation from "../../../Common/Component/OtpVerification";
 import Receipt from "../InternationalFlow/Receipt";
 import StepFour from "../InternationalFlow/StepFour";
 import { currencies } from "../InternationalFlow/StepOne";
@@ -1478,6 +1478,7 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, show
                                                             data.showOtpModal
                                                             &&
                                                             <OtpConfirmation
+                                                                variant="modal"
                                                                 callback={data.payment_type?.value === "card" ? initiateCardPayment : data.payment_type?.value === "paypal" ? initiatePaypalPayment : verifyOtp}
                                                                 data={data}
                                                                 dataHandler={dataHandler}
@@ -1738,6 +1739,7 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, show
                                                                                 data.showOtpModal
                                                                                 &&
                                                                                 <OtpConfirmation
+                                                                                    variant="modal"
                                                                                     callback={data.payment_type?.value === "card" ? initiateCardPayment : data.payment_type?.value === "paypal" ? initiatePaypalPayment : verifyOtp}
                                                                                     data={data}
                                                                                     dataHandler={dataHandler}

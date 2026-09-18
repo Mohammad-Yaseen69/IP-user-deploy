@@ -209,3 +209,43 @@
 .saveButton:hover {
     background: #4338CA;
 }
+
+@media screen and (max-width: 600px) {
+    .modalBox {
+        max-width: 90%;
+        padding: 0px;
+    }
+
+    .modalHeader,
+    .modalBody,
+    .modalFooter {
+        padding: 20px;
+    }
+
+    .headerTitles {
+        p {
+            font-size: 12px !important;
+        }
+    }
+
+    .fieldLabel {
+        font-size: 10px;
+        font-weight: 600;
+        color: #9793A8;
+        text-transform: uppercase;
+        margin: 0;
+    }
+
+    .saveButton,
+    .backButton {
+        width: fit-content;
+        padding: 7px 20px;
+        background-color: #7040FF;
+        height: fit-content;
+    }
+
+    .backButton {
+        background-color: #F3F3F4;
+        color: #344054;
+    }
+}

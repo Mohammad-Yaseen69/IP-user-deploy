@@ -2,11 +2,13 @@ import { ArrowRight, Check, File, MessageSquare } from 'react-feather'
 import { useTranslation } from 'react-i18next'
 import Magicsvg from '../magicsvg'
 import styles from '../style/onboardingSteps.module.css'
+import MobileProgress from './MobileProgress'
 const SidebarProgress = ({
     percent = 15,
     stepsLeft = 5,
     assistantMessage = "Let's get you verified first, this only takes a minute, then we'll move to your company details.",
-    currentStepKey = 'account'
+    currentStepKey = 'account',
+    mobileView = false
 }) => {
     const { t } = useTranslation()
 
@@ -43,6 +45,16 @@ const SidebarProgress = ({
     const dashOffset = circ - (percent / 100) * circ
 
     const doneCount = checklist.filter(i => getStatus(i.key) === 'done').length
+
+    if(mobileView) {
+        return  <MobileProgress 
+                    percent={percent} 
+                    stepsLeft={stepsLeft} 
+                    doneCount={doneCount}
+                    checklist={checklist}
+                    getStatus={getStatus}
+                />;
+    }
 
     return (
         <aside className={styles.sidebar}>

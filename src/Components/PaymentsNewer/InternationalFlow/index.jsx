@@ -31,7 +31,7 @@ import CreditCard from "./CreditCard"
 import ErrorModal from "./ErrorModal"
 import FeesComponent from "./FeesComponent"
 import MobileWalletServices from "./MobileWalletServices"
-import OtpConfirmation from "./OtpConfirmation"
+import OtpConfirmation from "../../../Common/Component/OtpVerification"
 import Receipt from "./Receipt"
 import SelectedCard from "./SelectedCard"
 import ServiceDetails from "./ServiceDetails"
@@ -375,6 +375,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                 const decrypted = decryptData(res.data.data)
                 const exchange_rate_details = {
                     exchange_rate: decrypted?.data?.exchangeRate,
+                    markupValue: decrypted?.data?.markupValue,
                     receiver: { currency: destinationCurrency, amount: decrypted?.data?.recipientAmount },
                     fee: { amount: decrypted?.data?.result?.fee?.value },
                     total: decrypted?.data?.result?.total?.value,
@@ -591,10 +592,10 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
         }
     }
 
-    const getPlainExchangeRate = async (from, to, amount) => {
+    const getPlainExchangeRate = async (from, to, amount, markup = false) => {
         setLoading(true)
         try {
-            const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/get-plain-exchange-rate?from=${from}&to=${to}&amount=${amount}`, {
+            const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/get-plain-exchange-rate?from=${from}&to=${to}&amount=${amount}&markupValue=${markup}`, {
                 headers: authHeader
             });
             const dec = decryptData(res?.data?.data);
@@ -647,6 +648,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
         }
     }, [internationalData.payment_type])
 
+    console.log(internationalData?.exchange_rate, "exchange rate for check", internationalData.amount)
     useEffect(() => {
         let timeout;
         if (internationalData.payment_type?.value && subStep === 4) {
@@ -659,8 +661,15 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
             const getAmount = async () => {
                 try {
                     let amount;
-                    if (internationalData.payment_type?.value === "wallet" && internationalData?.wallet?.currency /*&& internationalData?.wallet?.currency?.code !== internationalData?.currency_wallet?.currency?.code*/) {
-                        amount = await getPlainExchangeRate(internationalData?.currency_wallet?.currency?.code, internationalData?.wallet?.currency?.code, Number(String(internationalData.amount)?.replaceAll(",", "")))
+                    const receivingCurrency = internationalData?.recipient_currency || internationalData?.exchange_rate?.receiver?.currency
+                    const walletCurrency = internationalData?.wallet?.currency?.code
+
+                    if (internationalData.payment_type?.value === "wallet" && internationalData?.wallet?.currency) {
+                        if (receivingCurrency && walletCurrency && receivingCurrency === walletCurrency) {
+                            amount = Number(String(internationalData.receiving_amount)?.replaceAll(",", ""))
+                        } else {
+                            amount = await getPlainExchangeRate(internationalData?.currency_wallet?.currency?.code, walletCurrency, Number(String(internationalData.amount)?.replaceAll(",", "")), internationalData?.exchange_rate?.markupValue)
+                        }
                     } else {
                         amount = Number(String(internationalData.amount)?.replaceAll(",", ""))
                     }
@@ -672,7 +681,15 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
 
             timeout = setTimeout(() => {
                 const wallet_id = internationalData.payment_type?.value === "wallet" ? internationalData.wallet?._id ?? internationalData?.currency_wallet?._id : internationalData?.currency_wallet?._id
-                const currency_code = internationalData.payment_type?.value === "wallet" ? internationalData?.wallet?.currency?.code ?? internationalData?.currency : internationalData?.currency;
+
+                const receivingCurrency = internationalData?.recipient_currency || internationalData?.exchange_rate?.receiver?.currency
+                const walletCurrency = internationalData?.wallet?.currency?.code
+                const isSameCurrency = receivingCurrency && walletCurrency && receivingCurrency === walletCurrency
+
+                const currency_code = internationalData.payment_type?.value === "wallet"
+                    ? (isSameCurrency ? receivingCurrency : (walletCurrency ?? internationalData?.currency))
+                    : internationalData?.currency;
+
                 getAmount()
                     .then(res => {
                         if (wallet_id) {
@@ -1679,6 +1696,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                                                             internationalData.showOtpModal
                                                             &&
                                                             <OtpConfirmation
+                                                                variant="modal"
                                                                 callback={internationalData.payment_type?.value === "card" ? initiateCardPayment : internationalData.payment_type?.value === "paypal" ? initiatePaypalPayment : internationalData?.payment_type?.value === "mobile_wallet" ? initiateMobileWalletPayment : verifyOtp}
                                                                 data={internationalData}
                                                                 dataHandler={updateInternationalData}
@@ -1766,6 +1784,8 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                                                     loading={loading}
                                                     data={internationalData}
                                                     dataHandler={updateInternationalData}
+                                                    markupValue={internationalData?.exchange_rate?.markupValue}
+                                                    skipSameCurrencyConversion
                                                 />
                                                 : ""
                                         }
@@ -1833,6 +1853,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                                                                         loading={loading}
                                                                         data={internationalData}
                                                                         dataHandler={updateInternationalData}
+                                                                        skipSameCurrencyConversion
                                                                     />
                                                                     :
                                                                     internationalData.payment_type?.sub_name
@@ -1938,6 +1959,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                                                                                 internationalData.showOtpModal
                                                                                 &&
                                                                                 <OtpConfirmation
+                                                                                    variant="modal"
                                                                                     callback={internationalData.payment_type?.value === "card" ? initiateCardPayment : internationalData.payment_type?.value === "paypal" ? initiatePaypalPayment : internationalData?.payment_type?.value === "mobile_wallet" ? initiateMobileWalletPayment : verifyOtp}
                                                                                     data={internationalData}
                                                                                     dataHandler={updateInternationalData}

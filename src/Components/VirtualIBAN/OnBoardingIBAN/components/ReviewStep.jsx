@@ -1,7 +1,10 @@
 import { useEffect, useState } from 'react'
-import { ArrowLeft, FileText } from 'react-feather'
+import { AlertCircle, ArrowLeft, FileText } from 'react-feather'
 import { useTranslation } from 'react-i18next'
 import styles from '../style/onboardingSteps.module.css'
+import StepProgress from './StepProgress'
+import AlertBox from './AlertBox'
+import { useMediaQuery } from '@mui/material'
 
 const DOC_TITLE_MAP = {
     commercial_register: "Commercial Register Extract / Certificate of Incorporation",
@@ -22,10 +25,11 @@ const DOC_TITLE_MAP = {
     aml_policy: "AML & Compliance Policy Document"
 }
 
-const ReviewStep = ({ onSubmit, onBack, allData = {}, onNext, userType }) => {
+const ReviewStep = ({ onSubmit, onBack, allData = {}, onNext, userType, currentStep }) => {
     const { t } = useTranslation()
     const [agreed, setAgreed] = useState(false)
     const [submitting, setSubmitting] = useState(false)
+    const isMobile = useMediaQuery('(max-width:600px)');
 
     useEffect(() => {
         window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
@@ -87,22 +91,27 @@ const ReviewStep = ({ onSubmit, onBack, allData = {}, onNext, userType }) => {
 
     return (
         <div className={styles.onboardingLayout}>
-            <div className={styles.wizardSteps}>
-                {steps.map((step, index) => (
-                    <div
-                        key={index}
-                        className={`${styles.step} ${step.active ? styles.active : ""} ${step.completed ? styles.completed : ""}`}
-                    >
-                        <div className={styles.stepLine}></div>
-                        <div className={styles.stepContent}>
-                            <span className={styles.stepNumber}>{step.num}</span>
-                            <span className={styles.stepLabel}>{step.label}</span>
+            <div>
+                <div className={styles.wizardSteps}>
+                    {steps.map((step, index) => (
+                        <div
+                            key={index}
+                            className={`${styles.step} ${step.active ? styles.active : ""} ${step.completed ? styles.completed : ""}`}
+                        >
+                            <div className={styles.stepLine}></div>
+                            <div className={styles.stepContent}>
+                                <span className={styles.stepNumber}>{step.num}</span>
+                                <span className={styles.stepLabel}>{step.label}</span>
+                            </div>
                         </div>
-                    </div>
-                ))}
+                    ))}
+                </div>
+                <StepProgress
+                    percent={100} 
+                    currentStep={currentStep} 
+                />
             </div>
-
-            <div style={{ width: "100%" }}>
+            <div style={{ width: "100%" }} className={styles.activityHeader}>
                 <h2 className={styles.formHeading}>{t("Review your activation request")}</h2>
                 <p className={styles.formSubheading}>
                     {t("Check everything below before you submit. You can jump back to any step to make changes.")}
@@ -377,7 +386,7 @@ const ReviewStep = ({ onSubmit, onBack, allData = {}, onNext, userType }) => {
                                         {providedDocs.length} {t("document(s) attached")}
                                     </span>
                                 </div>
-                                {providedDocs.map(([key, file]) => {
+                                {!isMobile && providedDocs.map(([key, file]) => {
                                     const title = DOC_TITLE_MAP[key] || t(key.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase()))
                                     const fileName = typeof file === 'object' && file?.name ? file.name : String(file)
                                     return (
@@ -414,13 +423,19 @@ const ReviewStep = ({ onSubmit, onBack, allData = {}, onNext, userType }) => {
                         )}
                     </div>
 
-                    <div className={styles.infoBox}>
-                        <span className={styles.infoIcon}>ⓘ</span>
-                        <p>
-                            {t("You won't be charged now. There's no pricing to accept at this stage, our team confirms your eligibility and sends a personalized offer with the applicable terms and next steps.")}
-                        </p>
-                    </div>
-
+                    {isMobile ?
+                                <AlertBox
+                                    icon={<AlertCircle size={12} color='#5926F0' />}
+                                    description={"You won't be charged now. There's no pricing to accept at this stage, our team confirms your eligibility and sends a personalized offer with the applicable terms and next steps."}
+                                />
+                                    :    
+                            <div className={styles.infoBox}>
+                                <span className={styles.infoIcon}>ⓘ</span>
+                                <p>
+                                    {t("You won't be charged now. There's no pricing to accept at this stage, our team confirms your eligibility and sends a personalized offer with the applicable terms and next steps.")}
+                                </p>
+                            </div>
+                    }
                     <div className={styles.confirmRow} onClick={() => setAgreed(!agreed)}>
                         <input
                             type="checkbox"

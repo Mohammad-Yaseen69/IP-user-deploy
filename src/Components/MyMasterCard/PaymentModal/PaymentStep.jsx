@@ -18,6 +18,7 @@ import { toast } from 'react-toastify';
 import { encryptData } from '../../../Helper/EssentilaMethods/Encryption';
 import lockIcon from "../../PaymentsNewer/InternationalFlow/files/lock-03.png"
 import mainIcon from "../../PaymentsNewer/InternationalFlow/files/PCI-DSS-1 1.png"
+import { useMediaQuery } from '@mui/material';
 
 
 
@@ -54,6 +55,7 @@ const PaymentStep = (
     }) => {
     const { t } = useTranslation()
     const { authHeader } = useContext(UserContext)
+    const isMobile = useMediaQuery('(max-width: 600px)');
 
     const expiryCheck = async (item) => {
         try {
@@ -118,6 +120,7 @@ const PaymentStep = (
                                     padding: "12px",
                                     borderRadius: "8px",
                                     marginTop: "15px",
+                                    flexDirection: isMobile ? 'column' : 'row'
                                 }),
                             }}
                             key={wallet_l.name}

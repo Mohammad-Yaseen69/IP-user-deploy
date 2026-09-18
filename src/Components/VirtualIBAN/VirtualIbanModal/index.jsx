@@ -57,7 +57,7 @@ import InstaPayLoader from "../../Loader"
 import { useCreateVirtualIban, useVirtualIbans, virtualIbanQueryKeys } from "../../../hooks/useVirtualIban"
 import { handlePaymentApiError } from "../../../utils/Functions/handlePaymentApiError"
 import { useNavigate } from "react-router"
-import OTPConfirmation from "../../UserSettingsNew/OTPConfirmation"
+import OTPConfirmation from "../../../Common/Component/OtpVerification"
 import {
     getActivationFeeConfig,
     getActiveInstaWallets,
@@ -925,6 +925,7 @@ const VirtualIbanModal = ({
             <Modal isOpen={showOtp} toggle={() => setShowOtp(false)} centered>
                 <ModalBody>
                     <OTPConfirmation
+                        variant="card"
                         setter={() => { }}
                         setterValue={true}
                         hideOtp={() => setShowOtp(false)}

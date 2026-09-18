@@ -15,7 +15,7 @@ import InstaPayLoader from '../../Loader'
 import WalletsComponent from '../InternationalFlow/WalletsComponent'
 import FeesComponent from '../InternationalFlow/FeesComponent'
 import StepThree from '../InternationalFlow/StepThree'
-import OtpConfirmation from '../InternationalFlow/OtpConfirmation'
+import OtpConfirmation from '../../../Common/Component/OtpVerification'
 import { ChevronLeft, ChevronRight, HelpCircle } from 'react-feather'
 import StepFive from '../InternationalFlow/StepFive'
 import StepFour from '../InternationalFlow/StepFour'
@@ -777,6 +777,7 @@ const NonInstapayPayment = ({ sendPaymentType, setSendPaymentType, setStep }) =>
                                 data.showOtpModal
                                 &&
                                 <OtpConfirmation
+                                    variant="modal"
                                     callback={data.payment_type?.value === "card" ? initiateCardPayment : data.payment_type?.value === "paypal" ? initiatePaypalPayment : data?.payment_type?.value === "mobile_wallet" ? () => { } : confirmWalletPayment}
                                     data={data}
                                     dataHandler={dataHandler}
