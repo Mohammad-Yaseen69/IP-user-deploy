@@ -23,6 +23,7 @@ import styles from "./styles/index.module.css"
 import { asVirtualIbanArray, isVirtualIbanInactive } from './utils/virtualIban'
 import VirtualIbanModal from './VirtualIbanModal'
 import OnboardingIBAN from './OnBoardingIBAN'
+import Compliance from './Compliance'
 
 
 const VirtualBank = () => {
@@ -272,6 +273,16 @@ const VirtualBank = () => {
                                     <div className={styles.tabContent}>
                                         <div className={styles.section}>
                                             <Manage />
+                                        </div>
+                                    </div>
+                                )}
+
+
+
+                                {activeTab === "compliance" && (
+                                    <div className={styles.tabContent}>
+                                        <div className={styles.section}>
+                                            <Compliance />
                                         </div>
                                     </div>
                                 )}

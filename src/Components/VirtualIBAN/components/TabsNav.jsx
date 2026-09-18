@@ -11,6 +11,7 @@ const tabs = [
   { id: "overview", label: "Overview", icon: OverViewIcon },
   { id: "transaction-history", label: "Transaction History", icon: TransecitonHis },
   { id: "ibanassets", label: "My vIBAN details", icon: IBAN_icon },
+  { id: "compliance", label: "Compliance", icon: IBAN_icon },
   { id: "manage", label: "Manage", icon: mange },
 ];
 
@@ -30,8 +31,7 @@ const TabsNav = ({ activeTab, onTabChange }) => {
         <button
           key={tab.id}
           className={`${styles.tab} ${activeTab === tab.id ? styles.active : ""}`}
-          onClick={() => onTabChange(tab.id)}
-        >
+          onClick={() => onTabChange(tab.id)}>
           <img src={tab.icon} alt={tab.label} className={styles.icon} />
           {t(tab.label)}
         </button>

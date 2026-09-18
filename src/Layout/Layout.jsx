@@ -282,7 +282,8 @@ const Layout = ({ children, classNames, ...rest }) => {
   }, [userDetails?._id]);
 
   useEffect(() => {
-    if (location.pathname === "/" || location.pathname.toLowerCase() === "/dashboard/default") {
+    const path = location.pathname.toLowerCase();
+    if (path === "/" || path === "/dashboard/default" || path === "/my-mastercard" || path === "/payments") {
       setTogglSidebar(true)
     } else {
       setTogglSidebar(false)
@@ -369,7 +370,7 @@ const Layout = ({ children, classNames, ...rest }) => {
           />
         }
 
-        {(showAdditionalFilesModal && !location.pathname.toLowerCase().includes("settings") && !location.pathname.toLowerCase().includes("my-mastercard")) &&
+        {(showAdditionalFilesModal && !location.pathname.toLowerCase().includes("settings") && !location.pathname.toLowerCase().includes("my-mastercard") && !location.pathname.toLowerCase().includes("payments")) &&
           <AdditionalDocumentModal
             isOpen={showAdditionalFilesModal}
             toggle={() => setShowAdditionalModal(false)}
