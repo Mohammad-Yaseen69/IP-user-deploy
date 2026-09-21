@@ -1,14 +1,58 @@
-import { AlertTriangle, ChevronLeft, ChevronRight, Copy, Tag } from 'react-feather';
+import { useContext, useMemo } from 'react';
+import { AlertTriangle, Copy, Tag } from 'react-feather';
 import { useTranslation } from 'react-i18next';
 import styles from '../style/DepositDetails.module.css';
 import IbanBreadcrumb from '../../components/IbanBreadcrumb';
+import { UserContext } from '../../../../Context/UserContext';
+import { INTL_DEPOSIT_ACCOUNTS, getPaymentReference } from '../../utils/virtualIban';
+
+const CARD_META = {
+    eur: {
+        symbol: '€',
+        title: 'EUR - Euro',
+        subtitle: 'Receive EUR payments from outside SEPA',
+        iconStyle: undefined,
+    },
+    usd: {
+        symbol: '$',
+        title: 'USD - US Dollar',
+        subtitle: 'Receive USD payments from outside SEPA',
+        iconStyle: { background: '#FEF3C7', color: '#D97706' },
+    },
+};
+
+const CURRENCIES = ['eur', 'usd'];
 
 const DepositDetails = () => {
     const { t } = useTranslation();
+    const { userDetails } = useContext(UserContext);
+
     const handleCopy = (text) => {
+        if (!text) return;
         navigator.clipboard.writeText(text);
         alert(`${t('Copied')}: ${text}`);
     };
+
+    const cards = useMemo(() => CURRENCIES.map((currency) => {
+        const account = INTL_DEPOSIT_ACCOUNTS[currency];
+        const reference = getPaymentReference(null, userDetails, currency);
+
+        const rows = [
+            { label: 'Account holder name', value: account.beneficiaryName },
+            { label: 'Account holder address', value: account.beneficiaryAddress },
+            { label: 'Account number / IBAN', value: account.accountNumber },
+            { label: 'BIC / SWIFT', value: account.bankCode },
+            { label: 'Bank name', value: account.bankName },
+            { label: 'Bank address', value: account.bankAddress },
+        ];
+
+        const allDetails = [
+            ...rows.map((row) => `${t(row.label)}: ${row.value}`),
+            `${t('Remittance information')}: ${reference}`,
+        ].join('\n');
+
+        return { currency, account, reference, rows, allDetails, meta: CARD_META[currency] };
+    }), [userDetails, t]);
 
     return (
         <div className={styles.container}>
@@ -34,184 +78,58 @@ const DepositDetails = () => {
             </div>
 
             <div className={styles.cardsGrid}>
+                {cards.map(({ currency, reference, rows, allDetails, meta }) => (
+                    <div className={styles.bankCard} key={currency}>
+                        <div className={styles.cardHeaderRow}>
+                            <div className={styles.currencyIcon} style={meta.iconStyle}>{meta.symbol}</div>
+                            <div className={styles.currencyMeta}>
+                                <h4>{t(meta.title)}</h4>
+                                <p>{t(meta.subtitle)}</p>
+                            </div>
+                        </div>
 
-                <div className={styles.bankCard}>
-                    <div className={styles.cardHeaderRow}>
-                        <div className={styles.currencyIcon}>{t('€')}</div>
-                        <div className={styles.currencyMeta}>
-                            <h4>{t('EUR - Euro')}</h4>
-                            <p>{t('Receive EUR payments from outside SEPA')}</p>
+                        <div className={styles.infoBlock}>
+                            {rows.map((row) => (
+                                <div className={styles.dataRow} key={row.label}>
+                                    <div className={styles.labelStack}>
+                                        <h5>{t(row.label)}</h5>
+                                        <p>{row.value}</p>
+                                    </div>
+                                    <button className={styles.copyBtn} onClick={() => handleCopy(row.value)}>
+                                        <Copy size={16} />
+                                    </button>
+                                </div>
+                            ))}
+                        </div>
+
+                        <div className={styles.remittanceBox}>
+                            <div className={styles.remittanceHeader}>
+                                <Tag size={14} /> {t('Remittance information to include')}
+                            </div>
+                            <div className={styles.remittanceValueRow}>
+                                <span className={styles.remittanceCode}>{reference}</span>
+                                <button className={styles.copyBtn} onClick={() => handleCopy(reference)}>
+                                    <Copy size={16} />
+                                </button>
+                            </div>
+                            <p className={styles.remittanceExample}>
+                                {t('Example')}: {reference} - ABC Trading Ltd
+                            </p>
+                        </div>
+
+                        <div
+                            className={styles.copyAllDetails}
+                            role="button"
+                            tabIndex={0}
+                            onClick={() => handleCopy(allDetails)}
+                            onKeyDown={(event) => event.key === 'Enter' && handleCopy(allDetails)}
+                        >
+                            <Copy size={20} /> {t('Copy all details')}
                         </div>
                     </div>
-
-                    <div className={styles.infoBlock}>
-                        <div className={styles.dataRow}>
-                            <div className={styles.labelStack}>
-                                <h5>{t('Account holder name')}</h5>
-                                <p>{t('System Pay Services (Malta) Limited')}</p>
-                            </div>
-                            <button className={styles.copyBtn} onClick={() => handleCopy("System Pay Services (Malta) Limited")}>
-                                <Copy size={16} />
-                            </button>
-                        </div>
-
-                        <div className={styles.dataRow}>
-                            <div className={styles.labelStack}>
-                                <h5>{t('Account holder address')}</h5>
-                                <p>{t('Ruby Workspaces Office 3 Pendergardens Triq Gort, San Ġiljan, STJ 9023, Malta')}</p>
-                            </div>
-                            <button className={styles.copyBtn} onClick={() => handleCopy("Ruby Workspaces Office 3 Pendergardens Triq Gort, San Ġiljan, STJ 9023, Malta")}>
-                                <Copy size={16} />
-                            </button>
-                        </div>
-
-                        <div className={styles.dataRow}>
-                            <div className={styles.labelStack}>
-                                <h5>{t('Account number / IBAN')}</h5>
-                                <p>{t('ES8201828510940200010371')}</p>
-                            </div>
-                            <button className={styles.copyBtn} onClick={() => handleCopy("ES8201828510940200010371")}>
-                                <Copy size={16} />
-                            </button>
-                        </div>
-
-                        <div className={styles.dataRow}>
-                            <div className={styles.labelStack}>
-                                <h5>{t('BIC / SWIFT')}</h5>
-                                <p>{t('BBVAESMMXXX')}</p>
-                            </div>
-                            <button className={styles.copyBtn} onClick={() => handleCopy("BBVAESMMXXX")}>
-                                <Copy size={16} />
-                            </button>
-                        </div>
-
-                        <div className={styles.dataRow}>
-                            <div className={styles.labelStack}>
-                                <h5>{t('Bank name')}</h5>
-                                <p>{t('BANCO BILBAO VIZCAYA ARGENTARIA S.A.')}</p>
-                            </div>
-                            <button className={styles.copyBtn} onClick={() => handleCopy("BANCO BILBAO VIZCAYA ARGENTARIA S.A.")}>
-                                <Copy size={16} />
-                            </button>
-                        </div>
-
-                        <div className={styles.dataRow}>
-                            <div className={styles.labelStack}>
-                                <h5>{t('Bank address')}</h5>
-                                <p>{t('Pz De San Nicolas 4, Bilbao, 48005, Spain')}</p>
-                            </div>
-                            <button className={styles.copyBtn} onClick={() => handleCopy("Pz De San Nicolas 4, Bilbao, 48005, Spain")}>
-                                <Copy size={16} />
-                            </button>
-                        </div>
-                    </div>
-
-                    <div className={styles.remittanceBox}>
-                        <div className={styles.remittanceHeader}>
-                            <Tag size={14} /> {t('Remittance information to include')}
-                        </div>
-                        <div className={styles.remittanceValueRow}>
-                            <span className={styles.remittanceCode}>{t('REF GJL55V3 - [Your Company or Individual Name]')}</span>
-                            <button className={styles.copyBtn} onClick={() => handleCopy("REF GJL55V3")}>
-                                <Copy size={16} />
-                            </button>
-                        </div>
-                        <p className={styles.remittanceExample}>{t('Example: REF GJL55V3 - ABC Trading Ltd or REF GJL55V3 - John Smith')}</p>
-                    </div>
-                    <div className={styles.copyAllDetails}>
-                        <Copy size={20} /> {t('Copy all details')}
-                    </div>
-                </div>
-
-                <div className={styles.bankCard}>
-                    <div className={styles.cardHeaderRow}>
-                        <div className={styles.currencyIcon} style={{ background: '#FEF3C7', color: '#D97706' }}>{t('$')}</div>
-                        <div className={styles.currencyMeta}>
-                            <h4>{t('USD - US Dollar')}</h4>
-                            <p>{t('Receive USD payments from outside SEPA')}</p>
-                        </div>
-                    </div>
-
-                    <div className={styles.infoBlock}>
-                        <div className={styles.dataRow}>
-                            <div className={styles.labelStack}>
-                                <h5>{t('Account holder name')}</h5>
-                                <p>{t('System Pay Services (Malta) Limited')}</p>
-                            </div>
-                            <button className={styles.copyBtn} onClick={() => handleCopy("System Pay Services (Malta) Limited")}>
-                                <Copy size={16} />
-                            </button>
-                        </div>
-
-                        <div className={styles.dataRow}>
-                            <div className={styles.labelStack}>
-                                <h5>{t('Account holder address')}</h5>
-                                <p>{t('Ruby Workspaces Office 3 Pendergardens Triq Gort, San Ġiljan, STJ 9023, Malta')}</p>
-                            </div>
-                            <button className={styles.copyBtn} onClick={() => handleCopy("Ruby Workspaces Office 3 Pendergardens Triq Gort, San Ġiljan, STJ 9023, Malta")}>
-                                <Copy size={16} />
-                            </button>
-                        </div>
-
-                        <div className={styles.dataRow}>
-                            <div className={styles.labelStack}>
-                                <h5>{t('Account number / IBAN')}</h5>
-                                <p>{t('ES8201828510940200010371')}</p>
-                            </div>
-                            <button className={styles.copyBtn} onClick={() => handleCopy("ES8201828510940200010371")}>
-                                <Copy size={16} />
-                            </button>
-                        </div>
-
-                        <div className={styles.dataRow}>
-                            <div className={styles.labelStack}>
-                                <h5>{t('BIC / SWIFT')}</h5>
-                                <p>{t('BBVAESMMXXX')}</p>
-                            </div>
-                            <button className={styles.copyBtn} onClick={() => handleCopy("BBVAESMMXXX")}>
-                                <Copy size={16} />
-                            </button>
-                        </div>
-
-                        <div className={styles.dataRow}>
-                            <div className={styles.labelStack}>
-                                <h5>{t('Bank name')}</h5>
-                                <p>{t('BANCO BILBAO VIZCAYA ARGENTARIA S.A.')}</p>
-                            </div>
-                            <button className={styles.copyBtn} onClick={() => handleCopy("BANCO BILBAO VIZCAYA ARGENTARIA S.A.")}>
-                                <Copy size={16} />
-                            </button>
-                        </div>
-
-                        <div className={styles.dataRow}>
-                            <div className={styles.labelStack}>
-                                <h5>{t('Bank address')}</h5>
-                                <p>{t('Pz De San Nicolas 4, Bilbao, 48005, Spain')}</p>
-                            </div>
-                            <button className={styles.copyBtn} onClick={() => handleCopy("Pz De San Nicolas 4, Bilbao, 48005, Spain")}>
-                                <Copy size={16} />
-                            </button>
-                        </div>
-                    </div>
-
-                    <div className={styles.remittanceBox}>
-                        <div className={styles.remittanceHeader}>
-                            <Tag size={14} /> {t('Remittance information to include')}
-                        </div>
-                        <div className={styles.remittanceValueRow}>
-                            <span className={styles.remittanceCode}>{t('REF PY9F4G3 - [Your Company or Individual Name]')}</span>
-                            <button className={styles.copyBtn} onClick={() => handleCopy("REF PY9F4G3")}>
-                                <Copy size={16} />
-                            </button>
-                        </div>
-                        <p className={styles.remittanceExample}>{t('Example: REF PY9F4G3 - ABC Trading Ltd or REF PY9F4G3 - John Smith')}</p>
-                    </div>
-                    <div className={styles.copyAllDetails}>
-                        <Copy size={20} /> {t('Copy all details')}
-                    </div>
-                </div>
-
+                ))}
             </div>
+
             <div className={styles.needHelpBanner}>
                 <h4>{t('Need help?')}</h4>
                 <p>
