@@ -1,22 +1,9 @@
-import { useContext, useMemo } from 'react';
 import styles from '../AddBeneficiaryFlowV2.module.css';
-import { Alert, Fields, OptionCard, SelectField } from '../components';
+import { Alert, FieldLabel, Fields, Hint, OptionCard } from '../components';
+import CountryDropDown from '../../../../AddBeneficiary/CountryDropDown';
 import { RECIPIENT_TYPES } from '../constants';
-import { UserContext } from '../../../../../Context/UserContext';
 
 const StepRecipient = ({ form, setField, errors = {} }) => {
-    const { allowedCountries } = useContext(UserContext);
-    const isBusiness = form.recipient_type === 'business';
-
-    const countryOptions = useMemo(
-        () =>
-            (allowedCountries || []).map((country) => ({
-                value: country.country_iso_code,
-                label: country.country_name,
-            })),
-        [allowedCountries],
-    );
-
     return (
         <>
             <div className={styles.group}>
@@ -43,16 +30,16 @@ const StepRecipient = ({ form, setField, errors = {} }) => {
             </div>
 
             <Fields>
-                <SelectField
-                    id="abf-country"
-                    label={isBusiness ? 'Country of registration' : 'Country they live in'}
-                    value={form.country}
-                    onChange={(value) => setField('country', value)}
-                    options={countryOptions}
-                    placeholder="Select a country"
-                    error={errors.country}
-                    hint="This decides which payout methods and details are needed."
-                />
+                <div className={`${styles.field} ${styles.fieldFlex}`}>
+                    <FieldLabel htmlFor="abf-country">Country</FieldLabel>
+                    <CountryDropDown
+                        country={form.country || ''}
+                        onSelect={(selected) => setField('country', selected?.alpha3 || '')}
+                    />
+                    <Hint error={!!errors.country}>
+                        {errors.country || 'This decides which payout methods and details are needed.'}
+                    </Hint>
+                </div>
             </Fields>
 
             <Alert variant="info">
