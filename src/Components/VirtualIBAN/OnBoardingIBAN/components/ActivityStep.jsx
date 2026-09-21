@@ -1,13 +1,11 @@
-import { Tooltip, useMediaQuery } from '@mui/material'
+import { Tooltip } from '@mui/material'
 import { useEffect, useMemo, useState } from 'react'
-import { AlertCircle, AlertTriangle, ArrowLeft, ArrowRight, X } from 'react-feather'
+import { ArrowLeft, ArrowRight, X } from 'react-feather'
 import { useTranslation } from 'react-i18next'
 import bvnkIndustryReference from '../../../../utils/Data/bvnkIndustryReference.json'
 import CountryDropDown from '../../../AddBeneficiary/CountryDropDown'
 import styles from '../style/onboardingSteps.module.css'
 import SidebarProgress from './SidebarProgress'
-import StepProgress from './StepProgress'
-import AlertBox from './AlertBox'
 
 const getIndustryPayload = (industry) => ({
     name: industry?.name,
@@ -32,14 +30,9 @@ const MAIN_COUNTRY_OPTIONS = [
 
 const COUNTRY_LIST = ['Switzerland', 'France', 'Germany', 'United Kingdom', 'Netherlands', 'Luxembourg', 'Ireland', 'Malta', 'United Arab Emirates', 'United States', 'Senegal', 'Pakistan', 'India', 'China', 'Brazil', 'Canada', 'Japan', 'Australia', 'Saudi Arabia', 'South Africa']
 
-const countrySelectStyle = {
-    borderRadius: '12px', padding: '13px 15px', border: '1px solid #1412201F'
-}
-
-const ActivityStep = ({ onNext, onBack, data = {}, currentStep}) => {
+const ActivityStep = ({ onNext, onBack, data = {} }) => {
     const { t } = useTranslation()
     const [showCountryDropdown, setShowCountryDropdown] = useState(false)
-    const isMobile = useMediaQuery('(max-width:600px)');
 
     useEffect(() => {
         window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
@@ -163,53 +156,37 @@ const ActivityStep = ({ onNext, onBack, data = {}, currentStep}) => {
 
     return (
         <div className={styles.onboardingLayout}>
-            <div>
-                <div className={styles.wizardSteps}>
-                    {steps.map((step, index) => (
-                        <div
-                            key={index}
-                            className={`${styles.step} ${step.active ? styles.active : ""
-                                } ${step.completed ? styles.completed : ""}`}
-                        >
-                            <div className={styles.stepLine}></div>
+            <div className={styles.wizardSteps}>
+                {steps.map((step, index) => (
+                    <div
+                        key={index}
+                        className={`${styles.step} ${step.active ? styles.active : ""
+                            } ${step.completed ? styles.completed : ""}`}
+                    >
+                        <div className={styles.stepLine}></div>
 
-                            <div className={styles.stepContent}>
-                                <span className={styles.stepNumber}>{step.num}</span>
-                                <span className={styles.stepLabel}>{step.label}</span>
-                            </div>
+                        <div className={styles.stepContent}>
+                            <span className={styles.stepNumber}>{step.num}</span>
+                            <span className={styles.stepLabel}>{step.label}</span>
                         </div>
-                    ))}
-                </div>
-                <StepProgress
-                    percent={45} 
-                    currentStep={currentStep} 
-                />
+                    </div>
+                ))}
             </div>
-            <div
-                style={{
-                    width: "100%"
-                }}
-                className={styles.activityHeader}
-            >
+            <div style={{
+                width: "100%"
+            }}>
                 <h2 className={styles.formHeading}>{t("How will you use InstaPay?")}</h2>
                 <p className={styles.formSubheading}>
                     {t("These answers tailor your account. Some questions and documents appear dynamically based on your profile, nothing more than we need.")}
                 </p>
-                <div className={styles.activityAlert}>
-                    <AlertBox
-                        title={"Assistant"}
-                        description={"Almost halfway. These answers shape which documents we'll actually need from you."}
-                    />
-                </div>
             </div>
-            
             <div className={styles.mainArea}>
 
-                <div>
+                <div >
                     <div className={styles.formContainer2} style={{
                         marginBottom: "15px",
                     }}>
-                        <div className={`${styles.onboardingForm2} ${styles.activityFormWrapper}`}>
+                        <div className={styles.onboardingForm2}>
 
                             <div className={styles.inputGroup}>
                                 <label className={styles.inputLabel}>
@@ -250,7 +227,7 @@ const ActivityStep = ({ onNext, onBack, data = {}, currentStep}) => {
                                         "Cross-border payment orchestration and multi-currency treasury..."
                                     )}
                                 />
-                                <span className={styles.charCount}>{form.businessDescription.length}/1000</span>
+                                < span className={styles.charCount}>{form.businessDescription.length}/1000</span>
                             </div>
 
                             <div className={styles.inputGroup}
@@ -404,8 +381,8 @@ const ActivityStep = ({ onNext, onBack, data = {}, currentStep}) => {
                                                     type="button"
                                                     disabled={comingSoon}
                                                     className={`${styles.chip} ${form.services?.includes(label)
-                                                            ? styles.activeChip
-                                                            : ""
+                                                        ? styles.activeChip
+                                                        : ""
                                                         }`}
                                                     onClick={() =>
                                                         !comingSoon && toggleArrayItem("services", label)
@@ -449,7 +426,7 @@ const ActivityStep = ({ onNext, onBack, data = {}, currentStep}) => {
                         style={{
                             width: "100%"
                         }}>
-                        <div className={`${styles.onboardingForm2} ${styles.activityFormWrapper}`}
+                        <div className={styles.onboardingForm2}
 
                             style={{
                                 width: "100%"
@@ -486,7 +463,9 @@ const ActivityStep = ({ onNext, onBack, data = {}, currentStep}) => {
                                         onChange={set("paymentNature")}
                                     />
                                 </div>
-                            
+                            </div>
+
+                            <div className={styles.formGrid}>
                                 <div className={styles.inputGroup}>
                                     <label className={styles.inputLabel}>
                                         {t("COUNTRIES OF ORIGIN OF FUNDS")} <span style={{ color: "red", fontWeight: 600 }}>*</span>
@@ -500,7 +479,6 @@ const ActivityStep = ({ onNext, onBack, data = {}, currentStep}) => {
                                         }}
                                         country=""
                                         background="#fff"
-                                        containerStyle={countrySelectStyle}
                                     />
 
                                     <div className={styles.chips}>
@@ -530,7 +508,6 @@ const ActivityStep = ({ onNext, onBack, data = {}, currentStep}) => {
                                                 toggleArrayItem("destinationCountries", country.name);
                                             }
                                         }}
-                                        containerStyle={countrySelectStyle}
                                         country=""
                                         background="#fff"
                                     />
@@ -552,10 +529,10 @@ const ActivityStep = ({ onNext, onBack, data = {}, currentStep}) => {
                                 </div>
                             </div>
 
-                            <div className={`${styles.formGrid} ${styles.twoInputRow}`}>
+                            <div className={styles.formGrid}>
                                 <div className={styles.inputGroup}>
                                     <label className={styles.inputLabel}>
-                                        {t(isMobile ? "Avg transaction" : "AVERAGE TRANSACTION VALUE (EUR)")} <span style={{ color: "red", fontWeight: 600 }}>*</span>
+                                        {t("AVERAGE TRANSACTION VALUE (EUR)")} <span style={{ color: "red", fontWeight: 600 }}>*</span>
                                     </label>
 
                                     <div className={styles.inputWrapper}>
@@ -574,7 +551,7 @@ const ActivityStep = ({ onNext, onBack, data = {}, currentStep}) => {
 
                                 <div className={styles.inputGroup}>
                                     <label className={styles.inputLabel}>
-                                        {t(isMobile ? "Max transaction" : "MAXIMUM TRANSACTION VALUE (EUR)")} <span style={{ color: "red", fontWeight: 600 }}>*</span>
+                                        {t("MAXIMUM TRANSACTION VALUE (EUR)")} <span style={{ color: "red", fontWeight: 600 }}>*</span>
                                     </label>
 
                                     <div className={styles.inputWrapper}>
@@ -611,14 +588,44 @@ const ActivityStep = ({ onNext, onBack, data = {}, currentStep}) => {
                                         <span className={styles.currencyBadge}>EUR</span>
                                     </div>
                                 </div>
-                                {isMobile ?
-                                    <div className={styles.twoInputRow}>
-                                        <PaymentsFields form={form} set={set} isMobile={true} />
+
+                                <div className={styles.inputGroup}>
+                                    <label className={styles.inputLabel}>
+                                        {t("INCOMING PAYMENTS / MONTH (EUR)")} <span style={{ color: "red", fontWeight: 600 }}>*</span>
+                                    </label>
+
+                                    <div className={styles.inputWrapper}>
+                                        <input
+                                            style={{ padding: "14.5px 52px 14.5px 14px" }}
+                                            type="number"
+                                            min="0"
+                                            placeholder="50000"
+                                            className={styles.textInput}
+                                            value={form.incomingPayments}
+                                            onChange={set("incomingPayments")}
+                                        />
+                                        <span className={styles.currencyBadge}>EUR</span>
                                     </div>
-                                :
-                                    <PaymentsFields form={form} set={set} />
-                                }
-                                
+                                </div>
+
+                                <div className={styles.inputGroup}>
+                                    <label className={styles.inputLabel}>
+                                        {t("OUTGOING PAYMENTS / MONTH (EUR)")} <span style={{ color: "red", fontWeight: 600 }}>*</span>
+                                    </label>
+
+                                    <div className={styles.inputWrapper}>
+                                        <input
+                                            style={{ padding: "14.5px 52px 14.5px 14px" }}
+                                            type="number"
+                                            min="0"
+                                            placeholder="40000"
+                                            className={styles.textInput}
+                                            value={form.outgoingPayments}
+                                            onChange={set("outgoingPayments")}
+                                        />
+                                        <span className={styles.currencyBadge}>EUR</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -634,34 +641,16 @@ const ActivityStep = ({ onNext, onBack, data = {}, currentStep}) => {
                     />
                 </div>
             </div>
-            {isMobile ?
-                <div className={styles.alertWrapper}>
-                    <AlertBox
-                        icon={<AlertCircle size={12} color='#5926F0' />}
-                        description={"Crypto selected, offered as an upgrade. We may request source-of-wealth evidence and apply a temporary cap. Availability depends on your region."}
-                    />
-                    <AlertBox
-                        variant='warning'
-                        containerClass={styles.alertContainer}
-                        descClass={styles.alertDesc}
-                        icon={<AlertTriangle size={12} color='#8A5A00' />}
-                        description={"Higher-risk corridor selected. Expect a standard-to-enhanced review with a couple of extra documents. This is normal and we'll guide you."}
-                    />
-                </div>
-                :    
-                <>
-                    <div className={styles.noticeStrip}>
-                        {t(
-                            "Crypto selected, offered as an upgrade. We may request source-of-wealth evidence and apply a temporary cap. Availability depends on your region."
-                        )}
-                    </div>
-                    <div className={styles.noticeStri2}>
-                        {t(
-                            "Higher-risk corridor selected. Expect a standard-to-enhanced review with a couple of extra documents. This is normal and we'll guide you."
-                        )}
-                    </div>
-                </>       
-            }
+            <div className={styles.noticeStrip}>
+                {t(
+                    "Crypto selected, offered as an upgrade. We may request source-of-wealth evidence and apply a temporary cap. Availability depends on your region."
+                )}
+            </div>
+            <div className={styles.noticeStri2}>
+                {t(
+                    "Higher-risk corridor selected. Expect a standard-to-enhanced review with a couple of extra documents. This is normal and we'll guide you."
+                )}
+            </div>
             <div className={styles.navigationFooter}>
                 <button onClick={onBack} className={styles.backButton}>
                     <ArrowLeft size={16} />
@@ -674,7 +663,7 @@ const ActivityStep = ({ onNext, onBack, data = {}, currentStep}) => {
                     style={{ opacity: !isFormValid ? 0.5 : 1, cursor: !isFormValid ? 'not-allowed' : 'pointer' }}
                 >
                     {t("Continue")}
-                    {!isMobile && <ArrowRight size={16} />}
+                    <ArrowRight size={16} />
                 </button>
             </div>
         </div>
@@ -682,49 +671,3 @@ const ActivityStep = ({ onNext, onBack, data = {}, currentStep}) => {
 }
 
 export default ActivityStep
-
-
-const PaymentsFields = ({ form, set, isMobile }) => {
-    const { t } = useTranslation();
-    return(
-    <>
-    <div className={styles.inputGroup}>
-        <label className={styles.inputLabel}>
-            {t(isMobile ? "Incoming / month" : "INCOMING PAYMENTS / MONTH (EUR)")} <span style={{ color: "red", fontWeight: 600 }}>*</span>
-        </label>
-
-        <div className={styles.inputWrapper}>
-            <input
-                style={{ padding: "14.5px 52px 14.5px 14px" }}
-                type="number"
-                min="0"
-                placeholder="50000"
-                className={styles.textInput}
-                value={form.incomingPayments}
-                onChange={set("incomingPayments")}
-            />
-            <span className={styles.currencyBadge}>EUR</span>
-        </div>
-    </div>
-
-    <div className={styles.inputGroup}>
-        <label className={styles.inputLabel}>
-            {t(isMobile ? "Outgoing / month" : "OUTGOING PAYMENTS / MONTH (EUR)")} <span style={{ color: "red", fontWeight: 600 }}>*</span>
-        </label>
-
-        <div className={styles.inputWrapper}>
-            <input
-                style={{ padding: "14.5px 52px 14.5px 14px" }}
-                type="number"
-                min="0"
-                placeholder="40000"
-                className={styles.textInput}
-                value={form.outgoingPayments}
-                onChange={set("outgoingPayments")}
-            />
-            <span className={styles.currencyBadge}>EUR</span>
-        </div>
-    </div>
-    </>
-)
-}
