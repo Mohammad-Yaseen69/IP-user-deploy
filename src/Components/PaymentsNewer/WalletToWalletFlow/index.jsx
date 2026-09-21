@@ -382,7 +382,10 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, show
             if (dec?.otp_sent_on || dec?.available_methods) {
                 dataHandler("otpMethods", dec)
                 if (!data.showOtpModal) {
-                    dataHandler("codeType", dec?.otp_sent_on || "sms")
+                    dataHandler(
+                        "codeType",
+                        data.codeType || "sms"
+                    )
                 }
             }
             dataHandler("showOtpModal", true)
