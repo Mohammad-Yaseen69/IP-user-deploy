@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import styles from '../style/DepositDetails.module.css';
 import IbanBreadcrumb from '../../components/IbanBreadcrumb';
 import { UserContext } from '../../../../Context/UserContext';
+import { useVirtualIbans } from '../../../../hooks/useVirtualIban';
 import { INTL_DEPOSIT_ACCOUNTS, getPaymentReference } from '../../utils/virtualIban';
 
 const CARD_META = {
@@ -26,6 +27,8 @@ const CURRENCIES = ['eur', 'usd'];
 const DepositDetails = () => {
     const { t } = useTranslation();
     const { userDetails } = useContext(UserContext);
+    const { data: ibans = [] } = useVirtualIbans(userDetails?._id);
+    const iban = ibans?.[0] || null;
 
     const handleCopy = (text) => {
         if (!text) return;
@@ -35,7 +38,7 @@ const DepositDetails = () => {
 
     const cards = useMemo(() => CURRENCIES.map((currency) => {
         const account = INTL_DEPOSIT_ACCOUNTS[currency];
-        const reference = getPaymentReference(null, userDetails, currency);
+        const reference = getPaymentReference(iban, userDetails, currency);
 
         const rows = [
             { label: 'Account holder name', value: account.beneficiaryName },
@@ -52,7 +55,7 @@ const DepositDetails = () => {
         ].join('\n');
 
         return { currency, account, reference, rows, allDetails, meta: CARD_META[currency] };
-    }), [userDetails, t]);
+    }), [iban, userDetails, t]);
 
     return (
         <div className={styles.container}>

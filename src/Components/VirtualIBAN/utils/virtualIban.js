@@ -34,9 +34,8 @@ export const getProviderReference = (currency) => getIntlDepositAccount(currency
 
 export const getAccountReferenceCode = (iban, userDetails) => {
     const candidates = [
-        userDetails?.username,
         iban?.virtualIbanId,
-        iban?._id || iban?.id,
+        userDetails?.username,
     ]
 
     const code = candidates.find((value) => String(value ?? "").trim())
