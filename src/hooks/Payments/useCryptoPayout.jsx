@@ -37,13 +37,14 @@ export const useCryptoPayout = () => {
     const { getUserWallets } = useContext(UserContext)
 
     return useMutation({
-        mutationFn: (payload) =>
+        mutationFn: ({ idempotencyKey, ...payload }) =>
             apiWrapper({
                 endpoint: "/api/crypto/payout",
                 method: "POST",
                 payload,
                 isEncrypted: true,
                 isDecrypted: true,
+                idempotencyKey,
             }),
         onSuccess: () => {
             getUserWallets?.(true)

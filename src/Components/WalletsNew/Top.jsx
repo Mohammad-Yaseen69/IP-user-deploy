@@ -66,7 +66,7 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
                     }, 100)
                 }
                 if (action === "withdraw") {
-                    if (wallet?.wallet_type === "crypto") setShowSendCryptoModal(true)
+                    if (wallet?.wallet_type === "crypto") openSendCryptoModal(wallet)
                     else setShowWithdrawalModal(true)
                 } else if (action === "download") {
                     setShowDownloadStatementModal(true)
@@ -95,12 +95,17 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
     const [showConversionModal, setShowConversionModal] = useState(false)
     const [showDownloadStatementModal, setShowDownloadStatementModal] = useState(false)
     const [showSendCryptoModal, setShowSendCryptoModal] = useState(false)
+    const [sendCryptoWallet, setSendCryptoWallet] = useState(null)
 
+    const openSendCryptoModal = (wallet) => {
+        setSendCryptoWallet(wallet)
+        setShowSendCryptoModal(true)
+    }
 
     useEffect(() => {
         if (action === "convert") setShowConversionModal(true)
         else if (action === "withdraw") {
-            if (currentWallet?.wallet_type === "crypto") setShowSendCryptoModal(true)
+            if (currentWallet?.wallet_type === "crypto") openSendCryptoModal(currentWallet)
             else setShowWithdrawalModal(true)
         }
         else if (action === "add-currency") setShowAddCurrencyModal(true)
@@ -410,7 +415,7 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
                                         whiteSpace: "nowrap"
                                     }}
                                     className={styles.action}
-                                    onClick={() => setShowSendCryptoModal(true)}
+                                    onClick={() => openSendCryptoModal(currentWallet)}
                                     id="send_crypto"
                                 >
                                     <img style={{ height: "20px" }} src={withdraw} alt="" />
@@ -586,11 +591,11 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
                         }
                     </>
             }
-            {isCryptoWallet && showSendCryptoModal && (
+            {showSendCryptoModal && sendCryptoWallet && (
                 <SendCryptoModal
                     isOpen={showSendCryptoModal}
                     toggle={() => setShowSendCryptoModal(false)}
-                    wallet={currentWallet}
+                    wallet={sendCryptoWallet}
                 />
             )}
             <DownloadStatement

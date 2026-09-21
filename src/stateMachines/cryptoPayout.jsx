@@ -40,7 +40,7 @@ export const getAmountNumber = (value) => {
     return Number.isFinite(amount) ? amount : 0
 }
 
-export const MIN_PAYOUT_AMOUNT = 1
+export const MIN_PAYOUT_AMOUNT = 10
 
 export const getAmountError = (amount, availableBalance, cryptoCurrency = "") => {
     const value = getAmountNumber(amount)

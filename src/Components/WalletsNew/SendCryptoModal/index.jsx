@@ -6,6 +6,7 @@ import { Modal, ModalBody } from "reactstrap"
 import { UserContext } from "../../../Context/UserContext"
 import { useDebounce } from "../../../hooks/useDebounce/useDebounce"
 import useSendOtp from "../../../hooks/GeneralUse/useSendOtp"
+import { useIdempotency } from "../../../hooks/Payments/useIdempotency"
 import { useCryptoPayout, useCryptoPayoutFee, useValidateCryptoAddress } from "../../../hooks/Payments/useCryptoPayout"
 import { handlePaymentApiError } from "../../../utils/Functions/handlePaymentApiError"
 import useWindowWidth from "../../../utils/useWindowWidth"
@@ -107,9 +108,18 @@ const getBeneficiaryName = (beneficiary) => {
 
 const getBeneficiaryId = (beneficiary) => beneficiary?._id || beneficiary?.id
 
+const QUOTE_ERROR_HINTS = [
+    "quote expired",
+    "quote has already been used",
+    "quote is invalid",
+    "token_expired",
+    "invalid_token",
+    "waited too long",
+]
+
 const isQuoteError = (message) => {
     const text = String(message || "").toLowerCase()
-    return text.includes("quote expired") || text.includes("quote has already been used") || text.includes("quote is invalid")
+    return QUOTE_ERROR_HINTS.some((hint) => text.includes(hint))
 }
 
 const isMissingBeneficiaryDetailsError = (message) =>
@@ -143,14 +153,17 @@ const SendCryptoModal = ({ isOpen, toggle, wallet }) => {
     const [otpToken, setOtpToken] = useState("")
     const [payoutResult, setPayoutResult] = useState(null)
     const [isAddBeneficiaryOpen, setIsAddBeneficiaryOpen] = useState(false)
+    const [savedBeneficiaryId, setSavedBeneficiaryId] = useState("")
 
     const feeMutation = useCryptoPayoutFee()
     const payoutMutation = useCryptoPayout()
     const validateAddress = useValidateCryptoAddress()
+    const { getKey, reset: resetIdempotencyKey } = useIdempotency()
 
     const { sendOtp, isSendingOtp } = useSendOtp({
         onSuccess: (token) => {
             setOtpToken(token)
+            resetIdempotencyKey()
             setCurrentStep(STEPS.OTP)
         },
         onError: (error) => {
@@ -269,6 +282,17 @@ const SendCryptoModal = ({ isOpen, toggle, wallet }) => {
     }, [debouncedAddress, debouncedProtocol, cryptoCurrency])
 
     useEffect(() => {
+        if (!savedBeneficiaryId) return
+
+        const saved = cryptoBeneficiaries.find((beneficiary) => getBeneficiaryId(beneficiary) === savedBeneficiaryId)
+        if (!saved) return
+
+        setBeneficiaryError("")
+        setSelectedBeneficiary(saved)
+        setSavedBeneficiaryId("")
+    }, [cryptoBeneficiaries, savedBeneficiaryId])
+
+    useEffect(() => {
         if (!quoteExpiresAt) return undefined
 
         const remaining = quoteExpiresAt - Date.now()
@@ -298,6 +322,8 @@ const SendCryptoModal = ({ isOpen, toggle, wallet }) => {
         setOtpToken("")
         setPayoutResult(null)
         setIsAddBeneficiaryOpen(false)
+        setSavedBeneficiaryId("")
+        resetIdempotencyKey()
     }
 
     const handleClose = () => {
@@ -307,12 +333,8 @@ const SendCryptoModal = ({ isOpen, toggle, wallet }) => {
 
     const handleBeneficiarySaved = async (savedBeneficiary) => {
         setIsAddBeneficiaryOpen(false)
+        setSavedBeneficiaryId(getBeneficiaryId(savedBeneficiary) || "")
         await getUserBeneficiaries?.()
-
-        if (hasCryptoChannel(savedBeneficiary, cryptoCurrency)) {
-            setBeneficiaryError("")
-            setSelectedBeneficiary(savedBeneficiary)
-        }
     }
 
     const buildFeePayload = () => ({
@@ -397,11 +419,13 @@ const SendCryptoModal = ({ isOpen, toggle, wallet }) => {
                 token: otpToken,
                 otp,
                 type: type || authType,
+                idempotencyKey: getKey(),
             })
 
             setPayoutResult(res?.data || res || null)
             setVerified(true)
         } catch (error) {
+            resetIdempotencyKey()
             handlePaymentApiError({
                 error,
                 navigate,
@@ -494,7 +518,7 @@ const SendCryptoModal = ({ isOpen, toggle, wallet }) => {
                         confirmedNetwork={confirmedNetwork}
                         setConfirmedNetwork={setConfirmedNetwork}
                         quoteExpiresAt={quoteExpiresAt}
-                        isQuoteExpired={isQuoteExpired}
+                        isQuoteExpired={isQuoteExpired || !feeDetails?.token}
                         onRefreshQuote={handleRefreshQuote}
                         isRefreshing={feeMutation.isPending}
                     />
