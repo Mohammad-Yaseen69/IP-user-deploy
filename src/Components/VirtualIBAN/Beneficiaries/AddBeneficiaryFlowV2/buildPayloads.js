@@ -48,6 +48,74 @@ export const prefillBeneficiaryBag = (beneficiary) => {
     return bag;
 };
 
+const EXTRAS_ALIASES = {
+    firstname: ['firstname', 'firstName'],
+    lastname: ['lastname', 'lastName'],
+    legalName: ['legalName'],
+    email: ['email'],
+    msisdn: ['msisdn'],
+    address: ['address', 'beneficiaryAddress'],
+    city: ['city', 'beneficiaryCity'],
+    postal_code: ['postal_code', 'beneficiaryPostal'],
+    date_of_birth: ['date_of_birth'],
+};
+
+const firstValue = (...values) => values.find((value) => clean(value)) || '';
+
+export const prefillEditBag = (beneficiary) => {
+    if (!beneficiary) return {};
+
+    const extras = beneficiary.extras || {};
+
+    const bag = {
+        firstname: firstValue(beneficiary.first_name, extras.firstname, extras.firstName),
+        lastname: firstValue(beneficiary.last_name, extras.lastname, extras.lastName),
+        legalName: firstValue(beneficiary.company_name, extras.legalName),
+        email: firstValue(beneficiary.email, extras.email),
+        msisdn: firstValue(beneficiary.phone, extras.msisdn),
+        address: firstValue(beneficiary.address, extras.address, extras.beneficiaryAddress),
+        city: firstValue(beneficiary.city, extras.city, extras.beneficiaryCity),
+        postal_code: firstValue(beneficiary.zip_code, extras.postal_code, extras.beneficiaryPostal),
+        date_of_birth: firstValue(beneficiary.date_of_birth, extras.date_of_birth),
+    };
+
+    Object.keys(bag).forEach((key) => {
+        if (!bag[key]) delete bag[key];
+    });
+
+    return bag;
+};
+
+export const buildBeneficiaryUpdatePayload = ({ form, countries, beneficiary }) => {
+    const payload = buildBeneficiaryPayload({ form, countries });
+
+    const ownExtras = { ...payload.extras };
+    if (!clean(ownExtras.vendor)) delete ownExtras.vendor;
+
+    const extras = { ...(beneficiary?.extras || {}), ...ownExtras };
+
+    Object.keys(EXTRAS_ALIASES).forEach((key) => {
+        const value = clean(form.beneficiary?.[key]) || '';
+        const column = BENEFICIARY_COLUMN_MAP[key];
+
+        EXTRAS_ALIASES[key].forEach((alias) => {
+            if (value) extras[alias] = value;
+            else if (extras[alias]) extras[alias] = '';
+        });
+
+        if (!value && column && beneficiary?.[column]) payload[column] = '';
+    });
+
+    if (form.country) {
+        extras.country_iso_code = form.country;
+        extras.beneficiaryCountry = form.country;
+    }
+
+    payload.extras = extras;
+
+    return payload;
+};
+
 export const buildBeneficiaryPayload = ({ form, countries }) => {
     const countryRecord = (countries || []).find((c) => c.country_iso_code === form.country);
 

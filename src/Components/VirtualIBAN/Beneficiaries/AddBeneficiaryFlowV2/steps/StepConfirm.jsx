@@ -4,7 +4,7 @@ import { METHOD_CONTEXT_LABEL } from '../constants';
 import { getFieldDef } from '../vendorFields';
 import { UserContext } from '../../../../../Context/UserContext';
 
-const StepConfirm = ({ form, requirements, onEditStep }) => {
+const StepConfirm = ({ form, requirements, onEditStep, hideChannel = false }) => {
     const { allowedCountries } = useContext(UserContext);
 
     const countryLabel =
@@ -54,16 +54,18 @@ const StepConfirm = ({ form, requirements, onEditStep }) => {
                 ))}
             </SummaryCard>
 
-            <SummaryCard heading="Payout channel" action="Edit" onAction={() => onEditStep(2)}>
-                <SummaryRow label="Method" value={METHOD_CONTEXT_LABEL[form.method] || ''} />
-                {channelRows.map((name) => (
-                    <SummaryRow
-                        key={name}
-                        label={labelFor(name)}
-                        value={displayValue(name, form.channel[name])}
-                    />
-                ))}
-            </SummaryCard>
+            {!hideChannel && (
+                <SummaryCard heading="Payout channel" action="Edit" onAction={() => onEditStep(2)}>
+                    <SummaryRow label="Method" value={METHOD_CONTEXT_LABEL[form.method] || ''} />
+                    {channelRows.map((name) => (
+                        <SummaryRow
+                            key={name}
+                            label={labelFor(name)}
+                            value={displayValue(name, form.channel[name])}
+                        />
+                    ))}
+                </SummaryCard>
+            )}
         </>
     );
 };

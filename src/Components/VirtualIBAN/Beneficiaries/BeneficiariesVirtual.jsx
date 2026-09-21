@@ -397,16 +397,31 @@ const BeneficiariesVirtual = () => {
                 />
             )}
 
-            {/* Always used for editing; also handles creation when the flag is off. */}
-            <AddBeneficiaryModal
-                open={USE_NEW_ADD_BENEFICIARY_FLOW ? (isAddModalOpen && !!beneficiaryToEdit) : isAddModalOpen}
-                handleClose={() => {
-                    setIsAddModalOpen(false);
-                    setBeneficiaryToEdit(null);
-                }}
-                beneficiaryToEdit={beneficiaryToEdit}
-                onSaveSuccess={handleBeneficiarySaved}
-            />
+            {USE_NEW_ADD_BENEFICIARY_FLOW && beneficiaryToEdit && (
+                <AddBeneficiaryFlowV2
+                    open={isAddModalOpen && !!beneficiaryToEdit}
+                    mode="edit"
+                    existingBeneficiary={beneficiaryToEdit}
+                    handleClose={() => {
+                        setIsAddModalOpen(false);
+                        setBeneficiaryToEdit(null);
+                    }}
+                    onSaveSuccess={handleBeneficiarySaved}
+                />
+            )}
+
+            {/* Editing without the new flow, which also handles creation when the flag is off. */}
+            {!USE_NEW_ADD_BENEFICIARY_FLOW && (
+                <AddBeneficiaryModal
+                    open={isAddModalOpen}
+                    handleClose={() => {
+                        setIsAddModalOpen(false);
+                        setBeneficiaryToEdit(null);
+                    }}
+                    beneficiaryToEdit={beneficiaryToEdit}
+                    onSaveSuccess={handleBeneficiarySaved}
+                />
+            )}
 
             {/* Adding a channel reuses the same vendor-driven flow, starting at the
                 method step with the beneficiary already known. The original

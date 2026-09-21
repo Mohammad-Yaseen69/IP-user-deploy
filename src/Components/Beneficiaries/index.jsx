@@ -26,6 +26,14 @@ const Beneficiaries = () => {
     }, [userDetails])
     const can = usePermission()
     const [isAddOpen, setIsAddOpen] = useState(false)
+    const [activeBeneficiary, setActiveBeneficiary] = useState(null)
+    const [beneficiaryMode, setBeneficiaryMode] = useState("edit")
+
+    const openBeneficiary = (beneficiary, mode) => {
+        verifyToken()
+        setActiveBeneficiary(beneficiary)
+        setBeneficiaryMode(mode)
+    }
 
     useEffect(() => setFiltered(beneficiaries), [beneficiaries]);
 
@@ -98,7 +106,7 @@ const Beneficiaries = () => {
                         filtered.length > 0
                         ?
                         filtered.map(item => (
-                            <BeneficiaryCard key={item._id} user={item} />
+                            <BeneficiaryCard key={item._id} user={item} onEdit={(ben) => openBeneficiary(ben, "edit")} onView={(ben) => openBeneficiary(ben, "view")} />
                         ))
                         :
                         t("No Beneficiaries")
@@ -137,7 +145,7 @@ const Beneficiaries = () => {
                             filtered.length > 0
                                 ?
                                 filtered.map(item => (
-                                    <BeneficiaryCard key={item._id} user={item} />
+                                    <BeneficiaryCard key={item._id} user={item} onEdit={(ben) => openBeneficiary(ben, "edit")} onView={(ben) => openBeneficiary(ben, "view")} />
                                 ))
                                 :
                                 t("No Beneficiaries")
@@ -150,6 +158,16 @@ const Beneficiaries = () => {
                 <AddBeneficiaryFlowV2
                     open={isAddOpen}
                     handleClose={() => setIsAddOpen(false)}
+                    onSaveSuccess={() => getUserBeneficiaries()}
+                />
+            )}
+
+            {activeBeneficiary && (
+                <AddBeneficiaryFlowV2
+                    open={!!activeBeneficiary}
+                    mode={beneficiaryMode}
+                    existingBeneficiary={activeBeneficiary}
+                    handleClose={() => setActiveBeneficiary(null)}
                     onSaveSuccess={() => getUserBeneficiaries()}
                 />
             )}

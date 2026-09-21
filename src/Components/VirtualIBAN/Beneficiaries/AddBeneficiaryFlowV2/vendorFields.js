@@ -147,6 +147,37 @@ export const BVNK_RAILS = {
     crypto_wallet: BVNK_CRYPTO,
 };
 
+const EDIT_BENEFICIARY_FIELDS = {
+    individual: ['firstname', 'lastname', 'date_of_birth', 'email', 'msisdn', 'address', 'city', 'postal_code'],
+    business: ['legalName', 'email', 'msisdn', 'address', 'city', 'postal_code'],
+};
+
+const EDIT_REQUIRED_FIELDS = {
+    individual: ['firstname', 'lastname'],
+    business: ['legalName'],
+};
+
+export const getEditRequirements = (recipientType) => {
+    const key = recipientType === 'business' ? 'business' : 'individual';
+    const fields = EDIT_BENEFICIARY_FIELDS[key];
+    const required = EDIT_REQUIRED_FIELDS[key];
+    const baseDefs = { ...THUNES_ENTITY_FIELDS, ...BVNK_FIELD_DEFS };
+
+    const defs = fields.reduce((acc, name) => {
+        acc[name] = { ...getFieldDef(name, baseDefs), required: required.includes(name) };
+        return acc;
+    }, {});
+
+    return {
+        vendor: '',
+        beneficiaryFields: fields,
+        channelFields: [],
+        requiredBeneficiary: required,
+        requiredChannel: [],
+        defs,
+    };
+};
+
 export const getBvnkRequirements = (method, recipientType) => {
     const rail = BVNK_RAILS[method];
     if (!rail) return null;
