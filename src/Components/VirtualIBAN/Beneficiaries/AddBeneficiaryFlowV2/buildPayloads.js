@@ -1,18 +1,5 @@
 import { CHANNEL_TYPE_BY_METHOD } from './constants';
 
-/*
- * Maps the vendor-shaped form bags onto the two existing beneficiary endpoints.
- *
- *   POST /api/beneficiary/v2/add            the person or company
- *   POST /api/beneficiary/v2/:id/channel    where they get paid
- *
- * Anything the fixed columns cannot hold goes into `extras`, which both the
- * Mongo model and the channel schema already accept. That is also where the
- * vendor and payer identity live, so a later payment knows which rail and which
- * payer this channel belongs to.
- */
-
-/* Fields that map onto real columns on the beneficiary document. */
 const BENEFICIARY_COLUMN_MAP = {
     firstname: 'first_name',
     firstName: 'first_name',
@@ -30,11 +17,6 @@ const BENEFICIARY_COLUMN_MAP = {
 
 const clean = (value) => (typeof value === 'string' ? value.trim() : value);
 
-/**
- * Seeds the beneficiary bag from a saved record, so adding a second channel does
- * not make the user retype what we already hold. Both the vendor's own key names
- * (kept in `extras`) and our columns are covered.
- */
 export const prefillBeneficiaryBag = (beneficiary) => {
     if (!beneficiary) return {};
 
@@ -58,12 +40,80 @@ export const prefillBeneficiaryBag = (beneficiary) => {
     seed('beneficiaryPostal', beneficiary.zip_code);
     seed('country_iso_code', beneficiary.country_iso_code);
     seed('beneficiaryCountry', beneficiary.country_iso_code);
+    seed('date_of_birth', beneficiary.date_of_birth);
 
-    /* vendor/payer of the previous channel must not leak into the new one */
     delete bag.vendor;
     delete bag.payer_id;
 
     return bag;
+};
+
+const EXTRAS_ALIASES = {
+    firstname: ['firstname', 'firstName'],
+    lastname: ['lastname', 'lastName'],
+    legalName: ['legalName'],
+    email: ['email'],
+    msisdn: ['msisdn'],
+    address: ['address', 'beneficiaryAddress'],
+    city: ['city', 'beneficiaryCity'],
+    postal_code: ['postal_code', 'beneficiaryPostal'],
+    date_of_birth: ['date_of_birth'],
+};
+
+const firstValue = (...values) => values.find((value) => clean(value)) || '';
+
+export const prefillEditBag = (beneficiary) => {
+    if (!beneficiary) return {};
+
+    const extras = beneficiary.extras || {};
+
+    const bag = {
+        firstname: firstValue(beneficiary.first_name, extras.firstname, extras.firstName),
+        lastname: firstValue(beneficiary.last_name, extras.lastname, extras.lastName),
+        legalName: firstValue(beneficiary.company_name, extras.legalName),
+        email: firstValue(beneficiary.email, extras.email),
+        msisdn: firstValue(beneficiary.phone, extras.msisdn),
+        address: firstValue(beneficiary.address, extras.address, extras.beneficiaryAddress),
+        city: firstValue(beneficiary.city, extras.city, extras.beneficiaryCity),
+        postal_code: firstValue(beneficiary.zip_code, extras.postal_code, extras.beneficiaryPostal),
+        date_of_birth: firstValue(beneficiary.date_of_birth, extras.date_of_birth),
+    };
+
+    Object.keys(bag).forEach((key) => {
+        if (!bag[key]) delete bag[key];
+    });
+
+    return bag;
+};
+
+export const buildBeneficiaryUpdatePayload = ({ form, countries, beneficiary }) => {
+    const payload = buildBeneficiaryPayload({ form, countries });
+
+    const ownExtras = { ...payload.extras };
+    if (!clean(ownExtras.vendor)) delete ownExtras.vendor;
+
+    const extras = { ...(beneficiary?.extras || {}), ...ownExtras };
+
+    Object.keys(EXTRAS_ALIASES).forEach((key) => {
+        const value = clean(form.beneficiary?.[key]) || '';
+        const column = BENEFICIARY_COLUMN_MAP[key];
+
+        EXTRAS_ALIASES[key].forEach((alias) => {
+            if (value) extras[alias] = value;
+            else if (extras[alias]) extras[alias] = '';
+        });
+
+        if (!value && column && beneficiary?.[column]) payload[column] = '';
+    });
+
+    if (form.country) {
+        extras.country_iso_code = form.country;
+        extras.beneficiaryCountry = form.country;
+    }
+
+    payload.extras = extras;
+
+    return payload;
 };
 
 export const buildBeneficiaryPayload = ({ form, countries }) => {
@@ -86,11 +136,9 @@ export const buildBeneficiaryPayload = ({ form, countries }) => {
         if (column) {
             payload[column] = value;
         }
-        /* Keep the vendor's own key too, so we can replay it on a payout. */
         extras[key] = value;
     });
 
-    /* A business recipient may only have been asked for names. */
     if (form.recipient_type === 'business' && !payload.company_name) {
         payload.company_name = [payload.first_name, payload.last_name].filter(Boolean).join(' ');
     }
@@ -98,13 +146,12 @@ export const buildBeneficiaryPayload = ({ form, countries }) => {
     payload.extras = {
         ...extras,
         vendor: form.vendor,
-        ...(form.payer_id ? { payer_id: String(form.payer_id) } : {}),
     };
 
     return payload;
 };
 
-export const buildChannelPayload = ({ form, payer, transactionType }) => {
+export const buildChannelPayload = ({ form, transactionType }) => {
     const channelType = CHANNEL_TYPE_BY_METHOD[form.method] || 'bank';
     const channel = form.channel || {};
 
@@ -113,11 +160,9 @@ export const buildChannelPayload = ({ form, payer, transactionType }) => {
         method: form.method,
         country_iso_code: form.country,
         ...(form.service_id ? { service_id: form.service_id } : {}),
-        ...(payer ? { payer_id: String(payer.id), payer_name: payer.name } : {}),
         ...(transactionType ? { transaction_type: transactionType } : {}),
     };
 
-    /* Every identifier the vendor gave us, under its own name. */
     Object.keys(channel).forEach((key) => {
         const value = clean(channel[key]);
         if (value === undefined || value === null || value === '') return;
@@ -139,7 +184,7 @@ export const buildChannelPayload = ({ form, payer, transactionType }) => {
             swift_code: channel.swift_bic_code || channel.swift_code || channel.bic || '',
             account_number:
                 channel.bank_account_number || channel.account_number || channel.accountNumber || channel.iban || '',
-            name: channel.bankName || payer?.name || '',
+            name: channel.bankName || '',
             city: channel.bankCity || '',
             branch_street: channel.bankAddress || '',
             postal_code: channel.bankPostal || '',
@@ -148,8 +193,8 @@ export const buildChannelPayload = ({ form, payer, transactionType }) => {
         };
     } else if (channelType === 'mobile_wallet') {
         payload.mobile_wallet = {
-            money_provider: payer ? String(payer.id) : form.vendor,
-            wallet_name: payer?.name || 'Mobile wallet',
+            money_provider: channel.mobile_wallet_provider || form.vendor,
+            wallet_name: channel.mobile_wallet_name || 'Mobile wallet',
             wallet_account_number: channel.msisdn || channel.account_number || '',
             extras,
         };

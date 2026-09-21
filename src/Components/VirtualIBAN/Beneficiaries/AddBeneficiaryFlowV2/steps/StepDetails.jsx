@@ -11,17 +11,7 @@ import DynamicField from '../components/DynamicField';
 import { METHOD_AVATAR_ICON, METHOD_CONTEXT_LABEL } from '../constants';
 import { UserContext } from '../../../../../Context/UserContext';
 
-/*
- * Step 3 - the only screen that asks for details, in two sections.
- *
- *   Beneficiary details  who they are, per the provider's entity requirements
- *   Channel details      where the money lands, per its accepted identifiers
- *
- * The provider was chosen in step 2, so this screen goes straight to the fields.
- */
-
-/* Lays fields out two per row, which is how the design pairs them. */
-const FieldGrid = ({ names, defs, values, onChange, errors }) => {
+const FieldGrid = ({ names, defs, values, onChange, errors, disabled }) => {
     const rows = [];
     for (let index = 0; index < names.length; index += 2) {
         rows.push(names.slice(index, index + 2));
@@ -39,6 +29,7 @@ const FieldGrid = ({ names, defs, values, onChange, errors }) => {
                             value={values[name]}
                             onChange={(value) => onChange(name, value)}
                             error={errors[name]}
+                            disabled={disabled}
                         />
                     ))}
                 </FieldRow>
@@ -50,13 +41,13 @@ const FieldGrid = ({ names, defs, values, onChange, errors }) => {
 const StepDetails = ({
     form,
     requirements,
-    payerName,
     setBeneficiaryField,
     setChannelField,
     errors = {},
     providerError,
     recipientName,
     onChangeMethod,
+    disabled = false,
 }) => {
     const { allowedCountries } = useContext(UserContext);
 
@@ -68,15 +59,16 @@ const StepDetails = ({
     );
 
     const methodLabel = METHOD_CONTEXT_LABEL[form.method] || 'Payout channel';
-    const providerLabel = payerName || methodLabel;
+    const hasMethod = !!onChangeMethod;
 
     return (
         <>
             <ContextCard
                 icon={METHOD_AVATAR_ICON[form.method]}
+                initial={(recipientName || '').charAt(0).toUpperCase()}
                 name={recipientName}
-                meta={[payerName || methodLabel, countryLabel].filter(Boolean).join(', ')}
-                actionLabel="Change"
+                meta={[hasMethod ? methodLabel : null, countryLabel].filter(Boolean).join(', ')}
+                actionLabel={hasMethod ? 'Change' : undefined}
                 onAction={onChangeMethod}
             />
 
@@ -86,7 +78,11 @@ const StepDetails = ({
                         <Section>
                             <SectionTitle
                                 title="Beneficiary details"
-                                why={`${providerLabel} requires these details about the recipient.`}
+                                why={
+                                    hasMethod
+                                        ? `${methodLabel} requires these details about the recipient.`
+                                        : 'These details are shared with the payout provider when you send money.'
+                                }
                             />
                             <FieldGrid
                                 names={requirements.beneficiaryFields}
@@ -94,6 +90,7 @@ const StepDetails = ({
                                 values={form.beneficiary}
                                 onChange={setBeneficiaryField}
                                 errors={errors.beneficiary || {}}
+                                disabled={disabled}
                             />
                         </Section>
                     )}
@@ -102,7 +99,7 @@ const StepDetails = ({
                         <Section>
                             <SectionTitle
                                 title="Channel details"
-                                why="Where the money lands. Only the identifiers this provider accepts are shown."
+                                why="Where the money lands. Only the identifiers this method accepts are shown."
                             />
                             <FieldGrid
                                 names={requirements.channelFields}
@@ -110,6 +107,7 @@ const StepDetails = ({
                                 values={form.channel}
                                 onChange={setChannelField}
                                 errors={errors.channel || {}}
+                                disabled={disabled}
                             />
                         </Section>
                     )}
@@ -117,7 +115,7 @@ const StepDetails = ({
                     {requirements.beneficiaryFields.length === 0 &&
                         requirements.channelFields.length === 0 && (
                             <Alert variant="info">
-                                This provider does not require any extra details.
+                                This method does not require any extra details.
                             </Alert>
                         )}
                 </>
@@ -125,7 +123,7 @@ const StepDetails = ({
 
             {!requirements && (
                 <Alert variant="info">
-                    Go back and choose a provider so we know which details are needed.
+                    Go back and choose a payout method so we know which details are needed.
                 </Alert>
             )}
 

@@ -4,13 +4,7 @@ import { METHOD_CONTEXT_LABEL } from '../constants';
 import { getFieldDef } from '../vendorFields';
 import { UserContext } from '../../../../../Context/UserContext';
 
-/*
- * Step 4 - review exactly what will be saved.
- * Rows are built from whatever the vendor asked for, so this stays correct
- * however the requirements change.
- */
-
-const StepConfirm = ({ form, requirements, payerName, onEditStep }) => {
+const StepConfirm = ({ form, requirements, onEditStep, hideChannel = false }) => {
     const { allowedCountries } = useContext(UserContext);
 
     const countryLabel =
@@ -30,6 +24,10 @@ const StepConfirm = ({ form, requirements, payerName, onEditStep }) => {
         }
         if (def.options) {
             return def.options.find((option) => option.value === value)?.label || value;
+        }
+        if (def.type === 'date') {
+            const [year, month, day] = String(value).split('-');
+            return day && month && year ? `${day}/${month}/${year}` : value;
         }
         return value;
     };
@@ -56,17 +54,18 @@ const StepConfirm = ({ form, requirements, payerName, onEditStep }) => {
                 ))}
             </SummaryCard>
 
-            <SummaryCard heading="Payout channel" action="Edit" onAction={() => onEditStep(2)}>
-                <SummaryRow label="Method" value={METHOD_CONTEXT_LABEL[form.method] || ''} />
-                {payerName && <SummaryRow label="Provider" value={payerName} />}
-                {channelRows.map((name) => (
-                    <SummaryRow
-                        key={name}
-                        label={labelFor(name)}
-                        value={displayValue(name, form.channel[name])}
-                    />
-                ))}
-            </SummaryCard>
+            {!hideChannel && (
+                <SummaryCard heading="Payout channel" action="Edit" onAction={() => onEditStep(2)}>
+                    <SummaryRow label="Method" value={METHOD_CONTEXT_LABEL[form.method] || ''} />
+                    {channelRows.map((name) => (
+                        <SummaryRow
+                            key={name}
+                            label={labelFor(name)}
+                            value={displayValue(name, form.channel[name])}
+                        />
+                    ))}
+                </SummaryCard>
+            )}
         </>
     );
 };

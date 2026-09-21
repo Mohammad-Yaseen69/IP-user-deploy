@@ -1,11 +1,3 @@
-/*
- * Catalogue for the Add beneficiary (DS 2.0) flow.
- *
- * Which methods appear is decided at runtime by /api/payment/services for the
- * chosen country; this file only supplies the presentation metadata for each
- * one, plus the mapping between our method keys and the vendors' service names.
- */
-
 export const RECIPIENT_TYPES = [
     {
         value: 'individual',
@@ -21,7 +13,6 @@ export const RECIPIENT_TYPES = [
     },
 ];
 
-/* Presentation metadata, keyed by our internal method value. */
 export const METHOD_META = {
     mobile_wallet: {
         icon: 'device-mobile',
@@ -67,12 +58,17 @@ export const METHOD_META = {
     },
 };
 
-/* Our method value -> the service name the payers API expects. */
 export const THUNES_SERVICE_BY_METHOD = {
     mobile_wallet: 'Mobile Wallet',
     bank_account: 'Bank Account',
     cash_pickup: 'Cash Pickup',
     card_payment: 'Cards',
+};
+
+export const THUNES_DESTINATION_TYPE = {
+    cash_pickup: 1,
+    bank_account: 2,
+    mobile_wallet: 3,
 };
 
 const SERVICE_NAME_TO_METHOD = {
@@ -86,7 +82,6 @@ const SERVICE_NAME_TO_METHOD = {
 export const methodFromServiceName = (name) =>
     SERVICE_NAME_TO_METHOD[String(name || '').trim().toLowerCase()] || null;
 
-/* Rails paid from the user's own Virtual IBAN balance (BVNK). */
 export const BVNK_METHODS = [
     { value: 'local_bank', vendor: 'bvnk' },
     { value: 'swift', vendor: 'bvnk' },
@@ -108,13 +103,11 @@ export const GROUPS = {
     },
 };
 
-/* Label used under the recipient name on the context card. */
 export const METHOD_CONTEXT_LABEL = Object.keys(METHOD_META).reduce((acc, key) => {
     acc[key] = METHOD_META[key].title;
     return acc;
 }, {});
 
-/* Which glyph represents a method once it is chosen. */
 export const METHOD_AVATAR_ICON = {
     mobile_wallet: 'device-mobile',
     bank_account: 'bank-avatar',
@@ -125,7 +118,6 @@ export const METHOD_AVATAR_ICON = {
     local_bank: 'bank-avatar',
 };
 
-/* The channel_type the beneficiary API expects, per method. */
 export const CHANNEL_TYPE_BY_METHOD = {
     mobile_wallet: 'mobile_wallet',
     bank_account: 'bank',
@@ -155,9 +147,7 @@ export const INITIAL_FORM = {
     method: '',
     vendor: '',
     service_id: null,
-    payer_id: '',
 
-    /* Dynamic bags, keyed by the vendor's own field names. */
     beneficiary: {},
     channel: {},
 };

@@ -1,5 +1,7 @@
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { Modal } from '@mui/material';
+import DateMomentUtils from '@date-io/moment';
+import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import { ArrowLeft, X } from 'react-feather';
 import { toast } from 'react-toastify';
 import styles from './AddBeneficiaryFlowV2.module.css';
@@ -9,42 +11,55 @@ import StepMethod from './steps/StepMethod';
 import StepDetails from './steps/StepDetails';
 import StepConfirm from './steps/StepConfirm';
 import { INITIAL_FORM, THUNES_SERVICE_BY_METHOD } from './constants';
-import { buildBeneficiaryPayload, buildChannelPayload, prefillBeneficiaryBag } from './buildPayloads';
-import { usePayers, useRequirements } from './useVendorRequirements';
+import {
+    buildBeneficiaryPayload,
+    buildBeneficiaryUpdatePayload,
+    buildChannelPayload,
+    prefillBeneficiaryBag,
+    prefillEditBag,
+} from './buildPayloads';
+import { useRequiredFields, useRequirements } from './useVendorRequirements';
+import { getEditRequirements } from './vendorFields';
 import { apiWrapper } from '../../../../utils/Functions/apiWrapper';
 import { UserContext } from '../../../../Context/UserContext';
 
-/**
- * Add beneficiary - DS 2.0
- *
- * Four steps: recipient, method (including which provider), details, review.
- *
- * The details step is entirely vendor driven. Thunes declares its requirements
- * per payer and per transaction type, so we read them off the payer the user
- * picked rather than the country-wide union, which is what made the old screen
- * ask for details a given bank never wanted. BVNK rails use a fixed field set.
- *
- * Props mirror the legacy AddBeneficiaryModal:
- *   open, handleClose, onSaveSuccess
- *
- * Extra prop:
- *   existingBeneficiary  add another channel to a beneficiary that already exists
- */
+const STAGE_LABELS = {
+    recipient: 'Recipient',
+    method: 'Method',
+    details: 'Details',
+    confirm: 'Confirm',
+};
 
-const STEP_LABELS = ['Recipient', 'Method', 'Details', 'Confirm'];
+const MODE_STAGES = {
+    create: ['recipient', 'method', 'details', 'confirm'],
+    channel: ['method', 'details', 'confirm'],
+    edit: ['recipient', 'details', 'confirm'],
+    view: ['details'],
+};
 
-const STAGE_STEP = { recipient: 1, method: 2, details: 3, confirm: 4 };
+const MODE_TITLES = {
+    create: 'Add beneficiary',
+    channel: 'Add payout channel',
+    edit: 'Edit beneficiary',
+    view: 'Beneficiary details',
+};
 
 const AddBeneficiaryFlowV2 = ({
     open = false,
     handleClose,
     onSaveSuccess,
     existingBeneficiary = null,
+    mode: modeProp,
 }) => {
-    const isChannelMode = !!existingBeneficiary;
+    const mode = modeProp || (existingBeneficiary ? 'channel' : 'create');
+    const isChannelMode = mode === 'channel';
+    const isEditMode = mode === 'edit';
+    const isViewMode = mode === 'view';
+    const isBeneficiaryMode = isEditMode || isViewMode;
+    const stages = MODE_STAGES[mode] || MODE_STAGES.create;
     const { allowedCountries } = useContext(UserContext);
 
-    const [stage, setStage] = useState(isChannelMode ? 'method' : 'recipient');
+    const [stage, setStage] = useState(stages[0]);
     const [form, setForm] = useState(INITIAL_FORM);
     const [errors, setErrors] = useState({});
     const [providerError, setProviderError] = useState(null);
@@ -53,46 +68,47 @@ const AddBeneficiaryFlowV2 = ({
     useEffect(() => {
         if (!open) return;
 
-        setStage(isChannelMode ? 'method' : 'recipient');
+        setStage(stages[0]);
         setErrors({});
         setProviderError(null);
         setSaving(false);
-        setForm(
-            isChannelMode
-                ? {
-                    ...INITIAL_FORM,
-                    recipient_type: existingBeneficiary.beneficiary_type || 'individual',
-                    country: existingBeneficiary.country_iso_code || '',
-                    /* Start from what we already know about them. */
-                    beneficiary: prefillBeneficiaryBag(existingBeneficiary),
-                }
-                : INITIAL_FORM,
-        );
-    }, [open, isChannelMode, existingBeneficiary]);
+
+        if (!existingBeneficiary) {
+            setForm(INITIAL_FORM);
+            return;
+        }
+
+        setForm({
+            ...INITIAL_FORM,
+            recipient_type: existingBeneficiary.beneficiary_type || 'individual',
+            country: existingBeneficiary.country_iso_code || '',
+            beneficiary: isBeneficiaryMode
+                ? prefillEditBag(existingBeneficiary)
+                : prefillBeneficiaryBag(existingBeneficiary),
+        });
+    }, [open, mode, existingBeneficiary]);
 
     const isThunesMethod = !!THUNES_SERVICE_BY_METHOD[form.method];
 
-    /* Payers and requirements are resolved here so both step 2 and step 3 see them. */
-    const { payers, transactionType, isLoading: payersLoading } = usePayers({
+    const { fields, transactionType, isLoading: fieldsLoading, error: fieldsError } = useRequiredFields({
         countryIso3: form.country,
+        serviceId: form.service_id,
         method: form.method,
-        vendor: form.vendor,
         recipientType: form.recipient_type,
         enabled: isThunesMethod,
     });
 
-    const selectedPayer = useMemo(
-        () => payers.find((payer) => String(payer.id) === String(form.payer_id)) || null,
-        [payers, form.payer_id],
-    );
-
-    const requirements = useRequirements({
+    const vendorRequirements = useRequirements({
         method: form.method,
         vendor: form.vendor,
-        payer: selectedPayer,
+        fields,
         recipientType: form.recipient_type,
-        transactionType,
     });
+
+    const requirements = useMemo(
+        () => (isBeneficiaryMode ? getEditRequirements(form.recipient_type) : vendorRequirements),
+        [isBeneficiaryMode, form.recipient_type, vendorRequirements],
+    );
 
     const setField = useCallback((field, value) => {
         setForm((prev) => ({ ...prev, [field]: value }));
@@ -124,8 +140,6 @@ const AddBeneficiaryFlowV2 = ({
             method: entry.value,
             vendor: entry.vendor,
             service_id: entry.serviceId || null,
-            /* A different method means a different provider and identifiers. */
-            payer_id: '',
             channel: {},
         }));
         setErrors({});
@@ -155,8 +169,6 @@ const AddBeneficiaryFlowV2 = ({
         [allowedCountries, form.country],
     );
 
-    /* ------------------------------ validation ----------------------------- */
-
     const validateRecipient = () => {
         const next = {};
         if (!form.country) next.country = 'Choose the country first.';
@@ -167,7 +179,6 @@ const AddBeneficiaryFlowV2 = ({
     const validateMethod = () => {
         const next = {};
         if (!form.method) next.method = 'Choose how they should receive the money.';
-        else if (isThunesMethod && !form.payer_id) next.payer_id = 'Choose a provider to continue.';
         setErrors(next);
         return Object.keys(next).length === 0;
     };
@@ -194,38 +205,54 @@ const AddBeneficiaryFlowV2 = ({
         );
     };
 
-    /* -------------------------------- steps -------------------------------- */
+    const stageAt = (offset) => stages[stages.indexOf(stage) + offset];
 
     const goNext = () => {
-        if (stage === 'recipient') {
-            if (validateRecipient()) setStage('method');
-            return;
-        }
-        if (stage === 'method') {
-            if (validateMethod()) setStage('details');
-            return;
-        }
-        if (stage === 'details') {
-            if (validateDetails()) setStage('confirm');
-            return;
-        }
-        if (stage === 'confirm') submit();
+        if (stage === 'confirm') return submit();
+
+        if (stage === 'recipient' && !validateRecipient()) return;
+        if (stage === 'method' && !validateMethod()) return;
+        if (stage === 'details' && !validateDetails()) return;
+
+        const next = stageAt(1);
+        if (next) setStage(next);
+        else submit();
     };
 
     const goBack = () => {
-        if (stage === 'confirm') return setStage('details');
-        if (stage === 'details') return setStage('method');
-        if (stage === 'method') {
-            if (isChannelMode) handleClose && handleClose();
-            else setStage('recipient');
-        }
+        const previous = stageAt(-1);
+        if (previous) setStage(previous);
+        else if (handleClose) handleClose();
     };
 
     const submit = async () => {
+        if (isViewMode) return;
+
         setSaving(true);
         setProviderError(null);
 
         try {
+            if (isEditMode) {
+                const updated = await apiWrapper({
+                    endpoint: `/api/beneficiary/v2/${existingBeneficiary._id}`,
+                    method: 'PUT',
+                    payload: buildBeneficiaryUpdatePayload({
+                        form,
+                        countries: allowedCountries,
+                        beneficiary: existingBeneficiary,
+                    }),
+                    isEncrypted: true,
+                    isDecrypted: true,
+                });
+
+                toast.success('Beneficiary updated.');
+                if (onSaveSuccess) {
+                    onSaveSuccess(updated?.data || updated?.beneficiaryData || existingBeneficiary, false);
+                }
+                if (handleClose) handleClose();
+                return;
+            }
+
             const beneficiaryPayload = buildBeneficiaryPayload({
                 form,
                 countries: allowedCountries,
@@ -235,7 +262,6 @@ const AddBeneficiaryFlowV2 = ({
             let beneficiaryRecord = existingBeneficiary;
 
             if (isChannelMode) {
-                /* The provider may need details the saved record does not have yet. */
                 const updated = await apiWrapper({
                     endpoint: `/api/beneficiary/v2/${beneficiaryId}`,
                     method: 'PUT',
@@ -263,7 +289,6 @@ const AddBeneficiaryFlowV2 = ({
 
             const channelPayload = buildChannelPayload({
                 form,
-                payer: selectedPayer,
                 transactionType,
             });
 
@@ -291,13 +316,19 @@ const AddBeneficiaryFlowV2 = ({
         }
     };
 
-    /* ------------------------------ chrome text ---------------------------- */
-
     const subtitle = () => {
         const firstName = recipientName.split(' ')[0];
 
+        if (isViewMode) return `The details we hold for ${firstName}.`;
+
         if (isChannelMode && stage === 'method') {
             return `How else should ${firstName} receive money?`;
+        }
+
+        if (isEditMode) {
+            return stage === 'confirm'
+                ? 'Check the changes before you save.'
+                : 'Update the details we hold for this recipient.';
         }
 
         switch (stage) {
@@ -316,17 +347,16 @@ const AddBeneficiaryFlowV2 = ({
 
     const primaryLabel = () => {
         if (saving) return 'Saving...';
-        if (stage === 'confirm') return isChannelMode ? 'Save channel' : 'Save beneficiary';
-        return 'Continue';
+        if (stage !== 'confirm') return 'Continue';
+        if (isChannelMode) return 'Save channel';
+        return isEditMode ? 'Save changes' : 'Save beneficiary';
     };
 
     const primaryDisabled = () => {
         if (saving) return true;
-        if (stage === 'method') return !form.method || (isThunesMethod && !form.payer_id);
+        if (stage === 'method') return !form.method || (isThunesMethod && fieldsLoading);
         return false;
     };
-
-    /* -------------------------------- render ------------------------------- */
 
     const renderBody = () => {
         switch (stage) {
@@ -337,12 +367,9 @@ const AddBeneficiaryFlowV2 = ({
                 return (
                     <StepMethod
                         form={form}
-                        setField={setField}
                         onSelectMethod={selectMethod}
-                        payers={payers}
-                        payersLoading={payersLoading}
-                        needsPayer={isThunesMethod}
-                        errors={errors}
+                        requirementsLoading={isThunesMethod && fieldsLoading}
+                        requirementsError={isThunesMethod ? fieldsError : null}
                         showTiming={isChannelMode}
                         recipientName={isChannelMode ? recipientName : null}
                         recipientMeta={[
@@ -360,13 +387,13 @@ const AddBeneficiaryFlowV2 = ({
                     <StepDetails
                         form={form}
                         requirements={requirements}
-                        payerName={selectedPayer?.name}
                         setBeneficiaryField={setBeneficiaryField}
                         setChannelField={setChannelField}
                         errors={errors}
                         providerError={providerError}
                         recipientName={recipientName}
-                        onChangeMethod={() => setStage('method')}
+                        disabled={isViewMode}
+                        onChangeMethod={isBeneficiaryMode ? null : () => setStage('method')}
                     />
                 );
 
@@ -375,8 +402,8 @@ const AddBeneficiaryFlowV2 = ({
                     <StepConfirm
                         form={form}
                         requirements={requirements}
-                        payerName={selectedPayer?.name}
-                        onEditStep={(step) => setStage(step === 1 ? 'recipient' : 'details')}
+                        hideChannel={isBeneficiaryMode}
+                        onEditStep={(step) => setStage(step === 1 ? stages[0] : 'details')}
                     />
                 );
 
@@ -387,13 +414,14 @@ const AddBeneficiaryFlowV2 = ({
 
     return (
         <Modal open={open} onClose={handleClose} aria-labelledby="add-beneficiary-v2">
+            <MuiPickersUtilsProvider utils={DateMomentUtils}>
             <div className={styles.root}>
                 <div className={styles.modal}>
                     <div className={styles.header}>
                         <div className={styles.titleRow}>
                             <div className={styles.titleText}>
                                 <h2 className={styles.title} id="add-beneficiary-v2">
-                                    {isChannelMode ? 'Add payout channel' : 'Add beneficiary'}
+                                    {MODE_TITLES[mode] || MODE_TITLES.create}
                                 </h2>
                                 <p className={styles.subtitle}>{subtitle()}</p>
                             </div>
@@ -402,20 +430,25 @@ const AddBeneficiaryFlowV2 = ({
                             </button>
                         </div>
 
-                        <Stepper steps={STEP_LABELS} current={STAGE_STEP[stage]} />
+                        {stages.length > 1 && (
+                            <Stepper
+                                steps={stages.map((item) => STAGE_LABELS[item])}
+                                current={stages.indexOf(stage) + 1}
+                            />
+                        )}
                     </div>
 
                     <div className={styles.body}>{renderBody()}</div>
 
                     <div className={styles.footer}>
                         <div className={styles.footerSide}>
-                            {stage === 'recipient' ? (
+                            {stage === stages[0] ? (
                                 <button
                                     type="button"
                                     className={`${styles.btn} ${styles.btnGhost}`}
                                     onClick={handleClose}
                                 >
-                                    Cancel
+                                    {isViewMode ? 'Close' : 'Cancel'}
                                 </button>
                             ) : (
                                 <button
@@ -431,18 +464,21 @@ const AddBeneficiaryFlowV2 = ({
                         </div>
 
                         <div className={styles.footerSide}>
-                            <button
-                                type="button"
-                                className={`${styles.btn} ${styles.btnPrimary}`}
-                                onClick={goNext}
-                                disabled={primaryDisabled()}
-                            >
-                                {primaryLabel()}
-                            </button>
+                            {!isViewMode && (
+                                <button
+                                    type="button"
+                                    className={`${styles.btn} ${styles.btnPrimary}`}
+                                    onClick={goNext}
+                                    disabled={primaryDisabled()}
+                                >
+                                    {primaryLabel()}
+                                </button>
+                            )}
                         </div>
                     </div>
                 </div>
             </div>
+            </MuiPickersUtilsProvider>
         </Modal>
     );
 };

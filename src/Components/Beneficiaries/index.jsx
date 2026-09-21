@@ -11,18 +11,7 @@ import add_ben from "./add_ben.svg"
 import { usePermission } from "../../hooks/GeneralUse/usePermission";
 import AddBeneficiaryFlowV2 from "../VirtualIBAN/Beneficiaries/AddBeneficiaryFlowV2";
 
-/*
- * Rollback switch for the add-beneficiary journey.
- *
- *   true   opens the vendor-driven DS 2.0 flow in a modal, which asks only for
- *          the fields the chosen payout provider actually requires.
- *   false  restores the original behaviour exactly: navigate to
- *          /beneficiaries/add and render the legacy AddBeneficiary form.
- *
- * Both paths stay wired below, so flipping this one boolean is the whole
- * revert. The legacy screen itself is untouched at src/Components/AddBeneficiary
- * and still serves the /beneficiaries/add route either way.
- */
+
 const USE_NEW_ADD_BENEFICIARY_FLOW = true
 
 const Beneficiaries = () => {
@@ -36,9 +25,15 @@ const Beneficiaries = () => {
         }
     }, [userDetails])
     const can = usePermission()
-    // Adding a beneficiary now uses the vendor-driven DS 2.0 flow, which asks only
-    // for the fields the chosen payout provider requires.
     const [isAddOpen, setIsAddOpen] = useState(false)
+    const [activeBeneficiary, setActiveBeneficiary] = useState(null)
+    const [beneficiaryMode, setBeneficiaryMode] = useState("edit")
+
+    const openBeneficiary = (beneficiary, mode) => {
+        verifyToken()
+        setActiveBeneficiary(beneficiary)
+        setBeneficiaryMode(mode)
+    }
 
     useEffect(() => setFiltered(beneficiaries), [beneficiaries]);
 
@@ -111,7 +106,7 @@ const Beneficiaries = () => {
                         filtered.length > 0
                         ?
                         filtered.map(item => (
-                            <BeneficiaryCard key={item._id} user={item} />
+                            <BeneficiaryCard key={item._id} user={item} onEdit={(ben) => openBeneficiary(ben, "edit")} onView={(ben) => openBeneficiary(ben, "view")} />
                         ))
                         :
                         t("No Beneficiaries")
@@ -150,7 +145,7 @@ const Beneficiaries = () => {
                             filtered.length > 0
                                 ?
                                 filtered.map(item => (
-                                    <BeneficiaryCard key={item._id} user={item} />
+                                    <BeneficiaryCard key={item._id} user={item} onEdit={(ben) => openBeneficiary(ben, "edit")} onView={(ben) => openBeneficiary(ben, "view")} />
                                 ))
                                 :
                                 t("No Beneficiaries")
@@ -163,6 +158,16 @@ const Beneficiaries = () => {
                 <AddBeneficiaryFlowV2
                     open={isAddOpen}
                     handleClose={() => setIsAddOpen(false)}
+                    onSaveSuccess={() => getUserBeneficiaries()}
+                />
+            )}
+
+            {activeBeneficiary && (
+                <AddBeneficiaryFlowV2
+                    open={!!activeBeneficiary}
+                    mode={beneficiaryMode}
+                    existingBeneficiary={activeBeneficiary}
+                    handleClose={() => setActiveBeneficiary(null)}
                     onSaveSuccess={() => getUserBeneficiaries()}
                 />
             )}

@@ -15,7 +15,7 @@ import { LimitsErrorMessage } from "../PaymentsNewer/OTPConfirmation";
 import { useIdempotency } from "../../hooks/Payments/useIdempotency";
 import { formatCurrency } from "../../Helper/AmountFormat";
 
-const ConversionModal = ({ isOpen, toggleModal, amount, exchangeAmount, currency, exchangeCurrency, exchangePrice, setEnteredCurrency, setResultCurrency, setUserCurrency, setExchangedCurrency, exchangeFee, fxDet }) => {
+const ConversionModal = ({ isOpen, toggleModal, amount, exchangeAmount, currency, exchangeCurrency, exchangePrice, setEnteredCurrency, setResultCurrency, setUserCurrency, setExchangedCurrency, exchangeFee, fxDet, senderWallet = null, receiverWallet = null }) => {
     const { setIsExtended } = useContext(InactivityContext)
     const { t } = useTranslation()
     const { userWallets, authHeader, getUserWallets } = useContext(UserContext)
@@ -33,8 +33,8 @@ const ConversionModal = ({ isOpen, toggleModal, amount, exchangeAmount, currency
         }
     }, [step])
 
-    const currentWallet = userWallets.filter(item => item.currency.code === currency)[0]
-    const exchangedWallet = userWallets.filter(item => item.currency.code === exchangeCurrency)[0]
+    const currentWallet = senderWallet || userWallets.filter(item => item.currency.code === currency)[0]
+    const exchangedWallet = receiverWallet || userWallets.filter(item => item.currency.code === exchangeCurrency)[0]
 
     const numberOfFields = 6;
     const [otpValues, setOTPValues] = useState(Array(numberOfFields).fill(''));
@@ -174,32 +174,29 @@ const ConversionModal = ({ isOpen, toggleModal, amount, exchangeAmount, currency
         if (saving) return
 
         setSaving(true)
-        if (+currentWallet.balance.available <= +amount) {
+        if (+currentWallet.balance.available < +amount) {
             setError(t("Insufficient Balance"))
             setSaving(false)
             return
         }
 
-        if (+currentWallet.balance.available > +amount) {
+        if (+currentWallet.balance.available >= +amount) {
+            const isCryptoConversion = currentWallet?.wallet_type === "crypto" || exchangedWallet?.wallet_type === "crypto"
+
+            if (isCryptoConversion && !fxDet?.token) {
+                setError(t("The quoted rate has expired, please start again."))
+                setSaving(false)
+                return
+            }
+
             const data = {
                 sender_wallet_id: currentWallet._id,
                 receiver_wallet_id: exchangedWallet._id,
                 amount: +amount
             }
 
-            const crypto_data = {
-                token: fxDet.token,
-                from_wallet_id: currentWallet?.wallet_id,
-                to_wallet_id: exchangedWallet?.wallet_id,
-                amount: +amount,
-                purpose: "FAMILY_SUPPORT",
-                description: "",
-                type: "crypto_to_fiat",
-                is_conversion: true
-            }
-
-            const encrpted = encryptData(currentWallet?.wallet_type === "crypto" ? crypto_data : data)
-            axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/${currentWallet?.wallet_type === "crypto" ? "crypto" : "wallet/insta-wallet-conversion"}`, { data: encrpted }, {
+            const encrpted = encryptData(isCryptoConversion ? { token: fxDet?.token, ...data } : data)
+            axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/insta-wallet-conversion${isCryptoConversion ? "/transfer" : ""}`, { data: encrpted }, {
                 headers: {
                     ...authHeader,
                     "Idempotency-Key": getKey()

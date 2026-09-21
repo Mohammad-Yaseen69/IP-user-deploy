@@ -26,6 +26,7 @@ import AddWithdrawalsModal from "../AddWithdrawa;sModal"
 import QrGenerate from "../Settings/QrGenerate"
 import { usePermission } from "../../hooks/GeneralUse/usePermission"
 import { Tooltip } from "@mui/material"
+import SendCryptoModal from "./SendCryptoModal"
 
 const Top = ({ currentWallet, setCurrentWallet, data }) => {
     const navigate = useNavigate()
@@ -70,7 +71,8 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
                     }, 100)
                 }
                 if (action === "withdraw") {
-                    setShowWithdrawalModal(true)
+                    if (wallet?.wallet_type === "crypto") openSendCryptoModal(wallet)
+                    else setShowWithdrawalModal(true)
                 } else if (action === "download") {
                     setShowDownloadStatementModal(true)
                 }
@@ -97,11 +99,20 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
     const [showWithdrawalModal, setShowWithdrawalModal] = useState(false)
     const [showConversionModal, setShowConversionModal] = useState(false)
     const [showDownloadStatementModal, setShowDownloadStatementModal] = useState(false)
+    const [showSendCryptoModal, setShowSendCryptoModal] = useState(false)
+    const [sendCryptoWallet, setSendCryptoWallet] = useState(null)
 
+    const openSendCryptoModal = (wallet) => {
+        setSendCryptoWallet(wallet)
+        setShowSendCryptoModal(true)
+    }
 
     useEffect(() => {
         if (action === "convert") setShowConversionModal(true)
-        else if (action === "withdraw") setShowWithdrawalModal(true)
+        else if (action === "withdraw") {
+            if (currentWallet?.wallet_type === "crypto") openSendCryptoModal(currentWallet)
+            else setShowWithdrawalModal(true)
+        }
         else if (action === "add-currency") setShowAddCurrencyModal(true)
         else if (action === "statement") setShowDownloadStatementModal(true)
 
@@ -167,6 +178,8 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
         }
     }
     const [savedWallet, setSavedWalelt] = useState({})
+
+    const isCryptoWallet = useMemo(() => currentWallet?.wallet_type === "crypto", [currentWallet])
 
     const blockedWallet = useMemo(() => {
         return currentWallet?.blocked || currentWallet?.admin_blocked || currentWallet?.blocked || currentWallet?.admin_blocked || currentWallet?.status !== "active"
@@ -390,7 +403,32 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
                             </Tooltip>
                         )}
 
-                    {can("wallet.payment.withdraw") ? (
+                    {isCryptoWallet ? (
+                        can("wallet.payment.withdraw") && (
+                            <Tooltip
+                                title={t("This currency wallet is currently blocked/disabled and you cannot send crypto.")}
+                                arrow
+                                disableHoverListener={!blockedWallet}
+                            >
+                                <button
+                                    disabled={blockedWallet}
+                                    style={{
+                                        opacity: blockedWallet ? .7 : 1,
+                                        cursor: blockedWallet ? "not-allowed" : "pointer",
+                                        backgroundColor: blockedWallet ? "grey" : "white",
+                                        color: blockedWallet ? "white" : "inherit",
+                                        whiteSpace: "nowrap"
+                                    }}
+                                    className={styles.action}
+                                    onClick={() => openSendCryptoModal(currentWallet)}
+                                    id="send_crypto"
+                                >
+                                    <img style={{ height: "20px" }} src={withdraw} alt="" />
+                                    {t("Send Crypto")}
+                                </button>
+                            </Tooltip>
+                        )
+                    ) : can("wallet.payment.withdraw") ? (
                         <button
                             disabled={blockedWallet}
                             style={{
@@ -558,6 +596,13 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
                         }
                     </>
             }
+            {showSendCryptoModal && sendCryptoWallet && (
+                <SendCryptoModal
+                    isOpen={showSendCryptoModal}
+                    toggle={() => setShowSendCryptoModal(false)}
+                    wallet={sendCryptoWallet}
+                />
+            )}
             <DownloadStatement
                 showModal={showDownloadStatementModal}
                 setShowModal={setShowDownloadStatementModal}
@@ -568,7 +613,7 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
                     {t("convert funds ")}
                 </ModalHeader>
                 <ModalBody>
-                    <CurConversion extCurrency={currentWallet?.currency?.code} />
+                    <CurConversion extCurrency={currentWallet?.currency?.code} extWallet={currentWallet} />
                 </ModalBody>
             </Modal>
         </div>

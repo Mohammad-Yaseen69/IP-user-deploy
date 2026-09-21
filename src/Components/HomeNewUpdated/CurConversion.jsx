@@ -14,7 +14,7 @@ import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
 
 let timeout;
 
-const CurConversion = ({ extCurrency = "", showHeading = true }) => {
+const CurConversion = ({ extCurrency = "", extWallet = null, showHeading = true }) => {
     const { t } = useTranslation()
     const [enteredCurrency, setEnteredCurrency] = useState("")
     const [resultCurrency, setResultCurrency] = useState("")
@@ -28,42 +28,66 @@ const CurConversion = ({ extCurrency = "", showHeading = true }) => {
 
     const [fxDet, setFxDet] = useState({})
 
-    useEffect(() => {
-        if (!userCurrency || !exchangedCurrency) {
-            const cur = userWallets?.filter(item => item?.status === "active" && !item?.blocked && !item?.admin_blocked)?.filter(item => item?.currency?.code?.toLowerCase() !== "btc" && item?.currency?.code?.toLowerCase() !== "eth")
-            setUserCurrency(extCurrency || cur?.[0]?.currency?.code)
-            setExchangedCurrency(extCurrency ? cur?.filter(item => item?.currency?.code !== extCurrency)?.[0]?.currency?.code : cur?.[1]?.currency?.code)
-            if (cur.wallet_type !== "crypto") {
-                setExchangedCurrency("USD")
-            }
-        }
-    }, [userWallets, userCurrency, exchangedCurrency])
+    const availableWallets = useMemo(() => (
+        userWallets
+            ?.filter(item => item?.status === "active" && !item?.blocked && !item?.admin_blocked)
+            ?.filter(item => item?.currency?.code?.toLowerCase() !== "btc" && item?.currency?.code?.toLowerCase() !== "eth")
+        ?? []
+    ), [userWallets])
 
-    const invalid = useMemo(() => userWallets?.filter(item => item.currency.code === userCurrency)[0]?.balance?.available < enteredCurrency, [userWallets, enteredCurrency, exchangedCurrency, userCurrency])
+    useEffect(() => {
+        if (!availableWallets.length) return
+
+        const hasSendingWallet = availableWallets.some(item => item?.currency?.code === userCurrency)
+        const fallbackWallet = availableWallets.find(item => item?.currency?.code === extCurrency) || availableWallets[0]
+        const sendingCode = hasSendingWallet ? userCurrency : fallbackWallet?.currency?.code
+
+        if (sendingCode !== userCurrency) {
+            setUserCurrency(sendingCode)
+        }
+
+        const others = availableWallets.filter(item => item?.currency?.code !== sendingCode)
+        const isReceivable = others.some(item => item?.currency?.code === exchangedCurrency)
+        if (!isReceivable) {
+            const preferred = others.find(item => item?.currency?.code === "USD") || others?.[0]
+            setExchangedCurrency(preferred?.currency?.code ?? "")
+        }
+    }, [availableWallets, userCurrency, exchangedCurrency])
+
     // modal
     const [isOpen, setIsOpen] = useState(false)
     const toggleModal = () => setIsOpen(!isOpen);
 
-    const balance = useMemo(() => userWallets.find(item => item?.currency?.code === userCurrency)?.balance?.available, [userWallets, userCurrency])
+    const senderWallet = useMemo(() => {
+        if (extWallet?._id && extWallet?.currency?.code === userCurrency) return extWallet
+        return availableWallets.find(item => item?.currency?.code === userCurrency)
+    }, [availableWallets, extWallet, userCurrency])
+
+    const receiverWallet = useMemo(() => (
+        availableWallets.find(item => item?.currency?.code === exchangedCurrency && item?._id !== senderWallet?._id)
+    ), [availableWallets, exchangedCurrency, senderWallet])
+
+    const balance = useMemo(() => Number(senderWallet?.balance?.available ?? 0), [senderWallet])
+
+    const invalid = useMemo(() => balance < Number(enteredCurrency || 0), [balance, enteredCurrency])
 
     const convertCurrency = async () => {
         setError("")
         setLoading(false)
         const getRates = () => {
-            const userWallet = userWallets?.find(item => item?.currency?.code === userCurrency)
-            const receiverWallet = userWallets?.find(item => item?.currency?.code === exchangedCurrency)
+            const userWallet = senderWallet
 
             if (!userWallet?._id || !receiverWallet?._id) {
                 setFxDet({})
                 setLoading(false)
                 return
             }
-            if (enteredCurrency <= 0) {
+            if (Number(enteredCurrency) <= 0) {
                 setFxDet({})
                 setLoading(false)
                 return
             }
-            if (balance < enteredCurrency) {
+            if (invalid) {
                 setError("Insufficient balance")
                 setFxDet({})
                 setLoading(false)
@@ -71,16 +95,17 @@ const CurConversion = ({ extCurrency = "", showHeading = true }) => {
             } else {
                 setLoading(true)
 
-                const cryptoPayload = {
-                    is_conversion: true,
-                    type: "crypto_to_fiat",
-                    from_wallet_id: userWallet?.wallet_id,
-                    to_wallet_id: receiverWallet?.wallet_id,
-                    amount: enteredCurrency
+                const isCryptoConversion = userWallet?.wallet_type === "crypto" || receiverWallet?.wallet_type === "crypto"
+
+                const conversionPayload = {
+                    sender_wallet_id: userWallet?._id,
+                    receiver_wallet_id: receiverWallet?._id,
+                    amount: +enteredCurrency,
+                    crypto_to_fiat: userWallet?.wallet_type === "crypto"
                 }
 
-                const url = userWallet?.wallet_type === "crypto" ? `${import.meta.env.VITE_IP_DEV_API}/api/crypto/transaction-rates` : `${import.meta.env.VITE_IP_DEV_API}/api/wallet/get-new-exchange-rate?from=${userCurrency}&to=${exchangedCurrency}&amount=${enteredCurrency}&type=conversion&level_id=${userDetails?.level?._id}&account_id=${userDetails?._id}&payment_type=wallet&receiver_wallet_id=${receiverWallet?._id}&sender_wallet_id=${userWallet?._id}&payment_method=instant`
-                const res = userWallet?.wallet_type === "crypto" ? axios.post(url, { data: encryptData(cryptoPayload) }, { headers: authHeader }) : axios.get(url, { headers: authHeader })
+                const url = isCryptoConversion ? `${import.meta.env.VITE_IP_DEV_API}/api/wallet/insta-wallet-conversion/fee` : `${import.meta.env.VITE_IP_DEV_API}/api/wallet/get-new-exchange-rate?from=${userCurrency}&to=${exchangedCurrency}&amount=${enteredCurrency}&type=conversion&level_id=${userDetails?.level?._id}&account_id=${userDetails?._id}&payment_type=wallet&receiver_wallet_id=${receiverWallet?._id}&sender_wallet_id=${userWallet?._id}&payment_method=instant`
+                const res = isCryptoConversion ? axios.post(url, { data: encryptData(conversionPayload) }, { headers: authHeader }) : axios.get(url, { headers: authHeader })
 
                 res.then(res => {
                     const decrypted = decryptData(res.data.data)
@@ -233,7 +258,7 @@ const CurConversion = ({ extCurrency = "", showHeading = true }) => {
                         <div className={styles.input_con}>
                             <select value={exchangedCurrency} onChange={e => setExchangedCurrency(e.target.value)}>
                                 {
-                                    filteredWallets?.filter(item => item?.currency?.code !== "USDT")?.map(item => (
+                                    filteredWallets?.filter(item => item?.currency?.code !== userCurrency)?.map(item => (
                                         <option key={item._id} value={item?.currency?.code} style={{ fontSize: "1rem", fontWeight: 900, display: exchangedCurrency === item?.currency?.code ? "none" : "inherit" }}>
                                             {item?.currency?.code}
                                         </option>
@@ -298,6 +323,8 @@ const CurConversion = ({ extCurrency = "", showHeading = true }) => {
                 setExchangedCurrency={setExchangedCurrency}
                 exchangeFee={exchangeFee}
                 fxDet={fxDet}
+                senderWallet={senderWallet}
+                receiverWallet={receiverWallet}
             />
         </div>
     )
