@@ -231,7 +231,9 @@ const CardOtp = ({
             setIsSaving(false)
         }
     }
-
+    useEffect(() => {
+        setResendTimer(authType === 'authenticator' ? 0 : (authType === 'email' ? 300 : 90))
+    }, [authType])
     return (
         <form onSubmit={handleSubmit} style={{ height: fullHeight ? '100%' : '450px', marginBottom: 0, boxShadow: 'none', gap: '1.3rem', display: 'flex', justifyContent: 'space-between', flexDirection: 'column' }}>
             <div style={{ borderRadius: '20px', flex: '1', display: 'flex', alignItems: 'center', overflow: 'hidden', padding: '14px', paddingBottom: '1rem', boxShadow: '0px 18px 15.348464965820312px -15px rgba(89, 38, 240, 0.16)' }} className="otp_cont">
