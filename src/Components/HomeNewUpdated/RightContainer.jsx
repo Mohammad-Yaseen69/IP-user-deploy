@@ -23,11 +23,10 @@ import { usePermission } from '../../hooks/GeneralUse/usePermission';
 const RightContainer = ({ setCurrentWallet, showBusinessModal, setShowBusinessModal }) => {
     const [activeDot, setActiveDot] = useState(0)
     const { t } = useTranslation()
-    const { userWallets: allWallets, getUserWallets } = useContext(UserContext)
+    const { userWallets, getUserWallets } = useContext(UserContext)
     const { userDetails } = useContext(UserContext)
     const swiperRef = useRef(null)
     const can = usePermission()
-    const userWallets = allWallets.filter(w => w?.provider !== 'bvnk')
 
     useEffect(() => {
         getUserWallets()
@@ -78,6 +77,7 @@ const RightContainer = ({ setCurrentWallet, showBusinessModal, setShowBusinessMo
             background: "#FFF",
             boxShadow: "0px 2px 5px 0px rgba(38, 51, 77, 0.03)",
             padding: window.innerWidth > 1650 ? "1.5rem" : "1rem",
+            // flex: 1,
         }}>
             <div className={`${cardsStyle.container}`}>
                 <h4 className='d_r_head'>{t("My Wallets")}</h4>
@@ -126,6 +126,7 @@ const RightContainer = ({ setCurrentWallet, showBusinessModal, setShowBusinessMo
                                     height: "7px",
                                     width: activeDot === index ? "30px" : "7px",
                                     borderRadius: "30px",
+                                    // background: activeDot === index ? "#5926f0" : "#e64067",
                                     background: activeDot === index ? "#5926f0" : "#666666",
                                     cursor: "pointer"
                                 }}
@@ -148,6 +149,7 @@ const RightContainer = ({ setCurrentWallet, showBusinessModal, setShowBusinessMo
                                             background: "radial-gradient(124.63% 259.09% at 48.48% 152.15%, rgba(230, 64, 103, 0.10) 0%, rgba(89, 38, 240, 0.10) 55.65%, rgba(72, 40, 160, 0.10) 100%), #FFF",
                                             display: "flex", justifyContent: "center", alignItems: "center",
                                             borderRadius: "10px",
+                                            // border: "1.11414px solid rgba(0, 0, 0, 0.08)",
                                             boxShadow: "0px 11.288448333740234px 11.288448333740234px -6.271359920501709px rgba(109, 41, 220, 0.15)",
                                             cursor: "pointer",
                                             transition: "100ms ease-in-out"
@@ -188,7 +190,13 @@ const RightContainer = ({ setCurrentWallet, showBusinessModal, setShowBusinessMo
                     </button>
                 }
             </div>
+            {/* </CardBody>
+            </Card>
+            <Card style={{ boxShadow: "0px 2px 5px 0px rgba(38, 51, 77, 0.03)", border: "1px solid rgba(0,0,0,.1)", borderRadius: "30px", marginBottom: 0, flex: 1 }}>
+                <CardBody style={{ padding: window.innerWidth > 1800 ? "1.5rem" : "20px" }}> */}
             {can("wallet.payment.conversion") && <CurConversion />}
+            {/* </CardBody>
+            </Card> */}
         </div>
     );
 };

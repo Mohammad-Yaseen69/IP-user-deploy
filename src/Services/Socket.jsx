@@ -66,7 +66,7 @@ class SocketsService {
         });
 
         this.socket.on("txn:update", (data) => {
-            const status = data.status
+            const status = data.status // COMPLETED, PROCESSING, FAILED
             console.log("txn:update", data);
         })
 
@@ -91,25 +91,6 @@ class SocketsService {
 
         this.socket.on("txn:subscribeError", (data) => {
             console.log("txn:subscribeError", data)
-        })
-
-        this.socket.on("crypto_wallet:created", (data) => {
-            if (typeof window !== 'undefined') {
-                window.dispatchEvent(new CustomEvent('instapay:crypto_wallet:created', { detail: data }));
-            }
-        })
-
-        this.socket.on("crypto_wallet:deposit_detected", (data) => {
-            if (typeof window !== 'undefined') {
-                window.dispatchEvent(new CustomEvent('instapay:crypto_wallet:deposit_detected', { detail: data }));
-            }
-            toast.info(`Incoming ${data?.currency || ''} deposit detected — awaiting confirmation.`);
-        })
-
-        this.socket.on("crypto_wallet:deposit_completed", (data) => {
-            if (typeof window !== 'undefined') {
-                window.dispatchEvent(new CustomEvent('instapay:crypto_wallet:deposit_completed', { detail: data }));
-            }
         })
     }
 
