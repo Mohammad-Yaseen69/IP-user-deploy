@@ -14,6 +14,8 @@ import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
 
 let timeout;
 
+const QUOTE_TTL_MS = 2 * 60 * 1000;
+
 const CurConversion = ({ extCurrency = "", extWallet = null, showHeading = true }) => {
     const { t } = useTranslation()
     const [enteredCurrency, setEnteredCurrency] = useState("")
@@ -27,6 +29,14 @@ const CurConversion = ({ extCurrency = "", extWallet = null, showHeading = true 
     const [error, setError] = useState("")
 
     const [fxDet, setFxDet] = useState({})
+    const [quoteExpiresAt, setQuoteExpiresAt] = useState(null)
+    const [isQuoteExpired, setIsQuoteExpired] = useState(false)
+
+    const clearQuote = () => {
+        setFxDet({})
+        setQuoteExpiresAt(null)
+        setIsQuoteExpired(false)
+    }
 
     const availableWallets = useMemo(() => (
         userWallets
@@ -78,18 +88,18 @@ const CurConversion = ({ extCurrency = "", extWallet = null, showHeading = true 
             const userWallet = senderWallet
 
             if (!userWallet?._id || !receiverWallet?._id) {
-                setFxDet({})
+                clearQuote()
                 setLoading(false)
                 return
             }
             if (Number(enteredCurrency) <= 0) {
-                setFxDet({})
+                clearQuote()
                 setLoading(false)
                 return
             }
             if (invalid) {
                 setError("Insufficient balance")
-                setFxDet({})
+                clearQuote()
                 setLoading(false)
                 return
             } else {
@@ -123,6 +133,8 @@ const CurConversion = ({ extCurrency = "", extWallet = null, showHeading = true 
                     }
 
                     setFxDet(exchange_rate_details)
+                    setQuoteExpiresAt(Date.now() + QUOTE_TTL_MS)
+                    setIsQuoteExpired(false)
                     setLoading(false)
 
                     // if (+enteredCurrency > exchange_rate_details?.limits_used?.daily_sending_limit_used) {
@@ -138,7 +150,7 @@ const CurConversion = ({ extCurrency = "", extWallet = null, showHeading = true 
                     .catch(err => {
                         const dec = decryptData(err.response.data.data)
                         setError(dec?.message)
-                        setFxDet({})
+                        clearQuote()
                         setLoading(false)
                         const error = LimitsErrorMessage(dec?.code ?? dec?.message)
                         if (error) {
@@ -149,7 +161,7 @@ const CurConversion = ({ extCurrency = "", extWallet = null, showHeading = true 
         }
         if (invalid) {
             setResultCurrency("Insufficient Balance")
-            setFxDet({})
+            clearQuote()
             setLoading(false)
         } else {
             if (enteredCurrency && userCurrency && exchangedCurrency) {
@@ -161,13 +173,37 @@ const CurConversion = ({ extCurrency = "", extWallet = null, showHeading = true 
     }
 
     useEffect(() => {
+        if (!quoteExpiresAt) return undefined
+
+        const remaining = quoteExpiresAt - Date.now()
+        if (remaining <= 0) {
+            setIsQuoteExpired(true)
+            return undefined
+        }
+
+        const expiryTimer = setTimeout(() => setIsQuoteExpired(true), remaining)
+        return () => clearTimeout(expiryTimer)
+    }, [quoteExpiresAt])
+
+    const refreshQuote = () => {
+        setIsQuoteExpired(false)
+        convertCurrency()
+    }
+
+    useEffect(() => {
+        if (isQuoteExpired && !isOpen) {
+            refreshQuote()
+        }
+    }, [isQuoteExpired, isOpen])
+
+    useEffect(() => {
         if (timeout) {
             clearTimeout(timeout)
         }
         timeout = setTimeout(() => {
             if (!enteredCurrency || enteredCurrency === "undefined") {
                 setResultCurrency("")
-                setFxDet({})
+                clearQuote()
 
             } else {
                 convertCurrency()
@@ -325,6 +361,10 @@ const CurConversion = ({ extCurrency = "", extWallet = null, showHeading = true 
                 fxDet={fxDet}
                 senderWallet={senderWallet}
                 receiverWallet={receiverWallet}
+                quoteExpiresAt={quoteExpiresAt}
+                isQuoteExpired={isQuoteExpired}
+                onRefreshQuote={refreshQuote}
+                isRefreshing={loading}
             />
         </div>
     )
