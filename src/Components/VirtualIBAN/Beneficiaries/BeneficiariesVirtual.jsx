@@ -14,17 +14,7 @@ import { apiWrapper } from '../../../utils/Functions/apiWrapper';
 import { UserContext } from '../../../Context/UserContext';
 import { toast } from 'react-toastify';
 
-/*
- * Rollback switch for the add-beneficiary and add-channel journeys.
- *
- *   true   both use the vendor-driven DS 2.0 flow, which asks only for the
- *          fields the chosen payout provider actually requires.
- *   false  restores the original pair of modals: AddBeneficiaryModal to create
- *          the beneficiary, then DynamicChannelModal to attach a channel.
- *
- * Both paths stay wired below, so flipping this one boolean is the whole
- * revert. Editing an existing beneficiary always uses AddBeneficiaryModal.
- */
+
 const USE_NEW_ADD_BENEFICIARY_FLOW = true;
 
 const BeneficiariesVirtual = () => {
