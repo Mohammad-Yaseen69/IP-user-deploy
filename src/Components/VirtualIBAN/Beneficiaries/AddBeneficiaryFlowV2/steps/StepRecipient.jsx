@@ -4,12 +4,6 @@ import { Alert, Fields, OptionCard, SelectField } from '../components';
 import { RECIPIENT_TYPES } from '../constants';
 import { UserContext } from '../../../../../Context/UserContext';
 
-/*
- * Step 1 - who are you paying, and where do they receive money.
- *
- * Names, email and the rest moved to step 3: which of them we need depends on
- * the vendor and payer, and neither is known until the method is chosen.
- */
 const StepRecipient = ({ form, setField, errors = {} }) => {
     const { allowedCountries } = useContext(UserContext);
     const isBusiness = form.recipient_type === 'business';
