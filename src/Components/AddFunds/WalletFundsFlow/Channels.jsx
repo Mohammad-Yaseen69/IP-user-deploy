@@ -26,7 +26,6 @@ const Channels = ({
   const usePaytently = true; // Paytently is the card provider.
   console.log("user detail(18)", userDetails);
   const [showVerificationModal, setShowVerificationModal] = useState(false);
-  const usePaytently = true;
   const { data: methods, isLoading } = useQuery({
     queryKey: ["AvailableMethods"],
     queryFn: () =>
