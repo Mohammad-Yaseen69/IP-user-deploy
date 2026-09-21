@@ -603,7 +603,7 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
                     {t("convert funds ")}
                 </ModalHeader>
                 <ModalBody>
-                    <CurConversion extCurrency={currentWallet?.currency?.code} />
+                    <CurConversion extCurrency={currentWallet?.currency?.code} extWallet={currentWallet} />
                 </ModalBody>
             </Modal>
         </div>
