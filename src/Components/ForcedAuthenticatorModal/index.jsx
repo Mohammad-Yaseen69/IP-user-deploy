@@ -1,19 +1,18 @@
-import React, { useContext, useState } from "react";
-import { Modal, ModalBody, ModalFooter, Button } from "reactstrap";
-import styles from "./styles/index.module.css";
-import authStyles from "../Auth/styles/index.module.css";
+import axios from "axios";
+import { useContext, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { Button, Modal, ModalBody, ModalFooter } from "reactstrap";
 import { UserContext } from "../../Context/UserContext";
-import GoogleAuthenticatorModal from "../GoogleAuthenticatorModal";
-import LanguagePicker from "../LanguagePicker";
+import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 import logoutIcon from "../../Layout/SidebarNew/files/logout_a.svg";
+import as from "../Auth/files/as.svg";
 import authenticatorImg from "../Auth/files/authenticator.webp";
 import gs from "../Auth/files/gs.svg";
-import as from "../Auth/files/as.svg";
-import axios from "axios";
-import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
-import { toast } from "react-toastify";
+import authStyles from "../Auth/styles/index.module.css";
+import GoogleAuthenticatorModal from "../GoogleAuthenticatorModal";
+import styles from "./styles/index.module.css";
 
 const ForcedAuthenticatorModal = () => {
     const { t } = useTranslation();
@@ -67,7 +66,7 @@ const ForcedAuthenticatorModal = () => {
                 setAuthenticatorActive={() => {
                     sessionStorage.removeItem("force_auth_on_login");
                 }}
-                setEditMode={() => {}}
+                setEditMode={() => { }}
                 sideText="Google Authenticator"
                 successTitle="Google Two Factor Authentication Is Now Linked To Your Instapay Account."
             />

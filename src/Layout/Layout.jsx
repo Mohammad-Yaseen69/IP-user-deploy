@@ -282,7 +282,8 @@ const Layout = ({ children, classNames, ...rest }) => {
   }, [userDetails?._id]);
 
   useEffect(() => {
-    if (location.pathname === "/" || location.pathname.toLowerCase() === "/dashboard/default") {
+    const path = location.pathname.toLowerCase();
+    if (path === "/" || path === "/dashboard/default" || path === "/my-mastercard" || path === "/payments") {
       setTogglSidebar(true)
     } else {
       setTogglSidebar(false)
@@ -305,6 +306,15 @@ const Layout = ({ children, classNames, ...rest }) => {
       setShowKyc(true)
     }
   }, [userDetails])
+
+  const isFinancialQuestionModalOpen =
+    (is30DaysInfo && userDetails?.account_type === "individual" && profileCompleted === true) ||
+    (threeDaysReminderInfo && userDetails?.account_type === "individual" && profileCompleted === true) ||
+    is30Days ||
+    (threeDaysReminder && !threeDaysReminderInfo && profileCompleted === true && !is30DaysInfo);
+
+  const canShowForcedAuthenticator = shouldForceAuthenticator && !showModal && !isFinancialQuestionModalOpen;
+
   return (
     <Fragment>
       {
@@ -360,7 +370,7 @@ const Layout = ({ children, classNames, ...rest }) => {
           />
         }
 
-        {(showAdditionalFilesModal && !location.pathname.toLowerCase().includes("settings") && !location.pathname.toLowerCase().includes("my-mastercard")) &&
+        {(showAdditionalFilesModal && !location.pathname.toLowerCase().includes("settings") && !location.pathname.toLowerCase().includes("my-mastercard") && !location.pathname.toLowerCase().includes("payments")) &&
           <AdditionalDocumentModal
             isOpen={showAdditionalFilesModal}
             toggle={() => setShowAdditionalModal(false)}
@@ -409,7 +419,7 @@ const Layout = ({ children, classNames, ...rest }) => {
                 <ProfileCompletionModal setShowModal={setShowModal} profileIncompleteReason={profileIncompleteReason} kyc={showKyc && profileCompleted} />
               }
               {
-                (shouldForceAuthenticator && !showModal)
+                canShowForcedAuthenticator
                 &&
                 <ForcedAuthenticatorModal />
               }
@@ -452,7 +462,7 @@ const Layout = ({ children, classNames, ...rest }) => {
                 <ProfileCompletionModal setShowModal={setShowModal} profileIncompleteReason={profileIncompleteReason} kyc={showKyc && profileCompleted} />
               }
               {
-                (shouldForceAuthenticator && !showModal)
+                canShowForcedAuthenticator
                 &&
                 <ForcedAuthenticatorModal />
               }

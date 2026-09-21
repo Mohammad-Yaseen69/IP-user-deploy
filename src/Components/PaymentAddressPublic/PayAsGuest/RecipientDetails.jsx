@@ -10,6 +10,7 @@ import CitiesDropDown from "../../CitiesDropDown";
 import USCounties from "./USCounties.json";
 import CANCounties from "./CANCounties.json";
 import { verifyPhoneNumber } from "../../../utils/Functions/phoneVerification";
+import { preventEdgeSpaces, preventEmailSpaces } from "../../../hooks/useTrimInput";
 
 const RecipientDetails = ({ data, dataHandler, isShipping, isReferenceRequired }) => {
     const { t } = useTranslation();
@@ -88,6 +89,7 @@ const RecipientDetails = ({ data, dataHandler, isShipping, isReferenceRequired }
                             type="text"
                             placeholder={t("Enter your Name")}
                             value={data.fullName}
+                            onKeyDown={preventEdgeSpaces}
                             onChange={(e) => dataHandler("fullName", e.target.value)}
                         />
                     </div>
@@ -155,6 +157,7 @@ const RecipientDetails = ({ data, dataHandler, isShipping, isReferenceRequired }
                                     </label>
                                     <input
                                         type="text"
+                                        onKeyDown={preventEdgeSpaces}
                                         value={data.customerTown || ""}
                                         onChange={(e) => dataHandler("customerTown", e.target.value)}
                                         required={cardPaymentRequiredFields.customer_town}
@@ -168,6 +171,7 @@ const RecipientDetails = ({ data, dataHandler, isShipping, isReferenceRequired }
                                     </label>
                                     <input
                                         type="text"
+                                        onKeyDown={preventEdgeSpaces}
                                         value={data.customerStreet || ""}
                                         onChange={(e) => dataHandler("customerStreet", e.target.value)}
                                         required={cardPaymentRequiredFields.customer_street}
@@ -192,6 +196,7 @@ const RecipientDetails = ({ data, dataHandler, isShipping, isReferenceRequired }
                                         :
                                         <input
                                             type="text"
+                                            onKeyDown={preventEdgeSpaces}
                                             value={data.customer_county || ""}
                                             onChange={(e) => dataHandler("customer_county", e.target.value)}
                                             required={cardPaymentRequiredFields.customer_county}
@@ -222,6 +227,7 @@ const RecipientDetails = ({ data, dataHandler, isShipping, isReferenceRequired }
                             type="email"
                             placeholder="ie: abc@gmail.com"
                             value={data.email}
+                            onKeyDown={preventEmailSpaces}
                             onChange={(e) => dataHandler("email", e.target.value.trim())}
                         />
                         {!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(

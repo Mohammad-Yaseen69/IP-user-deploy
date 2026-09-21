@@ -9,6 +9,7 @@ import PermissionTree from './PermissionTree'
 import { decryptData } from "../../../Helper/EssentilaMethods/Decryption"
 import { FaUserCircle } from "react-icons/fa"
 import { BsVinyl } from "react-icons/bs"
+import { preventEdgeSpaces } from "../../../hooks/useTrimInput"
 const STEPS = [
     { id: 1, label: "Role Details", icon: <BsVinyl size={14} /> },
     { id: 2, label: "Permissions", icon: <Settings size={14} /> },
@@ -421,7 +422,9 @@ const RoleModal = ({ isRole, isOpen, onClose, t, width, isEdit, editData }) => {
                                         <>
                                             <div className={styles.formGroup}>
                                                 <label className={styles.formLabel}>{t("Title")}</label>
-                                                <input className={styles.formInput} name="title" value={form.title} onChange={handleChange} placeholder={t("Enter Title")} required />
+                                                <input className={styles.formInput}
+                                                    onKeyDown={preventEdgeSpaces}
+                                                    name="title" value={form.title} onChange={handleChange} placeholder={t("Enter Title")} required />
                                             </div>
                                             <div className={styles.formGroup}>
                                                 <label className={styles.formLabel}>{t("Description")}</label>
@@ -434,6 +437,7 @@ const RoleModal = ({ isRole, isOpen, onClose, t, width, isEdit, editData }) => {
                                                     className={styles.formInput}
                                                     name="description"
                                                     value={form.description}
+                                                    onKeyDown={preventEdgeSpaces}
                                                     onChange={handleChange}
                                                     placeholder={t("Enter Description")}
                                                     required

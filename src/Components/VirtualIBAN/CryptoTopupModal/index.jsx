@@ -118,6 +118,11 @@ const CryptoTopupModal = ({ isOpen, toggle, selectedIban }) => {
         toggle?.()
     }
 
+    const handleCheckoutClose = () => {
+        setCheckoutUrl("")
+        handleClose()
+    }
+
     const previewFee = async () => {
         if (!ibanId) {
             toast.error(t("Please select a virtual IBAN first"))
@@ -352,8 +357,12 @@ const CryptoTopupModal = ({ isOpen, toggle, selectedIban }) => {
         >
             <ModalBody style={{ padding: "20px" }}>{renderBody()}</ModalBody>
         </Modal>
-        <Modal isOpen={Boolean(checkoutUrl)} toggle={() => setCheckoutUrl("")} size="xl">
-            <ModalHeader toggle={() => setCheckoutUrl("")}>{t("Payment Checkout")}</ModalHeader>
+        <Modal
+            isOpen={Boolean(checkoutUrl)}
+            toggle={handleCheckoutClose}
+            style={{ width: "700px", maxWidth: "calc(100% - 2rem)" }}
+        >
+            <ModalHeader toggle={handleCheckoutClose}>{t("Payment Checkout")}</ModalHeader>
             <ModalBody style={{ padding: 0 }}>
                 <iframe
                     title={t("Payment Checkout")}

@@ -133,7 +133,6 @@ export const bankExtrasInitial = {
     account_type: "",
     bsb_number: "",
     branch_number: "",
-    routing_code: "",
     entity_tt_id: "",
     ifs_code: "",
     clabe: "",
@@ -146,6 +145,29 @@ export const bankExtrasInitial = {
     qr_code: ""
 };
 
+
+// routing_code is never asked for directly; it is always mirrored from aba_routing_number.
+// Use this when loading saved extras into form state so only ABA Routing Number is rendered.
+export const normalizeBankExtras = (extras) => {
+    if (!extras || typeof extras !== "object") return extras
+    const { routing_code, ...rest } = extras
+    return {
+        ...rest,
+        aba_routing_number: rest.aba_routing_number || routing_code || ""
+    }
+}
+
+// Use this when sending extras to the API: both routing_code and aba_routing_number carry the same value.
+export const buildBankExtrasPayload = (extras) => {
+    if (!extras || typeof extras !== "object") return extras
+    const { routing_code, ...rest } = extras
+    const aba = rest.aba_routing_number ?? ""
+    return {
+        ...rest,
+        aba_routing_number: aba,
+        routing_code: aba
+    }
+}
 
 export const basicExtrasInitial = {
     middlename: "",
