@@ -38,6 +38,7 @@ export const THUNES_ENTITY_FIELDS = {
 };
 
 export const THUNES_IDENTIFIER_FIELDS = {
+    mobile_wallet_provider: { label: 'Mobile money provider', type: 'payer' },
     msisdn: { label: 'Mobile number', type: 'tel', placeholder: '+234 801 234 5678' },
     bank_account_number: { label: 'Account number', type: 'text', alphanumeric: true },
     account_number: { label: 'Account number', type: 'text', alphanumeric: true },
@@ -153,8 +154,8 @@ export const BVNK_RAILS = {
 };
 
 const EDIT_BENEFICIARY_FIELDS = {
-    individual: ['firstname', 'lastname', 'date_of_birth', 'email', 'msisdn', 'address', 'city', 'postal_code'],
-    business: ['legalName', 'email', 'msisdn', 'address', 'city', 'postal_code'],
+    individual: ['firstname', 'lastname', 'date_of_birth', 'email', 'msisdn', 'address', 'province_state', 'city', 'postal_code'],
+    business: ['legalName', 'email', 'msisdn', 'address', 'province_state', 'city', 'postal_code'],
 };
 
 const EDIT_REQUIRED_FIELDS = {
@@ -231,7 +232,9 @@ export const ALWAYS_ASKED_FIELDS = {
     business: ['company_name'],
 };
 
-export const getThunesRequirements = (fields, recipientType) => {
+const MOBILE_WALLET_CHANNEL_FIELDS = ['mobile_wallet_provider', 'msisdn'];
+
+export const getThunesRequirements = (fields, recipientType, method) => {
     if (!fields) return null;
 
     const alwaysAsked = ALWAYS_ASKED_FIELDS[recipientType === 'business' ? 'business' : 'individual'];
@@ -244,8 +247,16 @@ export const getThunesRequirements = (fields, recipientType) => {
         ...providerFields.filter((name) => !alwaysAsked.includes(name)),
     ];
 
-    const channelFields = flattenFieldSets(fields.credit_party_identifiers_accepted)
+    const identifierFields = flattenFieldSets(fields.credit_party_identifiers_accepted)
         .filter((name) => THUNES_IDENTIFIER_FIELDS[name]);
+
+    /* A mobile wallet is only ever a provider and the number it is held on, whatever
+       else the provider lists as an accepted identifier. */
+    const channelFields = method === 'mobile_wallet'
+        ? MOBILE_WALLET_CHANNEL_FIELDS
+        : identifierFields;
+
+    const defs = { ...THUNES_ENTITY_FIELDS, ...THUNES_IDENTIFIER_FIELDS };
 
     return {
         vendor: 'thunes',
@@ -253,7 +264,11 @@ export const getThunesRequirements = (fields, recipientType) => {
         channelFields,
         requiredBeneficiary: beneficiaryFields,
         requiredChannel: channelFields,
-        defs: { ...THUNES_ENTITY_FIELDS, ...THUNES_IDENTIFIER_FIELDS },
+        /* The recipient's own mobile number is asked separately, so name this one for
+           what it is rather than showing "Mobile number" twice. */
+        defs: method === 'mobile_wallet'
+            ? { ...defs, msisdn: { ...defs.msisdn, label: 'Wallet number' } }
+            : defs,
         limits: {
             min: fields.minimum_transaction_amount,
             max: fields.maximum_transaction_amount,

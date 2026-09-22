@@ -1,11 +1,45 @@
+import { useRef } from 'react';
 import { DatePicker } from '@material-ui/pickers';
 import { FieldLabel, Hint, SelectField, TextField } from './index';
 import CountryDropDown from '../../../../AddBeneficiary/CountryDropDown';
 import CitiesDropDown from '../../../../CitiesDropDown';
+import PhoneInput from '../../../../PhoneInput';
 import styles from '../AddBeneficiaryFlowV2.module.css';
 import { getFieldDef } from '../vendorFields';
 
 const STATE_NAME_FIELD = 'state_name';
+const PROVIDER_NAME_FIELD = 'mobile_wallet_name';
+
+const phoneInputStyles = {
+    boxShadow: 'var(--abf-shadow-input)',
+    border: '1px solid var(--abf-grey-25)',
+    borderRadius: 'var(--abf-r-sm)',
+    paddingTop: '8px',
+    paddingBottom: "8px",
+    background: '#fff',
+};
+
+const PhoneField = ({ value, onChange, country, disabled }) => {
+    const initialValue = useRef(value || '');
+    const hasReported = useRef(false);
+
+    return (
+        <PhoneInput
+            phone={initialValue.current}
+            country={country}
+            disabled={disabled}
+            disableDropdown
+            customStyles={phoneInputStyles}
+            setPhone={(next) => {
+                if (!hasReported.current) {
+                    hasReported.current = true;
+                    if (!next) return;
+                }
+                if (next !== value) onChange(next);
+            }}
+        />
+    );
+};
 
 const sanitise = (value, def) => {
     let next = value;
@@ -56,12 +90,42 @@ const DynamicField = ({
     countryIso3 = '',
     stateData = [],
     hasStateField = false,
+    payers = [],
+    payersLoading = false,
 }) => {
     const def = getFieldDef(name, defs);
 
     const id = `abf-${name}`;
     const required = def.required !== false;
     const label = required ? `${def.label} *` : def.label;
+
+    if (def.type === 'payer') {
+        return (
+            <SelectField
+                flex={flex}
+                id={id}
+                label={label}
+                value={value || ''}
+                onChange={(payerId) => {
+                    const payer = payers.find((item) => String(item?.id) === String(payerId));
+                    onChange(payerId, { [PROVIDER_NAME_FIELD]: payer?.name || '' });
+                }}
+                disabled={disabled || payersLoading || payers.length === 0}
+                options={payers.map((payer) => ({ value: String(payer?.id), label: payer?.name }))}
+                placeholder={payersLoading ? 'Loading providers...' : 'Select provider'}
+                error={error}
+                hint={!payersLoading && payers.length === 0 ? 'No providers are available for this country.' : def.hint}
+            />
+        );
+    }
+
+    if (def.type === 'tel') {
+        return (
+            <FieldShell id={id} label={label} error={error} hint={def.hint} flex={flex}>
+                <PhoneField value={value} onChange={onChange} country={countryIso3} disabled={disabled} />
+            </FieldShell>
+        );
+    }
 
     if (def.type === 'state') {
         return (
