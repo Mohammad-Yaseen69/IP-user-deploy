@@ -12,7 +12,7 @@ import { usePermission } from "../../hooks/GeneralUse/usePermission";
 import AddBeneficiaryFlowV2 from "../VirtualIBAN/Beneficiaries/AddBeneficiaryFlowV2";
 
 
-const USE_NEW_ADD_BENEFICIARY_FLOW = true
+const USE_NEW_ADD_BENEFICIARY_FLOW = false
 
 const Beneficiaries = () => {
     const { t } = useTranslation()
