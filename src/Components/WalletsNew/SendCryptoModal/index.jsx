@@ -37,6 +37,7 @@ import {
     getBeneficiaryCryptoChannels,
     getChannelAddress,
     getChannelAsset,
+    getChannelProtocol,
     getInitialProtocol,
     getProtocolsForAddress,
     hasCryptoChannel,
@@ -187,14 +188,17 @@ const SendCryptoModal = ({ isOpen, toggle, wallet }) => {
 
     const address = getChannelAddress(selectedChannel)
 
+    const savedProtocol = useMemo(() => getChannelProtocol(selectedChannel), [selectedChannel])
+
     const protocolOptions = useMemo(() => {
         if (!address) return []
+        if (savedProtocol) return [savedProtocol]
         if (apiProtocols.length) return filterProtocolsForAddress(apiProtocols, address)
         const fromAddress = getProtocolsForAddress(address)
         if (fromAddress.length) return fromAddress
         const initial = getInitialProtocol(selectedChannel)
         return initial ? [initial] : []
-    }, [address, apiProtocols, selectedChannel])
+    }, [address, apiProtocols, selectedChannel, savedProtocol])
 
     const amountError = getAmountError(amount, availableBalance, cryptoCurrency)
 
@@ -491,11 +495,12 @@ const SendCryptoModal = ({ isOpen, toggle, wallet }) => {
                         protocolOptions={protocolOptions}
                         protocol={protocol}
                         setProtocol={setProtocol}
+                        isProtocolLocked={!!savedProtocol}
                         addressStatus={addressStatus}
                         cryptoCurrency={cryptoCurrency}
                         errorMessage={beneficiaryError}
                         onEditBeneficiary={
-                            isMissingBeneficiaryDetailsError(beneficiaryError) && selectedBeneficiary
+                            (isMissingBeneficiaryDetailsError(beneficiaryError) || addressStatus === "invalid") && selectedBeneficiary
                                 ? () => {
                                     handleClose()
                                     navigate(

@@ -1,5 +1,12 @@
 const UNSUPPORTED_PROTOCOLS = ["STELLAR"]
 
+export const CRYPTO_PAYOUT_PROTOCOLS = {
+    USDT: ["TRC20", "ERC20", "BEP20", "POLYGON", "SOL"],
+    USDC: ["SOL", "POLYGON", "ERC20", "TRC20", "BEP20"],
+}
+
+export const CRYPTO_PAYOUT_ASSETS = Object.keys(CRYPTO_PAYOUT_PROTOCOLS)
+
 export const PROTOCOL_LABELS = {
     TRC20: "TRON (TRC20)",
     ERC20: "Ethereum (ERC20)",
@@ -43,6 +50,12 @@ export const normalizeProtocol = (value) => {
     return isSupportedProtocol(protocol) ? protocol : ""
 }
 
+export const getAssetProtocols = (asset) =>
+    CRYPTO_PAYOUT_PROTOCOLS[String(asset || "").toUpperCase()] || CRYPTO_PAYOUT_PROTOCOLS.USDT
+
+export const getAssetProtocolOptions = (asset) =>
+    getAssetProtocols(asset).map((protocol) => ({ value: protocol, label: getProtocolLabel(protocol) }))
+
 export const getProtocolsForAddress = (address) => {
     const value = String(address || "").trim()
     if (!value) return []
@@ -60,18 +73,18 @@ export const filterProtocolsForAddress = (protocols = [], address = "") => {
     return narrowed.length ? narrowed : offered
 }
 
-export const getInitialProtocol = (channel) => {
-    const address = getChannelAddress(channel)
-    const possible = getProtocolsForAddress(address)
-    const stored = normalizeProtocol(
-        channel?.extras?.crypto_network ||
-        channel?.network ||
-        channel?.protocol ||
-        channel?.currency
-    )
+export const getChannelProtocol = (channel) => normalizeProtocol(
+    channel?.extras?.crypto_network ||
+    channel?.network ||
+    channel?.protocol ||
+    channel?.currency
+)
 
-    if (stored && (!possible.length || possible.includes(stored))) return stored
-    return possible[0] || ""
+export const getInitialProtocol = (channel) => {
+    const stored = getChannelProtocol(channel)
+    if (stored) return stored
+
+    return getProtocolsForAddress(getChannelAddress(channel))[0] || ""
 }
 
 export const getChannelAddress = (channel) =>
