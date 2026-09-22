@@ -28,7 +28,7 @@ const SidebarProgress = ({
         { key: 'documents', label: t('Documents'), icon: <File size={15} />, }
     ]
 
-    const ORDER = ['account', 'company', 'activity', 'owners', 'documents']
+    const ORDER = ['account', 'company', 'activity', 'owners', 'documents', 'review']
 
     const getStatus = (itemKey) => {
         const currentIdx = ORDER.indexOf(currentStepKey)
