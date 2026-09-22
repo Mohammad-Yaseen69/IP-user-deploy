@@ -10,7 +10,8 @@ import { PlaidCurrencies } from "../../AddFunds/WalletFundsFlow"
 import CardMaintenanceModal from "../../CardMaintenanceModal"
 
 
-const StepOne = ({ data, dataHandler, allowed, wallet }) => {
+// cardEnabled: card goes through Paytently, so skip the Trust maintenance notice.
+const StepOne = ({ data, dataHandler, allowed, wallet, cardEnabled = false }) => {
     const [showCardMaintenanceModal, setShowCardMaintenanceModal] = useState(false)
     const payouts = [
         {
@@ -43,8 +44,8 @@ const StepOne = ({ data, dataHandler, allowed, wallet }) => {
             name: "Bank Transfer (Europe Only)",
             value: "bank_transfer",
             id: 2,
-            icon: pagSvgs.wallet,
-            active_icon: pagSvgs.wallet_a,
+            icon: pagSvgs.bank_transfer,
+            active_icon: pagSvgs.bank_transfer,
             api_val: "bank"
         },
         {
@@ -72,7 +73,7 @@ const StepOne = ({ data, dataHandler, allowed, wallet }) => {
                             style={{ cursor: item.coming_soon ? "not-allowed" : "pointer", opacity: item.coming_soon ? .8 : 1 }}
                             onClick={() => {
                                 if (item.coming_soon) return console.log("")
-                                if (item.value === "card") {
+                                if (item.value === "card" && !cardEnabled) {
                                     setShowCardMaintenanceModal(true)
                                     return
                                 }

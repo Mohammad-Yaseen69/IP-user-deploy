@@ -15,3 +15,15 @@
     gap: 1rem;
     position: relative;
 }
+
+@media screen and (max-width: 600px) {
+    .container {
+        box-shadow: none;
+        border: 1px solid #1412201F;
+        box-shadow: 0px 1px 2px 0px #1412200D;
+        border-radius: 12px;
+        font-size: 14px;
+        padding: 11px 13px;
+        align-items: center;
+    }
+}

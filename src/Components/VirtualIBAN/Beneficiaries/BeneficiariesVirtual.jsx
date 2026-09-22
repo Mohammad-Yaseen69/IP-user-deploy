@@ -5,20 +5,25 @@ import IbanBreadcrumb from '../components/IbanBreadcrumb';
 import { useTranslation } from 'react-i18next';
 import useWindowWidth from '../../../utils/useWindowWidth';
 import TopRight from '../../topRight';
-import DynamicChannelModal from './Modals/DynamicChannelModal';
 import AddBeneficiaryModal from './Modals/AddBeneficiaryModal';
+import DynamicChannelModal from './Modals/DynamicChannelModal';
+import AddBeneficiaryFlowV2 from './AddBeneficiaryFlowV2';
 import { useNavigate } from 'react-router';
 import { useQuery } from '@tanstack/react-query';
 import { apiWrapper } from '../../../utils/Functions/apiWrapper';
+import { handlePaymentApiError } from '../../../utils/Functions/handlePaymentApiError';
 import { UserContext } from '../../../Context/UserContext';
 import { toast } from 'react-toastify';
+
+
+const USE_NEW_ADD_BENEFICIARY_FLOW = true;
 
 const BeneficiariesVirtual = () => {
     const { t } = useTranslation();
     const width = useWindowWidth();
     const navigate = useNavigate();
     const { userDetails } = useContext(UserContext);
-
+    const isMobile = width <= 600;
     const accountId = userDetails?._id || userDetails?.account_id;
 
     const [searchQuery, setSearchQuery] = useState('');
@@ -74,21 +79,22 @@ const BeneficiariesVirtual = () => {
             toast.success(t("Channel removed successfully"));
             refetch();
         } catch (err) {
-            console.error("Delete channel error:", err);
-            toast.error(t("Failed to remove channel"));
+            handlePaymentApiError({
+                error: err,
+                navigate,
+                fallback: t("Failed to remove channel"),
+                setError: (message) => toast.error(message),
+            });
         }
     };
 
-    const handleBeneficiarySaved = async (savedBeneficiary, isNew) => {
+    const handleBeneficiarySaved = async (savedBeneficiary) => {
         if (savedBeneficiary?._id) {
             setSelectedBeneficiaryId(savedBeneficiary._id);
         }
         await refetch();
-
-        if (isNew && savedBeneficiary) {
-            setChannelModalBeneficiary(savedBeneficiary);
-            setIsChannelModalOpen(true);
-        }
+        // The DS 2.0 flow creates the payout channel as part of the same journey,
+        // so there is no longer a second modal to chain into here.
     };
 
     const getInitials = (b) => {
@@ -108,6 +114,7 @@ const BeneficiariesVirtual = () => {
 
     return (
         <div className={styles.container}>
+            {!isMobile && 
             <div className={styles.top}>
                 <div className={styles.headerTitleMain}>
                     <div className={styles.titleWithBack}>
@@ -119,15 +126,16 @@ const BeneficiariesVirtual = () => {
                     {width > 1000 && <TopRight />}
                 </div>
             </div>
-
+            }
             <div className={styles.mainContent}>
+            {!isMobile && 
                 <div className={styles.navigationHeader}>
                     <IbanBreadcrumb items={[
                         { label: "My virtual bank", path: "/virtual-IBAN" },
                         { label: "Beneficiaries" }
                     ]} />
                 </div>
-
+            }
                 <div className={styles.contentLayout}>
                     <div className={styles.columnsFlexGrid}>
                         <div className={styles.leftColumn}>
@@ -172,6 +180,29 @@ const BeneficiariesVirtual = () => {
                                         const totalChannels = (b.bank_details?.length || 0) + (b.mobile_wallet?.length || 0) + (b.crypto?.length || 0);
 
                                         return (
+                                            isMobile?
+                                             <div
+                                                    key={b._id || idx}
+                                                    className={`${styles.beneficiaryItem} ${isSelected ? styles.activeItem : ''}`}
+                                                    onClick={() => setSelectedBeneficiaryId(b._id)}
+                                                    style={{ cursor: 'pointer' }}
+                                                >
+                                            <div className={styles.beneficiaryItemWrapper}>
+                                                    <div className={styles.avatarCircle} style={{ background: getAvatarBg(idx) }}>
+                                                        {getInitials(b)}
+                                                    </div>
+                                                    <div className={styles.itemMeta}>
+                                                        <h4>{name || t("Unnamed Beneficiary")}</h4>
+                                                        <p>
+                                                            {b.beneficiary_type === 'business' ? t("Company") : t("Individual")}
+                                                            {b.country_name ? ` • ${b.country_name}` : ''}
+                                                            {!isMobile && ` • ${totalChannels} ${t("channels")}`}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                <div className={styles.channelBadge}>{totalChannels}</div>
+                                            </div>
+                                            :
                                             <div
                                                 key={b._id || idx}
                                                 className={`${styles.beneficiaryItem} ${isSelected ? styles.activeItem : ''}`}
@@ -190,7 +221,7 @@ const BeneficiariesVirtual = () => {
                                                     </p>
                                                 </div>
                                             </div>
-                                        );
+                                    );
                                     })
                                 )}
                             </div>
@@ -203,15 +234,31 @@ const BeneficiariesVirtual = () => {
                                         <div className={styles.profileLeftGroup}>
                                             <div className={styles.avatarCircleBig}>{getInitials(activeBeneficiary)}</div>
                                             <div className={styles.profileTitleBlock}>
-                                                <div className={styles.nameBadgeRow}>
-                                                    <h2>
-                                                        {activeBeneficiary.beneficiary_type === 'business'
-                                                            ? activeBeneficiary.company_name
-                                                            : `${activeBeneficiary.first_name || ''} ${activeBeneficiary.last_name || ''}`.trim()}
-                                                    </h2>
-                                                    <span className={styles.badgeLabel}>
-                                                        {activeBeneficiary.beneficiary_type === 'business' ? t("Business") : t("Individual")}
-                                                    </span>
+                                                <div>
+                                                    <div className={styles.nameBadgeRow}>
+                                                        <h2>
+                                                            {activeBeneficiary.beneficiary_type === 'business'
+                                                                ? activeBeneficiary.company_name
+                                                                : `${activeBeneficiary.first_name || ''} ${activeBeneficiary.last_name || ''}`.trim()}
+                                                        </h2>
+                                                        <span className={styles.badgeLabel}>
+                                                            {activeBeneficiary.beneficiary_type === 'business' ? t("Business") : t("Individual")}
+                                                        </span>
+                                                    </div>
+                                                     {isMobile &&
+                                                        <div className={styles.profileActionGroup}>
+                                                            <button
+                                                                className={styles.editIconButton}
+                                                                onClick={() => {
+                                                                    setBeneficiaryToEdit(activeBeneficiary);
+                                                                    setIsAddModalOpen(true);
+                                                                }}
+                                                                title={t("Edit Beneficiary")}
+                                                            >
+                                                                <Edit3 size={isMobile ? 13 : 16} />
+                                                            </button>
+                                                        </div>
+                                                    }
                                                 </div>
                                                 <p className={styles.subTextDetail}>
                                                     {activeBeneficiary.country_name || activeBeneficiary.country_iso_code || t("Global")}
@@ -222,19 +269,20 @@ const BeneficiariesVirtual = () => {
                                                 </p>
                                             </div>
                                         </div>
-
-                                        <div className={styles.profileActionGroup}>
-                                            <button
-                                                className={styles.editIconButton}
-                                                onClick={() => {
-                                                    setBeneficiaryToEdit(activeBeneficiary);
-                                                    setIsAddModalOpen(true);
-                                                }}
-                                                title={t("Edit Beneficiary")}
-                                            >
-                                                <Edit3 size={16} />
-                                            </button>
-                                        </div>
+                                        {!isMobile &&
+                                            <div className={styles.profileActionGroup}>
+                                                <button
+                                                    className={styles.editIconButton}
+                                                    onClick={() => {
+                                                        setBeneficiaryToEdit(activeBeneficiary);
+                                                        setIsAddModalOpen(true);
+                                                    }}
+                                                    title={t("Edit Beneficiary")}
+                                                >
+                                                    <Edit3 size={16} />
+                                                </button>
+                                            </div>
+                                        }
                                     </div>
 
                                     <div className={styles.sectionHeaderRow}>
@@ -252,6 +300,40 @@ const BeneficiariesVirtual = () => {
 
                                     {activeBeneficiary.bank_details && activeBeneficiary.bank_details.length > 0 && (
                                         activeBeneficiary.bank_details.map((bank, bIdx) => (
+                                            isMobile ?
+                                            <div key={bank._id || bIdx} className={styles.cryptoWalletCard} style={{ marginTop: '12px' }}>
+                                                <div className={styles.walletHeader}>
+                                                        <div className={styles.channelTypeLabel}>
+                                                            <div className={styles.iconwrap} style={{ borderRadius: "12px", background: "#F5F2FF" }}>
+                                                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4F46E5" strokeWidth="2">
+                                                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                                                    <line x1="9" y1="21" x2="9" y2="9"></line>
+                                                                    <line x1="15" y1="21" x2="15" y2="9"></line>
+                                                                    <line x1="3" y1="9" x2="21" y2="9"></line>
+                                                                </svg>
+                                                            </div>
+                                                        <div>
+                                                            <span className={styles.networkTag}>{t("Bank Account")}</span>                                                 <span className={styles.networkActive}>{bank.name || t("Bank")}</span>
+                                                        </div>
+                                                        </div>
+                                                    <button
+                                                        onClick={() => handleDeleteChannel('bank', bank._id)}
+                                                        style={{ border: 'none', background: 'transparent', color: '#EF4444', cursor: 'pointer', padding: '4px' }}
+                                                        title={t("Delete channel")}
+                                                    >
+                                                        <Trash2 size={14} />
+                                                    </button>
+                                                </div>
+                                                <div className={styles.addressRow}>
+                                                    <span className={styles.cryptoAddress}>
+                                                        {bank.iban || bank.account_number || bank.bank_account_number || ''}
+                                                    </span>
+                                                    <button className={styles.copyBtn} onClick={() => handleCopy(bank.iban || bank.account_number)}>
+                                                        <Copy size={14} />
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            :
                                             <div key={bank._id || bIdx} className={styles.cryptoWalletCard} style={{ marginTop: '12px' }}>
                                                 <div className={styles.walletHeader}>
                                                     <div className={styles.channelTypeLabel}>
@@ -358,7 +440,7 @@ const BeneficiariesVirtual = () => {
                                         (!activeBeneficiary.mobile_wallet || activeBeneficiary.mobile_wallet.length === 0) &&
                                         (!activeBeneficiary.crypto || activeBeneficiary.crypto.length === 0) && (
                                             <div style={{ padding: '32px 16px', textAlign: 'center', background: '#FAF9FD', borderRadius: '16px', border: '1px dashed #E5E7EB', marginTop: '16px' }}>
-                                                <p style={{ margin: '0 0 12px', fontSize: '14px', color: '#6B7280' }}>
+                                                <p style={{ margin: '0 0 12px', fontSize: '14px', color: '#6B7280', fontWeight:isMobile && 400 }}>
                                                     {t("No payout channels added for this beneficiary yet.")}
                                                 </p>
                                                 <button
@@ -366,7 +448,7 @@ const BeneficiariesVirtual = () => {
                                                         setChannelModalBeneficiary(activeBeneficiary);
                                                         setIsChannelModalOpen(true);
                                                     }}
-                                                    style={{ padding: '8px 16px', borderRadius: '8px', border: 'none', background: '#4F46E5', color: '#FFF', fontWeight: 600, fontSize: '13px', cursor: 'pointer' }}
+                                                    style={{ padding: '8px 16px', borderRadius: '8px', border: 'none', background: isMobile ? '#5926F0' : '#4F46E5', color: '#FFF', fontWeight: 600, fontSize: '13px', cursor: 'pointer' }}
                                                 >
                                                     + {t("Add first channel")}
                                                 </button>
@@ -383,25 +465,69 @@ const BeneficiariesVirtual = () => {
                 </div>
             </div>
 
-            <AddBeneficiaryModal
-                open={isAddModalOpen}
-                handleClose={() => {
-                    setIsAddModalOpen(false);
-                    setBeneficiaryToEdit(null);
-                }}
-                beneficiaryToEdit={beneficiaryToEdit}
-                onSaveSuccess={handleBeneficiarySaved}
-            />
+            {/* New beneficiaries go through the vendor-driven DS 2.0 flow, which asks
+                only for the fields the chosen payout provider actually requires. */}
+            {USE_NEW_ADD_BENEFICIARY_FLOW && (
+                <AddBeneficiaryFlowV2
+                    open={isAddModalOpen && !beneficiaryToEdit}
+                    handleClose={() => {
+                        setIsAddModalOpen(false);
+                        setBeneficiaryToEdit(null);
+                    }}
+                    onSaveSuccess={handleBeneficiarySaved}
+                />
+            )}
 
-            <DynamicChannelModal
-                open={isChannelModalOpen}
-                handleClose={() => {
-                    setIsChannelModalOpen(false);
-                    setChannelModalBeneficiary(null);
-                }}
-                beneficiaryData={channelModalBeneficiary || activeBeneficiary}
-                onSaveSuccess={() => refetch()}
-            />
+            {USE_NEW_ADD_BENEFICIARY_FLOW && beneficiaryToEdit && (
+                <AddBeneficiaryFlowV2
+                    open={isAddModalOpen && !!beneficiaryToEdit}
+                    mode="edit"
+                    existingBeneficiary={beneficiaryToEdit}
+                    handleClose={() => {
+                        setIsAddModalOpen(false);
+                        setBeneficiaryToEdit(null);
+                    }}
+                    onSaveSuccess={handleBeneficiarySaved}
+                />
+            )}
+
+            {/* Editing without the new flow, which also handles creation when the flag is off. */}
+            {!USE_NEW_ADD_BENEFICIARY_FLOW && (
+                <AddBeneficiaryModal
+                    open={isAddModalOpen}
+                    handleClose={() => {
+                        setIsAddModalOpen(false);
+                        setBeneficiaryToEdit(null);
+                    }}
+                    beneficiaryToEdit={beneficiaryToEdit}
+                    onSaveSuccess={handleBeneficiarySaved}
+                />
+            )}
+
+            {/* Adding a channel reuses the same vendor-driven flow, starting at the
+                method step with the beneficiary already known. The original
+                DynamicChannelModal is kept below for the flag-off path. */}
+            {USE_NEW_ADD_BENEFICIARY_FLOW ? (
+                <AddBeneficiaryFlowV2
+                    open={isChannelModalOpen}
+                    handleClose={() => {
+                        setIsChannelModalOpen(false);
+                        setChannelModalBeneficiary(null);
+                    }}
+                    existingBeneficiary={channelModalBeneficiary || activeBeneficiary}
+                    onSaveSuccess={() => refetch()}
+                />
+            ) : (
+                <DynamicChannelModal
+                    open={isChannelModalOpen}
+                    handleClose={() => {
+                        setIsChannelModalOpen(false);
+                        setChannelModalBeneficiary(null);
+                    }}
+                    beneficiaryData={channelModalBeneficiary || activeBeneficiary}
+                    onSaveSuccess={() => refetch()}
+                />
+            )}
         </div>
     );
 };

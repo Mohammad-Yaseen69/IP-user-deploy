@@ -6,22 +6,19 @@ import mw from "../PaymentsNewer/files/mw.png"
 import pc from "../PaymentsNewer/files/pc.png"
 import cw from "../PaymentsNewer/files/cw.png"
 import { ChevronDown, ChevronUp, MoreHorizontal } from "react-feather"
-import { Link } from "react-router-dom"
 import { useTranslation } from "react-i18next"
-import { useContext, useEffect, useState } from "react"
-import { UserContext } from "../../Context/UserContext"
+import { useEffect, useState } from "react"
 import { Button } from "reactstrap"
 import DeleteBeneficiary from "./DeleteBeneficiary"
 import { usePermission } from "../../hooks/GeneralUse/usePermission"
 
-const BeneficiaryCard = ({ user }) => {
+const BeneficiaryCard = ({ user, onEdit = () => { }, onView = () => { } }) => {
     const { t } = useTranslation()
     const normalizeName = (s) => (s || "").toLowerCase().replace(/[^a-z]/g, "")
     const exact = countries.find(c => normalizeName(c.name) === normalizeName(user?.country_name))
     const loose = countries.find(c => normalizeName(c.name).includes(normalizeName(user?.country_name)) || normalizeName(user?.country_name).includes(normalizeName(c.name)) || user?.country_iso_code === c.alpha3)
     const country = exact || loose
     const itemCheck = (item) => user?.account_type.some(acc => acc.toLowerCase() === item);
-    const { verifyToken } = useContext(UserContext)
     const [showMore, setShowMore] = useState(false);
     const toggleShowMore = () => setShowMore(!showMore)
     const [showDelete, setShowDelete] = useState(false);
@@ -46,9 +43,11 @@ const BeneficiaryCard = ({ user }) => {
             {
                 window.innerWidth > 1000
                     ?
-                    <Link to={`/beneficiaries/edit${user.beneficiary_type === "business" ? "/business" : ""}?user_id=${user._id}`} className={styles.left} onClick={() => {
+                    <div className={styles.left} style={{ cursor: "pointer" }} onClick={() => {
                         if (window.innerWidth < 1000) {
                             setShowFull(!showFull)
+                        } else {
+                            onView(user)
                         }
                     }}>
                         <div>
@@ -101,7 +100,7 @@ const BeneficiaryCard = ({ user }) => {
                         }}>
                             <ChevronDown />
                         </button>
-                    </Link>
+                    </div>
                     :
                     <div className={styles.left} onClick={() => {
                         setShowFull(!showFull)
@@ -276,16 +275,12 @@ const BeneficiaryCard = ({ user }) => {
                             showMore
                             &&
                             <div style={{ top: window.innerWidth < 1000 && "inherit", bottom: window.innerWidth < 1000 && "100%", zIndex: 12 }} className={styles.showMore}>
-                                <Link to={`/beneficiaries/edit${user.beneficiary_type === "business" ? "/business" : ""}?user_id=${user._id}&edit=true`}>
-                                    {can("beneficiaries.edit") && <Button color='transparent' className={styles.btn} style={{ padding: ".5rem 1rem" }}>
-                                        {t("Edit") + " " + t("Beneficiary")}
-                                    </Button>}
-                                </Link>
-                                <Link to={`/beneficiaries/edit${user.beneficiary_type === "business" ? "/business" : ""}?user_id=${user._id}&view=true`}>
-                                    <Button color='transparent' className={styles.btn} style={{ padding: ".5rem 1rem" }}>
-                                        {t("View") + " " + t("Beneficiary")}
-                                    </Button>
-                                </Link>
+                                {can("beneficiaries.edit") && <Button color='transparent' className={styles.btn} style={{ padding: ".5rem 1rem" }} onClick={() => onEdit(user)}>
+                                    {t("Edit") + " " + t("Beneficiary")}
+                                </Button>}
+                                <Button color='transparent' className={styles.btn} style={{ padding: ".5rem 1rem" }} onClick={() => onView(user)}>
+                                    {t("View") + " " + t("Beneficiary")}
+                                </Button>
                                 {can("beneficiaries.delete") && <Button color='transparent' className={styles.btn} style={{ padding: ".5rem 1rem" }} onClick={toggleShowDelete}>
                                     {t("Delete") + " " + t("Beneficiary")}
                                 </Button>}

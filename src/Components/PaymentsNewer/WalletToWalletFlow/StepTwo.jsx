@@ -247,9 +247,10 @@ const StepTwo = ({ data, dataHandler, getExchangeRate, showFee, inNonInstapay = 
                                 list: wallets
                             }}
                             isOpen={showCurrency}
-                            onSelectHandler={(item) => {
+                            onSelectHandler={async(item) => {
                                 dataHandler("currency", item)
                                 dataHandler("currency_wallet", item)
+                                await getExchangeRate(data.amount,'','instant',item.currency_code, setter)
                             }}
                             toggle={() => setShowCurrency(false)}
                             searchable={true}
