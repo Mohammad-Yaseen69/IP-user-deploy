@@ -1,4 +1,4 @@
-import { CHANNEL_TYPE_BY_METHOD } from './constants';
+import { CHANNEL_PAYLOAD_KEY, CHANNEL_TYPE_BY_METHOD } from './constants';
 
 const BENEFICIARY_COLUMN_MAP = {
     firstname: 'first_name',
@@ -91,6 +91,8 @@ export const prefillEditBag = (beneficiary) => {
         msisdn: firstValue(beneficiary.phone, extras.msisdn),
         address: firstValue(beneficiary.address, extras.address, extras.beneficiaryAddress),
         city: firstValue(beneficiary.city, extras.city, extras.beneficiaryCity),
+        province_state: firstValue(extras.province_state),
+        state_name: firstValue(extras.state_name),
         postal_code: firstValue(beneficiary.zip_code, extras.postal_code, extras.beneficiaryPostal),
         date_of_birth: firstValue(beneficiary.date_of_birth, extras.date_of_birth),
     };
@@ -193,9 +195,10 @@ export const buildChannelPayload = ({ form, transactionType }) => {
             .join(' ');
 
     const payload = { channel_type: channelType };
+    const channelKey = CHANNEL_PAYLOAD_KEY[channelType] || CHANNEL_PAYLOAD_KEY.bank;
 
     if (channelType === 'bank') {
-        payload.bank_details = {
+        payload[channelKey] = {
             iban: channel.iban || '',
             swift_code: channel.swift_bic_code || channel.swift_code || channel.bic || '',
             account_number:
@@ -207,27 +210,27 @@ export const buildChannelPayload = ({ form, transactionType }) => {
             account_holder_name: holderName,
             extras,
         };
-    } else if (channelType === 'mobile_wallet') {
-        payload.mobile_wallet = {
+    } else if (channelType === 'mobile') {
+        payload[channelKey] = {
             money_provider: channel.mobile_wallet_provider || form.vendor,
             wallet_name: channel.mobile_wallet_name || 'Mobile wallet',
             wallet_account_number: channel.msisdn || channel.account_number || '',
             extras,
         };
     } else if (channelType === 'crypto') {
-        payload.crypto = {
+        payload[channelKey] = {
             currency: channel.crypto_asset || 'USDC',
             wallet_address: channel.wallet_address || '',
             extras,
         };
-    } else if (channelType === 'cash_pickup') {
-        payload.cash_pickup = {
+    } else if (channelType === 'cash') {
+        payload[channelKey] = {
             document_type: form.beneficiary?.id_type || '',
             document_number: form.beneficiary?.id_number || '',
             extras,
         };
     } else if (channelType === 'card') {
-        payload.card = {
+        payload[channelKey] = {
             name: holderName,
             number: channel.card_number || '',
             expiry: channel.card_expiry || '',

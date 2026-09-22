@@ -65,11 +65,18 @@ export const THUNES_SERVICE_BY_METHOD = {
     card_payment: 'Cards',
 };
 
-export const THUNES_DESTINATION_TYPE = {
+/* get-required-fields takes the service's own id in the path and Neema's id for the
+   same method as destinationType, whichever vendor the service belongs to. */
+export const NEEMA_DESTINATION_TYPE = {
     cash_pickup: 1,
     bank_account: 2,
     mobile_wallet: 3,
+    card_payment: 4,
+    upi: 5,
 };
+
+export const getDestinationType = (method, serviceId) =>
+    NEEMA_DESTINATION_TYPE[method] ?? serviceId;
 
 const SERVICE_NAME_TO_METHOD = {
     'mobile wallet': 'mobile_wallet',
@@ -118,14 +125,25 @@ export const METHOD_AVATAR_ICON = {
     local_bank: 'bank-avatar',
 };
 
+/* channel_type is stored on the beneficiary as account_type, which the payment screens
+   filter on, so it uses their vocabulary: bank, mobile, cash, card, crypto. */
 export const CHANNEL_TYPE_BY_METHOD = {
-    mobile_wallet: 'mobile_wallet',
+    mobile_wallet: 'mobile',
     bank_account: 'bank',
-    cash_pickup: 'cash_pickup',
+    cash_pickup: 'cash',
     card_payment: 'card',
     local_bank: 'bank',
     swift: 'bank',
     crypto_wallet: 'crypto',
+};
+
+/* The details themselves always travel under the channel's own key. */
+export const CHANNEL_PAYLOAD_KEY = {
+    bank: 'bank_details',
+    mobile: 'mobile_wallet',
+    cash: 'cash_pickup',
+    card: 'card',
+    crypto: 'crypto',
 };
 
 export const CRYPTO_ASSETS = [
@@ -147,6 +165,7 @@ export const INITIAL_FORM = {
     method: '',
     vendor: '',
     service_id: null,
+    service_name: '',
 
     beneficiary: {},
     channel: {},
