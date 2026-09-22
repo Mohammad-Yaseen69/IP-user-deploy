@@ -39,13 +39,14 @@ const SecurityQuestions = () => {
     const [saving, setSaving] = useState("")
     const [token, setToken] = useState("")
     const [codeType, setCodeType] = useState("sms")
+    const [otpMethods, setOtpMethods] = useState(null)
     const can = usePermission()
     const isEdit = can("settings.security-questions.update")
     useEffect(() => {
-        setCodeType(userDetails?.tfa ? "authenticator" : "sms")
+        setCodeType(userDetails?.tfa ? "authenticator" : userDetails?.email_verification ? "email" : userDetails?.whatsapp_verification ? "whatsapp" : "sms")
     }, [userDetails])
 
-    const sendOtp = async () => {
+    const sendOtp = async (method) => {
         setSaving(true)
         const data = {
             data: {
@@ -56,7 +57,7 @@ const SecurityQuestions = () => {
                 question3: selectedQuesThree,
                 answer3: answerThree?.trim() || "",
             },
-            type: codeType
+            type: method || codeType
         }
 
         if (userDetails?.user?.question1 || userDetails?.user?.question2 || userDetails?.user?.question3) {
@@ -70,6 +71,8 @@ const SecurityQuestions = () => {
 
                 const dec = decryptData(res.data.data)
                 setToken(dec?.token)
+                setOtpMethods(dec)
+                if (!showOtp) setCodeType(dec?.otp_sent_on || "sms")
                 setShowOtp(true)
             } catch (error) {
                 toast.error("Something went wrong while sending otp!")
@@ -339,6 +342,7 @@ const SecurityQuestions = () => {
                             resendHandler={sendOtp}
                             authType={codeType}
                             setAuthType={setCodeType}
+                            methods={otpMethods}
                         />
                     </ModalBody>
                 </Modal>

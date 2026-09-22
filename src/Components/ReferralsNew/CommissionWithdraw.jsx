@@ -22,12 +22,14 @@ const CommissionWithdraw = ({ isOpen, toggle, referralBalance = 0, defaultCurren
     const [complete, setComplete] = useState(false);
     const [token, setToken] = useState("")
     const [codeType, setCodeType] = useState("sms")
+    const [otpMethods, setOtpMethods] = useState(null)
 
     useEffect(() => {
-        setCodeType(userDetails?.tfa ? "authenticator" : "sms")
+        setCodeType(userDetails?.tfa ? "authenticator" : userDetails?.email_verification ? "email" : userDetails?.whatsapp_verification ? "whatsapp" : "sms")
     }, [userDetails])
 
-    const sendOtp = async () => {
+    const sendOtp = async (method) => {
+        const resolvedType = typeof method === 'string' ? method : codeType
         setSaving(true)
         setError("")
         try {
@@ -38,7 +40,7 @@ const CommissionWithdraw = ({ isOpen, toggle, referralBalance = 0, defaultCurren
                     payer_id: +userWithdrawals?.[withdrawal]?.[0]?.payer_id,
                     service_id: +userWithdrawals?.[withdrawal]?.[0]?.service_id,
                 },
-                type: codeType
+                type: resolvedType
             }
             const encrypted = encryptData(data)
             const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/send-otp`, {
@@ -49,6 +51,8 @@ const CommissionWithdraw = ({ isOpen, toggle, referralBalance = 0, defaultCurren
 
             const dec = decryptData(res.data.data)
             // console.log(dec)
+            setOtpMethods(dec)
+            if (typeof method !== 'string') setCodeType(dec?.otp_sent_on || "sms")
             setComplete(true)
             setToken(dec?.token)
         } catch (error) {
@@ -166,6 +170,7 @@ const CommissionWithdraw = ({ isOpen, toggle, referralBalance = 0, defaultCurren
                             resendHandler={sendOtp}
                             authType={codeType}
                             setAuthType={setCodeType}
+                            methods={otpMethods}
                         />
                 }
             </ModalBody>

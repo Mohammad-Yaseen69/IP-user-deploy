@@ -16,7 +16,7 @@ import TrustpaymentPage from '../../AddFunds/WalletFund/CreditTransaction'
 import { CARD_TYPES } from '../../CreditInput/CreditCardTypes'
 import { apiErrorMessage } from '../../PaymentsNewer/InternationalFlow'
 import ErrorModal from '../../PaymentsNewer/InternationalFlow/ErrorModal'
-import { LimitsErrorMessage } from '../../PaymentsNewer/OTPConfirmation'
+import { LimitsErrorMessage } from '../../../utils/Functions/paymentLimits'
 import OTPConfirmation from '../../../Common/Component/OtpVerification'
 import { AddFunds, CircleCheck, Currency, Receipt } from '../files'
 import ConfirmationStep from '../PaymentModal/ConfirmationStep'
@@ -44,6 +44,7 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card, setCurrentCardDetai
     const { userWallets, authHeader, userDetails, setProfileLockTime } = useContext(UserContext)
     const [cards, setCards] = useState([])
     const [codeType, setCodeType] = useState("sms")
+    const [otpMethods, setOtpMethods] = useState(null)
     const [saveCard, setSaveCard] = useState(false)
     const [walletState, setWalletState] = useState({})
     const [cardNumberError, setCardNumberError] = useState(null)
@@ -96,6 +97,10 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card, setCurrentCardDetai
 
         if (userDetails?.tfa) {
             setCodeType("authenticator")
+        } else if (userDetails?.email_verification) {
+            setCodeType("email")
+        } else if (userDetails?.whatsapp_verification) {
+            setCodeType("whatsapp")
         } else {
             setCodeType("sms")
         }
@@ -116,6 +121,7 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card, setCurrentCardDetai
         setToken(null);
         setshowOtpModal(false);
         setCodeType("sms");
+        setOtpMethods(null);
         setSaveCard(false);
         setSelectedSaveCard({});
         setCardDetails({
@@ -177,13 +183,14 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card, setCurrentCardDetai
     const [cardTransactionDetails, setCardTransactionDetails] = useState({})
 
 
-    const sendOtp = async () => {
+    const sendOtp = async (methodId) => {
+        const otpMethod = typeof methodId === 'string' ? methodId : codeType
         const data = {
             data: {
                 token: feeDetails?.token,
                 accountId: userDetails?._id
             },
-            type: codeType
+            type: otpMethod
         }
 
         setDisabled(true)
@@ -211,6 +218,10 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card, setCurrentCardDetai
             })
 
             const dec = decryptData(res?.data?.data)
+            setOtpMethods(dec)
+            if (!showOtpModal) {
+                setCodeType(dec?.otp_sent_on || "sms")
+            }
             setshowOtpModal(true)
             setToken(dec?.token)
         } catch {
@@ -660,6 +671,7 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card, setCurrentCardDetai
                         resendHandler={sendOtp}
                         authType={codeType}
                         setAuthType={setCodeType}
+                        methods={otpMethods}
                         showAuthToggle={true}
                     />
                 </ModalBody>

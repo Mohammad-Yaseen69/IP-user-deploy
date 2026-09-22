@@ -26,7 +26,7 @@ import StepTwo from '../WalletToWalletFlow/StepTwo'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { apiWrapper } from '../../../utils/Functions/apiWrapper'
 import { decryptData } from '../../../Helper/EssentilaMethods/Decryption'
-import { LimitsErrorMessage } from '../OTPConfirmation'
+import { LimitsErrorMessage } from '../../../utils/Functions/paymentLimits'
 import { apiErrorMessage } from '../InternationalFlow'
 import usePlainFx from '../../../hooks/Payments/usePlainFx'
 import useSendOtp from '../../../hooks/GeneralUse/useSendOtp'
@@ -144,8 +144,14 @@ const NonInstapayPayment = ({ sendPaymentType, setSendPaymentType, setStep }) =>
     })
 
     const { sendOtp: sendOtpFunction } = useSendOtp({
-        onSuccess: (token) => {
+        onSuccess: (token, dec) => {
             dataHandler("loading", false)
+            if (dec?.otp_sent_on || dec?.available_methods) {
+                dataHandler("otpMethods", dec)
+                if (!data.showOtpModal) {
+                    dataHandler("codeType", dec?.otp_sent_on || "sms")
+                }
+            }
             dataHandler("showOtpModal", true)
             dataHandler("otp_token", token)
         },
@@ -566,6 +572,10 @@ const NonInstapayPayment = ({ sendPaymentType, setSendPaymentType, setStep }) =>
         if (userDetails?._id) {
             if (userDetails?.tfa) {
                 dataHandler("codeType", "authenticator")
+            } else if (userDetails?.email_verification) {
+                dataHandler("codeType", "email")
+            } else if (userDetails?.whatsapp_verification) {
+                dataHandler("codeType", "whatsapp")
             } else {
                 dataHandler("codeType", "sms")
             }
@@ -788,10 +798,11 @@ const NonInstapayPayment = ({ sendPaymentType, setSendPaymentType, setStep }) =>
                                         dataHandler("showOtpModal", false)
                                         reset()
                                     }}
-                                    resendHandler={() => {
-                                        sendOtp()
+                                    resendHandler={(codeType) => {
+                                        sendOtp(codeType)
                                         reset()
                                     }}
+                                    methods={data.otpMethods}
                                     error={data.otpError}
                                 />
                             }

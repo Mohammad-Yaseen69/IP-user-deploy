@@ -12,7 +12,7 @@ import { encryptData } from '../../Helper/EssentilaMethods/Encryption'
 import SuccessModal from '../AddBeneficiary/SuccessModal'
 import InstaPayLoader from '../Loader'
 import ErrorModal from '../PaymentsNewer/InternationalFlow/ErrorModal'
-import { LimitsErrorMessage } from '../PaymentsNewer/OTPConfirmation'
+import { LimitsErrorMessage } from '../../utils/Functions/paymentLimits'
 import OTPConfirmation from '../../Common/Component/OtpVerification'
 
 const AcceptModal = ({ isOpen, toggle, item }) => {
@@ -25,11 +25,12 @@ const AcceptModal = ({ isOpen, toggle, item }) => {
     const [showSuccess, setShowSuccess] = useState(false)
     const [showOtp, setShowOtp] = useState(false)
     const [codeType, setCodeType] = useState("sms")
+    const [otpMethods, setOtpMethods] = useState(null)
     const [error, setError] = useState("")
     const queryClient = useQueryClient()
 
     useEffect(() => {
-        setCodeType(userDetails?.tfa ? "authenticator" : "sms")
+        setCodeType(userDetails?.tfa ? "authenticator" : userDetails?.email_verification ? "email" : userDetails?.whatsapp_verification ? "whatsapp" : "sms")
     }, [userDetails])
 
     useEffect(() => {
@@ -38,7 +39,8 @@ const AcceptModal = ({ isOpen, toggle, item }) => {
 
     const wallet = useMemo(() => userWallets?.find(item => item?._id === currentWallet), [currentWallet])
 
-    const sendOtp = async () => {
+    const sendOtp = async (method) => {
+        const resolvedType = typeof method === 'string' ? method : codeType
         setSaving(true)
         try {
             const data = {
@@ -49,7 +51,7 @@ const AcceptModal = ({ isOpen, toggle, item }) => {
                     purpose: "xyz",
                     payment_type: "payment_request",
                 },
-                type: codeType
+                type: resolvedType
             }
             const encrypted = encryptData(data)
             const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/send-otp`, {
@@ -60,6 +62,8 @@ const AcceptModal = ({ isOpen, toggle, item }) => {
 
             const dec = decryptData(res.data.data)
             // console.log(dec)
+            setOtpMethods(dec)
+            if (typeof method !== 'string') setCodeType(dec?.otp_sent_on || "sms")
             setShowOtp(true)
             setToken(dec?.token)
             await queryClient.invalidateQueries({ queryKey: ['receivedPaymentRequests', userDetails?._id] })
@@ -192,6 +196,8 @@ const AcceptModal = ({ isOpen, toggle, item }) => {
                                     processing={saving}
                                     authType={codeType}
                                     setAuthType={setCodeType}
+                                    resendHandler={sendOtp}
+                                    methods={otpMethods}
                                 />
                             </ModalBody>
                         </>

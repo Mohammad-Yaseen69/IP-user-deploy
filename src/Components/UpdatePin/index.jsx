@@ -142,7 +142,9 @@ const CreatePin = () => {
     }
 
     const sendOtp = async (e) => {
-        e && e.preventDefault()
+        if (e && typeof e.preventDefault === 'function') {
+            e.preventDefault()
+        }
         const pin = pinFields.data.join('');
         const confirmPin = confirmPinFields.data.join('');
 

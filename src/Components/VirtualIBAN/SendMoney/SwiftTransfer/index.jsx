@@ -816,7 +816,7 @@ const SwiftTransfer = forwardRef(({ isOpen = true, toggle, selectedIban, availab
     const liveBalance = syncedBalance?.balance ?? availableBalance ?? selectedIban?.balance ?? 0
     const currencyCode = selectedIban?.currency || "EUR"
     const sourceAvailableBalance = getSourceBalance(liveBalance, selectedIban)
-    const getDefaultAuthType = () => (userDetails?.tfa ? "authenticator" : "sms")
+    const getDefaultAuthType = () => (userDetails?.tfa ? "authenticator" : userDetails?.email_verification ? "email" : userDetails?.whatsapp_verification ? "whatsapp" : "sms")
 
     const [currentStep, setCurrentStep] = useState(STEPS.AMOUNT)
     const [amount, setAmount] = useState("")
@@ -832,6 +832,8 @@ const SwiftTransfer = forwardRef(({ isOpen = true, toggle, selectedIban, availab
     const [confirmedDetails, setConfirmedDetails] = useState(false)
     const [confirmedParentCompany, setConfirmedParentCompany] = useState(false)
     const [authType, setAuthType] = useState(getDefaultAuthType)
+    const [otpChannel, setOtpChannel] = useState(getDefaultAuthType)
+    const [otpMethods, setOtpMethods] = useState(null)
     const [feeDetails, setFeeDetails] = useState(null)
     const [quoteToken, setQuoteToken] = useState("")
     const [quoteExpiresAt, setQuoteExpiresAt] = useState(null)
@@ -845,8 +847,13 @@ const SwiftTransfer = forwardRef(({ isOpen = true, toggle, selectedIban, availab
     const payoutDirect = useVirtualIbanSwiftPayoutDirect()
 
     const { sendOtp, isSendingOtp } = useSendOtp({
-        onSuccess: (token) => {
+        onSuccess: (token, dec) => {
             setOtpToken(token)
+            setOtpMethods(dec)
+            if (currentStep !== STEPS.OTP && dec?.otp_sent_on) {
+                setAuthType(dec.otp_sent_on)
+                setOtpChannel(dec.otp_sent_on)
+            }
             setCurrentStep(STEPS.OTP)
         },
         onError: (err) => {
@@ -891,7 +898,9 @@ const SwiftTransfer = forwardRef(({ isOpen = true, toggle, selectedIban, availab
 
     useEffect(() => {
         if (userDetails?.tfa) setAuthType("authenticator")
-    }, [userDetails?.tfa])
+        else if (userDetails?.email_verification) setAuthType("email")
+        else if (userDetails?.whatsapp_verification) setAuthType("whatsapp")
+    }, [userDetails?.tfa, userDetails?.email_verification, userDetails?.whatsapp_verification])
 
     useEffect(() => {
         if (userDetails?._id) getUserBeneficiaries()
@@ -935,6 +944,8 @@ const SwiftTransfer = forwardRef(({ isOpen = true, toggle, selectedIban, availab
         setConfirmedDetails(false)
         setConfirmedParentCompany(false)
         setAuthType(getDefaultAuthType())
+        setOtpChannel(getDefaultAuthType())
+        setOtpMethods(null)
         setFeeDetails(null)
         setQuoteToken("")
         setQuoteExpiresAt(null)
@@ -990,10 +1001,11 @@ const SwiftTransfer = forwardRef(({ isOpen = true, toggle, selectedIban, availab
     }
 
     const handleSendOtp = async (otpCodeType) => {
-        const nextAuthType = otpCodeType || authType
-        setAuthType(nextAuthType)
+        const nextChannel = otpCodeType || otpChannel
+        setOtpChannel(nextChannel)
+        setAuthType(nextChannel)
 
-        await sendOtp(buildPayoutPayload(), nextAuthType)
+        await sendOtp(buildPayoutPayload(), nextChannel)
 
     }
 
@@ -1172,6 +1184,7 @@ const SwiftTransfer = forwardRef(({ isOpen = true, toggle, selectedIban, availab
                         resendHandler={handleSendOtp}
                         authType={authType}
                         setAuthType={setAuthType}
+                        methods={otpMethods}
                     />
                 )
             case STEPS.DONE:

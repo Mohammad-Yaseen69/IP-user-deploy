@@ -61,7 +61,7 @@ const Basic = ({ setCurrentTab }) => {
     const [loading, setLoading] = useState()
     const can = usePermission()
     useEffect(() => {
-        setCodeType("sms")
+        setCodeType("whatsapp")
     }, [userDetails])
     const isKycApproved = useMemo(() => userDetails?.user?.kyc_status === "approved" || userDetails?.user?.kyc_status === "verified" || userDetails?.kyc_status === "approved" || userDetails?.kyc_status === "verified", [userDetails])
     const isKybApproved = useMemo(() => userDetails?.company?.kyb_status === "approved" || userDetails?.kyb_status === "approved", [userDetails])
@@ -223,7 +223,12 @@ const Basic = ({ setCurrentTab }) => {
     }
 
     const [otpToken, setOtpToken] = useState("")
-    const sendOtp = async (type = "") => {
+    const [otpMethods, setOtpMethods] = useState(null)
+    const sendOtp = async (arg = "") => {
+        const isChannel = arg === "whatsapp" || arg === "sms"
+        const type = isChannel ? (otpType || (userDetails?.account_type === "individual" ? "email" : "phone")) : arg
+        const channel = isChannel ? arg : codeType
+
         setIsSaving(true)
         setOtpType(type === "email" ? "email" : "phone")
 
@@ -237,7 +242,8 @@ const Basic = ({ setCurrentTab }) => {
             const body = {
                 [type]: type === "email" ? email : phone,
                 account_id: userDetails?._id,
-                authenticator: codeType === "authenticator"
+                authenticator: codeType === "authenticator",
+                ...(type === "phone" ? { type: channel === "sms" ? "sms" : "whatsapp" } : {})
             }
             // console.log(body)
             const encrypted = encryptData(body)
@@ -251,6 +257,8 @@ const Basic = ({ setCurrentTab }) => {
             const data = decryptData(res.data.data)
             // console.log(data)
             setOtpToken(data?.token)
+            setOtpMethods(data?.availableMethods)
+            if (!showOtp) setCodeType(data?.availableMethods?.whatsapp ? "whatsapp" : "sms")
             setShowOtp(true)
         } catch (err) {
             const error = decryptData(err.response.data.data)
@@ -577,8 +585,8 @@ const Basic = ({ setCurrentTab }) => {
                             resendHandler={sendOtp}
                             authType={codeType}
                             setAuthType={setCodeType}
-                            showAuthToggle={false}
-                            hideTfaSwitch={true}
+                            methods={otpMethods}
+                            hideTfaSwitch={!otpMethods}
                             otpTypeOnProfile={otpType}
                             inBasic={true}
                         />

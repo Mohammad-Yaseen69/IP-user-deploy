@@ -16,7 +16,7 @@ import { UserContext } from "../../../Context/UserContext";
 import StepTwo from "../WalletToWalletFlow/StepTwo";
 import axios from "axios";
 import { decryptData } from "../../../Helper/EssentilaMethods/Decryption";
-import { LimitsErrorMessage } from "../OTPConfirmation";
+import { LimitsErrorMessage } from "../../../utils/Functions/paymentLimits";
 import StepThree from "../InternationalFlow/StepThree";
 import StepFour from "../InternationalFlow/StepFour";
 import WalletsComponent from "../InternationalFlow/WalletsComponent";
@@ -136,6 +136,10 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
     useEffect(() => {
         if (userDetails?.tfa) {
             dataHandler("codeType", "authenticator")
+        } else if (userDetails?.email_verification) {
+            dataHandler("codeType", "email")
+        } else if (userDetails?.whatsapp_verification) {
+            dataHandler("codeType", "whatsapp")
         }
     }, [userDetails])
 
@@ -254,6 +258,12 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
             })
 
             const dec = decryptData(res.data.data)
+            if (dec?.otp_sent_on || dec?.available_methods) {
+                dataHandler("otpMethods", dec)
+                if (!data.showOtpModal) {
+                    dataHandler("codeType", dec?.otp_sent_on || "sms")
+                }
+            }
             if (!dec?.skipOtp) {
                 dataHandler("showOtpModal", true)
             }
@@ -1078,6 +1088,7 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
                                                                         dataHandler("showOtpModal", false)
                                                                     }}
                                                                     resendHandler={sendOtp}
+                                                                    methods={data.otpMethods}
                                                                     resetIdempotency={reset}
                                                                 />
                                                             }
@@ -1341,6 +1352,7 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
                                                                                     dataHandler("showOtpModal", false)
                                                                                 }}
                                                                                 resendHandler={sendOtp}
+                                                                                methods={data.otpMethods}
                                                                                 error={data.otpError}
                                                                                 resetIdempotency={reset}
 

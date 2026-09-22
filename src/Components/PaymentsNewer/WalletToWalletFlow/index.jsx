@@ -34,7 +34,7 @@ import { currencies } from "../InternationalFlow/StepOne";
 import StepThree from "../InternationalFlow/StepThree";
 import styles from "../InternationalFlow/styles/index.module.css";
 import WalletsComponent from "../InternationalFlow/WalletsComponent";
-import { LimitsErrorMessage } from "../OTPConfirmation";
+import { LimitsErrorMessage } from "../../../utils/Functions/paymentLimits";
 import Recursive from "../RecursivePayment";
 import SchedulePayment from "../SchedulePayment";
 import PaymentType from "./PaymentType";
@@ -176,7 +176,7 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, show
     useEffect(() => {
         if (!userDetails) return
 
-        dataHandler("codeType", userDetails.tfa ? "authenticator" : "sms")
+        dataHandler("codeType", userDetails.tfa ? "authenticator" : userDetails.email_verification ? "email" : userDetails.whatsapp_verification ? "whatsapp" : "sms")
         dataHandler("timezone", userDetails.timezone)
     }, [userDetails])
 
@@ -373,8 +373,7 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, show
         reset()
         dataHandler("loading", true)
         try {
-            const resolvedCodeType = codeType || (userDetails?.tfa ? "authenticator" : data.codeType)
-            dataHandler("codeType", resolvedCodeType)
+            const resolvedCodeType = codeType || data.codeType
             const payload = generatePayload(resolvedCodeType)
             const encrypted = encryptData(payload)
             const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/send-otp`, {
@@ -384,6 +383,16 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, show
             })
 
             const dec = decryptData(res.data.data)
+            // console.log(dec?.otp_sent_on, "dec?.otp_sent_on ")
+            if (dec?.otp_sent_on || dec?.available_methods) {
+                dataHandler("otpMethods", dec)
+                if (!data.showOtpModal) {
+                    dataHandler(
+                        "codeType",
+                        data.codeType || "sms"
+                    )
+                }
+            }
             dataHandler("showOtpModal", true)
             dataHandler("otp_token", dec?.token)
         } catch (error) {
@@ -1490,6 +1499,7 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, show
                                                                     dataHandler("showOtpModal", false)
                                                                 }}
                                                                 resendHandler={sendOtp}
+                                                                methods={data.otpMethods}
                                                                 error={data.otpError}
                                                                 resetIdempotency={reset}
                                                             />
@@ -1751,6 +1761,7 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, show
                                                                                         dataHandler("showOtpModal", false)
                                                                                     }}
                                                                                     resendHandler={sendOtp}
+                                                                                    methods={data.otpMethods}
                                                                                     error={data.otpError}
                                                                                     resetIdempotency={reset}
                                                                                 />

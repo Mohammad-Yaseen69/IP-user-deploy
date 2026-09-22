@@ -37,6 +37,7 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay,
   const [token, setToken] = useState(null)
   const [showOtpModal, setshowOtpModal] = useState(false)
   const [codeType, setCodeType] = useState("sms")
+  const [otpMethods, setOtpMethods] = useState(null)
   const [saveCard, setSaveCard] = useState(false)
   const [cards, setCards] = useState([])
   const [selectedSaveCard, setSelectedSaveCard] = useState({})
@@ -65,6 +66,7 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay,
     setToken(null);
     setshowOtpModal(false);
     setCodeType("sms");
+    setOtpMethods(null);
     setSaveCard(false);
     setSelectedSaveCard({});
     setCardTransactionDetails({});
@@ -135,13 +137,16 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay,
 
   console.log(googlePay, applePay)
 
-  const sendOtp = async (e) => {
-    
+  const sendOtp = async (methodId) => {
+    if (methodId && typeof methodId.preventDefault === 'function') {
+      methodId.preventDefault()
+    }
+    const otpMethod = typeof methodId === 'string' ? methodId : codeType
+
     if (paymentType !== "wallet") {
       if (!feeDetails.token) return false
     }
 
-    e && e.preventDefault()
     setLoading(true)
     try {
       const twoYearsAhead = new Date();
@@ -159,7 +164,7 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay,
           apple_pay: false,
           google_pay: false
         },
-        type: codeType
+        type: otpMethod
       }
 
       if (applePay === true || googlePay === true) {
@@ -194,7 +199,7 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay,
           google_pay: false
 
         },
-        type: codeType
+        type: otpMethod
       }
 
       if (paymentType === "paypal") {
@@ -221,6 +226,10 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay,
       })
 
       const dec = decryptData(res.data.data)
+      setOtpMethods(dec)
+      if (!showOtpModal) {
+        setCodeType(dec?.otp_sent_on || "sms")
+      }
       setToken(dec?.token)
       setshowOtpModal(true)
     } catch (error) {
@@ -312,6 +321,10 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay,
 
     if (userDetails?.tfa) {
       setCodeType("authenticator")
+    } else if (userDetails?.email_verification) {
+      setCodeType("email")
+    } else if (userDetails?.whatsapp_verification) {
+      setCodeType("whatsapp")
     } else {
       setCodeType("sms")
     }
@@ -644,6 +657,7 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay,
             resendHandler={sendOtp}
             authType={codeType}
             setAuthType={setCodeType}
+            methods={otpMethods}
             showAuthToggle={true}
           />
         </ModalBody>

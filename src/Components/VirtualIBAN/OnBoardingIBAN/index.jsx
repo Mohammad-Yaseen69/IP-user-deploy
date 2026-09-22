@@ -93,6 +93,7 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
     const [showOtpModal, setShowOtpModal] = useState(false)
     const [otpToken, setOtpToken] = useState('')
     const [codeType, setCodeType] = useState('sms')
+    const [otpMethods, setOtpMethods] = useState(null)
     const [loadingStatus, setLoadingStatus] = useState(true)
 
     const checkRequestStatus = async () => {
@@ -147,8 +148,9 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
     }, [state.step]);
 
     const { sendOtp } = useSendOtp({
-        onSuccess: (token) => {
+        onSuccess: (token, dec) => {
             setOtpToken(token)
+            setOtpMethods(dec)
             setShowOtpModal(true)
         },
         onError: (err) => {
@@ -220,7 +222,7 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
             return
         }
 
-        const selectedType = userDetails?.tfa ? 'authenticator' : 'sms'
+        const selectedType = userDetails?.tfa ? 'authenticator' : userDetails?.email_verification ? 'email' : userDetails?.whatsapp_verification ? 'whatsapp' : 'sms'
         setCodeType(selectedType)
 
         const payload = {
@@ -534,10 +536,15 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
                         variant="card"
                         authType={codeType}
                         setAuthType={setCodeType}
+                        methods={otpMethods}
                         callback={handleVerifyOtpSubmit}
                         hideOtp={() => setShowOtpModal(false)}
                         setter={() => { }}
-                        resendHandler={() => sendOtp({ wallet_id: state.selectedWallet?._id }, codeType)}
+                        resendHandler={(method) => {
+                            const nextCodeType = method || codeType
+                            if (method) setCodeType(method)
+                            return sendOtp({ wallet_id: state.selectedWallet?._id }, nextCodeType)
+                        }}
                     />
                 </ModalBody>
             </Modal>

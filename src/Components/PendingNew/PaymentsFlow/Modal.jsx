@@ -17,7 +17,7 @@ import { encryptData } from '../../../Helper/EssentilaMethods/Encryption'
 import axios from 'axios'
 import { decryptData } from '../../../Helper/EssentilaMethods/Decryption'
 import { toast } from 'react-toastify'
-import { LimitsErrorMessage } from '../../PaymentsNewer/OTPConfirmation'
+import { LimitsErrorMessage } from '../../../utils/Functions/paymentLimits'
 import recent from "../../PaymentsNewer/Mobile/files/recent.svg"
 import int_styles from "../../PaymentsNewer/Mobile/styles/International.module.css"
 
@@ -125,6 +125,8 @@ const PaymentsFlowModal = ({ isOpen, toggle, data, dataHandler, item }) => {
 
             const dec = decryptData(res.data.data)
             // console.log(dec)
+            dataHandler("otpMethods", dec)
+            if (!codeType) dataHandler("codeType", dec?.otp_sent_on || "sms")
             dataHandler("show_otp", true)
             dataHandler("payment_token", dec?.token)
         } catch (error) {
@@ -620,6 +622,7 @@ const PaymentsFlowModal = ({ isOpen, toggle, data, dataHandler, item }) => {
                                                         dataHandler("show_otp", false)
                                                     }}
                                                     resendHandler={sendOtp}
+                                                    methods={data.otpMethods}
                                                     error={data.otp_error}
                                                     resetIdempotency={reset}
 
@@ -798,6 +801,7 @@ const PaymentsFlowModal = ({ isOpen, toggle, data, dataHandler, item }) => {
                                                             dataHandler("show_otp", false)
                                                         }}
                                                         resendHandler={sendOtp}
+                                                        methods={data.otpMethods}
                                                         error={data.otp_error}
                                                         resetIdempotency={reset}
                                                     />
