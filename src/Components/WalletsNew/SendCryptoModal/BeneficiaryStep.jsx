@@ -27,6 +27,7 @@ const BeneficiaryStep = ({
     protocolOptions = [],
     protocol,
     setProtocol,
+    isProtocolLocked = false,
     addressStatus,
     cryptoCurrency,
     errorMessage,
@@ -157,7 +158,17 @@ const BeneficiaryStep = ({
                             )}
                             {addressStatus === "invalid" && (
                                 <span className={styles.addressBad}>
-                                    {t("This address is not valid for the selected network.")}
+                                    {isProtocolLocked
+                                        ? t("This address is not valid on the network saved for this beneficiary.")
+                                        : t("This address is not valid for the selected network.")}
+                                    {onEditBeneficiary && (
+                                        <>
+                                            {" "}
+                                            <button type="button" className={styles.linkBtn} onClick={onEditBeneficiary}>
+                                                {t("Edit beneficiary")}
+                                            </button>
+                                        </>
+                                    )}
                                 </span>
                             )}
                             {!addressStatus && <span>{t("Taken from the saved beneficiary wallet.")}</span>}
@@ -170,9 +181,19 @@ const BeneficiaryStep = ({
                 <div className={styles.section}>
                     <div className={styles.sectionLabel}>
                         <span>{t("Network")}</span>
-                        <span className={styles.sectionHint}>{t("Must match what the recipient supports")}</span>
+                        <span className={styles.sectionHint}>
+                            {isProtocolLocked
+                                ? t("Saved with this beneficiary")
+                                : t("Must match what the recipient supports")}
+                        </span>
                     </div>
-                    {protocolOptions.length > 0 ? (
+                    {isProtocolLocked && protocol ? (
+                        <div className={styles.protocolGrid}>
+                            <span className={`${styles.protocolChip} ${styles.protocolChipActive}`}>
+                                {getProtocolLabel(protocol)}
+                            </span>
+                        </div>
+                    ) : protocolOptions.length > 0 ? (
                         <div className={styles.protocolGrid}>
                             {protocolOptions.map((option) => (
                                 <button

@@ -1,4 +1,5 @@
 import { gendersData, idTypeData, occupations } from '../../../../utils/Data';
+import { CRYPTO_PAYOUT_ASSETS, getAssetProtocolOptions } from '../../../WalletsNew/SendCryptoModal/cryptoProtocols';
 
 const toOptions = (record) =>
     Object.keys(record).map((value) => ({ value, label: record[value] }));
@@ -13,6 +14,7 @@ export const THUNES_ENTITY_FIELDS = {
     lastname2: { label: 'Second last name', type: 'text' },
     middlename: { label: 'Middle name', type: 'text' },
     nativename: { label: 'Name in local script', type: 'text' },
+    company_name: { label: 'Company name', type: 'text', placeholder: 'Nour Trading LLC' },
     nationality_country_iso_code: { label: 'Nationality', type: 'country' },
     code: { label: 'Recipient code', type: 'text' },
     date_of_birth: { label: 'Date of birth', type: 'date', disableFuture: true },
@@ -20,9 +22,9 @@ export const THUNES_ENTITY_FIELDS = {
     gender: { label: 'Gender', type: 'select', options: GENDER_OPTIONS },
     address: { label: 'Address', type: 'text', placeholder: '3 Norfolk Road' },
     postal_code: { label: 'Postal code', type: 'text' },
-    city: { label: 'City', type: 'text' },
+    city: { label: 'City', type: 'city' },
     country_iso_code: { label: 'Country', type: 'country' },
-    province_state: { label: 'Province or state', type: 'text' },
+    province_state: { label: 'Province or state', type: 'state' },
     msisdn: { label: 'Mobile number', type: 'tel', placeholder: '+234 801 234 5678' },
     email: { label: 'Email address', type: 'email', placeholder: 'name@example.com' },
     id_type: { label: 'ID type', type: 'select', options: ID_TYPE_OPTIONS },
@@ -91,20 +93,23 @@ export const BVNK_FIELD_DEFS = {
     bankPostal: { label: 'Bank postal code', type: 'text' },
 
     beneficiaryAddress: { label: 'Address', type: 'text' },
-    beneficiaryCity: { label: 'City', type: 'text' },
+    beneficiaryCity: { label: 'City', type: 'city' },
     beneficiaryPostal: { label: 'Postal code', type: 'text' },
     beneficiaryCountry: { label: 'Country', type: 'country' },
 
-    crypto_asset: { label: 'Asset', type: 'select', required: true, options: [
-        { value: 'USDC', label: 'USDC' },
-        { value: 'USDT', label: 'USDT' },
-    ] },
-    crypto_network: { label: 'Network', type: 'select', required: true, options: [
-        { value: 'ethereum', label: 'Ethereum (ERC-20)' },
-        { value: 'tron', label: 'Tron (TRC-20)' },
-        { value: 'polygon', label: 'Polygon' },
-        { value: 'solana', label: 'Solana' },
-    ] },
+    crypto_asset: {
+        label: 'Asset',
+        type: 'select',
+        required: true,
+        options: CRYPTO_PAYOUT_ASSETS.map((asset) => ({ value: asset, label: asset })),
+    },
+    crypto_network: {
+        label: 'Network',
+        type: 'select',
+        required: true,
+        options: getAssetProtocolOptions('USDT'),
+        hint: 'The payout always uses this network, so it must be one the recipient supports.',
+    },
     wallet_address: {
         label: 'Wallet address',
         type: 'text',
@@ -178,11 +183,21 @@ export const getEditRequirements = (recipientType) => {
     };
 };
 
-export const getBvnkRequirements = (method, recipientType) => {
+export const getBvnkRequirements = (method, recipientType, channel = {}) => {
     const rail = BVNK_RAILS[method];
     if (!rail) return null;
 
     const entity = BVNK_ENTITY_FIELDS[recipientType === 'business' ? 'business' : 'individual'];
+
+    const defs = method === 'crypto_wallet'
+        ? {
+            ...BVNK_FIELD_DEFS,
+            crypto_network: {
+                ...BVNK_FIELD_DEFS.crypto_network,
+                options: getAssetProtocolOptions(channel?.crypto_asset),
+            },
+        }
+        : BVNK_FIELD_DEFS;
 
     return {
         vendor: 'bvnk',
@@ -190,7 +205,7 @@ export const getBvnkRequirements = (method, recipientType) => {
         channelFields: rail.channel,
         requiredBeneficiary: entity,
         requiredChannel: rail.requiredChannel,
-        defs: BVNK_FIELD_DEFS,
+        defs,
     };
 };
 
@@ -210,11 +225,24 @@ export const flattenFieldSets = (setsOrNames) => {
     return [...names];
 };
 
-export const getThunesRequirements = (fields) => {
+/* Asked on every recipient, whatever the provider says it needs. */
+export const ALWAYS_ASKED_FIELDS = {
+    individual: ['firstname', 'lastname'],
+    business: ['company_name'],
+};
+
+export const getThunesRequirements = (fields, recipientType) => {
     if (!fields) return null;
 
-    const beneficiaryFields = flattenFieldSets(fields.required_receiving_entity_fields)
+    const alwaysAsked = ALWAYS_ASKED_FIELDS[recipientType === 'business' ? 'business' : 'individual'];
+
+    const providerFields = flattenFieldSets(fields.required_receiving_entity_fields)
         .filter((name) => THUNES_ENTITY_FIELDS[name]);
+
+    const beneficiaryFields = [
+        ...alwaysAsked,
+        ...providerFields.filter((name) => !alwaysAsked.includes(name)),
+    ];
 
     const channelFields = flattenFieldSets(fields.credit_party_identifiers_accepted)
         .filter((name) => THUNES_IDENTIFIER_FIELDS[name]);

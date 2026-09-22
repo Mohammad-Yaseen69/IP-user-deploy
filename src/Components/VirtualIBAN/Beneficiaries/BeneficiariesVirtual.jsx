@@ -11,6 +11,7 @@ import AddBeneficiaryFlowV2 from './AddBeneficiaryFlowV2';
 import { useNavigate } from 'react-router';
 import { useQuery } from '@tanstack/react-query';
 import { apiWrapper } from '../../../utils/Functions/apiWrapper';
+import { handlePaymentApiError } from '../../../utils/Functions/handlePaymentApiError';
 import { UserContext } from '../../../Context/UserContext';
 import { toast } from 'react-toastify';
 
@@ -78,8 +79,12 @@ const BeneficiariesVirtual = () => {
             toast.success(t("Channel removed successfully"));
             refetch();
         } catch (err) {
-            console.error("Delete channel error:", err);
-            toast.error(t("Failed to remove channel"));
+            handlePaymentApiError({
+                error: err,
+                navigate,
+                fallback: t("Failed to remove channel"),
+                setError: (message) => toast.error(message),
+            });
         }
     };
 

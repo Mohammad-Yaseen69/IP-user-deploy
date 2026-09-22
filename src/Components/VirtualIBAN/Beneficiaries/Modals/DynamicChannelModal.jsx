@@ -10,11 +10,15 @@ import { toast } from 'react-toastify';
 import PhoneInput from '../../../PhoneInput';
 import CountryDropDown from '../../../AddBeneficiary/CountryDropDown';
 import { isValidBic, ISO3_REGEX } from '../../utils/swiftValidation';
+import { handlePaymentApiError } from '../../../../utils/Functions/handlePaymentApiError';
+import { useNavigate } from 'react-router';
 
 const DynamicChannelModal = ({ open, handleClose, beneficiaryData, onSaveSuccess, lockChannelType = null, errorOnInvalid = true, error = false }) => {
     const isErrorMode = typeof errorOnInvalid === 'boolean' ? errorOnInvalid : typeof error === 'boolean' ? error : false;
     const { t } = useTranslation();
     const isMobile = useMediaQuery('(max-width: 600px)');
+
+    const navigate = useNavigate();
 
     const [channelType, setChannelType] = useState(lockChannelType || 'bank');
     const [submitting, setSubmitting] = useState(false);
@@ -237,9 +241,12 @@ const DynamicChannelModal = ({ open, handleClose, beneficiaryData, onSaveSuccess
             if (onSaveSuccess) onSaveSuccess(res?.data || res, channelPayload);
             handleClose();
         } catch (err) {
-            console.error("Add channel error:", err);
-            const msg = err?.response?.data?.message || err?.message || t("Failed to add payout channel");
-            toast.error(msg);
+            handlePaymentApiError({
+                error: err,
+                navigate,
+                fallback: t("Failed to add payout channel"),
+                setError: (message) => toast.error(message),
+            });
         } finally {
             setSubmitting(false);
         }

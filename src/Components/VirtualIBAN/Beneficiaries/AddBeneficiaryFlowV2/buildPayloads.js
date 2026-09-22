@@ -6,6 +6,7 @@ const BENEFICIARY_COLUMN_MAP = {
     lastname: 'last_name',
     lastName: 'last_name',
     legalName: 'company_name',
+    company_name: 'company_name',
     email: 'email',
     msisdn: 'phone',
     city: 'city',
@@ -31,6 +32,7 @@ export const prefillBeneficiaryBag = (beneficiary) => {
     seed('lastname', beneficiary.last_name);
     seed('lastName', beneficiary.last_name);
     seed('legalName', beneficiary.company_name);
+    seed('company_name', beneficiary.company_name);
     seed('email', beneficiary.email);
     seed('msisdn', beneficiary.phone);
     seed('city', beneficiary.city);
@@ -51,7 +53,7 @@ export const prefillBeneficiaryBag = (beneficiary) => {
 const EXTRAS_ALIASES = {
     firstname: ['firstname', 'firstName'],
     lastname: ['lastname', 'lastName'],
-    legalName: ['legalName'],
+    legalName: ['legalName', 'company_name'],
     email: ['email'],
     msisdn: ['msisdn'],
     address: ['address', 'beneficiaryAddress'],
@@ -62,6 +64,20 @@ const EXTRAS_ALIASES = {
 
 const firstValue = (...values) => values.find((value) => clean(value)) || '';
 
+/* Providers read the same detail under different keys: Thunes wants firstname, BVNK wants
+   firstName. Whichever form filled it, every alias carries the value. */
+const mirrorExtrasAliases = (extras) => {
+    const mirrored = { ...extras };
+
+    Object.values(EXTRAS_ALIASES).forEach((aliases) => {
+        const value = aliases.map((alias) => clean(mirrored[alias])).find(Boolean);
+        if (!value) return;
+        aliases.forEach((alias) => { mirrored[alias] = value; });
+    });
+
+    return mirrored;
+};
+
 export const prefillEditBag = (beneficiary) => {
     if (!beneficiary) return {};
 
@@ -70,7 +86,7 @@ export const prefillEditBag = (beneficiary) => {
     const bag = {
         firstname: firstValue(beneficiary.first_name, extras.firstname, extras.firstName),
         lastname: firstValue(beneficiary.last_name, extras.lastname, extras.lastName),
-        legalName: firstValue(beneficiary.company_name, extras.legalName),
+        legalName: firstValue(beneficiary.company_name, extras.legalName, extras.company_name),
         email: firstValue(beneficiary.email, extras.email),
         msisdn: firstValue(beneficiary.phone, extras.msisdn),
         address: firstValue(beneficiary.address, extras.address, extras.beneficiaryAddress),
@@ -144,7 +160,7 @@ export const buildBeneficiaryPayload = ({ form, countries }) => {
     }
 
     payload.extras = {
-        ...extras,
+        ...mirrorExtrasAliases(extras),
         vendor: form.vendor,
     };
 

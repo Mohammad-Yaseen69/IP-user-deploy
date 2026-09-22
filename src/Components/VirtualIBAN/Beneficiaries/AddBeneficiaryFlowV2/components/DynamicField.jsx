@@ -1,8 +1,11 @@
 import { DatePicker } from '@material-ui/pickers';
 import { FieldLabel, Hint, SelectField, TextField } from './index';
 import CountryDropDown from '../../../../AddBeneficiary/CountryDropDown';
+import CitiesDropDown from '../../../../CitiesDropDown';
 import styles from '../AddBeneficiaryFlowV2.module.css';
 import { getFieldDef } from '../vendorFields';
+
+const STATE_NAME_FIELD = 'state_name';
 
 const sanitise = (value, def) => {
     let next = value;
@@ -41,12 +44,58 @@ const FieldShell = ({ id, label, error, hint, flex, children }) => (
     </div>
 );
 
-const DynamicField = ({ name, defs, value, onChange, error, flex = true, disabled = false }) => {
+const DynamicField = ({
+    name,
+    defs,
+    value,
+    onChange,
+    error,
+    flex = true,
+    disabled = false,
+    values = {},
+    countryIso3 = '',
+    stateData = [],
+    hasStateField = false,
+}) => {
     const def = getFieldDef(name, defs);
 
     const id = `abf-${name}`;
     const required = def.required !== false;
     const label = required ? `${def.label} *` : def.label;
+
+    if (def.type === 'state') {
+        return (
+            <FieldShell id={id} label={label} error={error} hint={def.hint} flex={flex}>
+                <CitiesDropDown
+                    isState
+                    stateData={stateData}
+                    iso_3={countryIso3}
+                    disabled={disabled || !countryIso3}
+                    title="Select state"
+                    userCity={values[STATE_NAME_FIELD] || value || ''}
+                    setUserCity={(stateName, stateCode) =>
+                        onChange(stateCode || stateName || '', { [STATE_NAME_FIELD]: stateName || '' })
+                    }
+                />
+            </FieldShell>
+        );
+    }
+
+    if (def.type === 'city') {
+        return (
+            <FieldShell id={id} label={label} error={error} hint={def.hint} flex={flex}>
+                <CitiesDropDown
+                    iso_3={countryIso3}
+                    stateCode={values.province_state || ''}
+                    requireState={hasStateField}
+                    disabled={disabled || !countryIso3}
+                    title="Select city"
+                    userCity={value || ''}
+                    setUserCity={(city) => onChange(city || '')}
+                />
+            </FieldShell>
+        );
+    }
 
     if (def.type === 'date') {
         return (
