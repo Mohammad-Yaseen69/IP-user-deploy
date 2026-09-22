@@ -8,10 +8,19 @@ import {
     SectionTitle,
 } from '../components';
 import DynamicField from '../components/DynamicField';
+import { getFieldDef } from '../vendorFields';
+import { useCountryStates } from '../useCountryStates';
 import { METHOD_AVATAR_ICON, METHOD_CONTEXT_LABEL } from '../constants';
 import { UserContext } from '../../../../../Context/UserContext';
 
-const FieldGrid = ({ names, defs, values, onChange, errors, disabled }) => {
+const ADDRESS_CHECK_COLORS = {
+    checking: 'var(--abf-text-secondary)',
+    valid: '#067647',
+    invalid: '#b42318',
+};
+
+const FieldGrid = ({ names, defs, values, onChange, errors, disabled, lockedFields = [], countryIso3, stateData }) => {
+    const hasStateField = names.some((name) => getFieldDef(name, defs).type === 'state');
     const rows = [];
     for (let index = 0; index < names.length; index += 2) {
         rows.push(names.slice(index, index + 2));
@@ -27,9 +36,13 @@ const FieldGrid = ({ names, defs, values, onChange, errors, disabled }) => {
                             name={name}
                             defs={defs}
                             value={values[name]}
-                            onChange={(value) => onChange(name, value)}
+                            values={values}
+                            countryIso3={countryIso3}
+                            stateData={stateData}
+                            hasStateField={hasStateField}
+                            onChange={(value, patch) => onChange(name, value, patch)}
                             error={errors[name]}
-                            disabled={disabled}
+                            disabled={disabled || lockedFields.includes(name)}
                         />
                     ))}
                 </FieldRow>
@@ -47,9 +60,12 @@ const StepDetails = ({
     providerError,
     recipientName,
     onChangeMethod,
+    addressCheck = null,
+    lockedFields = [],
     disabled = false,
 }) => {
     const { allowedCountries } = useContext(UserContext);
+    const { data: stateData = [] } = useCountryStates(form.country);
 
     const countryLabel = useMemo(
         () =>
@@ -91,6 +107,9 @@ const StepDetails = ({
                                 onChange={setBeneficiaryField}
                                 errors={errors.beneficiary || {}}
                                 disabled={disabled}
+                                lockedFields={lockedFields}
+                                countryIso3={form.country}
+                                stateData={stateData}
                             />
                         </Section>
                     )}
@@ -108,7 +127,22 @@ const StepDetails = ({
                                 onChange={setChannelField}
                                 errors={errors.channel || {}}
                                 disabled={disabled}
+                                lockedFields={lockedFields}
+                                countryIso3={form.country}
+                                stateData={stateData}
                             />
+                            {addressCheck && (
+                                <p
+                                    style={{
+                                        margin: '2px 0 0',
+                                        fontSize: '12px',
+                                        fontWeight: 600,
+                                        color: ADDRESS_CHECK_COLORS[addressCheck.state] || 'var(--abf-text-secondary)',
+                                    }}
+                                >
+                                    {addressCheck.message}
+                                </p>
+                            )}
                         </Section>
                     )}
 

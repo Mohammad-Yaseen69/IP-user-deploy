@@ -3,6 +3,7 @@ import { Modal } from '@mui/material';
 import DateMomentUtils from '@date-io/moment';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import { ArrowLeft, X } from 'react-feather';
+import { useNavigate } from 'react-router';
 import { toast } from 'react-toastify';
 import styles from './AddBeneficiaryFlowV2.module.css';
 import { Stepper } from './components';
@@ -22,6 +23,10 @@ import { useRequiredFields, useRequirements } from './useVendorRequirements';
 import { getEditRequirements } from './vendorFields';
 import { apiWrapper } from '../../../../utils/Functions/apiWrapper';
 import { UserContext } from '../../../../Context/UserContext';
+import { handlePaymentApiError } from '../../../../utils/Functions/handlePaymentApiError';
+import { useValidateCryptoAddress } from '../../../../hooks/Payments/useCryptoPayout';
+import { useDebounce } from '../../../../hooks/useDebounce/useDebounce';
+import { getProtocolLabel } from '../../../WalletsNew/SendCryptoModal/cryptoProtocols';
 
 const STAGE_LABELS = {
     recipient: 'Recipient',
@@ -36,6 +41,8 @@ const MODE_STAGES = {
     edit: ['recipient', 'details', 'confirm'],
     view: ['details'],
 };
+
+const LOCKED_COUNTRY_FIELDS = ['country_iso_code', 'beneficiaryCountry'];
 
 const MODE_TITLES = {
     create: 'Add beneficiary',
@@ -57,13 +64,67 @@ const AddBeneficiaryFlowV2 = ({
     const isViewMode = mode === 'view';
     const isBeneficiaryMode = isEditMode || isViewMode;
     const stages = MODE_STAGES[mode] || MODE_STAGES.create;
-    const { allowedCountries } = useContext(UserContext);
+    const { allowedCountries, setProfileLockTime } = useContext(UserContext);
+    const navigate = useNavigate();
 
     const [stage, setStage] = useState(stages[0]);
     const [form, setForm] = useState(INITIAL_FORM);
     const [errors, setErrors] = useState({});
     const [providerError, setProviderError] = useState(null);
     const [saving, setSaving] = useState(false);
+    const [addressStatus, setAddressStatus] = useState('');
+
+    const validateAddress = useValidateCryptoAddress();
+
+    const isCryptoChannel = form.method === 'crypto_wallet';
+    const cryptoAsset = form.channel?.crypto_asset || '';
+    const cryptoNetwork = form.channel?.crypto_network || '';
+    const walletAddress = String(form.channel?.wallet_address || '').trim();
+
+    const debouncedAddress = useDebounce(walletAddress, 500);
+
+    useEffect(() => {
+        let cancelled = false;
+
+        if (!isCryptoChannel || !debouncedAddress || !cryptoNetwork || !cryptoAsset) {
+            setAddressStatus('');
+            return undefined;
+        }
+
+        setAddressStatus('checking');
+        validateAddress
+            .mutateAsync({
+                crypto_currency: cryptoAsset,
+                protocol: cryptoNetwork,
+                address: debouncedAddress,
+            })
+            .then((res) => {
+                if (cancelled) return;
+                const valid = res?.data?.valid ?? res?.valid;
+                setAddressStatus(valid ? 'valid' : 'invalid');
+            })
+            .catch(() => {
+                if (!cancelled) setAddressStatus('');
+            });
+
+        return () => {
+            cancelled = true;
+        };
+    }, [isCryptoChannel, debouncedAddress, cryptoNetwork, cryptoAsset]);
+
+    const addressCheck = useMemo(() => {
+        if (!isCryptoChannel || !walletAddress) return null;
+        if (walletAddress !== debouncedAddress || addressStatus === 'checking') {
+            return { state: 'checking', message: 'Checking address...' };
+        }
+        if (addressStatus === 'valid') {
+            return { state: 'valid', message: `Valid for ${getProtocolLabel(cryptoNetwork)}` };
+        }
+        if (addressStatus === 'invalid') {
+            return { state: 'invalid', message: 'This address is not valid on the selected network.' };
+        }
+        return null;
+    }, [isCryptoChannel, walletAddress, debouncedAddress, addressStatus, cryptoNetwork]);
 
     useEffect(() => {
         if (!open) return;
@@ -103,6 +164,7 @@ const AddBeneficiaryFlowV2 = ({
         vendor: form.vendor,
         fields,
         recipientType: form.recipient_type,
+        channel: form.channel,
     });
 
     const requirements = useMemo(
@@ -110,14 +172,31 @@ const AddBeneficiaryFlowV2 = ({
         [isBeneficiaryMode, form.recipient_type, vendorRequirements],
     );
 
+    /* The recipient's country was answered on step 1, so it is shown but never re-asked. */
+    const lockedFields = useMemo(() => (
+        (requirements?.beneficiaryFields || []).filter((name) => LOCKED_COUNTRY_FIELDS.includes(name))
+    ), [requirements]);
+
+    useEffect(() => {
+        if (!form.country || !lockedFields.length) return;
+
+        const stale = lockedFields.filter((name) => form.beneficiary[name] !== form.country);
+        if (!stale.length) return;
+
+        setForm((prev) => ({
+            ...prev,
+            beneficiary: stale.reduce((bag, name) => ({ ...bag, [name]: prev.country }), prev.beneficiary),
+        }));
+    }, [form.country, form.beneficiary, lockedFields]);
+
     const setField = useCallback((field, value) => {
         setForm((prev) => ({ ...prev, [field]: value }));
         setErrors((prev) => (prev[field] ? { ...prev, [field]: undefined } : prev));
         setProviderError(null);
     }, []);
 
-    const setBeneficiaryField = useCallback((name, value) => {
-        setForm((prev) => ({ ...prev, beneficiary: { ...prev.beneficiary, [name]: value } }));
+    const setBeneficiaryField = useCallback((name, value, patch = {}) => {
+        setForm((prev) => ({ ...prev, beneficiary: { ...prev.beneficiary, ...patch, [name]: value } }));
         setErrors((prev) =>
             prev.beneficiary?.[name]
                 ? { ...prev, beneficiary: { ...prev.beneficiary, [name]: undefined } }
@@ -125,8 +204,8 @@ const AddBeneficiaryFlowV2 = ({
         );
     }, []);
 
-    const setChannelField = useCallback((name, value) => {
-        setForm((prev) => ({ ...prev, channel: { ...prev.channel, [name]: value } }));
+    const setChannelField = useCallback((name, value, patch = {}) => {
+        setForm((prev) => ({ ...prev, channel: { ...prev.channel, ...patch, [name]: value } }));
         setErrors((prev) =>
             prev.channel?.[name]
                 ? { ...prev, channel: { ...prev.channel, [name]: undefined } }
@@ -197,6 +276,10 @@ const AddBeneficiaryFlowV2 = ({
                     next.channel[name] = 'Required.';
                 }
             });
+        }
+
+        if (isCryptoChannel && !next.channel.wallet_address && addressStatus === 'invalid') {
+            next.channel.wallet_address = 'This address is not valid on the selected network.';
         }
 
         setErrors(next);
@@ -304,13 +387,17 @@ const AddBeneficiaryFlowV2 = ({
             if (onSaveSuccess) onSaveSuccess(beneficiaryRecord, !isChannelMode);
             if (handleClose) handleClose();
         } catch (error) {
-            const message =
-                error?.response?.data?.message ||
-                error?.message ||
-                'We could not save this beneficiary.';
-            setProviderError({ title: 'Could not save the beneficiary', body: message });
-            setStage('details');
-            toast.error(message);
+            handlePaymentApiError({
+                error,
+                navigate,
+                setProfileLockTime,
+                fallback: 'We could not save this beneficiary.',
+                setError: (message) => {
+                    setProviderError({ title: 'Could not save the beneficiary', body: message });
+                    setStage('details');
+                    toast.error(message);
+                },
+            });
         } finally {
             setSaving(false);
         }
@@ -355,6 +442,7 @@ const AddBeneficiaryFlowV2 = ({
     const primaryDisabled = () => {
         if (saving) return true;
         if (stage === 'method') return !form.method || (isThunesMethod && fieldsLoading);
+        if (stage === 'details' && addressCheck?.state === 'invalid') return true;
         return false;
     };
 
@@ -392,6 +480,8 @@ const AddBeneficiaryFlowV2 = ({
                         errors={errors}
                         providerError={providerError}
                         recipientName={recipientName}
+                        addressCheck={addressCheck}
+                        lockedFields={lockedFields}
                         disabled={isViewMode}
                         onChangeMethod={isBeneficiaryMode ? null : () => setStage('method')}
                     />

@@ -70,12 +70,14 @@ export const useRequiredFields = ({ countryIso3, serviceId, method, recipientTyp
     return { fields, transactionType, isLoading: isFetching, error };
 };
 
-export const useRequirements = ({ method, vendor, fields, recipientType }) => {
+export const useRequirements = ({ method, vendor, fields, recipientType, channel }) => {
+    const cryptoAsset = channel?.crypto_asset;
+
     return useMemo(() => {
         if (BVNK_METHODS.some((m) => m.value === method)) {
-            return getBvnkRequirements(method, recipientType);
+            return getBvnkRequirements(method, recipientType, { crypto_asset: cryptoAsset });
         }
         if (!fields) return null;
-        return getThunesRequirements(fields);
-    }, [method, vendor, fields, recipientType]);
+        return getThunesRequirements(fields, recipientType);
+    }, [method, vendor, fields, recipientType, cryptoAsset]);
 };
