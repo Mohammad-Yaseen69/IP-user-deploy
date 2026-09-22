@@ -11,7 +11,7 @@ import { encryptData } from '../../../Helper/EssentilaMethods/Encryption'
 import TrustpaymentPage from '../../AddFunds/WalletFund/CreditTransaction'
 import { CARD_TYPES } from '../../CreditInput/CreditCardTypes'
 import { apiErrorMessage } from '../../PaymentsNewer/InternationalFlow'
-import OTPConfirmation from '../../UserSettingsNew/OTPConfirmation'
+import OTPConfirmation from '../../../Common/Component/OtpVerification'
 import styles from "../styles/onboard.module.scss"
 import ConfirmationStep from './ConfirmationStep'
 import PaymentSelect from './PaymentSelectStep'
@@ -636,6 +636,7 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay,
         <ModalHeader toggle={() => setshowOtpModal(false)}> {t("Confirm")} </ModalHeader>
         <ModalBody>
           <OTPConfirmation
+            variant="card"
             callback={paymentType === "wallet" ? createWallet : paymentType === "paypal" ? initiatePaypalPayment : initiateCardVVC}
             setterValue={true}
             hideOtp={() => setshowOtpModal(false)}

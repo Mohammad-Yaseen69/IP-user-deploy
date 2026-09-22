@@ -99,6 +99,12 @@ const Notification = ({ notification, currentUser }) => {
                 }
             }
         }
+        if (notification.type === "virtual_iban") {
+            setLink("/virtual-IBAN")
+        }
+        if (notification.type === "currency") {
+            setLink("/wallets")
+        }
         if (notification.type === "referral_signup") {
             setLink("/referrals")
         }

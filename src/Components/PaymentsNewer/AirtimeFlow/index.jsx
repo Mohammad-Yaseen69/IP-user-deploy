@@ -14,7 +14,7 @@ import cardStyles from "../styles/SendActionCard.module.scss"
 import StepThree from "./StepThree";
 import StepFour from "./StepFour";
 import StepFive from "./StepFive";
-import OtpConfirmation from "../InternationalFlow/OtpConfirmation";
+import OtpConfirmation from "../../../Common/Component/OtpVerification";
 import { encryptData } from "../../../Helper/EssentilaMethods/Encryption";
 import { LimitsErrorMessage } from "../OTPConfirmation";
 import { useLocation, useNavigate } from "react-router";
@@ -35,6 +35,8 @@ import ReceiptE from "../Esim/Receipt"
 import countries from "../../CitiesDropDown/CitiesData.json"
 import PrevModal from "./PrevModal";
 import { useIdempotency } from "../../../hooks/Payments/useIdempotency";
+import { initiatePaytentlyPayment, usePaytently } from "../../../utils/Functions/paytently";
+import PaytentlyHostedModal from "../../AddFunds/PaytentlyHostedModal";
 
 const initialState = {
     loading: false,
@@ -366,7 +368,8 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
         if (array.includes(data.step)) {
             if (data.step === 4) {
 
-                if (!data.showCard) {
+                // Paytently collects the card on its own hosted form, so our card step is skipped.
+                if (!data.showCard && !(usePaytently && data.payment_type?.value === "card")) {
                     updateDataHandler("showCard", true)
                 } else {
                     getPackageDetails()
@@ -423,6 +426,9 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
                 if (data.payment_type?.value === "wallet") {
                     return !data.wallet?._id
                 } else if (data.payment_type?.value === "card") {
+                    // Paytently validates the card on its own hosted form; nothing to check here.
+                    if (usePaytently) return false
+
                     const [contentMonth, contentYear] = data.expiry.split("/").map(Number);
                     const currentDate = new Date();
                     const currentMonth = currentDate.getMonth() + 1;
@@ -441,10 +447,36 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
     // toast.success(data.wallet?._id)
 
     const [showCardModal, setShowCardModal] = useState(false)
+    const [paytentlyHosted, setPaytentlyHosted] = useState(null)
 
     const initiateCardPayment = async (otp) => {
         updateDataHandler("loading", true)
         try {
+            // Paytently collects the card on its own hosted form, so no card data is built
+            // here. The quote and recipient ride inside the OTP token; only the wallet and
+            // the flow name are sent alongside it.
+            if (usePaytently) {
+                const dec = await initiatePaytentlyPayment({
+                    walletId: data.localWallet?._id,
+                    flow: data.flow === "e-sim" ? "esim" : "airtime",
+                    otp: {
+                        token: data.created_transaction?.token,
+                        otp: otp,
+                        type: data.codeType,
+                    },
+                    idempotencyKey: getKey(),
+                })
+
+                if (!dec?.hosted_forms_url) {
+                    updateDataHandler("otpError", LimitsErrorMessage(dec?.code ?? dec?.message) ?? dec?.message ?? "We cannot process your request at the moment, please try again later.")
+                    return
+                }
+
+                setPaytentlyHosted({ hostedUrl: dec.hosted_forms_url, authorizeUrl: dec.authorize_url })
+                updateDataHandler("show_otp", false)
+                return
+            }
+
             const payload = {
                 token: data.created_transaction?.token,
                 otp: otp,
@@ -474,7 +506,8 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
             console.log(dec)
             updateDataHandler("cardTransactionDetails", dec)
         } catch (err) {
-            const decrypted = decryptData(err.response.data.data)
+            // A Paytently timeout has no response body, so this must survive err.response being absent.
+            const decrypted = err?.response?.data?.data ? decryptData(err.response.data.data) : {}
             console.log(decrypted)
             if (decrypted?.message === "invalid_card_details") {
                 setShowCardModal(true)
@@ -523,6 +556,7 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
         data.show_otp
         &&
         <OtpConfirmation
+            variant="modal"
             callback={data.payment_type?.value === "card" ? initiateCardPayment : verifyOtp}
             // callback={verifyOtp}
             data={data}
@@ -542,6 +576,12 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
 
     return (
         <>
+            <PaytentlyHostedModal
+                isOpen={!!paytentlyHosted?.hostedUrl}
+                hostedUrl={paytentlyHosted?.hostedUrl}
+                authorizeUrl={paytentlyHosted?.authorizeUrl}
+                onClose={() => setPaytentlyHosted(null)}
+            />
             {
                 data.cardTransactionDetails?.transaction_id
                     ?

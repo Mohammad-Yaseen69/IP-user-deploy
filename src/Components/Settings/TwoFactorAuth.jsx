@@ -13,7 +13,7 @@ import GoogleAuthenticatorModal from '../GoogleAuthenticatorModal';
 import { useLocation, useNavigate } from 'react-router';
 import { AuthenticatorDetails } from '../Auth/Login';
 import { startRegistration } from "@simplewebauthn/browser"
-import OTPConfirmation from '../UserSettingsNew/OTPConfirmation';
+import OTPConfirmation from '../../Common/Component/OtpVerification';
 import AuthIcon from "./a_items/auth.svg"
 import EmailIcon from "./a_items/email.svg"
 import PhoneIcon from "./a_items/phone.svg"
@@ -618,6 +618,7 @@ const TwoFactorAuth = () => {
                     <ModalHeader toggle={resetModal}>{t("Confirm")}</ModalHeader>
                     <ModalBody>
                         <OTPConfirmation
+                            variant="card"
                             callback={createPasskey}
                             setter={setShowSuccess}
                             setterValue={true}

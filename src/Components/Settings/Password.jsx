@@ -8,7 +8,7 @@ import { encryptData } from '../../Helper/EssentilaMethods/Encryption'
 import axios from 'axios'
 import { decryptData } from '../../Helper/EssentilaMethods/Decryption'
 import { toast } from 'react-toastify'
-import OTPConfirmation from '../UserSettingsNew/OTPConfirmation'
+import OTPConfirmation from '../../Common/Component/OtpVerification'
 import SuccessModal from '../AddBeneficiary/SuccessModal'
 import { useNavigate } from 'react-router'
 import { usePermission } from '../../hooks/GeneralUse/usePermission'
@@ -242,6 +242,7 @@ const Password = () => {
                 <ModalHeader toggle={() => setShowOtp(!showOtp)}>{t("Confirm")}</ModalHeader>
                 <ModalBody>
                     <OTPConfirmation
+                        variant="card"
                         callback={updatePasswordHandler}
                         setter={setShowSuccess}
                         setterValue={true}

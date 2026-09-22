@@ -4,7 +4,7 @@ import useWindowWidth from "../../../utils/useWindowWidth";
 import InstaPayLoader from "../../Loader";
 import { MoreHorizontal, MoreVertical, X } from "react-feather";
 import { useState } from "react";
-import { useContext, useMemo } from "react";
+import { useContext } from "react";
 import { UserContext } from "../../../Context/UserContext";
 import { Link } from "react-router-dom";
 
@@ -42,203 +42,102 @@ const ActivityTable = ({ filteredData, Loading }) => {
 
     return (
         <div className={styles.tableWrapper}>
-            <div className={styles.table}>
+            <table className={styles.table}>
 
-                {
-                    width > 700 && <div className={`${styles.tr} ${styles.thead}`}>
-
-                        {width > 700 && (
-                            <div
-                                style={{
-                                    flex: 0.04,
-                                    textAlign: "center",
-                                    justifyContent: "center"
-                                }}
+                {width > 700 && (
+                    <thead>
+                        <tr className={`${styles.tr} ${styles.thead}`}>
+                            <th                     
                                 className={`${styles.th} ${styles.serial}`}
+                                style={{ width: "4%" }}
                             >
                                 {t("S.No")}
-                            </div>
-                        )}
+                            </th>
 
-                        <div
-                            style={{
-                                flex: width <= 700 ? 0.20 : 0.14,
-                                textAlign: "center"
-                            }}
-                            className={styles.th}
-                        >
-                            {t("Date")}
-                        </div>
+                            <th className={styles.th} style={{ width: "14%" }} >
+                                {t("Date")}
+                            </th>
 
-                        <div
-                            style={{
-                                flex: width <= 700 ? 0.30 : 0.18,
-                                textAlign: "center"
-                            }}
-                            className={styles.th}
-                        >
-                            {t("Name")}
-                        </div>
+                            <th className={styles.th} style={{ width: "18%" }}>
+                                {t("Name")}
+                            </th>
 
-                        {width > 700 && (
-                            <div
-                                style={{
-                                    flex: 0.14,
-                                    textAlign: "center"
-                                }}
-                                className={styles.th}
-                            >
+                            <th className={styles.th} style={{ width: "14%" }}>
                                 {t("Entity Type")}
-                            </div>
-                        )}
+                            </th>
 
-                        <div
-                            style={{
-                                flex: width <= 700 ? 0.22 : 0.18,
-                                textAlign: "center"
-                            }}
-                            className={styles.th}
-                        >
-                            {t("Action")}
-                        </div>
+                            <th className={styles.th} style={{ width: "18%" }}>
+                                {t("Action")}
+                            </th>
 
-                        {width > 700 && (
-                            <div
-                                style={{
-                                    flex: 0.26,
-                                    textAlign: "center"
-                                }}
-                                className={styles.th}
-                            >
+                            <th className={styles.th} style={{ width: "26%" }}>
                                 {t("Description")}
-                            </div>
-                        )}
+                            </th>
 
-                        <div
-                            style={{
-                                flex: width <= 700 ? 0.18 : 0.12,
-                                textAlign: "center"
-                            }}
-                            className={styles.th}
-                        >
-                            {t("IP Address")}
-                        </div>
-                        <div
-                            style={{
-                                flex: width <= 700 ? 0.18 : 0.12,
-                                textAlign: "center"
-                            }}
-                            className={styles.th}
-                        >
-                        </div>
+                            <th className={styles.th} style={{ width: "12%" }}>
+                                {t("IP Address")}
+                            </th>
 
-                    </div>
-                }
+                            <th className={styles.th} style={{ width: "12%" }}></th>
+                        </tr>
+                    </thead>
+                )}
 
-                {Loading ? (
-                    <div
-                        style={{
-                            padding: "40px",
-                            textAlign: "center"
-                        }}
-                    >
-                        <InstaPayLoader />
-                    </div>
-                ) : filteredData?.length > 0 ? (
-
-                    filteredData.map((item, index) => (
-                        (
-                            width > 700 ?
-                                <div
+                <tbody>
+                    {Loading ? (
+                        <tr>
+                            <td colSpan={8} style={{ padding: "40px", textAlign: "center" }}>
+                                <InstaPayLoader />
+                            </td>
+                        </tr>
+                    ) : filteredData?.length > 0 ? (
+                        filteredData.map((item, index) => (
+                            width > 700 ? (
+                                <tr
                                     key={item?._id || index}
                                     className={`${styles.tr} ${styles.dataRow}`}
                                 >
-
-                                    {width > 700 && (
-                                        <div
-                                            style={{
-                                                flex: 0.04,
-                                                textAlign: "center",
-                                                justifyContent: "center"
-                                            }}
-                                            className={`${styles.td} ${styles.serial}`}
-                                        >
-                                            {index + 1}
-                                        </div>
-                                    )}
-
-                                    <div
-                                        style={{
-                                            flex: width <= 700 ? 0.20 : 0.14,
-                                            textAlign: "center"
-                                        }}
-                                        className={styles.td}
+                                    <td                                        
+                                        className={`${styles.td} ${styles.serial}`}
+                                        style={{ width: "6%", textAlign: "center"  }}
                                     >
+                                        {index + 1}
+                                    </td>
+
+                                    <td className={styles.td} style={{ width: "14%", textAlign: "center"  }}>
                                         {item?.createdAt
                                             ? new Date(item.createdAt).toLocaleDateString()
                                             : "—"}
-                                    </div>
+                                    </td>
 
-                                    <div
-                                        style={{
-                                            flex: width <= 700 ? 0.30 : 0.18,
-                                            textAlign: "center"
-                                        }}
-                                        className={styles.td}
-                                    >
+                                    <td className={styles.td} style={{ width: "18%", textAlign: "center"  }}>
                                         {item?.agent?.first_name || userDetails?.company_name || ""}{item?.agent?.last_name || ""}
-                                    </div>
+                                    </td>
 
-                                    {width > 700 && (
-                                        <div
-                                            style={{
-                                                flex: 0.14,
-                                                textAlign: "center"
-                                            }}
-                                            className={styles.td}
-                                        >
-                                            {item?.entityType || "—"}
-                                        </div>
-                                    )}
+                                    <td className={styles.td} style={{ width: "14%", textAlign: "center"  }}>
+                                        {item?.entityType || "—"}
+                                    </td>
 
-                                    <div
-                                        style={{
-                                            flex: width <= 700 ? 0.22 : 0.18,
-                                            textAlign: "center",
-                                            wordBreak: "break-word"
-                                        }}
+                                    <td
+                                        style={{ width: "18%", wordBreak: "break-word", textAlign: "center"  }}
                                         className={styles.td}
                                     >
                                         {truncate(item?.action, 15) || "—"}
-                                    </div>
+                                    </td>
 
-                                    {width > 700 && (
-                                        <div
-                                            style={{
-                                                flex: 0.26,
-                                                textAlign: "center",
-                                                wordBreak: "break-word"
-                                            }}
-                                            className={styles.td}
-                                        >
-                                            {dynamicDesc(item?.description)}
-                                        </div>
-                                    )}
-
-                                    <div
-                                        style={{
-                                            flex: width <= 700 ? 0.18 : 0.12,
-                                            textAlign: "center"
-                                        }}
+                                    <td
+                                        style={{ width: "26%", wordBreak: "break-word", textAlign: "center"  }}
                                         className={styles.td}
                                     >
+                                        {dynamicDesc(item?.description)}
+                                    </td>
+
+                                    <td className={styles.td} style={{ width: "12%", textAlign: "center"  }}>
                                         {item?.ipAddress || "—"}
-                                    </div>
-                                    <div
-                                        style={{
-                                            flex: width <= 700 ? 0.18 : 0.12,
-                                            textAlign: "center"
-                                        }}
+                                    </td>
+
+                                    <td
+                                        style={{ width: "12%", cursor: "pointer", textAlign: "center"  }}
                                         onClick={() => {
                                             setSelectedActivity(item)
                                             setShowModal(true)
@@ -246,18 +145,14 @@ const ActivityTable = ({ filteredData, Loading }) => {
                                         className={styles.td}
                                     >
                                         <MoreVertical size={18} />
-
-                                    </div>
-
-                                </div> :
-                                <div
+                                    </td>
+                                </tr>
+                            ) : (
+                                <tr
                                     key={item?._id || index}
                                     className={`${styles.tr} ${styles.dataRow}`}
                                 >
-                                    <div
-                                        className={styles.td}
-                                    >
-
+                                    <td className={styles.td}>
                                         {item?.agent?.first_name || userDetails?.company_name || ""}{item?.agent?.last_name || ""}
 
                                         <div
@@ -267,126 +162,111 @@ const ActivityTable = ({ filteredData, Loading }) => {
                                             }}
                                         >
                                             <MoreHorizontal size={18} />
-
                                         </div>
-                                    </div>
-                                    <div
+                                    </td>
 
-                                        className={styles.td}
-                                    >
+                                    <td className={styles.td}>
                                         <div style={{ color: "#6E7687", fontWeight: "500" }}>{t("Action")}</div>
-
                                         {truncate(item?.action, 15) || "—"}
-                                    </div>
+                                    </td>
 
-                                    <div
-
-                                        className={styles.td}
-                                    >
+                                    <td className={styles.td}>
                                         <div style={{ color: "#6E7687", fontWeight: "500" }}>{t("Description")}</div>
-
                                         {dynamicDesc(item?.description)}
-                                    </div>
+                                    </td>
 
-                                    <div
-
-                                        className={styles.td}
-                                    >
+                                    <td className={styles.td}>
                                         <div style={{ color: "#6E7687", fontWeight: "500" }}>{t("Ip Address")}</div>
                                         {item?.ipAddress || "—"}
-                                    </div>
+                                    </td>
 
-                                    <div
-
-                                        className={styles.td}
-                                    >
+                                    <td className={styles.td}>
                                         <div style={{ color: "#6E7687", fontWeight: "500" }}>{t("Date")}</div>
-
                                         {item?.createdAt
                                             ? new Date(item.createdAt).toLocaleDateString()
-                                            : "—"}                                    </div>
-                                </div>
-                        )
-                    ))
-
-                ) : (
-                    <div
-                        style={{
-                            textAlign: "center",
-                            padding: "40px",
-                            color: "#aaa",
-                            fontSize: "14px"
-                        }}
-                    >
-                        {t("No Activity found")}
-                    </div>
-                )}
-                {showModal && selectedActivity && (
-                    <div
-                        className={styles.modalOverlay}
-                        onClick={() => setShowModal(false)}
-                    >
-                        <div
-                            className={styles.modal}
-                            onClick={(e) => e.stopPropagation()}
-                        >
-                            <div className={styles.modalHeader}>
-                                <h3>{t("Activity Details")}</h3>
-
-                                <button
-                                    className={styles.closeBtn}
-                                    onClick={() => setShowModal(false)}
-                                >
-                                    <X size={18} />
-                                </button>
-                            </div>
-
-                            <div className={styles.modalBody}>
-
-                                <div className={styles.detailRow}>
-                                    <span>{t("ID")}</span>
-                                    <p>{selectedActivity?._id}</p>
-                                </div>
-
-                                <div className={styles.detailRow}>
-                                    <span>{t("Action")}</span>
-                                    <p>{selectedActivity?.action}</p>
-                                </div>
-
-                                <div className={styles.detailRow}>
-                                    <span>{t("Description")}</span>
-                                    <p>{selectedActivity?.description}</p>
-                                </div>
-
-                                <div className={styles.detailRow}>
-                                    <span>{t("Entity Type")}</span>
-                                    <p>{selectedActivity?.entityType}</p>
-                                </div>
-
-                                <div className={styles.detailRow}>
-                                    <span>{t("Entity ID")}</span>
-                                    <p>{selectedActivity?.entityId}</p>
-                                </div>
-
-                                <div className={styles.detailRow}>
-                                    <span>{t("IP Address")}</span>
-                                    <p>{selectedActivity?.ipAddress}</p>
-                                </div>
-
-                                <div className={styles.detailRow}>
-                                    <span>{t("Created At")}</span>
-                                    <p>
-                                        {selectedActivity?.createdAt
-                                            ? new Date(selectedActivity.createdAt).toLocaleString()
                                             : "—"}
-                                    </p>
-                                </div>
+                                    </td>
+                                </tr>
+                            )
+                        ))
+                    ) : (
+                        <tr>
+                            <td
+                                colSpan={8}
+                                style={{ textAlign: "center", padding: "40px", color: "#aaa", fontSize: "14px" }}
+                            >
+                                {t("No Activity found")}
+                            </td>
+                        </tr>
+                    )}
+                </tbody>
+            </table>
 
+            {showModal && selectedActivity && (
+                <div
+                    className={styles.modalOverlay}
+                    onClick={() => setShowModal(false)}
+                >
+                    <div
+                        className={styles.modal}
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <div className={styles.modalHeader}>
+                            <h3>{t("Activity Details")}</h3>
+
+                            <button
+                                className={styles.closeBtn}
+                                onClick={() => setShowModal(false)}
+                            >
+                                <X size={18} />
+                            </button>
+                        </div>
+
+                        <div className={styles.modalBody}>
+
+                            <div className={styles.detailRow}>
+                                <span>{t("ID")}</span>
+                                <p>{selectedActivity?._id}</p>
                             </div>
+
+                            <div className={styles.detailRow}>
+                                <span>{t("Action")}</span>
+                                <p>{selectedActivity?.action}</p>
+                            </div>
+
+                            <div className={styles.detailRow}>
+                                <span>{t("Description")}</span>
+                                <p>{selectedActivity?.description}</p>
+                            </div>
+
+                            <div className={styles.detailRow}>
+                                <span>{t("Entity Type")}</span>
+                                <p>{selectedActivity?.entityType}</p>
+                            </div>
+
+                            <div className={styles.detailRow}>
+                                <span>{t("Entity ID")}</span>
+                                <p>{selectedActivity?.entityId}</p>
+                            </div>
+
+                            <div className={styles.detailRow}>
+                                <span>{t("IP Address")}</span>
+                                <p>{selectedActivity?.ipAddress}</p>
+                            </div>
+
+                            <div className={styles.detailRow}>
+                                <span>{t("Created At")}</span>
+                                <p>
+                                    {selectedActivity?.createdAt
+                                        ? new Date(selectedActivity.createdAt).toLocaleString()
+                                        : "—"}
+                                </p>
+                            </div>
+
                         </div>
                     </div>
-                )}
-            </div>
+                </div>
+            )}
         </div>
     );
 };

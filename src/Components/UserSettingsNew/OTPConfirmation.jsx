@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import auth_icon from "../PaymentsNewer/files/auth.png"
 import { useNavigate } from 'react-router';
 import { UserContext } from '../../Context/UserContext';
+import { useMediaQuery } from '@mui/material';
 
 
 const formatTime = (seconds) => {
@@ -22,6 +23,8 @@ const OTPConfirmation = ({ setter, callback, setterValue, hideOtp, type = "", pr
     const numberOfFields = 6;
     const [otpValues, setOTPValues] = useState(Array(numberOfFields).fill(''));
     const inputRefs = useRef(Array(numberOfFields).fill(null));
+    const isMobile = useMediaQuery('(max-width: 600px)');
+
     useEffect(() => {
         if (inputRefs?.current?.[0]) {
             inputRefs?.current?.[0]?.focus()
@@ -359,6 +362,10 @@ const OTPConfirmation = ({ setter, callback, setterValue, hideOtp, type = "", pr
                                 display: "flex",
                                 alignItems: "center",
                                 fontSize: "18px",
+                                width: isMobile ? '100%' : 'auto',
+                                maxWidth: '300px',
+                                margin: '0 auto',
+                                justifyContent: "center",
                                 opacity: (isAnyFieldEmpty || isSaving || processing) ? 0.5 : 1,
                                 pointerEvents: (isAnyFieldEmpty || isSaving || processing) ? 'none' : 'auto'
                             }}

@@ -5,6 +5,7 @@ import { UserContext } from '../../Context/UserContext';
 import { useTranslation } from 'react-i18next';
 import Fuse from 'fuse.js';
 import { countriesInDiffLangs } from '../../Data/CountriesWithTranslations/countries';
+import { useMediaQuery } from '@mui/material';
 
 const CountryDropDown = ({ onSelect, country = "", disabled = false, padding = ".7rem .5rem", disabledColor = "#e9ecef", countryNameSize = {}, filteringList = [], setIsCountryInFocus = () => { }, background = "#fff", shadow, containerStyle = {} }) => {
     const { t, i18n } = useTranslation()
@@ -16,6 +17,7 @@ const CountryDropDown = ({ onSelect, country = "", disabled = false, padding = "
     const [searchTerm, setSearchTerm] = useState('');
     const [countriesLoaded, setCountriesLoaded] = useState(false);
     const { allowedCountries, getAllActiveCountries } = useContext(UserContext)
+    const isMobile = useMediaQuery('(max-width: 600px)');
 
     useEffect(() => {
         getAllActiveCountries();
@@ -46,7 +48,7 @@ const CountryDropDown = ({ onSelect, country = "", disabled = false, padding = "
                 setCountriesLoaded(true);
             }
         }
-    }, [allowedCountries, i18n.language, ]);
+    }, [allowedCountries, i18n.language]);
 
     const fuse = new Fuse(countries, {
         keys: ["name"],
@@ -98,9 +100,10 @@ const CountryDropDown = ({ onSelect, country = "", disabled = false, padding = "
             countryInputRef?.current?.blur()
         }
     }, [isOpen])
+
     return (
         <Dropdown isOpen={isOpen} toggle={toggleDropdown}>
-            <DropdownToggle className='countrySelect' color='white' style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", border: "1px solid rgba(0,0,0,.05)", borderRadius: "5px", padding: padding, background: disabled ? disabledColor : background, boxShadow: shadow ? "0px -0.5px 7.2px 0px rgba(0, 0, 0, 0.20), 0px 0px 4px 6px #FDFDFD inset" : "", ...containerStyle }} disabled={disabled}>
+            <DropdownToggle color='white' style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", border: isMobile ? '1px solid #1412201F' : "1px solid rgba(0,0,0,.05)", borderRadius: isMobile ? '10px' : "5px", padding: padding, background: disabled ? disabledColor : background, boxShadow: isMobile ? '0px 1px 2px 0px #1412200D' : (shadow ? "0px -0.5px 7.2px 0px rgba(0, 0, 0, 0.20), 0px 0px 4px 6px #FDFDFD inset" : "") }} disabled={disabled}>
                 {
                     isOpen
                         ?
@@ -108,17 +111,20 @@ const CountryDropDown = ({ onSelect, country = "", disabled = false, padding = "
                         :
                         <>
                             {selectedCountry ? (
-                                <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
+                                <div style={{ display: "flex", gap: isMobile ? '10px' : "1rem", alignItems: "center" }}>
                                     <img src={selectedCountry?.file_url}
                                         alt={selectedCountry?.code}
                                         width="41"
                                         height="27"
                                         loading="lazy"
-                                        style={{ borderRadius: "4px", boxShadow: "0 0 10px rgba(0,0,0,.3)", }}
+                                        style={{
+                                            borderRadius: "4px", boxShadow: isMobile ? '0px 0px 0px 1px #1412201A inset' :
+                                                "0 0 10px rgba(0,0,0,.3)", border: isMobile ? '1px solid #1412201F' : 'none'
+                                        }}
                                         className="i_t_flag"
                                         draggable="false"
                                     />
-                                    <span style={{ fontWeight: 700, ...countryNameSize }}>{t(selectedCountry?.name)}</span>
+                                    <span style={{ fontWeight: isMobile ? 500 : 700, ...countryNameSize }}>{t(selectedCountry?.name)}</span>
                                 </div>
                             ) : <span style={{ color: "#a8a8a8" }}>{t("Select Country")}</span>}
                         </>
@@ -141,7 +147,7 @@ const CountryDropDown = ({ onSelect, country = "", disabled = false, padding = "
                                     width="41"
                                     height="27"
                                     loading="lazy"
-                                    style={{ borderRadius: "4px", boxShadow: "0 0 10px rgba(0,0,0,.3)", width: "41px", height: "27px" }}
+                                    style={{ borderRadius: "4px", boxShadow: "0 0 10px rgba(0,0,0,.3)", width: isMobile ? '26px' : "41px", height: isMobile ? '19px' : "27px" }}
                                     className="i_t_flag"
                                     draggable="false"
                                 />

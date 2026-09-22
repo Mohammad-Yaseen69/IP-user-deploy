@@ -14,7 +14,7 @@ import axios from 'axios'
 import { decryptData } from '../../../Helper/EssentilaMethods/Decryption'
 import { encryptData } from '../../../Helper/EssentilaMethods/Encryption'
 import { toast } from 'react-toastify'
-import OtpConfirmation from "../../PaymentsNewer/InternationalFlow/OtpConfirmation"
+import OtpConfirmation from "../../../Common/Component/OtpVerification"
 import InstaPayLoader from '../../Loader'
 import { Link } from 'react-router-dom'
 import { apiErrorMessage } from '../../PaymentsNewer/InternationalFlow';
@@ -748,6 +748,7 @@ const CardtoCard = ({ setOpen, isOpen, card, currentCardDetails, setCurrentCardD
       }
 
       <OtpConfirmation
+        variant="modal"
         data={data}
         dataHandler={updateHandler}
         isLoading={data.loading}

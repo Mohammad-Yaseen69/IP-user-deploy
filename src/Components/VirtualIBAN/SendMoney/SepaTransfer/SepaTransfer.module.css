@@ -843,8 +843,135 @@
     margin-left: auto;
 }
 
+
+.mobileLinesContainer {
+    display: flex;
+    gap: 6px;
+    width: 100%;
+    align-items: center;
+}
+
+.stepBarLine {
+    flex: 1;
+    height: 4px;
+    border-radius: 4px;
+    background: #e4e3e5;
+}
+
+.lineCompleted {
+    background: #10b981 !important;
+}
+
+.lineActive {
+    background: #5926f0 !important;
+}
+
+
+.stepHeaderRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.stepTextContent {
+    font-family: Inter, sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: #171522;
+}
+
+.stepTextContent span {
+    color: #6e7687;
+    font-weight: 500;
+}
+
+.rightActionContainer {
+    display: flex;
+    align-items: center;
+}
+
+.helpPillBtn {
+    border: 1px solid #e4dbff;
+    border-radius: 100px;
+    background: #f2eeff;
+    color: #5926f0;
+    padding: 6px 14px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: Inter, sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.helpIconCircle {
+    background: #5926f0;
+    color: #ffffff;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: bold;
+}
+
+.chevronIcon {
+    font-size: 12px;
+    margin-left: 2px;
+}
+
+.stepIndicatorContainer {
+    width: 70%;
+    border: 2px solid blue;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    padding-right: 38px;
+    justify-content: center;
+    box-sizing: border-box;
+    color: #000000;
+    font-size: 12px;
+    font-weight: 900;
+    border-bottom: 2px solid #ece9f5;
+}
+
+.stepContainer {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 16px;
+    width: 100%;
+    padding-bottom: 16px;
+    border-bottom: 2px solid #ece9f5;
+}
+
+.stepcontactBox {
+    width: 70px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    border-radius: 14px;
+}
+
+.stepLine {
+    flex: 1;
+    height: 4px;
+    border-radius: 4px;
+    background-color: var(--line-color, #e4e3e5);
+    transition: background-color 0.3s ease;
+}
+
 @media (max-width: 1000px) {
-    .leftPanel,
+
+   .leftPanel,
     .rightPanel {
         width: 100%;
         min-width: 0;
@@ -865,6 +992,7 @@
 }
 
 @media (max-width: 700px) {
+
     .sourceCard,
     .footer,
     .doneActions,
@@ -905,5 +1033,310 @@
     .backBtn,
     .nextBtn {
         width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+
+    .flowHeaderContent {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        align-items: center;
+        row-gap: 2px;
+        width: 100%;
+    }
+
+    .flowHeader {
+        display: flex;
+        align-items: center;
+        gap: 0px;
+    }
+
+    .flowHeaderContent h2 {
+        font-size: 20px;
+    }
+
+    .flowHeader .flowHeader h2 {
+        grid-column: 1 / 2;
+        grid-row: 1 / 2;
+    }
+
+    .cancelBtn {
+        grid-column: 2 / 3;
+        grid-row: 1 / 2;
+        justify-self: end;
+        background-color: #f1f2f6;
+        border: none;
+        border-radius: 20px;
+        color: #4b5563;
+        font-family: Inter, sans-serif;
+        font-size: 13px;
+        font-weight: 500;
+        padding: 4px 12px;
+        cursor: pointer;
+    }
+
+    .flowHeader p {
+        grid-column: 1 / 3;
+        grid-row: 2 / 3;
+    }
+
+    .rightPanel {
+        border-radius: 10px;
+        padding: 1px;
+        background: 0;
+    }
+
+    .sourceCard {
+        display: flex !important;
+        flex-direction: row !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        padding: 25px 18px !important;
+        gap: 8px !important;
+        width: 100% !important;
+        border-radius: 16px !important;
+    }
+
+    .sourceLeft {
+        display: flex !important;
+        align-items: center !important;
+        gap: 8px !important;
+        flex: 1;
+        min-width: 0;
+
+        .flagBox {
+            min-width: 40px !important;
+            min-height: 40px !important;
+            flex-shrink: 0;
+            background-color: transparent;
+            padding: 1px;
+        }
+
+        div:last-child {
+            min-width: 0;
+            overflow: hidden;
+        }
+
+        h4 {
+            font-size: 16px !important;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-size: x-large;
+            font: 900;
+            margin: 0 !important;
+        }
+
+        p {
+            font-size: 13px !important;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin: 0 !important;
+        }
+    }
+
+    .sourceBalance {
+        text-align: right !important;
+        flex-shrink: 0 !important;
+        margin-left: 4px;
+
+        h4 {
+            font-size: 15px !important;
+            white-space: nowrap;
+            margin: 0 !important;
+        }
+
+        p {
+            font-size: 11px !important;
+            white-space: nowrap;
+            margin: 0 !important;
+        }
+    }
+
+    .selectedSpeedCard .railPill {
+        background: rgb(212, 207, 207) !important;
+        color: rgb(136, 76, 214) !important;
+        padding: 8px;
+    }
+
+    .speedGrid {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 12px !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+    }
+
+    .speedCard {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-height: 115px !important;
+        height: auto !important;
+        border: 1.5px solid #e4dbff !important;
+        border-radius: 14px !important;
+        background: #fff !important;
+        padding: 14px 16px !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: space-between !important;
+        gap: 10px !important;
+        box-sizing: border-box !important;
+    }
+
+    .speedFee {
+        display: none !important;
+    }
+
+    .selectedSpeedCard .speedFee {
+        display: block !important;
+        font-size: 11px !important;
+        font-weight: 600 !important;
+        color: #6e7687 !important;
+    }
+
+    .selectedSpeedCard {
+        background: #fff !important;
+        border: 2px solid #9b8dc5 !important;
+        color: inherit !important;
+        box-shadow: 0 0 0 3px rgba(89, 38, 240, 0.08) !important;
+    }
+
+    .selectedSpeedCard h4 {
+        color: #0c0a20 !important;
+    }
+
+    .selectedSpeedCard p,
+    .selectedSpeedCard span {
+        color: #6e7687 !important;
+    }
+
+    .selectedSpeedCard .railPill {
+        background: #f2eeff !important;
+        color: #715eaa !important;
+    }
+
+    .selectedSpeedCard .defaultPill {
+        background: #e6f7ec !important;
+        color: #097224 !important;
+    }
+
+    .speedCardTop {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        width: 100% !important;
+        margin-bottom: 2px !important;
+    }
+
+    .speedCard h4 {
+        font-size: 14px !important;
+        margin: 0 !important;
+    }
+
+    .speedCard p {
+        font-size: 10px !important;
+        line-height: 1.3 !important;
+        margin: 0 !important;
+    }
+
+    .speedLabel h4 {
+        font-size: 15px !important;
+        font-weight: 700 !important;
+        color: #000000 !important;
+        margin: 0 0 6px 0 !important;
+    }
+
+    .stepHeaderRow {
+        font-weight: 600;
+        font-size: 20px;
+        color: black;
+    }
+
+    .infoStrip {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .infoIcon {
+        flex-shrink: 0;
+        margin-top: 2px;
+    }
+
+    .infoStrip strong {
+        color: #1b1f2a;
+        font-weight: 600;
+    }
+
+    .infoStrip span {
+        font-weight: 400;
+        font-size: 12px;
+    }
+
+    .selectWrap {
+        border-radius: 10px;
+        overflow: hidden;
+        border: 1px solid #ece9f5;
+        display: flex;
+        align-items: center;
+    }
+
+    .customInputWrapper input {
+        border-radius: 10px !important;
+    }
+
+    .sectionLabel {
+        color: black;
+        font-size: 20px;
+        font-weight: 600;
+        line-height: 1.5;
+    }
+
+    .reviewTable .reviewRow:nth-last-child(3) strong {
+        color: #328636 !important;
+    }
+
+    .reviewRow:last-child strong {
+        color: rgb(139, 57, 206) !important;
+    }
+
+    .reviewStep {
+        gap: 4px;
+    }
+
+    .backBtn {
+        font-size: 0;
+        width: 48px;
+        height: 48px;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 12px;
+    }
+
+    .backBtn svg {
+        margin: 0;
+        width: 20px !important;
+        height: 20px !important;
+    }
+
+    .backBtn1 {
+        background-color: transparent;
+    }
+
+    .nextBtn {
+        flex: 1;
+        border-radius: 15px;
+        padding-top: 2px;
+    }
+
+    .stepHeaderRow strong {
+        color: #9095a1ee;
+        font-weight: 400;
+        font-size: 12px;
     }
 }

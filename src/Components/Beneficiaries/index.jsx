@@ -9,6 +9,10 @@ import BeneficiaryCard from './BeneficiaryCard'
 import { UserContext } from '../../Context/UserContext'
 import add_ben from "./add_ben.svg"
 import { usePermission } from "../../hooks/GeneralUse/usePermission";
+import AddBeneficiaryFlowV2 from "../VirtualIBAN/Beneficiaries/AddBeneficiaryFlowV2";
+
+
+const USE_NEW_ADD_BENEFICIARY_FLOW = true
 
 const Beneficiaries = () => {
     const { t } = useTranslation()
@@ -21,6 +25,15 @@ const Beneficiaries = () => {
         }
     }, [userDetails])
     const can = usePermission()
+    const [isAddOpen, setIsAddOpen] = useState(false)
+    const [activeBeneficiary, setActiveBeneficiary] = useState(null)
+    const [beneficiaryMode, setBeneficiaryMode] = useState("edit")
+
+    const openBeneficiary = (beneficiary, mode) => {
+        verifyToken()
+        setActiveBeneficiary(beneficiary)
+        setBeneficiaryMode(mode)
+    }
 
     useEffect(() => setFiltered(beneficiaries), [beneficiaries]);
 
@@ -59,11 +72,20 @@ const Beneficiaries = () => {
                         <Input type='search' placeholder={t('Search for Beneficiaries')} style={{ padding: ".5rem 1rem" }} onChange={filterBenef}
                         />
                     </div>
-                    {can("beneficiaries.add") && <Button color='transparent' className={styles.btn} style={{ padding: ".5rem 1rem" }} onClick={verifyToken}>
-                        <Link to={"/beneficiaries/add"}>
-                            {t("Add Beneficiary")}
-                        </Link>
-                    </Button>}
+                    {can("beneficiaries.add") && (
+                        USE_NEW_ADD_BENEFICIARY_FLOW
+                            ? <Button color='transparent' className={styles.btn} style={{ padding: ".5rem 1rem" }} onClick={() => {
+                                verifyToken()
+                                setIsAddOpen(true)
+                            }}>
+                                {t("Add Beneficiary")}
+                            </Button>
+                            : <Button color='transparent' className={styles.btn} style={{ padding: ".5rem 1rem" }} onClick={verifyToken}>
+                                <Link to={"/beneficiaries/add"}>
+                                    {t("Add Beneficiary")}
+                                </Link>
+                            </Button>
+                    )}
                     {/* <Button color='transparent' className={styles.btn} style={{ padding: ".5rem 1rem" }} onClick={() => setManagable(true)}>{t("Manage Beneficiaries")}</Button> */}
                 </div>
 
@@ -84,7 +106,7 @@ const Beneficiaries = () => {
                         filtered.length > 0
                         ?
                         filtered.map(item => (
-                            <BeneficiaryCard key={item._id} user={item} />
+                            <BeneficiaryCard key={item._id} user={item} onEdit={(ben) => openBeneficiary(ben, "edit")} onView={(ben) => openBeneficiary(ben, "view")} />
                         ))
                         :
                         t("No Beneficiaries")
@@ -103,18 +125,27 @@ const Beneficiaries = () => {
                             <Search />
                             <Input type='search' placeholder={t('Search for Beneficiaries')} style={{ padding: ".5rem 1rem" }} onChange={filterBenef} />
                         </div>
-                        <Link to={"/beneficiaries/add"}>
-                            <img src={add_ben}
-                                loading="lazy"
-                            />
-                        </Link>
+                        {USE_NEW_ADD_BENEFICIARY_FLOW
+                            ? <button
+                                type="button"
+                                style={{ all: 'unset', cursor: 'pointer', display: 'inline-flex' }}
+                                onClick={() => setIsAddOpen(true)}
+                            >
+                                <img src={add_ben} loading="lazy" alt={t("Add Beneficiary")} />
+                            </button>
+                            : <Link to={"/beneficiaries/add"}>
+                                <img src={add_ben}
+                                    loading="lazy"
+                                />
+                            </Link>
+                        }
                     </div>
                     <div className={styles.table_body}>
                         {
                             filtered.length > 0
                                 ?
                                 filtered.map(item => (
-                                    <BeneficiaryCard key={item._id} user={item} />
+                                    <BeneficiaryCard key={item._id} user={item} onEdit={(ben) => openBeneficiary(ben, "edit")} onView={(ben) => openBeneficiary(ben, "view")} />
                                 ))
                                 :
                                 t("No Beneficiaries")
@@ -122,6 +153,24 @@ const Beneficiaries = () => {
                     </div>
                 </div>
             </div>
+
+            {USE_NEW_ADD_BENEFICIARY_FLOW && (
+                <AddBeneficiaryFlowV2
+                    open={isAddOpen}
+                    handleClose={() => setIsAddOpen(false)}
+                    onSaveSuccess={() => getUserBeneficiaries()}
+                />
+            )}
+
+            {activeBeneficiary && (
+                <AddBeneficiaryFlowV2
+                    open={!!activeBeneficiary}
+                    mode={beneficiaryMode}
+                    existingBeneficiary={activeBeneficiary}
+                    handleClose={() => setActiveBeneficiary(null)}
+                    onSaveSuccess={() => getUserBeneficiaries()}
+                />
+            )}
         </>
 
     )
