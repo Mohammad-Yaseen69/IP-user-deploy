@@ -1,0 +1,330 @@
+.section {
+    margin-bottom: 20px;
+}
+
+.sectionLabel {
+    font-family: Inter, sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.sectionHint {
+    font-family: Inter, sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    color: #6e7687;
+}
+
+.searchBox {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid #e1e5ee;
+    background: #fff;
+    border-radius: 8px;
+    padding: 8px 12px;
+    margin-bottom: 10px;
+    color: #6e7687;
+
+    input {
+        border: none;
+        outline: none;
+        background: transparent;
+        flex: 1;
+        font-family: Inter, sans-serif;
+        font-size: 13px;
+        color: #333;
+    }
+}
+
+.beneficiaryList {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-height: 230px;
+    overflow-y: auto;
+    padding-right: 4px;
+}
+
+.beneficiaryCard {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    text-align: left;
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid #e1e5ee;
+    background: #fff;
+    cursor: pointer;
+    transition: 200ms;
+
+    &:hover {
+        border-color: #c9b9ff;
+    }
+}
+
+.selectedBeneficiary {
+    border-color: #5926f0;
+    background: #f7f4ff;
+}
+
+.avatar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: #ede8ff;
+    color: #5926f0;
+    font-family: Inter, sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.beneficiaryCopy {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+    flex: 1;
+
+    strong {
+        font-family: Inter, sans-serif;
+        font-size: 14px;
+        font-weight: 600;
+        color: #333;
+    }
+
+    small {
+        font-family: Inter, sans-serif;
+        font-size: 12px;
+        color: #6e7687;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+}
+
+.assetBadge {
+    font-family: Inter, sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    color: #5926f0;
+    background: #ede8ff;
+    border-radius: 20px;
+    padding: 4px 10px;
+    flex-shrink: 0;
+}
+
+.emptyState {
+    font-family: Inter, sans-serif;
+    font-size: 13px;
+    color: #6e7687;
+    text-align: center;
+    padding: 24px 12px;
+    border: 1px dashed #e1e5ee;
+    border-radius: 10px;
+    background: #fff;
+}
+
+.linkBtn {
+    border: none;
+    background: transparent;
+    padding: 0;
+    font-family: Inter, sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: #5926f0;
+    cursor: pointer;
+}
+
+.addressBox {
+    border: 1px solid #e1e5ee;
+    border-radius: 10px;
+    background: #fff;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.addressValue {
+    font-family: "SFMono-Regular", Menlo, monospace;
+    font-size: 12px;
+    color: #333;
+    word-break: break-all;
+}
+
+.addressMeta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: Inter, sans-serif;
+    font-size: 12px;
+    color: #6e7687;
+}
+
+.addressOk {
+    color: #067647;
+    font-weight: 600;
+}
+
+.addressBad {
+    color: #d92d20;
+    font-weight: 600;
+}
+
+.protocolGrid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.protocolChip {
+    border: 1px solid #e1e5ee;
+    background: #fff;
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-family: Inter, sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    color: #333;
+    cursor: pointer;
+    transition: 200ms;
+
+    &:hover {
+        border-color: #c9b9ff;
+    }
+}
+
+.protocolChipActive {
+    border-color: #5926f0;
+    background: #5926f0;
+    color: #fff;
+}
+
+.confirmRow {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 12px;
+    border: 1px solid #e1e5ee;
+    border-radius: 10px;
+    background: #fff;
+    margin-top: 12px;
+    cursor: pointer;
+
+    input {
+        margin-top: 2px;
+        width: 16px;
+        height: 16px;
+        accent-color: #5926f0;
+        cursor: pointer;
+        flex-shrink: 0;
+    }
+
+    span {
+        font-family: Inter, sans-serif;
+        font-size: 13px;
+        color: #333;
+        line-height: 1.5;
+    }
+}
+
+.dangerBox {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 12px 16px;
+    border-radius: 8px;
+    background: #fef3f2;
+    border: 1px solid #fecdca;
+    margin-top: 12px;
+}
+
+.dangerText {
+    font-family: Inter, sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    color: #b42318;
+    line-height: 1.5;
+}
+
+.expiredBox {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 16px;
+    border-radius: 8px;
+    background: #fffbeb;
+    border: 1px solid #fde68a;
+    margin-bottom: 12px;
+}
+
+.expiredText {
+    font-family: Inter, sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    color: #b45309;
+}
+
+.refreshQuoteBtn {
+    border: 1px solid #5926f0;
+    background: #fff;
+    color: #5926f0;
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-family: Inter, sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+
+    &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+}
+
+.networkStrong {
+    font-weight: 700;
+    color: #333;
+}
+
+.monoValue {
+    font-family: "SFMono-Regular", Menlo, monospace;
+    font-size: 13px;
+    color: #333;
+}
+
+.addBtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    border: 1px solid #5926f0;
+    background: #fff;
+    color: #5926f0;
+    border-radius: 6px;
+    padding: 5px 10px;
+    font-family: Inter, sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: 200ms;
+
+    &:hover {
+        background: #5926f0;
+        color: #fff;
+    }
+}

@@ -6,6 +6,7 @@ import { useLocation, useNavigate } from "react-router";
 import { toast } from "react-toastify";
 import { UserContext } from "../../../Context/UserContext.jsx";
 import { usePermission } from "../../../hooks/GeneralUse/usePermission";
+import { handlePaymentApiError } from "../../../utils/Functions/handlePaymentApiError";
 import { useSyncVirtualIbanBalance, useUpdateVirtualIbanStatus } from "../../../hooks/useVirtualIban.jsx";
 import ConvertFundsModal from "../ConvertFundsModal";
 import CryptoTopupModal from "../CryptoTopupModal/index.jsx";
@@ -146,7 +147,12 @@ const QuickActions = ({ selectedIban }) => {
             toast.success(action === "BLOCK" ? "Virtual IBAN paused" : "Virtual IBAN reactivated")
             return true
         } catch (error) {
-            toast.error(error?.response?.data?.message || error?.message || "Unable to update virtual IBAN status")
+            handlePaymentApiError({
+                error,
+                navigate,
+                fallback: "Unable to update virtual IBAN status",
+                setError: (message) => toast.error(message),
+            })
             return false
         }
     }

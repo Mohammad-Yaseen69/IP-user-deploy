@@ -4,6 +4,7 @@ import { X, UploadCloud } from "react-feather";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 import { apiWrapper } from "../../../utils/Functions/apiWrapper";
+import { handlePaymentApiError } from "../../../utils/Functions/handlePaymentApiError";
 
 const InquiryResponseModal = ({ isOpen, toggle, inquiry, onSuccess }) => {
     const { t } = useTranslation();
@@ -57,7 +58,11 @@ const InquiryResponseModal = ({ isOpen, toggle, inquiry, onSuccess }) => {
             if (onSuccess) onSuccess();
             toggle();
         } catch (error) {
-            toast.error(error?.response?.data?.message || t("compliance.uploadError", "Failed to upload response."));
+            handlePaymentApiError({
+                error,
+                fallback: t("compliance.uploadError", "Failed to upload response."),
+                setError: (message) => toast.error(message),
+            });
         } finally {
             setLoading(false);
         }
