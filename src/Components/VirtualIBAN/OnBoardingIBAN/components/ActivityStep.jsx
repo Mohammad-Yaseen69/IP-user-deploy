@@ -1,4 +1,4 @@
-import { Tooltip, useMediaQuery } from '@mui/material'
+import { Tooltip, useMediaQuery  } from '@mui/material'
 import { useEffect, useMemo, useState } from 'react'
 import { AlertCircle, AlertTriangle, ArrowLeft, ArrowRight, X } from 'react-feather'
 import { useTranslation } from 'react-i18next'
@@ -40,7 +40,7 @@ const ActivityStep = ({ onNext, onBack, data = {}, currentStep}) => {
     const { t } = useTranslation()
     const [showCountryDropdown, setShowCountryDropdown] = useState(false)
     const isMobile = useMediaQuery('(max-width:600px)');
-
+    
     useEffect(() => {
         window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
         document.body.scrollTop = 0;
@@ -185,12 +185,9 @@ const ActivityStep = ({ onNext, onBack, data = {}, currentStep}) => {
                     currentStep={currentStep} 
                 />
             </div>
-            <div
-                style={{
-                    width: "100%"
-                }}
-                className={styles.activityHeader}
-            >
+            <div style={{
+                width: "100%"
+            }} className={styles.activityHeader}>
                 <h2 className={styles.formHeading}>{t("How will you use InstaPay?")}</h2>
                 <p className={styles.formSubheading}>
                     {t("These answers tailor your account. Some questions and documents appear dynamically based on your profile, nothing more than we need.")}
@@ -202,7 +199,6 @@ const ActivityStep = ({ onNext, onBack, data = {}, currentStep}) => {
                     />
                 </div>
             </div>
-            
             <div className={styles.mainArea}>
 
                 <div>
@@ -250,7 +246,7 @@ const ActivityStep = ({ onNext, onBack, data = {}, currentStep}) => {
                                         "Cross-border payment orchestration and multi-currency treasury..."
                                     )}
                                 />
-                                <span className={styles.charCount}>{form.businessDescription.length}/1000</span>
+                                < span className={styles.charCount}>{form.businessDescription.length}/1000</span>
                             </div>
 
                             <div className={styles.inputGroup}
@@ -404,8 +400,8 @@ const ActivityStep = ({ onNext, onBack, data = {}, currentStep}) => {
                                                     type="button"
                                                     disabled={comingSoon}
                                                     className={`${styles.chip} ${form.services?.includes(label)
-                                                            ? styles.activeChip
-                                                            : ""
+                                                        ? styles.activeChip
+                                                        : ""
                                                         }`}
                                                     onClick={() =>
                                                         !comingSoon && toggleArrayItem("services", label)
@@ -486,7 +482,7 @@ const ActivityStep = ({ onNext, onBack, data = {}, currentStep}) => {
                                         onChange={set("paymentNature")}
                                     />
                                 </div>
-                            
+
                                 <div className={styles.inputGroup}>
                                     <label className={styles.inputLabel}>
                                         {t("COUNTRIES OF ORIGIN OF FUNDS")} <span style={{ color: "red", fontWeight: 600 }}>*</span>
@@ -530,9 +526,9 @@ const ActivityStep = ({ onNext, onBack, data = {}, currentStep}) => {
                                                 toggleArrayItem("destinationCountries", country.name);
                                             }
                                         }}
-                                        containerStyle={countrySelectStyle}
                                         country=""
                                         background="#fff"
+                                        containerStyle={countrySelectStyle}
                                     />
 
                                     <div className={styles.chips}>
@@ -618,7 +614,7 @@ const ActivityStep = ({ onNext, onBack, data = {}, currentStep}) => {
                                 :
                                     <PaymentsFields form={form} set={set} />
                                 }
-                                
+                               
                             </div>
                         </div>
                     </div>
@@ -634,7 +630,7 @@ const ActivityStep = ({ onNext, onBack, data = {}, currentStep}) => {
                     />
                 </div>
             </div>
-            {isMobile ?
+             {isMobile ?
                 <div className={styles.alertWrapper}>
                     <AlertBox
                         icon={<AlertCircle size={12} color='#5926F0' />}
@@ -682,7 +678,6 @@ const ActivityStep = ({ onNext, onBack, data = {}, currentStep}) => {
 }
 
 export default ActivityStep
-
 
 const PaymentsFields = ({ form, set, isMobile }) => {
     const { t } = useTranslation();

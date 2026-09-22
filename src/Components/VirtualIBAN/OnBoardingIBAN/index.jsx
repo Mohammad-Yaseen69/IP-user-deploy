@@ -1,12 +1,10 @@
 import axios from 'axios'
-import { forwardRef, useContext, useEffect, useImperativeHandle, useReducer, useState } from 'react'
+import { forwardRef, useContext, useEffect, useImperativeHandle, useReducer, useState } from 'react';
 import { Activity, ArrowRight, Cpu, CreditCard, Globe, Zap } from 'react-feather'
 import { useTranslation } from 'react-i18next'
-import { useNavigate } from 'react-router'
 import { toast } from 'react-toastify'
 import { UserContext } from '../../../Context/UserContext'
 import { usePermission } from '../../../hooks/GeneralUse/usePermission'
-import useWindowWidth from '../../../utils/useWindowWidth'
 import imageCard from "../files/images/Frame_2147236087.png"
 import styles from "./style/OnboardingIban.module.css"
 
@@ -294,7 +292,7 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
         }
     }
 
-    
+
     const handleStatusAction = () => {
         if (state.status === 'approved' && onCreated) {
             onCreated()
@@ -368,7 +366,7 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
                     <div className={styles.rightSection}>
                         <img src={imageCard} alt="Business IBAN card" />
                     </div>
-                    <div className={styles.mobileContent}>
+                     <div className={styles.mobileContent}>
                         <h2 className={styles.mobileHeading}>
                             {t("Get a dedicated business IBAN for your company.")}
                         </h2>
@@ -545,6 +543,8 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
             </Modal>
         </div>
     )
-})
+});
+
+OnboardingIBAN.displayName = 'OnboardingIBAN';
 
 export default OnboardingIBAN
