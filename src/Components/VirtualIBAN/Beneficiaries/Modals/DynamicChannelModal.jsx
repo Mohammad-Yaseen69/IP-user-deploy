@@ -20,7 +20,6 @@ const DynamicChannelModal = ({ open, handleClose, beneficiaryData, onSaveSuccess
 
     const navigate = useNavigate();
 
-    const navigate = useNavigate();
 
     const [channelType, setChannelType] = useState(lockChannelType || 'bank');
     const [submitting, setSubmitting] = useState(false);
