@@ -4,18 +4,17 @@ import TopRight from '../topRight'
 import { useTranslation } from 'react-i18next'
 import { Search } from 'react-feather'
 import { Button, Input } from 'reactstrap'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import BeneficiaryCard from './BeneficiaryCard'
 import { UserContext } from '../../Context/UserContext'
 import add_ben from "./add_ben.svg"
 import { usePermission } from "../../hooks/GeneralUse/usePermission";
 import AddBeneficiaryFlowV2 from "../VirtualIBAN/Beneficiaries/AddBeneficiaryFlowV2";
-
-
-const USE_NEW_ADD_BENEFICIARY_FLOW = true
+import { USE_NEW_BENEFICIARY_FLOW } from "../VirtualIBAN/Beneficiaries/AddBeneficiaryFlowV2/constants";
 
 const Beneficiaries = () => {
     const { t } = useTranslation()
+    const navigate = useNavigate()
 
     const { beneficiaries, verifyToken, getUserBeneficiaries, userDetails } = useContext(UserContext)
     const [filtered, setFiltered] = useState(beneficiaries)
@@ -31,6 +30,13 @@ const Beneficiaries = () => {
 
     const openBeneficiary = (beneficiary, mode) => {
         verifyToken()
+
+        if (!USE_NEW_BENEFICIARY_FLOW) {
+            const businessPath = beneficiary?.beneficiary_type === "business" ? "/business" : ""
+            navigate(`/beneficiaries/edit${businessPath}?user_id=${beneficiary?._id}&${mode}=true`)
+            return
+        }
+
         setActiveBeneficiary(beneficiary)
         setBeneficiaryMode(mode)
     }
@@ -73,7 +79,7 @@ const Beneficiaries = () => {
                         />
                     </div>
                     {can("beneficiaries.add") && (
-                        USE_NEW_ADD_BENEFICIARY_FLOW
+                        USE_NEW_BENEFICIARY_FLOW
                             ? <Button color='transparent' className={styles.btn} style={{ padding: ".5rem 1rem" }} onClick={() => {
                                 verifyToken()
                                 setIsAddOpen(true)
@@ -125,7 +131,7 @@ const Beneficiaries = () => {
                             <Search />
                             <Input type='search' placeholder={t('Search for Beneficiaries')} style={{ padding: ".5rem 1rem" }} onChange={filterBenef} />
                         </div>
-                        {USE_NEW_ADD_BENEFICIARY_FLOW
+                        {USE_NEW_BENEFICIARY_FLOW
                             ? <button
                                 type="button"
                                 style={{ all: 'unset', cursor: 'pointer', display: 'inline-flex' }}
@@ -154,7 +160,7 @@ const Beneficiaries = () => {
                 </div>
             </div>
 
-            {USE_NEW_ADD_BENEFICIARY_FLOW && (
+            {USE_NEW_BENEFICIARY_FLOW && (
                 <AddBeneficiaryFlowV2
                     open={isAddOpen}
                     handleClose={() => setIsAddOpen(false)}
@@ -162,7 +168,7 @@ const Beneficiaries = () => {
                 />
             )}
 
-            {activeBeneficiary && (
+            {USE_NEW_BENEFICIARY_FLOW && activeBeneficiary && (
                 <AddBeneficiaryFlowV2
                     open={!!activeBeneficiary}
                     mode={beneficiaryMode}
