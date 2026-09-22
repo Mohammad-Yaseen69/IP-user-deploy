@@ -8,6 +8,7 @@ import {
     SectionTitle,
 } from '../components';
 import DynamicField from '../components/DynamicField';
+import ChannelsSummary from '../components/ChannelsSummary';
 import { getFieldDef } from '../vendorFields';
 import { useCountryStates } from '../useCountryStates';
 import { METHOD_AVATAR_ICON, METHOD_CONTEXT_LABEL } from '../constants';
@@ -19,7 +20,7 @@ const ADDRESS_CHECK_COLORS = {
     invalid: '#b42318',
 };
 
-const FieldGrid = ({ names, defs, values, onChange, errors, disabled, lockedFields = [], countryIso3, stateData }) => {
+const FieldGrid = ({ names, defs, values, onChange, errors, disabled, lockedFields = [], countryIso3, stateData, payers, payersLoading }) => {
     const hasStateField = names.some((name) => getFieldDef(name, defs).type === 'state');
     const rows = [];
     for (let index = 0; index < names.length; index += 2) {
@@ -40,6 +41,8 @@ const FieldGrid = ({ names, defs, values, onChange, errors, disabled, lockedFiel
                             countryIso3={countryIso3}
                             stateData={stateData}
                             hasStateField={hasStateField}
+                            payers={payers}
+                            payersLoading={payersLoading}
                             onChange={(value, patch) => onChange(name, value, patch)}
                             error={errors[name]}
                             disabled={disabled || lockedFields.includes(name)}
@@ -62,6 +65,9 @@ const StepDetails = ({
     onChangeMethod,
     addressCheck = null,
     lockedFields = [],
+    payers = [],
+    payersLoading = false,
+    beneficiary = null,
     disabled = false,
 }) => {
     const { allowedCountries } = useContext(UserContext);
@@ -110,6 +116,8 @@ const StepDetails = ({
                                 lockedFields={lockedFields}
                                 countryIso3={form.country}
                                 stateData={stateData}
+                                payers={payers}
+                                payersLoading={payersLoading}
                             />
                         </Section>
                     )}
@@ -130,6 +138,8 @@ const StepDetails = ({
                                 lockedFields={lockedFields}
                                 countryIso3={form.country}
                                 stateData={stateData}
+                                payers={payers}
+                                payersLoading={payersLoading}
                             />
                             {addressCheck && (
                                 <p
@@ -160,6 +170,8 @@ const StepDetails = ({
                     Go back and choose a payout method so we know which details are needed.
                 </Alert>
             )}
+
+            {beneficiary && <ChannelsSummary beneficiary={beneficiary} heading="Payout channels on file" />}
 
             {providerError && (
                 <Alert variant="error" title={providerError.title}>
