@@ -32,7 +32,7 @@ import { currencies } from "../InternationalFlow/StepOne";
 import StepThree from "../InternationalFlow/StepThree";
 import styles from "../InternationalFlow/styles/index.module.css";
 import WalletsComponent from "../InternationalFlow/WalletsComponent";
-import { LimitsErrorMessage } from "../OTPConfirmation";
+import { LimitsErrorMessage } from "../../../utils/Functions/paymentLimits";
 import Recursive from "../RecursivePayment";
 import SchedulePayment from "../SchedulePayment";
 import PaymentType from "./PaymentType";

@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { UserContext } from "../../Context/UserContext";
 import axios from "axios";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
-import { LimitsErrorMessage } from "../PaymentsNewer/OTPConfirmation";
+import { LimitsErrorMessage } from "../../utils/Functions/paymentLimits";
 import { useNavigate } from "react-router";
 import { Modal, ModalBody } from "reactstrap";
 import Receipt from "../PaymentsNewer/InternationalFlow/Receipt";

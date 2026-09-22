@@ -12,7 +12,7 @@ import { encryptData } from '../../Helper/EssentilaMethods/Encryption'
 import SuccessModal from '../AddBeneficiary/SuccessModal'
 import InstaPayLoader from '../Loader'
 import ErrorModal from '../PaymentsNewer/InternationalFlow/ErrorModal'
-import { LimitsErrorMessage } from '../PaymentsNewer/OTPConfirmation'
+import { LimitsErrorMessage } from '../../utils/Functions/paymentLimits'
 import OTPConfirmation from '../../Common/Component/OtpVerification'
 
 const AcceptModal = ({ isOpen, toggle, item }) => {

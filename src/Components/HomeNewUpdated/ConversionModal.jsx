@@ -11,7 +11,7 @@ import axios from "axios";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
 import { InactivityContext } from "../../InactivityWrapper";
-import { LimitsErrorMessage } from "../PaymentsNewer/OTPConfirmation";
+import { LimitsErrorMessage } from "../../utils/Functions/paymentLimits";
 import { useIdempotency } from "../../hooks/Payments/useIdempotency";
 import { formatCurrency } from "../../Helper/AmountFormat";
 

@@ -13,7 +13,7 @@ import faded_lines from "../PaymentsNewer/files/faded_lines.png"
 import OTPConfirmation from '../../Common/Component/OtpVerification'
 import { useNavigate } from 'react-router'
 import InstaPayLoader from '../Loader'
-import { LimitsErrorMessage } from '../PaymentsNewer/OTPConfirmation'
+import { LimitsErrorMessage } from '../../utils/Functions/paymentLimits'
 
 const CommissionConversion = ({ isOpen, toggle, referralBalance = 0, defaultCurrency, setSuccess, getReferralCommission, toggleWithdrawModal }) => {
     const navigate = useNavigate()

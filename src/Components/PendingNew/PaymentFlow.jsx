@@ -11,7 +11,7 @@ import confirmationVideo from "../PaymentsNewer/files/confirm.mp4"
 import SuccessModal from "../AddBeneficiary/SuccessModal"
 import OTPConfirmation from "../../Common/Component/OtpVerification"
 import { useTranslation } from "react-i18next"
-import { LimitsErrorMessage } from "../PaymentsNewer/OTPConfirmation"
+import { LimitsErrorMessage } from "../../utils/Functions/paymentLimits"
 import { Link, useNavigate } from "react-router-dom"
 import { useQueryClient } from "@tanstack/react-query"
 

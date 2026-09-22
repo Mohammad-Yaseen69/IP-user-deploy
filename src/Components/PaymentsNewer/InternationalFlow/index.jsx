@@ -23,7 +23,7 @@ import { service_name_formatter } from "../../TransactionsNewApi/TransactionItem
 import SendActionCard from '../Common/SendActionCard'
 import int from "../files/int.svg"
 import international from "../files/international.png"
-import { LimitsErrorMessage } from "../OTPConfirmation"
+import { LimitsErrorMessage } from "../../../utils/Functions/paymentLimits"
 import RecentTransactions from "../WalletToWalletFlow/RecentTransactions"
 import CreditCard from "./CreditCard"
 import ErrorModal from "./ErrorModal"

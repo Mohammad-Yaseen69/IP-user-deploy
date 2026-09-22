@@ -16,7 +16,7 @@ import { UserContext } from "../../../Context/UserContext";
 import StepTwo from "../WalletToWalletFlow/StepTwo";
 import axios from "axios";
 import { decryptData } from "../../../Helper/EssentilaMethods/Decryption";
-import { LimitsErrorMessage } from "../OTPConfirmation";
+import { LimitsErrorMessage } from "../../../utils/Functions/paymentLimits";
 import StepThree from "../InternationalFlow/StepThree";
 import StepFour from "../InternationalFlow/StepFour";
 import WalletsComponent from "../InternationalFlow/WalletsComponent";

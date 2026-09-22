@@ -17,7 +17,7 @@ import { encryptData } from '../../../Helper/EssentilaMethods/Encryption'
 import axios from 'axios'
 import { decryptData } from '../../../Helper/EssentilaMethods/Decryption'
 import { toast } from 'react-toastify'
-import { LimitsErrorMessage } from '../../PaymentsNewer/OTPConfirmation'
+import { LimitsErrorMessage } from '../../../utils/Functions/paymentLimits'
 import recent from "../../PaymentsNewer/Mobile/files/recent.svg"
 import int_styles from "../../PaymentsNewer/Mobile/styles/International.module.css"
 

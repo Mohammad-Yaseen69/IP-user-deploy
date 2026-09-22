@@ -16,12 +16,12 @@ import { useNavigate } from "react-router";
 import { createShambeToken } from "../../Helper/CreateToken";
 import NotFoundModal from "../NotFound/NotFoundModal";
 import { apiErrorMessage } from "../PaymentsNewer/InternationalFlow";
-import { LimitsErrorMessage } from "../PaymentsNewer/OTPConfirmation";
 
 import { WidgetSDK } from "@keabank/websdk";
 import { apiWrapper } from "../../utils/Functions/apiWrapper";
 import MobileWalletStatus from "../PaymentAddressPublic/PayAsGuest/MobileWalletStatus";
 import { useIdempotency } from "../../hooks/Payments/useIdempotency";
+import { LimitsErrorMessage } from "../../utils/Functions/paymentLimits";
 
 
 const sdk = new WidgetSDK({

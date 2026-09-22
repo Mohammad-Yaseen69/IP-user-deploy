@@ -12,7 +12,7 @@ import PaymentsFlowModal from "./Modal";
 import { UserContext } from "../../../Context/UserContext";
 import axios from "axios";
 import { decryptData } from "../../../Helper/EssentilaMethods/Decryption";
-import { LimitsErrorMessage } from "../../PaymentsNewer/OTPConfirmation";
+import { LimitsErrorMessage } from "../../../utils/Functions/paymentLimits";
 import { toast } from "react-toastify";
 import ErrorModal from "../../PaymentsNewer/InternationalFlow/ErrorModal";
 

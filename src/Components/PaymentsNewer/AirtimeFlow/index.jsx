@@ -16,7 +16,7 @@ import StepFour from "./StepFour";
 import StepFive from "./StepFive";
 import OtpConfirmation from "../../../Common/Component/OtpVerification";
 import { encryptData } from "../../../Helper/EssentilaMethods/Encryption";
-import { LimitsErrorMessage } from "../OTPConfirmation";
+import { LimitsErrorMessage } from "../../../utils/Functions/paymentLimits";
 import { useLocation, useNavigate } from "react-router";
 import { Link } from "react-router-dom";
 import { ChevronLeft, ChevronRight, HelpCircle } from "react-feather";
