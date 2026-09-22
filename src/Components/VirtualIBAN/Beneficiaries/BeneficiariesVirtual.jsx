@@ -8,6 +8,7 @@ import TopRight from '../../topRight';
 import AddBeneficiaryModal from './Modals/AddBeneficiaryModal';
 import DynamicChannelModal from './Modals/DynamicChannelModal';
 import AddBeneficiaryFlowV2 from './AddBeneficiaryFlowV2';
+import { USE_NEW_BENEFICIARY_FLOW } from './AddBeneficiaryFlowV2/constants';
 import { useNavigate } from 'react-router';
 import { useQuery } from '@tanstack/react-query';
 import { apiWrapper } from '../../../utils/Functions/apiWrapper';
@@ -15,8 +16,6 @@ import { handlePaymentApiError } from '../../../utils/Functions/handlePaymentApi
 import { UserContext } from '../../../Context/UserContext';
 import { toast } from 'react-toastify';
 
-
-const USE_NEW_ADD_BENEFICIARY_FLOW = true;
 
 const BeneficiariesVirtual = () => {
     const { t } = useTranslation();
@@ -391,7 +390,7 @@ const BeneficiariesVirtual = () => {
 
             {/* New beneficiaries go through the vendor-driven DS 2.0 flow, which asks
                 only for the fields the chosen payout provider actually requires. */}
-            {USE_NEW_ADD_BENEFICIARY_FLOW && (
+            {USE_NEW_BENEFICIARY_FLOW && (
                 <AddBeneficiaryFlowV2
                     open={isAddModalOpen && !beneficiaryToEdit}
                     handleClose={() => {
@@ -402,7 +401,7 @@ const BeneficiariesVirtual = () => {
                 />
             )}
 
-            {USE_NEW_ADD_BENEFICIARY_FLOW && beneficiaryToEdit && (
+            {USE_NEW_BENEFICIARY_FLOW && beneficiaryToEdit && (
                 <AddBeneficiaryFlowV2
                     open={isAddModalOpen && !!beneficiaryToEdit}
                     mode="edit"
@@ -416,7 +415,7 @@ const BeneficiariesVirtual = () => {
             )}
 
             {/* Editing without the new flow, which also handles creation when the flag is off. */}
-            {!USE_NEW_ADD_BENEFICIARY_FLOW && (
+            {!USE_NEW_BENEFICIARY_FLOW && (
                 <AddBeneficiaryModal
                     open={isAddModalOpen}
                     handleClose={() => {
@@ -431,7 +430,7 @@ const BeneficiariesVirtual = () => {
             {/* Adding a channel reuses the same vendor-driven flow, starting at the
                 method step with the beneficiary already known. The original
                 DynamicChannelModal is kept below for the flag-off path. */}
-            {USE_NEW_ADD_BENEFICIARY_FLOW ? (
+            {USE_NEW_BENEFICIARY_FLOW ? (
                 <AddBeneficiaryFlowV2
                     open={isChannelModalOpen}
                     handleClose={() => {

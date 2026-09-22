@@ -1,3 +1,7 @@
+/* One switch for the whole beneficiary journey. True puts add, edit and view in this
+   dialog; false sends all three back to the older screens. */
+export const USE_NEW_BENEFICIARY_FLOW = false;
+
 export const RECIPIENT_TYPES = [
     {
         value: 'individual',
