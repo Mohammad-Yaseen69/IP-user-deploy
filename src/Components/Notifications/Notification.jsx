@@ -119,7 +119,9 @@ const Notification = ({ notification, currentUser, onRead }) => {
         } catch (error) {
             // console.log(decryptData(error?.response?.data?.data))
         }
-        onRead();
+        if(onRead){
+           onRead();
+        }
     }
 
     return (
