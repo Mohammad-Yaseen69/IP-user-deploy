@@ -63,9 +63,7 @@ const QuickActions = ({ selectedIban }) => {
         "compadsaf"
     ];
 
-    const isCryptoTopupAllowed = allowedUsernames.includes(
-        String(userDetails?.username || "").trim().toLowerCase()
-    );
+    const isCryptoTopupAllowed = true
     const { t } = useTranslation()
     const openModal = (key) => setModals((prev) =>
         Object.keys(prev).reduce((next, modalKey) => ({
