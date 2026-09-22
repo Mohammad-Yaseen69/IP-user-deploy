@@ -2,11 +2,13 @@ import { useContext, useMemo } from 'react';
 import styles from '../AddBeneficiaryFlowV2.module.css';
 import { Alert, ContextCard, GroupHeader, OptionCard } from '../components';
 import { GROUPS, METHOD_META } from '../constants';
-import { useAvailableMethods } from '../useVendorRequirements';
 import { UserContext } from '../../../../../Context/UserContext';
 
 const StepMethod = ({
     form,
+    methods = { transfer: [], virtualIban: [] },
+    isLoading = false,
+    error = null,
     onSelectMethod,
     requirementsLoading = false,
     requirementsError = null,
@@ -16,7 +18,6 @@ const StepMethod = ({
     showTiming = false,
 }) => {
     const { allowedCountries } = useContext(UserContext);
-    const { methods, isLoading, error } = useAvailableMethods(form.country);
 
     const countryLabel = useMemo(
         () =>
