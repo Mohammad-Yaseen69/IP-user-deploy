@@ -9,13 +9,16 @@ import PhoneInput from '../../../PhoneInput';
 import { toast } from 'react-toastify';
 import { UserContext } from '../../../../Context/UserContext';
 import { handleEmailInput, handleNameInput, preventEdgeSpaces, preventEmailSpaces } from '../../../../hooks/useTrimInput';
+import { handlePaymentApiError } from '../../../../utils/Functions/handlePaymentApiError';
+import { useNavigate } from 'react-router';
 const nameRegex = /^[A-Za-z\s]+$/;
 const AddBeneficiaryModal = ({ open, handleClose, onSaveSuccess, beneficiaryToEdit }) => {
     const { t } = useTranslation();
     const [loading, setLoading] = useState(false);
     const [beneficiaryType, setBeneficiaryType] = useState('individual');
     const [phoneKey, setPhoneKey] = useState(0);
-    const { allowedCountries } = useContext(UserContext);
+    const { allowedCountries, setProfileLockTime } = useContext(UserContext);
+    const navigate = useNavigate();
     const prefillPhoneRef = useRef('');
     const [formData, setFormData] = useState({
         first_name: '',
@@ -184,9 +187,13 @@ const AddBeneficiaryModal = ({ open, handleClose, onSaveSuccess, beneficiaryToEd
             if (onSaveSuccess) onSaveSuccess(createdOrUpdated, !beneficiaryToEdit);
             handleClose();
         } catch (err) {
-            console.error("Save beneficiary error:", err);
-            const msg = err?.response?.data?.message || err?.message || t("Failed to save beneficiary");
-            toast.error(msg);
+            handlePaymentApiError({
+                error: err,
+                navigate,
+                setProfileLockTime,
+                fallback: t("Failed to save beneficiary"),
+                setError: (message) => toast.error(message),
+            });
         } finally {
             setLoading(false);
         }
