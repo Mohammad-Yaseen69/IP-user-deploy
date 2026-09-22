@@ -44,8 +44,8 @@ const StepOne = ({ data, dataHandler, allowed, wallet, cardEnabled = false }) =>
             name: "Bank Transfer (Europe Only)",
             value: "bank_transfer",
             id: 2,
-            icon: pagSvgs.wallet,
-            active_icon: pagSvgs.wallet_a,
+            icon: pagSvgs.bank_transfer,
+            active_icon: pagSvgs.bank_transfer,
             api_val: "bank"
         },
         {
