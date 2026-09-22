@@ -11,6 +11,7 @@ import StepRecipient from './steps/StepRecipient';
 import StepMethod from './steps/StepMethod';
 import StepDetails from './steps/StepDetails';
 import StepConfirm from './steps/StepConfirm';
+import StepView from './steps/StepView';
 import { INITIAL_FORM, THUNES_SERVICE_BY_METHOD } from './constants';
 import {
     buildBeneficiaryPayload,
@@ -19,7 +20,7 @@ import {
     prefillBeneficiaryBag,
     prefillEditBag,
 } from './buildPayloads';
-import { useRequiredFields, useRequirements } from './useVendorRequirements';
+import { usePayers, useRequiredFields, useRequirements } from './useVendorRequirements';
 import { getEditRequirements } from './vendorFields';
 import { apiWrapper } from '../../../../utils/Functions/apiWrapper';
 import { UserContext } from '../../../../Context/UserContext';
@@ -149,14 +150,22 @@ const AddBeneficiaryFlowV2 = ({
         });
     }, [open, mode, existingBeneficiary]);
 
-    const isThunesMethod = !!THUNES_SERVICE_BY_METHOD[form.method];
+    const isTransferMethod = !!THUNES_SERVICE_BY_METHOD[form.method];
 
     const { fields, transactionType, isLoading: fieldsLoading, error: fieldsError } = useRequiredFields({
         countryIso3: form.country,
         serviceId: form.service_id,
         method: form.method,
         recipientType: form.recipient_type,
-        enabled: isThunesMethod,
+        enabled: isTransferMethod,
+    });
+
+    const { payers, isLoading: payersLoading } = usePayers({
+        countryIso3: form.country,
+        serviceName: form.service_name,
+        vendor: form.vendor,
+        transactionType,
+        enabled: form.method === 'mobile_wallet',
     });
 
     const vendorRequirements = useRequirements({
@@ -219,6 +228,7 @@ const AddBeneficiaryFlowV2 = ({
             method: entry.value,
             vendor: entry.vendor,
             service_id: entry.serviceId || null,
+            service_name: entry.serviceName || '',
             channel: {},
         }));
         setErrors({});
@@ -272,6 +282,9 @@ const AddBeneficiaryFlowV2 = ({
                 }
             });
             (requirements.requiredChannel || []).forEach((name) => {
+                /* Nothing to choose from means the provider cannot be the blocker. */
+                if (name === 'mobile_wallet_provider' && payers.length === 0) return;
+
                 if (!String(form.channel[name] || '').trim()) {
                     next.channel[name] = 'Required.';
                 }
@@ -441,7 +454,7 @@ const AddBeneficiaryFlowV2 = ({
 
     const primaryDisabled = () => {
         if (saving) return true;
-        if (stage === 'method') return !form.method || (isThunesMethod && fieldsLoading);
+        if (stage === 'method') return !form.method || (isTransferMethod && fieldsLoading);
         if (stage === 'details' && addressCheck?.state === 'invalid') return true;
         return false;
     };
@@ -456,8 +469,8 @@ const AddBeneficiaryFlowV2 = ({
                     <StepMethod
                         form={form}
                         onSelectMethod={selectMethod}
-                        requirementsLoading={isThunesMethod && fieldsLoading}
-                        requirementsError={isThunesMethod ? fieldsError : null}
+                        requirementsLoading={isTransferMethod && fieldsLoading}
+                        requirementsError={isTransferMethod ? fieldsError : null}
                         showTiming={isChannelMode}
                         recipientName={isChannelMode ? recipientName : null}
                         recipientMeta={[
@@ -471,6 +484,10 @@ const AddBeneficiaryFlowV2 = ({
                 );
 
             case 'details':
+                if (isViewMode) {
+                    return <StepView beneficiary={existingBeneficiary} recipientName={recipientName} />;
+                }
+
                 return (
                     <StepDetails
                         form={form}
@@ -482,6 +499,9 @@ const AddBeneficiaryFlowV2 = ({
                         recipientName={recipientName}
                         addressCheck={addressCheck}
                         lockedFields={lockedFields}
+                        payers={payers}
+                        payersLoading={payersLoading}
+                        beneficiary={isEditMode ? existingBeneficiary : null}
                         disabled={isViewMode}
                         onChangeMethod={isBeneficiaryMode ? null : () => setStage('method')}
                     />
