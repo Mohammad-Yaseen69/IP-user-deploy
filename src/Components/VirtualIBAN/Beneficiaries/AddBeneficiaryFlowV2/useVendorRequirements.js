@@ -1,0 +1,122 @@
+import { useContext, useMemo } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { apiWrapper } from '../../../../utils/Functions/apiWrapper';
+import { UserContext } from '../../../../Context/UserContext';
+import {
+    getBvnkRequirements,
+    getThunesRequirements,
+    resolveTransactionType,
+} from './vendorFields';
+import { BVNK_METHODS, getDestinationType, methodFromServiceName } from './constants';
+
+export const useAvailableMethods = (countryIso3) => {
+    const { userDetails } = useContext(UserContext);
+    const senderIso3 = userDetails?.country?.country_iso_code || userDetails?.country_iso_code;
+
+    const { data, isFetching, error } = useQuery({
+        queryKey: ['abfServices', countryIso3, senderIso3],
+        queryFn: () =>
+            apiWrapper({
+                endpoint: `/api/payment/services/${countryIso3}/${senderIso3}`,
+                method: 'GET',
+                isDecrypted: true,
+            }),
+        enabled: !!countryIso3 && !!senderIso3,
+        staleTime: 5 * 60 * 1000,
+    });
+
+    const methods = useMemo(() => {
+        const services = data?.services || [];
+
+        const transfer = services
+            .map((service) => {
+                const [name, vendor] = String(service.method || '').split(' - ');
+                const method = methodFromServiceName(name);
+                if (!method) return null;
+                return {
+                    value: method,
+                    serviceId: service.id,
+                    serviceName: name?.trim(),
+                    vendor: (vendor || 'thunes').trim().toLowerCase(),
+                };
+            })
+            .filter(Boolean);
+
+        return { transfer, virtualIban: BVNK_METHODS };
+    }, [data]);
+
+    return { methods, isLoading: isFetching, error };
+};
+
+export const useRequiredFields = ({ countryIso3, serviceId, method, recipientType, enabled = true }) => {
+    const { userDetails } = useContext(UserContext);
+    const transactionType = resolveTransactionType(userDetails?.account_type, recipientType);
+    const destinationType = getDestinationType(method, serviceId);
+
+    const { data, isFetching, error } = useQuery({
+        queryKey: ['abfRequiredFields', countryIso3, serviceId, destinationType, transactionType],
+        queryFn: () =>
+            apiWrapper({
+                endpoint: `/api/payment/get-required-fields/${countryIso3}/${serviceId}/${transactionType}?destinationType=${destinationType}`,
+                method: 'GET',
+                isDecrypted: true,
+            }),
+        enabled: enabled && !!countryIso3 && !!serviceId,
+        staleTime: 5 * 60 * 1000,
+    });
+
+    const fields = useMemo(() => data?.data || data || null, [data]);
+
+    return { fields, transactionType, isLoading: isFetching, error };
+};
+
+const normalisePayers = (data) => {
+    if (Array.isArray(data)) return data.filter((payer) => payer?.id || payer?.name);
+
+    if (Array.isArray(data?.destinations)) {
+        return data.destinations.map((payer) => ({
+            id: payer?.destinationId,
+            name: payer?.destinationName,
+        }));
+    }
+
+    return [];
+};
+
+/* Mobile wallets pay a named provider, so the recipient has to pick one. */
+export const usePayers = ({ countryIso3, serviceName, vendor, transactionType, enabled = true }) => {
+    const { data, isFetching, error } = useQuery({
+        queryKey: ['abfPayers', countryIso3, serviceName, vendor, transactionType],
+        queryFn: async () => {
+            const res = await apiWrapper({
+                endpoint: '/api/payment/payers',
+                method: 'POST',
+                payload: {
+                    country: countryIso3,
+                    service: serviceName,
+                    vendor,
+                    transaction_type: transactionType,
+                },
+                isDecrypted: true,
+            });
+
+            return normalisePayers(res);
+        },
+        enabled: enabled && !!countryIso3 && !!serviceName && !!transactionType,
+        staleTime: 5 * 60 * 1000,
+    });
+
+    return { payers: data || [], isLoading: isFetching, error };
+};
+
+export const useRequirements = ({ method, vendor, fields, recipientType, channel }) => {
+    const cryptoAsset = channel?.crypto_asset;
+
+    return useMemo(() => {
+        if (BVNK_METHODS.some((m) => m.value === method)) {
+            return getBvnkRequirements(method, recipientType, { crypto_asset: cryptoAsset });
+        }
+        if (!fields) return null;
+        return getThunesRequirements(fields, recipientType, method);
+    }, [method, vendor, fields, recipientType, cryptoAsset]);
+};
