@@ -120,7 +120,6 @@ const MoveMoney = () => {
                 )}
               </p>
             </div>
-            {/*  */}
             <div className={styles.sectionBlock}>
               <div className={`${styles.sectionLabel} ${styles.cardTitle} `}>
                 {t("SEND MONEY OUT")}{" "}
@@ -190,9 +189,8 @@ const MoveMoney = () => {
                       </span>
                       <span
                         className={`${styles.tag} ${styles.tagGray}   ${styles.tagEuro} `}
-                        a
                       >
-                        1-5 1-3
+                        1-5
                       </span>
                       <span
                         className={`${styles.tag} ${styles.tagGray}   ${styles.tagEuro} `}
@@ -298,7 +296,6 @@ const MoveMoney = () => {
                     <div className={`${styles.iconBox} ${styles.bgGreen}`}>
                       <CreditCard size={20} />
                     </div>
-
                     <div className={styles.cardBody}>
                       <h3 className={styles.cardTitle}>{t("Balances")}</h3>
                       <p className={styles.cardDesc}>

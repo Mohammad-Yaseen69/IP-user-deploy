@@ -269,7 +269,6 @@ const PurposeStep = ({ amount, currencyCode, purpose, setPurpose, description, s
                 <span>{t("SEPA transfers deliver the full amount and carry no correspondent fees, so there is no OUR/SHA/BEN choice to make.")}</span>
             </div>
         </div>
-        // </div>
     )
 }
 
