@@ -89,11 +89,6 @@ const SidebarNew = ({ setShowModal, showModal }) => {
     const { userDetails, profileCompletedPercentage } = useContext(UserContext)
 
     const location = useLocation()
-    useEffect(() => {
-        if (location.pathname === "/" || location.pathname === "/dashboard/default" || location.pathname === "/my-mastercard") {
-            setTogglSidebar(true)
-        }
-    }, [location.pathname])
 
     const [inheritSize, setInheritSize] = useState(false)
     const filteredMenu = MENU?.filter(item => {

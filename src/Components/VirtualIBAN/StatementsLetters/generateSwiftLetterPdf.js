@@ -3,30 +3,9 @@ import html2canvas from 'html2canvas';
 import QRCodeStyling from 'qr-code-styling';
 import logoImg from '../../../assets/images/logo/logo2.webp';
 import signatureImg from './signatur.png';
-import { getPaymentReference } from '../utils/virtualIban';
+import { getPaymentReference, INTL_DEPOSIT_ACCOUNTS } from '../utils/virtualIban';
 
-export const INTL_SWIFT_DATA = {
-    usd: {
-        currencyCode: 'USD',
-        currencyLabel: 'USD (US Dollar)',
-        beneficiaryName: 'SYSTEM PAY SERVICES MALTA LTD',
-        beneficiaryAddress: 'Ruby Workspaces Office 3 Pendergardens Triq Gort, San Giljan, STJ 9023, MT',
-        accountNumber: 'ES9601828510912010000487',
-        bankCode: 'BBVAESMMXXX',
-        bankName: 'Banco Bilbao Vizcaya Argentaria, S.A.',
-        bankAddress: 'Plaza De San Nicolas 4, Bilbao, 48005, ES',
-    },
-    eur: {
-        currencyCode: 'EUR',
-        currencyLabel: 'EUR (Euro)',
-        beneficiaryName: 'System Pay Services (Malta) Limited',
-        beneficiaryAddress: 'Ruby Workspaces Office 3 Pendergardens Triq Gort, San Giljan, STJ 9023, MT',
-        accountNumber: 'ES8201828510940200010371',
-        bankCode: 'BBVAESMMXXX',
-        bankName: 'Banco Bilbao Vizcaya Argentaria, S.A.',
-        bankAddress: 'De San Nicolas 4, Bilboa, 48005, ES',
-    },
-};
+export const INTL_SWIFT_DATA = INTL_DEPOSIT_ACCOUNTS;
 
 export const service_name_formatter = (itemName) => {
     if (itemName) {
@@ -166,7 +145,7 @@ const buildSwiftLetterPagesHtml = ({ logoBase64, qrBase64, signatureBase64, iban
     const orgNumber = getSafeString(userDetails?.company?.registration_number || userDetails?.company?.tax_id, '---');
     const virtualIbanId = getSafeString(iban?.virtualIbanId || iban?._id || iban?.id, '');
     const customerId = virtualIbanId
-    const paymentReference = getPaymentReference(iban, userDetails);
+    const paymentReference = getPaymentReference(iban, userDetails, currency);
 
     const todayDate = formatDate(new Date());
     const refCode = `ISCL-${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, '0')}${String(new Date().getDate()).padStart(2, '0')}-${customerId.slice(-4)}`;
