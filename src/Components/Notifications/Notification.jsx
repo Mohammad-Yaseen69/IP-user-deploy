@@ -46,7 +46,7 @@ function calculateDateDifference(inputDate) {
     return `${differenceInMonths}m ago`;
 }
 
-const Notification = ({ notification, currentUser }) => {
+const Notification = ({ notification, currentUser, onRead }) => {
     const [status, setStatus] = useState(notification?.status)
     const [link, setLink] = useState("")
     const { userDetails } = useContext(UserContext)
@@ -119,6 +119,7 @@ const Notification = ({ notification, currentUser }) => {
         } catch (error) {
             // console.log(decryptData(error?.response?.data?.data))
         }
+        onRead();
     }
 
     return (
