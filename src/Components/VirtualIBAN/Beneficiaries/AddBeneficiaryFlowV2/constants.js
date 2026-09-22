@@ -165,7 +165,6 @@ export const INITIAL_FORM = {
     method: '',
     vendor: '',
     service_id: null,
-    service_name: '',
 
     beneficiary: {},
     channel: {},
