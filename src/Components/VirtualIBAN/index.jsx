@@ -146,6 +146,8 @@ const VirtualBank = () => {
             scrollToIbanDetails()
         }
     }, [activeTab, selectedAccount]);
+
+    console.log(rawIbans, 'rawIbans')
     return (
         <div className={styles.container}>
             <div className={styles.top}>
