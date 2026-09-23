@@ -79,6 +79,14 @@ export const MENU = [
                 permission: "wallet.view"
             },
             {
+                title: "Crypto Hub",
+                icon: <img loading="lazy" src={crypto_icon} style={{ marginRight: "12px" }} />,
+                activeIcon: <img loading="lazy" src={crypto_icon_a} style={{ marginRight: "12px" }} />,
+                type: "link",
+                url: `${window.location.origin}/crypto-wallets`,
+                permission: "wallet.view"
+            },
+            {
                 title: "My Mastercard",
                 icon: <img loading="lazy" src={mastercard} style={{ marginRight: "12px" }} />,
                 activeIcon: <img loading="lazy" src={mastercard_a} style={{ marginRight: "12px" }} />,

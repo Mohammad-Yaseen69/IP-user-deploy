@@ -24,6 +24,8 @@ import {
 } from "react-feather"
 import AddBeneficiaryModal from "../../Beneficiaries/Modals/AddBeneficiaryModal"
 import DynamicChannelModal from "../../Beneficiaries/Modals/DynamicChannelModal"
+import AddBeneficiaryFlowV2 from "../../Beneficiaries/AddBeneficiaryFlowV2"
+import { USE_NEW_BENEFICIARY_FLOW } from "../../Beneficiaries/AddBeneficiaryFlowV2/constants"
 import useWindowWidth from "../../../../utils/useWindowWidth"
 import ContactBox from "../../../MyMasterCard/PaymentModal/ContactBox"
 import { getAmountNumber } from "../../utils/amount"
@@ -906,12 +908,36 @@ const SwiftTransfer = forwardRef(({ isOpen = true, toggle, selectedIban, availab
         if (userDetails?._id) getUserBeneficiaries()
     }, [userDetails])
 
-    const handleBeneficiarySaved = (savedBeneficiary, isNew) => {
-        if (isNew && savedBeneficiary) {
-            setChannelModalBeneficiary(savedBeneficiary);
-            setIsChannelModalOpen(true);
+    const [savedBeneficiaryId, setSavedBeneficiaryId] = useState("")
+
+    /* The new flow saves the recipient and the bank details together, so there is no
+       second modal to chain into - the saved record is picked up once the refreshed
+       list carries its channel. */
+    const handleBeneficiarySaved = async (savedBeneficiary, isNew) => {
+        if (!USE_NEW_BENEFICIARY_FLOW) {
+            if (isNew && savedBeneficiary) {
+                setChannelModalBeneficiary(savedBeneficiary);
+                setIsChannelModalOpen(true);
+            }
+            return;
         }
+
+        setIsAddModalOpen(false);
+        setIsChannelModalOpen(false);
+        setChannelModalBeneficiary(null);
+        setSavedBeneficiaryId(savedBeneficiary?._id || savedBeneficiary?.id || "");
+        await getUserBeneficiaries();
     };
+
+    useEffect(() => {
+        if (!savedBeneficiaryId) return
+
+        const saved = swiftBeneficiaries.find((item) => (item?._id || item?.id) === savedBeneficiaryId)
+        if (!saved) return
+
+        setSelectedBeneficiary(saved)
+        setSavedBeneficiaryId("")
+    }, [swiftBeneficiaries, savedBeneficiaryId])
 
     const handleChannelSaved = async (updatedBeneficiary) => {
         await getUserBeneficiaries();
@@ -1305,11 +1331,25 @@ const SwiftTransfer = forwardRef(({ isOpen = true, toggle, selectedIban, availab
                 </Modal>
             )}
 
-            <AddBeneficiaryModal
-                open={isAddModalOpen}
-                handleClose={() => setIsAddModalOpen(false)}
-                onSaveSuccess={handleBeneficiarySaved}
-            />
+            {USE_NEW_BENEFICIARY_FLOW ? (
+                <AddBeneficiaryFlowV2
+                    open={isAddModalOpen || isChannelModalOpen}
+                    fixedMethod="swift"
+                    existingBeneficiary={isChannelModalOpen ? channelModalBeneficiary : null}
+                    handleClose={() => {
+                        setIsAddModalOpen(false);
+                        setIsChannelModalOpen(false);
+                        setChannelModalBeneficiary(null);
+                    }}
+                    onSaveSuccess={handleBeneficiarySaved}
+                />
+            ) : (
+                <>
+                <AddBeneficiaryModal
+                    open={isAddModalOpen}
+                    handleClose={() => setIsAddModalOpen(false)}
+                    onSaveSuccess={handleBeneficiarySaved}
+                />
 
             <DynamicChannelModal
                 open={isChannelModalOpen}

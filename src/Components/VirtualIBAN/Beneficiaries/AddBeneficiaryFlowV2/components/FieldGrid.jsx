@@ -36,6 +36,7 @@ const FieldGrid = ({
                             countryIso3={countryIso3}
                             stateData={stateData}
                             hasStateField={hasStateField}
+                            siblingNames={names}
                             payers={payers}
                             payersLoading={payersLoading}
                             onChange={(value, patch) => onChange(name, value, patch)}
