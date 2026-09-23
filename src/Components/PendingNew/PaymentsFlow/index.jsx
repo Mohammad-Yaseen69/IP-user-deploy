@@ -12,7 +12,7 @@ import PaymentsFlowModal from "./Modal";
 import { UserContext } from "../../../Context/UserContext";
 import axios from "axios";
 import { decryptData } from "../../../Helper/EssentilaMethods/Decryption";
-import { LimitsErrorMessage } from "../../PaymentsNewer/OTPConfirmation";
+import { LimitsErrorMessage } from "../../../utils/Functions/paymentLimits";
 import { toast } from "react-toastify";
 import ErrorModal from "../../PaymentsNewer/InternationalFlow/ErrorModal";
 
@@ -95,6 +95,10 @@ const PaymentsFlow = ({ item }) => {
     useEffect(() => {
         if (userDetails?.tfa) {
             updateData("codeType", "authenticator")
+        } else if (userDetails?.email_verification) {
+            updateData("codeType", "email")
+        } else if (userDetails?.whatsapp_verification) {
+            updateData("codeType", "whatsapp")
         }
     }, [userDetails])
 

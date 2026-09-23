@@ -11,7 +11,7 @@ import { useCryptoPayout, useCryptoPayoutFee, useValidateCryptoAddress } from ".
 import { handlePaymentApiError } from "../../../utils/Functions/handlePaymentApiError"
 import useWindowWidth from "../../../utils/useWindowWidth"
 import ContactBox from "../../MyMasterCard/PaymentModal/ContactBox"
-import OTPConfirmation from "../../UserSettingsNew/OTPConfirmation"
+import OTPConfirmation from "../../../Common/Component/OtpVerification"
 import SidebarProgress from "../../VirtualIBAN/VirtualIbanModal/SidebarProgress"
 import convertStyles from "../../VirtualIBAN/ConvertFundsModal/convertFunds.module.scss"
 import withdrawStyles from "../../VirtualIBAN/WithdrawBalanceModal/withdrawBalance.module.scss"
@@ -136,7 +136,7 @@ const SendCryptoModal = ({ isOpen, toggle, wallet }) => {
     const cryptoCurrency = String(wallet?.currency?.code || "").toUpperCase()
     const availableBalance = wallet?.balance?.available ?? 0
 
-    const getDefaultAuthType = () => (userDetails?.tfa ? "authenticator" : "sms")
+    const getDefaultAuthType = () => (userDetails?.tfa ? "authenticator" : userDetails?.email_verification ? "email" : userDetails?.whatsapp_verification ? "whatsapp" : "sms")
 
     const [currentStep, setCurrentStep] = useState(STEPS.AMOUNT)
     const [selectedBeneficiary, setSelectedBeneficiary] = useState(null)
@@ -151,6 +151,7 @@ const SendCryptoModal = ({ isOpen, toggle, wallet }) => {
     const [addressStatus, setAddressStatus] = useState("")
     const [beneficiaryError, setBeneficiaryError] = useState("")
     const [authType, setAuthType] = useState(getDefaultAuthType)
+    const [otpMethods, setOtpMethods] = useState(null)
     const [otpToken, setOtpToken] = useState("")
     const [payoutResult, setPayoutResult] = useState(null)
     const [isAddBeneficiaryOpen, setIsAddBeneficiaryOpen] = useState(false)
@@ -162,8 +163,12 @@ const SendCryptoModal = ({ isOpen, toggle, wallet }) => {
     const { getKey, reset: resetIdempotencyKey } = useIdempotency()
 
     const { sendOtp, isSendingOtp } = useSendOtp({
-        onSuccess: (token) => {
+        onSuccess: (token, dec) => {
             setOtpToken(token)
+            setOtpMethods(dec)
+            if (currentStep !== STEPS.OTP && dec?.otp_sent_on) {
+                setAuthType(dec.otp_sent_on)
+            }
             resetIdempotencyKey()
             setCurrentStep(STEPS.OTP)
         },
@@ -228,7 +233,9 @@ const SendCryptoModal = ({ isOpen, toggle, wallet }) => {
 
     useEffect(() => {
         if (userDetails?.tfa) setAuthType("authenticator")
-    }, [userDetails?.tfa])
+        else if (userDetails?.email_verification) setAuthType("email")
+        else if (userDetails?.whatsapp_verification) setAuthType("whatsapp")
+    }, [userDetails?.tfa, userDetails?.email_verification, userDetails?.whatsapp_verification])
 
     useEffect(() => {
         setSelectedChannel(cryptoChannels[0] || null)
@@ -531,7 +538,9 @@ const SendCryptoModal = ({ isOpen, toggle, wallet }) => {
             case STEPS.OTP:
                 return (
                     <OTPConfirmation
+                        variant="card"
                         fullHeight
+                        methods={otpMethods}
                         setter={setCurrentStep}
                         setterValue={STEPS.DONE}
                         hideOtp={() => { }}

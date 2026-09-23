@@ -1,24 +1,25 @@
-import { useContext, useState, useEffect } from "react";
-import styles from "./BankDeposit.module.scss";
-import { useTranslation } from "react-i18next";
 import { useMutation } from "@tanstack/react-query";
-import { UserContext } from "../../../Context/UserContext";
+import { useContext, useEffect, useState } from "react";
 import { ChevronRight } from "react-feather";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router";
 import { toast } from "react-toastify";
+import { UserContext } from "../../../Context/UserContext";
+import styles from "./BankDeposit.module.scss";
 // import { formatCurrency } from "../../../Helper/AmountFormat";
-import InstaPayLoader from "../../Loader";
 import axios from "axios";
 import { usePlaidLink } from "react-plaid-link";
-import cardStyles from "../../PaymentsNewer/InternationalFlow/styles/creditcard.module.css";
-import { apiWrapper } from "../../../utils/Functions/apiWrapper";
-import { PLAID_EXIT_MAP } from "./PlaidExistMap";
-import { handlePaymentApiError } from "../../../utils/Functions/handlePaymentApiError";
 import { PlaidCurrencies } from ".";
+import useSendOtp from "../../../hooks/GeneralUse/useSendOtp";
+import { apiWrapper } from "../../../utils/Functions/apiWrapper";
+import { handlePaymentApiError } from "../../../utils/Functions/handlePaymentApiError";
+import InstaPayLoader from "../../Loader";
+import cardStyles from "../../PaymentsNewer/InternationalFlow/styles/creditcard.module.css";
 import BankIbanSelection from "./BankIbanSelection";
 import BankTransferReview from "./BankTransferReview";
-import useSendOtp from "../../../hooks/GeneralUse/useSendOtp";
-import OTPConfirmation from "../../UserSettingsNew/OTPConfirmation";
+import { PLAID_EXIT_MAP } from "./PlaidExistMap";
+import OTPConfirmation from "../../../Common/Component/OtpVerification";
+
 import { Modal, ModalBody, ModalHeader } from "reactstrap";
 
 const PlaidBankTransfer = ({
@@ -32,7 +33,6 @@ const PlaidBankTransfer = ({
   successMessage,
   closeBtnText
 }) => {
-  console.log("successMessages ", successMessage)
   const { userDetails, authHeader, setProfileLockTime } = useContext(UserContext);
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -47,6 +47,7 @@ const PlaidBankTransfer = ({
   const [pendingTransactionId, setPendingTransactionId] = useState(null);
   const [autoOpen, setAutoOpen] = useState(false);
   const [otpToken, setOtpToken] = useState(null);
+  const [otpMethods, setOtpMethods] = useState(null);
   const [showOtp, setShowOtp] = useState(false);
   const [codeType, setCodeType] = useState("sms")
   const [redirectTimer, setRedirectTimer] = useState(10);
@@ -55,6 +56,10 @@ const PlaidBankTransfer = ({
       console.log(token, data)
       setShowOtp(true)
       setOtpToken(token)
+      setOtpMethods(data)
+      if (!showOtp) {
+        setCodeType(data?.otp_sent_on || 'sms')
+      }
     },
     onError: (err) => {
       dataHandler("error", err?.message || "We are unable to process your request at the moment, please try again later!")
@@ -66,7 +71,12 @@ const PlaidBankTransfer = ({
       if (type !== "verification_payment") {
         fetchSavedBanks();
       }
-      setCodeType(userDetails?.tfa ? "authenticator" : "sms")
+      setCodeType(
+        userDetails?.tfa ? "authenticator"
+          : userDetails?.email_verification ? "email"
+            : userDetails?.whatsapp_verification ? "whatsapp"
+              : "sms"
+      )
     }
   }, [userDetails?._id, type]);
   useEffect(() => {
@@ -506,6 +516,7 @@ const PlaidBankTransfer = ({
             resendHandler={sendOtpHandler}
             authType={codeType}
             setAuthType={setCodeType}
+            methods={otpMethods}
           />
         </ModalBody>
       </Modal>

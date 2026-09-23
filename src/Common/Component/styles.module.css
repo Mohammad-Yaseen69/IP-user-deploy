@@ -65,6 +65,72 @@
      }
  }
 
+ .mobileHeader {
+     display: flex;
+     align-items: center;
+     padding: 20px 20px 20px 15px;
+     justify-content: space-between;
+
+     .headerContent {
+         display: flex;
+         align-items: center;
+         gap: 15px;
+
+         span {
+             margin-bottom: 0;
+             font-weight: 600;
+             font-size: 16px;
+         }
+     }
+
+     .cancelButton {
+         padding: 5px 8px;
+         background-color: #F3F3F7;
+         color: #65627A;
+         font-family: Inter;
+         font-size: 13px;
+         font-weight: 600;
+         border: none;
+         border-radius: 100px;
+     }
+ }
+
+ .mobileFooter {
+     box-shadow: 0px -8px 24px -18px #14122080;
+     padding: 15px 20px;
+     border-top: 1px solid #14122012;
+     gap: 8px;
+     position: fixed;
+     bottom: 81px;
+     left: 0;
+     right: 0;
+     background-color: white;
+     display: flex;
+    align-items: center;
+     .backBtn {
+         border: 1px solid #1412201F;
+         box-shadow: 0px 1px 2px 0px #1412200D;
+         width: 52px;
+         height: 52px;
+         border-radius: 14px;
+         background: #FFFFFF01;
+         padding: 0 5px;
+     }
+
+     .nextBtn {
+         box-shadow: 0px 6px 18px -5px #5926F06B;
+         background: linear-gradient(180deg, #7040FF 0%, #5926F0 100%);
+         border-radius: 14px;
+         font-size: 15px;
+         font-weight: 600;
+         letter-spacing: -0.25px;
+         height: 52px;
+         width: 100%;
+         color: white;
+         border: none;
+     }
+ }
+
  @media (max-width: 700px) {
      .paginationWrapper {
          justify-content: center;

@@ -1,0 +1,152 @@
+.container {
+    padding: 12px 22px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+    font-family: Inter;
+}
+
+.slideBtn {
+    background: #1412201F;
+    height: 4px;
+    width: 40px;
+    border-radius: 100px;
+}
+
+.readyPercentContainer {
+    box-shadow: 0px 14px 34px -14px #5926F099;
+    background: #FFFFFF01;
+    width: 112px;
+    height: 112px;
+    border-radius: 100%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.percentCount {
+    font-size: 26px;
+    font-weight: 600;
+    color: #141220;
+    letter-spacing: -1.1px;
+    line-height: 1.1;
+}
+
+.percentLabel {
+    color: #9793A8;
+    font-weight: 600;
+    font-size: 9px;
+    letter-spacing: 1.4px;
+}
+
+.alertBox {
+    padding: 10px 15px !important;
+    border-radius: 16px !important;
+    border: .5px solid #5926F01F;
+}
+
+.alertTitle {
+    font-size: 9.5px !important;
+    color: #3B2694;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.1px;
+    margin-top: 2px !important;
+}
+
+.alertDescription {
+    font-size: 12.5px !important;
+    line-height: 19.75px;
+    letter-spacing: 0%;
+    padding: 3px 0 !important;
+}
+
+.checklistHeader {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.checkListHeading {
+    color: #9793A8;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1.2px;
+}
+
+.checkListCount {
+    color: #9793A8;
+    font-size: 11.5px;
+}
+
+.checklist {
+    width: 100%;
+    border: 1px solid #14122012;
+    box-shadow: 0px 14px 30px -14px #1412201A;
+    box-shadow: 0px 1px 2px 0px #1412200A;
+    border-radius: 16px;
+}
+
+.checklistRow {
+    border-bottom: 1px solid #14122012;
+    padding: 15px 17px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.checklistItem {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    span {
+        font-weight: 500;
+        font-size: 13.5px;
+        letter-spacing: -.1px;
+    }
+}
+
+.iconContainer {
+    background: #FFFFFF01;
+    width: 22px;
+    height: 22px;
+    border-radius: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #1412201F;
+
+    svg {
+        color: white;
+    }
+}
+
+.statusChip {
+    font-weight: 600;
+    font-size: 9.5px !important;
+    padding: 5px 9px;
+    height: 21px !important;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+}
+
+.askAIBtn {
+    background: #F3F3F7;
+    height: 52px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: -0.25px;
+    width: 100%;
+    border: none;
+}
