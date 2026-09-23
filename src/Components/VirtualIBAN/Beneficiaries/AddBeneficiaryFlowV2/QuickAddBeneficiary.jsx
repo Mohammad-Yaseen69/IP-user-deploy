@@ -5,6 +5,7 @@ import styles from './AddBeneficiaryFlowV2.module.css';
 import { Alert, Section, SectionTitle } from './components';
 import FieldGrid from './components/FieldGrid';
 import { useCountryStates } from './useCountryStates';
+import { usePhoneVerification } from './usePhoneVerification';
 import { useRequiredFields, useRequirements } from './useVendorRequirements';
 import { buildBeneficiaryPayload, buildChannelPayload } from './buildPayloads';
 import { METHOD_CONTEXT_LABEL } from './constants';
@@ -27,6 +28,12 @@ const PREFILLED_CHANNEL_FIELDS = ['mobile_wallet_provider'];
 
 /* Answered by the transfer itself, so it is filled in but never shown. */
 const PREFILLED_BENEFICIARY_FIELDS = ['country_iso_code'];
+
+const CHANNEL_CHECK_COLORS = {
+    checking: 'var(--abf-text-secondary)',
+    valid: '#067647',
+    invalid: '#b42318',
+};
 
 const getQuickAddMethod = (channelValue) => METHOD_BY_CHANNEL[String(channelValue || '').toLowerCase()] || null;
 
@@ -72,6 +79,7 @@ const QuickAddBeneficiary = ({
     const [providerError, setProviderError] = useState(null);
 
     const { data: stateData = [] } = useCountryStates(countryIso3);
+    const phoneCheck = usePhoneVerification(channel.msisdn, method === 'mobile_wallet');
 
     const { fields, transactionType, isLoading: fieldsLoading } = useRequiredFields({
         countryIso3,
@@ -136,6 +144,10 @@ const QuickAddBeneficiary = ({
         (requirements?.requiredChannel || []).forEach((name) => {
             if (!String(channel[name] || '').trim()) next.channel[name] = 'Required.';
         });
+
+        if (!next.channel.msisdn && phoneCheck?.state === 'invalid') {
+            next.channel.msisdn = phoneCheck.message;
+        }
 
         if (requirements) {
             const fieldType = (name) => getFieldDef(name, requirements.defs).type;
@@ -225,7 +237,7 @@ const QuickAddBeneficiary = ({
                         type="button"
                         className={`${styles.btn} ${styles.btnPrimary}`}
                         onClick={save}
-                        disabled={saving || fieldsLoading || !method}
+                        disabled={saving || fieldsLoading || !method || phoneCheck?.state === 'invalid'}
                     >
                         {saving ? 'Adding...' : 'Add beneficiary'}
                     </button>
@@ -269,6 +281,18 @@ const QuickAddBeneficiary = ({
                                 countryIso3={countryIso3}
                                 stateData={stateData}
                             />
+                            {phoneCheck && (
+                                <p
+                                    style={{
+                                        margin: '2px 0 0',
+                                        fontSize: '12px',
+                                        fontWeight: 600,
+                                        color: CHANNEL_CHECK_COLORS[phoneCheck.state] || 'var(--abf-text-secondary)',
+                                    }}
+                                >
+                                    {phoneCheck.message}
+                                </p>
+                            )}
                         </Section>
                     )}
                 </>

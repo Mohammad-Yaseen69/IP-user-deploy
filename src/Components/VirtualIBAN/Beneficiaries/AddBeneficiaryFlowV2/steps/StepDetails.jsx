@@ -6,7 +6,7 @@ import { useCountryStates } from '../useCountryStates';
 import { METHOD_AVATAR_ICON, METHOD_CONTEXT_LABEL } from '../constants';
 import { UserContext } from '../../../../../Context/UserContext';
 
-const ADDRESS_CHECK_COLORS = {
+const CHANNEL_CHECK_COLORS = {
     checking: 'var(--abf-text-secondary)',
     valid: '#067647',
     invalid: '#b42318',
@@ -21,7 +21,7 @@ const StepDetails = ({
     providerError,
     recipientName,
     onChangeMethod,
-    addressCheck = null,
+    channelCheck = null,
     lockedFields = [],
     payers = [],
     payersLoading = false,
@@ -99,16 +99,16 @@ const StepDetails = ({
                                 payers={payers}
                                 payersLoading={payersLoading}
                             />
-                            {addressCheck && (
+                            {channelCheck && (
                                 <p
                                     style={{
                                         margin: '2px 0 0',
                                         fontSize: '12px',
                                         fontWeight: 600,
-                                        color: ADDRESS_CHECK_COLORS[addressCheck.state] || 'var(--abf-text-secondary)',
+                                        color: CHANNEL_CHECK_COLORS[channelCheck.state] || 'var(--abf-text-secondary)',
                                     }}
                                 >
-                                    {addressCheck.message}
+                                    {channelCheck.message}
                                 </p>
                             )}
                         </Section>

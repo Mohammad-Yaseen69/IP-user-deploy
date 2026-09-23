@@ -28,6 +28,7 @@ import { handlePaymentApiError } from '../../../../utils/Functions/handlePayment
 import { collectIdentifierErrors } from '../../../../utils/Functions/bankIdentifiers';
 import { useValidateCryptoAddress } from '../../../../hooks/Payments/useCryptoPayout';
 import { useDebounce } from '../../../../hooks/useDebounce/useDebounce';
+import { usePhoneVerification } from './usePhoneVerification';
 import { getProtocolLabel } from '../../../WalletsNew/SendCryptoModal/cryptoProtocols';
 
 const STAGE_LABELS = {
@@ -185,6 +186,11 @@ const AddBeneficiaryFlowV2 = ({
         return service?.payers || [];
     }, [methods, form.method, form.service_id]);
 
+    const phoneCheck = usePhoneVerification(form.channel?.msisdn, form.method === 'mobile_wallet');
+
+    /* Whichever identifier this channel turns on gets checked in the same place. */
+    const channelCheck = isCryptoChannel ? addressCheck : phoneCheck;
+
     const vendorRequirements = useRequirements({
         method: form.method,
         vendor: form.vendor,
@@ -309,6 +315,10 @@ const AddBeneficiaryFlowV2 = ({
 
         if (isCryptoChannel && !next.channel.wallet_address && addressStatus === 'invalid') {
             next.channel.wallet_address = 'This address is not valid on the selected network.';
+        }
+
+        if (!next.channel.msisdn && phoneCheck?.state === 'invalid') {
+            next.channel.msisdn = phoneCheck.message;
         }
 
         if (requirements) {
@@ -479,7 +489,7 @@ const AddBeneficiaryFlowV2 = ({
     const primaryDisabled = () => {
         if (saving) return true;
         if (stage === 'method') return !form.method || (isTransferMethod && fieldsLoading);
-        if (stage === 'details' && addressCheck?.state === 'invalid') return true;
+        if (stage === 'details' && channelCheck?.state === 'invalid') return true;
         return false;
     };
 
@@ -524,7 +534,7 @@ const AddBeneficiaryFlowV2 = ({
                         errors={errors}
                         providerError={providerError}
                         recipientName={recipientName}
-                        addressCheck={addressCheck}
+                        channelCheck={channelCheck}
                         lockedFields={lockedFields}
                         payers={payers}
                         payersLoading={methodsLoading}
