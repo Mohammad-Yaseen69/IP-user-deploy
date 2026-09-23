@@ -7,14 +7,14 @@ import { toast } from "react-toastify";
 import { UserContext } from "../../../Context/UserContext.jsx";
 import { usePermission } from "../../../hooks/GeneralUse/usePermission";
 import { handlePaymentApiError } from "../../../utils/Functions/handlePaymentApiError";
-import { useSyncVirtualIbanBalance, useUpdateVirtualIbanStatus } from "../../../hooks/useVirtualIban.jsx";
+import { useSyncVirtualIbanBalance, useVirtualIbanUserBlock } from "../../../hooks/useVirtualIban.jsx";
 import ConvertFundsModal from "../ConvertFundsModal";
 import CryptoTopupModal from "../CryptoTopupModal/index.jsx";
 import { actions } from "../data/Actions.jsx";
 import IBANDetails from "../IBAN/IBANDetails.jsx";
 import StatementModal from "../StatementModal";
 import styles from "../styles/QuickActions.module.css";
-import { isVirtualIbanFrozen, isVirtualIbanUserBlocked } from "../utils/virtualIban";
+import { isVirtualIbanFrozen, isVirtualIbanUserBlocked, mergeVirtualIbanState } from "../utils/virtualIban";
 import UnsubscribeModal from "../UnsubscribeModal/index.jsx";
 import WithdrawBalanceModal from "../WithdrawBalanceModal";
 
@@ -42,8 +42,9 @@ const QuickActions = ({ selectedIban }) => {
     const currentBalance = syncedBalance?.balance ?? selectedIban?.balance ?? 0
     const ibanStatus = syncedBalance?.status || selectedIban?.status || ""
     const isBlocked = String(ibanStatus).toUpperCase() === "BLOCKED" || String(ibanStatus).toUpperCase() === "INACTIVE"
-    const isFrozen = isVirtualIbanFrozen(syncedBalance) || isVirtualIbanFrozen(selectedIban)
-    const isUserBlocked = isVirtualIbanUserBlocked(syncedBalance) || isVirtualIbanUserBlocked(selectedIban)
+    const ibanState = mergeVirtualIbanState(selectedIban, syncedBalance)
+    const isFrozen = isVirtualIbanFrozen(ibanState)
+    const isUserBlocked = isVirtualIbanUserBlocked(ibanState)
 
     const getActionRestriction = (actionId) => {
         if (isFrozen) return FROZEN_ACTION_TOOLTIP
@@ -52,7 +53,7 @@ const QuickActions = ({ selectedIban }) => {
         return ""
     }
 
-    const updateIbanStatus = useUpdateVirtualIbanStatus()
+    const userBlockIban = useVirtualIbanUserBlock()
     const navigate = useNavigate()
     const [modals, setModals] = useState({
         deposit: false,
@@ -64,7 +65,7 @@ const QuickActions = ({ selectedIban }) => {
     })
 
     const [showCryptoTopupModal, setShowCryptoTopupModal] = useState(false);
- 
+
 
     const isCryptoTopupAllowed = true
     const { t } = useTranslation()
@@ -76,7 +77,7 @@ const QuickActions = ({ selectedIban }) => {
     )
     const closeModal = (key) => setModals((prev) => ({ ...prev, [key]: false }))
 
-   
+
     const location = useLocation()
     useEffect(() => {
         const action = new URLSearchParams(location.search).get("action")
@@ -88,7 +89,7 @@ const QuickActions = ({ selectedIban }) => {
         1: "virtual-iban.details.view",
         2: "virtual-iban.funds.convert",
         3: "virtual-iban.funds.withdraw",
-        4: "virtual-iban.statement.download",
+        4: "virtual-iban.status.update",
         5: "payments.money.request",
         6: "beneficiaries.view",
         8: "virtual-iban.status.update",
@@ -116,9 +117,6 @@ const QuickActions = ({ selectedIban }) => {
                     setShowCryptoTopupModal(true);
                 }
                 return;
-            case 4:
-                return;
-
             case 7:
                 navigate("/virtual-IBAN/beneficiaries-virtual");
                 return;
@@ -136,6 +134,7 @@ const QuickActions = ({ selectedIban }) => {
 
     const handleUnsubscribeWithdraw = () => openModal("withdrawal")
 
+    // BLOCK = unsubscribe (sets userBlocked), UNBLOCK = subscribe again.
     const handleToggleIbanStatus = async ({ action }) => {
         if (!can("virtual-iban.status.update")) return false
 
@@ -145,14 +144,14 @@ const QuickActions = ({ selectedIban }) => {
         }
 
         try {
-            await updateIbanStatus.mutateAsync({ ibanId, action })
-            toast.success(action === "BLOCK" ? "Virtual IBAN paused" : "Virtual IBAN reactivated")
+            await userBlockIban.mutateAsync({ ibanId, action })
+            toast.success(action === "BLOCK" ? "Virtual IBAN unsubscribed" : "Virtual IBAN subscribed")
             return true
         } catch (error) {
             handlePaymentApiError({
                 error,
                 navigate,
-                fallback: "Unable to update virtual IBAN status",
+                fallback: "Unable to update virtual IBAN subscription",
                 setError: (message) => toast.error(message),
             })
             return false
@@ -167,18 +166,15 @@ const QuickActions = ({ selectedIban }) => {
             }).map((action) => {
                 const restrictionTooltip = getActionRestriction(action.id)
                 const disabledByBlockedIban = Boolean(restrictionTooltip)
-                const isComingSoon = action.id === 4 || action.id === 5 && !isCryptoTopupAllowed;
+                const isComingSoon = action.id === 5 && !isCryptoTopupAllowed;
                 const isDisabled = disabledByBlockedIban || isComingSoon
-                const actionLabel =
-                    action.id === 4 && isBlocked
-                        ? "Reactivate"
-                        : action.label;
+                // Once unsubscribed (userBlocked) the same card becomes "Subscribe".
+                const isUnsubscribeAction = action.id === UNSUBSCRIBE_ACTION_ID
+                const showResume = isUnsubscribeAction && isUserBlocked
+                const actionLabel = showResume ? "Subscribe" : action.label;
 
-                const actionSub =
-                    action.id === 4 && isBlocked
-                        ? "Resume virtual account"
-                        : action.sub;
-                const actionColor = action.id === 4 && isBlocked ? "#5926F0" : action.color
+                const actionSub = showResume ? "Resume virtual account" : action.sub;
+                const actionColor = showResume ? "#5926F0" : action.color
                 const restrictionSub = isFrozen
                     ? "Frozen IBAN"
                     : isUserBlocked
@@ -277,8 +273,8 @@ const QuickActions = ({ selectedIban }) => {
                     toggle={() => closeModal("unsubscribe")}
                     hasBalance={currentBalance > 0}
                     onWithdraw={handleUnsubscribeWithdraw}
-                    isBlocked={isBlocked}
-                    isProcessing={updateIbanStatus.isPending}
+                    isBlocked={isUserBlocked}
+                    isProcessing={userBlockIban.isPending}
                     onToggleStatus={handleToggleIbanStatus}
                 />
             )}
