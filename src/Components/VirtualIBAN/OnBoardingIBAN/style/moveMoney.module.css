@@ -336,3 +336,12 @@
     background: rgba(255, 255, 255, 0.2);
     color: #FFF;
 }
+.cardDisabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+    background: #F3F4F6;
+}
+
+.cardDisabled:hover {
+    border-color: #EAECF0;
+}

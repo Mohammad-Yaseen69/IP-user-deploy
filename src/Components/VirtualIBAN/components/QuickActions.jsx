@@ -14,6 +14,7 @@ import { actions } from "../data/Actions.jsx";
 import IBANDetails from "../IBAN/IBANDetails.jsx";
 import StatementModal from "../StatementModal";
 import styles from "../styles/QuickActions.module.css";
+import { isVirtualIbanFrozen, isVirtualIbanUserBlocked } from "../utils/virtualIban";
 import UnsubscribeModal from "../UnsubscribeModal/index.jsx";
 import WithdrawBalanceModal from "../WithdrawBalanceModal";
 
@@ -28,6 +29,9 @@ const MODAL_MAP = {
 
 const BLOCKED_DISABLED_ACTIONS = new Set([1, 2, 3])
 const BLOCKED_ACTION_TOOLTIP = "This virtual IBAN is paused. Reactivate it to deposit, move, convert, or withdraw funds."
+const UNSUBSCRIBE_ACTION_ID = 4
+const FROZEN_ACTION_TOOLTIP = "This virtual IBAN is frozen. Quick actions are unavailable until it is unfrozen."
+const USER_BLOCKED_ACTION_TOOLTIP = "This virtual IBAN is blocked. You can still view your balance and transactions, or unsubscribe."
 
 const QuickActions = ({ selectedIban }) => {
     const can = usePermission()
@@ -38,6 +42,16 @@ const QuickActions = ({ selectedIban }) => {
     const currentBalance = syncedBalance?.balance ?? selectedIban?.balance ?? 0
     const ibanStatus = syncedBalance?.status || selectedIban?.status || ""
     const isBlocked = String(ibanStatus).toUpperCase() === "BLOCKED" || String(ibanStatus).toUpperCase() === "INACTIVE"
+    const isFrozen = isVirtualIbanFrozen(syncedBalance) || isVirtualIbanFrozen(selectedIban)
+    const isUserBlocked = isVirtualIbanUserBlocked(syncedBalance) || isVirtualIbanUserBlocked(selectedIban)
+
+    const getActionRestriction = (actionId) => {
+        if (isFrozen) return FROZEN_ACTION_TOOLTIP
+        if (isUserBlocked && actionId !== UNSUBSCRIBE_ACTION_ID) return USER_BLOCKED_ACTION_TOOLTIP
+        if (isBlocked && BLOCKED_DISABLED_ACTIONS.has(actionId)) return BLOCKED_ACTION_TOOLTIP
+        return ""
+    }
+
     const updateIbanStatus = useUpdateVirtualIbanStatus()
     const navigate = useNavigate()
     const [modals, setModals] = useState({
@@ -50,19 +64,7 @@ const QuickActions = ({ selectedIban }) => {
     })
 
     const [showCryptoTopupModal, setShowCryptoTopupModal] = useState(false);
-    const allowedUsernames = [
-        "ahmed",
-        "yaseen123",
-        "yousuf",
-        "yaseen",
-        "jackeb777",
-        "hunain",
-        "yousuf_",
-        "khalid222",
-        "business_ininin",
-        "businessify",
-        "compadsaf"
-    ];
+ 
 
     const isCryptoTopupAllowed = true
     const { t } = useTranslation()
@@ -78,10 +80,10 @@ const QuickActions = ({ selectedIban }) => {
     const location = useLocation()
     useEffect(() => {
         const action = new URLSearchParams(location.search).get("action")
-        if (!action || isBlocked) return
+        if (!action || isBlocked || isFrozen || isUserBlocked) return
         if (action === "deposit" && can("virtual-iban.details.view")) openModal("deposit")
         else if (action === "convert" && can("virtual-iban.funds.convert")) openModal("convertFunds")
-    }, [location.search, isBlocked])
+    }, [location.search, isBlocked, isFrozen, isUserBlocked])
     const permissionByAction = {
         1: "virtual-iban.details.view",
         2: "virtual-iban.funds.convert",
@@ -96,7 +98,7 @@ const QuickActions = ({ selectedIban }) => {
         const permission = permissionByAction[actionId]
         if (permission && !can(permission)) return
 
-        if (isBlocked && BLOCKED_DISABLED_ACTIONS.has(actionId)) {
+        if (getActionRestriction(actionId)) {
             return
         }
 
@@ -163,7 +165,8 @@ const QuickActions = ({ selectedIban }) => {
                 const permission = permissionByAction[action.id]
                 return !permission || can(permission)
             }).map((action) => {
-                const disabledByBlockedIban = isBlocked && BLOCKED_DISABLED_ACTIONS.has(action.id)
+                const restrictionTooltip = getActionRestriction(action.id)
+                const disabledByBlockedIban = Boolean(restrictionTooltip)
                 const isComingSoon = action.id === 4 || action.id === 5 && !isCryptoTopupAllowed;
                 const isDisabled = disabledByBlockedIban || isComingSoon
                 const actionLabel =
@@ -176,6 +179,11 @@ const QuickActions = ({ selectedIban }) => {
                         ? "Resume virtual account"
                         : action.sub;
                 const actionColor = action.id === 4 && isBlocked ? "#5926F0" : action.color
+                const restrictionSub = isFrozen
+                    ? "Frozen IBAN"
+                    : isUserBlocked
+                        ? "Blocked IBAN"
+                        : "Paused IBAN"
                 const card = (
                     <button
                         key={action.id}
@@ -197,7 +205,7 @@ const QuickActions = ({ selectedIban }) => {
                             <span className={styles.label}>{t(actionLabel)}</span>
                             <span className={styles.sub}>
                                 {disabledByBlockedIban
-                                    ? t("Paused IBAN")
+                                    ? t(restrictionSub)
                                     : isComingSoon
                                         ? t("Coming Soon")
                                         : t(actionSub)}
@@ -208,7 +216,7 @@ const QuickActions = ({ selectedIban }) => {
 
                 if (isDisabled) {
                     const tooltipTitle = disabledByBlockedIban
-                        ? t(BLOCKED_ACTION_TOOLTIP)
+                        ? t(restrictionTooltip)
                         : isComingSoon
                             ? t("Coming Soon")
                             : "";

@@ -21,7 +21,7 @@ import IBANDetails from './IBAN/IBANDetails'
 import Manage from './Manage/Manage'
 import OnboardingIBAN from './OnBoardingIBAN'
 import styles from "./styles/index.module.css"
-import { asVirtualIbanArray, isVirtualIbanInactive } from './utils/virtualIban'
+import { asVirtualIbanArray, isVirtualIbanAdminBlocked } from './utils/virtualIban'
 import VirtualIbanModal from './VirtualIbanModal'
 
 
@@ -55,7 +55,7 @@ const VirtualBank = () => {
         () => ibans.find((iban) => (iban?._id || iban?.id) === selectedAccount) || ibans[0],
         [ibans, selectedAccount]
     )
-    const selectedIbanInactive = isVirtualIbanInactive(selectedIban)
+    const selectedIbanAdminBlocked = isVirtualIbanAdminBlocked(selectedIban)
     const [page, setPage] = useState(1);
     const [limit, setLimit] = useState(10);
     const [statusFilter, setStatusFilter] = useState('');
@@ -146,7 +146,6 @@ const VirtualBank = () => {
             scrollToIbanDetails()
         }
     }, [activeTab, selectedAccount]);
-
     console.log(rawIbans, 'rawIbans')
     return (
         <div className={styles.container}>
@@ -176,7 +175,7 @@ const VirtualBank = () => {
                         userDetails?.account_type === "business" ?
                             <OnboardingIBAN /> :
                             <IBAN onCreated={handleBackToDashboard} />
-                        : selectedIbanInactive ?
+                        : selectedIbanAdminBlocked ?
                             <div className={styles.main}>
                                 <InactiveIban />
                             </div>
