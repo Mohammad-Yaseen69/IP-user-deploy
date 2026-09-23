@@ -1,11 +1,10 @@
 import axios from "axios"
-import { forwardRef, useContext, useEffect, useImperativeHandle, useMemo, useRef, useState } from "react"
+import { useContext, useEffect, useMemo, useRef, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { useNavigate } from "react-router"
 import { toast } from "react-toastify"
 import { Modal, ModalBody } from "reactstrap"
 import {
-    Check,
     CheckCircle,
     ChevronDown,
     ChevronLeft,
@@ -45,7 +44,6 @@ import {
     SIDEBAR_STEPS,
     SIDEBAR_STEP_NAMES,
     STEPS,
-    getSidebarStepName,
 } from "../../../../stateMachines/swiftTransfer"
 import SidebarProgress from "../../VirtualIbanModal/SidebarProgress"
 import AmountStep from "../../ConvertFundsModal/AmountStep"
@@ -58,7 +56,7 @@ import useSendOtp from "../../../../hooks/GeneralUse/useSendOtp"
 import { useQueryClient } from "@tanstack/react-query"
 import { useVirtualIbanSwiftPayoutFee, useVirtualIbanSwiftPayoutDirect, useSyncVirtualIbanBalance, virtualIbanQueryKeys } from "../../../../hooks/useVirtualIban"
 import { handlePaymentApiError } from "../../../../utils/Functions/handlePaymentApiError"
-import OTPConfirmation from "../../../../Common/Component/OtpVerification"
+import OTPConfirmation from "../../../UserSettingsNew/OTPConfirmation"
 import jsPDF from "jspdf"
 import autoTable from "jspdf-autotable"
 import AddBeneficiary from "../../../AddBeneficiary"
@@ -79,9 +77,6 @@ import {
     hasBeneficiarySwiftCode,
     maskIban
 } from "../Common/beneficiaryHelpers"
-import MobileStepProgress from "../../VirtualIbanModal/MobileStepProgress"
-import MobileFooter from '../../../../Common/Component/MobileFooter';
-import StepsDrawer from "../../../../Common/Component/StepsDrawer"
 
 const DEFAULT_BENEFICIARY_FORM = {
     type: "individual",
@@ -538,7 +533,7 @@ const ReviewStep = ({
                         {exchangeRate && (
                             <>
                                 <br />
-                                <p style={{ marginTop: "4px" }}>{t("Rate")}&nbsp;</p>
+                                <p style={{ marginTop: "4px" }}>{t("Rate")}</p>
                                 <strong>
                                     1 EUR = {exchangeRate.value.toFixed(4)} USD
                                 </strong>
@@ -718,8 +713,6 @@ const DoneStep = ({
 }) => {
     const { t } = useTranslation()
     const navigate = useNavigate()
-    const width = useWindowWidth()
-    const isMobile = width <= 600;
 
     const recipientAmount = feeDetails?.recipient
     const feeAmount = feeDetails?.fee
@@ -736,10 +729,7 @@ const DoneStep = ({
         <div className={styles.doneStep}>
             <div className={styles.doneHero}>
                 <img src={success} alt="" />
-                <div className={styles.doneIcon}>
-                    <Check size={32} />
-                </div>
-                <h3>{t(isMobile ? "Payment on its way 🎉" : "Payment submitted")}</h3>
+                <h3>{t("Payment submitted")}</h3>
                 <p>
                     {t("You sent")} {formatMoney(amount, currencyCode)} {t("to")}{" "}
                     {getBeneficiaryName(selectedBeneficiary)}
@@ -776,7 +766,7 @@ const DoneStep = ({
                     <Send size={15} />
                     {t("Send again")}
                 </button>
-                <div className={styles.doneActionsRight}>
+                <div>
                     <button
                         type="button"
                         className={styles.backBtn}
@@ -793,12 +783,12 @@ const DoneStep = ({
                             })
                         }
                     >
-                        {!isMobile && <Download size={15} />}
-                        {t(isMobile ? "Download" : "Download receipt")}
+                        <Download size={15} />
+                        {t("Download receipt")}
                     </button>
                     <button type="button" className={styles.nextBtn} onClick={() => navigate("/virtual-IBAN")}>
-                        {!isMobile && <Home size={15} />}
-                        {t(isMobile ? "Dashboard" : "Back to dashboard")}
+                        <Home size={15} />
+                        {t("Back to dashboard")}
                     </button>
                 </div>
             </div>
@@ -806,7 +796,7 @@ const DoneStep = ({
     )
 }
 
-const SwiftTransfer = forwardRef(({ isOpen = true, toggle, selectedIban, availableBalance, isPage = false }, ref) => {
+const SwiftTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, isPage = false }) => {
     const { t } = useTranslation()
     const width = useWindowWidth()
     const navigate = useNavigate()
@@ -818,7 +808,7 @@ const SwiftTransfer = forwardRef(({ isOpen = true, toggle, selectedIban, availab
     const liveBalance = syncedBalance?.balance ?? availableBalance ?? selectedIban?.balance ?? 0
     const currencyCode = selectedIban?.currency || "EUR"
     const sourceAvailableBalance = getSourceBalance(liveBalance, selectedIban)
-    const getDefaultAuthType = () => (userDetails?.tfa ? "authenticator" : userDetails?.email_verification ? "email" : userDetails?.whatsapp_verification ? "whatsapp" : "sms")
+    const getDefaultAuthType = () => (userDetails?.tfa ? "authenticator" : "sms")
 
     const [currentStep, setCurrentStep] = useState(STEPS.AMOUNT)
     const [amount, setAmount] = useState("")
@@ -834,28 +824,19 @@ const SwiftTransfer = forwardRef(({ isOpen = true, toggle, selectedIban, availab
     const [confirmedDetails, setConfirmedDetails] = useState(false)
     const [confirmedParentCompany, setConfirmedParentCompany] = useState(false)
     const [authType, setAuthType] = useState(getDefaultAuthType)
-    const [otpChannel, setOtpChannel] = useState(getDefaultAuthType)
-    const [otpMethods, setOtpMethods] = useState(null)
     const [feeDetails, setFeeDetails] = useState(null)
     const [quoteToken, setQuoteToken] = useState("")
     const [quoteExpiresAt, setQuoteExpiresAt] = useState(null)
     const [isRefreshingQuote, setIsRefreshingQuote] = useState(false)
     const [otpToken, setOtpToken] = useState("")
     const [payoutResult, setPayoutResult] = useState(null)
-    const isMobile = width <= 600;
-    const [showDrawer, setShowDrawer] = useState(false);
 
     const payoutFee = useVirtualIbanSwiftPayoutFee()
     const payoutDirect = useVirtualIbanSwiftPayoutDirect()
 
     const { sendOtp, isSendingOtp } = useSendOtp({
-        onSuccess: (token, dec) => {
+        onSuccess: (token) => {
             setOtpToken(token)
-            setOtpMethods(dec)
-            if (currentStep !== STEPS.OTP && dec?.otp_sent_on) {
-                setAuthType(dec.otp_sent_on)
-                setOtpChannel(dec.otp_sent_on)
-            }
             setCurrentStep(STEPS.OTP)
         },
         onError: (err) => {
@@ -900,9 +881,7 @@ const SwiftTransfer = forwardRef(({ isOpen = true, toggle, selectedIban, availab
 
     useEffect(() => {
         if (userDetails?.tfa) setAuthType("authenticator")
-        else if (userDetails?.email_verification) setAuthType("email")
-        else if (userDetails?.whatsapp_verification) setAuthType("whatsapp")
-    }, [userDetails?.tfa, userDetails?.email_verification, userDetails?.whatsapp_verification])
+    }, [userDetails?.tfa])
 
     useEffect(() => {
         if (userDetails?._id) getUserBeneficiaries()
@@ -970,8 +949,6 @@ const SwiftTransfer = forwardRef(({ isOpen = true, toggle, selectedIban, availab
         setConfirmedDetails(false)
         setConfirmedParentCompany(false)
         setAuthType(getDefaultAuthType())
-        setOtpChannel(getDefaultAuthType())
-        setOtpMethods(null)
         setFeeDetails(null)
         setQuoteToken("")
         setQuoteExpiresAt(null)
@@ -1027,11 +1004,10 @@ const SwiftTransfer = forwardRef(({ isOpen = true, toggle, selectedIban, availab
     }
 
     const handleSendOtp = async (otpCodeType) => {
-        const nextChannel = otpCodeType || otpChannel
-        setOtpChannel(nextChannel)
-        setAuthType(nextChannel)
+        const nextAuthType = otpCodeType || authType
+        setAuthType(nextAuthType)
 
-        await sendOtp(buildPayoutPayload(), nextChannel)
+        await sendOtp(buildPayoutPayload(), nextAuthType)
 
     }
 
@@ -1120,10 +1096,6 @@ const SwiftTransfer = forwardRef(({ isOpen = true, toggle, selectedIban, availab
         else setCurrentStep(prevStep)
     }
 
-    useImperativeHandle(ref, () => ({
-        back: handleBack,
-    }), [handleBack])
-
     const renderStepContent = () => {
         switch (currentStep) {
             case STEPS.AMOUNT:
@@ -1200,7 +1172,6 @@ const SwiftTransfer = forwardRef(({ isOpen = true, toggle, selectedIban, availab
             case STEPS.OTP:
                 return (
                     <OTPConfirmation
-                        variant="card"
                         fullHeight
                         setter={setCurrentStep}
                         setterValue={STEPS.DONE}
@@ -1210,7 +1181,6 @@ const SwiftTransfer = forwardRef(({ isOpen = true, toggle, selectedIban, availab
                         resendHandler={handleSendOtp}
                         authType={authType}
                         setAuthType={setAuthType}
-                        methods={otpMethods}
                     />
                 )
             case STEPS.DONE:
@@ -1245,6 +1215,7 @@ const SwiftTransfer = forwardRef(({ isOpen = true, toggle, selectedIban, availab
                             <p>{t("International Wire — EUR → USD")}</p>
                         </div>
                     </div>
+
                     <div style={{ marginTop: "2rem" }} className={withdrawStyles.progressEffect}>
                         {SIDEBAR_STEPS.map((item, index) => {
                             const IconComponent = sidebarIcons[item.stepName]
@@ -1273,7 +1244,7 @@ const SwiftTransfer = forwardRef(({ isOpen = true, toggle, selectedIban, availab
             <section className={styles.rightPanel}>
                 <div className={styles.content}>{renderStepContent()}</div>
 
-                {(showFooter && !isMobile) && (
+                {showFooter && (
                     <div className={styles.footer}>
                         <button type="button" className={styles.cancelBtn} onClick={handleClose}>
                             {t("Cancel")}
@@ -1295,32 +1266,14 @@ const SwiftTransfer = forwardRef(({ isOpen = true, toggle, selectedIban, availab
                         </div>
                     </div>
                 )}
-            </section>           
-            {(isMobile && currentStep !== STEPS.DONE) &&
-                <MobileFooter 
-                    label={isProcessing ? t("Processing...") : getContinueLabel(currentStep, t)}
-                    handleBack={handleBack}
-                    handleAction={handleContinue}
-                    disabled={disabled}
-                />
-            }
+            </section>
         </div>
     )
 
     return (
         <>
             {isPage ? (
-                <div className={styles.pageContainer}>
-                {isMobile && <MobileStepProgress 
-                                currentStep={currentStep} 
-                                isSidebarStepActive={isSidebarStepActive}
-                                isSidebarStepCompleted={isSidebarStepCompleted}
-                                SIDEBAR_STEPS={SIDEBAR_STEPS}
-                                getSidebarStepName={getSidebarStepName}
-                                handleClick={()=>setShowDrawer(true)}
-                            />}
-                    {content}
-                </div>
+                <div className={styles.pageContainer}>{content}</div>
             ) : (
                 <Modal
                     isOpen={isOpen}
@@ -1351,26 +1304,20 @@ const SwiftTransfer = forwardRef(({ isOpen = true, toggle, selectedIban, availab
                     onSaveSuccess={handleBeneficiarySaved}
                 />
 
-            <DynamicChannelModal
-                open={isChannelModalOpen}
-                handleClose={() => {
-                    setIsChannelModalOpen(false);
-                    setChannelModalBeneficiary(null);
-                }}
-                beneficiaryData={channelModalBeneficiary}
-                lockChannelType="bank"
-                onSaveSuccess={handleChannelSaved}
-            />
-            <StepsDrawer
-                open={showDrawer}
-                currentStep={currentStep} 
-                isSidebarStepActive={isSidebarStepActive}
-                isSidebarStepCompleted={isSidebarStepCompleted}
-                SIDEBAR_STEPS={SIDEBAR_STEPS}
-                toggleDrawer={()=>setShowDrawer(false)}
-            />
+                <DynamicChannelModal
+                    open={isChannelModalOpen}
+                    handleClose={() => {
+                        setIsChannelModalOpen(false);
+                        setChannelModalBeneficiary(null);
+                    }}
+                    beneficiaryData={channelModalBeneficiary}
+                    lockChannelType="bank"
+                    onSaveSuccess={handleChannelSaved}
+                />
+                </>
+            )}
         </>
     )
-})
+}
 
 export default SwiftTransfer
