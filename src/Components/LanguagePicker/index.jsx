@@ -11,7 +11,8 @@ import { UserContext } from "../../Context/UserContext"
 import { useLocation } from "react-router"
 import useCountryLocation from "../../hooks/GeneralUse/useCountryLocation"
 import localforage from "localforage"
-const LanguagePicker = ({ size = "24", backgroundWhite, newUI, defaultLanguage, shouldOpenUpRequired = false }) => {
+import { ChevronDown } from "react-feather"
+const LanguagePicker = ({ size = "24", backgroundWhite, newUI, selectUi, defaultLanguage, shouldOpenUpRequired = false }) => {
     const { i18n, t } = useTranslation()
     const [showDropDown, setShowDropDown] = useState()
     const [currentLang, setCurrentLang] = useState(defaultLanguage || "en")
@@ -470,7 +471,35 @@ const LanguagePicker = ({ size = "24", backgroundWhite, newUI, defaultLanguage, 
                                 {window.innerWidth < 1000 && <img src={drag} style={{ cursor: 'grab' }} alt="drag" />}
                             </div>
                         </> :
+                        selectUi ?
+                        <>
+                            <div
+                                style={{
+                                    padding: "8px",
+                                    display: "flex",
+                                    justifyContent: "center",
+                                    alignItems: "center",
+                                    gap: "10px",
+                                    borderRadius: "8px",
+                                    background: "white",
+                                    boxShadow: "0 4px 39.6px 0 rgba(109, 41, 220, 0.15)",
+                                    cursor: "pointer",
+                                    transform: window.innerWidth < 1000 ? `translateY(${translateY}px)` : undefined,
+                                    position: "relative",
+                                    zIndex: 999
+                                }}
+                                onClick={(e) => {
+                                    e.stopPropagation()
+                                    setShowDropDown(true)
+                                }}
+                            >
+                                <span style={{ fontWeight: 600, fontSize: "14px" }}>
+                                    {languageCountries.find(i => i.lang === currentLang)?.display}
+                                </span>
 
+                                <ChevronDown size={18}/> 
+                            </div>
+                        </> :
                         <Col xs="auto" style={{
                             padding: ".5rem",
                             boxShadow: "0px 9.94788px 10.7769px rgba(109, 41, 220, 0.17)",
