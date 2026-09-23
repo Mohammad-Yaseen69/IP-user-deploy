@@ -53,7 +53,8 @@ const ForgotPassword = ({ setIsLoginForm, setIsForgot, country }) => {
             show: false
         }
     })
-
+    const [availableMethods, setAvailableMethods] = useState({ sms: true })
+    const whatsappAvailable = currentMethod === "sms" && availableMethods?.['whatsapp'];
 
     const changePassHandler = (e) => {
         const { name, value } = e.target;
@@ -126,12 +127,16 @@ const ForgotPassword = ({ setIsLoginForm, setIsForgot, country }) => {
             if (isAgent) {
                 data.isAgent = true
             }
-
+            console.log('data',data)
             const response = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/account/send-forgot-password-otp`, {
                 data: encryptData(data)
             })
             const dec = decryptData(response.data.data)
+            console.log('decryptData', dec)
             setOtpToken(dec?.token)
+            if(dec?.availableMethods){
+                setAvailableMethods(dec?.availableMethods)
+            }
             setEmailVerified(true)
         } catch (error) {
             const dec = decryptData(error?.response?.data?.data)
@@ -360,7 +365,7 @@ const ForgotPassword = ({ setIsLoginForm, setIsForgot, country }) => {
                                             <span
                                                 onClick={() => {
                                                     if (resendTimer === 0) {
-                                                        if (currentMethod === "sms") {
+                                                        if (whatsappAvailable) {
                                                             setCurrentMethod("whatsapp")
                                                             setResendTimer(90)
                                                             sendOTP({ preventDefault: () => { } }, "whatsapp")
@@ -382,9 +387,9 @@ const ForgotPassword = ({ setIsLoginForm, setIsForgot, country }) => {
                                                     setShowTooltip(false)
                                                 }}
                                                 style={{ display: 'flex', alignItems: "center", gap: "7px", padding: '10px 15px', boxShadow: "0px 0px 4px #0000002e", borderRadius: "6px", cursor: "pointer" }}>
-                                                <img style={{ width: '24px' }} src={currentMethod === "sms" ? whatsappIcon : smsIcon} alt="" />
+                                                <img style={{ width: '24px' }} src={whatsappAvailable ? whatsappIcon : smsIcon} alt="" />
                                                 <span style={{ fontWeight: 600, color: 'black' }}>
-                                                    {t("Verify Using {{method}}", { method: currentMethod === "sms" ? "Whatsapp" : "SMS" })}
+                                                    {t("Verify Using {{method}}", { method: whatsappAvailable ? "Whatsapp" : "SMS" })}
                                                 </span>
                                             </span>
 

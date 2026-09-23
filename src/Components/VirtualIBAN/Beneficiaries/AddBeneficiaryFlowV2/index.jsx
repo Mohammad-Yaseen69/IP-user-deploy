@@ -20,7 +20,7 @@ import {
     prefillBeneficiaryBag,
     prefillEditBag,
 } from './buildPayloads';
-import { usePayers, useRequiredFields, useRequirements } from './useVendorRequirements';
+import { useAvailableMethods, useRequiredFields, useRequirements } from './useVendorRequirements';
 import { getEditRequirements } from './vendorFields';
 import { apiWrapper } from '../../../../utils/Functions/apiWrapper';
 import { UserContext } from '../../../../Context/UserContext';
@@ -160,13 +160,17 @@ const AddBeneficiaryFlowV2 = ({
         enabled: isTransferMethod,
     });
 
-    const { payers, isLoading: payersLoading } = usePayers({
-        countryIso3: form.country,
-        serviceName: form.service_name,
-        vendor: form.vendor,
+    const { methods, isLoading: methodsLoading, error: methodsError } = useAvailableMethods(
+        form.country,
         transactionType,
-        enabled: form.method === 'mobile_wallet',
-    });
+    );
+
+    /* Only a mobile wallet asks the sender to name the provider. */
+    const payers = useMemo(() => {
+        if (form.method !== 'mobile_wallet') return [];
+        const service = methods.transfer.find((entry) => entry.serviceId === form.service_id);
+        return service?.payers || [];
+    }, [methods, form.method, form.service_id]);
 
     const vendorRequirements = useRequirements({
         method: form.method,
@@ -228,7 +232,6 @@ const AddBeneficiaryFlowV2 = ({
             method: entry.value,
             vendor: entry.vendor,
             service_id: entry.serviceId || null,
-            service_name: entry.serviceName || '',
             channel: {},
         }));
         setErrors({});
@@ -468,6 +471,9 @@ const AddBeneficiaryFlowV2 = ({
                 return (
                     <StepMethod
                         form={form}
+                        methods={methods}
+                        isLoading={methodsLoading}
+                        error={methodsError}
                         onSelectMethod={selectMethod}
                         requirementsLoading={isTransferMethod && fieldsLoading}
                         requirementsError={isTransferMethod ? fieldsError : null}
@@ -500,7 +506,7 @@ const AddBeneficiaryFlowV2 = ({
                         addressCheck={addressCheck}
                         lockedFields={lockedFields}
                         payers={payers}
-                        payersLoading={payersLoading}
+                        payersLoading={methodsLoading}
                         beneficiary={isEditMode ? existingBeneficiary : null}
                         disabled={isViewMode}
                         onChangeMethod={isBeneficiaryMode ? null : () => setStage('method')}
