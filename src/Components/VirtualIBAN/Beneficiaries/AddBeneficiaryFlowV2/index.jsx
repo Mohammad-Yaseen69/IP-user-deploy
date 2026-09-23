@@ -12,7 +12,7 @@ import StepMethod from './steps/StepMethod';
 import StepDetails from './steps/StepDetails';
 import StepConfirm from './steps/StepConfirm';
 import StepView from './steps/StepView';
-import { INITIAL_FORM, THUNES_SERVICE_BY_METHOD } from './constants';
+import { BVNK_METHODS, INITIAL_FORM, THUNES_SERVICE_BY_METHOD } from './constants';
 import {
     buildBeneficiaryPayload,
     buildBeneficiaryUpdatePayload,
@@ -59,13 +59,20 @@ const AddBeneficiaryFlowV2 = ({
     onSaveSuccess,
     existingBeneficiary = null,
     mode: modeProp,
+    fixedMethod = '',
+    initialCountry = '',
 }) => {
     const mode = modeProp || (existingBeneficiary ? 'channel' : 'create');
     const isChannelMode = mode === 'channel';
     const isEditMode = mode === 'edit';
     const isViewMode = mode === 'view';
     const isBeneficiaryMode = isEditMode || isViewMode;
-    const stages = MODE_STAGES[mode] || MODE_STAGES.create;
+
+    /* A flow that already knows how the money leaves does not ask again. */
+    const stages = useMemo(() => {
+        const modeStages = MODE_STAGES[mode] || MODE_STAGES.create;
+        return fixedMethod ? modeStages.filter((item) => item !== 'method') : modeStages;
+    }, [mode, fixedMethod]);
     const { allowedCountries, setProfileLockTime } = useContext(UserContext);
     const navigate = useNavigate();
 
@@ -136,20 +143,25 @@ const AddBeneficiaryFlowV2 = ({
         setProviderError(null);
         setSaving(false);
 
+        const fixed = fixedMethod
+            ? { method: fixedMethod, vendor: BVNK_METHODS.find((item) => item.value === fixedMethod)?.vendor || '' }
+            : {};
+
         if (!existingBeneficiary) {
-            setForm(INITIAL_FORM);
+            setForm({ ...INITIAL_FORM, ...fixed, country: initialCountry || '' });
             return;
         }
 
         setForm({
             ...INITIAL_FORM,
+            ...fixed,
             recipient_type: existingBeneficiary.beneficiary_type || 'individual',
-            country: existingBeneficiary.country_iso_code || '',
+            country: existingBeneficiary.country_iso_code || initialCountry || '',
             beneficiary: isBeneficiaryMode
                 ? prefillEditBag(existingBeneficiary)
                 : prefillBeneficiaryBag(existingBeneficiary),
         });
-    }, [open, mode, existingBeneficiary]);
+    }, [open, mode, existingBeneficiary, fixedMethod, initialCountry]);
 
     const isTransferMethod = !!THUNES_SERVICE_BY_METHOD[form.method];
 
@@ -518,7 +530,7 @@ const AddBeneficiaryFlowV2 = ({
                         payersLoading={methodsLoading}
                         beneficiary={isEditMode ? existingBeneficiary : null}
                         disabled={isViewMode}
-                        onChangeMethod={isBeneficiaryMode ? null : () => setStage('method')}
+                        onChangeMethod={isBeneficiaryMode || fixedMethod ? null : () => setStage('method')}
                     />
                 );
 
