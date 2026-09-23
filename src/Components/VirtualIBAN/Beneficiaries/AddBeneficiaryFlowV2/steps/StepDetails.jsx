@@ -1,15 +1,7 @@
 import { useContext, useMemo } from 'react';
-import {
-    Alert,
-    ContextCard,
-    FieldRow,
-    Fields,
-    Section,
-    SectionTitle,
-} from '../components';
-import DynamicField from '../components/DynamicField';
+import { Alert, ContextCard, Section, SectionTitle } from '../components';
+import FieldGrid from '../components/FieldGrid';
 import ChannelsSummary from '../components/ChannelsSummary';
-import { getFieldDef } from '../vendorFields';
 import { useCountryStates } from '../useCountryStates';
 import { METHOD_AVATAR_ICON, METHOD_CONTEXT_LABEL } from '../constants';
 import { UserContext } from '../../../../../Context/UserContext';
@@ -18,40 +10,6 @@ const ADDRESS_CHECK_COLORS = {
     checking: 'var(--abf-text-secondary)',
     valid: '#067647',
     invalid: '#b42318',
-};
-
-const FieldGrid = ({ names, defs, values, onChange, errors, disabled, lockedFields = [], countryIso3, stateData, payers, payersLoading }) => {
-    const hasStateField = names.some((name) => getFieldDef(name, defs).type === 'state');
-    const rows = [];
-    for (let index = 0; index < names.length; index += 2) {
-        rows.push(names.slice(index, index + 2));
-    }
-
-    return (
-        <Fields>
-            {rows.map((row) => (
-                <FieldRow key={row.join('-')} alignEnd>
-                    {row.map((name) => (
-                        <DynamicField
-                            key={name}
-                            name={name}
-                            defs={defs}
-                            value={values[name]}
-                            values={values}
-                            countryIso3={countryIso3}
-                            stateData={stateData}
-                            hasStateField={hasStateField}
-                            payers={payers}
-                            payersLoading={payersLoading}
-                            onChange={(value, patch) => onChange(name, value, patch)}
-                            error={errors[name]}
-                            disabled={disabled || lockedFields.includes(name)}
-                        />
-                    ))}
-                </FieldRow>
-            ))}
-        </Fields>
-    );
 };
 
 const StepDetails = ({

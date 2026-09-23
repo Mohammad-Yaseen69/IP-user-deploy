@@ -1079,9 +1079,9 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                     return
                 }
 
-                if (!internationalData.beneficiary?.address) {
-                    return setShowAddressModal(true)
-                }
+                // if (!internationalData.beneficiary?.address) {
+                //     return setShowAddressModal(true)
+                // }
                 setRequiredMissingFields({
                     beneficiary: { basic: [], extras: [] },
                     vendors: { fields: [], vendorType: internationalData?.payoutChannel.value }
