@@ -79,7 +79,7 @@ export const MENU = [
                 permission: "wallet.view"
             },
             {
-                title: "Crypto Wallets",
+                title: "Crypto Hub",
                 icon: <img loading="lazy" src={crypto_icon} style={{ marginRight: "12px" }} />,
                 activeIcon: <img loading="lazy" src={crypto_icon_a} style={{ marginRight: "12px" }} />,
                 type: "link",
