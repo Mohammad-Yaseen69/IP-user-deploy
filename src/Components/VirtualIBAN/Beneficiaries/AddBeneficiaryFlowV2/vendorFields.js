@@ -82,21 +82,13 @@ export const BVNK_FIELD_DEFS = {
     },
 
     iban: { label: 'IBAN', type: 'iban', alphanumeric: true, uppercase: true, required: true },
-    accountNumber: { label: 'Account number', type: 'text', alphanumeric: true, required: true },
     bic: { label: 'BIC / SWIFT', type: 'bic', alphanumeric: true, uppercase: true },
     swift_code: { label: 'SWIFT / BIC', type: 'bic', alphanumeric: true, uppercase: true, required: true },
-    intermediaryBic: { label: 'Intermediary BIC', type: 'bic', alphanumeric: true, uppercase: true },
 
     bankName: { label: 'Bank name', type: 'text' },
-    bankCountry: { label: 'Bank country', type: 'country' },
-    bankAddress: { label: 'Bank address', type: 'text' },
+    bankAddress: { label: 'Bank street address', type: 'text' },
     bankCity: { label: 'Bank city', type: 'text' },
     bankPostal: { label: 'Bank postal code', type: 'text' },
-
-    beneficiaryAddress: { label: 'Address', type: 'text' },
-    beneficiaryCity: { label: 'City', type: 'city' },
-    beneficiaryPostal: { label: 'Postal code', type: 'text' },
-    beneficiaryCountry: { label: 'Country', type: 'country' },
 
     crypto_asset: {
         label: 'Asset',
@@ -120,25 +112,27 @@ export const BVNK_FIELD_DEFS = {
     },
 };
 
+/* The recipient address the payout carries. The country is never asked for: the payout
+   reads it from the beneficiary's own country, and the bank's country with it. */
+const BVNK_ADDRESS_FIELDS = ['address', 'city', 'province_state', 'postal_code'];
+
+/* SEPA reaches the account by IBAN alone - the only detail the payout refuses to go
+   without - so everything else it sends is offered but never demanded. */
 const BVNK_SEPA = {
-    beneficiary: [],
-    channel: ['iban', 'bic', 'bankName', 'bankCountry'],
+    beneficiary: BVNK_ADDRESS_FIELDS,
+    requiredBeneficiary: [],
+    channel: ['iban', 'bic', 'bankName'],
     requiredChannel: ['iban'],
 };
 
+/* SWIFT is checked twice before it leaves - validateSwiftBeneficiary on the way into the
+   transfer and the payout itself - and both ask for the recipient address and the whole
+   bank address behind the BIC. The account still travels as an IBAN. */
 const BVNK_SWIFT = {
-    beneficiary: ['beneficiaryAddress', 'beneficiaryCity', 'beneficiaryPostal', 'beneficiaryCountry'],
-    channel: [
-        'swift_code',
-        'accountNumber',
-        'bankName',
-        'bankAddress',
-        'bankCity',
-        'bankPostal',
-        'bankCountry',
-        'intermediaryBic',
-    ],
-    requiredChannel: ['swift_code', 'accountNumber'],
+    beneficiary: BVNK_ADDRESS_FIELDS,
+    requiredBeneficiary: ['address', 'city', 'postal_code'],
+    channel: ['iban', 'swift_code', 'bankName', 'bankAddress', 'bankCity', 'bankPostal'],
+    requiredChannel: ['iban', 'swift_code', 'bankName', 'bankAddress', 'bankCity', 'bankPostal'],
 };
 
 const BVNK_CRYPTO = {
@@ -204,7 +198,7 @@ export const getBvnkRequirements = (method, recipientType, channel = {}) => {
         vendor: 'bvnk',
         beneficiaryFields: [...entity, ...rail.beneficiary],
         channelFields: rail.channel,
-        requiredBeneficiary: entity,
+        requiredBeneficiary: [...entity, ...(rail.requiredBeneficiary || [])],
         requiredChannel: rail.requiredChannel,
         defs,
     };
