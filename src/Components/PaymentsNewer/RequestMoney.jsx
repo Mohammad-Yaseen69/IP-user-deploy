@@ -99,7 +99,7 @@ const RequestMoney = ({ setAction, setStep }) => {
         },
     ]
     const { userDetails, userWallets, authHeader } = useContext(UserContext)
-    const [codeType, setCodeType] = useState("sms")
+    const [codeType, setCodeType] = useState("authenticator")
     const [totalBalance, setTotalBalance] = useState(0)
     const [timezone, setTimezone] = useState("")
 

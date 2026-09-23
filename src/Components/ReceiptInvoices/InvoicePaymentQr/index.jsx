@@ -7,7 +7,7 @@ import { decryptData } from "../../../Helper/EssentilaMethods/Decryption"
 import { toast } from "react-toastify"
 import { ArrowLeft } from "react-feather"
 import InstaPayLoader from "../../Loader"
-import { LimitsErrorMessage } from "../../PaymentsNewer/OTPConfirmation"
+import { LimitsErrorMessage } from "../../../utils/Functions/paymentLimits"
 import NotFound from "../../NotFound";
 import { useTranslation } from "react-i18next";
 import ErrorModal from "../../QrQuickerPay/components/ErrorModal";
