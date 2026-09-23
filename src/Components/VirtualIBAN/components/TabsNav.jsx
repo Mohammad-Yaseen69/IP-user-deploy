@@ -4,7 +4,6 @@ import OverViewIcon from "../files/images/OverView.svg"
 import mange from "../files/images/Mange.svg"
 import TransecitonHis from "../files/images/TransectionHistory.svg"
 import IBAN_icon from "../files/images/IBAN.svg"
-import CryptoChannelsIcon from "../files/images/CryptoChannels.svg"
 import { useTranslation } from "react-i18next";
 import { usePermission } from "../../../hooks/GeneralUse/usePermission";
 
@@ -22,7 +21,6 @@ const TabsNav = ({ activeTab, onTabChange }) => {
   const visibleTabs = tabs.filter((tab) => {
     if (tab.id === "transaction-history") return can("virtual-iban.transactions.view")
     if (tab.id === "ibanassets") return can("virtual-iban.details.view")
-    if (tab.id === "crypto-channels") return can("virtual-iban.details.view")
     if (tab.id === "manage") return can("virtual-iban.status.update")
     return true
   })
