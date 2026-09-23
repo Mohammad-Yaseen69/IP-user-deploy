@@ -82,6 +82,7 @@ export const BVNK_FIELD_DEFS = {
     },
 
     iban: { label: 'IBAN', type: 'iban', alphanumeric: true, uppercase: true, required: true },
+    account_number: { label: 'Account number', type: 'text', alphanumeric: true, required: true },
     bic: { label: 'BIC / SWIFT', type: 'bic', alphanumeric: true, uppercase: true },
     swift_code: { label: 'SWIFT / BIC', type: 'bic', alphanumeric: true, uppercase: true, required: true },
 
@@ -125,14 +126,14 @@ const BVNK_SEPA = {
     requiredChannel: ['iban'],
 };
 
-/* SWIFT is checked twice before it leaves - validateSwiftBeneficiary on the way into the
-   transfer and the payout itself - and both ask for the recipient address and the whole
-   bank address behind the BIC. The account still travels as an IBAN. */
+/* Everything validateSwiftBeneficiary checks before the transfer will go: the account as
+   the bank quotes it, the BIC, and the bank address behind it. The bank country is not
+   asked for - the channel records the recipient's own country as the bank's. */
 const BVNK_SWIFT = {
     beneficiary: BVNK_ADDRESS_FIELDS,
     requiredBeneficiary: ['address', 'city', 'postal_code'],
-    channel: ['iban', 'swift_code', 'bankName', 'bankAddress', 'bankCity', 'bankPostal'],
-    requiredChannel: ['iban', 'swift_code', 'bankName', 'bankAddress', 'bankCity', 'bankPostal'],
+    channel: ['account_number', 'swift_code', 'bankName', 'bankAddress', 'bankCity', 'bankPostal'],
+    requiredChannel: ['account_number', 'swift_code', 'bankName', 'bankAddress', 'bankCity', 'bankPostal'],
 };
 
 const BVNK_CRYPTO = {
