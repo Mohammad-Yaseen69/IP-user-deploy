@@ -958,3 +958,50 @@
         font-size: 11px;
     }
 }
+
+/* Adding a recipient inside another flow: the same fields without the dialog around them. */
+.quickAdd {
+    display: flex;
+    flex-direction: column;
+    gap: var(--abf-md);
+    width: 100%;
+    text-align: left;
+}
+
+.quickAddBar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: var(--abf-sm);
+    padding-bottom: var(--abf-sm);
+    border-bottom: 1px solid var(--abf-border-subtle);
+}
+
+.quickAddHeading {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.quickAddTitle {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--abf-text-primary);
+}
+
+.quickAddMeta {
+    margin: 0;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--abf-text-secondary);
+}
+
+.quickAddActions {
+    display: flex;
+    align-items: center;
+    gap: var(--abf-sm);
+    flex-shrink: 0;
+}
