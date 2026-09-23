@@ -8,9 +8,9 @@ import { apiWrapper } from '../../utils/Functions/apiWrapper'
 import useWindowWidth from '../../utils/useWindowWidth'
 import InstaPayLoader from '../Loader'
 import TopRight from '../topRight'
+import Compliance from './Compliance'
 import AccountsSidebar from './components/AccountsSidebar'
 import BalanceHeader from './components/BalanceHeader'
-import Empty from './components/Empty'
 import InactiveIban from './components/InactiveIban'
 import MonthlyExpenses from './components/MonthlyExpenses'
 import QuickActions from './components/QuickActions'
@@ -19,11 +19,10 @@ import TabsNav from './components/TabsNav'
 import IBAN from './IBAN/IBAN'
 import IBANDetails from './IBAN/IBANDetails'
 import Manage from './Manage/Manage'
+import OnboardingIBAN from './OnBoardingIBAN'
 import styles from "./styles/index.module.css"
 import { asVirtualIbanArray, isVirtualIbanInactive } from './utils/virtualIban'
 import VirtualIbanModal from './VirtualIbanModal'
-import OnboardingIBAN from './OnBoardingIBAN'
-import Compliance from './Compliance'
 
 
 const VirtualBank = () => {
