@@ -56,7 +56,7 @@ import useSendOtp from "../../../../hooks/GeneralUse/useSendOtp"
 import { useQueryClient } from "@tanstack/react-query"
 import { useVirtualIbanSwiftPayoutFee, useVirtualIbanSwiftPayoutDirect, useSyncVirtualIbanBalance, virtualIbanQueryKeys } from "../../../../hooks/useVirtualIban"
 import { handlePaymentApiError } from "../../../../utils/Functions/handlePaymentApiError"
-import OTPConfirmation from "../../../UserSettingsNew/OTPConfirmation"
+import OTPConfirmation from "../../../../Common/Component/OtpVerification"
 import jsPDF from "jspdf"
 import autoTable from "jspdf-autotable"
 import AddBeneficiary from "../../../AddBeneficiary"
@@ -808,7 +808,7 @@ const SwiftTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, 
     const liveBalance = syncedBalance?.balance ?? availableBalance ?? selectedIban?.balance ?? 0
     const currencyCode = selectedIban?.currency || "EUR"
     const sourceAvailableBalance = getSourceBalance(liveBalance, selectedIban)
-    const getDefaultAuthType = () => (userDetails?.tfa ? "authenticator" : "sms")
+    const getDefaultAuthType = () => (userDetails?.tfa ? "authenticator" : userDetails?.email_verification ? "email" : userDetails?.whatsapp_verification ? "whatsapp" : "sms")
 
     const [currentStep, setCurrentStep] = useState(STEPS.AMOUNT)
     const [amount, setAmount] = useState("")
@@ -824,6 +824,8 @@ const SwiftTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, 
     const [confirmedDetails, setConfirmedDetails] = useState(false)
     const [confirmedParentCompany, setConfirmedParentCompany] = useState(false)
     const [authType, setAuthType] = useState(getDefaultAuthType)
+    const [otpChannel, setOtpChannel] = useState(getDefaultAuthType)
+    const [otpMethods, setOtpMethods] = useState(null)
     const [feeDetails, setFeeDetails] = useState(null)
     const [quoteToken, setQuoteToken] = useState("")
     const [quoteExpiresAt, setQuoteExpiresAt] = useState(null)
@@ -835,8 +837,13 @@ const SwiftTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, 
     const payoutDirect = useVirtualIbanSwiftPayoutDirect()
 
     const { sendOtp, isSendingOtp } = useSendOtp({
-        onSuccess: (token) => {
+        onSuccess: (token, dec) => {
             setOtpToken(token)
+            setOtpMethods(dec)
+            if (currentStep !== STEPS.OTP && dec?.otp_sent_on) {
+                setAuthType(dec.otp_sent_on)
+                setOtpChannel(dec.otp_sent_on)
+            }
             setCurrentStep(STEPS.OTP)
         },
         onError: (err) => {
@@ -881,7 +888,9 @@ const SwiftTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, 
 
     useEffect(() => {
         if (userDetails?.tfa) setAuthType("authenticator")
-    }, [userDetails?.tfa])
+        else if (userDetails?.email_verification) setAuthType("email")
+        else if (userDetails?.whatsapp_verification) setAuthType("whatsapp")
+    }, [userDetails?.tfa, userDetails?.email_verification, userDetails?.whatsapp_verification])
 
     useEffect(() => {
         if (userDetails?._id) getUserBeneficiaries()
@@ -949,6 +958,8 @@ const SwiftTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, 
         setConfirmedDetails(false)
         setConfirmedParentCompany(false)
         setAuthType(getDefaultAuthType())
+        setOtpChannel(getDefaultAuthType())
+        setOtpMethods(null)
         setFeeDetails(null)
         setQuoteToken("")
         setQuoteExpiresAt(null)
@@ -1004,10 +1015,11 @@ const SwiftTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, 
     }
 
     const handleSendOtp = async (otpCodeType) => {
-        const nextAuthType = otpCodeType || authType
-        setAuthType(nextAuthType)
+        const nextChannel = otpCodeType || otpChannel
+        setOtpChannel(nextChannel)
+        setAuthType(nextChannel)
 
-        await sendOtp(buildPayoutPayload(), nextAuthType)
+        await sendOtp(buildPayoutPayload(), nextChannel)
 
     }
 
@@ -1172,6 +1184,7 @@ const SwiftTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, 
             case STEPS.OTP:
                 return (
                     <OTPConfirmation
+                        variant="card"
                         fullHeight
                         setter={setCurrentStep}
                         setterValue={STEPS.DONE}
@@ -1181,6 +1194,7 @@ const SwiftTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, 
                         resendHandler={handleSendOtp}
                         authType={authType}
                         setAuthType={setAuthType}
+                        methods={otpMethods}
                     />
                 )
             case STEPS.DONE:
