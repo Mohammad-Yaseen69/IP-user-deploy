@@ -36,6 +36,7 @@
             align-items: center;
             gap: 1rem;
             margin-bottom: 1rem;
+            flex-wrap: wrap;
             // overflow-x: auto;
 
             .right {
@@ -64,8 +65,7 @@
                         width: 5px;
                         border-radius: 10px;
                         background-color: white;
-                        position: absolute;
-                        right: 10px;
+                        margin-left: auto;
 
                     }
                 }
@@ -76,7 +76,7 @@
                 align-items: center;
                 gap: 12px;
                 position: relative;
-
+                min-width: 255px;
                 .search {
                     display: flex;
                     align-items: center;
@@ -630,6 +630,7 @@
                     justify-content: space-between;
 
                     .search {
+                        width: 100%;
                         display: flex;
                         align-items: center;
                         background: #fff;
