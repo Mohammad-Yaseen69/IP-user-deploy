@@ -8,9 +8,10 @@ import { useCountryStates } from './useCountryStates';
 import { useRequiredFields, useRequirements } from './useVendorRequirements';
 import { buildBeneficiaryPayload, buildChannelPayload } from './buildPayloads';
 import { METHOD_CONTEXT_LABEL } from './constants';
-import { THUNES_ENTITY_FIELDS } from './vendorFields';
+import { getFieldDef, THUNES_ENTITY_FIELDS } from './vendorFields';
 import { apiWrapper } from '../../../../utils/Functions/apiWrapper';
 import { handlePaymentApiError } from '../../../../utils/Functions/handlePaymentApiError';
+import { collectIdentifierErrors } from '../../../../utils/Functions/bankIdentifiers';
 import { UserContext } from '../../../../Context/UserContext';
 
 /* The payout channel is named by its own value inside the transfer. */
@@ -135,6 +136,14 @@ const QuickAddBeneficiary = ({
         (requirements?.requiredChannel || []).forEach((name) => {
             if (!String(channel[name] || '').trim()) next.channel[name] = 'Required.';
         });
+
+        if (requirements) {
+            const fieldType = (name) => getFieldDef(name, requirements.defs).type;
+            next.channel = {
+                ...collectIdentifierErrors(requirements.channelFields, channel, fieldType),
+                ...next.channel,
+            };
+        }
 
         setErrors(next);
         return Object.keys(next.beneficiary).length === 0 && Object.keys(next.channel).length === 0;
