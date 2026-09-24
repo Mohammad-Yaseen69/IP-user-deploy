@@ -548,7 +548,7 @@ const ActivityStep = ({ onNext, onBack, data = {}, currentStep}) => {
                                 </div>
                             </div>
 
-                            <div className={`${styles.formGrid} ${styles.twoInputRow}`}>
+                            <div className={`${styles.formGrid} ${isMobile && styles.twoInputRow}`}>
                                 <div className={styles.inputGroup}>
                                     <label className={styles.inputLabel}>
                                         {t(isMobile ? "Avg transaction" : "AVERAGE TRANSACTION VALUE (EUR)")} <span style={{ color: "red", fontWeight: 600 }}>*</span>
