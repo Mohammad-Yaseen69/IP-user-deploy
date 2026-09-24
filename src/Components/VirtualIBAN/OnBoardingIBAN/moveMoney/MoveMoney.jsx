@@ -11,7 +11,6 @@ import {
     Briefcase,
     RefreshCw,
     CreditCard,
-    Cpu,
     ArrowLeft,
     Search,
     ChevronLeft
@@ -236,24 +235,6 @@ const MoveMoney = () => {
                                                     <span className={`${styles.tag} ${styles.tagBlue}`}>{t("Multi-currency")}</span>
                                                     <span className={`${styles.tag} ${styles.tagGray}`}>{t("Fiat/Crypto")}</span>
                                                     <span className={`${styles.tag} ${styles.tagGray}`}>{t("Accounts")}</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </Tooltip>
-                                    <Tooltip title={t("Coming Soon")} arrow>
-                                        <div className={styles.card}>
-                                            <div className={`${styles.iconBox} ${styles.bgOrange}`}>
-                                                <Cpu size={20} />
-                                            </div>
-                                            <div className={styles.cardBody}>
-                                                <h3 className={styles.cardTitle}>{t("Crypto & Stablecoins")}</h3>
-                                                <p className={styles.cardDesc}>
-                                                    {t("Receive, send, convert, request and mass-pay in crypto — auto-settle to your IBAN. Powered by BVNK.")}
-                                                </p>
-                                                <div className={styles.badgeRow}>
-                                                    <span className={`${styles.tag} ${styles.tagBlue}`}>{t("Assets")}</span>
-                                                    <span className={`${styles.tag} ${styles.tagGray}`}>{t("Payouts")}</span>
-                                                    <span className={`${styles.tag} ${styles.tagGray}`}>{t("Gateways")}</span>
                                                 </div>
                                             </div>
                                         </div>

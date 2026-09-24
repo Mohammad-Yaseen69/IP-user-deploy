@@ -32,7 +32,7 @@ const SelectedWallet = ({ wallet, setSubStep }) => {
                     alignItems: "center",
                     borderRadius: "12px",
                     boxShadow: "0px 4px 7px rgba(172, 53, 159, 0.31)",
-                    fontSize: "1rem",
+                    fontSize: "0.7rem",
                     fontWeight: 900,
                     color: "white",
                     marginRight: ".75rem"

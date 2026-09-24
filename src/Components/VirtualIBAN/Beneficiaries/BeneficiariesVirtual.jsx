@@ -5,13 +5,17 @@ import IbanBreadcrumb from '../components/IbanBreadcrumb';
 import { useTranslation } from 'react-i18next';
 import useWindowWidth from '../../../utils/useWindowWidth';
 import TopRight from '../../topRight';
-import DynamicChannelModal from './Modals/DynamicChannelModal';
 import AddBeneficiaryModal from './Modals/AddBeneficiaryModal';
+import DynamicChannelModal from './Modals/DynamicChannelModal';
+import AddBeneficiaryFlowV2 from './AddBeneficiaryFlowV2';
+import { USE_NEW_BENEFICIARY_FLOW } from './AddBeneficiaryFlowV2/constants';
 import { useNavigate } from 'react-router';
 import { useQuery } from '@tanstack/react-query';
 import { apiWrapper } from '../../../utils/Functions/apiWrapper';
+import { handlePaymentApiError } from '../../../utils/Functions/handlePaymentApiError';
 import { UserContext } from '../../../Context/UserContext';
 import { toast } from 'react-toastify';
+
 
 const BeneficiariesVirtual = () => {
     const { t } = useTranslation();
@@ -74,21 +78,22 @@ const BeneficiariesVirtual = () => {
             toast.success(t("Channel removed successfully"));
             refetch();
         } catch (err) {
-            console.error("Delete channel error:", err);
-            toast.error(t("Failed to remove channel"));
+            handlePaymentApiError({
+                error: err,
+                navigate,
+                fallback: t("Failed to remove channel"),
+                setError: (message) => toast.error(message),
+            });
         }
     };
 
-    const handleBeneficiarySaved = async (savedBeneficiary, isNew) => {
+    const handleBeneficiarySaved = async (savedBeneficiary) => {
         if (savedBeneficiary?._id) {
             setSelectedBeneficiaryId(savedBeneficiary._id);
         }
         await refetch();
-
-        if (isNew && savedBeneficiary) {
-            setChannelModalBeneficiary(savedBeneficiary);
-            setIsChannelModalOpen(true);
-        }
+        // The DS 2.0 flow creates the payout channel as part of the same journey,
+        // so there is no longer a second modal to chain into here.
     };
 
     const getInitials = (b) => {
@@ -459,25 +464,69 @@ const BeneficiariesVirtual = () => {
                 </div>
             </div>
 
-            <AddBeneficiaryModal
-                open={isAddModalOpen}
-                handleClose={() => {
-                    setIsAddModalOpen(false);
-                    setBeneficiaryToEdit(null);
-                }}
-                beneficiaryToEdit={beneficiaryToEdit}
-                onSaveSuccess={handleBeneficiarySaved}
-            />
+            {/* New beneficiaries go through the vendor-driven DS 2.0 flow, which asks
+                only for the fields the chosen payout provider actually requires. */}
+            {USE_NEW_BENEFICIARY_FLOW && (
+                <AddBeneficiaryFlowV2
+                    open={isAddModalOpen && !beneficiaryToEdit}
+                    handleClose={() => {
+                        setIsAddModalOpen(false);
+                        setBeneficiaryToEdit(null);
+                    }}
+                    onSaveSuccess={handleBeneficiarySaved}
+                />
+            )}
 
-            <DynamicChannelModal
-                open={isChannelModalOpen}
-                handleClose={() => {
-                    setIsChannelModalOpen(false);
-                    setChannelModalBeneficiary(null);
-                }}
-                beneficiaryData={channelModalBeneficiary || activeBeneficiary}
-                onSaveSuccess={() => refetch()}
-            />
+            {USE_NEW_BENEFICIARY_FLOW && beneficiaryToEdit && (
+                <AddBeneficiaryFlowV2
+                    open={isAddModalOpen && !!beneficiaryToEdit}
+                    mode="edit"
+                    existingBeneficiary={beneficiaryToEdit}
+                    handleClose={() => {
+                        setIsAddModalOpen(false);
+                        setBeneficiaryToEdit(null);
+                    }}
+                    onSaveSuccess={handleBeneficiarySaved}
+                />
+            )}
+
+            {/* Editing without the new flow, which also handles creation when the flag is off. */}
+            {!USE_NEW_BENEFICIARY_FLOW && (
+                <AddBeneficiaryModal
+                    open={isAddModalOpen}
+                    handleClose={() => {
+                        setIsAddModalOpen(false);
+                        setBeneficiaryToEdit(null);
+                    }}
+                    beneficiaryToEdit={beneficiaryToEdit}
+                    onSaveSuccess={handleBeneficiarySaved}
+                />
+            )}
+
+            {/* Adding a channel reuses the same vendor-driven flow, starting at the
+                method step with the beneficiary already known. The original
+                DynamicChannelModal is kept below for the flag-off path. */}
+            {USE_NEW_BENEFICIARY_FLOW ? (
+                <AddBeneficiaryFlowV2
+                    open={isChannelModalOpen}
+                    handleClose={() => {
+                        setIsChannelModalOpen(false);
+                        setChannelModalBeneficiary(null);
+                    }}
+                    existingBeneficiary={channelModalBeneficiary || activeBeneficiary}
+                    onSaveSuccess={() => refetch()}
+                />
+            ) : (
+                <DynamicChannelModal
+                    open={isChannelModalOpen}
+                    handleClose={() => {
+                        setIsChannelModalOpen(false);
+                        setChannelModalBeneficiary(null);
+                    }}
+                    beneficiaryData={channelModalBeneficiary || activeBeneficiary}
+                    onSaveSuccess={() => refetch()}
+                />
+            )}
         </div>
     );
 };

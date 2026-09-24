@@ -2,6 +2,53 @@ export const unwrapVirtualIbanResponse = (res) => res?.data?.data ?? res?.data ?
 
 export const getVirtualIbanId = (iban) => iban?._id || iban?.id || ""
 
+export const INTL_DEPOSIT_ACCOUNTS = {
+    usd: {
+        currencyCode: "USD",
+        currencyLabel: "USD (US Dollar)",
+        beneficiaryName: "SYSTEM PAY SERVICES MALTA LTD",
+        beneficiaryAddress: "Ruby Workspaces Office 3 Pendergardens Triq Gort, San Giljan, STJ 9023, MT",
+        accountNumber: "ES9601828510912010000487",
+        bankCode: "BBVAESMMXXX",
+        bankName: "BANCO BILBAO VIZCAYA ARGENTARIA S.A.",
+        bankAddress: "Pz De San Nicolas 4, Bilbao, 48005, ES",
+        reference: "PY9F4G3",
+    },
+    eur: {
+        currencyCode: "EUR",
+        currencyLabel: "EUR (Euro)",
+        beneficiaryName: "System Pay Services (Malta) Limited",
+        beneficiaryAddress: "Ruby Workspaces Office 3 Pendergardens Triq Gort, San Giljan, STJ 9023, MT",
+        accountNumber: "ES8201828510940200010371",
+        bankCode: "BBVAESMMXXX",
+        bankName: "BANCO BILBAO VIZCAYA ARGENTARIA S.A.",
+        bankAddress: "Pz De San Nicolas 4, Bilbao, 48005, ES",
+        reference: "6JL69V3",
+    },
+}
+
+export const getIntlDepositAccount = (currency) =>
+    INTL_DEPOSIT_ACCOUNTS[String(currency || "").toLowerCase()] || null
+
+export const getProviderReference = (currency) => getIntlDepositAccount(currency)?.reference || ""
+
+export const getAccountReferenceCode = (iban, userDetails) => {
+    const candidates = [
+        iban?.virtualIbanId,
+        userDetails?.username,
+    ]
+
+    const code = candidates.find((value) => String(value ?? "").trim())
+    return String(code ?? "").trim().replace(/\s+/g, "")
+}
+
+export const getPaymentReference = (iban, userDetails, currency) => {
+    const providerReference = getProviderReference(currency)
+    const accountReference = getAccountReferenceCode(iban, userDetails)
+
+    return ["Ref", providerReference, accountReference].filter(Boolean).join(" ")
+}
+
 export const getVirtualIbanCountry = (iban) => {
     const rawCountry = iban?.country || iban?.jurisdiction || iban?.bank?.address?.country
     const country = String(rawCountry || iban?.iban || "").slice(0, 2).toUpperCase()
@@ -77,6 +124,12 @@ export const asVirtualIbanArray = (value) => {
                                         : []
 
     return data.map(normalizeVirtualIban).filter(Boolean)
+}
+
+export const isVirtualIbanInactive = (iban) => {
+    if (!iban) return false
+
+    return Boolean(iban?.adminBlocked) || String(iban?.status || "").toUpperCase() === "INACTIVE"
 }
 
 export const asVirtualIban = (value) => {

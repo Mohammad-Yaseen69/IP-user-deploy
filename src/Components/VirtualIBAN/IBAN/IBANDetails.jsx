@@ -1,31 +1,13 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useState, useContext } from 'react'
 import { MoreHorizontal, Copy, Check, AlertCircle } from 'react-feather'
 import styles from '../styles/IBANDetails.module.css'
-import { normalizeVirtualIban } from '../utils/virtualIban'
+import { normalizeVirtualIban, getPaymentReference, INTL_DEPOSIT_ACCOUNTS } from '../utils/virtualIban'
 import { useTranslation } from 'react-i18next'
 import { usePermission } from '../../../hooks/GeneralUse/usePermission'
 import { useVirtualIbanDetails } from '../../../hooks/useVirtualIban'
+import { UserContext } from '../../../Context/UserContext'
 
-const INTL_DATA = {
-    usd: {
-        beneficiaryName: 'SYSTEM PAY SERVICES MALTA LTD',
-        beneficiaryAddress: 'Ruby Workspaces Office 3 Pendergardens Triq Gort, San Giljan, STJ 9023, MT',
-        accountNumber: 'ES9601828510912010000487',
-        bankCode: 'BBVAESMMXXX',
-        bankName: 'Banco Bilbao Vizcaya Argentaria, S.A.',
-        bankAddress: 'Plaza De San Nicolas 4, Bilbao, 48005, ES',
-        paymentReference: 'REF PY9F4G3'
-    },
-    eur: {
-        beneficiaryName: 'System Pay Services (Malta) Limited',
-        beneficiaryAddress: 'Ruby Workspaces Office 3 Pendergardens Triq Gort, San Giljan, STJ 9023, MT',
-        accountNumber: 'ES8201828510940200010371',
-        bankCode: 'BBVAESMMXXX',
-        bankName: 'Banco Bilbao Vizcaya Argentaria, S.A.',
-        bankAddress: 'De San Nicolas 4, Bilboa, 48005, ES',
-        paymentReference: 'REF 6JL69V3',
-    },
-}
+const INTL_DATA = INTL_DEPOSIT_ACCOUNTS
 
 function useCopy() {
     const [copiedKey, setCopiedKey] = useState(null)
@@ -66,6 +48,7 @@ const IBANDetails = ({ ibanId, fallbackIban }) => {
     const [depositing, setDepositing] = useState("eu")
     const [intlCurrency, setIntlCurrency] = useState("usd")
     const { t } = useTranslation()
+    const { userDetails } = useContext(UserContext)
     const can = usePermission()
     const canViewDetails = can("virtual-iban.details.view")
     const canCopyDetails = can("virtual-iban.details.copy")
@@ -74,6 +57,10 @@ const IBANDetails = ({ ibanId, fallbackIban }) => {
     const iban = useMemo(
         () => normalizeVirtualIban(data || fallbackIban) || {},
         [data, fallbackIban]
+    )
+    const paymentReference = useMemo(
+        () => getPaymentReference(iban, userDetails, intlCurrency),
+        [iban, userDetails, intlCurrency]
     )
     const bankAddress = iban?.bankAddress || iban?.bank?.formattedAddress || ""
     const allText = useMemo(() => {
@@ -94,10 +81,10 @@ const IBANDetails = ({ ibanId, fallbackIban }) => {
                 `${t("Bank Code")}: ${intl.bankCode || ""}`,
                 `${t("Bank name")}: ${intl.bankName || ""}`,
                 `${t("Bank address")}: ${intl.bankAddress || ""}`,
-                `${t("Payment reference")}: ${intl.paymentReference || ""}`,
+                `${t("Payment reference")}: ${paymentReference || ""}`,
             ].filter((line) => !line.endsWith(": ")).join("\n")
         }
-    }, [depositing, intlCurrency, iban, bankAddress, t])
+    }, [depositing, intlCurrency, iban, bankAddress, t, paymentReference])
 
     if (!canViewDetails) return null
 
@@ -175,7 +162,7 @@ const IBANDetails = ({ ibanId, fallbackIban }) => {
                                 <DetailRow label={t("Bank Code")} value={INTL_DATA[intlCurrency]?.bankCode} copyKey="intl-bankcode" copiedKey={copiedKey} onCopy={canCopyDetails ? copy : null} />
                                 <DetailRow label={t("Bank name")} value={INTL_DATA[intlCurrency]?.bankName} copyKey="intl-bank" copiedKey={copiedKey} onCopy={canCopyDetails ? copy : null} />
                                 <DetailRow label={t("Bank address")} value={INTL_DATA[intlCurrency]?.bankAddress} copyKey="intl-bank-address" copiedKey={copiedKey} onCopy={canCopyDetails ? copy : null} />
-                                <DetailRow label={t("Payment reference")} value={INTL_DATA[intlCurrency]?.paymentReference} copyKey="intl-reference" copiedKey={copiedKey} onCopy={canCopyDetails ? copy : null} />
+                                <DetailRow label={t("Payment reference")} value={paymentReference} copyKey="intl-reference" copiedKey={copiedKey} onCopy={canCopyDetails ? copy : null} />
                             </>
                         )}
                     </div>

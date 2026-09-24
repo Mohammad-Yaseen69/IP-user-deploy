@@ -9,7 +9,7 @@ import CountryDropDown from "../AddBeneficiary/CountryDropDown";
 import SuccessModal from "../AddBeneficiary/SuccessModal";
 import CitiesDropDown from "../CitiesDropDown";
 import { useTranslation } from "react-i18next";
-import { bankExtrasInitial, beneficiaryInitialFormData, BeneficiaryRelation, friendsAndFamily, gendersData, idTypeData, occupations, BUSINESS_RELATIONSHIPS, basicExtrasInitial } from "../../utils/Data";
+import { bankExtrasInitial, beneficiaryInitialFormData, BeneficiaryRelation, friendsAndFamily, gendersData, idTypeData, occupations, BUSINESS_RELATIONSHIPS, basicExtrasInitial, normalizeBankExtras } from "../../utils/Data";
 import NestedDropdown from "../NestedDropdown";
 import InstaPayLoader from "../Loader";
 import { service_name_formatter } from "../TransactionsNewApi/TransactionItem";
@@ -388,7 +388,7 @@ const EditBeneficiary = ({ errorOnInvalid = true, error = false }) => {
             nationality: userData?.extras?.nationality || "",
             occupation: userData?.extras?.occupation || "",
         })
-        setBankExtras(userData?.bank_details?.[0]?.extras ?? bankExtrasInitial)
+        setBankExtras(userData?.bank_details?.[0]?.extras ? normalizeBankExtras(userData.bank_details[0].extras) : bankExtrasInitial)
         setCashxtras(userData?.cash_pickup?.[0]?.extras ?? { msisdn: "" })
         setBankCountryCode(userData?.bank_details?.[0]?.extras?.country_iso_code || "")
         setCardExtras(userData?.card?.[0]?.extras ?? { bank_account_number: "" })
