@@ -39,7 +39,7 @@ const StepTwo = ({ data, dataHandler, getExchangeRate, showFee, inNonInstapay = 
                 :
                 userWallets?.find(item => item?.default)
             const wallet = { ...def, ...currencies.find(item => item.currency_code === def?.currency?.code) }
-            console.log(wallet)
+
             dataHandler("currency", wallet)
             dataHandler("currency_wallet", wallet)
         }
@@ -247,9 +247,12 @@ const StepTwo = ({ data, dataHandler, getExchangeRate, showFee, inNonInstapay = 
                                 list: wallets
                             }}
                             isOpen={showCurrency}
-                            onSelectHandler={(item) => {
+                            onSelectHandler={async(item) => {
                                 dataHandler("currency", item)
                                 dataHandler("currency_wallet", item)
+                                if(data?.amount && item?.currency_code){
+                                    await getExchangeRate(data.amount,'','instant',item.currency_code, setter)
+                                }
                             }}
                             toggle={() => setShowCurrency(false)}
                             searchable={true}

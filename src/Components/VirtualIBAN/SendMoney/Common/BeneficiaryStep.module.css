@@ -172,50 +172,20 @@
 }
 
 
-@media (max-width: 480px) {
-    .beneficiaryStep {
-        display: grid;
-        grid-template-columns: 1fr auto;
-        grid-template-areas:
-            "header header"
-            "search button"
-            "list list";
-        gap: 12px;
-        align-items: center;
-    }
-
-    .beneficiaryHeader {
-        display: contents;
-    }
-    .beneficiaryList {
-    min-height: 100px;
-}
-    .beneficiaryHeader h3 {
-        grid-area: header;
-        padding-bottom: 12px;
-        padding-top: 20px;
-        margin-bottom: 0;
-        font-size: 22px;
-        font-weight: 700;
-    }
-
-    .searchBox {
-        grid-area: search;
-        margin-bottom: 0;
-        height: 40px;
-    }
-    .searchBox input {
-        line-height: normal; 
-        width: 35vw;  
-    }
+@media (max-width: 600px) {
     .primarySmallBtn {
-        grid-area: button;
-        height: 40px;
-        white-space: nowrap;
-        margin-bottom: 0;
+        background: linear-gradient(180deg, #7040FF 0%, #5926F0 100%);
+        border-radius: 10px;
+        box-shadow: 0px 4px 12px -4px #5926F08C;
+        padding: 8px 11px;
+        font-size: 13.5px;
+        font-weight: 600;
+        letter-spacing: -0.2px;
     }
 
-    .beneficiaryList {
-        grid-area: list;
+    .emptyState {
+        color: #9793A8;
+        font-size: 11.5px;
+        padding: 15px 0;
     }
 }

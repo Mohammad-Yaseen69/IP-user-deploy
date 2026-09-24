@@ -5,7 +5,7 @@ import { Button, Card, CardBody, CardHeader, Input, Label } from "reactstrap";
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import { UserContext } from "../../Context/UserContext";
-import img from "../../assets/images/logo/logo2.webp"
+import img from "../../assets/images/logo/logo2.png"
 import {
     Packer,
     Document,
@@ -133,7 +133,7 @@ const DownloadData = ({ isCollapsed, setIsCollapsed }) => {
             nameDob ? ["Full Name", userDetails?.account_type === "individual" ? `${userDetails?.user?.first_name} ${userDetails?.user?.last_name}` : `${userDetails?.company?.company_name}`] : null,
             nameDob ? ["InstaPay Username", `${userDetails?.username ?? "N/A"}`] : null,
             nameDob ? ["Date Of Birth", `${userDetails?.dob ?? "N/A"}`] : null,
-            nameDob ? ["Gender", `${userDetails?.gender ?? "N/A"}`] : null,
+            (nameDob && userDetails?.gender) ? ["Gender", `${userDetails?.gender ?? "N/A"}`] : null,
             email ? ["Email Address", `${userDetails?.email ?? "N/A"}`] : null,
             number ? ["Phone Number", `+${userDetails?.phone ?? "N/A"}`] : null,
             address ? ["Address", `${userDetails?.address ?? "N/A"}`] : null,

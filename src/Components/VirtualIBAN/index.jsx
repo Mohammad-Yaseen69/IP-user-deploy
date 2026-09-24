@@ -16,6 +16,7 @@ import MonthlyExpenses from './components/MonthlyExpenses'
 import QuickActions from './components/QuickActions'
 import RecentTransactions from './components/RecentTransactions'
 import TabsNav from './components/TabsNav'
+import CryptoChannels from './CryptoChannels'
 import IBAN from './IBAN/IBAN'
 import IBANDetails from './IBAN/IBANDetails'
 import Manage from './Manage/Manage'
@@ -283,6 +284,13 @@ const VirtualBank = () => {
                                     <div className={styles.tabContent}>
                                         <div className={styles.section}>
                                             <Compliance />
+                                        </div>
+                                    </div>
+                                )}
+                                {activeTab === "crypto-channels" && (
+                                    <div className={styles.tabContent}>
+                                        <div className={styles.section}>
+                                            <CryptoChannels selectedIban={selectedIban} />
                                         </div>
                                     </div>
                                 )}

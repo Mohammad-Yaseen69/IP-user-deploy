@@ -6,6 +6,8 @@ import { Modal, ModalBody } from "reactstrap"
 import { CheckCircle, ChevronDown, ChevronLeft, ChevronRight, Download, FileText, Home, List, Plus, Search, Send, User } from "react-feather"
 import AddBeneficiaryModal from "../../Beneficiaries/Modals/AddBeneficiaryModal"
 import DynamicChannelModal from "../../Beneficiaries/Modals/DynamicChannelModal"
+import AddBeneficiaryFlowV2 from "../../Beneficiaries/AddBeneficiaryFlowV2"
+import { USE_NEW_BENEFICIARY_FLOW } from "../../Beneficiaries/AddBeneficiaryFlowV2/constants"
 import useWindowWidth from "../../../../utils/useWindowWidth"
 import ContactBox from "../../../MyMasterCard/PaymentModal/ContactBox"
 import { getAmountNumber } from "../../utils/amount"
@@ -652,12 +654,36 @@ const SepaTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, i
     const disabled = getDisabledState(currentStep, machineData) || isProcessing
     const showFooter = !showInstantFallback && currentStep !== STEPS.OTP && currentStep !== STEPS.DONE
 
-    const handleBeneficiarySaved = (savedBeneficiary, isNew) => {
-        if (isNew && savedBeneficiary) {
-            setChannelModalBeneficiary(savedBeneficiary);
-            setIsChannelModalOpen(true);
+    const [savedBeneficiaryId, setSavedBeneficiaryId] = useState("")
+
+    /* The new flow saves the recipient and the bank details together, so there is no
+       second modal to chain into - the saved record is picked up once the refreshed
+       list carries its channel. */
+    const handleBeneficiarySaved = async (savedBeneficiary, isNew) => {
+        if (!USE_NEW_BENEFICIARY_FLOW) {
+            if (isNew && savedBeneficiary) {
+                setChannelModalBeneficiary(savedBeneficiary);
+                setIsChannelModalOpen(true);
+            }
+            return;
         }
+
+        setIsAddModalOpen(false);
+        setIsChannelModalOpen(false);
+        setChannelModalBeneficiary(null);
+        setSavedBeneficiaryId(savedBeneficiary?._id || savedBeneficiary?.id || "");
+        await getUserBeneficiaries();
     };
+
+    useEffect(() => {
+        if (!savedBeneficiaryId) return
+
+        const saved = beneficiaryList.find((item) => (item?._id || item?.id) === savedBeneficiaryId)
+        if (!saved) return
+
+        setSelectedBeneficiary(saved)
+        setSavedBeneficiaryId("")
+    }, [beneficiaryList, savedBeneficiaryId])
 
     const handleChannelSaved = async (updatedBeneficiary) => {
         await getUserBeneficiaries();
@@ -1029,22 +1055,38 @@ const SepaTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, i
                 </Modal>
             )}
 
-            <AddBeneficiaryModal
-                open={isAddModalOpen}
-                handleClose={() => setIsAddModalOpen(false)}
-                onSaveSuccess={handleBeneficiarySaved}
-            />
+            {USE_NEW_BENEFICIARY_FLOW ? (
+                <AddBeneficiaryFlowV2
+                    open={isAddModalOpen || isChannelModalOpen}
+                    fixedMethod="local_bank"
+                    existingBeneficiary={isChannelModalOpen ? channelModalBeneficiary : null}
+                    handleClose={() => {
+                        setIsAddModalOpen(false);
+                        setIsChannelModalOpen(false);
+                        setChannelModalBeneficiary(null);
+                    }}
+                    onSaveSuccess={handleBeneficiarySaved}
+                />
+            ) : (
+                <>
+                <AddBeneficiaryModal
+                    open={isAddModalOpen}
+                    handleClose={() => setIsAddModalOpen(false)}
+                    onSaveSuccess={handleBeneficiarySaved}
+                />
 
-            <DynamicChannelModal
-                open={isChannelModalOpen}
-                handleClose={() => {
-                    setIsChannelModalOpen(false);
-                    setChannelModalBeneficiary(null);
-                }}
-                beneficiaryData={channelModalBeneficiary}
-                lockChannelType="bank"
-                onSaveSuccess={handleChannelSaved}
-            />
+                <DynamicChannelModal
+                    open={isChannelModalOpen}
+                    handleClose={() => {
+                        setIsChannelModalOpen(false);
+                        setChannelModalBeneficiary(null);
+                    }}
+                    beneficiaryData={channelModalBeneficiary}
+                    lockChannelType="bank"
+                    onSaveSuccess={handleChannelSaved}
+                />
+                </>
+            )}
         </>
     )
 }
