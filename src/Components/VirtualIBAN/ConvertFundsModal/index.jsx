@@ -398,7 +398,7 @@ const ConvertFundsModal = ({ isOpen, toggle, selectedIban, availableBalance }) =
                 isSidebarStepActive={isSidebarStepActive}
                 isSidebarStepCompleted={isSidebarStepCompleted}
                 SIDEBAR_STEPS={SIDEBAR_STEPS}
-                toggleDrawer={()=>setShowDrawer(false)}
+                toggleDrawer={(val)=>setShowDrawer(val)}
             />
         </>
     )

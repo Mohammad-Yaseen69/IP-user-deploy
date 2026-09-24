@@ -1356,7 +1356,7 @@ const SwiftTransfer = forwardRef(({ isOpen = true, toggle, selectedIban, availab
                 isSidebarStepActive={isSidebarStepActive}
                 isSidebarStepCompleted={isSidebarStepCompleted}
                 SIDEBAR_STEPS={SIDEBAR_STEPS}
-                toggleDrawer={()=>setShowDrawer(false)}
+                toggleDrawer={(val)=>setShowDrawer(val)}
             />
         </>
     )
