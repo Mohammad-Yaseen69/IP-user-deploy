@@ -25,7 +25,8 @@ import InstaPayLoader from "../Loader";
 import { logger } from "@sentry/react";
 import VpnModal from "./VpnModal";
 import LocationDeniedModal from "./LocationDeniedModal";
-import { InputAdornment, TextField } from "@mui/material";
+import { InputAdornment, Stack, TextField } from "@mui/material";
+import { AlarmIcon } from "../PaymentAddressPublic/PayAsGuest/Svgs";
 
 const linkStyle = {
     color: "#5926F0",
@@ -1131,6 +1132,11 @@ const Login = ({ country, setIsLoginForm, }) => {
                                     value={password} onChange={e => setPassword(e.target.value)}
                                     name="password"
                                     InputProps={{
+                                        startAdornment: (
+                                            <InputAdornment position="start">
+                                                <AlarmIcon />
+                                            </InputAdornment>
+                                        ),
                                         endAdornment: (
                                             <InputAdornment onClick={() => setShowPassword(prev => !prev)} position="end">
                                                 {showPassword ?
@@ -1155,25 +1161,30 @@ const Login = ({ country, setIsLoginForm, }) => {
                             <button type="submit" className={styles.form_btn} disabled={isLoginError || isPressed || !isCredentialValid}>
                                 {t('Login')}
                             </button>
-                            <div
-                                className={styles.toggleLoginBtn}
-                                onClick={() => {
-                                    setLoginMethod(loginMethod === "email" ? "phone" : "email")
-                                    localStorage.setItem("loginWith", loginMethod === "email" ? "phone" : "email")
-                                    setEmail("")
-                                }}
-                            >
-                                {
-                                    loginMethod === "email"
-                                        ?
-                                        t("Sign in with phone")
-                                        :
-                                        t("Sign in with email")
-                                }
-                            </div>
+                            <Stack direction={'row'} padding={'8px 12px'} justifyContent={'space-between'}>
+                                <div
+                                    className={styles.toggleLoginBtn}
+                                    onClick={() => {
+                                        setLoginMethod(loginMethod === "email" ? "phone" : "email")
+                                        localStorage.setItem("loginWith", loginMethod === "email" ? "phone" : "email")
+                                        setEmail("")
+                                    }}
+                                >
+                                    {
+                                        loginMethod === "email"
+                                            ?
+                                            t("Sign in with phone")
+                                            :
+                                            t("Sign in with email")
+                                    }
+                                </div>
+                                <Link to="/forgot-password" className={styles.forgot_pass}>
+                                    {t('Forgot Password?')}
+                                </Link>
+                            </Stack>
                             <span className={styles.para}>
                                 {t("If you don't have an account")}&nbsp;•&nbsp;
-                                <Link style={linkStyle} to="/signup" onClick={() => setIsLoginForm(false)}>
+                                <Link style={linkStyle} onClick={() => setIsLoginForm(false)}>
                                     {t("Create an Account")}
                                 </Link>
                             </span>
