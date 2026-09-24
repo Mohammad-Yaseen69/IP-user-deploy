@@ -24,8 +24,8 @@ import {
 } from "../../../WalletsNew/SendCryptoModal/cryptoProtocols"
 import ReviewStep from "../../../WalletsNew/SendCryptoModal/ReviewStep"
 import DoneStep from "../../../WalletsNew/SendCryptoModal/DoneStep"
-import OTPConfirmation from "../../../UserSettingsNew/OTPConfirmation"
 import AddBeneficiaryFlowV2 from "../../Beneficiaries/AddBeneficiaryFlowV2"
+import OtpVerification from "../../../../Common/Component/OtpVerification"
 
 const QUICK_PERCENTAGES = [25, 50, 75, 100]
 
@@ -131,8 +131,10 @@ const SendCryptoPanel = ({ wallets = [], wallet, onSelectWallet }) => {
         <Modal isOpen={step === SEND_STEPS.OTP} toggle={flow.back} centered style={{ maxWidth: "520px" }}>
             <ModalHeader toggle={flow.back}>{t("Confirm your transfer")}</ModalHeader>
             <ModalBody>
-                <OTPConfirmation
+                <OtpVerification
                     fullHeight
+                    variant="card"
+                    methods={flow.otpMethods}
                     setter={setStep}
                     setterValue={SEND_STEPS.DONE}
                     hideOtp={() => { }}
