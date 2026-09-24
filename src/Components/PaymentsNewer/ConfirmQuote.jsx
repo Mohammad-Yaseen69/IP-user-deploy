@@ -17,7 +17,7 @@ import { toast } from "react-toastify";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 import { useNavigate } from "react-router";
 
-const ConfirmQuote = ({ beneficiary, amount, currency, setConfirmed, setSubStep, title, description, isBargainable, files, setBeneficiary, quotationDetails, setToken, totalBalance }) => {
+const ConfirmQuote = ({ beneficiary, amount, currency, setConfirmed, setSubStep, title, description, isBargainable, files, setBeneficiary, quotationDetails, setToken, totalBalance, setOtpResponse = () => { } }) => {
     const { t } = useTranslation()
     const [complete, setComplete] = useState(false);
     const pRef = useRef(null)
@@ -90,6 +90,7 @@ const ConfirmQuote = ({ beneficiary, amount, currency, setConfirmed, setSubStep,
 
                 const dec = decryptData(res.data.data)
                 // console.log(dec)
+                setOtpResponse(dec)
                 setConfirmed(true)
                 setToken(dec?.token)
             } catch (error) {

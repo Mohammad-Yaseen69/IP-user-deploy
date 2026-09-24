@@ -1,23 +1,21 @@
-import React, { useState, useRef, useEffect, useContext } from 'react';
-import otp_icon from './files/otp_icon.png';
-import auth from './files/auth.png';
-import { Button } from 'reactstrap';
-import { ChevronRight } from 'react-feather';
+import { useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
+import { useContext, useEffect, useRef, useState } from 'react';
+import { ChevronRight } from 'react-feather';
+import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router';
+import { Button } from 'reactstrap';
+import { OTP_METHOD_CONFIG, getAvailableOtpMethods } from '../../Common/Component/OtpVerification';
+import { UserContext } from '../../Context/UserContext';
 import { decryptData } from '../../Helper/EssentilaMethods/Decryption';
 import { encryptData } from '../../Helper/EssentilaMethods/Encryption';
-import { UserContext } from '../../Context/UserContext';
-import { InactivityContext } from '../../InactivityWrapper';
-import { useTranslation } from 'react-i18next';
-import { toast } from 'react-toastify';
 import { resendHandler } from '../../Helper/SendOTP';
-import { useNavigate } from 'react-router';
-import TrustpaymentPage from '../AddFunds/WalletFund/CreditTransaction';
-import { apiErrorMessage } from './InternationalFlow';
-import { useQueryClient } from '@tanstack/react-query';
 import { useIdempotency } from '../../hooks/Payments/useIdempotency';
+import { InactivityContext } from '../../InactivityWrapper';
 import { LimitsErrorMessage } from '../../utils/Functions/paymentLimits';
-import { OTP_METHOD_CONFIG, getAvailableOtpMethods } from '../../Common/Component/OtpVerification';
+import TrustpaymentPage from '../AddFunds/WalletFund/CreditTransaction';
+import auth from './files/auth.png';
+import otp_icon from './files/otp_icon.png';
 import modalStyles from './InternationalFlow/styles/otpconfirmation.module.css';
 
 const OTPConfirmation = ({
@@ -63,9 +61,6 @@ const OTPConfirmation = ({
     const [token, setToken] = useState("")
     const navigate = useNavigate()
 
-    // Same OTP method handling as Common/Component/OtpVerification (CardOtp).
-    // Only active when the send-otp response (with available_methods) is passed via `methods`;
-    // otherwise the legacy sms/authenticator toggle is kept for the other flows using this component.
     const [otpMethods, setOtpMethods] = useState(methods)
     useEffect(() => {
         if (methods?.available_methods) setOtpMethods(methods)
@@ -194,7 +189,6 @@ const OTPConfirmation = ({
                             requestObject?.setRequestDetails(decrypted.requestDetails)
 
 
-                            // exchange rate api
                             const data = {
                                 request_id: decrypted?.requestDetails?.reference_id,
                                 currency: decrypted?.requestDetails?.currency?.code
@@ -307,7 +301,6 @@ const OTPConfirmation = ({
                             requestObject?.setRequestDetails(decrypted.subscribtionDetails)
 
 
-                            // exchange rate api
                             const data = {
                                 request_id: decrypted?.subscribtionDetails?._id,
                                 currency: decrypted?.subscribtionDetails?.request_payment?.currency?.code
