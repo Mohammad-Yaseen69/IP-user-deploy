@@ -5,8 +5,8 @@ import { decryptData } from "../../Helper/EssentilaMethods/Decryption"
 export const handlePaymentApiError = ({
     error,
     setError,
-    setProfileLockTime,
-    navigate,
+    setProfileLockTime = () => {},
+    navigate = () => {},
     fallback = "We are unable to process your request at the moment, please try again later."
 }) => {
     try {

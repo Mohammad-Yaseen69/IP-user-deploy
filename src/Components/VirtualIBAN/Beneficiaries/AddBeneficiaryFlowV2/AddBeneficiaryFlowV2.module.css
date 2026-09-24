@@ -1,0 +1,1007 @@
+/*
+ * Add beneficiary - DS 2.0
+ * Tokens transcribed from Figma "InstaPay Product UI" ->
+ * section "Add beneficiary - DS 2.0 polished" (node 13680:16490).
+ * Self-contained: nothing here is shared with the legacy beneficiary modals.
+ */
+
+.root {
+    /* brand */
+    --abf-primary: #5926F0;
+    --abf-primary-600: #4A32E3;
+    --abf-primary-300: #9AA4F9;
+    --abf-blue-50: #F2EEFF;
+    --abf-blue-600: #4C1ED1;
+    --abf-blue-700: #3B17A8;
+
+    /* text */
+    --abf-text-primary: #1B1F2A;
+    --abf-text-secondary: #6E7687;
+    --abf-text-muted: #9AA3B2;
+
+    /* surfaces + borders */
+    --abf-border-subtle: #E1E5EE;
+    --abf-border-default: #D1D6E0;
+    --abf-bg-surface: #EFF1F6;
+    --abf-bg-canvas: #F8F9FC;
+
+    /* greyscale (form controls) */
+    --abf-grey-25: #E4E3E5;
+    --abf-grey-50: #CECED2;
+    --abf-grey-400: #6D6C79;
+    --abf-grey-900: #0C0A20;
+
+    /* status */
+    --abf-yellow-50: #FFFBDF;
+    --abf-success: #10B981;
+    --abf-error: #D54033;
+    --abf-error-50: #FEF2F2;
+    --abf-error-700: #B91C1C;
+
+    /* radii */
+    --abf-r-sm: 6px;
+    --abf-r-md: 10px;
+    --abf-r-lg: 14px;
+    --abf-r-xl: 20px;
+    --abf-r-full: 999px;
+
+    /* spacing */
+    --abf-xs: 4px;
+    --abf-sm: 8px;
+    --abf-md: 16px;
+    --abf-lg: 24px;
+
+    /* elevation */
+    --abf-shadow-modal: 0px 24px 64px 0px rgba(20, 18, 41, 0.18);
+    --abf-shadow-input: 0px 1px 1.5px 0px rgba(44, 54, 53, 0.03);
+
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    box-sizing: border-box;
+}
+
+.root *,
+.root *::before,
+.root *::after {
+    box-sizing: border-box;
+}
+
+/* ---------------------------------- shell --------------------------------- */
+
+.modal {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    max-width: 640px;
+    max-height: 92vh;
+    background: #FFFFFF;
+    border-radius: var(--abf-r-xl);
+    box-shadow: var(--abf-shadow-modal);
+    outline: none;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--abf-md);
+    padding: var(--abf-lg) var(--abf-lg) var(--abf-md);
+    border-bottom: 1px solid var(--abf-border-subtle);
+    flex-shrink: 0;
+}
+
+.titleRow {
+    display: flex;
+    gap: var(--abf-md);
+    align-items: flex-start;
+    width: 100%;
+}
+
+.titleText {
+    display: flex;
+    flex: 1 0 0;
+    min-width: 0;
+    flex-direction: column;
+    gap: var(--abf-xs);
+}
+
+.title {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 1.2;
+    color: var(--abf-text-primary);
+}
+
+.subtitle {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.5;
+    letter-spacing: -0.42px;
+    color: var(--abf-text-secondary);
+}
+
+.closeBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+    border: none;
+    background: transparent;
+    border-radius: var(--abf-r-sm);
+    color: var(--abf-text-secondary);
+    cursor: pointer;
+    transition: background 0.15s ease;
+}
+
+.closeBtn:hover {
+    background: var(--abf-bg-surface);
+}
+
+.body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--abf-lg);
+    padding: var(--abf-lg);
+    width: 100%;
+    overflow-y: auto;
+    flex: 1;
+    min-height: 0;
+}
+
+/*
+ * Without this the body's flex children shrink to fit instead of overflowing,
+ * and anything with `overflow: hidden` (the summary cards) loses its last rows
+ * rather than making the body scroll.
+ */
+.body > * {
+    flex-shrink: 0;
+}
+
+.footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--abf-sm);
+    padding: var(--abf-md) var(--abf-lg);
+    border-top: 1px solid var(--abf-border-subtle);
+    background: #FFFFFF;
+    flex-shrink: 0;
+}
+
+.footerSide {
+    display: flex;
+    gap: var(--abf-sm);
+    align-items: center;
+}
+
+/* --------------------------------- stepper -------------------------------- */
+
+.stepper {
+    display: flex;
+    gap: var(--abf-sm);
+    align-items: flex-start;
+    width: 100%;
+}
+
+.step {
+    display: flex;
+    flex: 1 0 0;
+    min-width: 0;
+    flex-direction: column;
+    gap: var(--abf-sm);
+}
+
+.stepBar {
+    height: 4px;
+    width: 100%;
+    border-radius: var(--abf-r-full);
+    background: var(--abf-border-subtle);
+}
+
+.stepBarDone,
+.stepBarCurrent {
+    background: var(--abf-primary);
+}
+
+.stepLabel {
+    margin: 0;
+    font-size: 12px;
+    line-height: 1.5;
+    letter-spacing: -0.36px;
+    font-weight: 500;
+    color: var(--abf-text-muted);
+}
+
+.stepLabelDone {
+    color: var(--abf-primary);
+}
+
+.stepLabelCurrent {
+    font-weight: 600;
+    color: var(--abf-text-primary);
+}
+
+/* --------------------------------- buttons -------------------------------- */
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--abf-sm);
+    height: 36px;
+    padding: 0 16px;
+    border: none;
+    border-radius: var(--abf-r-sm);
+    background: transparent;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: -0.42px;
+    cursor: pointer;
+    transition: background 0.15s ease, opacity 0.15s ease;
+    white-space: nowrap;
+}
+
+.btnPrimary {
+    background: var(--abf-primary-600);
+    color: #FFFFFF;
+}
+
+.btnPrimary:hover:not(:disabled) {
+    background: var(--abf-blue-600);
+}
+
+.btnPrimary:disabled {
+    background: var(--abf-primary-300);
+    cursor: not-allowed;
+}
+
+.btnGhost {
+    color: var(--abf-primary-600);
+}
+
+.btnGhost:hover:not(:disabled) {
+    background: var(--abf-blue-50);
+}
+
+.btnGhost:disabled {
+    color: var(--abf-text-muted);
+    cursor: not-allowed;
+}
+
+/* small inline actions: "Change", "Edit", "Add email for payment receipts" */
+.btnSmall {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--abf-sm);
+    height: 32px;
+    padding: 0 12px;
+    border: none;
+    border-radius: var(--abf-r-sm);
+    background: transparent;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: -0.36px;
+    color: var(--abf-primary-600);
+    cursor: pointer;
+    transition: background 0.15s ease;
+    white-space: nowrap;
+}
+
+.btnSmall:hover {
+    background: var(--abf-blue-50);
+}
+
+/* --------------------------- option / method cards ------------------------- */
+
+.optionList {
+    display: flex;
+    flex-direction: column;
+    gap: var(--abf-sm);
+    width: 100%;
+}
+
+.optionListWide {
+    gap: var(--abf-md);
+}
+
+/* A method card together with the provider picker it reveals when selected. */
+.methodBlock {
+    display: flex;
+    flex-direction: column;
+    gap: var(--abf-sm);
+    width: 100%;
+}
+
+.methodBlock .fields {
+    padding: 0 var(--abf-md) var(--abf-sm);
+}
+
+/* side-by-side cards, e.g. "What kind of wallet is this?" */
+.optionListRow {
+    flex-direction: row;
+}
+
+.optionListRow .option {
+    flex: 1 0 0;
+    min-width: 0;
+    align-items: flex-start;
+}
+
+@media (max-width: 680px) {
+    .optionListRow {
+        flex-direction: column;
+    }
+}
+
+.option {
+    display: flex;
+    gap: var(--abf-md);
+    align-items: center;
+    width: 100%;
+    padding: var(--abf-md);
+    background: #FFFFFF;
+    border: 1px solid var(--abf-border-subtle);
+    border-radius: var(--abf-r-lg);
+    cursor: pointer;
+    text-align: left;
+    font-family: inherit;
+    transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.option:hover:not(.optionDisabled):not(.optionSelected) {
+    border-color: var(--abf-border-default);
+    background: var(--abf-bg-canvas);
+}
+
+/* step 1 cards sit on the heavier default border, step 2 on the subtle one */
+.optionStrongBorder {
+    border-color: var(--abf-border-default);
+}
+
+.optionSelected {
+    border: 2px solid var(--abf-primary);
+    padding: calc(var(--abf-md) - 1px);
+}
+
+.optionDisabled {
+    background: var(--abf-bg-canvas);
+    border-style: dashed;
+    cursor: not-allowed;
+}
+
+.optionIcon {
+    display: flex;
+    align-items: flex-start;
+    padding: var(--abf-sm);
+    border-radius: var(--abf-r-md);
+    background: var(--abf-bg-surface);
+    flex-shrink: 0;
+}
+
+.optionIconSelected {
+    background: var(--abf-blue-50);
+}
+
+.optionText {
+    display: flex;
+    flex: 1 0 0;
+    min-width: 0;
+    flex-direction: column;
+    gap: var(--abf-xs);
+}
+
+/* step 1 stacks title and subtitle with no gap */
+.optionTextTight {
+    gap: 0;
+}
+
+.optionTitle {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.5;
+    letter-spacing: -0.42px;
+    color: var(--abf-text-primary);
+}
+
+.optionTitleDisabled {
+    color: var(--abf-text-muted);
+}
+
+.optionSubtitle {
+    margin: 0;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 1.5;
+    letter-spacing: -0.36px;
+    color: var(--abf-text-secondary);
+}
+
+.optionNote {
+    margin: 0;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1.5;
+    letter-spacing: -0.36px;
+    color: var(--abf-text-muted);
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.optionTiming {
+    margin: 0;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1.5;
+    letter-spacing: -0.36px;
+    color: var(--abf-text-secondary);
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+/* radio control */
+.radio {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    border-radius: 100px;
+    background: #FFFFFF;
+    border: 1px solid var(--abf-grey-50);
+    box-shadow: var(--abf-shadow-input);
+}
+
+.radioActive {
+    border: none;
+    box-shadow: none;
+    background: transparent;
+}
+
+/* ------------------------------ groups (step 2) --------------------------- */
+
+.group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--abf-sm);
+    width: 100%;
+}
+
+.groupHeader {
+    display: flex;
+    flex-direction: column;
+    gap: var(--abf-xs);
+    width: 100%;
+}
+
+.groupHeaderTitle {
+    display: flex;
+    gap: var(--abf-sm);
+    align-items: center;
+    width: 100%;
+}
+
+.groupTitle {
+    margin: 0;
+    flex: 1 0 0;
+    min-width: 0;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.5;
+    letter-spacing: -0.42px;
+    color: var(--abf-text-primary);
+}
+
+.groupSubtitle {
+    margin: 0;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 1.5;
+    letter-spacing: -0.36px;
+    color: var(--abf-text-secondary);
+}
+
+/* --------------------------- recipient context card ----------------------- */
+
+.contextCard {
+    display: flex;
+    gap: var(--abf-md);
+    align-items: center;
+    width: 100%;
+    padding: var(--abf-md);
+    background: var(--abf-bg-canvas);
+    border: 1px solid var(--abf-border-subtle);
+    border-radius: var(--abf-r-lg);
+}
+
+.contextAvatar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+    border-radius: var(--abf-r-md);
+    background: var(--abf-blue-50);
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.5;
+    letter-spacing: -0.42px;
+    color: var(--abf-primary);
+}
+
+.contextText {
+    display: flex;
+    flex: 1 0 0;
+    min-width: 0;
+    flex-direction: column;
+    gap: var(--abf-xs);
+}
+
+.contextName {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.5;
+    letter-spacing: -0.42px;
+    color: var(--abf-text-primary);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.contextMeta {
+    margin: 0;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 1.5;
+    letter-spacing: -0.36px;
+    color: var(--abf-text-secondary);
+}
+
+/* ------------------------------- form fields ------------------------------ */
+
+.fields {
+    display: flex;
+    flex-direction: column;
+    gap: var(--abf-md);
+    width: 100%;
+}
+
+.fieldRow {
+    display: flex;
+    gap: var(--abf-md);
+    align-items: flex-start;
+    width: 100%;
+}
+
+.fieldRowEnd {
+    align-items: flex-end;
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+    min-width: 0;
+}
+
+.fieldFlex {
+    flex: 1 0 0;
+}
+
+.fieldLabel {
+    margin: 0;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1.5;
+    letter-spacing: -0.36px;
+    color: var(--abf-grey-900);
+}
+
+.inputShell {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    height: 40px;
+    width: 100%;
+    padding: 8px 12px;
+    background: #FFFFFF;
+    border: 1px solid var(--abf-grey-25);
+    border-radius: var(--abf-r-sm);
+    box-shadow: var(--abf-shadow-input);
+    transition: border-color 0.15s ease;
+}
+
+.inputShell:focus-within {
+    border-color: var(--abf-primary-600);
+}
+
+.inputShellError,
+.inputShellError:focus-within {
+    border-color: var(--abf-error);
+}
+
+.selectShell {
+    padding-right: 16px;
+    gap: 8px;
+}
+
+.input {
+    flex: 1 0 0;
+    min-width: 0;
+    height: 100%;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: -0.42px;
+    color: var(--abf-grey-900);
+}
+
+.input::placeholder {
+    color: var(--abf-text-muted);
+}
+
+.input:disabled {
+    color: var(--abf-text-muted);
+    cursor: not-allowed;
+}
+
+.select {
+    flex: 1 0 0;
+    min-width: 0;
+    height: 100%;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: -0.42px;
+    color: var(--abf-grey-900);
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+}
+
+.hint {
+    display: flex;
+    gap: var(--abf-xs);
+    align-items: center;
+    width: 100%;
+}
+
+.hintText {
+    margin: 0;
+    flex: 1 0 0;
+    min-width: 0;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 1.5;
+    letter-spacing: -0.36px;
+    color: var(--abf-grey-400);
+}
+
+.hintTextError {
+    color: var(--abf-error);
+}
+
+/* ----------------------------- section divider ---------------------------- */
+
+.section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--abf-md);
+    width: 100%;
+}
+
+.sectionHead {
+    display: flex;
+    flex-direction: column;
+    gap: var(--abf-xs);
+    width: 100%;
+}
+
+.sectionTitleRow {
+    display: flex;
+    gap: var(--abf-sm);
+    align-items: center;
+    width: 100%;
+}
+
+.sectionTitle {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.5;
+    letter-spacing: -0.42px;
+    color: var(--abf-text-primary);
+    white-space: nowrap;
+}
+
+.sectionRule {
+    flex: 1 0 0;
+    min-width: 0;
+    height: 1px;
+    background: var(--abf-border-subtle);
+}
+
+.sectionWhy {
+    display: flex;
+    gap: var(--abf-xs);
+    align-items: center;
+    width: 100%;
+}
+
+.sectionWhyText {
+    margin: 0;
+    flex: 1 0 0;
+    min-width: 0;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 1.5;
+    letter-spacing: -0.36px;
+    color: var(--abf-text-secondary);
+}
+
+/* ------------------------------ summary cards ----------------------------- */
+
+.summary {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    border: 1px solid var(--abf-border-subtle);
+    border-radius: var(--abf-r-md);
+    overflow: hidden;
+}
+
+.summaryHeading {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: var(--abf-sm) var(--abf-md);
+    background: var(--abf-bg-canvas);
+    border-bottom: 1px solid var(--abf-border-subtle);
+}
+
+.summaryHeadingText {
+    margin: 0;
+    flex: 1 0 0;
+    min-width: 0;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.5;
+    letter-spacing: -0.36px;
+    color: var(--abf-text-secondary);
+}
+
+.summaryRow {
+    display: flex;
+    gap: var(--abf-md);
+    align-items: center;
+    width: 100%;
+    min-height: 44px;
+    padding: var(--abf-sm) var(--abf-md);
+    border-bottom: 1px solid var(--abf-border-subtle);
+}
+
+.summaryRow:last-child {
+    border-bottom: none;
+}
+
+.summaryLabel {
+    margin: 0;
+    width: 150px;
+    flex-shrink: 0;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.5;
+    letter-spacing: -0.42px;
+    color: var(--abf-text-secondary);
+}
+
+.summaryLabelNarrow {
+    width: 128px;
+}
+
+.summaryValue {
+    display: flex;
+    flex: 1 0 0;
+    min-width: 0;
+    gap: var(--abf-xs);
+    align-items: center;
+}
+
+.summaryValueText {
+    margin: 0;
+    flex: 1 0 0;
+    min-width: 0;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.5;
+    letter-spacing: -0.42px;
+    color: var(--abf-text-primary);
+    word-break: break-word;
+}
+
+.summaryValueSuccess {
+    color: var(--abf-success);
+}
+
+/* --------------------------------- alerts --------------------------------- */
+
+.alert {
+    display: flex;
+    gap: var(--abf-sm);
+    align-items: flex-start;
+    width: 100%;
+    padding: var(--abf-md);
+    border-radius: var(--abf-r-md);
+}
+
+.alertInfo {
+    background: var(--abf-blue-50);
+}
+
+.alertError {
+    background: var(--abf-error-50);
+}
+
+.alertWarning {
+    background: var(--abf-yellow-50);
+}
+
+.alertText {
+    display: flex;
+    flex: 1 0 0;
+    min-width: 0;
+    flex-direction: column;
+    gap: var(--abf-xs);
+}
+
+.alertTitle {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.5;
+    letter-spacing: -0.42px;
+}
+
+.alertBody {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.5;
+    letter-spacing: -0.42px;
+}
+
+.alertInfo .alertTitle,
+.alertInfo .alertBody {
+    color: var(--abf-blue-700);
+}
+
+.alertError .alertTitle,
+.alertError .alertBody {
+    color: var(--abf-error-700);
+}
+
+.alertWarning .alertTitle,
+.alertWarning .alertBody {
+    color: var(--abf-text-primary);
+}
+
+/* ---------------------------------- icons --------------------------------- */
+
+/*
+ * Figma exports each glyph pre-coloured for the state it happened to sit in.
+ * This flow needs the same glyph in more than one colour (a method icon is
+ * #5926F0 when selected and #1B1F2A when not), so monochrome glyphs are painted
+ * through a CSS mask: the downloaded .svg is the mask, `color` supplies the
+ * paint. The asset files themselves are used exactly as exported.
+ */
+.icon {
+    display: block;
+    flex-shrink: 0;
+    background-color: currentColor;
+    -webkit-mask-position: center;
+    mask-position: center;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-size: contain;
+    mask-size: contain;
+}
+
+.iconImg {
+    display: block;
+    flex-shrink: 0;
+}
+/* -------------------------------- responsive ------------------------------ */
+
+@media (max-width: 680px) {
+    .modal {
+        max-width: 100%;
+        width: calc(100% - 24px);
+        max-height: 94vh;
+    }
+
+    .header,
+    .body,
+    .footer {
+        padding-left: var(--abf-md);
+        padding-right: var(--abf-md);
+    }
+
+    .fieldRow {
+        flex-direction: column;
+        gap: var(--abf-md);
+    }
+
+    .summaryLabel,
+    .summaryLabelNarrow {
+        width: 120px;
+    }
+
+    .stepLabel {
+        font-size: 11px;
+    }
+}
+
+/* Adding a recipient inside another flow: the same fields without the dialog around them. */
+.quickAdd {
+    display: flex;
+    flex-direction: column;
+    gap: var(--abf-md);
+    width: 100%;
+    text-align: left;
+}
+
+.quickAddBar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: var(--abf-sm);
+    padding-bottom: var(--abf-sm);
+    border-bottom: 1px solid var(--abf-border-subtle);
+}
+
+.quickAddHeading {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.quickAddTitle {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--abf-text-primary);
+}
+
+.quickAddMeta {
+    margin: 0;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--abf-text-secondary);
+}
+
+.quickAddActions {
+    display: flex;
+    align-items: center;
+    gap: var(--abf-sm);
+    flex-shrink: 0;
+}
