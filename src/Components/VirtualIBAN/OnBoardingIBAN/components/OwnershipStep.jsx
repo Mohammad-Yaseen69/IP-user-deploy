@@ -6,6 +6,10 @@ import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap'
 import { decryptData } from '../../../../Helper/EssentilaMethods/Decryption'
 import styles from '../style/onboardingSteps.module.css'
 import SidebarProgress from './SidebarProgress'
+import StepProgress from './StepProgress'
+import AlertBox from './AlertBox'
+import { useMediaQuery } from '@mui/material'
+import OwnerCard from './OwnerCard'
 
 
 const EMPTY_FORM = {
@@ -18,8 +22,16 @@ const EMPTY_FORM = {
     isPep: false
 }
 
-const OwnershipStep = ({ onNext, onBack, userType, data = {}, userDetails }) => {
+export const getInitials = (name) => {
+    if (!name) return 'UB'
+    const parts = name.trim().split(' ')
+    if (parts.length >= 2) return `${parts[0][0]}${parts[1][0]}`.toUpperCase()
+    return name.substring(0, 2).toUpperCase()
+}
+
+const OwnershipStep = ({ onNext, onBack, userType, data = {}, userDetails, currentStep }) => {
     const { t } = useTranslation()
+    const isMobile = useMediaQuery('(max-width:600px)');
 
     const kybStatus = userDetails?.company?.kyb_status
     const isKybDone = ['approved', 'verified'].includes(kybStatus)
@@ -146,40 +158,48 @@ const OwnershipStep = ({ onNext, onBack, userType, data = {}, userDetails }) => 
         { num: '06', label: t('Review'), active: false }
     ]
 
-    const getInitials = (name) => {
-        if (!name) return 'UB'
-        const parts = name.trim().split(' ')
-        if (parts.length >= 2) return `${parts[0][0]}${parts[1][0]}`.toUpperCase()
-        return name.substring(0, 2).toUpperCase()
-    }
 
     return (
         <div className={styles.onboardingLayout}>
-            <div className={styles.wizardSteps}>
-                {steps.map((step, index) => (
-                    <div
-                        key={index}
-                        className={`${styles.step} ${step.active ? styles.active : ""} ${step.completed ? styles.completed : ""}`}
-                    >
-                        <div className={styles.stepLine}></div>
-                        <div className={styles.stepContent}>
-                            <span className={styles.stepNumber}>{step.num}</span>
-                            <span className={styles.stepLabel}>{step.label}</span>
+            <div>
+                <div className={styles.wizardSteps}>
+                    {steps.map((step, index) => (
+                        <div
+                            key={index}
+                            className={`${styles.step} ${step.active ? styles.active : ""} ${step.completed ? styles.completed : ""}`}
+                        >
+                            <div className={styles.stepLine}></div>
+                            <div className={styles.stepContent}>
+                                <span className={styles.stepNumber}>{step.num}</span>
+                                <span className={styles.stepLabel}>{step.label}</span>
+                            </div>
                         </div>
-                    </div>
-                ))}
+                    ))}
+                </div>
+                <StepProgress
+                    percent={60} 
+                    currentStep={currentStep} 
+                />
             </div>
-
-            <div style={{ width: "100%" }}>
+            <div style={{ width: "100%" }} className={styles.activityHeader}>
                 <h2 className={styles.formHeading}>{t("Directors, Ownership & control")}</h2>
                 <p className={styles.formSubheading}>
                     {t("List anyone, individual or company, owning 25% or more (UBOs), plus your directors and authorised signatories.Individuals complete a quick e - ID via Didit; entities are verified against the registry.")}
                 </p>
+                <div className={styles.activityAlert}>
+                    <AlertBox
+                        title={"Assistant"}
+                        description={"Just the people left. Once owners are verified we can finalize your document checklist."}
+                    />
+                </div>
             </div>
 
             <div className={styles.mainArea}>
                 <div className={styles.onboardingFormOwnership}>
-                    {owners.map((owner) => (
+                    {owners.map((owner) => 
+                        isMobile?
+                        <OwnerCard owner={owner} key={owner.id} handleDelete={handleDeleteOwner}/>
+                            :
                         <div key={owner.id} className={styles.card} style={{ marginBottom: "15px", padding: "16px", borderRadius: "10px", border: "1px solid #e5e7eb", background: "#ffffff", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                             <div className={styles.left} style={{ display: "flex", alignItems: "center", gap: "15px" }}>
                                 {owner.type === 'entity' ? (
@@ -233,14 +253,14 @@ const OwnershipStep = ({ onNext, onBack, userType, data = {}, userDetails }) => 
                             >
                                 <CheckCircle size={14} />{t("Recorded")}</div>
                         </div>
-                    ))}
+                    )}
 
                     {!isKybDone ? (
                         <div className={styles.footer} style={{ display: "flex", gap: "12px", marginTop: "20px" }}>
                             <button type="button" onClick={() => openAddModal('individual')} className={styles.addBtn} style={{ padding: "10px 16px", borderRadius: "8px", background: "#f3f4f6", border: "1px solid #d1d5db", fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", gap: "6px" }}>
-                                <Plus size={16} />{t("Add Individual (UBO)")}</button>
+                                <Plus size={16} />{t(isMobile ? 'Add individual' : "Add Individual (UBO)")}</button>
                             <button type="button" disabled title="Corporate entity UBO is disabled for now" className={styles.addBtn} style={{ padding: "10px 16px", borderRadius: "8px", background: "#f3f4f6", border: "1px solid #e5e7eb", fontWeight: 600, opacity: 0.5, cursor: "not-allowed", display: "flex", alignItems: "center", gap: "6px" }}>
-                                <Plus size={16} />{t("Add Entity / Company (Disabled)")}</button>
+                                <Plus size={16} />{t(isMobile ? 'Add entity' : "Add Entity / Company (Disabled)")}</button>
                         </div>
                     ) : (
                         <div style={{ marginTop: '16px', padding: '12px 16px', background: '#F0FDF4', border: '1px solid #BBF7D0', borderRadius: '8px', color: '#166534', fontSize: '13px', fontWeight: 500 }}>
@@ -271,11 +291,11 @@ const OwnershipStep = ({ onNext, onBack, userType, data = {}, userDetails }) => 
                     style={{ opacity: owners.length === 0 ? 0.5 : 1, cursor: owners.length === 0 ? 'not-allowed' : 'pointer' }}
                 >
                     {t("Continue")}
-                    <ArrowRight size={16} />
+                    {!isMobile && <ArrowRight size={16} />}
                 </button>
             </div>
 
-            <Modal isOpen={isModalOpen} toggle={() => setIsModalOpen(false)} centered>
+            <Modal isOpen={isModalOpen} toggle={() => setIsModalOpen(false)} centered style={{maxWidth: isMobile ? '90%' : 'auto'}}>
                 <ModalHeader toggle={() => setIsModalOpen(false)}>
                     {isEditing ? 'Edit Beneficial Owner / Director' : 'Add Beneficial Owner / Director'}
                 </ModalHeader>
