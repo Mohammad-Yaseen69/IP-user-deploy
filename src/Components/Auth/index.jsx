@@ -11,6 +11,7 @@ import useCountryLocation from "../../hooks/GeneralUse/useCountryLocation"
 import { useLocation } from "react-router"
 import rightImage from "./agentAuth/files/image.png";
 import ShortLogo from "../../assets/images/logo/logo_white.png";
+import useWindowWidth from "../../utils/useWindowWidth"
 
 const swissFlag = coun.find(item => item.alpha3 === "CHE")?.file_url
 
@@ -20,6 +21,7 @@ const Auth = () => {
   const { country } = useCountryLocation()
   const location = useLocation()
   const redirect = new URLSearchParams(location.search).get("redirect")
+  const width = useWindowWidth();
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -51,6 +53,7 @@ const Auth = () => {
   const [registrationCompleted] = useState(false)
   const [hideLogo, setHideLogo] = useState(false)
 
+  const showText =  (width > 1100 || width <= 810)
   return (
     <>
       {!registrationCompleted &&
@@ -90,32 +93,37 @@ const Auth = () => {
                 setHideLogo={setHideLogo}
               />
             }
-            <div className={styles.f_footer}>
-              <div
-                style={{ visibility: hideLogo && "hidden" }}
-                className={styles.f_top}
-              >
-                {window.innerWidth > 1000 && <LanguagePicker selectUi={true} />}
+            <div>              
+              <div className={styles.f_footer}>              
+                <LanguagePicker selectUi={true} />
+                {showText &&
+                  <span className={styles.footerText}>
+                  {t("© 2024 InstaPay | Kemit KIngdom SA")}
+                  </span>
+                }
+                <span
+                  style={{ display: "flex", gap: ".4rem", alignItems: "center" }}
+                  className={styles.footerText}
+                >
+                  <img
+                    src={swissFlag}
+                    alt=""
+                    loading="lazy"
+                    style={{
+                      height: "13px",
+                      width: "16px",
+                      objectFit: "cover",
+                      borderRadius: "2px",
+                    }}
+                  />
+                  {t("A Swiss Company")}
+                </span>
               </div>
-              <span>
-               {t("© 2024 InstaPay | Kemit KIngdom SA")}
-              </span>
-              <span
-                style={{ display: "flex", gap: ".4rem", alignItems: "center" }}
-              >
-                <img
-                  src={swissFlag}
-                  alt=""
-                  loading="lazy"
-                  style={{
-                    height: "13px",
-                    width: "16px",
-                    objectFit: "cover",
-                    borderRadius: "2px",
-                  }}
-                />
-                {t("A Swiss Company")}
-              </span>
+              {!showText &&
+                <span className={styles.footerText} style={{ marginTop: '20px', marginInline: 'auto' }}>
+                {t("© 2024 InstaPay | Kemit KIngdom SA")}
+                </span>
+              }
             </div>
           </div>
         </section>

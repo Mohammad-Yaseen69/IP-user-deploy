@@ -1167,7 +1167,7 @@ const Login = ({ country, setIsLoginForm, }) => {
                                             customStyles={{
                                                 display: "flex",
                                                 height: "100%",
-                                                padding: width < 700 ? "18px 12px" : "12px 12px",
+                                                padding: "12px",
                                                 alignItems: "center",
                                                 gap: "12px",
                                                 alignSelf: "stretch",
@@ -1363,7 +1363,7 @@ const Login = ({ country, setIsLoginForm, }) => {
                                     <div className={styles.otp_methods} style={{
                                         marginTop:'20px',
                                         gridTemplateColumns:
-                                            availableMethods.length === 1
+                                            (availableMethods.length === 1 || width <= 600)
                                                 ? "1fr"
                                                 : "repeat(2, minmax(0, 1fr))"
                                     }}>
@@ -1479,16 +1479,7 @@ const Login = ({ country, setIsLoginForm, }) => {
                                 }
 
                             </div>                           
-                        </div>
-                        <div className={styles.center_bottom}>
-                            {
-                                width < 1000
-                                &&
-                                <button type="button" className={styles.go_back_btn} onClick={resetOtpStates}>
-                                    {t("Back")}
-                                </button>
-                            }
-                        </div>
+                        </div>                        
                     </div>
                 </form>
             }

@@ -126,7 +126,7 @@
     justify-content: space-between;
 }
 
-.f_footer span {
+.footerText {
     color: #777;
     font-family: Manrope;
     font-size: 12px;
@@ -134,6 +134,8 @@
     font-weight: 600;
     line-height: 18px;
     letter-spacing: -0.12px;
+    width: fit-content;
+    display: block;
 }
 
 .form_details .left,
@@ -184,7 +186,7 @@
 .otp .right {
     display: flex;
     flex-direction: column;
-    max-width: 492px;
+    max-width: 426px;
     margin-inline: auto;
     justify-content: space-between;
     flex: 1;
@@ -656,7 +658,7 @@
     display: flex;
     justify-content: space-between;
     gap: 10px;
-    width: 431px;
+    width: 100%;
     margin-inline: auto;
 }
 
@@ -737,6 +739,8 @@
     margin-top: 32px;
     gap: 20px;
     align-items: center;
+    margin-inline: auto;
+    width: 100%;
 
     .go_back_btn {
         color: #000000;
@@ -758,38 +762,33 @@
     align-self: stretch;
 }
 
-.otpMethodButton {
-    display: flex !important;
-    padding: var(--Gaps-Gap-Medium, 10px) !important;
-    align-items: center !important;
-    gap: 6px !important;
-    flex: 1 0 0 !important;
-    border-radius: var(--RADIUS-radius-2, 8px) !important;
-    border: 1px solid var(--neutral-neutral-420, rgba(18, 18, 18, 0.20)) !important;
-    background: #FFF !important;
-    overflow: hidden;
-    min-width: 0;
+.toggle_sms .otpMethodButton {
+    display: flex;
+    padding: 12px;
+    align-items: center;
+    gap: 10px;
+    border-radius: 8px;
+    border: 1px solid rgba(18, 18, 18, 0.20);
+    background: #FFF;
+    text-decoration: none;
+
+    span {
+        color: #000;
+        font-size: 12px;
+        font-weight: 600;
+        line-height: 18px;
+        letter-spacing: -0.12px;
+    }
+
+    img {
+        width: 20px;
+    }
 }
 
-.otpMethodText {}
 
 .otpMethodButton img {
     width: 20px;
-}
-
-.otpMethodButton span {
-    color: #000;
-    font-size: 12px;
-    margin-bottom: 0;
-    white-space: nowrap !important;
-    font-weight: 600;
-    text-decoration: underline !important;
-    text-decoration-color: white !important;
-}
-
-
-.otp_inputs button img {
-    width: 20px !important;
+    height: 20px;
 }
 
 @keyframes horizontal-shaking {
@@ -891,8 +890,10 @@
     .leftSide {
         width: 80%;
         min-width: auto;
-        h2{
-           font-size: 40px;
+
+        h2 {
+            margin-right: 10px;
+            font-size: 40px;
             font-weight: 600;
             line-height: 50px;
         }
@@ -902,15 +903,13 @@
 @media screen and (max-width: 1000px) {
     .container {
         max-height: 100vh;
+        gap: 15px;
+        padding: 15px;
     }
 
     .forgot_pass {
         text-align: center;
         margin: 0px !important;
-    }
-
-    .f_footer {
-        display: none;
     }
 
     .bottom_class {
@@ -990,20 +989,6 @@
         margin-bottom: 2rem;
     }
 
-    .otp .right .top {
-        display: flex;
-        flex-direction: column;
-        gap: 1.5rem;
-        align-items: center;
-        text-align: center;
-    }
-
-    .toggle_sms {
-        flex-direction: column;
-        gap: 1rem;
-        margin-bottom: 2rem;
-    }
-
     .toggle_sms button {
         padding: 10px 1.5rem;
         border-radius: 5px;
@@ -1015,20 +1000,47 @@
 }
 
 @media screen and (max-width: 810px) {
+    .container {
+        max-height: none;
+        height: 100%;
+    }
+
     .leftSide {
         display: none;
     }
 
     .form {
-        height: auto;
+        max-height: none;
+        height: 100%;
         overflow: auto;
+        padding: 50px 46px 27px;
     }
 }
 
 @media screen and (max-width: 600px) {
+    .container {
+        padding: 20px 12px;
+    }
+
+    .form {
+        padding: 32px 12px 24px;
+    }
+
+    .f_footer {
+        flex-direction: column;
+        gap: 26px;
+    }
+
+    .login_form .right {
+        padding: 0px 10px 27px;
+        width: 100%;
+    }
+
     .otp_methods {
         flex-direction: column;
     }
 
-
+    .otp_inputs {
+        gap: 8px;
+    }
 }

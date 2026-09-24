@@ -12,6 +12,18 @@ import { useLocation } from "react-router"
 import useCountryLocation from "../../hooks/GeneralUse/useCountryLocation"
 import localforage from "localforage"
 import { ChevronDown } from "react-feather"
+
+const commonStyles = {
+    padding: "8px",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    gap: "10px",
+    cursor: "pointer",
+    position: "relative",
+    zIndex: 999
+}
+
 const LanguagePicker = ({ size = "24", backgroundWhite, newUI, selectUi, defaultLanguage, shouldOpenUpRequired = false }) => {
     const { i18n, t } = useTranslation()
     const [showDropDown, setShowDropDown] = useState()
@@ -443,18 +455,11 @@ const LanguagePicker = ({ size = "24", backgroundWhite, newUI, selectUi, default
                             <div
                                 ref={dragHandleRef}
                                 style={{
-                                    padding: "8px",
-                                    display: "flex",
-                                    justifyContent: "center",
-                                    alignItems: "center",
-                                    gap: "10px",
+                                    ...commonStyles,                                   
                                     borderRadius: "8px",
                                     background: "white",
                                     boxShadow: "0 4px 39.6px 0 rgba(109, 41, 220, 0.15)",
-                                    cursor: "pointer",
                                     transform: window.innerWidth < 1000 ? `translateY(${translateY}px)` : undefined,
-                                    position: "relative",
-                                    zIndex: 999
                                 }}
                                 onClick={(e) => {
                                     e.stopPropagation()
@@ -475,18 +480,11 @@ const LanguagePicker = ({ size = "24", backgroundWhite, newUI, selectUi, default
                         <>
                             <div
                                 style={{
-                                    padding: "8px",
-                                    display: "flex",
-                                    justifyContent: "center",
-                                    alignItems: "center",
-                                    gap: "10px",
-                                    borderRadius: "8px",
-                                    background: "white",
-                                    boxShadow: "0 4px 39.6px 0 rgba(109, 41, 220, 0.15)",
-                                    cursor: "pointer",
+                                   ...commonStyles,   
+                                    borderRadius: "6px",
+                                    border: '1px solid rgba(161, 161, 161, 0.08)',
+                                    background: '#FAFAFA',
                                     transform: window.innerWidth < 1000 ? `translateY(${translateY}px)` : undefined,
-                                    position: "relative",
-                                    zIndex: 999
                                 }}
                                 onClick={(e) => {
                                     e.stopPropagation()
