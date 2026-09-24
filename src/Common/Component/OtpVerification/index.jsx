@@ -18,7 +18,9 @@ import LanguagePicker from '../../../Components/LanguagePicker'
 
 export const OTP_METHOD_PRIORITY = ['authenticator', 'email', 'whatsapp', 'sms']
 
-export const OTP_METHOD_CONFIG = {
+const OTP_RESEND_SECONDS = 120
+
+const OTP_METHOD_CONFIG = {
     authenticator: { label: 'Google Authenticator', Icon: Lock },
     email: { label: 'Email', Icon: Mail },
     whatsapp: { label: 'WhatsApp', Icon: MessageCircle },
@@ -123,7 +125,7 @@ const SignupOtp = ({ verifyOTpHandler, resendHandler, timer = 120, type = 'phone
                                     if (resendTimer === 0) {
                                         const nextMethod = currentMethod === 'sms' ? 'whatsapp' : 'sms'
                                         setCurrentMethod(nextMethod)
-                                        setResendTimer(90)
+                                        setResendTimer(OTP_RESEND_SECONDS)
                                         resendHandler(nextMethod)
                                         setOTPValues(Array(numberOfFields).fill(''))
                                     }
@@ -192,7 +194,7 @@ const CardOtp = ({
     const { userDetails } = useContext(UserContext)
     const inactivityCtx = useContext(InactivityContext)
     const { values: otpValues, setValues: setOTPValues, refs: inputRefs, handleChange, handleKeyDown, focusFirst, isComplete } = useOtpFields(numberOfFields)
-    const { seconds: resendTimer, setSeconds: setResendTimer, formatMMSS } = useCountdown(type === 'email' ? 300 : 90)
+    const { seconds: resendTimer, setSeconds: setResendTimer, formatMMSS } = useCountdown(OTP_RESEND_SECONDS)
 
     const [verified, setVerified] = useState(false)
     const [otpError, setOtpError] = useState('')
@@ -232,7 +234,7 @@ const CardOtp = ({
         }
     }
     useEffect(() => {
-        setResendTimer(authType === 'authenticator' ? 0 : (authType === 'email' ? 300 : 90))
+        setResendTimer(authType === 'authenticator' ? 0 : OTP_RESEND_SECONDS)
     }, [authType])
     return (
         <form onSubmit={handleSubmit} style={{ height: fullHeight ? '100%' : '450px', marginBottom: 0, boxShadow: 'none', gap: '1.3rem', display: 'flex', justifyContent: 'space-between', flexDirection: 'column' }}>
@@ -284,7 +286,7 @@ const CardOtp = ({
                                             <span style={{ color: '#5926f0', fontWeight: 800, cursor: 'pointer' }} onClick={() => {
                                                 setOTPValues(Array(numberOfFields).fill(''))
                                                 resendHandler(authType)
-                                                setResendTimer((authType === 'email' || type === 'email') ? 300 : 90)
+                                                setResendTimer(OTP_RESEND_SECONDS)
                                             }}>{t('Resend Now')}</span>
                                         </>
                                     )
@@ -320,7 +322,7 @@ const CardOtp = ({
 
                                                     if (resendTimer === 0) {
                                                         resendHandler(methodId)
-                                                        setResendTimer((methodId === 'email' || type === 'email') ? 300 : 90)
+                                                        setResendTimer(OTP_RESEND_SECONDS)
                                                     }
                                                 }}
                                             >
@@ -363,12 +365,16 @@ const ModalOtp = ({ isOpen, toggle, callback, data, dataHandler, resendHandler, 
     const navigate = useNavigate()
     const { userDetails } = useContext(UserContext)
     const { values: otpValues, setValues: setOTPValues, refs: inputRefs, handleChange, handleKeyDown, isComplete } = useOtpFields(numberOfFields)
-    const initialSeconds = data.codeType === 'authenticator' ? 0 : (data.codeType === 'email' ? 300 : 120)
+    const initialSeconds = data.codeType === 'authenticator' ? 0 : OTP_RESEND_SECONDS
     const { seconds: resendTimer, setSeconds: setResendTimer } = useCountdown(initialSeconds)
     const buttonRef = useRef(null)
 
     const { available: availableMethods } = getAvailableOtpMethods(userDetails, methods)
     const hasAuthenticator = availableMethods.includes('authenticator')
+
+    useEffect(() => {
+        if (data.codeType === 'authenticator') setResendTimer(0)
+    }, [data.codeType])
 
     useLayoutEffect(() => {
         const timeout = setTimeout(() => {
@@ -433,7 +439,7 @@ const ModalOtp = ({ isOpen, toggle, callback, data, dataHandler, resendHandler, 
                                             <span style={{ color: '#5926f0', fontWeight: 800, cursor: 'pointer' }} onClick={() => {
                                                 setOTPValues(Array(numberOfFields).fill(''))
                                                 resendHandler(data.codeType)
-                                                setResendTimer(data.codeType === 'email' ? 300 : 120)
+                                                setResendTimer(OTP_RESEND_SECONDS)
                                             }}>{t('Resend Now')}</span>
                                         </>
                                     ))
@@ -472,9 +478,7 @@ const ModalOtp = ({ isOpen, toggle, callback, data, dataHandler, resendHandler, 
 
                                             if (resendTimer === 0) {
                                                 resendHandler(methodId)
-                                                setResendTimer(
-                                                    methodId === 'email' ? 300 : 120
-                                                )
+                                                setResendTimer(OTP_RESEND_SECONDS)
                                             }
                                         }}
                                     >
@@ -521,7 +525,7 @@ const ButtonsOtp = ({
     const inactivityCtx = useContext(InactivityContext)
 
     const { values: otpValues, setValues: setOTPValues, refs: inputRefs, handleChange, handleKeyDown, focusFirst, isComplete } = useOtpFields(numberOfFields)
-    const { seconds: resendTimer, setSeconds: setResendTimer, formatMMSS } = useCountdown(type === 'email' ? 300 : 90)
+    const { seconds: resendTimer, setSeconds: setResendTimer, formatMMSS } = useCountdown(OTP_RESEND_SECONDS)
 
     const [verified, setVerified] = useState(false)
     const [otpError, setOtpError] = useState('')
@@ -529,6 +533,9 @@ const ButtonsOtp = ({
 
     const { available: availableMethods } = getAvailableOtpMethods(userDetails, methods)
     useEffect(() => { focusFirst() }, [])
+    useEffect(() => {
+        if (authType === 'authenticator') setResendTimer(0)
+    }, [authType])
     useEffect(() => { inactivityCtx?.setIsExtended?.(true) }, [])
     useEffect(() => {
         if (verified) {
@@ -558,7 +565,7 @@ const ButtonsOtp = ({
         setOtpError('')
         setAuthType(methodId)
         if (methodId !== 'authenticator') {
-            setResendTimer(methodId === 'email' ? 300 : 90)
+            setResendTimer(OTP_RESEND_SECONDS)
             resendHandler(methodId)
         }
     }
@@ -601,7 +608,7 @@ const ButtonsOtp = ({
                                 <button type="button" onClick={() => {
                                     setOTPValues(Array(numberOfFields).fill(''))
                                     resendHandler(authType)
-                                    setResendTimer((authType === 'email' || type === 'email') ? 300 : 90)
+                                    setResendTimer(OTP_RESEND_SECONDS)
                                 }}>{t('Resend now')}</button>
                             )}
                         </div>
