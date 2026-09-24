@@ -321,6 +321,13 @@ const VirtualBank = () => {
                                         </div>
                                     </div>
                                 )}
+                                {activeTab === "crypto-channels" && (
+                                    <div className={styles.tabContent}>
+                                        <div className={styles.section}>
+                                            <CryptoChannels selectedIban={selectedIban} />
+                                        </div>
+                                    </div>
+                                )}
                             </div>
             }
             {canCreateIban && (
