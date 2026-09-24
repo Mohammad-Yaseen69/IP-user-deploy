@@ -17,6 +17,8 @@ import { apiErrorMessage } from './InternationalFlow';
 import { useQueryClient } from '@tanstack/react-query';
 import { useIdempotency } from '../../hooks/Payments/useIdempotency';
 import { LimitsErrorMessage } from '../../utils/Functions/paymentLimits';
+import { OTP_METHOD_CONFIG, getAvailableOtpMethods } from '../../Common/Component/OtpVerification';
+import modalStyles from './InternationalFlow/styles/otpconfirmation.module.css';
 
 const OTPConfirmation = ({
     setSubStep,
@@ -36,6 +38,7 @@ const OTPConfirmation = ({
     externalWithdrawalPayload,
     isExternalWithdrawal,
     onBeforeConfirm,
+    methods,
 }) => {
     const { t } = useTranslation()
     const queryClient = useQueryClient()
@@ -59,6 +62,25 @@ const OTPConfirmation = ({
     const [isSaving, setIsSaving] = useState(false)
     const [token, setToken] = useState("")
     const navigate = useNavigate()
+
+    // Same OTP method handling as Common/Component/OtpVerification (CardOtp).
+    // Only active when the send-otp response (with available_methods) is passed via `methods`;
+    // otherwise the legacy sms/authenticator toggle is kept for the other flows using this component.
+    const [otpMethods, setOtpMethods] = useState(methods)
+    useEffect(() => {
+        if (methods?.available_methods) setOtpMethods(methods)
+    }, [methods])
+    const hasApiMethods = !!otpMethods?.available_methods
+    const { available: availableMethods } = getAvailableOtpMethods(userDetails, hasApiMethods ? otpMethods : undefined)
+    const hasAuthenticator = availableMethods.includes('authenticator')
+    const isCodeMethod = hasApiMethods ? authType !== "authenticator" : authType === "sms"
+    const getResendSeconds = (method) => hasApiMethods ? (method === "email" ? 300 : 90) : 120
+
+    useEffect(() => {
+        if (hasApiMethods) {
+            setResendTimer(authType === "authenticator" ? 0 : getResendSeconds(authType))
+        }
+    }, [authType, hasApiMethods])
 
     useEffect(() => {
         setIsExtended(true)
@@ -572,7 +594,9 @@ const OTPConfirmation = ({
                 intResend?.payoutChannel?.value?.toLowerCase()?.includes("bank") ? data.data.bank_id = intResend?.beneficiary?.bank_details?.[0]?._id : data.data.mobile_wallet_id = intResend?.beneficiary?.mobile_wallet?.[0]?._id
             }
         }
-        resendHandler(data, setToken, () => { }, authHeader, vendor === "thunes" ? true : false)
+        resendHandler(data, setToken, () => { }, authHeader, vendor === "thunes" ? true : false, (dec) => {
+            if (dec?.available_methods) setOtpMethods(dec)
+        })
     }
 
 
@@ -652,7 +676,7 @@ const OTPConfirmation = ({
                         }}
                     >
                         <img
-                            src={authType === "sms" ? otp_icon : auth}
+                            src={isCodeMethod ? otp_icon : auth}
                             alt="otp"
                             style={{
                                 width: '42px',
@@ -671,7 +695,7 @@ const OTPConfirmation = ({
                                 verified
                                     ?
                                     (
-                                        authType === "sms"
+                                        isCodeMethod
                                             ?
                                             t("Verification Code Verified")
                                             :
@@ -679,7 +703,7 @@ const OTPConfirmation = ({
                                     )
                                     :
                                     (
-                                        authType === "sms"
+                                        isCodeMethod
                                             ?
                                             t("Enter Code")
                                             :
@@ -692,7 +716,7 @@ const OTPConfirmation = ({
                                 verified
                                     ?
                                     (
-                                        authType === "sms"
+                                        isCodeMethod
                                             ?
                                             t("Verification code has been verified, You'll be redirected to the next step.")
                                             :
@@ -700,9 +724,15 @@ const OTPConfirmation = ({
                                     )
                                     :
                                     (
-                                        authType === "sms"
+                                        isCodeMethod
                                             ?
-                                            t("A one-time verification code has been sent to your email address and phone number.").replace("phone", userDetails?.phone?.slice(0, 3) === "971" ? "whatsapp" : "phone")
+                                            (
+                                                hasApiMethods
+                                                    ?
+                                                    `${t('A one-time verification code has been sent to your')} ${authType === 'email' ? t('email address') : authType === 'whatsapp' ? t('whatsapp number.') : t('phone number.')}`
+                                                    :
+                                                    t("A one-time verification code has been sent to your email address and phone number.").replace("phone", userDetails?.phone?.slice(0, 3) === "971" ? "whatsapp" : "phone")
+                                            )
                                             :
                                             t("Enter a code shown in the app to make sure everything works fine.")
                                     )
@@ -743,6 +773,14 @@ const OTPConfirmation = ({
                                     ))}
                                 </div>
                                 {
+                                    hasApiMethods
+                                        ?
+                                        (
+                                            !hasAuthenticator && !userDetails?.tfa
+                                            &&
+                                            <span onClick={() => navigate("/settings?tab=tfa")} style={{ color: "#5926f0", fontWeight: 600, textDecoration: "underline", cursor: "pointer" }}>{t("Setup Authenticator")}</span>
+                                        )
+                                        :
                                     userDetails?.tfa
                                         ?
                                         <span style={{
@@ -774,7 +812,7 @@ const OTPConfirmation = ({
                                     otpError && <span style={{ fontSize: ".8rem", fontWeight: 700, color: "red" }}>{otpError}</span>
                                 }
                                 {
-                                    authType === "sms"
+                                    isCodeMethod
                                     &&
                                     <span style={{ fontSize: "12px", color: "#aeaeae", fontWeight: 600 }}>
                                         {
@@ -786,13 +824,59 @@ const OTPConfirmation = ({
                                                     {t("Didn't receive the verification code?")}
                                                     <span style={{ color: "#5926f0", fontWeight: 800, cursor: "pointer" }} onClick={() => {
                                                         setOTPValues(Array(numberOfFields).fill(''))
-                                                        resendOTP("sms")
-                                                        setResendTimer(120)
+                                                        setIsAnyFieldEmpty(true)
+                                                        resendOTP(hasApiMethods ? authType : "sms")
+                                                        setResendTimer(getResendSeconds(authType))
                                                     }}>{t("Resend Now")}</span>
                                                 </>
                                         }
 
                                     </span>
+                                }
+                                {
+                                    hasApiMethods && availableMethods.length > 1
+                                    &&
+                                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '.5rem', width: '100%', marginTop: '.25rem' }}>
+                                        <div style={{ fontSize: '11px', fontWeight: 600, color: '#aeaeae', textAlign: 'center' }}>
+                                            {t('Choose your preferred method to receive your verification code:')}
+                                        </div>
+                                        <div className={modalStyles.otpMethods} style={{ justifyContent: 'center' }}>
+                                            {availableMethods.filter((methodId) => methodId !== authType).map((methodId) => {
+                                                const { label, Icon } = OTP_METHOD_CONFIG[methodId]
+
+                                                return (
+                                                    <button
+                                                        type="button"
+                                                        key={methodId}
+                                                        className={modalStyles.otpMethod}
+                                                        disabled={methodId !== 'authenticator' && resendTimer > 0}
+                                                        onClick={() => {
+                                                            inputRefs?.current?.[0]?.focus()
+                                                            setOTPValues(Array(numberOfFields).fill(''))
+                                                            setIsAnyFieldEmpty(true)
+                                                            setOtpError('')
+                                                            reset()
+
+                                                            if (methodId === 'authenticator') {
+                                                                setAuthType('authenticator')
+                                                                return
+                                                            }
+
+                                                            setAuthType(methodId)
+
+                                                            if (resendTimer === 0) {
+                                                                resendOTP(methodId)
+                                                                setResendTimer(getResendSeconds(methodId))
+                                                            }
+                                                        }}
+                                                    >
+                                                        <Icon size={14} />
+                                                        <span>{t(label)}</span>
+                                                    </button>
+                                                )
+                                            })}
+                                        </div>
+                                    </div>
                                 }
                                 <Button type="submit" size="lg" style={{
                                     border: "none",

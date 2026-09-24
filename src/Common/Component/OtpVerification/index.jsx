@@ -16,16 +16,16 @@ import buttonStyles from '../../../Components/VirtualIBAN/WithdrawBalanceModal/w
 import { UserContext } from '../../../Context/UserContext'
 import LanguagePicker from '../../../Components/LanguagePicker'
 
-const OTP_METHOD_PRIORITY = ['authenticator', 'email', 'whatsapp', 'sms']
+export const OTP_METHOD_PRIORITY = ['authenticator', 'email', 'whatsapp', 'sms']
 
-const OTP_METHOD_CONFIG = {
+export const OTP_METHOD_CONFIG = {
     authenticator: { label: 'Google Authenticator', Icon: Lock },
     email: { label: 'Email', Icon: Mail },
     whatsapp: { label: 'WhatsApp', Icon: MessageCircle },
     sms: { label: 'SMS', Icon: Smartphone },
 }
 
-const getAvailableOtpMethods = (userDetails, apiMethods) => {
+export const getAvailableOtpMethods = (userDetails, apiMethods) => {
     // Accepts either the raw send-otp response or its `available_methods` object.
     const apiFlags = apiMethods?.available_methods || apiMethods?.availableMethods || apiMethods
     const flags = apiFlags
