@@ -322,7 +322,7 @@ const ConvertFundsModal = ({ isOpen, toggle, selectedIban, availableBalance }) =
                             label={isProcessing ? t("Processing...") : isDone ? t("Convert more") : continueLabel}
                             handleBack={!isDone && handleBack}
                             handleAction={handleContinue}
-                            disabled={disabled}
+                            disabled={footerDisabled}
                         />
                     :
                 <div className={styles.footer}>

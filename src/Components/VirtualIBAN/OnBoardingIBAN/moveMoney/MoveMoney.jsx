@@ -61,7 +61,7 @@ const MoveMoney = () => {
 
     return (
         <>
-            {showSwiftPage &&
+            {(showSwiftPage && width <= 600) &&
                 <MobileHeader 
                     title={"SWIFT International"}
                     handleAction={handleClose}

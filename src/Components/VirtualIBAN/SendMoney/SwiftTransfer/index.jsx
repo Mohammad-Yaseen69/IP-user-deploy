@@ -736,9 +736,11 @@ const DoneStep = ({
         <div className={styles.doneStep}>
             <div className={styles.doneHero}>
                 <img src={success} alt="" />
-                <div className={styles.doneIcon}>
-                    <Check size={32} />
-                </div>
+                {isMobile &&
+                    <div className={styles.doneIcon}>
+                        <Check size={32} />
+                    </div>
+                }
                 <h3>{t(isMobile ? "Payment on its way 🎉" : "Payment submitted")}</h3>
                 <p>
                     {t("You sent")} {formatMoney(amount, currencyCode)} {t("to")}{" "}
@@ -1282,7 +1284,7 @@ const SwiftTransfer = forwardRef(({ isOpen = true, toggle, selectedIban, availab
                     </div>
                 )}
             </section>           
-            {(isMobile && currentStep !== STEPS.DONE) &&
+            {(isMobile && showFooter) &&
                 <MobileFooter 
                     label={isProcessing ? t("Processing...") : getContinueLabel(currentStep, t)}
                     handleBack={handleBack}
