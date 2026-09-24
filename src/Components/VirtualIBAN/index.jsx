@@ -167,6 +167,7 @@ const VirtualBank = () => {
 
 
             </div>
+            {((showGetIBAN || (ibans.length === 0 && canCreateIban)) && userDetails?.account_type === "business") &&
             <div className={styles.mobileTop}>
                 <div className={styles.headerTitle}>
                     <ChevronLeft size={22} onClick={() => onboardingRef.current?.back()} />
@@ -198,6 +199,7 @@ const VirtualBank = () => {
                     </button>
                 }
             </div>
+            }
             {
                 isInitialLoading ? (
                     <div style={{ minHeight: "520px", width: "100%" }}>

@@ -25,7 +25,7 @@ const StepProgress = ({ currentStep, percent }) => {
     <>
       <div className={styles.mobileStepContainer}>
         <p className={styles.stepCount}>
-          Step {currentStepNo} of {totalSteps}
+          {t('Step')} {currentStepNo} {t('of')} {totalSteps}
           <span> · {currentStep}</span>
         </p>
         <div className={styles.dropdownPill} onClick={toggleAiDrawer}>
