@@ -25,6 +25,10 @@ import PaymentStep from "../../MyMasterCard/PaymentModal/PaymentStep"
 import { getAmountNumber } from "../utils/amount"
 import { useExecuteVirtualIbanTransfer, useVirtualIbanTransferFee } from "../../../hooks/useVirtualIban"
 import { getErrorMessage } from "../../../Helper/getErrorMessage"
+import MobileHeader from "../../../Common/Component/MobileHeader"
+import MobileStepProgress from "../VirtualIbanModal/MobileStepProgress"
+import MobileFooter from "../../../Common/Component/MobileFooter"
+import StepsDrawer from "../../../Common/Component/StepsDrawer"
 
 const CoinsIcon = () => (
     <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
@@ -89,8 +93,9 @@ const SIDEBAR_ICONS = {
 const ConvertFundsModal = ({ isOpen, toggle, selectedIban, availableBalance }) => {
     const { t } = useTranslation()
     const width = useWindowWidth()
-
+    const isMobile = width <= 600;
     const { userWallets, getUserWallets } = useContext(UserContext)
+    const [showDrawer, setShowDrawer] = useState(false);
 
     const [currentStep, setCurrentStep] = useState(STEPS.AMOUNT)
     const [amount, setAmount] = useState("")
@@ -258,6 +263,7 @@ const ConvertFundsModal = ({ isOpen, toggle, selectedIban, availableBalance }) =
             className={styles.modalLayout}
             style={{ flexDirection: width < 1000 ? "column" : "row" }}
         >
+             {!isMobile &&
             <div className={addFundsStyles.left}>
                 <div
                     style={
@@ -266,51 +272,59 @@ const ConvertFundsModal = ({ isOpen, toggle, selectedIban, availableBalance }) =
 
                         }
                     }>
-                    <div className={styles.bankHeader}>
-                        <div className={styles.bankIcon}>
-                            <ConvertIcon />
-                        </div>
-                        {
-                            width > 700 ? <h2>{t("Move funds to")}
-                                <br />
-                                {t("InstaPay wallet")}
-                            </h2> :
-                                <h2>{t("Move funds to InstaPay wallet")}
-                                </h2>
-                        }
-                    </div>
-                    <div
-                        className={addFundsStyles.progressEffect}
-                        style={{ marginTop: "2rem" }}
-                    >
-                        {SIDEBAR_STEPS.map((item, index) => {
-                            const IconComponent = SIDEBAR_ICONS[item.stepName]
-                            return (
-                                <SidebarProgress
-                                    key={item.stepName}
-                                    stepLabel={item.stepLabel}
-                                    label={item.label}
-                                    Icon={IconComponent}
-                                    isActive={isSidebarStepActive(item, currentStep)}
-                                    isCompleted={isSidebarStepCompleted(item, currentStep)}
-                                    showBar={index < SIDEBAR_STEPS.length - 1}
-                                />
-                            )
-                        })}
-                    </div>
+                                               <div className={styles.bankHeader}>
+                                <div className={styles.bankIcon}>
+                                    <ConvertIcon />
+                                </div>
+                                {
+                                    width > 700 ? <h2>{t("Move funds to")}
+                                        <br />
+                                        {t("InstaPay wallet")}
+                                    </h2> :
+                                        <h2>{t("Move funds to InstaPay wallet")}
+                                        </h2>
+                                }
+                            </div>
+                            <div
+                                className={addFundsStyles.progressEffect}
+                                style={{ marginTop: "2rem" }}
+                            >
+                                {SIDEBAR_STEPS.map((item, index) => {
+                                    const IconComponent = SIDEBAR_ICONS[item.stepName]
+                                    return (
+                                        <SidebarProgress
+                                            key={item.stepName}
+                                            stepLabel={item.stepLabel}
+                                            label={item.label}
+                                            Icon={IconComponent}
+                                            isActive={isSidebarStepActive(item, currentStep)}
+                                            isCompleted={isSidebarStepCompleted(item, currentStep)}
+                                            showBar={index < SIDEBAR_STEPS.length - 1}
+                                        />
+                                    )
+                                })}
+                            </div>
                 </div>
                 {width > 700 &&
                     <div className={addFundsStyles.contactBox}>
                         <ContactBox />
                     </div>}
             </div>
+}
 
             <div
                 className={styles.rightPanel}
                 style={{ width: width < 1000 ? "100%" : undefined }}
             >
                 <div className={styles.content}>{renderStepContent()}</div>
-
+                 {isMobile?
+                        <MobileFooter 
+                            label={isProcessing ? t("Processing...") : isDone ? t("Convert more") : continueLabel}
+                            handleBack={!isDone && handleBack}
+                            handleAction={handleContinue}
+                            disabled={footerDisabled}
+                        />
+                    :
                 <div className={styles.footer}>
                     <button
                         type="button"
@@ -318,7 +332,7 @@ const ConvertFundsModal = ({ isOpen, toggle, selectedIban, availableBalance }) =
                         onClick={handleClose}
                     >
                         {t("Cancel")}
-                    </button>
+                    </button>                   
                     <div className={styles.footerNav}>
                         {!isDone && (
                             <button
@@ -342,6 +356,7 @@ const ConvertFundsModal = ({ isOpen, toggle, selectedIban, availableBalance }) =
                         </button>
                     </div>
                 </div>
+            }
             </div>
         </div>
     )
@@ -350,13 +365,41 @@ const ConvertFundsModal = ({ isOpen, toggle, selectedIban, availableBalance }) =
         <>
             <Modal
                 isOpen={isOpen}
+                zIndex={isMobile && 1}
                 style={{
                     minWidth: width > 1000 ? "900px" : "0px",
                 }}
                 toggle={handleClose}
+                fullscreen={isMobile}
             >
-                <ModalBody style={{ padding: "20px" }}>{renderBody()}</ModalBody>
+                <ModalBody style={{ padding: isMobile ? 0 : "20px" }}>
+                    {isMobile &&
+                        <>
+                            <MobileHeader 
+                                title={"Send money"}
+                                handleAction={handleClose}
+                                handleBack={handleBack}
+                            />
+                            <MobileStepProgress 
+                                handleClick={() => setShowDrawer(true)}
+                                currentStep={currentStep}
+                                isSidebarStepActive={isSidebarStepActive}
+                                isSidebarStepCompleted={isSidebarStepCompleted}
+                                SIDEBAR_STEPS={SIDEBAR_STEPS}
+                             />
+                        </>
+                    }
+                    {renderBody()}
+                </ModalBody>
             </Modal >
+            <StepsDrawer 
+                open={showDrawer}
+                currentStep={currentStep} 
+                isSidebarStepActive={isSidebarStepActive}
+                isSidebarStepCompleted={isSidebarStepCompleted}
+                SIDEBAR_STEPS={SIDEBAR_STEPS}
+                toggleDrawer={(val)=>setShowDrawer(val)}
+            />
         </>
     )
 }
