@@ -1,4 +1,4 @@
-import { Box, FormControl, IconButton, MenuItem, Modal, Select, TextField } from '@mui/material';
+import { Box, FormControl, IconButton, MenuItem, Modal, Select, TextField, useMediaQuery } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
 import { ArrowLeft, Info, X } from 'react-feather';
 import { useTranslation } from 'react-i18next';
@@ -16,6 +16,7 @@ import { useNavigate } from 'react-router';
 const DynamicChannelModal = ({ open, handleClose, beneficiaryData, onSaveSuccess, lockChannelType = null, errorOnInvalid = true, error = false }) => {
     const isErrorMode = typeof errorOnInvalid === 'boolean' ? errorOnInvalid : typeof error === 'boolean' ? error : false;
     const { t } = useTranslation();
+    const isMobile = useMediaQuery('(max-width: 600px)');
 
     const navigate = useNavigate();
 
@@ -100,8 +101,9 @@ const DynamicChannelModal = ({ open, handleClose, beneficiaryData, onSaveSuccess
     const commonInputStyles = {
         "& .MuiOutlinedInput-root": {
             borderRadius: "11px",
-            background: "#FAF9FD",
-            border: "1px solid #ECE9F5",
+            background: isMobile ? '#fff' : "#FAF9FD",
+            border: isMobile ? '1px solid #1412201F' : "1px solid #ECE9F5",
+            boxShadow: isMobile ? '0px 1px 2px 0px #1412200D' : 'none',
             transition: "all 0.2s ease-in-out",
             "& fieldset": { border: "none" },
             "&:hover": { borderColor: "#D1C9E9" },
@@ -250,6 +252,16 @@ const DynamicChannelModal = ({ open, handleClose, beneficiaryData, onSaveSuccess
         }
     };
 
+
+    const getChannelTypeButtonStyle = (type) => ({
+        flex: 1, padding: '7px 12px', borderRadius: isMobile ? '10px' : '7px', border: 'none',
+        background: accNumType === type ? (isMobile ? '#7040FF' : '#FFFFFF') : 'transparent',
+        color: accNumType === type ? (isMobile ? 'white' : '#4F46E5') : (isMobile ? '#65627A' : '#6B7280'),
+        fontWeight: isMobile ? 600 : (accNumType === type ? 600 : 500), fontSize: '13px', cursor: 'pointer',
+        boxShadow: accNumType === type ? '0 1px 3px rgba(0,0,0,0.1)' : 'none',
+        transition: 'all 0.2s ease'
+    });
+
     return (
         <Modal open={open} onClose={handleClose} aria-labelledby="dynamic-channel-modal">
             <Box className={styles.modalBox}>
@@ -288,8 +300,8 @@ const DynamicChannelModal = ({ open, handleClose, beneficiaryData, onSaveSuccess
                                         return selected;
                                     }}
                                     sx={{
+                                        borderRadius: isMobile ? '14px' : "11px",
                                         "& .MuiOutlinedInput-root": {
-                                            borderRadius: "11px",
                                             background: "#FAF9FD",
                                             border: "1px solid #ECE9F5",
                                             padding: "2px",
@@ -315,28 +327,14 @@ const DynamicChannelModal = ({ open, handleClose, beneficiaryData, onSaveSuccess
                                     <button
                                         type="button"
                                         onClick={() => setAccNumType('IBAN')}
-                                        style={{
-                                            flex: 1, padding: '7px 12px', borderRadius: '7px', border: 'none',
-                                            background: accNumType === 'IBAN' ? '#FFFFFF' : 'transparent',
-                                            color: accNumType === 'IBAN' ? '#4F46E5' : '#6B7280',
-                                            fontWeight: accNumType === 'IBAN' ? 600 : 500, fontSize: '13px', cursor: 'pointer',
-                                            boxShadow: accNumType === 'IBAN' ? '0 1px 3px rgba(0,0,0,0.1)' : 'none',
-                                            transition: 'all 0.2s ease'
-                                        }}
+                                        style={getChannelTypeButtonStyle('IBAN')}
                                     >
                                         {t("IBAN")}
                                     </button>
                                     <button
                                         type="button"
                                         onClick={() => setAccNumType('BIC')}
-                                        style={{
-                                            flex: 1, padding: '7px 12px', borderRadius: '7px', border: 'none',
-                                            background: accNumType === 'BIC' ? '#FFFFFF' : 'transparent',
-                                            color: accNumType === 'BIC' ? '#4F46E5' : '#6B7280',
-                                            fontWeight: accNumType === 'BIC' ? 600 : 500, fontSize: '13px', cursor: 'pointer',
-                                            boxShadow: accNumType === 'BIC' ? '0 1px 3px rgba(0,0,0,0.1)' : 'none',
-                                            transition: 'all 0.2s ease'
-                                        }}
+                                        style={getChannelTypeButtonStyle('BIC')}
                                     >
                                         {t("SWIFT / BIC")}
                                     </button>
@@ -444,7 +442,7 @@ const DynamicChannelModal = ({ open, handleClose, beneficiaryData, onSaveSuccess
                                     />
                                 </div>
 
-                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
+                                <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: '14px' }}>
                                     <div className={styles.inputGroup}>
                                         <label className={styles.fieldLabel}>{t("Branch Name")}</label>
                                         <TextField
@@ -469,7 +467,7 @@ const DynamicChannelModal = ({ open, handleClose, beneficiaryData, onSaveSuccess
                                     </div>
                                 </div>
 
-                                <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '14px' }}>
+                                <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '2fr 1fr', gap: '14px' }}>
                                     <div className={styles.inputGroup}>
                                         <label className={styles.fieldLabel}>{t("Branch Address / Street")} *</label>
                                         <TextField

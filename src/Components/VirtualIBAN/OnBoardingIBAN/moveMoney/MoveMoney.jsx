@@ -1,4 +1,4 @@
-import React, { useContext, useMemo, useState } from 'react';
+import React, { useContext, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import useWindowWidth from '../../../../utils/useWindowWidth';
 import TopRight from '../../../topRight';
@@ -12,7 +12,8 @@ import {
     RefreshCw,
     CreditCard,
     ArrowLeft,
-    Search
+    Search,
+    ChevronLeft
 } from 'react-feather';
 import SepaTransfer from '../../SendMoney/SepaTransfer';
 import SwiftTransfer from '../../SendMoney/SwiftTransfer';
@@ -21,6 +22,7 @@ import { useSyncVirtualIbanBalance, useVirtualIbans } from '../../../../hooks/us
 import { asVirtualIbanArray } from '../../utils/virtualIban';
 import { UserContext } from '../../../../Context/UserContext';
 import { useNavigate } from 'react-router';
+import MobileHeader from '../../../../Common/Component/MobileHeader';
 
 const MoveMoney = () => {
     const { t } = useTranslation();
@@ -28,7 +30,8 @@ const MoveMoney = () => {
     const [showSepaPage, setShowSepaPage] = useState(false);
     const [showSwiftPage, setShowSwiftPage] = useState(false);
     const [showCryptoTopupModal, setShowCryptoTopupModal] = useState(false);
-    const navigate = useNavigate();
+    const btnRef = useRef(null);
+
     const {
         userDetails,
         selectedAccount,
@@ -54,17 +57,29 @@ const MoveMoney = () => {
 
     const currentBalance = syncedBalance?.balance ?? selectedIban?.balance ?? 0
 
+    const handleClose = () => setShowSwiftPage(false);
+
     return (
-        <div className={styles.container}>
-            <div className={styles.top}>
-                <div className={styles.headerTitle}>
-                    <h1>{t("Move money")}</h1>
-                    <p>{t("Choose how to pay, get paid and manage your balances — pick one to begin.")}</p>
+        <>
+            {(showSwiftPage && width <= 600) &&
+                <MobileHeader 
+                    title={"SWIFT International"}
+                    handleAction={handleClose}
+                    handleBack={() => btnRef.current?.back()}
+                />
+            }
+        <div className={styles.container}>      
+            {width > 600 &&     
+                <div className={styles.top}>
+                    <div className={styles.headerTitle}>
+                        <h1>{t("Move money")}</h1>
+                        <p>{t("Choose how to pay, get paid and manage your balances — pick one to begin.")}</p>
+                    </div>
+                    <div className={styles.topright}>
+                        {width > 1000 && <TopRight />}
+                    </div>
                 </div>
-                <div className={styles.topright}>
-                    {width > 1000 && <TopRight />}
-                </div>
-            </div>
+            }
 
             <div className={styles.mainContent}>
                 {
@@ -84,20 +99,23 @@ const MoveMoney = () => {
                         </>
                     : showSwiftPage ?
                         <>
+                        {width > 600 &&
                             <IbanBreadcrumb items={[
                                 { label: "My virtual bank", path: "/virtual-IBAN" },
-                                { label: "Move money", onClick: () => setShowSwiftPage(false) },
+                                { label: "Move money", onClick: handleClose },
                                 { label: "SWIFT Transfer" }
                             ]} />
+                        }
                             <SwiftTransfer
                                 isPage={true}
                                 selectedIban={selectedIban}
                                 availableBalance={currentBalance}
-                                toggle={() => setShowSwiftPage(false)}
+                                toggle={handleClose}
+                                ref={btnRef}
                             />
                         </>
 
-                        : <>
+                        : <>                            
                             <div className={styles.headerTitle}>
                                 <IbanBreadcrumb items={[
                                     { label: "My virtual bank", path: "/virtual-IBAN" },
@@ -236,7 +254,8 @@ const MoveMoney = () => {
                 selectedIban={selectedIban}
             />
 
-        </div >
+        </div>
+        </>
     );
 };
 

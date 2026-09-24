@@ -12,6 +12,17 @@ const ASSET_NAMES = {
     USDC: "USD Coin",
 }
 
+const ASSET_SYMBOLS = {
+    BTC: "₿",
+    ETH: "Ξ",
+    USDT: "₮",
+    USDC: "$",
+}
+
+/* One glyph, for the circles too small to spell the code out. */
+export const getAssetSymbol = (code) =>
+    ASSET_SYMBOLS[String(code || "").toUpperCase()] || String(code || "").charAt(0)
+
 export const getWalletAccentColor = (code) =>
     CRYPTO_COLORS[String(code || "").toUpperCase()] || "#5926F0"
 
