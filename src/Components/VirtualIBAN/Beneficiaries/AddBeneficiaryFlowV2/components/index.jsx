@@ -311,7 +311,7 @@ export const SelectField = ({
 );
 
 export const FieldRow = ({ children, alignEnd = false }) => (
-    <div className={`${styles.fieldRow} ${alignEnd ? styles.fieldRowEnd : ''}`}>{children}</div>
+    <div className={`${styles.fieldRow}`}>{children}</div>
 );
 
 export const Fields = ({ children }) => <div className={styles.fields}>{children}</div>;
