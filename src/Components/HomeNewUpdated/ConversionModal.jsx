@@ -20,7 +20,7 @@ const formatTimeLeft = (seconds) => {
     return `${Math.floor(safe / 60)}:${String(safe % 60).padStart(2, "0")}`
 }
 
-const ConversionModal = ({ isOpen, toggleModal, amount, exchangeAmount, currency, exchangeCurrency, exchangePrice, setEnteredCurrency, setResultCurrency, setUserCurrency, setExchangedCurrency, exchangeFee, fxDet, senderWallet = null, receiverWallet = null, quoteExpiresAt = null, isQuoteExpired = false, onRefreshQuote = () => { }, isRefreshing = false }) => {
+const ConversionModal = ({ isOpen, toggleModal, amount, exchangeAmount, currency, exchangeCurrency, exchangePrice, setEnteredCurrency, setResultCurrency, setUserCurrency, setExchangedCurrency, exchangeFee, fxDet, senderWallet = null, receiverWallet = null, quoteExpiresAt = null, isQuoteExpired = false, onRefreshQuote = () => { }, isRefreshing = false, onSuccess = () => { } }) => {
     const { setIsExtended } = useContext(InactivityContext)
     const { t } = useTranslation()
     const { userWallets, authHeader, getUserWallets } = useContext(UserContext)
@@ -234,6 +234,7 @@ const ConversionModal = ({ isOpen, toggleModal, amount, exchangeAmount, currency
                     console.log(decrypted)
                     getUserWallets()
                     setStep(2)
+                    onSuccess(decrypted)
                 })
                 .catch(err => {
                     const decrypted = decryptData(err.response.data.data)
