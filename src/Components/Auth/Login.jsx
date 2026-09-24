@@ -26,6 +26,20 @@ import { logger } from "@sentry/react";
 import VpnModal from "./VpnModal";
 import LocationDeniedModal from "./LocationDeniedModal";
 import { InputAdornment, TextField } from "@mui/material";
+
+const linkStyle = {
+    color: "#5926F0",
+    fontSize: "12px",
+    fontStyle: "normal",
+    fontWeight: 700,
+    lineHeight: "150%",
+    letterSpacing: "-0.28px",
+    textDecoration: "underline"
+};
+
+const isPhoneNumber = /^\d{9,20}$/;
+const isEmail = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
 const Login = ({ country, setIsLoginForm, }) => {
     const navigate = useNavigate()
     const { t } = useTranslation()
@@ -34,9 +48,6 @@ const Login = ({ country, setIsLoginForm, }) => {
     const isQuickLoginRef = useRef(false)
     const redirectQuery = params.get("redirect");
     const redirect = location?.state?.redirect ?? (redirectQuery ? decodeURIComponent(redirectQuery) : null)
-    const isPhoneNumber = /^\d{9,20}$/;
-    const isEmail = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    const [emailVerified, setEmailVerified] = useState(false)
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [showPassword, setShowPassword] = useState(false)
@@ -815,7 +826,7 @@ const Login = ({ country, setIsLoginForm, }) => {
         if (resendTimer > 0 && lastOtpSentTo && (method === 'sms' || method === 'insta' || method === "wp" || method === "email")) {
             if (!hasChangedMethodOnce || lastOtpSentTo === method) {
                 setHasChangedMethodOnce(true);
-                if (resendTimer === 0 || !hasChangedMethodOnce) {
+                if (!hasChangedMethodOnce) {
                     shouldCallLoginHandler = true;
                 } else {
                     setCurrentOtpMethod(method);
@@ -989,7 +1000,6 @@ const Login = ({ country, setIsLoginForm, }) => {
     const resetLoginStates = () => {
         setEmail("")
         setPassword("")
-        setEmailVerified(false)
         setIsPressed(false)
         setIsLoginError("")
         setLoginToken("")
@@ -1000,19 +1010,11 @@ const Login = ({ country, setIsLoginForm, }) => {
     }
 
     const resolvedCredential = getResolvedCredential();
-    const isCredentialValid = isPhoneNumber.test(resolvedCredential) || isEmail.test(resolvedCredential);
+    const isCredentialValid = (isPhoneNumber.test(resolvedCredential) || isEmail.test(resolvedCredential)) && password;
     const availableMethods = methods.filter(
         m => m.avail && m.attr !== currentOtpMethod
     )
-    const linkStyle = {
-        color: "#5926F0",
-        fontSize: "12px",
-        fontStyle: "normal",
-        fontWeight: 700,
-        lineHeight: "150%",
-        letterSpacing: "-0.28px",
-        textDecoration: "underline"
-    };
+
     return (
         <>
 
@@ -1150,7 +1152,7 @@ const Login = ({ country, setIsLoginForm, }) => {
                             </div>
                         }
                             <span className={styles.para}>{t("By logging in, you agree to the terms outlined in InstaPay's Privacy Policy.")}</span>
-                            <button type="submit" className={styles.form_btn} disabled={isLoginError || isPressed || (showQuickLogin ? (emailVerified ? !password : false) : (emailVerified ? !password || !isCredentialValid : !isCredentialValid))}>
+                            <button type="submit" className={styles.form_btn} disabled={isLoginError || isPressed || !isCredentialValid}>
                                 {t('Login')}
                             </button>
                             <div
@@ -1306,57 +1308,28 @@ const Login = ({ country, setIsLoginForm, }) => {
                                                 ? "1fr"
                                                 : "repeat(2, minmax(0, 1fr))"
                                     }}>
-                                        {isMobile ? (
-                                            <>
-                                                {methods.map((method, index) => {
-                                                    if (method.avail && method.attr !== currentOtpMethod) {
-                                                        return (
-                                                            <button
-                                                                key={index}
-                                                                className={styles.otpMethodButton}
-                                                                type="button"
-                                                                disabled={isPressed || methodLoading || biometricLoading}
-                                                                onClick={() => handleOtpMethod(method.attr)}
-                                                            >
-                                                                <img
-                                                                    src={method.icon}
-                                                                    alt=""
-                                                                />
-                                                                <span className={styles.otpMethodText}>
-                                                                    {t(method.text)}
-                                                                </span>
-                                                            </button>
-                                                        )
-                                                    }
-                                                    return null;
-                                                })}
-                                            </>
-                                        ) : (
-                                            <>
-                                                {methods.map((method, index) => {
-                                                    if (method.avail && method.attr !== currentOtpMethod) {
-                                                        return (
-                                                            <button
-                                                                key={index}
-                                                                className={styles.otpMethodButton}
-                                                                type="button"
-                                                                disabled={isPressed || methodLoading || biometricLoading}
-                                                                onClick={() => handleOtpMethod(method.attr)}
-                                                            >
-                                                                <img
-                                                                    src={method.icon}
-                                                                    alt=""
-                                                                />
-                                                                <span style={{ marginBottom: "0" }}>
-                                                                    {t(method.text)}
-                                                                </span>
-                                                            </button>
-                                                        )
-                                                    }
-                                                    return null;
-                                                })}
-                                            </>
-                                        )}
+                                        {methods.map((method, index) => {
+                                            if (method.avail && method.attr !== currentOtpMethod) {
+                                                return (
+                                                    <button
+                                                        key={index}
+                                                        className={styles.otpMethodButton}
+                                                        type="button"
+                                                        disabled={isPressed || methodLoading || biometricLoading}
+                                                        onClick={() => handleOtpMethod(method.attr)}
+                                                    >
+                                                        <img
+                                                            src={method.icon}
+                                                            alt=""
+                                                        />
+                                                        <span className={isMobile && styles.otpMethodText} style={!isMobile && { marginBottom: "0" }}>
+                                                            {t(method.text)}
+                                                        </span>
+                                                    </button>
+                                                )
+                                            }
+                                            return null;
+                                        })}
                                     </div>
                                 }
                                 {
