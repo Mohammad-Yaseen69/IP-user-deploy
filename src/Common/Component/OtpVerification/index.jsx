@@ -20,7 +20,7 @@ export const OTP_METHOD_PRIORITY = ['authenticator', 'email', 'whatsapp', 'sms']
 
 const OTP_RESEND_SECONDS = 120
 
-const OTP_METHOD_CONFIG = {
+export const OTP_METHOD_CONFIG = {
     authenticator: { label: 'Google Authenticator', Icon: Lock },
     email: { label: 'Email', Icon: Mail },
     whatsapp: { label: 'WhatsApp', Icon: MessageCircle },
