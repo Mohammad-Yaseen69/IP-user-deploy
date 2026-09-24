@@ -49,9 +49,9 @@ const AssetStep = ({ assets = [], assetId, onSelect, isEuropean }) => {
                 </Callout>
             ) : null}
 
-            <Callout variant="success">
+            {/* <Callout variant="success">
                 {t("Wallet activation is free. There is no one-time, monthly or recurring fee.")}
-            </Callout>
+            </Callout> */}
         </>
     )
 }

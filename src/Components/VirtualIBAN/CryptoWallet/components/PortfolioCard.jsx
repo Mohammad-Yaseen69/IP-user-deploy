@@ -20,7 +20,7 @@ const PortfolioCard = ({ wallet, walletBalance, onSyncWallet, syncing }) => {
     const { data, isLoading } = useQuery({
         queryKey: ["crypto", "portfolio"],
         queryFn: () => apiWrapper({
-            endpoint: `/api/wallet/get-crypto-balance/${userDetails?._id}`,
+            endpoint: `/api/wallet/get-crypto-balance/${userDetails?._id}?currency=USD`,
             isDecrypted: true,
         }).then(dec => dec?.data)
     })
@@ -28,7 +28,7 @@ const PortfolioCard = ({ wallet, walletBalance, onSyncWallet, syncing }) => {
 
 
     const label = isWalletView ? t("Wallet balance") : t("Total crypto portfolio value")
-    const currency = isWalletView ? code : "EUR"
+    const currency = isWalletView ? code : "USD"
     const value = isWalletView ? formatCryptoAmount(walletBalance) : formatCurrency(data?.total, true, false)
 
 
@@ -63,14 +63,14 @@ const PortfolioCard = ({ wallet, walletBalance, onSyncWallet, syncing }) => {
                 </button>
             </div>
 
-            {isWalletView && (
+            {isWalletView && onSyncWallet && (
                 <div className={styles.delta}>
                     <span>{t("Converted value shown once FX is connected.")}</span>
                 </div>
             )}
 
             <div className={styles.portfolioActions}>
-                {isWalletView ? (
+                {isWalletView && onSyncWallet ? (
                     <button
                         type="button"
                         className={styles.chipBtn}
