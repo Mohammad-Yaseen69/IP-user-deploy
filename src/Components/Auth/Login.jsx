@@ -5,20 +5,14 @@ import { UserContext } from "../../Context/UserContext";
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 import PhoneInput from "../PhoneInput";
-import { AlertTriangle, ChevronRight, Eye, EyeOff, Mail } from "react-feather";
+import { AlertTriangle, Eye, EyeOff, Mail } from "react-feather";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import gs from "./files/gs.svg"
 import as from "./files/as.svg"
 import authenticator from "./files/authenticator.webp"
 import axios from "axios";
-import LanguagePicker from "../LanguagePicker";
 import FaceAnimation from "./FaceAnimation"
 import BiometricSvg from "../../assets/icons/fingerprint.png"
-import authenticatorBlack from '../../assets/images/authenticatorBlack.jpg'
-import instaBlack from '../../assets/images/instaBlack.png'
-import biometricBlack from '../../assets/images/biometricBlack.jpg'
-import whatsappBlack from '../../assets/images/whatsappBlack.png'
-import emailBlack from '../../assets/images/emailBlack.png'
 import { startAuthentication } from "@simplewebauthn/browser"
 import * as rdd from "react-device-detect";
 import { authIcon, instaIcon, smsIcon, whatsappIcon, email as emailIcon } from "./files"
@@ -72,12 +66,10 @@ const Login = ({ country, setIsLoginForm, }) => {
     const [biometricLoading, setBiometricLoading] = useState(false)
     const [biometricSuccessfull, setBiometricSuccessfull] = useState(false)
     const [showRestoreModal, setShowRestoreModal] = useState(false)
-    const [accountRestoreDetails, setAccountRestoreDetails] = useState(null)
     const [restoreLoading, setRestoreLoading] = useState(false)
     const [pendingLoginData, setPendingLoginData] = useState(null)
     const [capturedSecurityData, setCapturedSecurityData] = useState(null)
     const [isDataLoaded, setIsDataLoaded] = useState(false);
-    const [otpDeliveryInfo, setOtpDeliveryInfo] = useState({})
 
     const normalizeCredential = (value) => (value ?? "").toString().trim().toLowerCase();
     const getResolvedCredential = () => {
@@ -267,14 +259,12 @@ const Login = ({ country, setIsLoginForm, }) => {
                 const isLocationRequired = decrypted?.isLocationRequired
                 setFirstTime(false)
                 if (!restoreAccount && decrypted?.status === false && decrypted?.accountDetails?.requiresConfirmation === true) {
-                    setAccountRestoreDetails(decrypted)
                     setShowRestoreModal(true)
                     setIsPressed(false)
                     setMethodLoading(false)
                     return
                 }
                 // console.log("FULL LOGIN RESPONSE:", decrypted)
-                setOtpDeliveryInfo({ email: decrypted?.email, phone: decrypted?.phone })
                 setMethods(prevMethods => prevMethods.map(method => {
                     switch (method.attr) {
                         case 'auth':
@@ -330,7 +320,6 @@ const Login = ({ country, setIsLoginForm, }) => {
                 setLoginToken(decrypted?.token)
                 if (restoreAccount) {
                     setShowRestoreModal(false)
-                    setAccountRestoreDetails(null)
                     setRestoreLoading(false)
                 }
 
@@ -1008,54 +997,8 @@ const Login = ({ country, setIsLoginForm, }) => {
         setCurrentOtpMethod("auth")
         resetOtpStates()
         setShowRestoreModal(false)
-        setAccountRestoreDetails(null)
     }
 
-
-    const getOtpLabel = () => {
-        const maskValue = (value) => {
-            const str = String(value ?? "");
-            if (!str) return "";
-
-            if (str.includes("@")) {
-                const [username, domain] = str.split("@");
-
-                if (!username || !domain) return str;
-
-                if (username.length <= 3) {
-                    return `${"*".repeat(username.length)}@${domain}`;
-                }
-
-                const visibleSuffix = username.slice(-3);
-                const maskedLength = username.length - 3;
-                return `${"*".repeat(maskedLength)}${visibleSuffix}@${domain}`;
-            }
-
-            if (str.length <= 4) {
-                return str.replace(/./g, "*");
-            }
-
-            return `${str.slice(0, str.length - 4).replace(/./g, "*")}${str.slice(-4)}`;
-        };
-
-        const maskedEmail = maskValue(otpDeliveryInfo.email)
-        const maskedPhone = maskValue(otpDeliveryInfo.phone)
-        const service = String(otpDeliveryInfo.phone ?? "").slice(0, 3) === "971" ? "Whatsapp" : "SMS"
-
-        switch (currentOtpMethod) {
-            case "auth": return t("Google Authenticator Code")
-            case "insta": return t("Enter the code sent to your Instagram Account")
-            case "wp": return t("Enter the code sent to your Whatsapp on {{phone}}", { phone: `\u200E${maskedPhone}\u200E` })
-            case "email":
-                return t(
-                    "Enter the code sent to {{email}} via Email",
-                    {
-                        email: `\u200E${maskedEmail}\u200E`
-                    }
-                );
-            default: return t("Enter the code sent to {{phone}} via {{service}}", { phone: `\u200E${maskedPhone}\u200E`, service })
-        }
-    };
     const resolvedCredential = getResolvedCredential();
     const isCredentialValid = isPhoneNumber.test(resolvedCredential) || isEmail.test(resolvedCredential);
     const availableMethods = methods.filter(
@@ -1249,15 +1192,12 @@ const Login = ({ country, setIsLoginForm, }) => {
                 <form onSubmit={verifyOTpHandler} className={styles.otp}>                
                     <div className={styles.right}>
                         <div className={`${styles.topSection} ${styles.otpTopSection}`}>
-                            <label>{t("Enter OTP")}</label>
-                            <p>{t('Please enter the one-time password (OTP) sent to your phone to access your account.')}</p>
+                            {currentOtpMethod !== "biometric" && <label>{t("Enter OTP")}</label>}
+                            <p>{t(currentOtpMethod === "biometric" ? "Verify identity using your created Passkey on this device" : 'Please enter the one-time password (OTP) sent to your phone to access your account.')}</p>
                         </div>
                         <div className={styles.top}>
                             {currentOtpMethod === "biometric" ? (
                                 <div className={styles.biometric_section}>
-                                    <h4 style={{ color: "#545454", fontSize: "1rem", fontWeight: 600 }}>
-                                        {t("Verify identity using your created Passkey on this device")}
-                                    </h4>
                                     {biometricLoading || biometricSuccessfull ? (
                                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem', flexDirection: "column" }}>
                                             <span style={{ fontWeight: 600 }}>{biometricSuccessfull ? t("Biometric verification successful, We will redirect you to the dashboard page in a while.") : t('Please wait while we verify your biometric...')}</span>
@@ -1268,7 +1208,6 @@ const Login = ({ country, setIsLoginForm, }) => {
                                     ) : (
                                         <button
                                             onClick={handleBiometricVerification}
-                                            // className={styles.otpMethodButton}
                                             type="button"
                                             style={{
                                                 display: "flex",
