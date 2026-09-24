@@ -49,7 +49,10 @@ const StepsDrawer = ({
 }) => {
   const { t } = useTranslation();
   const doneCount =
-    SIDEBAR_STEPS.findIndex((x) => x.stepName === currentStep) + 1;
+    SIDEBAR_STEPS.findIndex(
+      (x) =>
+        x.stepName === currentStep || x?.alsoActiveFor?.includes(currentStep),
+    ) + 1;
 
   return (
     <SwipeableDrawer
@@ -62,8 +65,8 @@ const StepsDrawer = ({
           borderTopRightRadius: "25px",
         },
       }}
-      onClose={toggleDrawer}
-      onOpen={toggleDrawer}
+      onClose={()=>toggleDrawer(false)}
+      onOpen={()=>toggleDrawer(true)}
     >
       <div className={styles.container}>
         <div className={styles.slideBtn} />

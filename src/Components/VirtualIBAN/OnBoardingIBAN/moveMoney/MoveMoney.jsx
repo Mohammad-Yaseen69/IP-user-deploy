@@ -60,8 +60,8 @@ const MoveMoney = () => {
     const handleClose = () => setShowSwiftPage(false);
     
     return (
-         <>
-            {showSwiftPage &&
+        <>
+            {(showSwiftPage && width <= 600) &&
                 <MobileHeader 
                     title={"SWIFT International"}
                     handleAction={handleClose}

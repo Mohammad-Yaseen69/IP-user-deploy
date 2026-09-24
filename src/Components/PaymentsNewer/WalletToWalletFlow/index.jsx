@@ -372,8 +372,13 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, show
     const sendOtp = async (codeType = "") => {
         reset()
         dataHandler("loading", true)
+        // First send (no method passed) always starts from the default method (authenticator if enabled),
+        // so a method picked in a previous OTP modal (e.g. sms) is not reused.
+        const isInitialSend = typeof codeType !== "string" || !codeType
         try {
-            const resolvedCodeType = codeType || data.codeType
+            const resolvedCodeType = isInitialSend
+                ? (userDetails?.tfa ? "authenticator" : userDetails?.email_verification ? "email" : userDetails?.whatsapp_verification ? "whatsapp" : "sms")
+                : codeType
             const payload = generatePayload(resolvedCodeType)
             const encrypted = encryptData(payload)
             const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/send-otp`, {
@@ -386,12 +391,9 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, show
             // console.log(dec?.otp_sent_on, "dec?.otp_sent_on ")
             if (dec?.otp_sent_on || dec?.available_methods) {
                 dataHandler("otpMethods", dec)
-                if (!data.showOtpModal) {
-                    dataHandler(
-                        "codeType",
-                        data.codeType || "sms"
-                    )
-                }
+            }
+            if (isInitialSend) {
+                dataHandler("codeType", dec?.otp_sent_on || resolvedCodeType)
             }
             dataHandler("showOtpModal", true)
             dataHandler("otp_token", dec?.token)
