@@ -212,18 +212,27 @@ const StatementsLetters = () => {
                         </div>
 
                         <div className={styles.ibanRow}>
-                            <span>{ibanNumber}</span>
-                            <button
-                                className={styles.copyBtnWhite}
-                                onClick={() => handleCopy(ibanNumber, true)}
-                                aria-label={ibanCopied ? t('Copied') : t('Copy IBAN')}
-                            >
-                                {ibanCopied ? (
-                                    <Check size={20} color='#32CD32' />
-                                ) : (
-                                    <Copy size={14} />
-                                )}
-                            </button>
+                            {width >= 480 ? (
+                                <>
+                                    <span>{ibanNumber}</span>
+                                    <button
+                                        className={styles.copyBtnWhite}
+                                        onClick={() => handleCopy(ibanNumber, true)}
+                                        aria-label={ibanCopied ? t('Copied') : t('Copy IBAN')}
+                                    >
+                                        {ibanCopied ? (
+                                            <Check size={20} color='#32CD32' />
+                                        ) : (
+                                            <Copy size={14} />
+                                        )}
+                                    </button>
+                                </>
+
+                            ) : (
+                                <span>{ibanNumber?.replace(/\s+/g, '').match(/.{1,4}/g)?.join(' ')}</span>
+                            )
+                            }
+
                         </div>
 
                         <div className={styles.innerBalanceBox}>
@@ -268,13 +277,28 @@ const StatementsLetters = () => {
                                         disabled={downloading || previewing}
                                     >
                                         {downloading ? (
-                                            <><Loader size={14} className={styles.spinIcon} /> {t("Generating...")}</>
+                                            <>
+                                                <Loader size={14} className={styles.spinIcon} /> {t("Generating...")}
+                                            </>
+                                        ) : width >= 480 ? (
+                                            <>
+                                                <Download size={14} /> {t("Download Confirmation Letter")}
+                                            </>
                                         ) : (
-                                            <><Download size={14} /> {t("Download Confirmation Letter")}</>
+                                            <>
+                                                <Download size={14} /> {t("PDF")}
+                                            </>
                                         )}
                                     </button>
                                     <button className={styles.shareBtn} onClick={handleShare}>
-                                        <Share2 size={14} /> {t("Share")}
+                                        {
+                                            width >= 480 ? (
+                                                <>
+                                                    <Share2 size={14} /> {t("Share")}  </>) : (
+
+                                                <Share2 size={14} />
+                                            )
+                                        }
                                     </button>
                                 </div>
                             </div>
@@ -307,14 +331,29 @@ const StatementsLetters = () => {
                                         onClick={() => handleOpenSwiftModal('download')}
                                         disabled={swiftProcessing}
                                     >
-                                        <Download size={14} /> {t("Download Confirmation Letter")}
+                                        {width >= 480 ? (
+                                            <>
+                                                <Download size={14} /> {t("Download Confirmation Letter")}
+                                            </>
+                                        ) : (
+                                            <>
+                                                <Download size={14} /> {t("PDF")}
+                                            </>
+                                        )}
                                     </button>
                                     <button
                                         className={styles.shareBtn}
                                         onClick={() => handleOpenSwiftModal('share')}
                                         disabled={swiftProcessing}
                                     >
-                                        <Share2 size={14} /> {t("Share")}
+                                        {
+                                            width >= 480 ? (
+                                                <>
+                                                    <Share2 size={14} /> {t("Share")}  </>) : (
+
+                                                <Share2 size={14} />
+                                            )
+                                        }
                                     </button>
                                 </div>
                             </div>

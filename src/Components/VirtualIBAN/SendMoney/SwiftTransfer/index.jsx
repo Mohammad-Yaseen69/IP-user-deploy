@@ -58,7 +58,7 @@ import useSendOtp from "../../../../hooks/GeneralUse/useSendOtp"
 import { useQueryClient } from "@tanstack/react-query"
 import { useVirtualIbanSwiftPayoutFee, useVirtualIbanSwiftPayoutDirect, useSyncVirtualIbanBalance, virtualIbanQueryKeys } from "../../../../hooks/useVirtualIban"
 import { handlePaymentApiError } from "../../../../utils/Functions/handlePaymentApiError"
-import OTPConfirmation from "../../../../Common/Component/OtpVerification"
+import OTPConfirmation from "../../../UserSettingsNew/OTPConfirmation"
 import jsPDF from "jspdf"
 import autoTable from "jspdf-autotable"
 import AddBeneficiary from "../../../AddBeneficiary"
@@ -820,7 +820,7 @@ const SwiftTransfer = forwardRef(({ isOpen = true, toggle, selectedIban, availab
     const liveBalance = syncedBalance?.balance ?? availableBalance ?? selectedIban?.balance ?? 0
     const currencyCode = selectedIban?.currency || "EUR"
     const sourceAvailableBalance = getSourceBalance(liveBalance, selectedIban)
-    const getDefaultAuthType = () => (userDetails?.tfa ? "authenticator" : userDetails?.email_verification ? "email" : userDetails?.whatsapp_verification ? "whatsapp" : "sms")
+    const getDefaultAuthType = () => (userDetails?.tfa ? "authenticator" : "sms")
 
     const [currentStep, setCurrentStep] = useState(STEPS.AMOUNT)
     const [amount, setAmount] = useState("")
@@ -836,8 +836,6 @@ const SwiftTransfer = forwardRef(({ isOpen = true, toggle, selectedIban, availab
     const [confirmedDetails, setConfirmedDetails] = useState(false)
     const [confirmedParentCompany, setConfirmedParentCompany] = useState(false)
     const [authType, setAuthType] = useState(getDefaultAuthType)
-    const [otpChannel, setOtpChannel] = useState(getDefaultAuthType)
-    const [otpMethods, setOtpMethods] = useState(null)
     const [feeDetails, setFeeDetails] = useState(null)
     const [quoteToken, setQuoteToken] = useState("")
     const [quoteExpiresAt, setQuoteExpiresAt] = useState(null)
@@ -851,13 +849,8 @@ const SwiftTransfer = forwardRef(({ isOpen = true, toggle, selectedIban, availab
     const payoutDirect = useVirtualIbanSwiftPayoutDirect()
 
     const { sendOtp, isSendingOtp } = useSendOtp({
-        onSuccess: (token, dec) => {
+        onSuccess: (token) => {
             setOtpToken(token)
-            setOtpMethods(dec)
-            if (currentStep !== STEPS.OTP && dec?.otp_sent_on) {
-                setAuthType(dec.otp_sent_on)
-                setOtpChannel(dec.otp_sent_on)
-            }
             setCurrentStep(STEPS.OTP)
         },
         onError: (err) => {
@@ -902,9 +895,7 @@ const SwiftTransfer = forwardRef(({ isOpen = true, toggle, selectedIban, availab
 
     useEffect(() => {
         if (userDetails?.tfa) setAuthType("authenticator")
-        else if (userDetails?.email_verification) setAuthType("email")
-        else if (userDetails?.whatsapp_verification) setAuthType("whatsapp")
-    }, [userDetails?.tfa, userDetails?.email_verification, userDetails?.whatsapp_verification])
+    }, [userDetails?.tfa])
 
     useEffect(() => {
         if (userDetails?._id) getUserBeneficiaries()
@@ -972,8 +963,6 @@ const SwiftTransfer = forwardRef(({ isOpen = true, toggle, selectedIban, availab
         setConfirmedDetails(false)
         setConfirmedParentCompany(false)
         setAuthType(getDefaultAuthType())
-        setOtpChannel(getDefaultAuthType())
-        setOtpMethods(null)
         setFeeDetails(null)
         setQuoteToken("")
         setQuoteExpiresAt(null)
@@ -1029,11 +1018,10 @@ const SwiftTransfer = forwardRef(({ isOpen = true, toggle, selectedIban, availab
     }
 
     const handleSendOtp = async (otpCodeType) => {
-        const nextChannel = otpCodeType || otpChannel
-        setOtpChannel(nextChannel)
-        setAuthType(nextChannel)
+        const nextAuthType = otpCodeType || authType
+        setAuthType(nextAuthType)
 
-        await sendOtp(buildPayoutPayload(), nextChannel)
+        await sendOtp(buildPayoutPayload(), nextAuthType)
 
     }
 
@@ -1202,7 +1190,6 @@ const SwiftTransfer = forwardRef(({ isOpen = true, toggle, selectedIban, availab
             case STEPS.OTP:
                 return (
                     <OTPConfirmation
-                        variant="card"
                         fullHeight
                         setter={setCurrentStep}
                         setterValue={STEPS.DONE}
@@ -1212,7 +1199,6 @@ const SwiftTransfer = forwardRef(({ isOpen = true, toggle, selectedIban, availab
                         resendHandler={handleSendOtp}
                         authType={authType}
                         setAuthType={setAuthType}
-                        methods={otpMethods}
                     />
                 )
             case STEPS.DONE:
@@ -1297,9 +1283,9 @@ const SwiftTransfer = forwardRef(({ isOpen = true, toggle, selectedIban, availab
                         </div>
                     </div>
                 )}
-            </section>           
+            </section>
             {(isMobile && showFooter) &&
-                <MobileFooter 
+                <MobileFooter
                     label={isProcessing ? t("Processing...") : getContinueLabel(currentStep, t)}
                     handleBack={handleBack}
                     handleAction={handleContinue}
@@ -1313,14 +1299,14 @@ const SwiftTransfer = forwardRef(({ isOpen = true, toggle, selectedIban, availab
         <>
             {isPage ? (
                 <div className={styles.pageContainer}>
-                {isMobile && <MobileStepProgress 
-                                currentStep={currentStep} 
-                                isSidebarStepActive={isSidebarStepActive}
-                                isSidebarStepCompleted={isSidebarStepCompleted}
-                                SIDEBAR_STEPS={SIDEBAR_STEPS}
-                                getSidebarStepName={getSidebarStepName}
-                                handleClick={()=>setShowDrawer(true)}
-                            />}
+                    {isMobile && <MobileStepProgress
+                        currentStep={currentStep}
+                        isSidebarStepActive={isSidebarStepActive}
+                        isSidebarStepCompleted={isSidebarStepCompleted}
+                        SIDEBAR_STEPS={SIDEBAR_STEPS}
+                        getSidebarStepName={getSidebarStepName}
+                        handleClick={() => setShowDrawer(true)}
+                    />}
                     {content}
                 </div>
             ) : (
@@ -1347,35 +1333,36 @@ const SwiftTransfer = forwardRef(({ isOpen = true, toggle, selectedIban, availab
                 />
             ) : (
                 <>
-                <AddBeneficiaryModal
-                    open={isAddModalOpen}
-                    handleClose={() => setIsAddModalOpen(false)}
-                    onSaveSuccess={handleBeneficiarySaved}
-                />
+                    <AddBeneficiaryModal
+                        open={isAddModalOpen}
+                        handleClose={() => setIsAddModalOpen(false)}
+                        onSaveSuccess={handleBeneficiarySaved}
+                    />
 
-                <DynamicChannelModal
-                    open={isChannelModalOpen}
-                    handleClose={() => {
-                        setIsChannelModalOpen(false);
-                        setChannelModalBeneficiary(null);
-                    }}
-                    beneficiaryData={channelModalBeneficiary}
-                    lockChannelType="bank"
-                    onSaveSuccess={handleChannelSaved}
-                />
+                    <DynamicChannelModal
+                        open={isChannelModalOpen}
+                        handleClose={() => {
+                            setIsChannelModalOpen(false);
+                            setChannelModalBeneficiary(null);
+                        }}
+                        beneficiaryData={channelModalBeneficiary}
+                        lockChannelType="bank"
+                        onSaveSuccess={handleChannelSaved}
+                    />
                 </>
             )}
-            
-              <StepsDrawer
+
+            <StepsDrawer
                 open={showDrawer}
-                currentStep={currentStep} 
+                currentStep={currentStep}
                 isSidebarStepActive={isSidebarStepActive}
                 isSidebarStepCompleted={isSidebarStepCompleted}
                 SIDEBAR_STEPS={SIDEBAR_STEPS}
-                toggleDrawer={(val)=>setShowDrawer(val)}
+                toggleDrawer={(val) => setShowDrawer(val)}
             />
         </>
     )
 })
 
 export default SwiftTransfer
+SwiftTransfer.displayName = 'SwiftTransfer';
