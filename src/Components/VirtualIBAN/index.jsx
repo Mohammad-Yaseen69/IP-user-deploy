@@ -27,6 +27,8 @@ import OnboardingIBAN from './OnBoardingIBAN'
 import Compliance from './Compliance'
 import { Bell, ChevronLeft } from 'react-feather'
 import { Avatar, Badge } from '@mui/material'
+import Notifications from '../Notifications'
+import LanguagePicker from '../LanguagePicker'
 
 const VirtualBank = () => {
     const {
@@ -170,7 +172,7 @@ const VirtualBank = () => {
             {((showGetIBAN || (ibans.length === 0 && canCreateIban)) && userDetails?.account_type === "business") &&
             <div className={styles.mobileTop}>
                 <div className={styles.headerTitle}>
-                    <ChevronLeft size={22} onClick={() => onboardingRef.current?.back()} />
+                    {onboardingStep !== 'landing' && <ChevronLeft size={22} onClick={() => onboardingRef.current?.back()} />}
                     <h1>
                         {onboardingStep === 'pricing'
                         ? t("Your pricing")
@@ -181,23 +183,10 @@ const VirtualBank = () => {
                         : t("My virtual bank")}
                     </h1>
                 </div>
-                {onboardingStep === 'landing' ?
-                    <div className={styles.mobileTopRight}>
-                        <div className={styles.notificationContainer}>
-                        <Badge badgeContent='3' color="secondary" classes={{ anchorOriginTopRightRectangular: styles.notificationBadge }}>
-                            <Bell size={20} />
-                        </Badge>
-                        </div>
-                        <div className={styles.notificationContainer}>
-                        <Avatar alt="User Avatar" src={userDetails?.profile_image} sx={{ width: 28, height: 28 }} />
-                        </div>
-                    </div>
-                    :
-                    (onboardingStep !== 'pricing' && onboardingStep !== 'ActivateAccount') &&
-                    <button disabled className={styles.saveButton}>
-                        {t("Save & exit")}
-                    </button>
-                }
+                <div className={styles.mobileTopRight}>
+                    <Notifications hideShadow={true} />
+                    <LanguagePicker hideShadow={true} />
+                </div>
             </div>
             }
             {
