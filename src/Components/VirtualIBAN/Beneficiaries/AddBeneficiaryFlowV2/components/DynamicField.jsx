@@ -6,9 +6,25 @@ import CitiesDropDown from '../../../../CitiesDropDown';
 import PhoneInput from '../../../../PhoneInput';
 import styles from '../AddBeneficiaryFlowV2.module.css';
 import { getFieldDef } from '../vendorFields';
+import { checkIdentifier, isCheckedIdentifier, parseIban } from '../../../../../utils/Functions/bankIdentifiers';
 
 const STATE_NAME_FIELD = 'state_name';
 const PROVIDER_NAME_FIELD = 'mobile_wallet_name';
+const ACCOUNT_NUMBER_FIELDS = ['bank_account_number', 'account_number', 'accountNumber'];
+
+/* A valid IBAN carries the account number inside it, so an empty account field beside it
+   is filled in rather than asked for twice. Anything already typed is left alone. */
+const accountNumberPatch = (kind, value, siblingNames, values) => {
+    if (kind !== 'iban') return {};
+
+    const parsed = parseIban(value);
+    if (!parsed?.accountNumber) return {};
+
+    const target = ACCOUNT_NUMBER_FIELDS.find((name) => siblingNames.includes(name));
+    if (!target || String(values[target] || '').trim()) return {};
+
+    return { [target]: parsed.accountNumber };
+};
 
 const phoneInputStyles = {
     boxShadow: 'var(--abf-shadow-input)',
@@ -92,12 +108,36 @@ const DynamicField = ({
     hasStateField = false,
     payers = [],
     payersLoading = false,
+    siblingNames = [],
 }) => {
     const def = getFieldDef(name, defs);
 
     const id = `abf-${name}`;
     const required = def.required !== false;
     const label = required ? `${def.label} *` : def.label;
+
+    if (isCheckedIdentifier(def.type)) {
+        const check = checkIdentifier(def.type, value);
+        const derived = def.type === 'iban' ? parseIban(value) : null;
+
+        return (
+            <TextField
+                flex={flex}
+                id={id}
+                label={label}
+                value={value || ''}
+                onChange={(next) => {
+                    const cleaned = sanitise(next, def);
+                    onChange(cleaned, accountNumberPatch(def.type, cleaned, siblingNames, values));
+                }}
+                placeholder={def.placeholder}
+                disabled={disabled}
+                error={error || (check.state === 'invalid' ? check.message : undefined)}
+                hint={check.state === 'valid' ? check.message : def.hint}
+                trailingIcon={derived && !error ? 'check' : undefined}
+            />
+        );
+    }
 
     if (def.type === 'payer') {
         return (
