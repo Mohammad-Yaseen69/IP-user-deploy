@@ -54,7 +54,7 @@ const AccountItem = ({ data }) => {
 
     const sendOtp = async (method) => {
         setSaving(true)
-        const type = method || codeType
+        const type = typeof method === "string" ? method : codeType
         const payload = {
             data: {
                 type: data.name.toLowerCase().includes("whatsapp") ? "unlink-whatsapp" : "unlink-insta"

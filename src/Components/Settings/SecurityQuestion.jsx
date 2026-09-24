@@ -57,7 +57,7 @@ const SecurityQuestions = () => {
                 question3: selectedQuesThree,
                 answer3: answerThree?.trim() || "",
             },
-            type: method || codeType
+            type: typeof method === "string" ? method : codeType
         }
 
         if (userDetails?.user?.question1 || userDetails?.user?.question2 || userDetails?.user?.question3) {
@@ -97,7 +97,7 @@ const SecurityQuestions = () => {
                     }
                 })
                 .catch(err => {
-                    const decrypted = decryptData(err.response.data.data);
+                    const decrypted = err?.response?.data?.data ? decryptData(err.response.data.data) : null;
                     toast.error(decrypted?.message ?? "Something went wrong while adding questions!")
                 }).finally(() => setSaving(false))
         }
@@ -163,7 +163,7 @@ const SecurityQuestions = () => {
     useEffect(() => {
         setIsEditable(editmode)
     }, [editmode])
-
+// console.log(userDetails,"userDetails?.user?.question1")
     return (
         <Form className="card" id='security'>
             <CardHeader className={`pb-0`}>
@@ -317,7 +317,7 @@ const SecurityQuestions = () => {
                             outline: "none",
                             borderRadius: "10px"
                         }}
-                            onClick={sendOtp}
+                            onClick={() => sendOtp()}
                             disabled={(!selectedQuesOne || !answerOne) || (!answerTwo || !selectedQuesTwo) || (!selectedQuesThree || !answerThree) || !isValidAnswer(answerOne) || !isValidAnswer(answerTwo) || !isValidAnswer(answerThree) || saving}
                             type='button'
                         >{t("Save")}</Button>
