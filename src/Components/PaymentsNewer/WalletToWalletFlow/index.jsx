@@ -183,13 +183,14 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, show
             if (data?.wallet?._id === data?.currency?._id) return;
             // dataHandler("currency", data.wallet)
         } else {
-            if (userWallets?.length > 0) {
+            if (userWallets?.length > 0 && !data.currency?._id) {
                 const def = userWallets?.[0]?.wallet_type === "insta" && !userWallets?.[0]?.blocked && !userWallets?.[0]?.admin_blocked && userWallets?.[0]?.status?.toLowerCase() === "active"
                     ?
                     userWallets?.[0]
                     :
                     userWallets?.find(item => item?.default)
                 const wallet = { ...def, ...currencies.find(item => item.currency_code === def?.currency?.code) }
+
                 dataHandler("currency", wallet)
                 dataHandler("currency_wallet", wallet)
             }

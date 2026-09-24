@@ -1,0 +1,56 @@
+import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { useContext } from "react"
+import { UserContext } from "../../Context/UserContext"
+import { apiWrapper } from "../../utils/Functions/apiWrapper"
+
+export const cryptoPayoutQueryKeys = {
+    all: ["crypto-payout"],
+    validateAddress: (payload) => [...cryptoPayoutQueryKeys.all, "validate-address", payload],
+}
+
+export const useCryptoPayoutFee = () =>
+    useMutation({
+        mutationFn: (payload) =>
+            apiWrapper({
+                endpoint: "/api/crypto/payout/fee",
+                method: "POST",
+                payload,
+                isEncrypted: true,
+                isDecrypted: true,
+            }),
+    })
+
+export const useValidateCryptoAddress = () =>
+    useMutation({
+        mutationFn: (payload) =>
+            apiWrapper({
+                endpoint: "/api/crypto/payout/validate-address",
+                method: "POST",
+                payload,
+                isEncrypted: true,
+                isDecrypted: true,
+            }),
+    })
+
+export const useCryptoPayout = () => {
+    const queryClient = useQueryClient()
+    const { getUserWallets } = useContext(UserContext)
+
+    return useMutation({
+        mutationFn: ({ idempotencyKey, ...payload }) =>
+            apiWrapper({
+                endpoint: "/api/crypto/payout",
+                method: "POST",
+                payload,
+                isEncrypted: true,
+                isDecrypted: true,
+                idempotencyKey,
+            }),
+        onSuccess: () => {
+            getUserWallets?.(true)
+            queryClient.invalidateQueries({ queryKey: cryptoPayoutQueryKeys.all })
+            /* The hub's portfolio total is read separately from the wallet list. */
+            queryClient.invalidateQueries({ queryKey: ["crypto", "portfolio"] })
+        },
+    })
+}

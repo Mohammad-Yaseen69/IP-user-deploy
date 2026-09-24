@@ -7,6 +7,8 @@
         .table {
             width: 100%;
             min-height: 100vh;
+            border-collapse: separate;
+            border-spacing: 0;
         }
 
         .tr {
@@ -33,17 +35,22 @@
             font-weight: 500;
             line-height: normal;
             letter-spacing: -0.42px;
+            width: 100%;
+            text-align: center;
+            white-space: nowrap;
         }
 
         .td {
             color: var(--Light-Mode-Text, #151514);
             font-family: Inter;
+            width: 100%;
             font-size: 14px;
             font-style: normal;
             font-weight: 500;
             line-height: 150%;
             /* 21px */
             letter-spacing: -0.42px;
+            white-space: nowrap;
         }
 
         .serial {
@@ -187,6 +194,12 @@
         @media (max-width: 700px) {
             .table {
                 min-height: 600px;
+                display: block;
+            }
+
+            .table thead,
+            .table tbody {
+                display: block;
             }
 
             .dataRow {

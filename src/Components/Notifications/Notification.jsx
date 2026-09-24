@@ -46,7 +46,7 @@ function calculateDateDifference(inputDate) {
     return `${differenceInMonths}m ago`;
 }
 
-const Notification = ({ notification, currentUser }) => {
+const Notification = ({ notification, currentUser, onRead }) => {
     const [status, setStatus] = useState(notification?.status)
     const [link, setLink] = useState("")
     const { userDetails } = useContext(UserContext)
@@ -99,6 +99,12 @@ const Notification = ({ notification, currentUser }) => {
                 }
             }
         }
+        if (notification.type === "virtual_iban") {
+            setLink("/virtual-IBAN")
+        }
+        if (notification.type === "currency") {
+            setLink("/wallets")
+        }
         if (notification.type === "referral_signup") {
             setLink("/referrals")
         }
@@ -112,6 +118,9 @@ const Notification = ({ notification, currentUser }) => {
             setStatus(data?.notification?.status)
         } catch (error) {
             // console.log(decryptData(error?.response?.data?.data))
+        }
+        if(onRead){
+           onRead();
         }
     }
 

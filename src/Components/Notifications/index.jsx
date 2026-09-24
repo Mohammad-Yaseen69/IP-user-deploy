@@ -35,18 +35,18 @@ const Notifications = () => {
     const { userDetails, authHeader } = useContext(UserContext);
     const [notifications, setNotifications] = useState([]);
 
+    const getNotifications = async () => {
+        try {
+            const response = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/notification/get-notifications/${userDetails?._id}`, {
+                headers: authHeader
+            });
+
+            const decrypted = await decryptData(response?.data?.data);
+            setNotifications(decrypted?.notification || []);
+        } catch (error) {}
+    };
+
     useEffect(() => {
-        const getNotifications = async () => {
-            try {
-                const response = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/notification/get-notifications/${userDetails?._id}`, {
-                    headers: authHeader
-                });
-
-                const decrypted = await decryptData(response?.data?.data);
-                setNotifications(decrypted?.notification || []);
-            } catch (error) {}
-        };
-
         if (userDetails) {
             getNotifications();
         }
@@ -129,6 +129,7 @@ const Notifications = () => {
                                             notification={item}
                                             currentUser={item?.fromDetails?._id === userDetails?._id ? item?.toDetails : item?.fromDetails}
                                             key={item?._id}
+                                            onRead={getNotifications}
                                         />
                                     ))
                                 :

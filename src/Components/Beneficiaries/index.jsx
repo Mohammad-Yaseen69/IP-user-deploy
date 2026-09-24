@@ -4,14 +4,17 @@ import TopRight from '../topRight'
 import { useTranslation } from 'react-i18next'
 import { Search } from 'react-feather'
 import { Button, Input } from 'reactstrap'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import BeneficiaryCard from './BeneficiaryCard'
 import { UserContext } from '../../Context/UserContext'
 import add_ben from "./add_ben.svg"
 import { usePermission } from "../../hooks/GeneralUse/usePermission";
+import AddBeneficiaryFlowV2 from "../VirtualIBAN/Beneficiaries/AddBeneficiaryFlowV2";
+import { USE_NEW_BENEFICIARY_FLOW } from "../VirtualIBAN/Beneficiaries/AddBeneficiaryFlowV2/constants";
 
 const Beneficiaries = () => {
     const { t } = useTranslation()
+    const navigate = useNavigate()
 
     const { beneficiaries, verifyToken, getUserBeneficiaries, userDetails } = useContext(UserContext)
     const [filtered, setFiltered] = useState(beneficiaries)
@@ -21,6 +24,22 @@ const Beneficiaries = () => {
         }
     }, [userDetails])
     const can = usePermission()
+    const [isAddOpen, setIsAddOpen] = useState(false)
+    const [activeBeneficiary, setActiveBeneficiary] = useState(null)
+    const [beneficiaryMode, setBeneficiaryMode] = useState("edit")
+
+    const openBeneficiary = (beneficiary, mode) => {
+        verifyToken()
+
+        if (!USE_NEW_BENEFICIARY_FLOW) {
+            const businessPath = beneficiary?.beneficiary_type === "business" ? "/business" : ""
+            navigate(`/beneficiaries/edit${businessPath}?user_id=${beneficiary?._id}&${mode}=true`)
+            return
+        }
+
+        setActiveBeneficiary(beneficiary)
+        setBeneficiaryMode(mode)
+    }
 
     useEffect(() => setFiltered(beneficiaries), [beneficiaries]);
 
@@ -59,11 +78,20 @@ const Beneficiaries = () => {
                         <Input type='search' placeholder={t('Search for Beneficiaries')} style={{ padding: ".5rem 1rem" }} onChange={filterBenef}
                         />
                     </div>
-                    {can("beneficiaries.add") && <Button color='transparent' className={styles.btn} style={{ padding: ".5rem 1rem" }} onClick={verifyToken}>
-                        <Link to={"/beneficiaries/add"}>
-                            {t("Add Beneficiary")}
-                        </Link>
-                    </Button>}
+                    {can("beneficiaries.add") && (
+                        USE_NEW_BENEFICIARY_FLOW
+                            ? <Button color='transparent' className={styles.btn} style={{ padding: ".5rem 1rem" }} onClick={() => {
+                                verifyToken()
+                                setIsAddOpen(true)
+                            }}>
+                                {t("Add Beneficiary")}
+                            </Button>
+                            : <Button color='transparent' className={styles.btn} style={{ padding: ".5rem 1rem" }} onClick={verifyToken}>
+                                <Link to={"/beneficiaries/add"}>
+                                    {t("Add Beneficiary")}
+                                </Link>
+                            </Button>
+                    )}
                     {/* <Button color='transparent' className={styles.btn} style={{ padding: ".5rem 1rem" }} onClick={() => setManagable(true)}>{t("Manage Beneficiaries")}</Button> */}
                 </div>
 
@@ -84,7 +112,7 @@ const Beneficiaries = () => {
                         filtered.length > 0
                         ?
                         filtered.map(item => (
-                            <BeneficiaryCard key={item._id} user={item} />
+                            <BeneficiaryCard key={item._id} user={item} onEdit={(ben) => openBeneficiary(ben, "edit")} onView={(ben) => openBeneficiary(ben, "view")} />
                         ))
                         :
                         t("No Beneficiaries")
@@ -103,18 +131,27 @@ const Beneficiaries = () => {
                             <Search />
                             <Input type='search' placeholder={t('Search for Beneficiaries')} style={{ padding: ".5rem 1rem" }} onChange={filterBenef} />
                         </div>
-                        <Link to={"/beneficiaries/add"}>
-                            <img src={add_ben}
-                                loading="lazy"
-                            />
-                        </Link>
+                        {USE_NEW_BENEFICIARY_FLOW
+                            ? <button
+                                type="button"
+                                style={{ all: 'unset', cursor: 'pointer', display: 'inline-flex' }}
+                                onClick={() => setIsAddOpen(true)}
+                            >
+                                <img src={add_ben} loading="lazy" alt={t("Add Beneficiary")} />
+                            </button>
+                            : <Link to={"/beneficiaries/add"}>
+                                <img src={add_ben}
+                                    loading="lazy"
+                                />
+                            </Link>
+                        }
                     </div>
                     <div className={styles.table_body}>
                         {
                             filtered.length > 0
                                 ?
                                 filtered.map(item => (
-                                    <BeneficiaryCard key={item._id} user={item} />
+                                    <BeneficiaryCard key={item._id} user={item} onEdit={(ben) => openBeneficiary(ben, "edit")} onView={(ben) => openBeneficiary(ben, "view")} />
                                 ))
                                 :
                                 t("No Beneficiaries")
@@ -122,6 +159,24 @@ const Beneficiaries = () => {
                     </div>
                 </div>
             </div>
+
+            {USE_NEW_BENEFICIARY_FLOW && (
+                <AddBeneficiaryFlowV2
+                    open={isAddOpen}
+                    handleClose={() => setIsAddOpen(false)}
+                    onSaveSuccess={() => getUserBeneficiaries()}
+                />
+            )}
+
+            {USE_NEW_BENEFICIARY_FLOW && activeBeneficiary && (
+                <AddBeneficiaryFlowV2
+                    open={!!activeBeneficiary}
+                    mode={beneficiaryMode}
+                    existingBeneficiary={activeBeneficiary}
+                    handleClose={() => setActiveBeneficiary(null)}
+                    onSaveSuccess={() => getUserBeneficiaries()}
+                />
+            )}
         </>
 
     )

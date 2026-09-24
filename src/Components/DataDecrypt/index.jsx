@@ -159,11 +159,11 @@ const DataDecrypt = () => {
 
     const navigate = useNavigate()
 
-    const [hasAccess, setHasAccess] = useState(() => sessionStorage.getItem(ACCESS_STORAGE_KEY) === 'true')
-    const [modalOpen, setModalOpen] = useState(() => sessionStorage.getItem(ACCESS_STORAGE_KEY) !== 'true')
+    const [hasAccess, setHasAccess] = useState(() => localStorage.getItem(ACCESS_STORAGE_KEY) === 'true')
+    const [modalOpen, setModalOpen] = useState(() => localStorage.getItem(ACCESS_STORAGE_KEY) !== 'true')
 
     const handleAccessGranted = () => {
-        sessionStorage.setItem(ACCESS_STORAGE_KEY, 'true')
+        localStorage.setItem(ACCESS_STORAGE_KEY, 'true')
         setHasAccess(true)
         setModalOpen(false)
     }

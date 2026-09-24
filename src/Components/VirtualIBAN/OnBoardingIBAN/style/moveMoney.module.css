@@ -336,3 +336,15 @@
     background: rgba(255, 255, 255, 0.2);
     color: #FFF;
 }
+
+@media (max-width: 600px) {
+    .container {
+        margin: 0;
+        padding: 0;
+        min-height: auto;
+    }
+
+    .mainContent {
+        padding: 0;
+    }
+}

@@ -15,7 +15,12 @@ import { LimitsErrorMessage } from "../PaymentsNewer/OTPConfirmation";
 import { useIdempotency } from "../../hooks/Payments/useIdempotency";
 import { formatCurrency } from "../../Helper/AmountFormat";
 
-const ConversionModal = ({ isOpen, toggleModal, amount, exchangeAmount, currency, exchangeCurrency, exchangePrice, setEnteredCurrency, setResultCurrency, setUserCurrency, setExchangedCurrency, exchangeFee, fxDet }) => {
+const formatTimeLeft = (seconds) => {
+    const safe = Math.max(0, seconds)
+    return `${Math.floor(safe / 60)}:${String(safe % 60).padStart(2, "0")}`
+}
+
+const ConversionModal = ({ isOpen, toggleModal, amount, exchangeAmount, currency, exchangeCurrency, exchangePrice, setEnteredCurrency, setResultCurrency, setUserCurrency, setExchangedCurrency, exchangeFee, fxDet, senderWallet = null, receiverWallet = null, quoteExpiresAt = null, isQuoteExpired = false, onRefreshQuote = () => { }, isRefreshing = false, onSuccess = () => { } }) => {
     const { setIsExtended } = useContext(InactivityContext)
     const { t } = useTranslation()
     const { userWallets, authHeader, getUserWallets } = useContext(UserContext)
@@ -27,14 +32,32 @@ const ConversionModal = ({ isOpen, toggleModal, amount, exchangeAmount, currency
     const chevRef = useRef(null)
     const [step, setStep] = useState(1)
 
+    const [secondsLeft, setSecondsLeft] = useState(0)
+    const quoteUnavailable = isQuoteExpired || !fxDet?.exchange_rate
+
     useEffect(() => {
         if (step === 2) {
             setIsExtended(true)
         }
     }, [step])
 
-    const currentWallet = userWallets.filter(item => item.currency.code === currency)[0]
-    const exchangedWallet = userWallets.filter(item => item.currency.code === exchangeCurrency)[0]
+    useEffect(() => {
+        if (!quoteExpiresAt) return undefined
+
+        const tick = () => setSecondsLeft(Math.max(0, Math.round((quoteExpiresAt - Date.now()) / 1000)))
+        tick()
+        const timer = setInterval(tick, 1000)
+        return () => clearInterval(timer)
+    }, [quoteExpiresAt])
+
+    useEffect(() => {
+        if (quoteUnavailable) {
+            setComplete(false)
+        }
+    }, [quoteUnavailable])
+
+    const currentWallet = senderWallet || userWallets.filter(item => item.currency.code === currency)[0]
+    const exchangedWallet = receiverWallet || userWallets.filter(item => item.currency.code === exchangeCurrency)[0]
 
     const numberOfFields = 6;
     const [otpValues, setOTPValues] = useState(Array(numberOfFields).fill(''));
@@ -171,35 +194,36 @@ const ConversionModal = ({ isOpen, toggleModal, amount, exchangeAmount, currency
             setError(t("Wallet not found. Please try again."))
             return
         }
+        if (quoteUnavailable) {
+            setComplete(false)
+            return
+        }
         if (saving) return
 
         setSaving(true)
-        if (+currentWallet.balance.available <= +amount) {
+        if (+currentWallet.balance.available < +amount) {
             setError(t("Insufficient Balance"))
             setSaving(false)
             return
         }
 
-        if (+currentWallet.balance.available > +amount) {
+        if (+currentWallet.balance.available >= +amount) {
+            const isCryptoConversion = currentWallet?.wallet_type === "crypto" || exchangedWallet?.wallet_type === "crypto"
+
+            if (isCryptoConversion && !fxDet?.token) {
+                setError(t("The quoted rate has expired, please start again."))
+                setSaving(false)
+                return
+            }
+
             const data = {
                 sender_wallet_id: currentWallet._id,
                 receiver_wallet_id: exchangedWallet._id,
                 amount: +amount
             }
 
-            const crypto_data = {
-                token: fxDet.token,
-                from_wallet_id: currentWallet?.wallet_id,
-                to_wallet_id: exchangedWallet?.wallet_id,
-                amount: +amount,
-                purpose: "FAMILY_SUPPORT",
-                description: "",
-                type: "crypto_to_fiat",
-                is_conversion: true
-            }
-
-            const encrpted = encryptData(currentWallet?.wallet_type === "crypto" ? crypto_data : data)
-            axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/${currentWallet?.wallet_type === "crypto" ? "crypto" : "wallet/insta-wallet-conversion"}`, { data: encrpted }, {
+            const encrpted = encryptData(isCryptoConversion ? { token: fxDet?.token, ...data } : data)
+            axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/insta-wallet-conversion${isCryptoConversion ? "/transfer" : ""}`, { data: encrpted }, {
                 headers: {
                     ...authHeader,
                     "Idempotency-Key": getKey()
@@ -210,6 +234,7 @@ const ConversionModal = ({ isOpen, toggleModal, amount, exchangeAmount, currency
                     console.log(decrypted)
                     getUserWallets()
                     setStep(2)
+                    onSuccess(decrypted)
                 })
                 .catch(err => {
                     const decrypted = decryptData(err.response.data.data)
@@ -294,8 +319,46 @@ const ConversionModal = ({ isOpen, toggleModal, amount, exchangeAmount, currency
                                 <p style={{ whiteSpace: "nowrap" }}>{Number(fxDet?.total)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} {currency}</p>
                             </div>
                         </div>
+                        {
+                            !error && !quoteUnavailable && quoteExpiresAt
+                            &&
+                            <p style={{ textAlign: "center", fontSize: "13px", fontWeight: 600, color: "#6e7687", margin: "1rem 0 0" }}>
+                                {t("This rate expires in")} <span style={{ color: "#5926f0", fontWeight: 800 }}>{formatTimeLeft(secondsLeft)}</span>
+                            </p>
+                        }
                         {error ?
                             <p style={{ color: "red", fontWeight: 600, fontSize: "14px", textAlign: "center", marginBottom: "0px", marginTop: "20px" }}> {error} </p> :
+                            quoteUnavailable ?
+                                <div style={{
+                                    marginTop: "2rem",
+                                    padding: "1rem",
+                                    borderRadius: "16px",
+                                    border: "1px solid #f3c2bd",
+                                    background: "#fef3f2",
+                                    textAlign: "center"
+                                }}>
+                                    <p style={{ color: "#b42318", fontWeight: 600, fontSize: "14px", marginBottom: "12px" }}>
+                                        {t("This rate has expired. Refresh to get the current rate.")}
+                                    </p>
+                                    <button
+                                        type="button"
+                                        onClick={onRefreshQuote}
+                                        disabled={isRefreshing}
+                                        style={{
+                                            border: "none",
+                                            outline: "none",
+                                            borderRadius: "8px",
+                                            padding: ".6rem 1.4rem",
+                                            fontWeight: 600,
+                                            color: "white",
+                                            cursor: isRefreshing ? "not-allowed" : "pointer",
+                                            opacity: isRefreshing ? .7 : 1,
+                                            background: "linear-gradient(to left, #E64067 0%, #5926F0 55.65%, #4828A0 100%)"
+                                        }}
+                                    >
+                                        {isRefreshing ? t("Fetching Rates...") : t("Refresh Rate")}
+                                    </button>
+                                </div> :
                             <div ref={divRef}
                                 style={{
                                     textAlign: "center",
