@@ -66,3 +66,24 @@
 .dropdown_item span {
     font-weight: 700;
 }
+
+@media screen and (max-width: 600px) {
+    .selected img,
+    .dropdown_item img {
+        width: 26px;
+        height: 19px;
+        border-radius: 4px;
+        box-shadow: 0px 0px 0px 1px #1412201A inset;
+    }
+
+    .selected span {
+        font-weight: 500;
+        font-size: 12px;
+        white-space: nowrap;
+    }
+
+    .dropdown {
+        top: 43px;
+        padding: 3px;
+    }
+}

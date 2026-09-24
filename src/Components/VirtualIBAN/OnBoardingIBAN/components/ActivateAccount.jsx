@@ -13,6 +13,8 @@ import styles from "../style/ActivateAccount.module.css";
 import { UserContext } from "../../../../Context/UserContext";
 import { decryptData } from "../../../../Helper/EssentilaMethods/Decryption";
 import { encryptData } from "../../../../Helper/EssentilaMethods/Encryption";
+import { useMediaQuery } from "@mui/material";
+import { BankIcon, CryptoIcon, OpenBanking } from "./SvgIcons";
 
 const paymentMethods = [
   {
@@ -20,12 +22,14 @@ const paymentMethods = [
     title: "Wallet",
     subtitle: "Instapay Wallet",
     active: true,
+    Icon: OpenBanking
   },
   {
     id: "bank",
     title: "Bank transfer",
     subtitle: "SEPA | SWIFT",
     active: false,
+    Icon: BankIcon
   },
   {
     id: "card",
@@ -38,6 +42,7 @@ const paymentMethods = [
     title: "Crypto",
     subtitle: "USDC / USDT",
     active: false,
+    Icon: CryptoIcon
   },
 ];
 
@@ -53,6 +58,7 @@ const ActivateAccount = ({
 }) => {
   const { userWallets, getUserWallets, authHeader } = useContext(UserContext);
   const [loadingRates, setLoadingRates] = useState(false);
+  const isMobile = useMediaQuery('(max-width:600px)');
 
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
@@ -144,10 +150,14 @@ const ActivateAccount = ({
         <div className={styles.mainArea}>
           <div className={styles.header}>
             <div className={styles.headerTitle}>
+             {!isMobile &&
+             <>
               <div className={styles.cont}>
                 <Magicsvg />
               </div>
-              <h2>{t("Activate your account")}</h2>
+             <h2>{t("Activate your account")}</h2>
+            </>
+            }
             </div>
             <p>
               {t(
@@ -157,19 +167,21 @@ const ActivateAccount = ({
           </div>
 
           <div>
-            <label
-              style={{
-                fontWeight: 700,
-                fontSize: "12px",
-                textTransform: "uppercase",
-                color: "#6b7280",
-                letterSpacing: "0.05em",
-                marginBottom: "10px",
-                display: "block",
-              }}
-            >
-              {t("Payment Method")}
-            </label>
+            {!isMobile &&
+              <label
+                style={{
+                  fontWeight: 700,
+                  fontSize: "12px",
+                  textTransform: "uppercase",
+                  color: "#6b7280",
+                  letterSpacing: "0.05em",
+                  marginBottom: "10px",
+                  display: "block",
+                }}
+              >
+                {t("Payment Method")}
+              </label>
+            }
             <div className={styles.paymentMethods}>
               {paymentMethods.map((item) => (
                 <button
@@ -183,7 +195,7 @@ const ActivateAccount = ({
                   }}
                 >
                   <div className={styles.paymentIcon}>
-                    <CreditCard size={16} />
+                    {(item?.Icon&& isMobile) ? <item.Icon color={item.active?'#FFFFFF':'#6E7687'}/> : <CreditCard size={16} />}
                   </div>
                   <div style={{ textAlign: "start" }}>
                     <h5>
@@ -201,10 +213,12 @@ const ActivateAccount = ({
           style={{
             display: "flex",
             alignItems:"flex-start",
-            justifyContent: "space-between"
+            justifyContent: "space-between",
+            flexDirection: isMobile ? 'column' : 'row',
+            gap: isMobile && 20
           }}
           >
-            <div style={{ marginTop: "10px" }}>
+            <div style={{ marginTop: "10px", width: isMobile ? '100%' : 'auto' }}>
               <label
                 style={{
                   fontWeight: 700,

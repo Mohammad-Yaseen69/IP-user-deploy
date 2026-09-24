@@ -58,7 +58,6 @@
     border-radius: 8px;
     border: 1px solid var(--Greyscale-50, #E7E9E9);
     background: var(--Greyscale-0, #FFF);
-
     /* Card/Small */
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.03);
 }
@@ -485,46 +484,82 @@
     }
 
     .toolbar {
-        flex-direction: column;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        align-items: center;
+        gap: 8px;
         width: 100%;
+    }
 
-        .searchBox {
-            width: 100%;
-        }
+    .searchBox {
+        flex: 1 1 auto;
+        min-width: 0;
+    }
 
-        .toolbarRight {
-            width: 100%;
+    .toolbarRight {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 8px;
+        width: auto;
+        flex-shrink: 0;
+    }
 
-            div {
-                width: 100%;
+    .toolbarRight div {
+        width: auto;
+    }
 
-            }
-
-            .toolBtn {
-                width: 100%;
-            }
-        }
+    .toolBtn {
+        width: auto !important;
+        padding: 8px 12px !important;
+        white-space: nowrap;
+        font-size: 13px !important;
     }
 }
-
 
 @media (max-width: 480px) {
     .section {
         padding: 12px;
     }
+    .hideOnMobile {
+        display: none !important;
+    }
+
+    .toolbar {
+        flex-direction: row;
+        flex-wrap: nowrap;
+        gap: 6px;
+    }
+
+    .searchBox {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .searchInput {
+        padding: 8px 8px 8px 28px;
+        font-size: 12px;
+    }
+
+    .searchIcon {
+        left: 8px;
+    }
 
     .toolbarRight {
-        flex-direction: column;
-        width: 100%;
+        flex-direction: row;
+        width: auto;
+        gap: 6px;
     }
 
     .toolbarRight div {
-        width: 100%;
+        width: auto;
     }
 
     .toolBtn {
-        width: 100% !important;
-        justify-content: center !important;
+        width: auto !important;
+        padding: 8px 10px !important;
+        font-size: 12px !important;
+        gap: 4px !important;
     }
 
     .table thead tr th,
