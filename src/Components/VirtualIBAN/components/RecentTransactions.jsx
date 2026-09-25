@@ -273,7 +273,7 @@ const RecentTransactions = ({
 
           <div className={styles.toolbarRight}>
             <Button
-              className={styles.toolBtn}
+              className={`${styles.toolBtn} ${styles.hideOnMobile}`}
               onClick={() => setShowStatementModal(true)}
               startIcon={<Download size={13} />}
             >

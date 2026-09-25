@@ -120,7 +120,8 @@ const PaymentStep = (
                                     padding: "12px",
                                     borderRadius: "8px",
                                     marginTop: "15px",
-                                    flexDirection: isMobile ? 'column' : 'row'
+                                    flexDirection: isMobile ? 'column' : 'row',
+                                    width:'100%'
                                 }),
                             }}
                             key={wallet_l.name}

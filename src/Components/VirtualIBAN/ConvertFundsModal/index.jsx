@@ -322,7 +322,7 @@ const ConvertFundsModal = ({ isOpen, toggle, selectedIban, availableBalance }) =
                             label={isProcessing ? t("Processing...") : isDone ? t("Convert more") : continueLabel}
                             handleBack={!isDone && handleBack}
                             handleAction={handleContinue}
-                            disabled={disabled}
+                            disabled={footerDisabled}
                         />
                     :
                 <div className={styles.footer}>
@@ -398,7 +398,7 @@ const ConvertFundsModal = ({ isOpen, toggle, selectedIban, availableBalance }) =
                 isSidebarStepActive={isSidebarStepActive}
                 isSidebarStepCompleted={isSidebarStepCompleted}
                 SIDEBAR_STEPS={SIDEBAR_STEPS}
-                toggleDrawer={()=>setShowDrawer(false)}
+                toggleDrawer={(val)=>setShowDrawer(val)}
             />
         </>
     )

@@ -34,12 +34,12 @@ const MobileStepProgress = ({
           );
         })}
       </div>
-      <div className={styles.mobileStepContainer} onClick={handleClick}>
+      <div className={styles.mobileStepContainer}>
         <p className={styles.stepCount}>
-          Step {order.indexOf(currentSidebarStep) + 1} of {SIDEBAR_STEPS.length}
+          {t('Step')} {order.indexOf(currentSidebarStep) + 1} {t('of')} {SIDEBAR_STEPS.length}
           <span> · {currentSidebarStep?.toLowerCase()}</span>
         </p>
-        <div className={styles.dropdownPill}>
+        <div className={styles.dropdownPill} onClick={handleClick} role="button" tabIndex={0}>
           <div className={styles.addIconContainer}>
             <FaQuestion size={8} />
           </div>
