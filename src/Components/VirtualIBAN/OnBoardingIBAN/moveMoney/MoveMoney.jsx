@@ -42,7 +42,7 @@ const MoveMoney = () => {
     const ibans = useMemo(
         () => asVirtualIbanArray(rawIbans),
         [rawIbans]
-    )
+    );
     const selectedIban = useMemo(
         () =>
             ibans.find(
