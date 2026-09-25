@@ -21,6 +21,7 @@ import { UserContext } from "../../../Context/UserContext";
 import * as classes from "./AgentSidebar.module.css";
 import NavSegment from "./NavSegment";
 import Minmize from "./file/minimize.svg";
+import { Menu, MenuItem } from "@mui/material";
 
 const NAV_SECTIONS = [
     {
@@ -66,13 +67,15 @@ export const AgentSidebar = () => {
         "Agent";
 
     const handleLogout = () => {
-        setShowProfileMenu(false);
+        handleClose();
         if (typeof logout === "function") {
             logout();
         } else {
             navigate("/login");
         }
     };
+
+    const handleClose = () => setShowProfileMenu(null);
 
     return (
         <div className={`${classes.sideMenu} ${!isSidebarOpen ? classes.sideMenuCollapsed : ""}`}>
@@ -152,7 +155,7 @@ export const AgentSidebar = () => {
                         <button
                             type="button"
                             className={classes.profileButton}
-                            onClick={() => setShowProfileMenu((prev) => !prev)}
+                            onClick={(e) => setShowProfileMenu(e.currentTarget)}
                         >
                             <div className={classes.profileInfo}>
                                 <div className={classes.avatar} />
@@ -161,29 +164,30 @@ export const AgentSidebar = () => {
                             {isSidebarOpen && <ChevronRight className={classes.icon18} />}
                         </button>
 
-                        {showProfileMenu && (
-                            <div className={classes.profileMenu}>
-                                <button
-                                    type="button"
-                                    className={classes.profileMenuItem}
-                                    onClick={() => {
-                                        setShowProfileMenu(false);
-                                        navigate("/agent-profile");
-                                    }}
-                                >
-                                    <User className={classes.icon16} />
-                                    {isSidebarOpen && <span>My Profile</span>}
-                                </button>
-                                <button
-                                    type="button"
-                                    className={`${classes.profileMenuItem} ${classes.logoutItem}`}
-                                    onClick={handleLogout}
-                                >
-                                    <LogOut className={classes.icon16} />
-                                    {isSidebarOpen && <span>Logout</span>}
-                                </button>
-                            </div>
-                        )}
+                        <Menu
+                            anchorEl={showProfileMenu}
+                            open={Boolean(showProfileMenu)}
+                            onClose={handleClose}
+                            PopoverClasses={{paper:classes.profileMenu}}
+                        >
+                            <MenuItem
+                                className={classes.profileMenuItem}
+                                onClick={() => {
+                                    handleClose();
+                                    navigate("/agent-profile");
+                                }}
+                            >
+                                <User className={classes.icon16} />
+                                <span>My Profile</span>
+                            </MenuItem>
+                            <MenuItem 
+                                className={`${classes.profileMenuItem} ${classes.logoutItem}`}
+                                onClick={handleLogout}
+                            >
+                                <LogOut className={classes.icon16} />
+                                <span>Logout</span>
+                            </MenuItem>
+                        </Menu>
                     </div>
                 </div>
             </div>
