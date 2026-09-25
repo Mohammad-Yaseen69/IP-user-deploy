@@ -42,15 +42,15 @@ export const THUNES_IDENTIFIER_FIELDS = {
     msisdn: { label: 'Mobile number', type: 'tel', placeholder: '+234 801 234 5678' },
     bank_account_number: { label: 'Account number', type: 'text', alphanumeric: true },
     account_number: { label: 'Account number', type: 'text', alphanumeric: true },
-    iban: { label: 'IBAN', type: 'text', alphanumeric: true, uppercase: true },
-    swift_bic_code: { label: 'SWIFT / BIC', type: 'text', alphanumeric: true, uppercase: true },
+    iban: { label: 'IBAN', type: 'iban', alphanumeric: true, uppercase: true },
+    swift_bic_code: { label: 'SWIFT / BIC', type: 'bic', alphanumeric: true, uppercase: true },
     clabe: { label: 'CLABE', type: 'text', alphanumeric: true },
     cbu: { label: 'CBU', type: 'text', alphanumeric: true },
     cbu_alias: { label: 'CBU alias', type: 'text' },
     bik_code: { label: 'BIK code', type: 'text', alphanumeric: true },
     ifs_code: { label: 'IFSC code', type: 'text', alphanumeric: true, uppercase: true },
     sort_code: { label: 'Sort code', type: 'text', alphanumeric: true },
-    aba_routing_number: { label: 'ABA routing number', type: 'text', alphanumeric: true },
+    aba_routing_number: { label: 'ABA routing number', type: 'routing', alphanumeric: true },
     routing_code: { label: 'Routing code', type: 'text', alphanumeric: true },
     bsb_number: { label: 'BSB number', type: 'text', alphanumeric: true },
     branch_number: { label: 'Branch number', type: 'text', alphanumeric: true },
@@ -81,22 +81,15 @@ export const BVNK_FIELD_DEFS = {
         hint: 'Required by the payout provider to verify the recipient.',
     },
 
-    iban: { label: 'IBAN', type: 'text', alphanumeric: true, uppercase: true, required: true },
-    accountNumber: { label: 'Account number', type: 'text', alphanumeric: true, required: true },
-    bic: { label: 'BIC / SWIFT', type: 'text', alphanumeric: true, uppercase: true },
-    swift_code: { label: 'SWIFT / BIC', type: 'text', alphanumeric: true, uppercase: true, required: true },
-    intermediaryBic: { label: 'Intermediary BIC', type: 'text', alphanumeric: true, uppercase: true },
+    iban: { label: 'IBAN', type: 'iban', alphanumeric: true, uppercase: true, required: true },
+    account_number: { label: 'Account number', type: 'text', alphanumeric: true, required: true },
+    bic: { label: 'BIC / SWIFT', type: 'bic', alphanumeric: true, uppercase: true },
+    swift_code: { label: 'SWIFT / BIC', type: 'bic', alphanumeric: true, uppercase: true, required: true },
 
     bankName: { label: 'Bank name', type: 'text' },
-    bankCountry: { label: 'Bank country', type: 'country' },
-    bankAddress: { label: 'Bank address', type: 'text' },
+    bankAddress: { label: 'Bank street address', type: 'text' },
     bankCity: { label: 'Bank city', type: 'text' },
     bankPostal: { label: 'Bank postal code', type: 'text' },
-
-    beneficiaryAddress: { label: 'Address', type: 'text' },
-    beneficiaryCity: { label: 'City', type: 'city' },
-    beneficiaryPostal: { label: 'Postal code', type: 'text' },
-    beneficiaryCountry: { label: 'Country', type: 'country' },
 
     crypto_asset: {
         label: 'Asset',
@@ -120,25 +113,27 @@ export const BVNK_FIELD_DEFS = {
     },
 };
 
+/* The recipient address the payout carries. The country is never asked for: the payout
+   reads it from the beneficiary's own country, and the bank's country with it. */
+const BVNK_ADDRESS_FIELDS = ['address', 'city', 'province_state', 'postal_code'];
+
+/* SEPA reaches the account by IBAN alone - the only detail the payout refuses to go
+   without - so everything else it sends is offered but never demanded. */
 const BVNK_SEPA = {
-    beneficiary: [],
-    channel: ['iban', 'bic', 'bankName', 'bankCountry'],
+    beneficiary: BVNK_ADDRESS_FIELDS,
+    requiredBeneficiary: [],
+    channel: ['iban', 'bic', 'bankName'],
     requiredChannel: ['iban'],
 };
 
+/* Everything validateSwiftBeneficiary checks before the transfer will go: the account as
+   the bank quotes it, the BIC, and the bank address behind it. The bank country is not
+   asked for - the channel records the recipient's own country as the bank's. */
 const BVNK_SWIFT = {
-    beneficiary: ['beneficiaryAddress', 'beneficiaryCity', 'beneficiaryPostal', 'beneficiaryCountry'],
-    channel: [
-        'swift_code',
-        'accountNumber',
-        'bankName',
-        'bankAddress',
-        'bankCity',
-        'bankPostal',
-        'bankCountry',
-        'intermediaryBic',
-    ],
-    requiredChannel: ['swift_code', 'accountNumber'],
+    beneficiary: BVNK_ADDRESS_FIELDS,
+    requiredBeneficiary: ['address', 'city', 'postal_code'],
+    channel: ['account_number', 'swift_code', 'bankName', 'bankAddress', 'bankCity', 'bankPostal'],
+    requiredChannel: ['account_number', 'swift_code', 'bankName', 'bankAddress', 'bankCity', 'bankPostal'],
 };
 
 const BVNK_CRYPTO = {
@@ -204,7 +199,7 @@ export const getBvnkRequirements = (method, recipientType, channel = {}) => {
         vendor: 'bvnk',
         beneficiaryFields: [...entity, ...rail.beneficiary],
         channelFields: rail.channel,
-        requiredBeneficiary: entity,
+        requiredBeneficiary: [...entity, ...(rail.requiredBeneficiary || [])],
         requiredChannel: rail.requiredChannel,
         defs,
     };

@@ -1,6 +1,6 @@
 import React from 'react';
 
-const PhoneNumber = ({ number, setNumber, selectedCountry, setError, styles, onBlur, onKeyDown, onFocus }) => {
+const PhoneNumber = ({ number, setNumber, selectedCountry, setError, styles = {}, onBlur, onKeyDown, onFocus }) => {
     const handleChange = (e) => {
         let input = e.target.value;
 
@@ -20,6 +20,7 @@ const PhoneNumber = ({ number, setNumber, selectedCountry, setError, styles, onB
                 all: "unset",
                 fontWeight: 700,
                 paddingRight: "1rem",
+                ...styles
                 // padding: "12px",
                 // borderRadius: "0.375rem"
             }}

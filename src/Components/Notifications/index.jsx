@@ -8,7 +8,7 @@ import axios from "axios";
 import Notification from "./Notification";
 import { useTranslation } from "react-i18next";
 
-const Notifications = () => {
+const Notifications = ({ hideShadow=false }) => {
     const [showDropDown, setShowDropDown] = useState(false)
     const { t } = useTranslation()
     const dropdownRef = useRef(null);
@@ -70,7 +70,7 @@ const Notifications = () => {
         <div ref={dropdownRef}>
             <Col xs="auto" style={{
                 padding: ".5rem",
-                boxShadow: "0px 9.94788px 10.7769px rgba(109, 41, 220, 0.17)",
+                boxShadow: hideShadow ? 'none' : "0px 9.94788px 10.7769px rgba(109, 41, 220, 0.17)",
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",

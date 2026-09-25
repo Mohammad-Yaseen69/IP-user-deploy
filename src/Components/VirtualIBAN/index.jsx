@@ -16,6 +16,7 @@ import MonthlyExpenses from './components/MonthlyExpenses'
 import QuickActions from './components/QuickActions'
 import RecentTransactions from './components/RecentTransactions'
 import TabsNav from './components/TabsNav'
+import CryptoChannels from './CryptoChannels'
 import IBAN from './IBAN/IBAN'
 import IBANDetails from './IBAN/IBANDetails'
 import Manage from './Manage/Manage'
@@ -23,6 +24,9 @@ import OnboardingIBAN from './OnBoardingIBAN'
 import styles from "./styles/index.module.css"
 import { asVirtualIbanArray, isVirtualIbanAdminBlocked } from './utils/virtualIban'
 import VirtualIbanModal from './VirtualIbanModal'
+import Notifications from '../Notifications'
+import LanguagePicker from '../LanguagePicker'
+import { ChevronLeft } from 'react-feather'
 
 
 const VirtualBank = () => {
@@ -42,6 +46,8 @@ const VirtualBank = () => {
     const [activeTab, setActiveTab] = useState("overview");
     const [showGetIBAN, setShowGetIBAN] = useState(false);
     const ibanDetailsRef = useRef(null);
+    const onboardingRef = useRef(null)
+    const [onboardingStep, setOnboardingStep] = useState('landing')
 
     const ibans = useMemo(() => asVirtualIbanArray(rawIbans), [rawIbans])
     const creationInProgress = ibanCreationStatus === true
@@ -163,6 +169,26 @@ const VirtualBank = () => {
 
 
             </div>
+            {((showGetIBAN || (ibans.length === 0 && canCreateIban)) && userDetails?.account_type === "business") &&
+                <div className={styles.mobileTop}>
+                    <div className={styles.headerTitle}>
+                        {onboardingStep !== 'landing' && <ChevronLeft size={22} onClick={() => onboardingRef.current?.back()} />}
+                        <h1>
+                            {onboardingStep === 'pricing'
+                                ? t("Your pricing")
+                                : onboardingStep === 'ActivateAccount'
+                                    ? t("Activate your account")
+                                    : userDetails?.account_type === "business"
+                                        ? t("Business IBAN")
+                                        : t("My virtual bank")}
+                        </h1>
+                    </div>
+                    <div className={styles.mobileTopRight}>
+                        <Notifications hideShadow={true} />
+                        <LanguagePicker hideShadow={true} />
+                    </div>
+                </div>
+            }
             {
                 isInitialLoading ? (
                     <div style={{ minHeight: "520px", width: "100%" }}>
@@ -173,7 +199,7 @@ const VirtualBank = () => {
                 ) :
                     (showGetIBAN || (ibans.length === 0 && canCreateIban)) ?
                         userDetails?.account_type === "business" ?
-                            <OnboardingIBAN /> :
+                            <OnboardingIBAN ref={onboardingRef} onStepChange={setOnboardingStep} /> :
                             <IBAN onCreated={handleBackToDashboard} />
                         : selectedIbanAdminBlocked ?
                             <div className={styles.main}>
@@ -283,6 +309,13 @@ const VirtualBank = () => {
                                     <div className={styles.tabContent}>
                                         <div className={styles.section}>
                                             <Compliance />
+                                        </div>
+                                    </div>
+                                )}
+                                {activeTab === "crypto-channels" && (
+                                    <div className={styles.tabContent}>
+                                        <div className={styles.section}>
+                                            <CryptoChannels selectedIban={selectedIban} />
                                         </div>
                                     </div>
                                 )}

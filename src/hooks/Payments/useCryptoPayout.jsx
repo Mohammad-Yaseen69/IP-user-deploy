@@ -49,6 +49,8 @@ export const useCryptoPayout = () => {
         onSuccess: () => {
             getUserWallets?.(true)
             queryClient.invalidateQueries({ queryKey: cryptoPayoutQueryKeys.all })
+            /* The hub's portfolio total is read separately from the wallet list. */
+            queryClient.invalidateQueries({ queryKey: ["crypto", "portfolio"] })
         },
     })
 }
