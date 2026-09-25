@@ -1283,9 +1283,9 @@ const SwiftTransfer = forwardRef(({ isOpen = true, toggle, selectedIban, availab
                         </div>
                     </div>
                 )}
-            </section>           
+            </section>
             {(isMobile && showFooter) &&
-                <MobileFooter 
+                <MobileFooter
                     label={isProcessing ? t("Processing...") : getContinueLabel(currentStep, t)}
                     handleBack={handleBack}
                     handleAction={handleContinue}
@@ -1299,14 +1299,14 @@ const SwiftTransfer = forwardRef(({ isOpen = true, toggle, selectedIban, availab
         <>
             {isPage ? (
                 <div className={styles.pageContainer}>
-                {isMobile && <MobileStepProgress 
-                                currentStep={currentStep} 
-                                isSidebarStepActive={isSidebarStepActive}
-                                isSidebarStepCompleted={isSidebarStepCompleted}
-                                SIDEBAR_STEPS={SIDEBAR_STEPS}
-                                getSidebarStepName={getSidebarStepName}
-                                handleClick={()=>setShowDrawer(true)}
-                            />}
+                    {isMobile && <MobileStepProgress
+                        currentStep={currentStep}
+                        isSidebarStepActive={isSidebarStepActive}
+                        isSidebarStepCompleted={isSidebarStepCompleted}
+                        SIDEBAR_STEPS={SIDEBAR_STEPS}
+                        getSidebarStepName={getSidebarStepName}
+                        handleClick={() => setShowDrawer(true)}
+                    />}
                     {content}
                 </div>
             ) : (
@@ -1333,35 +1333,38 @@ const SwiftTransfer = forwardRef(({ isOpen = true, toggle, selectedIban, availab
                 />
             ) : (
                 <>
-                <AddBeneficiaryModal
-                    open={isAddModalOpen}
-                    handleClose={() => setIsAddModalOpen(false)}
-                    onSaveSuccess={handleBeneficiarySaved}
-                />
+                    <AddBeneficiaryModal
+                        open={isAddModalOpen}
+                        handleClose={() => setIsAddModalOpen(false)}
+                        onSaveSuccess={handleBeneficiarySaved}
+                    />
 
-                <DynamicChannelModal
-                    open={isChannelModalOpen}
-                    handleClose={() => {
-                        setIsChannelModalOpen(false);
-                        setChannelModalBeneficiary(null);
-                    }}
-                    beneficiaryData={channelModalBeneficiary}
-                    lockChannelType="bank"
-                    onSaveSuccess={handleChannelSaved}
-                />
+                    <DynamicChannelModal
+                        open={isChannelModalOpen}
+                        handleClose={() => {
+                            setIsChannelModalOpen(false);
+                            setChannelModalBeneficiary(null);
+                        }}
+                        beneficiaryData={channelModalBeneficiary}
+                        lockChannelType="bank"
+                        onSaveSuccess={handleChannelSaved}
+                    />
                 </>
             )}
-            
-              <StepsDrawer
+
+            <StepsDrawer
                 open={showDrawer}
-                currentStep={currentStep} 
+                currentStep={currentStep}
                 isSidebarStepActive={isSidebarStepActive}
                 isSidebarStepCompleted={isSidebarStepCompleted}
                 SIDEBAR_STEPS={SIDEBAR_STEPS}
-                toggleDrawer={(val)=>setShowDrawer(val)}
+                toggleDrawer={(val) => setShowDrawer(val)}
             />
         </>
     )
 })
 
+SwiftTransfer.displayName = 'SwiftTransfer';
+
 export default SwiftTransfer
+SwiftTransfer.displayName = 'SwiftTransfer';
