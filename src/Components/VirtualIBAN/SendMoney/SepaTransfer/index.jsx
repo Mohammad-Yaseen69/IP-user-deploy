@@ -62,6 +62,7 @@ import {
 } from "../Common/beneficiaryHelpers"
 import { formatCurrency } from "../../../../Helper/AmountFormat"
 import { decryptData } from "../../../../Helper/EssentilaMethods/Decryption"
+import { Info } from "lucide-react"
 
 const DEFAULT_BENEFICIARY_FORM = {
     type: "individual",
@@ -134,7 +135,6 @@ const SepaAmountStep = ({ amount, setAmount, availableBalance, currencyCode, sou
     return (
         <div className={styles.stepStack}>
             <AmountStep amount={amount} setAmount={setAmount} currencyCode={currencyCode} availableBalance={sourceBalance} label="Amount to send" min={MIN_AMOUNT} max={MAX_AMOUNT} />
-
             <div>
                 <div className={styles.sectionLabel}>{t("From")}</div>
                 <div className={styles.sourceCard}>
@@ -148,11 +148,9 @@ const SepaAmountStep = ({ amount, setAmount, availableBalance, currencyCode, sou
 
             <div>
                 <div className={styles.sectionLabel}>{t("Delivery speed")}</div>
-
                 <div className={styles.speedGrid}>
                     {SEPA_TRANSFER_SPEEDS.map((speed) => {
                         const isComingSoon = false;
-
                         return (
                             <Tooltip
                                 key={speed.id}
@@ -244,7 +242,8 @@ const PurposeStep = ({ amount, currencyCode, purpose, setPurpose, description, s
 
     return (
         <div className={styles.purposeStep}>
-            <div className={styles.stepHeaderRow}><span>{t("Who pays the intermediary charges?")}</span><strong>{t("Sending")} {formatMoney(amount, currencyCode)}</strong></div>
+            <div className={styles.stepHeaderRow}><span>{t("Who pays the intermediary charges?")}</span><strong>
+                {t("Sending")} {formatMoney(amount, currencyCode)}</strong></div>
             <label className={styles.field}>
                 <span>{t("Purpose category")}</span>
                 <div className={styles.selectWrap}>
@@ -254,6 +253,7 @@ const PurposeStep = ({ amount, currencyCode, purpose, setPurpose, description, s
                     <ChevronDown size={18} />
                 </div>
             </label>
+            {/* <div className={styles.customInputWrapper}> */}
             <TextField
                 label={t("Description / Remittance Reference *")}
                 value={description}
@@ -263,8 +263,13 @@ const PurposeStep = ({ amount, currencyCode, purpose, setPurpose, description, s
                 error={descError}
                 maxLength={34}
             />
+            {/* </div> */}
+            {/* <div className={styles.customInputWrapper}> */}
             <TextField label={t("Additional information (optional)")} value={additionalInfo} onChange={setAdditionalInfo} />
-            <div className={styles.infoStrip}>{t("SEPA transfers deliver the full amount and carry no correspondent fees, so there is no OUR/SHA/BEN choice to make.")}</div>
+            <div className={styles.infoStrip}>
+                <Info size={16} className={styles.infoIcon} />
+                <span>{t("SEPA transfers deliver the full amount and carry no correspondent fees, so there is no OUR/SHA/BEN choice to make.")}</span>
+            </div>
         </div>
     )
 }
@@ -470,7 +475,7 @@ const DoneStep = ({
                 <div className={styles.reviewRow}><span>{t("Tracking reference")}</span><strong>{trackingReference}</strong></div>
                 <div className={styles.reviewRow}><span>{t("Status")}</span><strong>{t(status)}</strong></div>
                 <div className={styles.reviewRow}><span>{t("Fee")}</span><strong>{feeAmount ? formatMoney(feeAmount.value, feeAmount.currency || currencyCode) : t("Free")}</strong></div>
-                <div className={styles.reviewRow}><span>{t("Recipient gets")}</span><strong>{formatMoney(recipientAmount?.value ?? amount, currencyCode)} {t("in full")}</strong></div>
+                <div className={styles.reviewRow}><span>{t("Recipient gets")}</span><strong >{formatMoney(recipientAmount?.value ?? amount, currencyCode)} {t("in full")}</strong></div>
                 <div className={styles.reviewRow}><span>{t("Expected arrival")}</span><strong>{speed.id === "instant" ? t("Seconds") : t("1-2 business days")}</strong></div>
             </div>
             <div className={styles.doneActions}>
@@ -934,33 +939,118 @@ const SepaTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, i
         <div className={styles.modalLayout} style={{ flexDirection: width < 1000 ? "column" : "row", width: "100%" }}>
             <aside className={styles.leftPanel}>
                 <div>
-                    <div className={styles.flowHeader}><div className={styles.flowIcon}><Send size={18} /></div><div><h2>{t("SEPA Transfer")}</h2><p>{t("European Bank Transfer - EUR only")}</p></div></div>
-                    <div
-                        style={{
-                            marginTop: "2rem"
-                        }}
-                        className={withdrawStyles.progressEffect}
-                    >
-                        {SIDEBAR_STEPS.map((item, index) => {
-                            const IconComponent = sidebarIcons[item.stepName]
-                            return <SidebarProgress key={item.stepName} stepLabel={item.stepLabel} label={item.label} Icon={IconComponent} isActive={isSidebarStepActive(item, currentStep)} isCompleted={isSidebarStepCompleted(item, currentStep)} showBar={index < SIDEBAR_STEPS.length - 1} />
-                        })}
+                    <div className={styles.flowHeader}><div className={styles.flowIcon}>
+                        {width <= 480 ? (
+                            <button type="button" className={`${styles.backBtn} ${styles.backBtn1}`} onClick={handleBack}>
+                                <ChevronLeft size={14} />{t("Back")}
+                            </button>
+                        ) : (
+                            <>
+                                <div className={styles.flowIcon}>
+                                    <Send size={18} />
+                                </div>
+                            </>
+                        )}
                     </div>
+                        <div className={styles.flowHeaderContent}>
+                            <h2>{t("SEPA Transfer")}</h2>   {width <= 480 ? <button type="button" className={styles.cancelBtn} onClick={handleClose}>{t("Cancel")}</button> : (
+                                <>
+                                    <span></span>
+                                    <p>{t("European Bank Transfer - EUR only")}</p>
+                                </>
+                            )}
+
+                        </div></div>
+                    {
+                        width >= 480 ? (
+                            <div
+                                style={{
+                                    marginTop: "2rem"
+                                }}
+                                className={withdrawStyles.progressEffect}
+                            >
+                                {SIDEBAR_STEPS.map((item, index) => {
+                                    const IconComponent = sidebarIcons[item.stepName]
+                                    return <SidebarProgress key={item.stepName} stepLabel={item.stepLabel} label={item.label} Icon={IconComponent} isActive={isSidebarStepActive(item, currentStep)} isCompleted={isSidebarStepCompleted(item, currentStep)} showBar={index < SIDEBAR_STEPS.length - 1} />
+                                })}
+                            </div>
+                        ) : (
+                            <div
+                                style={{
+                                    marginTop: "2rem",
+                                    display: "flex",
+                                    gap: "6px",
+                                    width: "100%"
+                                }}
+                                className={withdrawStyles.progressEffect}
+                            >
+
+                                {SIDEBAR_STEPS.map((item, index) => {
+                                    const isActive = isSidebarStepActive(item, currentStep);
+                                    const isCompleted = isSidebarStepCompleted(item, currentStep);
+                                    let lineColor = "#e4e3e5";
+                                    if (isCompleted) {
+                                        lineColor = "#10b981";
+                                    } else if (isActive) {
+                                        lineColor = "#5926f0";
+                                    }
+                                    return (
+                                        <div
+                                            key={item.stepName || index}
+                                            className={styles.stepLine}
+                                            style={{ "--line-color": lineColor }}
+                                        />
+                                    );
+                                })}
+                            </div>
+                        )}
                 </div>
                 {width > 700 && <div className={styles.contactBox}><ContactBox /></div>}
             </aside>
+            {(() => {
+                const activeIndex = SIDEBAR_STEPS.findIndex(item => isSidebarStepActive(item, currentStep));
+                const currentStepNumber = activeIndex !== -1 ? activeIndex + 1 : 1;
+                const currentStepName = SIDEBAR_STEPS[activeIndex]?.label || SIDEBAR_STEPS[activeIndex]?.stepLabel || "";
+                const totalSteps = SIDEBAR_STEPS.length;
+                return width < 480 ? (
+                    <section
+                        className={styles.stepContainer}
+                    >
+                        <div style={{ display: "flex", justifyContent: "flex-start", width: "100%" }}>
+                            <span style={styles.stepIndicator}>
+                                Step {currentStepNumber} of {totalSteps} &nbsp; <span style={{ color: "gray" }}> {currentStepName} </span>
+                            </span>
+                        </div>
+                        <div style={{ display: "flex", justifyContent: "flex-end" }}>
+                            <span className={styles.stepcontactBox}>
+                                <ContactBox isMobile={width < 480} />
+                            </span>
+                        </div>
+                    </section>
+                ) : (
+                    <div ></div>
+                );
+            })()}
+
+            {/* Problem herer */}
             <section className={styles.rightPanel}>
                 <div className={styles.content}>{renderStepContent()}</div>
                 {showFooter && (
                     <div className={styles.footer}>
-                        <button type="button" className={styles.cancelBtn} onClick={handleClose}>{t("Cancel")}</button>
+                        {width >= 480 ? <button type="button" className={styles.cancelBtn} onClick={handleClose}>{t("Cancel")}</button> : (
+                            <span />
+                        )}
                         <div className={styles.footerNav}>
                             <button type="button" className={styles.backBtn} onClick={handleBack}><ChevronLeft size={14} />{t("Back")}</button>
-                            <button type="button" className={styles.nextBtn} disabled={disabled} onClick={handleContinue}>{isProcessing ? t("Processing...") : getContinueLabel(currentStep, t)}<ChevronRight size={14} /></button>
+                            <button type="button" className={styles.nextBtn} disabled={disabled} onClick={handleContinue}>{isProcessing ? t("Processing...") : getContinueLabel(currentStep, t)}<ChevronRight size={14} />
+                            </button>
                         </div>
                     </div>
+
                 )}
+
             </section>
+
         </div>
     )
     return (
