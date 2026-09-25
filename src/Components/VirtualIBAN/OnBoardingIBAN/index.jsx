@@ -368,7 +368,7 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
                     <div className={styles.rightSection}>
                         <img src={imageCard} alt="Business IBAN card" />
                     </div>
-                     <div className={styles.mobileContent}>
+                    <div className={styles.mobileContent}>
                         <h2 className={styles.mobileHeading}>
                             {t("Get a dedicated business IBAN for your company.")}
                         </h2>
@@ -381,14 +381,14 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
                         </div>
                     </div>
 
-                     <div className={styles.footerContainer}>                         
+                    <div className={styles.footerContainer}>
                         <button
                             className={styles.buttonGroup1}
                             onClick={() => handleTypeSelect('business')}
                         >
-                           <span>{t("Request IBAN Activation")}</span>
+                            <span>{t("Request IBAN Activation")}</span>
                             <div className={styles.forwardBtnIcon}>
-                                <ArrowRight size={18}/>
+                                <ArrowRight size={18} />
                             </div>
                         </button>
                     </div>
@@ -530,7 +530,7 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
                 />
             )}
 
-            <Modal style={{maxWidth: isMobile ? '90%' : 'auto'}} isOpen={showOtpModal} toggle={() => setShowOtpModal(false)} centered>
+            <Modal style={{ maxWidth: isMobile ? '90%' : 'auto' }} isOpen={showOtpModal} toggle={() => setShowOtpModal(false)} centered>
                 <ModalBody>
                     <OTPConfirmation
                         variant="card"
