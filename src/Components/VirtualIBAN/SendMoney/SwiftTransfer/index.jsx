@@ -1380,5 +1380,7 @@ const SwiftTransfer = forwardRef(({ isOpen = true, toggle, selectedIban, availab
     )
 })
 
+SwiftTransfer.displayName = 'SwiftTransfer';
+
 export default SwiftTransfer
 SwiftTransfer.displayName = 'SwiftTransfer';
