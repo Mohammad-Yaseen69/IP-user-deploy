@@ -92,6 +92,7 @@
     gap: 10px;
     padding: 8px;
     position: relative;
+    border: none;
 }
 
 .icon16 {
@@ -359,4 +360,41 @@
 
 .logoutItem {
     color: #e53935;
+}
+
+.sideMenuCollapsed {
+    width: 72px;
+    padding: 24px 12px;
+}
+
+.sideMenuCollapsed .header {
+    flex-direction: column;
+    gap: 12px;
+}
+
+.navSegmentCollapsed {
+    justify-content: center;
+    padding: 12px;
+}
+
+.sideMenuCollapsed .navGroup {
+    align-items: center;
+}
+
+.sideMenuCollapsed .notificationsRow {
+    flex-direction: column;
+    justify-content: center;
+}
+
+.sideMenuCollapsed .notificationsButton {
+    justify-content: center;
+    flex: 0 0 auto;
+}
+
+.sideMenuCollapsed .profileButton {
+    justify-content: center;
+}
+
+.sideMenuCollapsed .profileInfo {
+    width: auto;
 }
