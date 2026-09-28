@@ -85,6 +85,7 @@ export const useCryptoSendFlow = (wallet, { active = true } = {}) => {
     const [beneficiaryError, setBeneficiaryError] = useState("")
     const [authType, setAuthType] = useState(getDefaultAuthType)
     const [otpToken, setOtpToken] = useState("")
+    const [otpMethods, setOtpMethods] = useState(null)
     const [payoutResult, setPayoutResult] = useState(null)
     const [savedBeneficiaryId, setSavedBeneficiaryId] = useState("")
 
@@ -94,8 +95,9 @@ export const useCryptoSendFlow = (wallet, { active = true } = {}) => {
     const { getKey, reset: resetIdempotencyKey } = useIdempotency()
 
     const { sendOtp, isSendingOtp } = useSendOtp({
-        onSuccess: (token) => {
+        onSuccess: (token, response) => {
             setOtpToken(token)
+            setOtpMethods(response || null)
             resetIdempotencyKey()
             setStep(SEND_STEPS.OTP)
         },
@@ -245,6 +247,7 @@ export const useCryptoSendFlow = (wallet, { active = true } = {}) => {
         setBeneficiaryError("")
         setAuthType(getDefaultAuthType())
         setOtpToken("")
+        setOtpMethods(null)
         setPayoutResult(null)
         setSavedBeneficiaryId("")
         resetIdempotencyKey()
@@ -426,6 +429,7 @@ export const useCryptoSendFlow = (wallet, { active = true } = {}) => {
         isSending: payoutMutation.isPending,
         authType,
         setAuthType,
+        otpMethods,
         payoutResult,
         canGetQuote,
         canConfirm,

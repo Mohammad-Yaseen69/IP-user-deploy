@@ -21,7 +21,7 @@ import { Modal, ModalBody, Spinner } from 'reactstrap'
 import { decryptData } from '../../../Helper/EssentilaMethods/Decryption'
 import { encryptData } from '../../../Helper/EssentilaMethods/Encryption'
 import useSendOtp from '../../../hooks/GeneralUse/useSendOtp'
-import OTPConfirmation from '../../UserSettingsNew/OTPConfirmation'
+import OTPConfirmation from '../../../Common/Component/OtpVerification'
 import { useMediaQuery } from '@mui/material'
 
 const STEPS_BUSINESS = ['landing', 'selection', 'account', 'company', 'activity', 'ownership', 'documents', 'review']
@@ -93,6 +93,7 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
     const [showOtpModal, setShowOtpModal] = useState(false)
     const [otpToken, setOtpToken] = useState('')
     const [codeType, setCodeType] = useState('sms')
+    const [otpMethods, setOtpMethods] = useState(null)
     const [loadingStatus, setLoadingStatus] = useState(true)
 
     const checkRequestStatus = async () => {
@@ -147,8 +148,9 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
     }, [state.step]);
 
     const { sendOtp } = useSendOtp({
-        onSuccess: (token) => {
+        onSuccess: (token, dec) => {
             setOtpToken(token)
+            setOtpMethods(dec)
             setShowOtpModal(true)
         },
         onError: (err) => {
@@ -220,7 +222,7 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
             return
         }
 
-        const selectedType = userDetails?.tfa ? 'authenticator' : 'sms'
+        const selectedType = userDetails?.tfa ? 'authenticator' : userDetails?.email_verification ? 'email' : userDetails?.whatsapp_verification ? 'whatsapp' : 'sms'
         setCodeType(selectedType)
 
         const payload = {
@@ -366,7 +368,7 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
                     <div className={styles.rightSection}>
                         <img src={imageCard} alt="Business IBAN card" />
                     </div>
-                     <div className={styles.mobileContent}>
+                    <div className={styles.mobileContent}>
                         <h2 className={styles.mobileHeading}>
                             {t("Get a dedicated business IBAN for your company.")}
                         </h2>
@@ -379,14 +381,14 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
                         </div>
                     </div>
 
-                     <div className={styles.footerContainer}>                         
+                    <div className={styles.footerContainer}>
                         <button
                             className={styles.buttonGroup1}
                             onClick={() => handleTypeSelect('business')}
                         >
-                           <span>{t("Request IBAN Activation")}</span>
+                            <span>{t("Request IBAN Activation")}</span>
                             <div className={styles.forwardBtnIcon}>
-                                <ArrowRight size={18}/>
+                                <ArrowRight size={18} />
                             </div>
                         </button>
                     </div>
@@ -528,15 +530,21 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
                 />
             )}
 
-            <Modal style={{maxWidth: isMobile ? '90%' : 'auto'}} isOpen={showOtpModal} toggle={() => setShowOtpModal(false)} centered>
+            <Modal style={{ maxWidth: isMobile ? '90%' : 'auto' }} isOpen={showOtpModal} toggle={() => setShowOtpModal(false)} centered>
                 <ModalBody>
                     <OTPConfirmation
+                        variant="card"
                         authType={codeType}
                         setAuthType={setCodeType}
+                        methods={otpMethods}
                         callback={handleVerifyOtpSubmit}
                         hideOtp={() => setShowOtpModal(false)}
                         setter={() => { }}
-                        resendHandler={() => sendOtp({ wallet_id: state.selectedWallet?._id }, codeType)}
+                        resendHandler={(method) => {
+                            const nextCodeType = method || codeType
+                            if (method) setCodeType(method)
+                            return sendOtp({ wallet_id: state.selectedWallet?._id }, nextCodeType)
+                        }}
                     />
                 </ModalBody>
             </Modal>
