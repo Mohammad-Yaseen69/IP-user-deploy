@@ -12,8 +12,15 @@ import { useLocation } from "react-router"
 import rightImage from "./agentAuth/files/image.png";
 import ShortLogo from "../../assets/images/logo/logo_white.png";
 import useWindowWidth from "../../utils/useWindowWidth"
+import { Check } from "react-feather"
+import { StuckCircle } from "../PaymentAddressPublic/PayAsGuest/Svgs"
+import { Link } from "react-router-dom"
 
 const swissFlag = coun.find(item => item.alpha3 === "CHE")?.file_url
+
+const steps = [
+  {key:1,label:'Create account'},{key:2,label:'Verify your identity'},{key:3,label:'Review and submit'},
+]
 
 const Auth = () => {
   const { t } = useTranslation()
@@ -22,6 +29,7 @@ const Auth = () => {
   const location = useLocation()
   const redirect = new URLSearchParams(location.search).get("redirect")
   const width = useWindowWidth();
+  const [registerStep, setRegisterStep] = useState(1)
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -81,14 +89,40 @@ const Auth = () => {
               loading="lazy"
               alt=""
             />
-            <h2>{t("Unlock Seamless Payments with InstaPay")}</h2>
+            {isLoginForm ? 
+              <h2>{t("Unlock Seamless Payments with InstaPay")}</h2>
+              :
+              <div className={styles.registerLeftContainer}>
+                <h2>{t("Open your InstaPay account")}</h2>
+                <p>{t('Takes a few minutes.')}</p>
+                <div className={styles.stepsContainer}>
+                  {steps.map(step=>{
+                    const isCompleted = registerStep > step.key;
+                    const isActive = registerStep === step.key;
+                    return(
+                    <div className={styles.stepper} key={step.label}>
+                      <div className={`${styles.stepperBadge} ${(isActive || isCompleted) && styles.activeStepperBadge}`}>
+                        {isCompleted ? <Check size={14} /> : step.key}
+                      </div>
+                      <span className={isActive ? styles.activeStep : isCompleted && styles.completedStep}>{t(step.label)}</span>
+                      {step.key === 1 && <div className={styles.stepsCount}>{registerStep} {t('of')} {steps.length}</div>}
+                    </div>
+                  )})}
+                </div>
+                <div className={styles.leftBottomContainer}>
+                    <StuckCircle />
+                    <span>{t('Stuck on a step?')}&nbsp;<Link>{t('Visit the Help Center')}</Link></span>
+                </div>
+              </div>
+            }
           </div>
-          <div className={styles.form}>
-            <img src={FullLogo} alt="Instapay" loading="lazy" className={styles.formLogo} />
+          <div className={`${styles.form} ${!isLoginForm && styles.registerFormContainer}`}>
+            <img src={FullLogo} alt="Instapay" loading="lazy" className={`${styles.formLogo} ${!isLoginForm && styles.registerFormLogo}`} />
             {isLoginForm ? 
               <Login country={country} setIsLoginForm={setIsLoginForm} />
              : 
               <Signup
+                handleStepChange={setRegisterStep}
                 setIsLoginForm={setIsLoginForm}
                 setHideLogo={setHideLogo}
               />

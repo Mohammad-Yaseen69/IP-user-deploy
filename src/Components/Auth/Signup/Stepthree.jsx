@@ -19,6 +19,21 @@ const Stepthree = ({ data, dataHandler, onKeyDown, onFocus }) => {
                                 (typeof data.country === "string" && data.country) ||
                                 "USA"
                             }
+                            customStyles={{
+                                padding: "12px",
+                                gap: "12px",
+                                borderRadius: "6px",
+                                border: "1px solid #E1E5EE",
+                                background: "#FFF",
+                                boxShadow: "0 1px 1.5px 0 rgba(44, 54, 53, 0.03)",
+                            }}
+                            inputStyles={{
+                                color: '#0C0A20',
+                                fontFamily: 'Inter',
+                                fontSize: '16px',
+                                fontWeight: 400,
+                                letterSpacing: '-0.48px'
+                            }}
                             setPhone={(e) => {
                                 dataHandler("phone", e)
                                 dataHandler("phone_error", null)
@@ -53,7 +68,6 @@ const Stepthree = ({ data, dataHandler, onKeyDown, onFocus }) => {
                         onChange={e => dataHandler("email", e.target.value)}
                         onKeyDown={onKeyDown}
                         onFocus={onFocus}
-                        style={{ background: "transparent", border: "none", outline: "none" }}
                         type="email"
                     />
                 </div>

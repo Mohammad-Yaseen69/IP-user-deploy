@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useContext, useEffect, useMemo, useReducer } from "react";
-import { ChevronRight } from "react-feather";
+import { ArrowLeft, ChevronRight } from "react-feather";
 import { useTranslation } from 'react-i18next';
 import { Link, useParams, useSearchParams } from "react-router-dom";
 import { UserContext } from "../../Context/UserContext";
@@ -66,7 +66,7 @@ function reducer(state, action) {
 const individualNameRegex = /^[A-Za-z\s]+$/
 const companyNameRegex = /^[A-Za-z0-9\s/-]+$/
 
-const Signup = ({ country, setIsLoginForm, setHideLogo }) => {
+const Signup = ({ country, setIsLoginForm, setHideLogo, handleStepChange }) => {
     // eslint-disable-next-line no-useless-escape
     const emailRegex = /^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$/
     const { t } = useTranslation()
@@ -392,6 +392,10 @@ const Signup = ({ country, setIsLoginForm, setHideLogo }) => {
         }
     }, [data.phone_otp_verfied, !data.show_email_otp])
 
+    useEffect(() => {
+      handleStepChange(data.step);
+    }, [data.step])
+    
     const verifyEmailOtp = async (otp, setOtp, numberOfFields = 6) => {
         dataHandler("loading", true)
         try {
@@ -505,118 +509,81 @@ const Signup = ({ country, setIsLoginForm, setHideLogo }) => {
                                             isWhatsappDefault={isWhatsappDefault}
                                         />
                                         :
-                                        <form className={styles.form_details} onSubmit={clickHandler} style={{ minHeight: "fit-content" }}>
-                                            <div className={styles.left}>
-                                                <h1>{t("Sign Up")}</h1>
-                                                <p>{t("Start Your InstaPay Journey Today!")}</p>
-                                                {
-                                                    window.innerWidth < 1000
-                                                    &&
-                                                    <LanguagePicker />
-                                                }
+                                        <form className={styles.registerForm} onSubmit={clickHandler}>
+                                            <div className={styles.registerFormTop}>
+                                                <h1>{t("How will you use InstaPay?")}</h1>
+                                                <p>{t("Pick one to start. The steps after this are tailored to your choice.")}</p>
                                             </div>
                                             <div className={styles.right} style={{ height: "100%" }}>
-
-                                                {
-                                                    data.step === 1
-                                                    &&
-                                                    <Stepone
-                                                        data={data}
-                                                        dataHandler={dataHandler}
-                                                    />
-                                                }
-                                                {
-                                                    data.step === 2
-                                                    &&
-                                                    <Steptwo
-                                                        data={data}
-                                                        dataHandler={dataHandler}
-                                                    />
-                                                }
-                                                {
-                                                    data.step === 3
-                                                    &&
-                                                    <Stepthree
-                                                        data={data}
-                                                        dataHandler={dataHandler}
-                                                        onKeyDown={recordTelemetryKeypress}
-                                                        onFocus={recordTelemetryFocus}
-                                                    />
-                                                }
-                                                {
-                                                    data.step === 4
-                                                    &&
-                                                    <Stepfour
-                                                        data={data}
-                                                        dataHandler={dataHandler}
-                                                    />
-                                                }
-                                                {
-                                                    data.step === 5
-                                                    &&
-                                                    <Stepfive
-                                                        data={data}
-                                                        dataHandler={dataHandler}
-                                                    />
-                                                }
-
-                                                <div className={styles.center_bottom} style={{ marginTop: "1rem" }}>
+                                                <div>
                                                     {
-                                                        (data.step > 1 && window.innerWidth < 1000)
+                                                        data.step === 1
                                                         &&
-                                                        <button disabled={data.loading || isSubmitting} type="button" onClick={() => dataHandler("step", data.step - 1)} className={styles.go_back_btn}>
-                                                            {t("Back")}
-                                                        </button>
+                                                        <Stepone
+                                                            data={data}
+                                                            dataHandler={dataHandler}
+                                                        />
+                                                    }
+                                                    {
+                                                        data.step === 2
+                                                        &&
+                                                        <Steptwo
+                                                            data={data}
+                                                            dataHandler={dataHandler}
+                                                        />
+                                                    }
+                                                    {
+                                                        data.step === 3
+                                                        &&
+                                                        <Stepthree
+                                                            data={data}
+                                                            dataHandler={dataHandler}
+                                                            onKeyDown={recordTelemetryKeypress}
+                                                            onFocus={recordTelemetryFocus}
+                                                        />
+                                                    }
+                                                    {
+                                                        data.step === 4
+                                                        &&
+                                                        <Stepfour
+                                                            data={data}
+                                                            dataHandler={dataHandler}
+                                                        />
+                                                    }
+                                                    {
+                                                        data.step === 5
+                                                        &&
+                                                        <Stepfive
+                                                            data={data}
+                                                            dataHandler={dataHandler}
+                                                        />
                                                     }
                                                     <div className={styles.bottom_text}>
                                                         <span>{t("Already Have an Account?").split("?")?.[0]} </span>
                                                         <Link onClick={() => setIsLoginForm(true)} to={"/login"}>{t("Login")}</Link>
                                                     </div>
-                                                    <div className={styles.btns}>
-                                                        {
-                                                            (data.step > 1 && window.innerWidth > 1000)
-                                                            &&
-                                                            <button disabled={data.loading || isSubmitting} type="button" className={styles.go_back_btn} onClick={() => dataHandler("step", data.step - 1)}>
-                                                                {t("Back")}
-                                                            </button>
-                                                        }
-                                                        <button disabled={data.loading || buttonDisabled || isSubmitting} type="submit" className={styles.form_btn}>
-                                                            <span>
-                                                                {
-                                                                    t("Continue")
-                                                                }
-                                                            </span>
-                                                            <ChevronRight size={28} color="white" />
-                                                        </button>
-                                                    </div>
                                                 </div>
-
-                                                {/* All-in-one Security Shield (Honeypot + Invisible reCAPTCHA + Attribution) */}
-                                                <SecurityShield />
+                                            </div>
+                                            <div className={styles.btns}>
+                                                {
+                                                    data.step > 1
+                                                    &&
+                                                    <button disabled={data.loading || isSubmitting} type="button" className={styles.go_back_btn} onClick={() => dataHandler("step", data.step - 1)}>
+                                                        <ArrowLeft size={18} />
+                                                        {t("Back")}
+                                                    </button>
+                                                }
+                                                <button disabled={data.loading || buttonDisabled || isSubmitting} type="submit" className={styles.form_btn}>
+                                                    <span>
+                                                        {
+                                                            t("Continue")
+                                                        }
+                                                    </span>
+                                                    <ChevronRight size={20} color="white" />
+                                                </button>
                                             </div>
                                         </form>
                             }
-
-                            <div style={{ marginTop: window.innerWidth < 625 && "30%" }} className={styles.auth_details}>
-                                <div className={styles.left}>
-                                    <h5>{t("Two-factor authentication (2FA) is the best way to protect yourself online.")}</h5>
-                                    <p>{t("We recommend you download and install the Google Authenticator app to ensure you receive your verification codes instantly, avoiding any SMS delays or issues.")}</p>
-                                    <div className={styles.download_info}>
-                                        <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2&hl=en&pli=1" target="_blank" rel="noreferrer">
-                                            <img src={gs} alt="" />
-                                        </a>
-                                        <a href="https://apps.apple.com/us/app/google-authenticator/id388497605" target="_blank" rel="noreferrer">
-                                            <img src={as} alt="" />
-                                        </a>
-                                    </div>
-                                </div>
-                                <div className={styles.right}>
-                                    <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2&hl=en&pli=1" target="_blank" rel="noreferrer">
-                                        <img src={authenticator} alt="" />
-                                    </a>
-                                    <h4>{t("Strong security with Google Authenticator")}</h4>
-                                </div>
-                            </div>
                         </>
             }
         </>
