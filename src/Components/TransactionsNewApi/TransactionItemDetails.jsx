@@ -251,21 +251,8 @@ const TransactionItemDetails = ({ item, badgeColor, desc, internationalReceiver,
 
                 {item?.service_type && item?.metadata?.crypto_tx_hash &&
                     <div className={styles.er_item}>
-                        <span>{t("Crypto Transaction Hash")}</span>
-                        <div style={{ display: "flex", alignItems: "center", gap: "8px", marginTop: "4px" }}>
-                            <p style={{
-                                // fontFamily: "monospace",
-                                fontSize: "12px",
-                                wordBreak: "break-all",
-                                margin: 0,
-                                flex: 1,
-                                color: "#333",
-                                background: "#f5f5f5",
-                                // padding: "6px 10px",
-                                borderRadius: "6px"
-                            }}>
-                                {item?.metadata?.crypto_tx_hash}
-                            </p>
+                        <div style={{ display: "flex", alignItems: "center", gap: "8px", marginTop: "4px", justifyContent: "space-between" }}>
+                            <span>{t("Crypto Transaction Hash")}</span>
                             <button
                                 onClick={() => {
                                     navigator.clipboard.writeText(item?.metadata?.crypto_tx_hash)
@@ -294,6 +281,19 @@ const TransactionItemDetails = ({ item, badgeColor, desc, internationalReceiver,
                                 {t("Copy")}
                             </button>
                         </div>
+                        <p style={{
+                            // fontFamily: "monospace",
+                            fontSize: "12px",
+                            wordBreak: "break-all",
+                            margin: 0,
+                            flex: 1,
+                            color: "#333",
+                            background: "#f5f5f5",
+                            // padding: "6px 10px",
+                            borderRadius: "6px"
+                        }}>
+                            {item?.metadata?.crypto_tx_hash}
+                        </p>
                     </div>
                 }
 
