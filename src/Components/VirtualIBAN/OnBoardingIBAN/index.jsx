@@ -46,7 +46,7 @@ const initialState = {
     ownership: { owners: [] },
     documents: { files: {} },
     selectedWallet: null,
-    feeDetails: { baseAmount: 500, convertedAmount: 500, currency: 'EUR', exchangeRate: 1 },
+    feeDetails: null,
     requestData: null,
 }
 
@@ -71,7 +71,7 @@ function onboardingReducer(state, action) {
         case 'SET_SELECTED_WALLET':
             return { ...state, selectedWallet: action.payload }
         case 'SET_FEE_DETAILS':
-            return { ...state, feeDetails: { ...state.feeDetails, ...action.payload } }
+            return { ...state, feeDetails: action.payload ? { ...state.feeDetails, ...action.payload } : null }
         case 'SET_REQUEST_DATA':
             return { ...state, requestData: action.payload }
         case 'RESET_ALL':
@@ -219,6 +219,10 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
     const handleInitiatePayment = async () => {
         if (!state.selectedWallet?._id) {
             toast.error(t("Please select an Instapay wallet to continue."))
+            return
+        }
+        if (state.feeDetails?.convertedAmount == null || !state.feeDetails?.currency) {
+            toast.error(t("Unable to fetch markup conversion rate"))
             return
         }
 
