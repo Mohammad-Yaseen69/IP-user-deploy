@@ -31,7 +31,7 @@ const Clients = () => {
         limit: limit.toString()
     }).toString();
 
-    const { data: responseData, isLoading, isError, refetch } = useQuery({
+    const { data: responseData, isLoading, isError,isFetching, refetch } = useQuery({
         queryKey: ['agent-clients', search, statusFilter, typeFilter, sortBy, sortOrder, page],
         queryFn: () =>
             apiWrapper({
@@ -40,6 +40,7 @@ const Clients = () => {
                 isEncrypted: false,
                 isDecrypted: true
             }),
+        keepPreviousData: true
     });
 
     const clientsList = responseData?.data?.clients || [];
@@ -176,6 +177,27 @@ const Clients = () => {
                         <div style={{ textAlign: 'center' }}>{t("ACTIONS")}</div>
                     </div>
 
+
+                    {isFetching && !isLoading && (
+                        <div style={{
+                            position: 'absolute',
+                            top: '0',
+                            left: 0,
+                            right: 0,
+                            bottom: 0,
+                            backgroundColor: 'rgba(255, 255, 255, 0.65)',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            zIndex: 10,
+                            backdropFilter: 'blur(1px)',
+                            borderRadius: '0 0 8px 8px'
+                        }}>
+                            <div style={{ padding: '30px', textAlign: 'center', color: '#666' }}>
+                                {t("Updating list...")}
+                            </div>
+                        </div>
+                    )}
                     {isLoading ? (
                         <div style={{ padding: '30px', textAlign: 'center', color: '#666' }}>
                             {t("Loading clients list...")}
