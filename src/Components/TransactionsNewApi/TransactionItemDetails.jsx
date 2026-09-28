@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next"
 import styles from "./styles/TransactionItemDetails.module.css"
-import React, { useContext, useMemo, useState, useRef, useEffect } from "react"
+import React, { useContext, useMemo, useState, useRef, useEffect, useCallback } from "react"
 import countries from "../PaymentsNewer/CountriesData.json"
 import { service_name_formatter } from "./TransactionItem"
 import CatDown from "./CatDown"
@@ -246,6 +246,54 @@ const TransactionItemDetails = ({ item, badgeColor, desc, internationalReceiver,
                         <p>
                             {item?.client_reference}
                         </p>
+                    </div>
+                }
+
+                {item?.service_type && item?.metadata?.crypto_tx_hash &&
+                    <div className={styles.er_item}>
+                        <span>{t("Crypto Transaction Hash")}</span>
+                        <div style={{ display: "flex", alignItems: "center", gap: "8px", marginTop: "4px" }}>
+                            <p style={{
+                                // fontFamily: "monospace",
+                                fontSize: "12px",
+                                wordBreak: "break-all",
+                                margin: 0,
+                                flex: 1,
+                                color: "#333",
+                                background: "#f5f5f5",
+                                // padding: "6px 10px",
+                                borderRadius: "6px"
+                            }}>
+                                {item?.metadata?.crypto_tx_hash}
+                            </p>
+                            <button
+                                onClick={() => {
+                                    navigator.clipboard.writeText(item?.metadata?.crypto_tx_hash)
+                                }}
+                                style={{
+                                    background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+                                    border: "none",
+                                    outline: "none",
+                                    borderRadius: "8px",
+                                    padding: "6px 12px",
+                                    cursor: "pointer",
+                                    display: "flex",
+                                    alignItems: "center",
+                                    gap: "4px",
+                                    color: "white",
+                                    fontSize: "12px",
+                                    fontWeight: 600,
+                                    whiteSpace: "nowrap",
+                                    flexShrink: 0
+                                }}
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                                </svg>
+                                {t("Copy")}
+                            </button>
+                        </div>
                     </div>
                 }
 
