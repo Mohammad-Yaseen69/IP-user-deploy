@@ -241,7 +241,7 @@ const AgentCommission = () => {
                     </div>
 
                 </div>
-                <div className={styles.boxSection}>
+                {/* <div className={styles.boxSection}>
                     <h3 className={styles.sectionTitle}>{t("Quick actions")}</h3>
                     <div className={styles.actionButtons}>
                         <button className={styles.actionBtn} onClick={() => handleOpenModal('corporate')}>
@@ -257,7 +257,7 @@ const AgentCommission = () => {
                             {t("Request fee model")}
                         </button>
                     </div>
-                </div>
+                </div> */}
 
             </div>
 

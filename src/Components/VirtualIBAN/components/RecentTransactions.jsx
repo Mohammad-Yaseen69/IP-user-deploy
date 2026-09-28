@@ -193,7 +193,7 @@ const TransactionRow = ({ tx, selectedIban }) => {
                   <DetailItem label={t("Service Type")}
                     value={t(formatType(tx.type))} />
                 )}
-                <DetailItem label={t("Reference")} value={tx?.remittance_information} />
+                <DetailItem label={t("Reference")} value={tx?.remittance_information ?? tx?.reference_id} />
 
 
               </div>
