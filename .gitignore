@@ -26,3 +26,4 @@ mcp_config.json
 !.env.example
 *.sw?
 /test*
+CLAUDE.md
