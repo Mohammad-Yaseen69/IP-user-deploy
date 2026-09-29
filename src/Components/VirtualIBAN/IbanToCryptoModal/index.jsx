@@ -27,6 +27,7 @@ import {
     goBack,
     isSidebarStepActive,
     isSidebarStepCompleted,
+    MIN_AMOUNT,
     SIDEBAR_STEPS,
     STEPS,
 } from "../../../stateMachines/ibanToCrypto"
@@ -245,6 +246,8 @@ const IbanToCryptoModal = forwardRef(({ isOpen, toggle, selectedIban, availableB
                             currencyCode={ibanCurrency}
                             availableBalance={sourceBalance}
                             label={t("Amount to convert")}
+                            min={MIN_AMOUNT}
+                            minQuickAmount={MIN_AMOUNT}
                         />
                         <DestinationNote wallet={wallet} onCreate={() => {
                             handleClose()

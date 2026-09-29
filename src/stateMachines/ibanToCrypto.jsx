@@ -9,6 +9,8 @@ export const SIDEBAR_STEPS = [
     { stepName: STEPS.REVIEW, stepLabel: "STEP 02", label: "Review & Confirm" },
 ]
 
+export const MIN_AMOUNT = 10
+
 const ORDER = [STEPS.AMOUNT, STEPS.REVIEW, STEPS.DONE]
 
 const transitions = {
@@ -32,7 +34,7 @@ export const getDisabledState = (stepName, data) => {
 
     switch (stepName) {
         case STEPS.AMOUNT:
-            return !data.wallet?._id || !data.amount || amount <= 0 || amount > availableBalance
+            return !data.wallet?._id || !data.amount || amount < MIN_AMOUNT || amount > availableBalance
         case STEPS.REVIEW:
             return !data.feeDetails?.token || data.quoteExpired
         default:
