@@ -38,7 +38,7 @@ const QUOTE_ERROR_HINTS = [
     "waited too long",
 ]
 
-const isQuoteError = (message) => {
+export const isQuoteError = (message) => {
     const text = String(message || "").toLowerCase()
     return QUOTE_ERROR_HINTS.some((hint) => text.includes(hint))
 }
