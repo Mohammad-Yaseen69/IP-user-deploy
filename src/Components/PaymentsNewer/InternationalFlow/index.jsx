@@ -296,7 +296,6 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
     }, [userDetails, isAgentLogin])
 
 
-    console.log(subStep, "subStep")
 
     const disabledButton = useMemo(() => {
         switch (subStep) {
@@ -363,7 +362,6 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
             updateInternationalData("exchange_rate_error", "sww")
         }
     }
-
     // eslint-disable-next-line no-unused-vars
     const getConversionRate = async (amount = internationalData.amount, setLimitType, wallet_id = "", currency_code = "", avoid_balance = true, setLoading, fromOrTo = "from") => {
         if (internationalData.payer?.id && internationalData.payoutChannel?.id && amount) {
@@ -668,7 +666,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                     const receivingCurrency = internationalData?.recipient_currency || internationalData?.exchange_rate?.receiver?.currency
                     const walletCurrency = internationalData?.wallet?.currency?.code
 
-                    if (internationalData.payment_type?.value === "wallet" && internationalData?.wallet?.currency) {
+                    if (internationalData.payment_type?.value === "wallet" && internationalData?.wallet?.currency && internationalData?.wallet?.currency?.code) {
                         if (receivingCurrency && walletCurrency && receivingCurrency === walletCurrency) {
                             amount = Number(String(internationalData.receiving_amount)?.replaceAll(",", ""))
                         } else {
@@ -1175,7 +1173,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                 }
                 // })
                 else {
-                    if (internationalData.payment_type?.value !== "wallet" || internationalData?.wallet?._id) {
+                    if (internationalData.payment_type?.value !== "wallet" || internationalData?.wallet?._id ) {
                         if (internationalData.payoutChannel?.vendor === "thunes") {
                             createQuotation(Number(String(internationalData.amount)?.replaceAll(",", "")))
                         } else {

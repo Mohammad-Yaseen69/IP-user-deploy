@@ -105,7 +105,7 @@ const StepFour = ({
     }
   }, [typesData, data.mobile_wallet_services]);
 
-  console.log(types, 'dsafsadffsad')
+  // console.log(types, 'dsafsadffsad')
   useEffect(() => {
     if (types.length > 0) {
       const defaultPaymentType = types.find((item) => item.value !== "card") ?? types?.[0];
