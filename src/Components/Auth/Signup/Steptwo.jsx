@@ -100,6 +100,7 @@ const Steptwo = ({ data, dataHandler }) => {
                             }}
                             padding="12px 16px 12px 12px"
                             shadow={false}
+                            containerStyle={{  border: '1px solid #E4E3E5', boxShadow: 'none', borderRadius:'6px'}}
                             selectedCountryStyle={styles.selectedCountry}
                         />
                     </div>

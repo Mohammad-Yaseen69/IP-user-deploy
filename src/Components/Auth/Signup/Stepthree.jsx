@@ -32,7 +32,8 @@ const Stepthree = ({ data, dataHandler, onKeyDown, onFocus }) => {
                                 fontFamily: 'Inter',
                                 fontSize: '16px',
                                 fontWeight: 400,
-                                letterSpacing: '-0.48px'
+                                letterSpacing: '-0.48px',
+                                width:'100%'
                             }}
                             setPhone={(e) => {
                                 dataHandler("phone", e)

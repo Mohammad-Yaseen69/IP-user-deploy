@@ -124,17 +124,18 @@ const OtpConfirmation = ({ verifyOTpHandler, resendHandler, timer = 120, type = 
                         <div className={styles.otp_inp}>                         
                             <div className={styles.otp_inputs}>
                                 {otpValues.map((value, index) => (
-                                    <input
-                                        key={index}
-                                        maxLength={1}
-                                        value={value}
-                                        onPaste={handlePaste}
-                                        onChange={(e) => {
-                                            handleInputChange(index, e.target.value)
-                                        }}
-                                        onKeyDown={(e) => handleInputKeyDown(index, e)}
-                                        ref={(input) => (inputRefs.current[index] = input)}
-                                    />
+                                    <div className={styles.otp_inputWrapper} key={index}>
+                                        <input
+                                            maxLength={1}
+                                            value={value}
+                                            onPaste={handlePaste}
+                                            onChange={(e) => {
+                                                handleInputChange(index, e.target.value)
+                                            }}
+                                            onKeyDown={(e) => handleInputKeyDown(index, e)}
+                                            ref={(input) => (inputRefs.current[index] = input)}
+                                        />
+                                    </div>
                                 ))}
                             </div>
                         </div>
@@ -178,9 +179,11 @@ const OtpConfirmation = ({ verifyOTpHandler, resendHandler, timer = 120, type = 
                             <span>
                                 {
                                     resendTimer > 0
-                                        ? type === "email"
-                                            ? t("Resend Code In 100 Seconds").replace("100", formatTimer(resendTimer))
-                                            : t("Resend Code In 100 Seconds").replace("100", resendTimer)
+                                        ?
+                                        <>
+                                            {t("Didn't get it? You can resend in")}&nbsp;
+                                            <span className={styles.countDownTimer}>{type === "email" ? formatTimer(resendTimer) : resendTimer}</span>
+                                        </>
                                         :
                                         <>{t("Didn't receive OTP?") + " "} <span style={{ color: "#5926f0", cursor: "pointer" }} onClick={() => {
                                             setOTPValues(Array(numberOfFields).fill(''))

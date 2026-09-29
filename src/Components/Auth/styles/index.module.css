@@ -7,6 +7,7 @@
     align-items: center;
     padding: 20px;
     gap: 20px;
+    min-height: 100vh;
 }
 
 .leftSide {
@@ -861,10 +862,52 @@
     gap: 24px;
 }
 
-.registerOtpForm .otp_inputs{
-    input{
-        
+.registerOtpForm .otp_inputWrapper {
+    border-radius: 6px;
+    border: 1px solid #E4E3E5;
+    background: #FFF;
+    box-shadow: 0 1px 1.5px 0 rgba(44, 54, 53, 0.03);
+    padding: 16px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    height: 80px;
+    width: 90px;
+
+    input {
+        color: #0C0A20;
+        text-align: center;
+        font-family: Inter;
+        font-size: 32px;
+        font-weight: 600;
+        line-height: 120%;
+        max-width: none;
+        max-height: none;
+        background: none;
+        padding: 0;
+        border-bottom: 1px solid;
+        width: 24px;
     }
+}
+
+.registerOtpForm .toggle_sms {
+    span {
+        color: #6E7687;
+        font-family: Inter;
+        font-size: 12px;
+        font-weight: 400;
+        line-height: 18px;
+    }
+}
+
+.registerOtpForm .toggle_sms .countDownTimer {
+    color: #1B1F2A;
+    font-family: Inter;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 18px;
 }
 
 .changeContainer {
@@ -879,7 +922,7 @@
     }
 
     span {
-        color: #5926F0  !important;
+        color: #5926F0 !important;
         font-family: Inter;
         font-size: 14px !important;
         font-weight: 600;
@@ -1292,5 +1335,24 @@
 
     .otp_inputs {
         gap: 8px;
+    }
+
+    .registerForm {
+        width: 100%;
+    }
+
+    .registerOtpForm .otp_inputWrapper {
+        height: 55px;
+        width: 100%;
+        padding: 16px 8px;
+
+        input {
+            font-size: 25px;
+        }
+    }
+
+    .registerOtpContainer .center_bottom .btns {
+        width: 100%;
+        margin-top: 24px;
     }
 }
