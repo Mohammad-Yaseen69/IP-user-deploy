@@ -4,7 +4,6 @@ import { getAssetSymbol, getWalletAccentColor } from "../CryptoWallet/utils/form
 import { formatWalletAmount, getWalletAvailable } from "../CryptoWallet/instapay/wallets"
 import styles from "./ibanToCrypto.module.scss"
 
-/* Where the converted USDT lands; the wallet is picked for the user, so this just says which. */
 const DestinationNote = ({ wallet, onCreate }) => {
     const { t } = useTranslation()
 

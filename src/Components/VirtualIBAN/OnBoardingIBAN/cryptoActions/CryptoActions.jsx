@@ -14,11 +14,6 @@ import { UserContext } from '../../../../Context/UserContext';
 import { usePermission } from '../../../../hooks/GeneralUse/usePermission';
 import MobileHeader from '../../../../Common/Component/MobileHeader';
 
-/*
- * Everything crypto the virtual IBAN can do, laid out like Move money: top up the IBAN
- * from crypto, convert IBAN balance into an InstaPay crypto wallet, and (later) pay out
- * to an external crypto address.
- */
 const CryptoActions = () => {
     const { t } = useTranslation();
     const width = useWindowWidth();
@@ -40,7 +35,6 @@ const CryptoActions = () => {
     const { data: syncedBalance } = useSyncVirtualIbanBalance(ibanId);
     const currentBalance = syncedBalance?.balance ?? selectedIban?.balance ?? 0;
 
-    /* Converting debits the IBAN, so it follows the same outgoing switch as SEPA and SWIFT. */
     const isOutboundBlocked =
         isVirtualIbanOutboundBlocked(syncedBalance) || isVirtualIbanOutboundBlocked(selectedIban);
     const canConvert = can("virtual-iban.funds.convert") && !isOutboundBlocked;
@@ -50,7 +44,6 @@ const CryptoActions = () => {
             ? t("You don't have permission to do this.")
             : "";
 
-    /* On a phone the conversion takes over this screen instead of opening a dialog. */
     const showConvertPage = showConvert && isMobile;
     const closeConvert = () => setShowConvert(false);
 

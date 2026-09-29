@@ -238,8 +238,6 @@ export const useExecuteVirtualIbanTransfer = () => {
     })
 }
 
-/* IBAN (EUR) to the user's own crypto wallet. The fee sits inside the amount, and the
-   quote's token is valid for 10 minutes and a single confirm. */
 export const useVirtualIbanCryptoTransferFee = () =>
     useMutation({
         mutationFn: (payload) =>
@@ -265,7 +263,6 @@ export const useExecuteVirtualIbanCryptoTransfer = () => {
                 isDecrypted: true,
                 idempotencyKey,
             }),
-        /* The EUR leaves the IBAN on confirm, before the crypto lands. */
         onSuccess: (_, variables) => {
             queryClient.invalidateQueries({ queryKey: virtualIbanQueryKeys.list() })
             if (variables?.iban_id) {

@@ -28,11 +28,6 @@ const formatClock = (seconds) => {
     return `${Math.floor(safe / 60)}:${String(safe % 60).padStart(2, "0")}`
 }
 
-/*
- * The quote the user confirms. The fee comes out of the amount, the crypto figure is an
- * estimate until the conversion settles, and the quote lives 10 minutes: when it runs
- * out a fresh one is fetched, since confirming an expired quote is refused.
- */
 const ReviewStep = ({ feeDetails, quoteExpiresAt, wallet, iban, onRefreshQuote, isRefreshing }) => {
     const { t } = useTranslation()
     const remaining = () => Math.round(((quoteExpiresAt || 0) - Date.now()) / 1000)
@@ -45,7 +40,6 @@ const ReviewStep = ({ feeDetails, quoteExpiresAt, wallet, iban, onRefreshQuote, 
         return () => clearInterval(timer)
     }, [quoteExpiresAt])
 
-    /* An expired quote can't be confirmed, so a fresh one is fetched as it runs out. */
     const expired = !!quoteExpiresAt && secondsLeft <= 0
     useEffect(() => {
         if (expired && !isRefreshing) onRefreshQuote?.()

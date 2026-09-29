@@ -110,7 +110,6 @@ const QuickActions = ({ selectedIban }) => {
                 return;
 
             case 5:
-                // Crypto opens its own screen of actions, like Move money does.
                 if (isCryptoTopupAllowed) {
                     navigate("/onboarding-IBAN/crypto");
                 }

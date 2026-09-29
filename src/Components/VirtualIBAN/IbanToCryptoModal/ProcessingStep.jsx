@@ -15,8 +15,6 @@ const money = (value, currency, maxDigits) => {
     return `${num.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: maxDigits })} ${currency ?? ""}`.trim()
 }
 
-/* Shown once the conversion is confirmed. The EUR has left the IBAN and the crypto arrives
-   when the conversion settles, announced by a notification, so there is nothing to wait for. */
 const ProcessingStep = ({ result }) => {
     const { t } = useTranslation()
 

@@ -4,7 +4,6 @@ export const STEPS = {
     DONE: "DONE",
 }
 
-/* DONE is the "processing" screen shown after confirm, not a step the user works through. */
 export const SIDEBAR_STEPS = [
     { stepName: STEPS.AMOUNT, stepLabel: "STEP 01", label: "Amount" },
     { stepName: STEPS.REVIEW, stepLabel: "STEP 02", label: "Review & Confirm" },
@@ -33,10 +32,8 @@ export const getDisabledState = (stepName, data) => {
 
     switch (stepName) {
         case STEPS.AMOUNT:
-            /* The USDT wallet is picked for the user; without one there is nowhere to credit. */
             return !data.wallet?._id || !data.amount || amount <= 0 || amount > availableBalance
         case STEPS.REVIEW:
-            /* A quote is single use and expires; without a live one there is nothing to confirm. */
             return !data.feeDetails?.token || data.quoteExpired
         default:
             return false

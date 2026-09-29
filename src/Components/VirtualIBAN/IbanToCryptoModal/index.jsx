@@ -34,11 +34,9 @@ import DestinationNote from "./DestinationNote"
 import ReviewStep from "./ReviewStep"
 import ProcessingStep from "./ProcessingStep"
 
-/* The conversion credits the user's USDT wallet; there is no wallet to choose. */
 const TARGET_CURRENCY = "USDT"
 const QUOTE_LIFETIME_MS = 10 * 60 * 1000
 
-/* Quote errors the user fixes by taking a fresh quote rather than by changing anything. */
 const STALE_QUOTE = /expired|already been used|does not match|invalid quote/i
 
 const CoinsIcon = () => (
@@ -79,22 +77,16 @@ const SIDEBAR_ICONS = {
     [STEPS.REVIEW]: () => <IdBadgeIcon />,
 }
 
-/* When the quote token itself says it expires; the 10 minute rule if it can't be read. */
 const getQuoteExpiry = (token) => {
+    let exp
     try {
-        const payload = JSON.parse(atob(String(token).split(".")[1].replace(/-/g, "+").replace(/_/g, "/")))
-        if (payload?.exp) return payload.exp * 1000
+        exp = JSON.parse(atob(String(token).split(".")[1].replace(/-/g, "+").replace(/_/g, "/")))?.exp
     } catch {
-        /* fall through */
+        exp = null
     }
-    return Date.now() + QUOTE_LIFETIME_MS
+    return exp ? exp * 1000 : Date.now() + QUOTE_LIFETIME_MS
 }
 
-/*
- * Convert virtual IBAN (EUR) balance into the user's InstaPay USDT wallet.
- * A dialog on desktop; with `isPage` it renders straight into the page (the mobile
- * screen), and exposes back() through the ref for that page's header.
- */
 const IbanToCryptoModal = forwardRef(({ isOpen, toggle, selectedIban, availableBalance, isPage = false }, ref) => {
     const { t } = useTranslation()
     const width = useWindowWidth()
@@ -123,7 +115,6 @@ const IbanToCryptoModal = forwardRef(({ isOpen, toggle, selectedIban, availableB
         if (active) getUserWallets()
     }, [active])
 
-    /* The active USDT wallet, the default one first if there are several. */
     const wallet = useMemo(() => (
         (userWallets || [])
             .filter(item => (
@@ -167,7 +158,6 @@ const IbanToCryptoModal = forwardRef(({ isOpen, toggle, selectedIban, availableB
         const data = res?.data
         setFeeDetails(data)
         setQuoteExpiresAt(getQuoteExpiry(data?.token))
-        /* A new quote is a new request, so it gets a new idempotency key. */
         resetIdempotency()
         return data
     }, [ibanId, wallet, amount])
@@ -181,7 +171,6 @@ const IbanToCryptoModal = forwardRef(({ isOpen, toggle, selectedIban, availableB
     }, [fetchQuote])
 
     const confirm = async () => {
-        /* A quote is single use: never let a double tap send it twice. */
         if (confirmingRef.current) return
         confirmingRef.current = true
         try {
@@ -200,7 +189,6 @@ const IbanToCryptoModal = forwardRef(({ isOpen, toggle, selectedIban, availableB
                 return
             }
             const message = showError(error, "We couldn't start the conversion. Please try again.")
-            /* The quote is spent or stale; take a fresh one so the user can simply retry. */
             if (STALE_QUOTE.test(message) || error?.response?.status === 502) {
                 await refreshQuote()
             }
@@ -245,7 +233,6 @@ const IbanToCryptoModal = forwardRef(({ isOpen, toggle, selectedIban, availableB
 
     useImperativeHandle(ref, () => ({ back: handleBack }))
 
-    /* ---------------------------------- render ---------------------------------- */
 
     const renderStepContent = () => {
         switch (currentStep) {
@@ -338,7 +325,6 @@ const IbanToCryptoModal = forwardRef(({ isOpen, toggle, selectedIban, availableB
                 ) : (
                     <div className={styles.footer} style={isDone ? { justifyContent: "flex-end" } : undefined}>
                         {isDone ? (
-                            /* Nothing left to do here: the credit arrives with a notification. */
                             <button type="button" className={styles.nextBtn} onClick={handleClose}>
                                 {t("Close")}
                             </button>
