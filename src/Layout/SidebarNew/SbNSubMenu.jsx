@@ -117,7 +117,7 @@ const SidebarSubMenu = ({ menu, className, setIsOpen, isOpen, level, showModal, 
                                     marginBottom: inheritSize && togglSidebar ? ".1rem" : "0",
                                     marginRight: !inheritSize && togglSidebar ? "13px" : "0",
                                     // opacity: togglSidebar ? 0 : 1
-                                }}>{t(item.title)}</li>
+                                }}>{t(inheritSize ? item.title : `${item?.title.slice(0,4)}${item?.title.length > 4 ? '...' : ''}`)}</li>
                                 :
                                 checkPermission(item?.permission) ?
                                     <li
