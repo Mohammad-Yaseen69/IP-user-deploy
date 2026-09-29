@@ -184,7 +184,7 @@ const Signup = ({ country, setIsLoginForm, setHideLogo, handleStepChange }) => {
             case 3:
                 return data.account_type === "individual" ? !data.phone || data.phone.length < 9 || !/^\d{9,20}$/g.test(data.phone) : (!emailRegex.test(data.email))
             case 4:
-                return !passwordRegex.every(item => item.test(data.password)) || data.password !== data.confirm_password
+                return !passwordRegex.every(item => item.test(data.password)) || data.password !== data.confirm_password || data.password.length < 9 || data.password.length > 64
 
             default:
                 break;
