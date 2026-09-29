@@ -60,7 +60,8 @@ const TAB_PARAMS = [
     // "withdraw" rather than "withdrawal" so the shorter link in the app
     // matches too; it never did under the old check.
     ["withdraw", "Receiving Accounts"],
-    ["crypto", "Crypto Receiving Accounts"],
+    // Crypto wallets now live on the receiving accounts page.
+    ["crypto", "Receiving Accounts"],
     ["cards", "Manage Saved Cards"],
     ["data", "Download Your Data"],
     ["delete", "Delete Your Account"],
@@ -162,12 +163,6 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
             active_icon: mwc_active,
             tabType: 'withdrawls'
         },
-        can("settings.receiving-accounts.view") &&
-        {
-            name: "Crypto Receiving Accounts",
-            icon: mwc,
-            active_icon: mwc_active,
-        },
         can("settings.saved-cards.view") &&
         {
             name: "Manage Saved Cards",
@@ -216,7 +211,7 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
     const [navigatedTabs] = useState([
         { param: "tfa", name: "Two Factor Authentication" },
         { param: "social", name: "My Social Network Accounts" },
-        { param: "crypto", name: "Crypto Receiving Accounts" },
+        { param: "crypto", name: "Receiving Accounts" },
         { param: 'verification', name: "Identity Verification" }
     ])
     useEffect(() => {

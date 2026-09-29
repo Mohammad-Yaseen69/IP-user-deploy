@@ -465,14 +465,7 @@ export const PAGES = [
         route: "/settings?tab=withdrawal",
         permission: "settings.view",
         description:
-            "Bank or mobile accounts to withdraw to. This is the page for cashing out or linking a bank account.",
-    },
-    {
-        id: "crypto_accounts",
-        title: "Crypto Receiving Accounts",
-        route: "/settings?tab=crypto",
-        permission: "settings.view",
-        description: "External crypto addresses to withdraw to. Network matters when saving an address.",
+            "Bank, mobile wallet, cash pickup and crypto wallet accounts to withdraw to, grouped by country. This is the page for cashing out, linking a bank account or saving a crypto address (network matters).",
     },
     {
         id: "change_password",
