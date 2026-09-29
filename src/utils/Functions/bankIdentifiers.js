@@ -5,6 +5,38 @@ import { isValidBic } from '../../Components/VirtualIBAN/utils/swiftValidation';
    bank code, a six digit sort code, then the eight digit account number. */
 const STRUCTURE_SEGMENT = /([ABCFLUW])(\d{2})/g;
 
+/* The iban package ships only the countries in the SEPA-centric registry, so it rejects
+   every IBAN from these twelve outright - Morocco included, which is a live corridor for
+   us. Each spec below was derived from a real IBAN for that country and checked against
+   the ISO 13616 mod-97 checksum, and the example is kept so it can be re-verified.
+
+   Registered only where the package has no entry, so if a future version adds them its
+   own definition wins. */
+const MISSING_COUNTRY_SPECS = [
+    ['MA', 28, 'F24', 'MA64011519000001205000534921'],
+    ['LY', 25, 'F21', 'LY83002048000020100120361'],
+    ['SD', 18, 'F14', 'SD2129010501234001'],
+    ['NE', 28, 'U02F22', 'NE58NE0380100100130305000268'],
+    ['TG', 28, 'U02F22', 'TG53TG0090604310346500400070'],
+    ['CF', 27, 'F23', 'CF4220001000010120069700160'],
+    ['CG', 27, 'F23', 'CG3930011000101013451300019'],
+    ['GA', 27, 'F23', 'GA2140021010032001890020126'],
+    ['TD', 27, 'F23', 'TD8960002000010271091600153'],
+    ['KM', 27, 'F23', 'KM4600005000010010904400137'],
+    ['DJ', 27, 'F23', 'DJ2110002010010409943020008'],
+    ['GQ', 27, 'F23', 'GQ7050002001003715228190196'],
+];
+
+const Specification = ibanLib.countries?.FR?.constructor;
+
+if (Specification) {
+    MISSING_COUNTRY_SPECS.forEach(([countryCode, length, structure, example]) => {
+        if (!ibanLib.countries[countryCode]) {
+            ibanLib.countries[countryCode] = new Specification(countryCode, length, structure, example);
+        }
+    });
+}
+
 export const toElectronicIban = (value) => ibanLib.electronicFormat(String(value || ''));
 
 export const isValidIban = (value) => ibanLib.isValid(toElectronicIban(value));
