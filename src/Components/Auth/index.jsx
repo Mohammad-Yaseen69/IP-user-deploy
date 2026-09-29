@@ -12,15 +12,14 @@ import { useLocation } from "react-router"
 import rightImage from "./agentAuth/files/image.png";
 import ShortLogo from "../../assets/images/logo/logo_white.png";
 import useWindowWidth from "../../utils/useWindowWidth"
-import { Check } from "react-feather"
 import { StuckCircle } from "../PaymentAddressPublic/PayAsGuest/Svgs"
 import { Link } from "react-router-dom"
 
 const swissFlag = coun.find(item => item.alpha3 === "CHE")?.file_url
 
-const steps = [
-  {key:1,label:'Create account'},{key:2,label:'Verify your identity'},{key:3,label:'Review and submit'},
-]
+// const steps = [
+//   {key:1,label:'Create account'},{key:2,label:'Verify your identity'},{key:3,label:'Review and submit'},
+// ]
 
 const Auth = () => {
   const { t } = useTranslation()
@@ -95,7 +94,7 @@ const Auth = () => {
               <div className={styles.registerLeftContainer}>
                 <h2>{t("Open your InstaPay account")}</h2>
                 <p>{t('Takes a few minutes.')}</p>
-                <div className={styles.stepsContainer}>
+                {/* <div className={styles.stepsContainer}>
                   {steps.map(step=>{
                     const isCompleted = registerStep > step.key;
                     const isActive = registerStep === step.key;
@@ -108,11 +107,14 @@ const Auth = () => {
                       {step.key === 1 && <div className={styles.stepsCount}>{registerStep} {t('of')} {steps.length}</div>}
                     </div>
                   )})}
-                </div>
-                <div className={styles.leftBottomContainer}>
-                    <StuckCircle />
-                    <span>{t('Stuck on a step?')}&nbsp;<Link>{t('Visit the Help Center')}</Link></span>
-                </div>
+                </div> */}
+                
+              </div>
+            }
+            {!isLoginForm &&
+              <div className={styles.leftBottomContainer}>
+                      <StuckCircle />
+                      <span>{t('Stuck on a step?')}&nbsp;<Link to={"https://guide.insta-pay.ch"} target="_blank">{t('Visit the Help Center')}</Link></span>
               </div>
             }
           </div>

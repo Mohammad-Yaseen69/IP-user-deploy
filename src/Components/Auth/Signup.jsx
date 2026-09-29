@@ -582,6 +582,7 @@ const Signup = ({ country, setIsLoginForm, setHideLogo, handleStepChange }) => {
                                                     <ChevronRight size={20} color="white" />
                                                 </button>
                                             </div>
+                                                <SecurityShield/>
                                         </form>
                             }
                         </>

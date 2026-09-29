@@ -117,7 +117,7 @@ const OtpConfirmation = ({ verifyOTpHandler, resendHandler, timer = 120, type = 
                     <p>{type === "phone" ?
                     t(`Enter the SMS code sent to +41********4053`).replace("+41********4053", `${data?.[type]?.slice(0, data?.[type]?.length - 4).split("").map(_ => "*").join("")}${data?.[type]?.slice(data?.[type]?.length - 4)}`).replace("SMS", currentMethod === "whatsapp" ? "WhatsApp" : "SMS") 
                     :
-                    t("We sent a 6-digit code to")} {getMaskedEmail()}</p>
+                    `${t("We sent a 6-digit code to")} ${getMaskedEmail()}`}</p>
                 </div>
                 <div className={styles.registerOtpContainer}>
                     <div className={styles.top}>

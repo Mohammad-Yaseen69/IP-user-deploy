@@ -176,12 +176,13 @@
 }
 
 .leftBottomContainer {
+    z-index: 2;
     display: flex;
     align-items: center;
     gap: 12px;
-    bottom: -295px;
+    bottom: 25px;
     position: absolute;
-
+    left: 32px;
     span {
         color: rgba(255, 255, 255, 0.56);
         font-family: Inter;
@@ -243,7 +244,7 @@
 .registerForm {
     display: flex;
     flex-direction: column;
-    gap: 64px;
+    gap: 30px;
     max-width: 560px;
     margin-inline: auto;
 }
@@ -1267,6 +1268,10 @@
     .center_bottom {
         flex-direction: column-reverse;
         align-items: center;
+    }
+
+   .registerFormContainer .center_bottom {
+        flex-direction: column;
     }
 
     .auth_details .right {
