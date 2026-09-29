@@ -5,13 +5,15 @@ import { isValidBic } from '../../Components/VirtualIBAN/utils/swiftValidation';
    bank code, a six digit sort code, then the eight digit account number. */
 const STRUCTURE_SEGMENT = /([ABCFLUW])(\d{2})/g;
 
-/* The iban package ships only the countries in the SEPA-centric registry, so it rejects
-   every IBAN from these twelve outright - Morocco included, which is a live corridor for
-   us. Each spec below was derived from a real IBAN for that country and checked against
-   the ISO 13616 mod-97 checksum, and the example is kept so it can be re-verified.
+/* The iban package is stuck on 0.0.14 and its country table predates a decade of IBAN
+   registry changes, so it rejects valid account numbers two different ways: countries it
+   has never heard of, and countries whose length has since changed.
 
-   Registered only where the package has no entry, so if a future version adds them its
-   own definition wins. */
+   Every spec below was derived from a real IBAN for that country and checked against the
+   ISO 13616 mod-97 checksum. The sample is kept inline so any of them can be re-verified
+   without hunting for a source. Where the registry allows letters in the account part the
+   structure stays permissive, because a too-strict pattern rejects valid input while
+   length plus mod-97 already does the real work. */
 const MISSING_COUNTRY_SPECS = [
     ['MA', 28, 'F24', 'MA64011519000001205000534921'],
     ['LY', 25, 'F21', 'LY83002048000020100120361'],
@@ -25,6 +27,25 @@ const MISSING_COUNTRY_SPECS = [
     ['KM', 27, 'F23', 'KM4600005000010010904400137'],
     ['DJ', 27, 'F23', 'DJ2110002010010409943020008'],
     ['GQ', 27, 'F23', 'GQ7050002001003715228190196'],
+    ['FK', 18, 'U02F12', 'FK88SC123456789012'],
+    ['HN', 28, 'U04F20', 'HN54PISA00000000000000123124'],
+    ['MN', 20, 'F16', 'MN121234123456789123'],
+    ['NI', 28, 'U04F20', 'NI45BAPR00000013000003558124'],
+    ['OM', 23, 'F03A16', 'OM810180000001299123456'],
+    ['RU', 33, 'F14A15', 'RU0204452560040702810412345678901'],
+    ['SO', 23, 'F19', 'SO211000001001000100141'],
+    ['YE', 30, 'U04F04A18', 'YE09CBKU0000000000001234560101'],
+    ['GW', 25, 'A02F19', 'GW04GW1430010181800637601'],
+];
+
+/* Countries the package does know, but at a length the registry has since changed. These
+   are the worse failure of the two: the package looks authoritative and silently rejects
+   every valid account number. Corrected only while the stale length is still there, so
+   this turns itself off once the package catches up. */
+const CORRECTED_COUNTRY_SPECS = [
+    ['BI', 16, 27, 'F23', 'BI4210000100010000332045181'],
+    ['DZ', 24, 26, 'F22', 'DZ580002100001113000000570'],
+    ['BF', 27, 28, 'A02F22', 'BF42BF0840101300463574000390'],
 ];
 
 const Specification = ibanLib.countries?.FR?.constructor;
@@ -32,6 +53,12 @@ const Specification = ibanLib.countries?.FR?.constructor;
 if (Specification) {
     MISSING_COUNTRY_SPECS.forEach(([countryCode, length, structure, example]) => {
         if (!ibanLib.countries[countryCode]) {
+            ibanLib.countries[countryCode] = new Specification(countryCode, length, structure, example);
+        }
+    });
+
+    CORRECTED_COUNTRY_SPECS.forEach(([countryCode, staleLength, length, structure, example]) => {
+        if (ibanLib.countries[countryCode]?.length === staleLength) {
             ibanLib.countries[countryCode] = new Specification(countryCode, length, structure, example);
         }
     });
