@@ -1,17 +1,16 @@
-import React, { useContext, useState } from 'react'
-import { Button, Input, Label, Modal, ModalBody, ModalHeader } from 'reactstrap'
-import styles from "./styles/AddNominee.module.css"
-import { Camera } from 'react-feather'
-import PhoneInput from 'react-phone-input-2'
-import OTPConfirmation from '../User/UserSettings/OTPConfirmation'
-import SuccessModal from '../User/UserSettings/SuccessModal'
 import axios from 'axios'
+import { useContext, useState } from 'react'
+import { Camera } from 'react-feather'
+import { useTranslation } from 'react-i18next'
+import PhoneInput from 'react-phone-input-2'
+import { toast } from 'react-toastify'
+import { Button, Input, Label } from 'reactstrap'
 import { UserContext } from '../../Context/UserContext'
 import { decryptData } from '../../Helper/EssentilaMethods/Decryption'
-import { useTranslation } from 'react-i18next'
-import { toast } from 'react-toastify'
-import { minDate } from './Basic'
 import { encryptData } from '../../Helper/EssentilaMethods/Encryption'
+import SuccessModal from '../User/UserSettings/SuccessModal'
+import { minDate } from './Basic'
+import styles from "./styles/AddNominee.module.css"
 
 const NomineeDetails = ({ nominee, setNominee }) => {
     const { t } = useTranslation()

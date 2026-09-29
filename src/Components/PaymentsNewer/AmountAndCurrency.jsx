@@ -12,7 +12,7 @@ import { UserContext } from "../../Context/UserContext";
 import { useLocation, useParams } from "react-router";
 import cities from "../CitiesDropDown/CitiesData.json"
 import CreditCardInput from "../CreditInput";
-import { LimitsErrorMessage, possibleErrors } from "./OTPConfirmation";
+import { LimitsErrorMessage, possibleErrors } from "../../utils/Functions/paymentLimits";
 import InstaPayLoader from "../Loader";
 import { formatCurrency } from "../../Helper/AmountFormat";
 

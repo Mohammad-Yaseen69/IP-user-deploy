@@ -7,7 +7,7 @@ import { encryptData } from '../../../Helper/EssentilaMethods/Encryption';
 import axios from 'axios';
 import { decryptData } from '../../../Helper/EssentilaMethods/Decryption';
 import SuccessModal from './SuccessModal';
-import OTPConfirmation from './OTPConfirmation';
+import OtpVerification from '../../../Common/Component/OtpVerification';
 import { ChevronDown, ChevronUp } from 'react-feather';
 import { useTranslation } from 'react-i18next';
 
@@ -162,7 +162,7 @@ const SecurityQuestions = ({ isCollapsed, setIsCollapsed }) => {
                     <Modal isOpen={showOtp} toggle={() => setShowOtp(!showOtp)}>
                         <ModalHeader toggle={() => setShowOtp(!showOtp)}>{t("Confirm")}</ModalHeader>
                         <ModalBody>
-                            <OTPConfirmation callback={(setter) => UpdateQuestionHandler(setter)} setter={setShowSuccess} setterValue={true} hideOtp={() => setShowOtp(false)} />
+                            <OtpVerification variant="card" hideTfaSwitch callback={(setter) => UpdateQuestionHandler(setter)} setter={setShowSuccess} setterValue={true} hideOtp={() => setShowOtp(false)} />
                         </ModalBody>
                     </Modal>
                 </div>

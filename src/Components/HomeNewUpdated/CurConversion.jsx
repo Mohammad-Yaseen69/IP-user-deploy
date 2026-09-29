@@ -8,7 +8,7 @@ import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 import ConversionModal from "./ConversionModal";
 import { UserContext } from "../../Context/UserContext";
 import styles from "./styles/CurConversion.module.css"
-import { LimitsErrorMessage } from "../PaymentsNewer/OTPConfirmation";
+import { LimitsErrorMessage } from "../../utils/Functions/paymentLimits";
 import { formatCurrency } from "../../Helper/AmountFormat";
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
 

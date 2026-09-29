@@ -57,7 +57,7 @@ import InstaPayLoader from "../../Loader"
 import { useCreateVirtualIban, useVirtualIbans, virtualIbanQueryKeys } from "../../../hooks/useVirtualIban"
 import { handlePaymentApiError } from "../../../utils/Functions/handlePaymentApiError"
 import { useNavigate } from "react-router"
-import OTPConfirmation from "../../UserSettingsNew/OTPConfirmation"
+import OTPConfirmation from "../../../Common/Component/OtpVerification"
 import {
     getActivationFeeConfig,
     getActiveInstaWallets,
@@ -123,6 +123,7 @@ const VirtualIbanModal = ({
     const [showOtp, setShowOtp] = useState(false)
     const [otpToken, setOtpToken] = useState("")
     const [codeType, setCodeType] = useState("sms")
+    const [otpMethods, setOtpMethods] = useState(null)
     const [createdIban, setCreatedIban] = useState(null)
     const [pendingTransactionId, setPendingTransactionId] = useState("")
     const [pendingTransactionRef, setPendingTransactionRef] = useState("")
@@ -164,8 +165,9 @@ const VirtualIbanModal = ({
     })
 
     const { sendOtp, isSendingOtp } = useSendOtp({
-        onSuccess: (token) => {
+        onSuccess: (token, dec) => {
             setOtpToken(token)
+            setOtpMethods(dec)
             setShowOtp(true)
         },
         onError: (err) => {
@@ -253,6 +255,10 @@ const VirtualIbanModal = ({
     useEffect(() => {
         if (userDetails?.tfa) {
             setCodeType("authenticator")
+        } else if (userDetails?.email_verification) {
+            setCodeType("email")
+        } else if (userDetails?.whatsapp_verification) {
+            setCodeType("whatsapp")
         }
     }, [userDetails])
 
@@ -925,6 +931,7 @@ const VirtualIbanModal = ({
             <Modal isOpen={showOtp} toggle={() => setShowOtp(false)} centered>
                 <ModalBody>
                     <OTPConfirmation
+                        variant="card"
                         setter={() => { }}
                         setterValue={true}
                         hideOtp={() => setShowOtp(false)}
@@ -933,6 +940,7 @@ const VirtualIbanModal = ({
                         resendHandler={handleSendOtp}
                         authType={codeType}
                         setAuthType={setCodeType}
+                        methods={otpMethods}
                     />
                 </ModalBody>
             </Modal>

@@ -6,7 +6,7 @@ import { encryptData } from '../../Helper/EssentilaMethods/Encryption';
 import axios from 'axios';
 import { decryptData } from '../../Helper/EssentilaMethods/Decryption';
 import { useTranslation } from 'react-i18next';
-import OTPConfirmation from '../UserSettingsNew/OTPConfirmation';
+import OTPConfirmation from '../../Common/Component/OtpVerification';
 import SuccessModal from '../AddBeneficiary/SuccessModal';
 import { useLocation, useNavigate } from 'react-router';
 import { toast } from 'react-toastify';
@@ -39,13 +39,14 @@ const SecurityQuestions = () => {
     const [saving, setSaving] = useState("")
     const [token, setToken] = useState("")
     const [codeType, setCodeType] = useState("sms")
+    const [otpMethods, setOtpMethods] = useState(null)
     const can = usePermission()
     const isEdit = can("settings.security-questions.update")
     useEffect(() => {
-        setCodeType(userDetails?.tfa ? "authenticator" : "sms")
+        setCodeType(userDetails?.tfa ? "authenticator" : userDetails?.email_verification ? "email" : userDetails?.whatsapp_verification ? "whatsapp" : "sms")
     }, [userDetails])
 
-    const sendOtp = async () => {
+    const sendOtp = async (method) => {
         setSaving(true)
         const data = {
             data: {
@@ -56,10 +57,20 @@ const SecurityQuestions = () => {
                 question3: selectedQuesThree,
                 answer3: answerThree?.trim() || "",
             },
-            type: codeType
+            type: typeof method === "string" ? method : codeType
         }
 
-        if (userDetails?.user?.question1 || userDetails?.user?.question2 || userDetails?.user?.question3) {
+        if (
+            userDetails?.user
+                ? (userDetails.user.question1 ||
+                    userDetails.user.question2 ||
+                    userDetails.user.question3)
+                : (
+                    userDetails?.company?.answer1 ||
+                    userDetails?.company?.answer2 ||
+                    userDetails?.company?.answer3
+                )
+        ) {
             try {
                 const encrypted = encryptData(data)
                 const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/send-otp`, {
@@ -70,6 +81,8 @@ const SecurityQuestions = () => {
 
                 const dec = decryptData(res.data.data)
                 setToken(dec?.token)
+                setOtpMethods(dec)
+                if (!showOtp) setCodeType(dec?.otp_sent_on || "sms")
                 setShowOtp(true)
             } catch (error) {
                 toast.error("Something went wrong while sending otp!")
@@ -94,7 +107,7 @@ const SecurityQuestions = () => {
                     }
                 })
                 .catch(err => {
-                    const decrypted = decryptData(err.response.data.data);
+                    const decrypted = err?.response?.data?.data ? decryptData(err.response.data.data) : null;
                     toast.error(decrypted?.message ?? "Something went wrong while adding questions!")
                 }).finally(() => setSaving(false))
         }
@@ -160,7 +173,7 @@ const SecurityQuestions = () => {
     useEffect(() => {
         setIsEditable(editmode)
     }, [editmode])
-
+    // console.log(userDetails.user, "userDetails?.user?.question1")
     return (
         <Form className="card" id='security'>
             <CardHeader className={`pb-0`}>
@@ -314,7 +327,7 @@ const SecurityQuestions = () => {
                             outline: "none",
                             borderRadius: "10px"
                         }}
-                            onClick={sendOtp}
+                            onClick={() => sendOtp()}
                             disabled={(!selectedQuesOne || !answerOne) || (!answerTwo || !selectedQuesTwo) || (!selectedQuesThree || !answerThree) || !isValidAnswer(answerOne) || !isValidAnswer(answerTwo) || !isValidAnswer(answerThree) || saving}
                             type='button'
                         >{t("Save")}</Button>
@@ -330,6 +343,7 @@ const SecurityQuestions = () => {
                     <ModalHeader toggle={() => setShowOtp(!showOtp)}>{t("Confirm")}</ModalHeader>
                     <ModalBody>
                         <OTPConfirmation
+                            variant="card"
                             callback={UpdateQuestionHandler}
                             setter={setShowSuccess}
                             setterValue={true}
@@ -338,6 +352,7 @@ const SecurityQuestions = () => {
                             resendHandler={sendOtp}
                             authType={codeType}
                             setAuthType={setCodeType}
+                            methods={otpMethods}
                         />
                     </ModalBody>
                 </Modal>

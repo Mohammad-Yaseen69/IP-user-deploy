@@ -13,7 +13,7 @@ import styles from "../style/ActivateAccount.module.css";
 import { UserContext } from "../../../../Context/UserContext";
 import { decryptData } from "../../../../Helper/EssentilaMethods/Decryption";
 import { encryptData } from "../../../../Helper/EssentilaMethods/Encryption";
-import { useMediaQuery } from "@mui/material";
+import { CircularProgress, useMediaQuery } from "@mui/material";
 import { BankIcon, CryptoIcon, OpenBanking } from "./SvgIcons";
 
 const paymentMethods = [
@@ -88,10 +88,12 @@ const ActivateAccount = ({
   useEffect(() => {
     if (!selectedWallet?._id) return;
 
-    const walletCurr = selectedWallet?.currency?.code || "EUR";
+    const walletCurr = selectedWallet?.currency?.code;
 
     const fetchMarkupRates = async () => {
       setLoadingRates(true);
+      // Drop the previous wallet's quote so its amount/currency is never shown for this one.
+      setFeeDetails(null);
       try {
         const payload = encryptData({ wallet_id: selectedWallet._id });
         const res = await axios.post(
@@ -100,13 +102,18 @@ const ActivateAccount = ({
           { headers: authHeader },
         );
         const dec = decryptData(res.data?.data);
+        const currency = dec?.data?.wallet_currency || walletCurr;
+        if (dec?.data?.converted_amount == null || !currency) {
+          toast.error(t("Unable to fetch markup conversion rate"));
+          return;
+        }
         if (dec?.data) {
           setFeeDetails({
-            baseAmount: dec.data.base_amount || 500,
-            convertedAmount: dec.data.converted_amount || 500,
-            currency: dec.data.wallet_currency || walletCurr,
+            baseAmount: dec.data.base_amount,
+            convertedAmount: dec.data.converted_amount,
+            currency,
             exchangeRate: dec.data.exchange_rate || 1,
-            activationFee: dec.data.activation_fee || dec.data.base_amount || 500,
+            activationFee: dec.data.activation_fee ?? dec.data.base_amount,
             kybFee: dec.data.kyb_fee || 0,
             isKybIncluded: dec.data.is_kyb_included || false,
             kybFeeBreakdown: dec.data.kyb_fee_breakdown || null,
@@ -125,12 +132,20 @@ const ActivateAccount = ({
     fetchMarkupRates();
   }, [selectedWallet?._id]);
 
+  const isFeeReady =
+    !loadingRates && feeDetails?.convertedAmount != null && !!feeDetails?.currency;
+
+  const totalDueLabel = !isFeeReady
+    ? ""
+    : feeDetails.currency !== "EUR"
+      ? `${feeDetails.convertedAmount} ${feeDetails.currency}`
+      : `€${feeDetails.baseAmount ?? feeDetails.convertedAmount}.00`;
+
   const isInsufficient = useMemo(() => {
-    if (!selectedWallet) return false;
+    if (!selectedWallet || !isFeeReady) return false;
     const available = selectedWallet.balance?.available || 0;
-    const required = feeDetails?.convertedAmount || 500;
-    return available < required;
-  }, [selectedWallet, feeDetails]);
+    return available < feeDetails.convertedAmount;
+  }, [selectedWallet, feeDetails, isFeeReady]);
 
   const handleWalletSelect = (wallet) => {
     setSelectedWallet(wallet);
@@ -367,7 +382,11 @@ const ActivateAccount = ({
               >
                 <div className={styles.summaryRow}>
                   <span>{t("IBAN activation fee")}</span>
-                  <strong>€{feeDetails?.activationFee || 500}.00</strong>
+                  <strong>
+                    {isFeeReady && feeDetails?.activationFee != null
+                      ? `€${feeDetails.activationFee}.00`
+                      : <CircularProgress size={14} />}
+                  </strong>
                 </div>
 
                 {feeDetails?.isKybIncluded && (
@@ -405,9 +424,9 @@ const ActivateAccount = ({
                     fontWeight: 700,
                   }}
                 >
-                  {feeDetails?.currency !== "EUR"
-                    ? `${feeDetails?.convertedAmount || 500} ${feeDetails?.currency}`
-                    : `€${feeDetails?.baseAmount || 500}.00`}
+                  {isFeeReady
+                    ? totalDueLabel
+                    : <CircularProgress size={24} sx={{ color: "#fff" }} />}
                 </h3>
               </div>
 
@@ -476,18 +495,18 @@ const ActivateAccount = ({
 
         <button
           onClick={onSubmitPayment}
-          disabled={!selectedWallet?._id || loadingRates}
+          disabled={!selectedWallet?._id || !isFeeReady}
           className={styles.continueButton}
           style={{
-            opacity: !selectedWallet?._id || loadingRates ? 0.5 : 1,
-            cursor: !selectedWallet?._id || loadingRates ? "not-allowed" : "pointer",
+            opacity: !selectedWallet?._id || !isFeeReady ? 0.5 : 1,
+            cursor: !selectedWallet?._id || !isFeeReady ? "not-allowed" : "pointer",
           }}
         >
-          {loadingRates
+          {!isFeeReady
             ? t("Calculating...")
             : isInsufficient
             ? t("Confirm & Activate IBAN")
-            : `${t("Pay")} ${feeDetails?.currency !== "EUR" ? `${feeDetails?.convertedAmount} ${feeDetails?.currency}` : `€${feeDetails?.baseAmount || 500}.00`}`}
+            : `${t("Pay")} ${totalDueLabel}`}
         </button>
       </div>
     </div>

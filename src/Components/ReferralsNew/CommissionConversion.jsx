@@ -10,10 +10,10 @@ import axios from 'axios'
 import { decryptData } from '../../Helper/EssentilaMethods/Decryption'
 import { toast } from 'react-toastify'
 import faded_lines from "../PaymentsNewer/files/faded_lines.png"
-import OTPConfirmation from '../UserSettingsNew/OTPConfirmation'
+import OTPConfirmation from '../../Common/Component/OtpVerification'
 import { useNavigate } from 'react-router'
 import InstaPayLoader from '../Loader'
-import { LimitsErrorMessage } from '../PaymentsNewer/OTPConfirmation'
+import { LimitsErrorMessage } from '../../utils/Functions/paymentLimits'
 
 const CommissionConversion = ({ isOpen, toggle, referralBalance = 0, defaultCurrency, setSuccess, getReferralCommission, toggleWithdrawModal }) => {
     const navigate = useNavigate()
@@ -30,10 +30,11 @@ const CommissionConversion = ({ isOpen, toggle, referralBalance = 0, defaultCurr
     const chevRef = useRef(null)
     const [saving, setSaving] = useState(false)
     const [codeType, setCodeType] = useState("sms")
+    const [otpMethods, setOtpMethods] = useState(null)
     const [loading, setLoading] = useState("")
 
     useEffect(() => {
-        setCodeType(userDetails?.tfa ? "authenticator" : "sms")
+        setCodeType(userDetails?.tfa ? "authenticator" : userDetails?.email_verification ? "email" : userDetails?.whatsapp_verification ? "whatsapp" : "sms")
     }, [userDetails])
 
     const handleDrag = (e, ui) => {
@@ -68,6 +69,8 @@ const CommissionConversion = ({ isOpen, toggle, referralBalance = 0, defaultCurr
 
             const dec = decryptData(res.data.data)
             console.log(dec)
+            setOtpMethods(dec)
+            if (!codeTypeArg) setCodeType(dec?.otp_sent_on || "sms")
             setConfirmed(true)
             setToken(dec?.token)
         } catch (error) {
@@ -333,6 +336,7 @@ const CommissionConversion = ({ isOpen, toggle, referralBalance = 0, defaultCurr
                         </>
                         :
                         <OTPConfirmation
+                            variant="card"
                             callback={convertCommission}
                             setter={setSuccess}
                             setterValue={true}
@@ -341,6 +345,7 @@ const CommissionConversion = ({ isOpen, toggle, referralBalance = 0, defaultCurr
                             resendHandler={sendOtp}
                             authType={codeType}
                             setAuthType={setCodeType}
+                            methods={otpMethods}
                         />
                 }
             </ModalBody>
