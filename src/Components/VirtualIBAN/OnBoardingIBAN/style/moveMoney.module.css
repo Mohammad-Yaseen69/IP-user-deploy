@@ -389,3 +389,8 @@
         gap: 4px;
     }
 }
+
+/* Actions that can't be used right now (blocked, no permission, coming soon). */
+.cardDisabled {
+    opacity: 0.55;
+}

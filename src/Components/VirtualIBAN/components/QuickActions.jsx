@@ -9,7 +9,6 @@ import { usePermission } from "../../../hooks/GeneralUse/usePermission";
 import { handlePaymentApiError } from "../../../utils/Functions/handlePaymentApiError";
 import { useSyncVirtualIbanBalance, useVirtualIbanUserBlock } from "../../../hooks/useVirtualIban.jsx";
 import ConvertFundsModal from "../ConvertFundsModal";
-import CryptoTopupModal from "../CryptoTopupModal/index.jsx";
 import { actions } from "../data/Actions.jsx";
 import IBANDetails from "../IBAN/IBANDetails.jsx";
 import StatementModal from "../StatementModal";
@@ -64,8 +63,6 @@ const QuickActions = ({ selectedIban }) => {
         sepa: false,
     })
 
-    const [showCryptoTopupModal, setShowCryptoTopupModal] = useState(false);
-
 
     const isCryptoTopupAllowed = true
     const { t } = useTranslation()
@@ -113,8 +110,9 @@ const QuickActions = ({ selectedIban }) => {
                 return;
 
             case 5:
+                // Crypto opens its own screen of actions, like Move money does.
                 if (isCryptoTopupAllowed) {
-                    setShowCryptoTopupModal(true);
+                    navigate("/onboarding-IBAN/crypto");
                 }
                 return;
             case 7:
@@ -285,11 +283,6 @@ const QuickActions = ({ selectedIban }) => {
                     selectedIban={selectedIban}
                 />
             )}
-            <CryptoTopupModal
-                isOpen={showCryptoTopupModal}
-                toggle={() => setShowCryptoTopupModal(false)}
-                selectedIban={selectedIban}
-            />
         </div>
     );
 };
