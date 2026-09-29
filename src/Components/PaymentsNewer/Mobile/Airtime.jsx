@@ -1,16 +1,11 @@
-import { useTranslation } from "react-i18next";
-import styles from "./styles/International.module.css"
 import { useContext, useEffect, useState } from "react";
 import { ChevronLeft } from "react-feather";
-import Country from "./Country";
-import TopIcon from "./files/Top";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router";
-import PWizard from "../PWizard";
 import { UserContext } from "../../../Context/UserContext";
-import AirtimeDetails from "./AirtimeDetails";
-import OTPConfirmation from "../OTPConfirmation";
-import AirtimeReceipt from "../AirtimeReceipt";
-import Airtime from "../AirtimeFlow"
+import Airtime from "../AirtimeFlow";
+import TopIcon from "./files/Top";
+import styles from "./styles/International.module.css";
 
 const AirtimeMobile = ({ step, setStep, setCurrentFlow, setAction }) => {
     const { t } = useTranslation();

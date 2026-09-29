@@ -6,7 +6,7 @@ import { Modal, ModalBody, ModalHeader } from 'reactstrap'
 import axios from 'axios'
 import { UserContext } from '../../../Context/UserContext'
 import { decryptData } from '../../../Helper/EssentilaMethods/Decryption'
-import OTPConfirmation from './OTPConfirmation'
+import OtpVerification from '../../../Common/Component/OtpVerification'
 import { useTranslation } from 'react-i18next'
 
 const AccountItem = ({ data, ssa }) => {
@@ -140,7 +140,7 @@ const AccountItem = ({ data, ssa }) => {
                     <Modal isOpen={showDelOtp} toggle={() => setShowDelOtp(!showDelOtp)}>
                         <ModalHeader toggle={() => setShowDelOtp(!showDelOtp)}>{t("Confirm")}</ModalHeader>
                         <ModalBody>
-                            <OTPConfirmation callback={(setter) => setter(true)} setter={() => { }} setterValue={false} hideOtp={() => setShowDelOtp(false)} />
+                            <OtpVerification variant="card" hideTfaSwitch callback={(setter) => setter(true)} setter={() => { }} setterValue={false} hideOtp={() => setShowDelOtp(false)} />
                         </ModalBody>
                     </Modal>
                 </div>
@@ -156,7 +156,7 @@ const AccountItem = ({ data, ssa }) => {
             <Modal isOpen={showOtp} toggle={() => setShowOtp(!showOtp)}>
                 <ModalHeader toggle={() => setShowOtp(!showOtp)}>{t("Confirm")}</ModalHeader>
                 <ModalBody>
-                    <OTPConfirmation callback={(setter) => otpCallback(setter)} setter={setChecked} setterValue={false} hideOtp={() => setShowOtp(false)} />
+                    <OtpVerification variant="card" hideTfaSwitch callback={(setter) => otpCallback(setter)} setter={setChecked} setterValue={false} hideOtp={() => setShowOtp(false)} />
                 </ModalBody>
             </Modal>
             <Modal isOpen={noUser} toggle={() => setNoUser(!noUser)}>

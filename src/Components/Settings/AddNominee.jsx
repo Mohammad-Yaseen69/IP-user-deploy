@@ -1,22 +1,21 @@
-import React, { useContext, useEffect, useState } from 'react'
-import { Button, Input, Label, Modal, ModalBody, ModalHeader } from 'reactstrap'
-import styles from "./styles/AddNominee.module.css"
-import { Camera } from 'react-feather'
-import PhoneInput from '../PhoneInput'
-import OTPConfirmation from '../User/UserSettings/OTPConfirmation'
-import SuccessModal from '../User/UserSettings/SuccessModal'
+import DateMomentUtils from '@date-io/moment'
+import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers'
 import axios from 'axios'
-import { UserContext } from '../../Context/UserContext'
-import { decryptData } from '../../Helper/EssentilaMethods/Decryption'
+import { useContext, useEffect, useState } from 'react'
+import { Camera } from 'react-feather'
 import { useTranslation } from 'react-i18next'
-import NestedDropdown from '../NestedDropdown'
-import { BeneficiaryRelation, friendsAndFamily } from '../../utils/Data'
-import africanCountries from "../../Data/AfricanCountries.json"
 import { toast } from 'react-toastify'
+import { Button, Input, Label } from 'reactstrap'
+import { UserContext } from '../../Context/UserContext'
+import africanCountries from "../../Data/AfricanCountries.json"
+import { decryptData } from '../../Helper/EssentilaMethods/Decryption'
 import { encryptData } from '../../Helper/EssentilaMethods/Encryption'
-import DateMomentUtils from '@date-io/moment';
-import { MuiPickersUtilsProvider, DatePicker } from '@material-ui/pickers';
 import { preventEdgeSpaces } from '../../hooks/useTrimInput'
+import { BeneficiaryRelation, friendsAndFamily } from '../../utils/Data'
+import NestedDropdown from '../NestedDropdown'
+import PhoneInput from '../PhoneInput'
+import SuccessModal from '../User/UserSettings/SuccessModal'
+import styles from "./styles/AddNominee.module.css"
 
 const currentDate = new Date();
 const maxDate = currentDate;

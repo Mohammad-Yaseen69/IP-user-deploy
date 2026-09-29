@@ -8,9 +8,9 @@ import { apiWrapper } from '../../utils/Functions/apiWrapper'
 import useWindowWidth from '../../utils/useWindowWidth'
 import InstaPayLoader from '../Loader'
 import TopRight from '../topRight'
+import Compliance from './Compliance'
 import AccountsSidebar from './components/AccountsSidebar'
 import BalanceHeader from './components/BalanceHeader'
-import Empty from './components/Empty'
 import InactiveIban from './components/InactiveIban'
 import MonthlyExpenses from './components/MonthlyExpenses'
 import QuickActions from './components/QuickActions'
@@ -20,15 +20,14 @@ import CryptoChannels from './CryptoChannels'
 import IBAN from './IBAN/IBAN'
 import IBANDetails from './IBAN/IBANDetails'
 import Manage from './Manage/Manage'
-import styles from "./styles/index.module.css"
-import { asVirtualIbanArray, isVirtualIbanInactive } from './utils/virtualIban'
-import VirtualIbanModal from './VirtualIbanModal'
 import OnboardingIBAN from './OnBoardingIBAN'
-import Compliance from './Compliance'
-import { Bell, ChevronLeft } from 'react-feather'
-import { Avatar, Badge } from '@mui/material'
+import styles from "./styles/index.module.css"
+import { asVirtualIbanArray, isVirtualIbanAdminBlocked } from './utils/virtualIban'
+import VirtualIbanModal from './VirtualIbanModal'
 import Notifications from '../Notifications'
 import LanguagePicker from '../LanguagePicker'
+import { ChevronLeft } from 'react-feather'
+
 
 const VirtualBank = () => {
     const {
@@ -62,7 +61,7 @@ const VirtualBank = () => {
         () => ibans.find((iban) => (iban?._id || iban?.id) === selectedAccount) || ibans[0],
         [ibans, selectedAccount]
     )
-    const selectedIbanInactive = isVirtualIbanInactive(selectedIban)
+    const selectedIbanAdminBlocked = isVirtualIbanAdminBlocked(selectedIban)
     const [page, setPage] = useState(1);
     const [limit, setLimit] = useState(10);
     const [statusFilter, setStatusFilter] = useState('');
@@ -153,6 +152,7 @@ const VirtualBank = () => {
             scrollToIbanDetails()
         }
     }, [activeTab, selectedAccount]);
+    console.log(rawIbans, 'rawIbans')
     return (
         <div className={styles.container}>
             <div className={styles.top}>
@@ -170,24 +170,24 @@ const VirtualBank = () => {
 
             </div>
             {((showGetIBAN || (ibans.length === 0 && canCreateIban)) && userDetails?.account_type === "business") &&
-            <div className={styles.mobileTop}>
-                <div className={styles.headerTitle}>
-                    {onboardingStep !== 'landing' && <ChevronLeft size={22} onClick={() => onboardingRef.current?.back()} />}
-                    <h1>
-                        {onboardingStep === 'pricing'
-                        ? t("Your pricing")
-                        : onboardingStep === 'ActivateAccount'
-                        ? t("Activate your account")
-                        : userDetails?.account_type === "business"
-                        ? t("Business IBAN")
-                        : t("My virtual bank")}
-                    </h1>
+                <div className={styles.mobileTop}>
+                    <div className={styles.headerTitle}>
+                        {onboardingStep !== 'landing' && <ChevronLeft size={22} onClick={() => onboardingRef.current?.back()} />}
+                        <h1>
+                            {onboardingStep === 'pricing'
+                                ? t("Your pricing")
+                                : onboardingStep === 'ActivateAccount'
+                                    ? t("Activate your account")
+                                    : userDetails?.account_type === "business"
+                                        ? t("Business IBAN")
+                                        : t("My virtual bank")}
+                        </h1>
+                    </div>
+                    <div className={styles.mobileTopRight}>
+                        <Notifications hideShadow={true} />
+                        <LanguagePicker hideShadow={true} />
+                    </div>
                 </div>
-                <div className={styles.mobileTopRight}>
-                    <Notifications hideShadow={true} />
-                    <LanguagePicker hideShadow={true} />
-                </div>
-            </div>
             }
             {
                 isInitialLoading ? (
@@ -201,7 +201,7 @@ const VirtualBank = () => {
                         userDetails?.account_type === "business" ?
                             <OnboardingIBAN ref={onboardingRef} onStepChange={setOnboardingStep} /> :
                             <IBAN onCreated={handleBackToDashboard} />
-                        : selectedIbanInactive ?
+                        : selectedIbanAdminBlocked ?
                             <div className={styles.main}>
                                 <InactiveIban />
                             </div>

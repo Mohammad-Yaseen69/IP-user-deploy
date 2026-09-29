@@ -110,7 +110,7 @@ const UnsubscribeModal = ({
             <div className={styles.headerRow}>
                 <div className={styles.redAsteriskBadge}>*</div>
                 <h2 className={styles.title}>
-                    {isBlocked ? t("Reactivate your virtual account?") : t("Pause your virtual account?")}
+                    {isBlocked ? t("Subscribe to your virtual account again?") : t("Unsubscribe from your virtual account?")}
                 </h2>
             </div>
 
@@ -142,9 +142,8 @@ const UnsubscribeModal = ({
                 </div>
             </div>
 
-            {!isBlocked && (
-                <div className={styles.reasonSection}>
-                    <label className={styles.reasonLabel}>
+            {/* {!isBlocked && (
+k                    <label className={styles.reasonLabel}>
                         {t("Reason")} <span className={styles.optional}>({t("optional")})</span>
                     </label>
                     <select
@@ -159,7 +158,7 @@ const UnsubscribeModal = ({
                         ))}
                     </select>
                 </div>
-            )}
+            )} */}
 
             <div className={styles.checkboxRow}>
                 <input
@@ -192,7 +191,7 @@ const UnsubscribeModal = ({
                     disabled={!confirmed || isProcessing}
                     style={!confirmed || isProcessing ? { opacity: 0.5, cursor: "not-allowed" } : {}}
                 >
-                    {isProcessing ? t("Processing...") : isBlocked ? t("Reactivate") : t("Pause account")}
+                    {isProcessing ? t("Processing...") : isBlocked ? t("Subscribe") : t("Unsubscribe")}
                 </button>
             </div>
         </div>
@@ -206,7 +205,7 @@ const UnsubscribeModal = ({
             style={{ maxWidth: "480px" }}
         >
             <ModalBody style={{ padding: 0, background: "transparent", border: "none" }}>
-                {!isBlocked && hasBalance ? renderWithBalance() : renderToggleStatus()}
+                {renderToggleStatus()}
             </ModalBody>
         </Modal>
     )
