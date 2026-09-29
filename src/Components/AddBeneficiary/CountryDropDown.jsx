@@ -7,7 +7,7 @@ import Fuse from 'fuse.js';
 import { countriesInDiffLangs } from '../../Data/CountriesWithTranslations/countries';
 import { useMediaQuery } from '@mui/material';
 
-const CountryDropDown = ({ onSelect, country = "", disabled = false, padding = ".7rem .5rem", disabledColor = "#e9ecef", countryNameSize = {}, filteringList = [], setIsCountryInFocus = () => { }, background = "#fff", shadow, containerStyle = {} }) => {
+const CountryDropDown = ({ onSelect, country = "", disabled = false, padding = ".7rem .5rem", disabledColor = "#e9ecef", countryNameSize = {}, filteringList = [], setIsCountryInFocus = () => { }, background = "#fff", shadow, containerStyle = {}, selectedCountryStyle = '' }) => {
     const { t, i18n } = useTranslation()
     const [isOpen, setIsOpen] = useState(false);
     const [selectedCountry, setSelectedCountry] = useState("");
@@ -103,7 +103,7 @@ const CountryDropDown = ({ onSelect, country = "", disabled = false, padding = "
 
     return (
         <Dropdown isOpen={isOpen} toggle={toggleDropdown}>
-            <DropdownToggle color='white' style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", border: isMobile ? '1px solid #1412201F' : "1px solid rgba(0,0,0,.05)", borderRadius: isMobile ? '10px' : "5px", padding: padding, background: disabled ? disabledColor : background, boxShadow: isMobile ? '0px 1px 2px 0px #1412200D' : (shadow ? "0px -0.5px 7.2px 0px rgba(0, 0, 0, 0.20), 0px 0px 4px 6px #FDFDFD inset" : "") }} disabled={disabled}>
+            <DropdownToggle color='white' style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", border: isMobile ? '1px solid #1412201F' : "1px solid rgba(0,0,0,.05)", borderRadius: isMobile ? '10px' : "5px", padding: padding, background: disabled ? disabledColor : background, boxShadow: isMobile ? '0px 1px 2px 0px #1412200D' : (shadow ? "0px -0.5px 7.2px 0px rgba(0, 0, 0, 0.20), 0px 0px 4px 6px #FDFDFD inset" : ""), ...containerStyle }} disabled={disabled}>
                 {
                     isOpen
                         ?
@@ -111,7 +111,7 @@ const CountryDropDown = ({ onSelect, country = "", disabled = false, padding = "
                         :
                         <>
                             {selectedCountry ? (
-                                <div style={{ display: "flex", gap: isMobile ? '10px' : "1rem", alignItems: "center" }}>
+                                <div style={{ display: "flex", gap: isMobile ? '10px' : "1rem", alignItems: "center" }} className={selectedCountryStyle}>
                                     <img src={selectedCountry?.file_url}
                                         alt={selectedCountry?.code}
                                         width="41"
