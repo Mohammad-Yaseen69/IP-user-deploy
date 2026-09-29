@@ -1271,7 +1271,7 @@
     }
 
    .registerFormContainer .center_bottom {
-        flex-direction: column;
+        flex-direction: row;
     }
 
     .auth_details .right {
