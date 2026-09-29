@@ -131,7 +131,7 @@ const Auth = () => {
             }
             <div>              
               <div className={styles.f_footer}>              
-                <LanguagePicker selectUi={true} />
+                <LanguagePicker selectUi={true} shouldOpenUpRequired={true} />
                 {showText &&
                   <span className={styles.footerText}>
                   {t("© 2024 InstaPay | Kemit KIngdom SA")}
