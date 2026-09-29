@@ -46,7 +46,11 @@ export const isSupportedProtocol = (protocol) =>
 export const normalizeProtocol = (value) => {
     const key = String(value || "").trim().toLowerCase()
     if (!key) return ""
-    const protocol = NETWORK_ALIASES[key] || (PROTOCOL_LABELS[key.toUpperCase()] ? key.toUpperCase() : "")
+    const base = key.split(" (")[0].trim()
+    const protocol =
+        NETWORK_ALIASES[key] ||
+        NETWORK_ALIASES[base] ||
+        (PROTOCOL_LABELS[key.toUpperCase()] ? key.toUpperCase() : "")
     return isSupportedProtocol(protocol) ? protocol : ""
 }
 
