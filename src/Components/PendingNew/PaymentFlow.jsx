@@ -9,9 +9,9 @@ import { encryptData } from "../../Helper/EssentilaMethods/Encryption"
 import Wizard from "./Wizard"
 import confirmationVideo from "../PaymentsNewer/files/confirm.mp4"
 import SuccessModal from "../AddBeneficiary/SuccessModal"
-import OTPConfirmation from "../UserSettingsNew/OTPConfirmation"
+import OTPConfirmation from "../../Common/Component/OtpVerification"
 import { useTranslation } from "react-i18next"
-import { LimitsErrorMessage } from "../PaymentsNewer/OTPConfirmation"
+import { LimitsErrorMessage } from "../../utils/Functions/paymentLimits"
 import { Link, useNavigate } from "react-router-dom"
 import { useQueryClient } from "@tanstack/react-query"
 
@@ -26,11 +26,12 @@ const PaymentFlow = ({ item, step, setStep, setStatus, verifyToken }) => {
     const [sending, setSending] = useState(false)
     const [token, setToken] = useState("")
     const [codeType, setCodeType] = useState("sms")
+    const [otpMethods, setOtpMethods] = useState(null)
     const [fx, setFx] = useState({})
     const queryClient = useQueryClient()
 
     useEffect(() => {
-        setCodeType(userDetails?.tfa ? "authenticator" : "sms")
+        setCodeType(userDetails?.tfa ? "authenticator" : userDetails?.email_verification ? "email" : userDetails?.whatsapp_verification ? "whatsapp" : "sms")
     }, [userDetails])
     useEffect(() => setStep(1), [])
 
@@ -90,7 +91,8 @@ const PaymentFlow = ({ item, step, setStep, setStatus, verifyToken }) => {
         }
     }, [currentWallet])
 
-    const sendOtp = async () => {
+    const sendOtp = async (method) => {
+        const resolvedType = typeof method === 'string' ? method : codeType
         setSending(true)
         try {
             const data = {
@@ -101,7 +103,7 @@ const PaymentFlow = ({ item, step, setStep, setStatus, verifyToken }) => {
                     purpose: "xyz",
                     payment_type: "payment_request",
                 },
-                type: codeType
+                type: resolvedType
             }
             const encrypted = encryptData(data)
             const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/send-otp`, {
@@ -112,6 +114,8 @@ const PaymentFlow = ({ item, step, setStep, setStatus, verifyToken }) => {
 
             const dec = decryptData(res.data.data)
             // console.log(dec)
+            setOtpMethods(dec)
+            if (typeof method !== 'string') setCodeType(dec?.otp_sent_on || "sms")
             setShowOtp(true)
             setToken(dec?.token)
         } catch (error) {
@@ -196,6 +200,7 @@ const PaymentFlow = ({ item, step, setStep, setStatus, verifyToken }) => {
                 <ModalHeader toggle={() => setShowOtp(!showOtp)}>{t("Confirm")}</ModalHeader>
                 <ModalBody>
                     <OTPConfirmation
+                        variant="card"
                         callback={acceptRequest}
                         setter={setShowSuccess}
                         setterValue={true}
@@ -204,6 +209,7 @@ const PaymentFlow = ({ item, step, setStep, setStatus, verifyToken }) => {
                         authType={codeType}
                         setAuthType={setCodeType}
                         resendHandler={sendOtp}
+                        methods={otpMethods}
                     />
                 </ModalBody>
             </Modal>

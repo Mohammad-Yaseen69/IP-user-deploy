@@ -1,5 +1,5 @@
 import { apiErrorMessage } from "../../Components/PaymentsNewer/InternationalFlow"
-import { LimitsErrorMessage } from "../../Components/PaymentsNewer/OTPConfirmation"
+import { LimitsErrorMessage } from "./paymentLimits"
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption"
 
 export const handlePaymentApiError = ({

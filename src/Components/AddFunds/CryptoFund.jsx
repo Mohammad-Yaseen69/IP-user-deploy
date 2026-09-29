@@ -21,7 +21,7 @@ import FeesComponent from "../PaymentsNewer/InternationalFlow/FeesComponent";
 import InstaPayLoader from "../Loader";
 import { apiWrapper } from "../../utils/Functions/apiWrapper";
 import { apiErrorMessage } from "../PaymentsNewer/InternationalFlow";
-import { LimitsErrorMessage } from "../PaymentsNewer/OTPConfirmation";
+import { LimitsErrorMessage } from "../../utils/Functions/paymentLimits";
 import { WidgetSDK } from "@keabank/websdk";
 import ErrorModal from "../PaymentsNewer/InternationalFlow/ErrorModal";
 import CryptoDetailsModal from "../PaymentAddressPublic/CryptoDetailsModal";

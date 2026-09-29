@@ -15,7 +15,7 @@ import { toast } from 'react-toastify'
 import axios from 'axios'
 import { encryptData } from '../../../Helper/EssentilaMethods/Encryption.jsx'
 import { feeCol } from '../CardtoCardModal/index.jsx'
-import OtpConfirmation from '../../PaymentsNewer/InternationalFlow/OtpConfirmation.jsx'
+import OtpConfirmation from '../../../Common/Component/OtpVerification'
 import StepOne from '../../PaymentsNewer/WalletToWalletFlow/StepOne.jsx'
 import useWindowWidth from '../../../utils/useWindowWidth.jsx'
 import { useLocation, useNavigate } from 'react-router'
@@ -32,7 +32,8 @@ const CardtoWallet = ({ isOpen, setOpen, card, setCurrentCardDetails, currentCar
     const [amount, setAmount] = useState()
     const [feeDets, setFeeDets] = useState({})
     const [token, setToken] = useState(null)
-    const [codeType, setCodeType] = useState("authenticator")
+    const [codeType, setCodeType] = useState("sms")
+    const [otpMethods, setOtpMethods] = useState(null)
     const [loading, setLoading] = useState()
     const [otpError, setOtpError] = useState()
     const [showotp, setshowotp] = useState()
@@ -53,7 +54,8 @@ const CardtoWallet = ({ isOpen, setOpen, card, setCurrentCardDetails, currentCar
         setAmount("");
         setFeeDets({});
         setToken(null);
-        setCodeType("authenticator");
+        setCodeType("sms");
+        setOtpMethods(null);
         setLoading(false);
         setOtpError(null);
         setshowotp(false);
@@ -68,6 +70,10 @@ const CardtoWallet = ({ isOpen, setOpen, card, setCurrentCardDetails, currentCar
         if (userDetails) {
             if (userDetails?.tfa) {
                 setCodeType("authenticator")
+            } else if (userDetails?.email_verification) {
+                setCodeType("email")
+            } else if (userDetails?.whatsapp_verification) {
+                setCodeType("whatsapp")
             } else {
                 setCodeType("sms")
             }
@@ -140,7 +146,8 @@ const CardtoWallet = ({ isOpen, setOpen, card, setCurrentCardDetails, currentCar
         }
     }
 
-    const sendOtp = async () => {
+    const sendOtp = async (methodId) => {
+        const otpMethod = typeof methodId === 'string' ? methodId : codeType
         setLoading(true)
         try {
             const data = {
@@ -149,7 +156,7 @@ const CardtoWallet = ({ isOpen, setOpen, card, setCurrentCardDetails, currentCar
                     cardId: card._id,
                     walletId: (userWallet?._id || recipient?.wallet?._id),
                 },
-                type: codeType,
+                type: otpMethod,
             }
 
             console.log(data)
@@ -159,6 +166,10 @@ const CardtoWallet = ({ isOpen, setOpen, card, setCurrentCardDetails, currentCar
             })
 
             const dec = decryptData(res.data.data)
+            setOtpMethods(dec)
+            if (!showotp) {
+                setCodeType(dec?.otp_sent_on || "sms")
+            }
             setOtpToken(dec?.token)
             setshowotp(true)
         } catch (error) {
@@ -423,6 +434,7 @@ const CardtoWallet = ({ isOpen, setOpen, card, setCurrentCardDetails, currentCar
 
 
             <OtpConfirmation
+                variant="modal"
                 data={{
                     codeType,
                     otpError
@@ -434,6 +446,7 @@ const CardtoWallet = ({ isOpen, setOpen, card, setCurrentCardDetails, currentCar
                     m === "codeType" ? setCodeType(v) : setOtpError(v)
                 }}
                 resendHandler={sendOtp}
+                methods={otpMethods}
                 callback={confirmTransaction}
             />
         </div>
