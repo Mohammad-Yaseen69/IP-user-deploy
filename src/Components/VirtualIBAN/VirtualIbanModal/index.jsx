@@ -45,12 +45,12 @@ import VerificationStep from "./VerificationStep"
 import styles from "./virtualIbanModal.module.scss"
 
 import { useNavigate } from "react-router"
+import OTPConfirmation from "../../../Common/Component/OtpVerification"
 import usePlainFx from "../../../hooks/Payments/usePlainFx"
 import { useCreateVirtualIban, useVirtualIbans, virtualIbanQueryKeys } from "../../../hooks/useVirtualIban"
 import SocketsService from "../../../Services/Socket"
 import { handlePaymentApiError } from "../../../utils/Functions/handlePaymentApiError"
 import InstaPayLoader from "../../Loader"
-import OTPConfirmation from "../../../Common/Component/OtpVerification"
 import { getVirtualIbanCountry, normalizeVirtualIban } from "../utils/virtualIban"
 import {
     getActivationFeeConfig,

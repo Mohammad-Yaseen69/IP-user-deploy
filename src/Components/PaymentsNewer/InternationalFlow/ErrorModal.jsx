@@ -21,7 +21,7 @@ const ErrorModal = ({ isOpen, toggle, message = "", heading = "Transaction Faile
     }
 
     return (
-        <Modal isOpen={isOpen}>
+        <Modal isOpen={isOpen} contentClassName={'mx-2'}>
             <ModalBody style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: ".5rem" }}>
                 <AlertTriangle size={80} color='red' />
                 <h4 style={{ color: "red" }}>{t(heading)}</h4>
