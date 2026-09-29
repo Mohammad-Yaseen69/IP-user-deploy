@@ -122,6 +122,29 @@ export const useVirtualIbanBlock = () => {
     })
 }
 
+export const useVirtualIbanUserBlock = () => {
+    const queryClient = useQueryClient()
+
+    return useMutation({
+        mutationFn: ({ ibanId, action }) =>
+            apiWrapper({
+                endpoint: `/api/virtual-iban/block/action/${ibanId}`,
+                method: "PUT",
+                payload: { action },
+                // isDecrypted: true,
+                isEncrypted: true,
+            }),
+        onSuccess: (_, variables) => {
+            const ibanId = variables?.ibanId
+            queryClient.invalidateQueries({ queryKey: virtualIbanQueryKeys.list() })
+            if (ibanId) {
+                queryClient.invalidateQueries({ queryKey: virtualIbanQueryKeys.detail(ibanId) })
+                queryClient.invalidateQueries({ queryKey: virtualIbanQueryKeys.balance(ibanId) })
+            }
+        },
+    })
+}
+
 export const useSyncVirtualIbanBalance = (ibanId) =>
     useQuery({
         queryKey: virtualIbanQueryKeys.balance(ibanId),

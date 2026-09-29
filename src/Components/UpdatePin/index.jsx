@@ -8,7 +8,7 @@ import { UserContext } from '../../Context/UserContext'
 import { decryptData } from '../../Helper/EssentilaMethods/Decryption'
 import { useNavigate } from "react-router-dom"
 import { Modal, ModalBody, ModalHeader } from "reactstrap"
-import OTPConfirmation from "../UserSettingsNew/OTPConfirmation"
+import OTPConfirmation from "../../Common/Component/OtpVerification"
 import { ChevronLeft } from "react-feather"
 import { useTranslation } from 'react-i18next'
 
@@ -142,7 +142,9 @@ const CreatePin = () => {
     }
 
     const sendOtp = async (e) => {
-        e && e.preventDefault()
+        if (e && typeof e.preventDefault === 'function') {
+            e.preventDefault()
+        }
         const pin = pinFields.data.join('');
         const confirmPin = confirmPinFields.data.join('');
 
@@ -269,6 +271,7 @@ const CreatePin = () => {
                             <ModalHeader toggle={() => setShowOtpModal(!showOtpModal)}>{t("Confirm")}</ModalHeader>
                             <ModalBody>
                                 <OTPConfirmation
+                                    variant="card"
                                     callback={updatePinFunc}
                                     setter={setShowSuccess}
                                     setterValue={true}
@@ -441,6 +444,7 @@ const CreatePin = () => {
                 <ModalHeader toggle={() => setShowOtpModal(!showOtpModal)}>{t("Confirm")}</ModalHeader>
                 <ModalBody>
                     <OTPConfirmation
+                        variant="card"
                         callback={updatePinFunc}
                         setter={setShowSuccess}
                         setterValue={true}

@@ -3,7 +3,7 @@ import { Button, Input, Label, Modal, ModalBody, ModalHeader } from 'reactstrap'
 import styles from "./styles/AddNominee.module.css"
 import { Camera } from 'react-feather'
 import PhoneInput from 'react-phone-input-2'
-import OTPConfirmation from '../User/UserSettings/OTPConfirmation'
+import OtpVerification from '../../Common/Component/OtpVerification'
 import SuccessModal from '../User/UserSettings/SuccessModal'
 import axios from 'axios'
 import { UserContext } from '../../Context/UserContext'
@@ -232,13 +232,13 @@ const NomineeDetails = ({ nominee, setNominee }) => {
             <Modal isOpen={showOtp} toggle={() => setShowOtp(!showOtp)}>
                 <ModalHeader toggle={() => setShowOtp(!showOtp)}>{t("Confirm")}</ModalHeader>
                 <ModalBody>
-                    <OTPConfirmation callback={(setter) => updateNomineeHandler(setter)} setter={setShowSuccess} setterValue={true} hideOtp={() => setShowOtp(false)} />
+                    <OtpVerification variant="card" hideTfaSwitch callback={(setter) => updateNomineeHandler(setter)} setter={setShowSuccess} setterValue={true} hideOtp={() => setShowOtp(false)} />
                 </ModalBody>
             </Modal>
             <Modal isOpen={showDelOtp} toggle={() => setShowDelOtp(!showDelOtp)}>
                 <ModalHeader toggle={() => setShowDelOtp(!showDelOtp)}>{t("Confirm")}</ModalHeader>
                 <ModalBody>
-                    <OTPConfirmation callback={(setter) => deleteNomineeHandler(setter)} setter={setShowSuccess} setterValue={true} hideOtp={() => setShowDelOtp(false)} />
+                    <OtpVerification variant="card" hideTfaSwitch callback={(setter) => deleteNomineeHandler(setter)} setter={setShowSuccess} setterValue={true} hideOtp={() => setShowDelOtp(false)} />
                 </ModalBody>
             </Modal>
             <SuccessModal isOpen={showSuccess} toggle={() => setShowSuccess(!showSuccess)} />

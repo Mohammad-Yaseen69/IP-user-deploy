@@ -185,9 +185,9 @@ const SendQuoteReceipt = ({ beneficiary, amount, currency, title, description, f
                     {
                         downloading
                             ?
-                            <div class="d-flex justify-content-center">
-                                <div class="spinner-border" color='primary' role="status">
-                                    <span class="sr-only">{t("Loading...")}</span>
+                            <div className="d-flex justify-content-center">
+                                <div className="spinner-border" color='primary' role="status">
+                                    <span className="sr-only">{t("Loading...")}</span>
                                 </div>
                             </div>
                             :
