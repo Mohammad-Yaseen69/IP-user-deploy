@@ -63,7 +63,7 @@ const Auth = () => {
   const showText =  (width > 1100 || width <= 810)
   return (
     <>
-      {!registrationCompleted &&
+      {registrationCompleted &&
       window.location.pathname.toLowerCase().includes("signup") 
       ? 
         <RegistrationCompleted
