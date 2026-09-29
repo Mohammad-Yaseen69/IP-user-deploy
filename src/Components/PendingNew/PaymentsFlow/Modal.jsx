@@ -7,7 +7,7 @@ import { useContext, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import WalletsComponent from '../../PaymentsNewer/InternationalFlow/WalletsComponent'
 import CreditCard from '../../PaymentsNewer/InternationalFlow/CreditCard'
-import OtpConfirmation from '../../PaymentsNewer/InternationalFlow/OtpConfirmation'
+import OtpConfirmation from '../../../Common/Component/OtpVerification'
 import Receipt from '../../PaymentsNewer/InternationalFlow/Receipt'
 import StepFive from '../../PaymentsNewer/WalletToWalletFlow/StepFive'
 import InstaPayLoader from '../../Loader'
@@ -17,7 +17,7 @@ import { encryptData } from '../../../Helper/EssentilaMethods/Encryption'
 import axios from 'axios'
 import { decryptData } from '../../../Helper/EssentilaMethods/Decryption'
 import { toast } from 'react-toastify'
-import { LimitsErrorMessage } from '../../PaymentsNewer/OTPConfirmation'
+import { LimitsErrorMessage } from '../../../utils/Functions/paymentLimits'
 import recent from "../../PaymentsNewer/Mobile/files/recent.svg"
 import int_styles from "../../PaymentsNewer/Mobile/styles/International.module.css"
 
@@ -125,6 +125,8 @@ const PaymentsFlowModal = ({ isOpen, toggle, data, dataHandler, item }) => {
 
             const dec = decryptData(res.data.data)
             // console.log(dec)
+            dataHandler("otpMethods", dec)
+            if (!codeType) dataHandler("codeType", dec?.otp_sent_on || "sms")
             dataHandler("show_otp", true)
             dataHandler("payment_token", dec?.token)
         } catch (error) {
@@ -609,6 +611,7 @@ const PaymentsFlowModal = ({ isOpen, toggle, data, dataHandler, item }) => {
                                                 data.show_otp
                                                 &&
                                                 <OtpConfirmation
+                                                    variant="modal"
                                                     callback={data.payment_type?.value === "card" ? initiateCardPayment : data.payment_type?.value === "paypal" ? initiatePaypalPayment : acceptRequest}
                                                     data={data}
                                                     dataHandler={dataHandler}
@@ -619,6 +622,7 @@ const PaymentsFlowModal = ({ isOpen, toggle, data, dataHandler, item }) => {
                                                         dataHandler("show_otp", false)
                                                     }}
                                                     resendHandler={sendOtp}
+                                                    methods={data.otpMethods}
                                                     error={data.otp_error}
                                                     resetIdempotency={reset}
 
@@ -787,6 +791,7 @@ const PaymentsFlowModal = ({ isOpen, toggle, data, dataHandler, item }) => {
                                                     data.show_otp
                                                     &&
                                                     <OtpConfirmation
+                                                        variant="modal"
                                                         callback={data.payment_type?.value === "card" ? initiateCardPayment : data.payment_type?.value === "paypal" ? initiatePaypalPayment : acceptRequest}
                                                         data={data}
                                                         dataHandler={dataHandler}
@@ -796,6 +801,7 @@ const PaymentsFlowModal = ({ isOpen, toggle, data, dataHandler, item }) => {
                                                             dataHandler("show_otp", false)
                                                         }}
                                                         resendHandler={sendOtp}
+                                                        methods={data.otpMethods}
                                                         error={data.otp_error}
                                                         resetIdempotency={reset}
                                                     />

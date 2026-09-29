@@ -8,7 +8,7 @@ import { encryptData } from '../../Helper/EssentilaMethods/Encryption'
 import axios from 'axios'
 import { decryptData } from '../../Helper/EssentilaMethods/Decryption'
 import { toast } from 'react-toastify'
-import OTPConfirmation from '../UserSettingsNew/OTPConfirmation'
+import OTPConfirmation from '../../Common/Component/OtpVerification'
 import SuccessModal from '../AddBeneficiary/SuccessModal'
 import { useNavigate } from 'react-router'
 import { usePermission } from '../../hooks/GeneralUse/usePermission'
@@ -68,14 +68,21 @@ const Password = () => {
     const [token, setToken] = useState("")
     const [saving, setSaving] = useState("")
     const [codeType, setCodeType] = useState("sms")
+    const [otpMethods, setOtpMethods] = useState(null)
 
     useEffect(() => {
-        setCodeType(userDetails?.tfa ? "authenticator" : "sms")
+        setCodeType(userDetails?.tfa ? "authenticator" : userDetails?.email_verification ? "email" : userDetails?.whatsapp_verification ? "whatsapp" : "sms")
     }, [userDetails])
 
-    const sendOtp = async (e) => {
-        e.preventDefault()
+    const sendOtp = async (eventOrMethod) => {
+        let method
+        if (eventOrMethod && typeof eventOrMethod.preventDefault === 'function') {
+            eventOrMethod.preventDefault()
+        } else if (typeof eventOrMethod === 'string') {
+            method = eventOrMethod
+        }
         setSaving(true)
+        const type = method || codeType
         try {
             const data = {
                 data: {
@@ -84,7 +91,7 @@ const Password = () => {
                     newPassword: state.new,
                     isAgent: isAgentLogin ? true : false
                 },
-                type: codeType
+                type
             }
             const encrypted = encryptData(data)
             const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/send-otp`, {
@@ -95,6 +102,8 @@ const Password = () => {
 
             const dec = decryptData(res.data.data)
             setToken(dec?.token)
+            setOtpMethods(dec)
+            if (!showOtp) setCodeType(dec?.otp_sent_on || "sms")
             setShowOtp(true)
         } catch (error) {
             toast.error("Something went wrong while changing the password!")
@@ -242,6 +251,7 @@ const Password = () => {
                 <ModalHeader toggle={() => setShowOtp(!showOtp)}>{t("Confirm")}</ModalHeader>
                 <ModalBody>
                     <OTPConfirmation
+                        variant="card"
                         callback={updatePasswordHandler}
                         setter={setShowSuccess}
                         setterValue={true}
@@ -250,6 +260,7 @@ const Password = () => {
                         resendHandler={sendOtp}
                         authType={codeType}
                         setAuthType={setCodeType}
+                        methods={otpMethods}
                     />
                 </ModalBody>
             </Modal>

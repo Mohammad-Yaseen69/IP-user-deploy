@@ -1,7 +1,7 @@
 import { useMutation } from "@tanstack/react-query"
 import { toast } from "react-toastify"
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption"
-import { LimitsErrorMessage } from "../../Components/PaymentsNewer/OTPConfirmation"
+import { LimitsErrorMessage } from "../../utils/Functions/paymentLimits"
 import { getFeeDetails } from "../../Components/QrQuickerPay/queries"
 
 const useFXNew = (data, dataHandler) => {

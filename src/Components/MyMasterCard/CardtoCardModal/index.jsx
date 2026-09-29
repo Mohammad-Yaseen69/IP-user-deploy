@@ -14,7 +14,7 @@ import axios from 'axios'
 import { decryptData } from '../../../Helper/EssentilaMethods/Decryption'
 import { encryptData } from '../../../Helper/EssentilaMethods/Encryption'
 import { toast } from 'react-toastify'
-import OtpConfirmation from "../../PaymentsNewer/InternationalFlow/OtpConfirmation"
+import OtpConfirmation from "../../../Common/Component/OtpVerification"
 import InstaPayLoader from '../../Loader'
 import { Link } from 'react-router-dom'
 import { apiErrorMessage } from '../../PaymentsNewer/InternationalFlow';
@@ -30,6 +30,7 @@ const initialState = {
   showOtpModal: false,
   token: '',
   codeType: "sms",
+  otpMethods: null,
   cards: [],
   loading: false,
   otpError: "",
@@ -200,6 +201,10 @@ const CardtoCard = ({ setOpen, isOpen, card, currentCardDetails, setCurrentCardD
 
     if (userDetails?.tfa) {
       updateHandler("codeType", "authenticator")
+    } else if (userDetails?.email_verification) {
+      updateHandler("codeType", "email")
+    } else if (userDetails?.whatsapp_verification) {
+      updateHandler("codeType", "whatsapp")
     } else {
       updateHandler("codeType", "sms")
     }
@@ -219,7 +224,8 @@ const CardtoCard = ({ setOpen, isOpen, card, currentCardDetails, setCurrentCardD
   }
 
 
-  const sendOtp = async () => {
+  const sendOtp = async (methodId) => {
+    const otpMethod = typeof methodId === 'string' ? methodId : data.codeType
     const apiData = {
       data: {
         senderCardId: card._id,
@@ -228,7 +234,7 @@ const CardtoCard = ({ setOpen, isOpen, card, currentCardDetails, setCurrentCardD
         note: data.note,
         token: data.feeToken,
       },
-      type: data.codeType
+      type: otpMethod
     }
 
 
@@ -243,6 +249,10 @@ const CardtoCard = ({ setOpen, isOpen, card, currentCardDetails, setCurrentCardD
 
       const dec = decryptData(res.data.data)
 
+      updateHandler("otpMethods", dec)
+      if (!data.showOtpModal) {
+        updateHandler("codeType", dec?.otp_sent_on || "sms")
+      }
       updateHandler("showOtpModal", true)
       updateHandler("token", dec?.token)
     } catch (error) {
@@ -748,6 +758,7 @@ const CardtoCard = ({ setOpen, isOpen, card, currentCardDetails, setCurrentCardD
       }
 
       <OtpConfirmation
+        variant="modal"
         data={data}
         dataHandler={updateHandler}
         isLoading={data.loading}
@@ -759,6 +770,7 @@ const CardtoCard = ({ setOpen, isOpen, card, currentCardDetails, setCurrentCardD
         }}
         callback={ctcPayment}
         resendHandler={sendOtp}
+        methods={data.otpMethods}
         error={data.otpError}
       />
     </>

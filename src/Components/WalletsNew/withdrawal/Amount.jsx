@@ -7,7 +7,7 @@ import { encryptData } from "../../../Helper/EssentilaMethods/Encryption";
 import { decryptData } from "../../../Helper/EssentilaMethods/Decryption";
 import { UserContext } from "../../../Context/UserContext";
 import { useLocation } from "react-router";
-import { LimitsErrorMessage, possibleErrors } from "../../PaymentsNewer/OTPConfirmation";
+import { LimitsErrorMessage, possibleErrors } from "../../../utils/Functions/paymentLimits";
 import InstaPayLoader from "../../Loader";
 import { service_name_formatter } from "../../TransactionsNewApi/TransactionItem";
 import { formatCurrency } from "../../../Helper/AmountFormat";

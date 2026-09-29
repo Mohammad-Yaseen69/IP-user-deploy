@@ -1,22 +1,20 @@
+import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Card, CardBody } from "reactstrap";
-import PaymentsBeneficiary from "./Beneficiary";
-import AmountAndCurrency from "./AmountAndCurrency";
-import ConfirmRequest from "./ConfirmRequest";
-import SendActionCard from "./Common/SendActionCard";
-import w3 from "./files/w3.png"
-import q from "./files/q.svg"
-import c_vid from "./files/confirm.mp4"
-import cfm_vid from "./files/confirmation.mp4"
-import PWizard from "./PWizard";
-import ConfirmQuote from "./ConfirmQuote";
-import SendQuoteReceipt from "./SendQuoteReceipt";
-import QuotationDetails from "./QuotationDetails";
-import OTPConfirmation from "./OTPConfirmation";
 import { UserContext } from "../../Context/UserContext";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
-import axios from "axios";
+import PaymentsBeneficiary from "./Beneficiary";
+import SendActionCard from "./Common/SendActionCard";
+import ConfirmQuote from "./ConfirmQuote";
+import c_vid from "./files/confirm.mp4";
+import cfm_vid from "./files/confirmation.mp4";
+import q from "./files/q.svg";
+import w3 from "./files/w3.png";
+import OTPConfirmation from "./OTPConfirmation";
+import PWizard from "./PWizard";
+import QuotationDetails from "./QuotationDetails";
+import SendQuoteReceipt from "./SendQuoteReceipt";
 
 const SendQuotation = ({ setAction, setStep }) => {
     const { t } = useTranslation();
@@ -32,6 +30,7 @@ const SendQuotation = ({ setAction, setStep }) => {
     const [extra, setExtra] = useState("")
     const [transactionDetails, setTransactionDetails] = useState(null)
     const [token, setToken] = useState("")
+    const [otpResponse, setOtpResponse] = useState(null)
 
     const handleRemoveBeneficiary = (index) => {
         const updatedBeneficiaries = [...beneficiary];
@@ -70,7 +69,7 @@ const SendQuotation = ({ setAction, setStep }) => {
     }, [userWallets, currency]);
 
     useEffect(() => {
-        setCodeType(userDetails?.tfa ? "authenticator" : "sms")
+        if (!completed) setCodeType(userDetails?.tfa ? "authenticator" : "sms")
     }, [userDetails])
     return (
         <div style={{ display: "flex" }} className="i_t_con">
@@ -209,6 +208,10 @@ const SendQuotation = ({ setAction, setStep }) => {
                                 }}
                                 setToken={setToken}
                                 totalBalance={totalBalance}
+                                setOtpResponse={(dec) => {
+                                    setOtpResponse(dec)
+                                    if (dec?.otp_sent_on) setCodeType(dec.otp_sent_on)
+                                }}
                             />
                         }
                         {
@@ -231,6 +234,7 @@ const SendQuotation = ({ setAction, setStep }) => {
                                 }}
                                 authType={codeType}
                                 setAuthType={setCodeType}
+                                methods={otpResponse}
                             />
                         }
                         {

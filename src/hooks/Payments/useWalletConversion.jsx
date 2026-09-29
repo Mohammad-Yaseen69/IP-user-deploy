@@ -3,7 +3,7 @@ import axios from "axios"
 import { UserContext } from "../../Context/UserContext"
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption"
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption"
-import { LimitsErrorMessage } from "../../Components/PaymentsNewer/OTPConfirmation"
+import { LimitsErrorMessage } from "../../utils/Functions/paymentLimits"
 
 export const CONVERSION_QUOTE_TTL_MS = 2 * 60 * 1000
 
