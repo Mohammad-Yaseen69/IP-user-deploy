@@ -110,13 +110,14 @@ const SidebarSubMenu = ({ menu, className, setIsOpen, isOpen, level, showModal, 
                                     width: "100%",
                                     padding: !inheritSize && togglSidebar ? "0rem" : "1rem 1.5rem .5rem 1.5rem",
                                     fontWeight: 600,
+                                    textTransform:'uppercase',
                                     letterSpacing: "2px",
                                     fontSize: !inheritSize && togglSidebar ? ".5rem" : ".7rem",
                                     whiteSpace: !inheritSize && togglSidebar ? "normal" : "nowrap",
                                     marginBottom: inheritSize && togglSidebar ? ".1rem" : "0",
                                     marginRight: !inheritSize && togglSidebar ? "13px" : "0",
                                     // opacity: togglSidebar ? 0 : 1
-                                }}>{t(item.title)}</li>
+                                }}>{t(inheritSize ? item.title : `${item?.title.slice(0,4)}${item?.title.length > 4 ? '...' : ''}`)}</li>
                                 :
                                 checkPermission(item?.permission) ?
                                     <li
