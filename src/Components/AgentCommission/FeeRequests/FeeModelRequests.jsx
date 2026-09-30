@@ -10,6 +10,7 @@ import { encryptData } from '../../../Helper/EssentilaMethods/Encryption';
 import useWindowWidth from '../../../utils/useWindowWidth';
 import TopRight from '../../topRight';
 import styles from '../styles/index.module.css';
+import FeeModelEditHistory from './FeeModelEditHistory';
 import FeeModelForm from './FeeModelForm';
 import { DEFAULT_FEE_ITEMS, NO_PERCENT_FEE_IDS, sanitizeFeeSchedule, scheduleFromRequest, updateFeeItem } from './feeSchedule';
 
@@ -381,6 +382,8 @@ const FeeModelRequests = () => {
                                                         ))}
                                                     </div>
                                                 </div>
+
+                                                <FeeModelEditHistory history={req.edit_history} />
                                             </CardBody>
                                         </Card>
                                     </Col>

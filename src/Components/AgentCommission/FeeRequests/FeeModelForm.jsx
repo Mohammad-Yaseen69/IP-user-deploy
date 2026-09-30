@@ -2,6 +2,11 @@ import { useTranslation } from 'react-i18next';
 import { Button, FormGroup, Input, Label, Table } from 'reactstrap';
 import { NO_PERCENT_FEE_IDS } from './feeSchedule';
 
+// Stops a minus sign (or exponent like 1e-5) being typed into fee inputs.
+const blockNegativeInput = (e) => {
+    if (['-', 'e', 'E'].includes(e.key)) e.preventDefault();
+};
+
 const FeeModelForm = ({
     heading,
     title,
@@ -62,6 +67,8 @@ const FeeModelForm = ({
                                     <Input
                                         type="number"
                                         step="any"
+                                        min="0"
+                                        onKeyDown={blockNegativeInput}
                                         value={item.flatEuro}
                                         onChange={(e) => onFeeChange(idx, 'flatEuro', e.target.value)}
                                         style={{ width: '130px' }}
@@ -72,6 +79,8 @@ const FeeModelForm = ({
                                         <Input
                                             type="number"
                                             step="any"
+                                            min="0"
+                                            onKeyDown={blockNegativeInput}
                                             value={item.percentAmount}
                                             onChange={(e) => onFeeChange(idx, 'percentAmount', e.target.value)}
                                             style={{ width: '130px' }}

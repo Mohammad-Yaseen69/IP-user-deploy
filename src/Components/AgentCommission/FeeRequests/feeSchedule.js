@@ -14,14 +14,13 @@ export const DEFAULT_FEE_ITEMS = [
 
 export const NO_PERCENT_FEE_IDS = ['iban_activation', 'monthly_iban_fee'];
 
-// Returns a new schedule with one field of one row updated. Fees without a percentage stay at 0%.
 export const updateFeeItem = (schedule, index, field, value) => {
     const updated = [...schedule];
     const targetItem = updated[index];
     if (field === 'percentAmount' && NO_PERCENT_FEE_IDS.includes(targetItem.id)) {
         updated[index] = { ...targetItem, percentAmount: 0 };
     } else {
-        updated[index] = { ...targetItem, [field]: parseFloat(value) || 0 };
+        updated[index] = { ...targetItem, [field]: Math.max(0, parseFloat(value) || 0) };
     }
     return updated;
 };
