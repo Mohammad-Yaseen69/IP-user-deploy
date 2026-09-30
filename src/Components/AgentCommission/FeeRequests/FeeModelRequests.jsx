@@ -246,7 +246,7 @@ const FeeModelRequests = () => {
                                                     <Button
                                                         size="sm"
                                                         outline
-                                                        style={{ color: '#5926F0', borderColor: '#5926F0', display: 'flex', alignItems: 'center', gap: '4px' }}
+                                                        style={{ padding: '4px 8px', color: '#5926F0', borderColor: '#5926F0', display: 'flex', alignItems: 'center', gap: '4px' }}
                                                         onClick={() => openEditModal(req)}
                                                     >
                                                         <Edit2 size={12} /> {t("Edit")}
@@ -430,7 +430,7 @@ const FeeModelRequests = () => {
                 </ModalBody>
             </Modal>
 
-            
+
         </div>
     );
 };
