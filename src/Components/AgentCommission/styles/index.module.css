@@ -322,3 +322,9 @@
         flex-direction: column;
     }
 }
+
+/* @media (max-width: 768px) {
+    .metricsGrid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+} */

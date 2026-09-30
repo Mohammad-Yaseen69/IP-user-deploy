@@ -111,6 +111,8 @@ const initialUserContext = {
     setIsAgentLogin: () => { },
     isAgentLogin: false,
     cryptoWithdrawals: 0,
+    isSidebarOpen: true,
+    setIsSidebarOpen: () => {}
 };
 
 const createImage = (url) =>
