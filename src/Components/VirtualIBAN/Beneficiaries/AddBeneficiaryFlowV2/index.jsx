@@ -369,7 +369,7 @@ const AddBeneficiaryFlowV2 = ({
         await apiWrapper({
             endpoint: `/api/beneficiary/v2/${beneficiaryId}/channel`,
             method: 'POST',
-            payload: channelPayload,
+            payload: { ...channelPayload, removeAll: isEditMode },
             isEncrypted: true,
             isDecrypted: true,
         });
