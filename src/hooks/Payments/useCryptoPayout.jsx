@@ -32,6 +32,40 @@ export const useValidateCryptoAddress = () =>
             }),
     })
 
+export const useCryptoWithdrawalFee = () =>
+    useMutation({
+        mutationFn: (payload) =>
+            apiWrapper({
+                endpoint: "/api/crypto/withdrawal/fee",
+                method: "POST",
+                payload,
+                isEncrypted: true,
+                isDecrypted: true,
+            }),
+    })
+
+export const useCryptoWithdrawal = () => {
+    const queryClient = useQueryClient()
+    const { getUserWallets } = useContext(UserContext)
+
+    return useMutation({
+        mutationFn: ({ idempotencyKey, ...payload }) =>
+            apiWrapper({
+                endpoint: "/api/crypto/withdrawal",
+                method: "POST",
+                payload,
+                isEncrypted: true,
+                isDecrypted: true,
+                idempotencyKey,
+            }),
+        onSuccess: () => {
+            getUserWallets?.(true)
+            queryClient.invalidateQueries({ queryKey: cryptoPayoutQueryKeys.all })
+            queryClient.invalidateQueries({ queryKey: ["crypto", "portfolio"] })
+        },
+    })
+}
+
 export const useCryptoPayout = () => {
     const queryClient = useQueryClient()
     const { getUserWallets } = useContext(UserContext)
