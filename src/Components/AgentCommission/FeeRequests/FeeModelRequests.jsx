@@ -121,12 +121,12 @@ const FeeModelRequests = () => {
             return;
         }
 
-      const payload = {
+        const payload = {
             request_id: editingRequest._id,
             title: editTitle.trim(),
             fee_schedule: sanitizeFeeSchedule(editFeeSchedule),
         };
- console.log("Edit fee model request payload:", payload);
+        console.log("Edit fee model request payload:", payload);
     };
 
     const copyToClipboard = (text, type = "code") => {
@@ -426,6 +426,8 @@ const FeeModelRequests = () => {
                     )}
                 </ModalBody>
             </Modal>
+
+            
         </div>
     );
 };
