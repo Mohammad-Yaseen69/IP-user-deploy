@@ -12,6 +12,8 @@ import TopRight from '../../topRight';
 import styles from '../styles/index.module.css';
 import FeeModelEditHistory from './FeeModelEditHistory';
 import FeeModelForm from './FeeModelForm';
+import { useEditFeeRequest, useFeeRequestEditHistory } from './hooks/useFeeRequestEdit';
+import { useIdempotency } from '../../../hooks/Payments/useIdempotency';
 import { DEFAULT_FEE_ITEMS, NO_PERCENT_FEE_IDS, sanitizeFeeSchedule, scheduleFromRequest, updateFeeItem } from './feeSchedule';
 
 const FeeModelRequests = () => {
@@ -31,7 +33,9 @@ const FeeModelRequests = () => {
     const [editingRequest, setEditingRequest] = useState(null);
     const [editTitle, setEditTitle] = useState('');
     const [editFeeSchedule, setEditFeeSchedule] = useState(DEFAULT_FEE_ITEMS);
-    const [savingEdit, setSavingEdit] = useState(false);
+    const { getKey: getEditKey, reset: resetEditKey } = useIdempotency();
+
+    const { data: editHistory = [], isLoading: loadingEditHistory } = useFeeRequestEditHistory();
 
     const fetchRequests = useCallback(async () => {
         setLoadingRequests(true);
@@ -56,6 +60,18 @@ const FeeModelRequests = () => {
     useEffect(() => {
         fetchRequests();
     }, [fetchRequests]);
+
+    const { mutate: editFeeRequest, isPending: savingEdit } = useEditFeeRequest({
+        onSuccess: (dec) => {
+            toast.success(dec?.message || t("Fee model request updated successfully!"));
+            resetEditKey();
+            setEditingRequest(null);
+            fetchRequests();
+        },
+        onError: (decErr) => {
+            toast.error(decErr?.message || t("Failed to update fee model request."));
+        },
+    });
 
     const handleFeeChange = (index, field, value) => {
         setFeeSchedule(prev => updateFeeItem(prev, index, field, value));
@@ -101,6 +117,7 @@ const FeeModelRequests = () => {
     };
 
     const openEditModal = (req) => {
+        resetEditKey();
         setEditingRequest(req);
         setEditTitle(req.title || '');
         setEditFeeSchedule(scheduleFromRequest(req.fee_schedule));
@@ -122,12 +139,17 @@ const FeeModelRequests = () => {
             return;
         }
 
-        const payload = {
-            request_id: editingRequest._id,
-            title: editTitle.trim(),
-            fee_schedule: sanitizeFeeSchedule(editFeeSchedule),
-        };
-        console.log("Edit fee model request payload:", payload);
+        editFeeRequest({
+            requestId: editingRequest._id,
+            idempotencyKey: getEditKey(),
+            // Same shape as the create request: flat amounts in EUR, percentages in %.
+            payload: {
+                account_id: userDetails?._id,
+                title: editTitle.trim(),
+                fee_schedule: sanitizeFeeSchedule(editFeeSchedule),
+                agent_revenue_model: editingRequest.agent_revenue_model || revenueModel,
+            },
+        });
     };
 
     const copyToClipboard = (text, type = "code") => {
@@ -382,14 +404,14 @@ const FeeModelRequests = () => {
                                                         ))}
                                                     </div>
                                                 </div>
-
-                                                <FeeModelEditHistory history={req.edit_history} />
                                             </CardBody>
                                         </Card>
                                     </Col>
                                 ))}
                             </Row>
                         )}
+
+                        <FeeModelEditHistory history={editHistory} loading={loadingEditHistory} />
                     </div>
                 ) : (
                     <Card style={{ borderRadius: '12px', border: '1px solid #E5E7EB', padding: '24px' }}>
