@@ -57,7 +57,7 @@ const CryptoIcon = () => (
 )
 
 const ChevronLeft = () => (
-    <svg width="14" height="14" viewBox="0 0 14 15" fill="none">
+    <svg width="20" height="20" viewBox="0 0 14 15" fill="none">
         <path d="M8.75 11L5.25 7.5L8.75 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
 )
@@ -275,7 +275,7 @@ const CryptoTopupModal = ({ isOpen, toggle, selectedIban }) => {
                                         disabled={isProcessing}
                                         onClick={handleBack}
                                     >
-                                        <ChevronLeft size={24} />
+                                            <ChevronLeft size={24} />
                                     </button>
                                 )}
                                 <h2>{t("Top up Virtual IBAN with Crypto")}</h2>
@@ -390,29 +390,29 @@ const CryptoTopupModal = ({ isOpen, toggle, selectedIban }) => {
 
     return (
         <>
-        <Modal
-            isOpen={isOpen}
-            style={{
-                minWidth: width > 1000 ? "900px" : "0px",
-            }}
-            toggle={handleClose}
-        >
-            <ModalBody style={{ padding: "20px" }}>{renderBody()}</ModalBody>
-        </Modal>
-        <Modal
-            isOpen={Boolean(checkoutUrl)}
-            toggle={handleCheckoutClose}
-            style={{ width: "700px", maxWidth: "calc(100% - 2rem)" }}
-        >
-            <ModalHeader toggle={handleCheckoutClose}>{t("Payment Checkout")}</ModalHeader>
-            <ModalBody style={{ padding: 0 }}>
-                <iframe
-                    title={t("Payment Checkout")}
-                    src={checkoutUrl}
-                    style={{ width: "100%", height: "75vh", border: 0, display: "block" }}
-                />
-            </ModalBody>
-        </Modal>
+            <Modal
+                isOpen={isOpen}
+                style={{
+                    minWidth: width > 1000 ? "900px" : "0px",
+                }}
+                toggle={handleClose}
+            >
+                <ModalBody style={{ padding: "20px" }}>{renderBody()}</ModalBody>
+            </Modal>
+            <Modal
+                isOpen={Boolean(checkoutUrl)}
+                toggle={handleCheckoutClose}
+                style={{ width: "700px", maxWidth: "calc(100% - 2rem)" }}
+            >
+                <ModalHeader toggle={handleCheckoutClose}>{t("Payment Checkout")}</ModalHeader>
+                <ModalBody style={{ padding: 0 }}>
+                    <iframe
+                        title={t("Payment Checkout")}
+                        src={checkoutUrl}
+                        style={{ width: "100%", height: "75vh", border: 0, display: "block" }}
+                    />
+                </ModalBody>
+            </Modal>
         </>
     )
 }
