@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
-import { Box, Modal, TextField, IconButton } from '@mui/material';
+import { Box, Modal, TextField, IconButton, useMediaQuery } from '@mui/material';
 import { X, User, Briefcase } from 'react-feather';
 import { useTranslation } from 'react-i18next';
 import { apiWrapper } from '../../../../utils/Functions/apiWrapper';
@@ -9,13 +9,18 @@ import PhoneInput from '../../../PhoneInput';
 import { toast } from 'react-toastify';
 import { UserContext } from '../../../../Context/UserContext';
 import { handleEmailInput, handleNameInput, preventEdgeSpaces, preventEmailSpaces } from '../../../../hooks/useTrimInput';
+import { handlePaymentApiError } from '../../../../utils/Functions/handlePaymentApiError';
+import { useNavigate } from 'react-router';
 const nameRegex = /^[A-Za-z\s]+$/;
+
 const AddBeneficiaryModal = ({ open, handleClose, onSaveSuccess, beneficiaryToEdit }) => {
     const { t } = useTranslation();
+    const isMobile = useMediaQuery('(max-width: 600px)');
     const [loading, setLoading] = useState(false);
     const [beneficiaryType, setBeneficiaryType] = useState('individual');
     const [phoneKey, setPhoneKey] = useState(0);
-    const { allowedCountries } = useContext(UserContext);
+    const { allowedCountries, setProfileLockTime } = useContext(UserContext);
+    const navigate = useNavigate();
     const prefillPhoneRef = useRef('');
     const [formData, setFormData] = useState({
         first_name: '',
@@ -184,9 +189,13 @@ const AddBeneficiaryModal = ({ open, handleClose, onSaveSuccess, beneficiaryToEd
             if (onSaveSuccess) onSaveSuccess(createdOrUpdated, !beneficiaryToEdit);
             handleClose();
         } catch (err) {
-            console.error("Save beneficiary error:", err);
-            const msg = err?.response?.data?.message || err?.message || t("Failed to save beneficiary");
-            toast.error(msg);
+            handlePaymentApiError({
+                error: err,
+                navigate,
+                setProfileLockTime,
+                fallback: t("Failed to save beneficiary"),
+                setError: (message) => toast.error(message),
+            });
         } finally {
             setLoading(false);
         }
@@ -195,9 +204,10 @@ const AddBeneficiaryModal = ({ open, handleClose, onSaveSuccess, beneficiaryToEd
     const commonInputStyles = {
         "& .MuiOutlinedInput-root": {
             borderRadius: "11px",
-            background: "#FAF9FD",
-            border: "1px solid #ECE9F5",
+            background: isMobile ? '#fff' : "#FAF9FD",
+            border: isMobile ? '1px solid #1412201F' : "1px solid #ECE9F5",
             transition: "all 0.2s ease-in-out",
+            boxShadow: isMobile ? '0px 1px 2px 0px #1412200D' : 'none',
             "& fieldset": { border: "none" },
             "&:hover": { borderColor: "#D1C9E9" },
             "&.Mui-focused": { border: "1px solid #4F46E5", background: "#FFFFFF" }
@@ -209,6 +219,27 @@ const AddBeneficiaryModal = ({ open, handleClose, onSaveSuccess, beneficiaryToEd
         },
     };
 
+    const getBeneficiaryTypeButtonStyle = (type) => ({
+        flex: 1,
+        padding: '8px 12px',
+        borderRadius: isMobile ? '10px' : '8px',
+        border: 'none',
+        background: beneficiaryType === type ? (isMobile ? '#7040FF' : '#FFFFFF') : 'transparent',
+        color: beneficiaryType === type ? (isMobile ? 'white' : '#4F46E5') : (isMobile ? '#65627A' : '#6B7280'),
+        fontWeight: isMobile ? 600 : (beneficiaryType === type ? 600 : 500),
+        fontSize: isMobile ? '13px' : '14px',
+        cursor: beneficiaryToEdit ? 'not-allowed' : 'pointer',
+        boxShadow: beneficiaryType === type
+            ? '0 1px 3px rgba(0,0,0,0.1)'
+            : 'none',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: '6px',
+        transition: 'all 0.2s ease',
+    });
+
+    const labelStyle = { display: 'block', fontSize: isMobile ? '10px' : '13px', fontWeight: isMobile ? 600 : 500, color: isMobile ? '#9793A8' : '#374151', marginBottom: '6px', letterSpacing: isMobile ? '1.1px' : 'normal', textTransform: isMobile ? 'uppercase' : 'none' };
     return (
         <Modal open={open} onClose={handleClose} aria-labelledby="add-beneficiary-modal">
             <Box
@@ -218,7 +249,7 @@ const AddBeneficiaryModal = ({ open, handleClose, onSaveSuccess, beneficiaryToEd
                     left: "50%",
                     transform: "translate(-50%, -50%)",
                     width: "100%",
-                    maxWidth: 540,
+                    maxWidth: { xs: '90%', sm: 540 },
                     maxHeight: "90vh",
                     bgcolor: "#FFFFFF",
                     borderRadius: "20px",
@@ -230,16 +261,16 @@ const AddBeneficiaryModal = ({ open, handleClose, onSaveSuccess, beneficiaryToEd
                     overflow: "hidden"
                 }}
             >
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '20px 24px', borderBottom: '1px solid #F3F4F6', flexShrink: 0 }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: isMobile ? '15px 20px' : '20px 24px', borderBottom: '1px solid #F3F4F6', flexShrink: 0, gap: '10px' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                        <div style={{ width: '40px', height: '40px', borderRadius: '12px', background: '#EEF2FF', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#4F46E5' }}>
+                        <div style={{ minWidth: '40px', minHeight: '40px', borderRadius: '12px', background: isMobile ? '#7040FF' : '#EEF2FF', display: 'flex', alignItems: 'center', justifyContent: 'center', color: isMobile ? 'white' : '#4F46E5' }}>
                             <User size={20} />
                         </div>
                         <div>
-                            <h3 style={{ margin: 0, fontSize: '18px', fontWeight: 600, color: '#111827' }}>
+                            <h3 style={{ margin: 0, fontSize: isMobile ? '16px' : '18px', fontWeight: 600, color: '#111827' }}>
                                 {beneficiaryToEdit ? t("Edit Beneficiary") : t("Add Beneficiary")}
                             </h3>
-                            <p style={{ margin: '2px 0 0', fontSize: '13px', color: '#6B7280' }}>
+                            <p style={{ margin: '2px 0 0', fontSize: isMobile ? '12px' : '13px', color: isMobile ? '#65627A' : '#6B7280' }}>
                                 {t("Step 1: Enter recipient personal or company details")}
                             </p>
                         </div>
@@ -251,63 +282,31 @@ const AddBeneficiaryModal = ({ open, handleClose, onSaveSuccess, beneficiaryToEd
 
                 <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', flex: 1, minHeight: 0, overflow: 'hidden' }}>
                     <div style={{ flex: 1, overflowY: 'auto', padding: '24px', minHeight: 0 }}>
-                        <div style={{ display: 'flex', gap: '8px', background: '#F3F4F6', padding: '4px', borderRadius: '12px', marginBottom: '20px', opacity: beneficiaryToEdit ? 0.6 : 1, pointerEvents: beneficiaryToEdit ? 'none' : 'auto' }}>
+                        <div style={{ display: 'flex', gap: '8px', background: isMobile ? '#F3F3F7' : '#F3F4F6', padding: '4px', borderRadius: isMobile ? '13px' : '12px', marginBottom: isMobile ? '15px' : '20px', opacity: beneficiaryToEdit ? 0.6 : 1, pointerEvents: beneficiaryToEdit ? 'none' : 'auto' }}>
                             <button
                                 type="button"
                                 disabled={!!beneficiaryToEdit}
                                 onClick={() => setBeneficiaryType('individual')}
-                                style={{
-                                    flex: 1,
-                                    padding: '8px 12px',
-                                    borderRadius: '8px',
-                                    border: 'none',
-                                    background: beneficiaryType === 'individual' ? '#FFFFFF' : 'transparent',
-                                    color: beneficiaryType === 'individual' ? '#4F46E5' : '#6B7280',
-                                    fontWeight: beneficiaryType === 'individual' ? 600 : 500,
-                                    fontSize: '14px',
-                                    cursor: beneficiaryToEdit ? 'not-allowed' : 'pointer',
-                                    boxShadow: beneficiaryType === 'individual' ? '0 1px 3px rgba(0,0,0,0.1)' : 'none',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    gap: '6px',
-                                    transition: 'all 0.2s ease'
-                                }}
+                                style={getBeneficiaryTypeButtonStyle('individual')}
                             >
-                                <User size={15} />
+                                {!isMobile && <User size={15} />}
                                 {t("Individual")}
                             </button>
                             <button
                                 type="button"
                                 disabled={!!beneficiaryToEdit}
                                 onClick={() => setBeneficiaryType('business')}
-                                style={{
-                                    flex: 1,
-                                    padding: '8px 12px',
-                                    borderRadius: '8px',
-                                    border: 'none',
-                                    background: beneficiaryType === 'business' ? '#FFFFFF' : 'transparent',
-                                    color: beneficiaryType === 'business' ? '#4F46E5' : '#6B7280',
-                                    fontWeight: beneficiaryType === 'business' ? 600 : 500,
-                                    fontSize: '14px',
-                                    cursor: beneficiaryToEdit ? 'not-allowed' : 'pointer',
-                                    boxShadow: beneficiaryType === 'business' ? '0 1px 3px rgba(0,0,0,0.1)' : 'none',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    gap: '6px',
-                                    transition: 'all 0.2s ease'
-                                }}
+                                style={getBeneficiaryTypeButtonStyle('business')}
                             >
-                                <Briefcase size={15} />
+                                {!isMobile && <Briefcase size={15} />}
                                 {t("Business")}
                             </button>
                         </div>
 
                         {beneficiaryType === 'individual' ? (
-                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px', marginBottom: '14px' }}>
+                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: isMobile ? '10px' : '14px', marginBottom: '14px' }}>
                                 <div>
-                                    <label style={{ display: 'block', fontSize: '13px', fontWeight: 500, color: '#374151', marginBottom: '6px' }}>{t("First Name")} *</label>
+                                    <label style={labelStyle}>{t("First Name")} *</label>
                                     <TextField
                                         fullWidth size="small" variant="outlined" required
                                         placeholder={t("e.g. Arnold")}
@@ -322,7 +321,7 @@ const AddBeneficiaryModal = ({ open, handleClose, onSaveSuccess, beneficiaryToEd
                                     />
                                 </div>
                                 <div>
-                                    <label style={{ display: 'block', fontSize: '13px', fontWeight: 500, color: '#374151', marginBottom: '6px' }}>{t("Last Name")} *</label>
+                                    <label style={labelStyle}>{t("Last Name")} *</label>
                                     <TextField
                                         fullWidth size="small" variant="outlined" required
                                         placeholder={t("e.g. Mbuka")}
@@ -335,7 +334,7 @@ const AddBeneficiaryModal = ({ open, handleClose, onSaveSuccess, beneficiaryToEd
                             </div>
                         ) : (
                             <div style={{ marginBottom: '14px' }}>
-                                <label style={{ display: 'block', fontSize: '13px', fontWeight: 500, color: '#374151', marginBottom: '6px' }}>{t("Company Name")} *</label>
+                                <label style={labelStyle}>{t("Company Name")} *</label>
                                 <TextField
                                     fullWidth size="small" variant="outlined" required
                                     placeholder={t("e.g. System Pay Services Solutions")}
@@ -348,7 +347,7 @@ const AddBeneficiaryModal = ({ open, handleClose, onSaveSuccess, beneficiaryToEd
                         )}
 
                         <div style={{ marginBottom: '14px' }}>
-                            <label style={{ display: 'block', fontSize: '13px', fontWeight: 500, color: '#374151', marginBottom: '6px' }}>{t("Country")} *</label>
+                            <label style={labelStyle}>{t("Country")} *</label>
                             <CountryDropDown
                                 country={formData.country_iso_code || formData.country_name}
                                 onSelect={(selected) => {
@@ -361,9 +360,9 @@ const AddBeneficiaryModal = ({ open, handleClose, onSaveSuccess, beneficiaryToEd
                             />
                         </div>
 
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px', marginBottom: '14px' }}>
+                        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: isMobile ? '10px' : '14px', marginBottom: '14px' }}>
                             <div title={isCountryDisabled ? t("Please select country first") : ""}>
-                                <label style={{ display: 'block', fontSize: '13px', fontWeight: 500, color: isCountryDisabled ? '#9CA3AF' : '#374151', marginBottom: '6px' }}>{t("City")} *</label>
+                                <label style={{ ...labelStyle, color: isCountryDisabled ? '#9CA3AF' : (isMobile ? '#9793A8' : '#374151') }}>{t("City")} *</label>
                                 <CitiesDropDown
                                     userCity={formData.city}
                                     setUserCity={(val) => handleChange('city', val)}
@@ -374,7 +373,7 @@ const AddBeneficiaryModal = ({ open, handleClose, onSaveSuccess, beneficiaryToEd
                             </div>
 
                             <div>
-                                <label style={{ display: 'block', fontSize: '13px', fontWeight: 500, color: '#374151', marginBottom: '6px' }}>
+                                <label style={labelStyle}>
                                     {t("Email")} {beneficiaryType === 'business' ? '*' : ''}
                                 </label>
                                 <TextField
@@ -383,7 +382,7 @@ const AddBeneficiaryModal = ({ open, handleClose, onSaveSuccess, beneficiaryToEd
                                     placeholder="name@example.com"
                                     value={formData.email}
                                     onKeyDown={preventEmailSpaces}
-                                     onChange={(e) =>
+                                    onChange={(e) =>
                                         handleChange(
                                             'email',
                                             handleEmailInput(e.target.value)
@@ -395,7 +394,8 @@ const AddBeneficiaryModal = ({ open, handleClose, onSaveSuccess, beneficiaryToEd
                         </div>
 
                         <div title={isCountryDisabled ? t("Please select country first") : ""} style={{ marginBottom: '14px' }}>
-                            <label style={{ display: 'block', fontSize: '13px', fontWeight: 500, color: isCountryDisabled ? '#9CA3AF' : '#374151', marginBottom: '6px' }}>
+                            <label style={{ ...labelStyle, color: isCountryDisabled ? '#9CA3AF' : (isMobile ? '#9793A8' : '#374151') }}
+                            >
                                 {t("Phone Number")} {beneficiaryType === 'individual' ? '*' : ''}
                             </label>
                             <PhoneInput
@@ -410,12 +410,16 @@ const AddBeneficiaryModal = ({ open, handleClose, onSaveSuccess, beneficiaryToEd
                                     if (cName) handleChange('country_name', cName);
                                     if (cCode) handleChange('country_iso_code', cCode);
                                 }}
+                                inputStyles={isMobile ? {
+                                    width: '100%',
+                                    fontWeight: 500
+                                } : {}}
                             />
                         </div>
 
-                        <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '14px', marginBottom: '20px' }}>
+                        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '2fr 1fr', gap: '14px', marginBottom: '20px' }}>
                             <div>
-                                <label style={{ display: 'block', fontSize: '13px', fontWeight: 500, color: '#374151', marginBottom: '6px' }}>{t("Address")} *</label>
+                                <label style={labelStyle}>{t("Address")} *</label>
                                 <TextField
                                     fullWidth size="small" variant="outlined" required
                                     placeholder={t("Street address, building, suite")}
@@ -425,7 +429,7 @@ const AddBeneficiaryModal = ({ open, handleClose, onSaveSuccess, beneficiaryToEd
                                 />
                             </div>
                             <div>
-                                <label style={{ display: 'block', fontSize: '13px', fontWeight: 500, color: '#374151', marginBottom: '6px' }}>{t("Postal / Zip Code")} *</label>
+                                <label style={labelStyle}>{t("Postal / Zip Code")} *</label>
                                 <TextField
                                     fullWidth size="small" variant="outlined" required
                                     placeholder={t("e.g. 10001")}
@@ -442,7 +446,7 @@ const AddBeneficiaryModal = ({ open, handleClose, onSaveSuccess, beneficiaryToEd
                             type="button"
                             onClick={handleClose}
                             style={{
-                                padding: '10px 18px',
+                                padding: isMobile ? '7px 20px' : '10px 18px',
                                 borderRadius: '10px',
                                 border: '1px solid #D1D5DB',
                                 background: '#FFFFFF',
@@ -458,15 +462,16 @@ const AddBeneficiaryModal = ({ open, handleClose, onSaveSuccess, beneficiaryToEd
                             type="submit"
                             disabled={loading}
                             style={{
-                                padding: '10px 24px',
+                                padding: isMobile ? '7px 20px' : '10px 24px',
                                 borderRadius: '10px',
                                 border: 'none',
-                                background: loading ? '#9CA3AF' : '#4F46E5',
+                                background: loading ? '#9CA3AF' : (isMobile ? '#7040FF' : '#4F46E5'),
                                 color: '#FFFFFF',
                                 fontWeight: 600,
                                 fontSize: '14px',
                                 cursor: loading ? 'not-allowed' : 'pointer',
-                                transition: 'background 0.2s ease'
+                                transition: 'background 0.2s ease',
+                                height: isMobile ? 'fit-content' : 'auto'
                             }}
                         >
                             {loading ? t("Saving...") : beneficiaryToEdit ? t("Update Beneficiary") : t("Next")}

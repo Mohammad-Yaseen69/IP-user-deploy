@@ -8,7 +8,7 @@ import { decryptData } from '../../Helper/EssentilaMethods/Decryption'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
 import { encryptData } from '../../Helper/EssentilaMethods/Encryption'
-import OTPConfirmation from '../UserSettingsNew/OTPConfirmation'
+import OTPConfirmation from '../../Common/Component/OtpVerification'
 import { useLocation, useNavigate } from 'react-router'
 import LinkToInstagramModal from '../LinkToInstagramModal'
 import LinktoTelegramModal from "../LinkToTelegramModal"
@@ -31,9 +31,10 @@ const AccountItem = ({ data }) => {
     const [channelEnabled, setChannelEnabled] = useState(false)
     const [otpToken, setOtpToken] = useState("")
     const [showChannelOtp, setShowChannelOtp] = useState(false)
+    const [otpMethods, setOtpMethods] = useState(null)
 
     useEffect(() => {
-        setCodeType(userDetails?.tfa ? "authenticator" : "sms")
+        setCodeType(userDetails?.tfa ? "authenticator" : userDetails?.email_verification ? "email" : userDetails?.whatsapp_verification ? "whatsapp" : "sms")
     }, [userDetails])
 
 
@@ -51,13 +52,14 @@ const AccountItem = ({ data }) => {
         }
     }
 
-    const sendOtp = async () => {
+    const sendOtp = async (method) => {
         setSaving(true)
+        const type = typeof method === "string" ? method : codeType
         const payload = {
             data: {
                 type: data.name.toLowerCase().includes("whatsapp") ? "unlink-whatsapp" : "unlink-insta"
             },
-            type: codeType
+            type
         }
         const enc = encryptData(payload)
         try {
@@ -66,6 +68,8 @@ const AccountItem = ({ data }) => {
             })
             const dec = decryptData(res.data.data)
             setToken(dec?.token)
+            setOtpMethods(dec)
+            if (!showOtp) setCodeType(dec?.otp_sent_on || "sms")
             setShowOtp(true)
         } catch (error) {
             const dec = decryptData(error?.response?.data?.data)
@@ -179,12 +183,12 @@ const AccountItem = ({ data }) => {
             }
         }
     }, [redirect, userDetails])
-    const sendChannelOtp = async () => {
+    const sendChannelOtp = async (method) => {
         try {
             setSaving(true)
 
             const payload = {
-                type: codeType,
+                type: method || codeType,
                 data: {
                     channel:
                         data.name.toLowerCase().includes("insta")
@@ -213,6 +217,8 @@ const AccountItem = ({ data }) => {
             const dec = decryptData(res.data.data)
 
             setOtpToken(dec?.token)
+            setOtpMethods(dec)
+            if (!showChannelOtp) setCodeType(dec?.otp_sent_on || "sms")
             setShowChannelOtp(true)
 
         } catch (error) {
@@ -367,12 +373,14 @@ const AccountItem = ({ data }) => {
                         <ModalHeader toggle={() => setShowDelOtp(!showDelOtp)}>{t("Confirm")}</ModalHeader>
                         <ModalBody>
                             <OTPConfirmation
+                                variant="card"
                                 callback={(setter) => setter(true)}
                                 setter={() => { }}
                                 setterValue={false}
                                 hideOtp={() => setShowDelOtp(false)}
                                 authType={codeType}
                                 setAuthType={setCodeType}
+                                methods={otpMethods}
                             />
                         </ModalBody>
                     </Modal>
@@ -459,6 +467,7 @@ const AccountItem = ({ data }) => {
                 }}>{t("Confirm")}</ModalHeader>
                 <ModalBody>
                     <OTPConfirmation
+                        variant="card"
                         callback={showChannelOtp ? channelOtpCallback : otpCallback}
                         setter={() => { }}
                         setterValue={true}
@@ -470,6 +479,7 @@ const AccountItem = ({ data }) => {
                         resendHandler={showChannelOtp ? sendChannelOtp : sendOtp}
                         authType={codeType}
                         setAuthType={setCodeType}
+                        methods={otpMethods}
                     />
                 </ModalBody>
             </Modal>

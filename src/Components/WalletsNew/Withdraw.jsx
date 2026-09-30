@@ -400,7 +400,7 @@ const WithdrawOldFlow = ({
     const [codeType, setCodeType] = useState("sms")
 
     useEffect(() => {
-        setCodeType(userDetails?.tfa ? "authenticator" : "sms")
+        if (!confirmed) setCodeType(userDetails?.tfa ? "authenticator" : "sms")
     }, [userDetails])
 
     const handleBack = () => {
@@ -515,7 +515,10 @@ const WithdrawOldFlow = ({
                         setSubStep={setStep}
                         reason={"FAMILY_SUPPORT"}
                         quotationDetails={quotationDetails}
-                        setCreatedTransaction={setCreatedTransaction}
+                        setCreatedTransaction={(dec) => {
+                            setCreatedTransaction(dec)
+                            if (dec?.otp_sent_on) setCodeType(dec.otp_sent_on)
+                        }}
                         createdQuotation={createdQuotation}
                         setBeneficiary={() => "a"}
                         codeType={codeType}
@@ -570,6 +573,7 @@ const WithdrawOldFlow = ({
                         isExternalWithdrawal={isExternalWithdrawal}
                         vendor={getVendor()}
                         setAuthType={setCodeType}
+                        methods={createdTransaction}
                         onBeforeConfirm={() => {
                             const amt = Number(String(amount)?.replaceAll(",", ""))
                             if (vendorBalanceInUSD < 4 || amt > vendorBalance) {
@@ -591,7 +595,7 @@ const WithdrawOldFlow = ({
                         country={country}
                         payoutChannel={payoutChannel}
                         paymentType={""}
-                        setShowStatus={() => "a"} 
+                        setShowStatus={() => "a"}
                         setIsInternational={() => "a"}
                         transactionDetails={transactionDetails}
                         type='withdrawn'

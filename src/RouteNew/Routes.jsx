@@ -84,6 +84,7 @@ const MoveMoney = lazy(() => import("../Components/VirtualIBAN/OnBoardingIBAN/mo
 const IbanValidationPage = lazy(() => import("../Components/VirtualIBAN/IbanValidationPage"))
 const InstaMedia = lazy(() => import("../Components/InstaMedia"))
 const StatementsLetters = lazy(() => import("../Components/VirtualIBAN/StatementsLetters/StatementsLetters.jsx"))
+const CryptoWalletsPage = lazy(() => import("../Components/VirtualIBAN/CryptoWallet/CryptoWalletsPage.jsx"))
 const BeneficiariesVirtual = lazy(() => import("../Components/VirtualIBAN/Beneficiaries/BeneficiariesVirtual.jsx"))
 const AgentCommission = lazy(() => import("../Components/AgentCommission/index.jsx"))
 const Leads = lazy(() => import("../Components/AgentCommission/Leads/Leads.jsx"))
@@ -199,6 +200,7 @@ export const routes = [
     { path: "/onboarding-IBAN", component: <PermissionRoute permission="virtual-iban.view"><OnboardingIBAN /></PermissionRoute> },
     { path: "/onboarding-IBAN/priceAcitvation", component: <PermissionRoute permission="virtual-iban.view"><PriceActivation /></PermissionRoute> },
     { path: "/onboarding-IBAN/moneymove", component: <PermissionRoute permission="virtual-iban.view"><MoveMoney /></PermissionRoute> },
+    { path: "/crypto-wallets", component: <PermissionRoute permission="wallet.view"><CryptoWalletsPage /></PermissionRoute> },
     { path: "/third-party-senders", component: <PermissionRoute permission="payments.send-as-third-party.view"><ThirdPartySenders /></PermissionRoute> },
     { path: "*", component: <NotFound type='Page' /> }
 ]

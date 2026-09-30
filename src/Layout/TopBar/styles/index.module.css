@@ -63,4 +63,7 @@
     .right {
         gap: .5rem;
     }
+    .dp {
+        flex-shrink: 0;
+    }
 }

@@ -13,6 +13,7 @@ import KYBPartner from '../../../Settings/KYBPartner'
 import VerificationPayment from '../../../Settings/VerificationPayment'
 import AdditionalFilesSection from '../../../Settings/AdditionalFilesSection'
 import imageCard from '../../files/images/Frame_2147236087.png'
+import { useMediaQuery } from '@mui/material'
 
 const STATUS_CONFIG = {
     pending: {
@@ -104,6 +105,7 @@ const getFeeAmount = async ({ payload, authHeader }) => {
 const StatusScreen = ({ status = 'submitted', ibanNumber, companyName, onAction, onCancel, activationData, partners = [], refreshPartners, setPartners, additionalFiles = [] }) => {
     const { t } = useTranslation()
     const { userDetails, authHeader } = useContext(UserContext)
+    const isMobile = useMediaQuery('(max-width:600px)');
 
     const kybFiles = userDetails?.company?.kyb_additional_file || activationData?.kyb_additional_file || [];
     const ibanFiles = activationData?.iban_additional_file || (Array.isArray(additionalFiles) && additionalFiles.length > 0 ? additionalFiles : []);
@@ -179,19 +181,20 @@ const StatusScreen = ({ status = 'submitted', ibanNumber, companyName, onAction,
     }
 
     return (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', width: '100%' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', width: '100%' , padding:'20px'}}>
             <div style={{
                 width: '100%',
                 background: '#FFFFFF',
                 borderRadius: '16px',
-                padding: '40px 36px',
+                padding: isMobile ? '20px 18px' : '40px 36px',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
                 gap: '40px',
                 boxShadow: '0 1px 3px rgba(0,0,0,0.05)',
                 border: '1px solid #ECECF2',
-                marginTop: '20px'
+                marginTop: '20px',
+                flexDirection: isMobile ? 'column' : 'row'
             }}>
                 <div style={{ flex: '1 1 55%', maxWidth: '600px' }}>
                     <div style={{
@@ -306,7 +309,7 @@ const StatusScreen = ({ status = 'submitted', ibanNumber, companyName, onAction,
                 width: '100%',
                 background: '#FFFFFF',
                 borderRadius: '16px',
-                padding: '40px 36px',
+                padding: isMobile ? '20px 18px' : '40px 36px',
                 display: 'flex',
                 flexDirection: 'column',
                 gap: '24px',
@@ -315,7 +318,7 @@ const StatusScreen = ({ status = 'submitted', ibanNumber, companyName, onAction,
             }}>
                 <h2 style={{ fontSize: '24px', fontWeight: 700, margin: 0, color: '#111827' }}>{t("Submitted Information")}</h2>
 
-                <div style={{ background: '#F9FAFB', padding: '24px', borderRadius: '12px', border: '1px solid #F3F4F6' }}>
+                <div style={{ background: '#F9FAFB', padding: isMobile ? '16px' : '24px', borderRadius: '12px', border: '1px solid #F3F4F6' }}>
                     <h3 style={{ fontSize: '18px', fontWeight: 600, margin: '0 0 16px 0', color: '#111827' }}>{t("Company Details")}</h3>
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '16px' }}>
                         <div>
@@ -345,7 +348,7 @@ const StatusScreen = ({ status = 'submitted', ibanNumber, companyName, onAction,
                     </div>
                 </div>
 
-                <div style={{ background: '#F9FAFB', padding: '24px', borderRadius: '12px', border: '1px solid #F3F4F6' }}>
+                <div style={{ background: '#F9FAFB', padding: isMobile ? '16px' : '24px', borderRadius: '12px', border: '1px solid #F3F4F6' }}>
                     <h3 style={{ fontSize: '18px', fontWeight: 600, margin: '0 0 16px 0', color: '#111827' }}>{t("Documents")}</h3>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                         <div>
@@ -369,7 +372,7 @@ const StatusScreen = ({ status = 'submitted', ibanNumber, companyName, onAction,
                     </div>
                 </div>
 
-                <div style={{ background: '#F9FAFB', padding: '24px', borderRadius: '12px', border: '1px solid #F3F4F6' }}>
+                <div style={{ background: '#F9FAFB', padding: isMobile ? '16px' : '24px', borderRadius: '12px', border: '1px solid #F3F4F6' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
                         <h3 style={{ fontSize: '18px', fontWeight: 600, margin: 0, color: '#111827' }}>{t("Directors")}</h3>
                         <Button 
@@ -384,7 +387,7 @@ const StatusScreen = ({ status = 'submitted', ibanNumber, companyName, onAction,
                         </Button>
                     </div>
 
-                    <Modal isOpen={showAddModal} toggle={() => setShowAddModal(!showAddModal)}>
+                    <Modal style={{maxWidth: isMobile ? '90%' : 'auto'}} isOpen={showAddModal} toggle={() => setShowAddModal(!showAddModal)}>
                         <ModalHeader toggle={() => setShowAddModal(!showAddModal)}>
                             {t("Add New Director")}
                         </ModalHeader>

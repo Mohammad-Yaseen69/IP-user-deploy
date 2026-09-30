@@ -27,14 +27,14 @@ import CreditCard from "../InternationalFlow/CreditCard";
 import ErrorModal from "../InternationalFlow/ErrorModal";
 import FeesComponent from "../InternationalFlow/FeesComponent";
 import MobileWalletServices from "../InternationalFlow/MobileWalletServices";
-import OtpConfirmation from "../InternationalFlow/OtpConfirmation";
+import OtpConfirmation from "../../../Common/Component/OtpVerification";
 import Receipt from "../InternationalFlow/Receipt";
 import StepFour from "../InternationalFlow/StepFour";
 import { currencies } from "../InternationalFlow/StepOne";
 import StepThree from "../InternationalFlow/StepThree";
 import styles from "../InternationalFlow/styles/index.module.css";
 import WalletsComponent from "../InternationalFlow/WalletsComponent";
-import { LimitsErrorMessage } from "../OTPConfirmation";
+import { LimitsErrorMessage } from "../../../utils/Functions/paymentLimits";
 import Recursive from "../RecursivePayment";
 import SchedulePayment from "../SchedulePayment";
 import PaymentType from "./PaymentType";
@@ -176,7 +176,7 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, show
     useEffect(() => {
         if (!userDetails) return
 
-        dataHandler("codeType", userDetails.tfa ? "authenticator" : "sms")
+        dataHandler("codeType", userDetails.tfa ? "authenticator" : userDetails.email_verification ? "email" : userDetails.whatsapp_verification ? "whatsapp" : "sms")
         dataHandler("timezone", userDetails.timezone)
     }, [userDetails])
 
@@ -186,13 +186,14 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, show
             if (data?.wallet?._id === data?.currency?._id) return;
             // dataHandler("currency", data.wallet)
         } else {
-            if (userWallets?.length > 0) {
+            if (userWallets?.length > 0 && !data.currency?._id) {
                 const def = userWallets?.[0]?.wallet_type === "insta" && !userWallets?.[0]?.blocked && !userWallets?.[0]?.admin_blocked && userWallets?.[0]?.status?.toLowerCase() === "active"
                     ?
                     userWallets?.[0]
                     :
                     userWallets?.find(item => item?.default)
                 const wallet = { ...def, ...currencies.find(item => item.currency_code === def?.currency?.code) }
+
                 dataHandler("currency", wallet)
                 dataHandler("currency_wallet", wallet)
             }
@@ -371,9 +372,13 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, show
     const sendOtp = async (codeType = "") => {
         reset()
         dataHandler("loading", true)
+        // First send (no method passed) always starts from the default method (authenticator if enabled),
+        // so a method picked in a previous OTP modal (e.g. sms) is not reused.
+        const isInitialSend = typeof codeType !== "string" || !codeType
         try {
-            const resolvedCodeType = codeType || (userDetails?.tfa ? "authenticator" : data.codeType)
-            dataHandler("codeType", resolvedCodeType)
+            const resolvedCodeType = isInitialSend
+                ? (userDetails?.tfa ? "authenticator" : userDetails?.email_verification ? "email" : userDetails?.whatsapp_verification ? "whatsapp" : "sms")
+                : codeType
             const payload = generatePayload(resolvedCodeType)
             const encrypted = encryptData(payload)
             const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/send-otp`, {
@@ -383,6 +388,13 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, show
             })
 
             const dec = decryptData(res.data.data)
+            // console.log(dec?.otp_sent_on, "dec?.otp_sent_on ")
+            if (dec?.otp_sent_on || dec?.available_methods) {
+                dataHandler("otpMethods", dec)
+            }
+            if (isInitialSend) {
+                dataHandler("codeType", dec?.otp_sent_on || resolvedCodeType)
+            }
             dataHandler("showOtpModal", true)
             dataHandler("otp_token", dec?.token)
         } catch (error) {
@@ -1478,6 +1490,7 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, show
                                                             data.showOtpModal
                                                             &&
                                                             <OtpConfirmation
+                                                                variant="modal"
                                                                 callback={data.payment_type?.value === "card" ? initiateCardPayment : data.payment_type?.value === "paypal" ? initiatePaypalPayment : verifyOtp}
                                                                 data={data}
                                                                 dataHandler={dataHandler}
@@ -1488,6 +1501,7 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, show
                                                                     dataHandler("showOtpModal", false)
                                                                 }}
                                                                 resendHandler={sendOtp}
+                                                                methods={data.otpMethods}
                                                                 error={data.otpError}
                                                                 resetIdempotency={reset}
                                                             />
@@ -1738,6 +1752,7 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, show
                                                                                 data.showOtpModal
                                                                                 &&
                                                                                 <OtpConfirmation
+                                                                                    variant="modal"
                                                                                     callback={data.payment_type?.value === "card" ? initiateCardPayment : data.payment_type?.value === "paypal" ? initiatePaypalPayment : verifyOtp}
                                                                                     data={data}
                                                                                     dataHandler={dataHandler}
@@ -1748,6 +1763,7 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, show
                                                                                         dataHandler("showOtpModal", false)
                                                                                     }}
                                                                                     resendHandler={sendOtp}
+                                                                                    methods={data.otpMethods}
                                                                                     error={data.otpError}
                                                                                     resetIdempotency={reset}
                                                                                 />

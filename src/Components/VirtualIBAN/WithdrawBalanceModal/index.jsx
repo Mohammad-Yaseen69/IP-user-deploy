@@ -17,7 +17,7 @@ import {
 import AmountStep from "./AmountStep"
 import DestinationStep, { shouldShowSaverSpeed } from "./DestinationStep"
 import ReviewStep from "./ReviewStep"
-import OTPConfirmation from "./OTPConfirmation"
+import OTPConfirmation from "../../../Common/Component/OtpVerification"
 import DoneStep from "./DoneStep"
 import styles from "./withdrawBalance.module.scss"
 import SidebarProgress from "../VirtualIbanModal/SidebarProgress"

@@ -8,7 +8,7 @@ import axios from "axios";
 import Notification from "./Notification";
 import { useTranslation } from "react-i18next";
 
-const Notifications = () => {
+const Notifications = ({ hideShadow=false }) => {
     const [showDropDown, setShowDropDown] = useState(false)
     const { t } = useTranslation()
     const dropdownRef = useRef(null);
@@ -35,18 +35,18 @@ const Notifications = () => {
     const { userDetails, authHeader } = useContext(UserContext);
     const [notifications, setNotifications] = useState([]);
 
+    const getNotifications = async () => {
+        try {
+            const response = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/notification/get-notifications/${userDetails?._id}`, {
+                headers: authHeader
+            });
+
+            const decrypted = await decryptData(response?.data?.data);
+            setNotifications(decrypted?.notification || []);
+        } catch (error) {}
+    };
+
     useEffect(() => {
-        const getNotifications = async () => {
-            try {
-                const response = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/notification/get-notifications/${userDetails?._id}`, {
-                    headers: authHeader
-                });
-
-                const decrypted = await decryptData(response?.data?.data);
-                setNotifications(decrypted?.notification || []);
-            } catch (error) {}
-        };
-
         if (userDetails) {
             getNotifications();
         }
@@ -70,7 +70,7 @@ const Notifications = () => {
         <div ref={dropdownRef}>
             <Col xs="auto" style={{
                 padding: ".5rem",
-                boxShadow: "0px 9.94788px 10.7769px rgba(109, 41, 220, 0.17)",
+                boxShadow: hideShadow ? 'none' : "0px 9.94788px 10.7769px rgba(109, 41, 220, 0.17)",
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
@@ -129,6 +129,7 @@ const Notifications = () => {
                                             notification={item}
                                             currentUser={item?.fromDetails?._id === userDetails?._id ? item?.toDetails : item?.fromDetails}
                                             key={item?._id}
+                                            onRead={getNotifications}
                                         />
                                     ))
                                 :

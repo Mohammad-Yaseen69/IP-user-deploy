@@ -1,12 +1,10 @@
 import axios from 'axios'
-import { useContext, useEffect, useReducer, useState } from 'react'
+import { forwardRef, useContext, useEffect, useImperativeHandle, useReducer, useState } from 'react';
 import { Activity, ArrowRight, Cpu, CreditCard, Globe, Zap } from 'react-feather'
 import { useTranslation } from 'react-i18next'
-import { useNavigate } from 'react-router'
 import { toast } from 'react-toastify'
 import { UserContext } from '../../../Context/UserContext'
 import { usePermission } from '../../../hooks/GeneralUse/usePermission'
-import useWindowWidth from '../../../utils/useWindowWidth'
 import imageCard from "../files/images/Frame_2147236087.png"
 import styles from "./style/OnboardingIban.module.css"
 
@@ -23,7 +21,8 @@ import { Modal, ModalBody, Spinner } from 'reactstrap'
 import { decryptData } from '../../../Helper/EssentilaMethods/Decryption'
 import { encryptData } from '../../../Helper/EssentilaMethods/Encryption'
 import useSendOtp from '../../../hooks/GeneralUse/useSendOtp'
-import OTPConfirmation from '../../UserSettingsNew/OTPConfirmation'
+import OTPConfirmation from '../../../Common/Component/OtpVerification'
+import { useMediaQuery } from '@mui/material'
 
 const STEPS_BUSINESS = ['landing', 'selection', 'account', 'company', 'activity', 'ownership', 'documents', 'review']
 const STEPS_INDIVIDUAL = ['landing', 'selection', 'account', 'review']
@@ -47,7 +46,7 @@ const initialState = {
     ownership: { owners: [] },
     documents: { files: {} },
     selectedWallet: null,
-    feeDetails: { baseAmount: 500, convertedAmount: 500, currency: 'EUR', exchangeRate: 1 },
+    feeDetails: null,
     requestData: null,
 }
 
@@ -72,7 +71,7 @@ function onboardingReducer(state, action) {
         case 'SET_SELECTED_WALLET':
             return { ...state, selectedWallet: action.payload }
         case 'SET_FEE_DETAILS':
-            return { ...state, feeDetails: { ...state.feeDetails, ...action.payload } }
+            return { ...state, feeDetails: action.payload ? { ...state.feeDetails, ...action.payload } : null }
         case 'SET_REQUEST_DATA':
             return { ...state, requestData: action.payload }
         case 'RESET_ALL':
@@ -82,11 +81,10 @@ function onboardingReducer(state, action) {
     }
 }
 
-const OnboardingIBAN = ({ onCreated }) => {
+const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
     const { t } = useTranslation()
     const can = usePermission()
-    const width = useWindowWidth()
-    const navigate = useNavigate()
+    const isMobile = useMediaQuery('(max-width:600px)');
 
     const canCreateIban = can("virtual-iban.account.create")
     const { userDetails, authHeader } = useContext(UserContext)
@@ -95,6 +93,7 @@ const OnboardingIBAN = ({ onCreated }) => {
     const [showOtpModal, setShowOtpModal] = useState(false)
     const [otpToken, setOtpToken] = useState('')
     const [codeType, setCodeType] = useState('sms')
+    const [otpMethods, setOtpMethods] = useState(null)
     const [loadingStatus, setLoadingStatus] = useState(true)
 
     const checkRequestStatus = async () => {
@@ -149,8 +148,9 @@ const OnboardingIBAN = ({ onCreated }) => {
     }, [state.step]);
 
     const { sendOtp } = useSendOtp({
-        onSuccess: (token) => {
+        onSuccess: (token, dec) => {
             setOtpToken(token)
+            setOtpMethods(dec)
             setShowOtpModal(true)
         },
         onError: (err) => {
@@ -182,8 +182,8 @@ const OnboardingIBAN = ({ onCreated }) => {
         if (currentStep === 'documents') return 'ownership'
         if (currentStep === 'ownership') return 'activity'
         if (currentStep === 'activity') return 'company'
-        if (currentStep === 'company') return 'selection'
-        if (currentStep === 'account') return 'selection'
+        if (currentStep === 'company') return 'landing'
+        if (currentStep === 'account') return 'landing'
         if (currentStep === 'selection') return 'landing'
         return 'landing'
     }
@@ -221,8 +221,12 @@ const OnboardingIBAN = ({ onCreated }) => {
             toast.error(t("Please select an Instapay wallet to continue."))
             return
         }
+        if (state.feeDetails?.convertedAmount == null || !state.feeDetails?.currency) {
+            toast.error(t("Unable to fetch markup conversion rate"))
+            return
+        }
 
-        const selectedType = userDetails?.tfa ? 'authenticator' : 'sms'
+        const selectedType = userDetails?.tfa ? 'authenticator' : userDetails?.email_verification ? 'email' : userDetails?.whatsapp_verification ? 'whatsapp' : 'sms'
         setCodeType(selectedType)
 
         const payload = {
@@ -294,7 +298,7 @@ const OnboardingIBAN = ({ onCreated }) => {
         }
     }
 
-    
+
     const handleStatusAction = () => {
         if (state.status === 'approved' && onCreated) {
             onCreated()
@@ -315,6 +319,16 @@ const OnboardingIBAN = ({ onCreated }) => {
         documents: state.documents.files,
     }
 
+    useImperativeHandle(ref, () => ({
+        back() {
+            return goBack()
+        }
+    }), [state.step])
+
+    useEffect(() => {
+        onStepChange?.(state.step)
+    }, [state.step, onStepChange])
+
     if (loadingStatus) {
         return (
             <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '350px', width: '100%' }}>
@@ -328,6 +342,14 @@ const OnboardingIBAN = ({ onCreated }) => {
             {state.step === 'landing' && (
                 <div className={styles.mainContent}>
                     <div className={styles.leftSection}>
+                        <div>
+                            <h1 className={styles.mobileHeading}>
+                                {t("My virtual bank")}
+                            </h1>
+                            <p className={styles.mobileDescription}>
+                                {t("Open a dedicated IBAN to receive and hold funds.")}
+                            </p>
+                        </div>
                         <p className={styles.subHeading}>{t("NEW · BUSINESS IBAN")}</p>
                         <h1 className={styles.heading}>
                             {t("Get a dedicated business IBAN")} <br /> {t("for your company.")}
@@ -349,6 +371,30 @@ const OnboardingIBAN = ({ onCreated }) => {
                     </div>
                     <div className={styles.rightSection}>
                         <img src={imageCard} alt="Business IBAN card" />
+                    </div>
+                    <div className={styles.mobileContent}>
+                        <h2 className={styles.mobileHeading}>
+                            {t("Get a dedicated business IBAN for your company.")}
+                        </h2>
+                        <p className={styles.mobileDescription}>
+                            {t("Submit your request to activate Business IBAN services. Our onboarding team will review your business profile, confirm eligibility, and send you your personalized activation pack with the applicable terms and next steps.")}
+                        </p>
+                        <div className={styles.buttonGroup}>
+                            <h5>{t("SEPA + SWIFT")}</h5>
+                            <p>{t("Receive worldwide")}</p>
+                        </div>
+                    </div>
+
+                    <div className={styles.footerContainer}>
+                        <button
+                            className={styles.buttonGroup1}
+                            onClick={() => handleTypeSelect('business')}
+                        >
+                            <span>{t("Request IBAN Activation")}</span>
+                            <div className={styles.forwardBtnIcon}>
+                                <ArrowRight size={18} />
+                            </div>
+                        </button>
                     </div>
                 </div>
             )}
@@ -397,6 +443,7 @@ const OnboardingIBAN = ({ onCreated }) => {
                     onBack={goBack}
                     userType={state.userType}
                     data={state.company}
+                    currentStep={state.step}
                 />
             )}
 
@@ -406,6 +453,7 @@ const OnboardingIBAN = ({ onCreated }) => {
                     onBack={goBack}
                     userType={state.userType}
                     data={state.activity}
+                    currentStep={state.step}
                 />
             )}
 
@@ -416,6 +464,7 @@ const OnboardingIBAN = ({ onCreated }) => {
                     userType={state.userType}
                     data={{ owners: state.ownership.owners }}
                     userDetails={userDetails}
+                    currentStep={state.step}
                 />
             )}
 
@@ -427,6 +476,7 @@ const OnboardingIBAN = ({ onCreated }) => {
                     data={{ files: state.documents.files }}
                     userDetails={userDetails}
                     companyDetails={state.company}
+                    currentStep={state.step}
                 />
             )}
 
@@ -438,6 +488,7 @@ const OnboardingIBAN = ({ onCreated }) => {
                     onBack={(target) => goBack(target)}
                     allData={fullFormData}
                     userType={state.userType}
+                    currentStep={state.step}
                 />
             )}
 
@@ -483,20 +534,28 @@ const OnboardingIBAN = ({ onCreated }) => {
                 />
             )}
 
-            <Modal isOpen={showOtpModal} toggle={() => setShowOtpModal(false)} centered>
+            <Modal style={{ maxWidth: isMobile ? '90%' : 'auto' }} isOpen={showOtpModal} toggle={() => setShowOtpModal(false)} centered>
                 <ModalBody>
                     <OTPConfirmation
+                        variant="card"
                         authType={codeType}
                         setAuthType={setCodeType}
+                        methods={otpMethods}
                         callback={handleVerifyOtpSubmit}
                         hideOtp={() => setShowOtpModal(false)}
                         setter={() => { }}
-                        resendHandler={() => sendOtp({ wallet_id: state.selectedWallet?._id }, codeType)}
+                        resendHandler={(method) => {
+                            const nextCodeType = method || codeType
+                            if (method) setCodeType(method)
+                            return sendOtp({ wallet_id: state.selectedWallet?._id }, nextCodeType)
+                        }}
                     />
                 </ModalBody>
             </Modal>
         </div>
     )
-}
+});
+
+OnboardingIBAN.displayName = 'OnboardingIBAN';
 
 export default OnboardingIBAN

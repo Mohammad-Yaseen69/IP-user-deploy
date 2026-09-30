@@ -100,6 +100,56 @@
     text-decoration-line: underline;
 }
 
+.otpMethodsWrap {
+    display: flex;
+    flex-direction: column;
+    gap: .7rem;
+}
+
+.otpMethodsWrap>.resend_and_switch {
+    display: block;
+}
+
+.otpMethodsWrap>.resend_and_switch span {
+    color: #545454;
+    font-size: 13px;
+}
+
+.otpMethods {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .6rem;
+}
+
+.otpMethod {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    border: 1.5px solid rgba(0, 0, 0, 0.08);
+    outline: none;
+    background: #FFF;
+    border-radius: 8px;
+    padding: .55rem 1rem;
+    color: #545454;
+    font-family: Manrope;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: border-color .15s ease, color .15s ease, background .15s ease;
+}
+
+.otpMethod:hover {
+    border-color: #5926F0;
+    color: #5926F0;
+}
+
+.selectedOtpMethod,
+.selectedOtpMethod:hover {
+    border-color: #5926F0;
+    background: rgba(89, 38, 240, 0.06);
+    color: #5926F0;
+}
+
 .buttons {
     display: flex;
     justify-content: space-between;
@@ -182,6 +232,19 @@
         width: 100%;
         padding: .8rem;
         font-size: 1rem;
+    }
+
+    .otpMethodsWrap>.resend_and_switch {
+        margin-top: 0;
+    }
+
+    .otpMethods {
+        width: 100%;
+    }
+
+    .otpMethod {
+        flex: 1;
+        justify-content: center;
     }
 
     .buttons {

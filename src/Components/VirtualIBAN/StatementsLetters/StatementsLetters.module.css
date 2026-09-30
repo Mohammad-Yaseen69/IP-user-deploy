@@ -719,3 +719,213 @@
         flex-direction: column;
     }
 }
+
+@media (max-width: 480px) {
+    .container {
+        padding: 12px;
+    }
+
+    .top {
+        flex-direction: column;
+        gap: 12px;
+    }
+    .topright {
+        margin-top: 0;
+        width: 100%;
+    }
+
+    .mainContent {
+        padding: 16px;
+    }
+    .columnsFlexGrid {
+        flex-direction: column;
+        gap: 16px;
+    }
+    .leftColumn {
+        padding: 0px;
+        border: none;
+        box-shadow: none;
+    }
+    .rightColumn {
+        padding: 0px;
+        border: none;
+        box-shadow: none;
+    }
+
+    .currencyRadioGrid {
+        flex-direction: column;
+    }
+
+    .swiftModalContainer {
+        padding: 16px;
+    }
+
+    .swiftModalFooter {
+        flex-direction: column-reverse;
+        width: 100%;
+    }
+
+    .swiftCancelBtn,
+    .swiftPrimaryBtn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    /* Buttons Row Setup for 480px */
+    .btnGroup {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        align-items: center;
+        gap: 6px;
+        width: 100%;
+    }
+
+    .previewBtn,
+    .downloadBtn,
+    .shareBtn,
+    .downloadStatementBtn {
+        width: auto;
+    }
+
+    .previewBtn {
+        flex: 1.4;
+        background: #5626E6 !important;
+        border-color: #5626E6 !important;
+        color: #FFFFFF !important;
+        padding: 10px 4px;
+        font-size: 12px;
+        justify-content: center;
+        white-space: nowrap;
+    }
+
+    .downloadBtn {
+        flex: 1.2;
+        background: #FFF !important;
+        border: 1px solid #D0D5DD !important;
+        color: #1d2025 !important;
+        padding: 10px 4px;
+        font-weight: 700;
+        font-size: 12px;
+        justify-content: center;
+        white-space: nowrap;
+    }
+
+    .shareBtn {
+        padding: 11px 10px;
+
+    }
+
+    .sectionHeadingSub {
+        color: #7c8391;
+        font-size: 12px !important;
+    }
+
+    .subSectionHeader p {
+        font-size: 12px;
+    }
+
+    .actionDesc {
+        color: #7c8391;
+        font-size: 11px !important;
+        margin: 0;
+    }
+
+    .accountCard {
+        display: flex;
+        padding: 24px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+        align-self: stretch;
+        border-radius: 16px;
+        background: linear-gradient(135deg, #4318FF 0%, #7338F7 100%);
+        color: #FFF;
+        box-shadow: 0 10px 25px -5px rgba(86, 38, 230, 0.3);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .accountHeader {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+    }
+
+    .accountHolderInfo {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .accountHolderDot {
+        width: 8px;
+        height: 8px;
+        background-color: #EF4444;
+        border-radius: 50%;
+        display: inline-block;
+    }
+
+    .accountHeader span {
+        font-size: 13px;
+        font-weight: 500;
+        letter-spacing: 0.3px;
+        color: rgba(255, 255, 255, 0.9);
+    }
+
+    .activeBadge {
+        background: rgba(255, 255, 255, 0.2);
+        color: #FFFFFF;
+        font-size: 11px;
+        font-weight: 600;
+        padding: 4px 10px;
+        border-radius: 20px;
+        letter-spacing: 0.8px;
+        text-transform: uppercase;
+    }
+
+    .ibanRow {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        gap: 12px;
+        font-size: 20px;
+        font-weight: 600;
+        font-family: monospace;
+        letter-spacing: 0.5px;
+        word-break: break-all;
+    }
+
+    .ibanText {
+        word-break: break-all;
+        line-height: 1.4;
+    }
+
+    .copyBtnWhite:hover {
+        background: rgba(255, 255, 255, 0.2);
+    }
+
+    .balanceLabel {
+        font-size: 10px;
+        color: #E0E7FF;
+    }
+
+    .balanceAmount {
+        font-size: 10px;
+        font-weight: 500;
+    }
+
+    .infoHelpAlertBox {
+        border: 1px solid rgb(253, 243, 243);
+        background: #f4effe;
+        color: purple;
+    }
+    .infoHelpAlertBox p {
+        color: rgb(126, 51, 211);
+        font-size: 12px !important;
+        line-height: 18px;
+    }
+
+}

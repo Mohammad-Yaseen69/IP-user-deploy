@@ -25,13 +25,13 @@ import { service_name_formatter } from "../../TransactionsNewApi/TransactionItem
 import SendActionCard from '../Common/SendActionCard'
 import int from "../files/int.svg"
 import international from "../files/international.png"
-import { LimitsErrorMessage } from "../OTPConfirmation"
+import { LimitsErrorMessage } from "../../../utils/Functions/paymentLimits"
 import RecentTransactions from "../WalletToWalletFlow/RecentTransactions"
 import CreditCard from "./CreditCard"
 import ErrorModal from "./ErrorModal"
 import FeesComponent from "./FeesComponent"
 import MobileWalletServices from "./MobileWalletServices"
-import OtpConfirmation from "./OtpConfirmation"
+import OtpConfirmation from "../../../Common/Component/OtpVerification"
 import Receipt from "./Receipt"
 import SelectedCard from "./SelectedCard"
 import ServiceDetails from "./ServiceDetails"
@@ -272,6 +272,10 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
     useEffect(() => {
         if (userDetails?.tfa) {
             updateInternationalData("codeType", "authenticator")
+        } else if (userDetails?.email_verification) {
+            updateInternationalData("codeType", "email")
+        } else if (userDetails?.whatsapp_verification) {
+            updateInternationalData("codeType", "whatsapp")
         }
         if (userDetails?.account_type && !internationalData.sendingType) {
             const defaultSendingType = userDetails.account_type === "individual" ? "C" : "B";
@@ -292,7 +296,6 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
     }, [userDetails, isAgentLogin])
 
 
-    console.log(subStep, "subStep")
 
     const disabledButton = useMemo(() => {
         switch (subStep) {
@@ -359,7 +362,6 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
             updateInternationalData("exchange_rate_error", "sww")
         }
     }
-
     // eslint-disable-next-line no-unused-vars
     const getConversionRate = async (amount = internationalData.amount, setLimitType, wallet_id = "", currency_code = "", avoid_balance = true, setLoading, fromOrTo = "from") => {
         if (internationalData.payer?.id && internationalData.payoutChannel?.id && amount) {
@@ -659,7 +661,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
             const getAmount = async () => {
                 try {
                     let amount;
-                    if (internationalData.payment_type?.value === "wallet" && internationalData?.wallet?.currency /*&& internationalData?.wallet?.currency?.code !== internationalData?.currency_wallet?.currency?.code*/) {
+                    if (internationalData.payment_type?.value === "wallet" && internationalData?.wallet?.currency && internationalData?.currency_wallet?.currency?.code /*&& internationalData?.wallet?.currency?.code !== internationalData?.currency_wallet?.currency?.code*/) {
                         amount = await getPlainExchangeRate(internationalData?.currency_wallet?.currency?.code, internationalData?.wallet?.currency?.code, Number(String(internationalData.amount)?.replaceAll(",", "")))
                     } else {
                         amount = Number(String(internationalData.amount)?.replaceAll(",", ""))
@@ -781,6 +783,12 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
             console.log(dec)
             if (!isResend) {
                 updateInternationalData("thunesCreateTransactionToken", dec?.token)
+            }
+            if (dec?.otp_sent_on || dec?.available_methods) {
+                updateInternationalData("otpMethods", dec)
+                if (!internationalData.showOtpModal) {
+                    updateInternationalData("codeType", dec?.otp_sent_on || "sms")
+                }
             }
             updateInternationalData("created_transaction", dec)
             updateInternationalData("showOtpModal", true)
@@ -1052,9 +1060,9 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                     return
                 }
 
-                if (!internationalData.beneficiary?.address) {
-                    return setShowAddressModal(true)
-                }
+                // if (!internationalData.beneficiary?.address) {
+                //     return setShowAddressModal(true)
+                // }
                 setRequiredMissingFields({
                     beneficiary: { basic: [], extras: [] },
                     vendors: { fields: [], vendorType: internationalData?.payoutChannel.value }
@@ -1679,6 +1687,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                                                             internationalData.showOtpModal
                                                             &&
                                                             <OtpConfirmation
+                                                                variant="modal"
                                                                 callback={internationalData.payment_type?.value === "card" ? initiateCardPayment : internationalData.payment_type?.value === "paypal" ? initiatePaypalPayment : internationalData?.payment_type?.value === "mobile_wallet" ? initiateMobileWalletPayment : verifyOtp}
                                                                 data={internationalData}
                                                                 dataHandler={updateInternationalData}
@@ -1689,6 +1698,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                                                                     updateInternationalData("showOtpModal", false)
                                                                 }}
                                                                 resendHandler={createTransaction}
+                                                                methods={internationalData.otpMethods}
                                                                 error={internationalData.otpError}
                                                                 resetIdempotency={reset}
                                                             />
@@ -1938,6 +1948,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                                                                                 internationalData.showOtpModal
                                                                                 &&
                                                                                 <OtpConfirmation
+                                                                                    variant="modal"
                                                                                     callback={internationalData.payment_type?.value === "card" ? initiateCardPayment : internationalData.payment_type?.value === "paypal" ? initiatePaypalPayment : internationalData?.payment_type?.value === "mobile_wallet" ? initiateMobileWalletPayment : verifyOtp}
                                                                                     data={internationalData}
                                                                                     dataHandler={updateInternationalData}
@@ -1948,6 +1959,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                                                                                         updateInternationalData("showOtpModal", false)
                                                                                     }}
                                                                                     resendHandler={createTransaction}
+                                                                                    methods={internationalData.otpMethods}
                                                                                     error={internationalData.otpError}
                                                                                     resetIdempotency={reset}
                                                                                 />

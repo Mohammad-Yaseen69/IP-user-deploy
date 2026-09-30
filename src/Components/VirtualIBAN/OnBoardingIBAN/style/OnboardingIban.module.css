@@ -418,9 +418,104 @@
     border-radius: 100px;
 }
 
+.mobileHeading {
+    display: none;
+    font-size: 24px;
+    font-weight: 600;
+    color: #141414;
+    margin: 0;
+}
+
+.mobileDescription {
+    display: none;
+    color: #141414;
+    font-size: 14px;
+    font-weight: 500;
+    opacity: 0.5;
+    margin: 0;
+}
+
+.footerContainer {
+    display: none;
+    border-top: 1px solid #14122012;
+    padding: 5px 20px;
+    width: 100%;
+    box-shadow: 0px -8px 24px -18px #14122080;
+}
+
+.mobileButtonGroup {
+    display: none;
+}
+
+.mobileContent {
+    display: none;
+    flex-direction: column;
+    gap: 16px;
+    padding-inline: 24px;
+}
+
 @media (max-width: 600px) {
-    .heading {
-        font-size: 32px;
+    .mainContent {
+        gap: 16px !important;
+        padding-inline: 0;
+    }
+
+    .heading,
+    .description,
+    .buttoncont {
+        display: none;
+    }
+
+    .mobileHeading,
+    .mobileDescription,
+    .footerContainer,
+    .mobileButtonGroup {
+        display: block;
+    }
+
+    .mobileContent {
+        display: flex;
+    }
+
+    .leftSection,
+    .rightSection {
+        padding-inline: 24px;
+    }
+
+    .buttonGroup {
+        h5 {
+            margin: 0;
+        }
+
+        p {
+            font-size: 12px !important;
+            color: #6E7687;
+        }
+    }
+
+    .buttonGroup1 {
+        width: 100%;
+        height: auto;
+        background: linear-gradient(180deg, #7040FF 0%, #5926F0 100%);
+        box-shadow: 0px 6px 18px -5px #5926F06B;
+        height: 52px;
+        border-radius: 14px;
+        span{
+            font-size: 15px;
+            font-weight: 600;
+            flex: 1;
+        }
+    }
+
+    .forwardBtnIcon{
+        background: #FFFFFF2E;
+        width: 30px;
+        height: 30px;
+        border-radius: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        
     }
 
     .statsRow {

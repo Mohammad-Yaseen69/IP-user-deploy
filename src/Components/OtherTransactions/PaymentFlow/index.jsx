@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { UserContext } from "../../../Context/UserContext";
 import axios from "axios";
 import { decryptData } from "../../../Helper/EssentilaMethods/Decryption";
-import { LimitsErrorMessage } from "../../PaymentsNewer/OTPConfirmation";
+import { LimitsErrorMessage } from "../../../utils/Functions/paymentLimits";
 import { useNavigate } from "react-router";
 import { Modal, ModalBody } from "reactstrap";
 import Receipt from "../../PaymentsNewer/InternationalFlow/Receipt";
@@ -12,7 +12,7 @@ import FeesComponent from "../../PaymentsNewer/InternationalFlow/FeesComponent";
 import StepFour from "../../PaymentsNewer/InternationalFlow/StepFour";
 import CreditCard from "../../PaymentsNewer/InternationalFlow/CreditCard";
 import StepFive from "../../PaymentsNewer/WalletToWalletFlow/StepFive";
-import OtpConfirmation from "../../PaymentsNewer/InternationalFlow/OtpConfirmation";
+import OtpConfirmation from "../../../Common/Component/OtpVerification";
 import { Link } from "react-router-dom";
 import { ChevronLeft, ChevronRight, HelpCircle, Info, X } from "react-feather";
 import WalletsComponent from "../../PaymentsNewer/InternationalFlow/WalletsComponent";
@@ -96,6 +96,10 @@ const SubscriptionPaymentFlow = ({ item, toggle, isOpen }) => {
     useEffect(() => {
         if (userDetails?.tfa) {
             dataHandler("codeType", "authenticator")
+        } else if (userDetails?.email_verification) {
+            dataHandler("codeType", "email")
+        } else if (userDetails?.whatsapp_verification) {
+            dataHandler("codeType", "whatsapp")
         }
     }, [userDetails])
 
@@ -330,6 +334,8 @@ const SubscriptionPaymentFlow = ({ item, toggle, isOpen }) => {
 
             const dec = decryptData(res.data.data)
             // console.log(dec)
+            dataHandler("otpMethods", dec)
+            if (!codeType) dataHandler("codeType", dec?.otp_sent_on || "sms")
             dataHandler("show_otp", true)
             dataHandler("payment_token", dec?.token)
         } catch (error) {
@@ -772,6 +778,7 @@ const SubscriptionPaymentFlow = ({ item, toggle, isOpen }) => {
                                                 data.show_otp
                                                 &&
                                                 <OtpConfirmation
+                                                    variant="modal"
                                                     callback={data.payment_type?.value === "card" ? initiateCardPayment : data.payment_type?.value === "paypal" ? initiatePaypalPayment : acceptRequest}
                                                     data={data}
                                                     dataHandler={dataHandler}
@@ -781,6 +788,7 @@ const SubscriptionPaymentFlow = ({ item, toggle, isOpen }) => {
                                                         dataHandler("show_otp", false)
                                                     }}
                                                     resendHandler={sendOtp}
+                                                    methods={data.otpMethods}
                                                     error={data.otp_error}
                                                 />
                                             }
@@ -956,6 +964,7 @@ const SubscriptionPaymentFlow = ({ item, toggle, isOpen }) => {
                                                         data.show_otp
                                                         &&
                                                         <OtpConfirmation
+                                                            variant="modal"
                                                             callback={data.payment_type?.value === "card" ? initiateCardPayment : data.payment_type?.value === "paypal" ? initiatePaypalPayment : acceptRequest}
                                                             data={data}
                                                             dataHandler={dataHandler}
@@ -965,6 +974,7 @@ const SubscriptionPaymentFlow = ({ item, toggle, isOpen }) => {
                                                                 dataHandler("show_otp", false)
                                                             }}
                                                             resendHandler={sendOtp}
+                                                            methods={data.otpMethods}
                                                             error={data.otp_error}
                                                         />
                                                     }

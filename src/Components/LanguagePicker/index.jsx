@@ -11,7 +11,7 @@ import { UserContext } from "../../Context/UserContext"
 import { useLocation } from "react-router"
 import useCountryLocation from "../../hooks/GeneralUse/useCountryLocation"
 import localforage from "localforage"
-const LanguagePicker = ({ size = "24", backgroundWhite, newUI, defaultLanguage, shouldOpenUpRequired = false }) => {
+const LanguagePicker = ({ size = "24", backgroundWhite, newUI, defaultLanguage, shouldOpenUpRequired = false, hideShadow = false  }) => {
     const { i18n, t } = useTranslation()
     const [showDropDown, setShowDropDown] = useState()
     const [currentLang, setCurrentLang] = useState(defaultLanguage || "en")
@@ -473,7 +473,7 @@ const LanguagePicker = ({ size = "24", backgroundWhite, newUI, defaultLanguage, 
 
                         <Col xs="auto" style={{
                             padding: ".5rem",
-                            boxShadow: "0px 9.94788px 10.7769px rgba(109, 41, 220, 0.17)",
+                            boxShadow: hideShadow ? 'none' : "0px 9.94788px 10.7769px rgba(109, 41, 220, 0.17)",
                             display: "flex",
                             justifyContent: "center",
                             alignItems: "center",

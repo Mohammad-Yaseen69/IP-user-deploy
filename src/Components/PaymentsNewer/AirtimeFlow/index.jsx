@@ -14,9 +14,9 @@ import cardStyles from "../styles/SendActionCard.module.scss"
 import StepThree from "./StepThree";
 import StepFour from "./StepFour";
 import StepFive from "./StepFive";
-import OtpConfirmation from "../InternationalFlow/OtpConfirmation";
+import OtpConfirmation from "../../../Common/Component/OtpVerification";
 import { encryptData } from "../../../Helper/EssentilaMethods/Encryption";
-import { LimitsErrorMessage } from "../OTPConfirmation";
+import { LimitsErrorMessage } from "../../../utils/Functions/paymentLimits";
 import { useLocation, useNavigate } from "react-router";
 import { Link } from "react-router-dom";
 import { ChevronLeft, ChevronRight, HelpCircle } from "react-feather";
@@ -121,6 +121,10 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
     useEffect(() => {
         if (userDetails?.tfa) {
             updateDataHandler("codeType", "authenticator")
+        } else if (userDetails?.email_verification) {
+            updateDataHandler("codeType", "email")
+        } else if (userDetails?.whatsapp_verification) {
+            updateDataHandler("codeType", "whatsapp")
         }
     }, [userDetails])
 
@@ -285,6 +289,12 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
 
             const dec = decryptData(res.data.data)
             updateDataHandler("created_transaction", dec)
+            if (dec?.otp_sent_on || dec?.available_methods) {
+                updateDataHandler("otpMethods", dec)
+                if (!data.show_otp) {
+                    updateDataHandler("codeType", dec?.otp_sent_on || "sms")
+                }
+            }
             console.log("otpshow", "transactioncreated")
             updateDataHandler("show_otp", true)
         } catch (error) {
@@ -556,6 +566,7 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
         data.show_otp
         &&
         <OtpConfirmation
+            variant="modal"
             callback={data.payment_type?.value === "card" ? initiateCardPayment : verifyOtp}
             // callback={verifyOtp}
             data={data}
@@ -567,6 +578,7 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
                 updateDataHandler("show_otp", false)
             }}
             resendHandler={createTransaction}
+            methods={data.otpMethods}
             error={data.otpError}
             resetIdempotency={reset}
         />

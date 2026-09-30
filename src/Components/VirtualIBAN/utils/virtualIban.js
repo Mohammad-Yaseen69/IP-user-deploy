@@ -2,20 +2,51 @@ export const unwrapVirtualIbanResponse = (res) => res?.data?.data ?? res?.data ?
 
 export const getVirtualIbanId = (iban) => iban?._id || iban?.id || ""
 
-export const getPaymentReference = (iban, userDetails) => {
-    const rawVirtualIbanId = iban?.virtualIbanId ? String(iban.virtualIbanId).trim() : ""
-    if (rawVirtualIbanId) {
-        `Ref ${rawVirtualIbanId}`
-    }
+export const INTL_DEPOSIT_ACCOUNTS = {
+    usd: {
+        currencyCode: "USD",
+        currencyLabel: "USD (US Dollar)",
+        beneficiaryName: "SYSTEM PAY SERVICES MALTA LTD",
+        beneficiaryAddress: "Ruby Workspaces Office 3 Pendergardens Triq Gort, San Giljan, STJ 9023, MT",
+        accountNumber: "ES9601828510912010000487",
+        bankCode: "BBVAESMMXXX",
+        bankName: "BANCO BILBAO VIZCAYA ARGENTARIA S.A.",
+        bankAddress: "Pz De San Nicolas 4, Bilbao, 48005, ES",
+        reference: "PY9F4G3",
+    },
+    eur: {
+        currencyCode: "EUR",
+        currencyLabel: "EUR (Euro)",
+        beneficiaryName: "System Pay Services (Malta) Limited",
+        beneficiaryAddress: "Ruby Workspaces Office 3 Pendergardens Triq Gort, San Giljan, STJ 9023, MT",
+        accountNumber: "ES8201828510940200010371",
+        bankCode: "BBVAESMMXXX",
+        bankName: "BANCO BILBAO VIZCAYA ARGENTARIA S.A.",
+        bankAddress: "Pz De San Nicolas 4, Bilbao, 48005, ES",
+        reference: "6JL69V3",
+    },
+}
 
-    const username = userDetails?.username
-    if (username) {
-        const trimmed = String(username).trim()
-        return `Ref ${trimmed}`
-    }
+export const getIntlDepositAccount = (currency) =>
+    INTL_DEPOSIT_ACCOUNTS[String(currency || "").toLowerCase()] || null
 
-    const fallbackId = iban?._id || iban?.id || ""
-    return fallbackId ? `Ref ${fallbackId}` : "Ref"
+export const getProviderReference = (currency) => getIntlDepositAccount(currency)?.reference || ""
+
+export const getAccountReferenceCode = (iban, userDetails) => {
+    const candidates = [
+        iban?.virtualIbanId,
+        userDetails?.username,
+    ]
+
+    const code = candidates.find((value) => String(value ?? "").trim())
+    return String(code ?? "").trim().replace(/\s+/g, "")
+}
+
+export const getPaymentReference = (iban, userDetails, currency) => {
+    const providerReference = getProviderReference(currency)
+    const accountReference = getAccountReferenceCode(iban, userDetails)
+
+    return ["Ref", providerReference, accountReference].filter(Boolean).join(" ")
 }
 
 export const getVirtualIbanCountry = (iban) => {
@@ -95,11 +126,20 @@ export const asVirtualIbanArray = (value) => {
     return data.map(normalizeVirtualIban).filter(Boolean)
 }
 
-export const isVirtualIbanInactive = (iban) => {
-    if (!iban) return false
+// The balance endpoint returns the freshest copy of these flags, so it wins
+// over the cached list record whenever it carries them.
+export const mergeVirtualIbanState = (iban, syncedBalance) => ({
+    ...(iban || {}),
+    ...(syncedBalance || {}),
+})
 
-    return Boolean(iban?.adminBlocked) || String(iban?.status || "").toUpperCase() === "INACTIVE"
-}
+export const isVirtualIbanAdminBlocked = (iban) => Boolean(iban?.adminBlocked)
+
+export const isVirtualIbanFrozen = (iban) => Boolean(iban?.freezeIban)
+
+export const isVirtualIbanUserBlocked = (iban) => Boolean(iban?.userBlocked)
+
+export const isVirtualIbanOutboundBlocked = (iban) => Boolean(iban?.blockOutbound)
 
 export const asVirtualIban = (value) => {
     const unwrapped = unwrapVirtualIbanResponse(value)

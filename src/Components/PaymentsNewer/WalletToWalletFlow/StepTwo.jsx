@@ -7,7 +7,7 @@ import er_icon from "../InternationalFlow/files/exchange_rate.svg"
 import chev_down from "../InternationalFlow/files/chev_down.svg"
 import ListModal from "../InternationalFlow/ListModal"
 import { currencies } from "../InternationalFlow/StepOne"
-import { possibleErrors } from "../OTPConfirmation"
+import { possibleErrors } from "../../../utils/Functions/paymentLimits"
 import { formatCurrency } from "../../../Helper/AmountFormat"
 import { cleanString } from "../../../Helper/cleanString"
 import useWindowWidth from "../../../utils/useWindowWidth"
@@ -39,7 +39,7 @@ const StepTwo = ({ data, dataHandler, getExchangeRate, showFee, inNonInstapay = 
                 :
                 userWallets?.find(item => item?.default)
             const wallet = { ...def, ...currencies.find(item => item.currency_code === def?.currency?.code) }
-            console.log(wallet)
+
             dataHandler("currency", wallet)
             dataHandler("currency_wallet", wallet)
         }
@@ -247,9 +247,12 @@ const StepTwo = ({ data, dataHandler, getExchangeRate, showFee, inNonInstapay = 
                                 list: wallets
                             }}
                             isOpen={showCurrency}
-                            onSelectHandler={(item) => {
+                            onSelectHandler={async(item) => {
                                 dataHandler("currency", item)
                                 dataHandler("currency_wallet", item)
+                                if(data?.amount && item?.currency_code){
+                                    await getExchangeRate(data.amount,'','instant',item.currency_code, setter)
+                                }
                             }}
                             toggle={() => setShowCurrency(false)}
                             searchable={true}

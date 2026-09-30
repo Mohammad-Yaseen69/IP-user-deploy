@@ -1,4 +1,4 @@
-import React, { useContext, useMemo, useState } from 'react';
+import React, { useContext, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import useWindowWidth from '../../../../utils/useWindowWidth';
 import TopRight from '../../../topRight';
@@ -11,17 +11,18 @@ import {
     Briefcase,
     RefreshCw,
     CreditCard,
-    Cpu,
     ArrowLeft,
-    Search
+    Search,
+    ChevronLeft
 } from 'react-feather';
 import SepaTransfer from '../../SendMoney/SepaTransfer';
 import SwiftTransfer from '../../SendMoney/SwiftTransfer';
 import CryptoTopupModal from '../../CryptoTopupModal';
 import { useSyncVirtualIbanBalance, useVirtualIbans } from '../../../../hooks/useVirtualIban';
-import { asVirtualIbanArray } from '../../utils/virtualIban';
+import { asVirtualIbanArray, isVirtualIbanOutboundBlocked } from '../../utils/virtualIban';
 import { UserContext } from '../../../../Context/UserContext';
 import { useNavigate } from 'react-router';
+import MobileHeader from '../../../../Common/Component/MobileHeader';
 
 const MoveMoney = () => {
     const { t } = useTranslation();
@@ -29,7 +30,8 @@ const MoveMoney = () => {
     const [showSepaPage, setShowSepaPage] = useState(false);
     const [showSwiftPage, setShowSwiftPage] = useState(false);
     const [showCryptoTopupModal, setShowCryptoTopupModal] = useState(false);
-    const navigate = useNavigate();
+    const btnRef = useRef(null);
+
     const {
         userDetails,
         selectedAccount,
@@ -55,17 +57,34 @@ const MoveMoney = () => {
 
     const currentBalance = syncedBalance?.balance ?? selectedIban?.balance ?? 0
 
+    // Outgoing transfers are switched off for this IBAN, so SEPA and SWIFT
+    // cannot be started from here.
+    const isOutboundBlocked =
+        isVirtualIbanOutboundBlocked(syncedBalance) || isVirtualIbanOutboundBlocked(selectedIban)
+    const outboundBlockedTooltip = t("Outgoing transfers are disabled for this virtual IBAN.")
+    const handleClose = () => setShowSwiftPage(false);
+
     return (
-        <div className={styles.container}>
-            <div className={styles.top}>
-                <div className={styles.headerTitle}>
-                    <h1>{t("Move money")}</h1>
-                    <p>{t("Choose how to pay, get paid and manage your balances — pick one to begin.")}</p>
+        <>
+            {(showSwiftPage && width <= 600) &&
+                <MobileHeader 
+                    title={"SWIFT International"}
+                    handleAction={handleClose}
+                    handleBack={() => btnRef.current?.back()}
+                />
+            }
+        <div className={styles.container}>      
+            {width > 600 &&     
+                <div className={styles.top}>
+                    <div className={styles.headerTitle}>
+                        <h1>{t("Move money")}</h1>
+                        <p>{t("Choose how to pay, get paid and manage your balances — pick one to begin.")}</p>
+                    </div>
+                    <div className={styles.topright}>
+                        {width > 1000 && <TopRight />}
+                    </div>
                 </div>
-                <div className={styles.topright}>
-                    {width > 1000 && <TopRight />}
-                </div>
-            </div>
+            }
 
             <div className={styles.mainContent}>
                 {
@@ -85,20 +104,23 @@ const MoveMoney = () => {
                         </>
                     : showSwiftPage ?
                         <>
+                        {width > 600 &&
                             <IbanBreadcrumb items={[
                                 { label: "My virtual bank", path: "/virtual-IBAN" },
-                                { label: "Move money", onClick: () => setShowSwiftPage(false) },
+                                { label: "Move money", onClick: handleClose },
                                 { label: "SWIFT Transfer" }
                             ]} />
+                        }
                             <SwiftTransfer
                                 isPage={true}
                                 selectedIban={selectedIban}
                                 availableBalance={currentBalance}
-                                toggle={() => setShowSwiftPage(false)}
+                                toggle={handleClose}
+                                ref={btnRef}
                             />
                         </>
 
-                        : <>
+                        : <>                            
                             <div className={styles.headerTitle}>
                                 <IbanBreadcrumb items={[
                                     { label: "My virtual bank", path: "/virtual-IBAN" },
@@ -112,8 +134,11 @@ const MoveMoney = () => {
                                 <div className={styles.sectionLabel}>{t("Send money out")} <span>{t("Instant, free transfers between InstaPay accounts")}</span></div>
                                 <div className={styles.cardsGrid3}>
 
-                                    <div className={styles.card} onClick={() => setShowSepaPage(true)}
-                                        style={{ cursor: "pointer" }}
+                                    <Tooltip title={isOutboundBlocked ? outboundBlockedTooltip : ""} arrow>
+                                    <div
+                                        className={`${styles.card} ${isOutboundBlocked ? styles.cardDisabled : ""}`}
+                                        onClick={isOutboundBlocked ? undefined : () => setShowSepaPage(true)}
+                                        style={{ cursor: isOutboundBlocked ? "not-allowed" : "pointer" }}
                                     >
                                         <div className={`${styles.iconBox} ${styles.bgBlue}`}>
                                             <Compass size={20} />
@@ -130,10 +155,12 @@ const MoveMoney = () => {
                                             </div>
                                         </div>
                                     </div>
+                                    </Tooltip>
+                                    <Tooltip title={isOutboundBlocked ? outboundBlockedTooltip : ""} arrow>
                                     <div
-                                        className={styles.card}
-                                        onClick={() => setShowSwiftPage(true)}
-                                        style={{ cursor: "pointer" }}
+                                        className={`${styles.card} ${isOutboundBlocked ? styles.cardDisabled : ""}`}
+                                        onClick={isOutboundBlocked ? undefined : () => setShowSwiftPage(true)}
+                                        style={{ cursor: isOutboundBlocked ? "not-allowed" : "pointer" }}
                                     >
                                         <div className={`${styles.iconBox} ${styles.bgYellow}`}>
                                             <Globe size={20} />
@@ -150,6 +177,7 @@ const MoveMoney = () => {
                                             </div>
                                         </div>
                                     </div>
+                                    </Tooltip>
                                     <Tooltip title="Coming Soon" arrow>
 
                                         <div className={`${styles.card}`}>
@@ -222,24 +250,6 @@ const MoveMoney = () => {
                                             </div>
                                         </div>
                                     </Tooltip>
-                                    <Tooltip title={t("Coming Soon")} arrow>
-                                        <div className={styles.card}>
-                                            <div className={`${styles.iconBox} ${styles.bgOrange}`}>
-                                                <Cpu size={20} />
-                                            </div>
-                                            <div className={styles.cardBody}>
-                                                <h3 className={styles.cardTitle}>{t("Crypto & Stablecoins")}</h3>
-                                                <p className={styles.cardDesc}>
-                                                    {t("Receive, send, convert, request and mass-pay in crypto — auto-settle to your IBAN. Powered by BVNK.")}
-                                                </p>
-                                                <div className={styles.badgeRow}>
-                                                    <span className={`${styles.tag} ${styles.tagBlue}`}>{t("Assets")}</span>
-                                                    <span className={`${styles.tag} ${styles.tagGray}`}>{t("Payouts")}</span>
-                                                    <span className={`${styles.tag} ${styles.tagGray}`}>{t("Gateways")}</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </Tooltip>
                                 </div>
                             </div>
 
@@ -255,7 +265,8 @@ const MoveMoney = () => {
                 selectedIban={selectedIban}
             />
 
-        </div >
+        </div>
+        </>
     );
 };
 

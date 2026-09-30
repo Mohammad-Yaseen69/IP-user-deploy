@@ -356,3 +356,10 @@
         font-size: 2rem;
     }
 }
+
+@media screen and (max-width: 600px) {
+    .i_t_flag {
+        width: 26px;
+        height: 19px;
+    }
+}

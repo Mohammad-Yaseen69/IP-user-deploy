@@ -9,6 +9,8 @@ import { useTranslation } from "react-i18next"
 import i18next from "i18next"
 import { Modal, ModalBody } from "reactstrap"
 import AddBeneficiary from "../../AddBeneficiary"
+import QuickAddBeneficiary from "../../VirtualIBAN/Beneficiaries/AddBeneficiaryFlowV2/QuickAddBeneficiary"
+import { USE_NEW_BENEFICIARY_FLOW } from "../../VirtualIBAN/Beneficiaries/AddBeneficiaryFlowV2/constants"
 
 function levenshteinDistance(a, b) {
     const dp = Array(a.length + 1)
@@ -50,11 +52,27 @@ const StepTwo = ({ data, dataHandler }) => {
     const [search, setSearch] = useState("")
     const [showOthers, setShowOthers] = useState(false)
     const [showBeneficiaryAddModal, setShowBeneficiaryAddModal] = useState(false)
-    const [prevBeneficiaryIds, setPrevBeneficiaryIds] = useState([])
+    const [savedBeneficiaryId, setSavedBeneficiaryId] = useState("")
 
     useEffect(() => {
         getUserBeneficiaries()
     }, [])
+
+    const handleBeneficiarySaved = async (savedBeneficiary) => {
+        setSavedBeneficiaryId(savedBeneficiary?._id || savedBeneficiary?.id || "")
+        setShowBeneficiaryAddModal(false)
+        await getUserBeneficiaries()
+    }
+
+    useEffect(() => {
+        if (!savedBeneficiaryId) return
+
+        const saved = beneficiaries.find(item => (item?._id || item?.id) === savedBeneficiaryId)
+        if (!saved) return
+
+        dataHandler("beneficiary", saved)
+        setSavedBeneficiaryId("")
+    }, [beneficiaries, savedBeneficiaryId])
 
     const bens = useMemo(() => {
         let fil = beneficiaries.filter(item => item.account_type.some(item => item.toLowerCase().includes(data.payoutChannel?.value?.toLowerCase())))
@@ -159,6 +177,25 @@ const StepTwo = ({ data, dataHandler }) => {
             dataHandler("beneficiary", ben)
         }
     }, [recipient, filterd])
+
+    /* Mid transfer we already know the country, the method and the payer, so adding a
+       recipient only asks for what the provider still needs. */
+    if (USE_NEW_BENEFICIARY_FLOW && showBeneficiaryAddModal) {
+        return (
+            <div className={styles.container}>
+                <QuickAddBeneficiary
+                    country={data.country}
+                    recipientType={data.transactionType === "C" ? "individual" : "business"}
+                    service={data.payoutChannel}
+                    payer={data.payer}
+                    payerRequiredFields={data.payerRequiredFields?.[0] || []}
+                    onCancel={() => setShowBeneficiaryAddModal(false)}
+                    onSaved={handleBeneficiarySaved}
+                />
+            </div>
+        )
+    }
+
     return (
         <div className={styles.container}>
             {
@@ -244,7 +281,6 @@ const StepTwo = ({ data, dataHandler }) => {
                         :
                         <div style={{ margin: "1rem auto", textAlign: "center", fontSize: ".8rem" }}>{message?.replace("No", data.transactionType === "C" ? "No individual" : "No business")}
                             <span onClick={() => {
-                                setPrevBeneficiaryIds(beneficiaries?.map(b => b?._id))
                                 setShowBeneficiaryAddModal(true)
                             }} style={{ cursor: "pointer", color: "#3a04e2" }}>
                                 {t("Add Now")}
@@ -292,11 +328,30 @@ const StepTwo = ({ data, dataHandler }) => {
                                                     </div>
                                                 } */}
                                             </div>
-                                            <span>
-                                                {data?.payoutChannel?.value === "mobile" ? t("Mobile Wallet") : data?.payoutChannel?.value === "cash" ? t("Cash Point") : t("Bank")}
-                                                :
-                                                {data?.payoutChannel?.value === "mobile" ? data?.payer?.name : data?.payoutChannel?.value === "cash" ? data?.payer?.name : service_name_formatter(item?.bank_details?.[0]?.bank_name ?? item?.bank_details?.[0]?.name ?? "N/A")}
-                                            </span>
+                                            {data?.payoutChannel?.value === "mobile"
+                                                ? (
+                                                    <span>
+                                                        {t("Mobile Wallet")} : {data?.payer?.name ?? ""}
+                                                    </span>
+                                                )
+                                                : data?.payoutChannel?.value === "cash"
+                                                    ? (
+                                                        <span>
+                                                            {t("Cash Point")} : {data?.payer?.name ?? ""}
+                                                        </span>
+                                                    )
+                                                    : (item?.bank_details?.[0]?.bank_name ||
+                                                        item?.bank_details?.[0]?.name)
+                                                        ? (
+                                                            <span>
+                                                                {t("Bank")} :{" "}
+                                                                {service_name_formatter(
+                                                                    item?.bank_details?.[0]?.bank_name ??
+                                                                    item?.bank_details?.[0]?.name
+                                                                )}
+                                                            </span>
+                                                        )
+                                                        : null}
                                             <span>
                                                 {
                                                     data.payoutChannel?.value === "bank"
@@ -326,18 +381,20 @@ const StepTwo = ({ data, dataHandler }) => {
             </div>
 
 
-            <Modal style={{ minWidth: window.innerWidth > 1000 && "900px" }} toggle={() => setShowBeneficiaryAddModal(false)} isOpen={showBeneficiaryAddModal}>
-                <ModalBody style={{ padding: "0px" }}>
-                    <AddBeneficiary
-                        inInternationalModal={true}
-                        toggleHandler={async (addedBen) => {
-                            await getUserBeneficiaries()
-                            dataHandler("beneficiary", addedBen)
-                            setShowBeneficiaryAddModal(false)
-                        }}
-                    />
-                </ModalBody>
-            </Modal>
+            {!USE_NEW_BENEFICIARY_FLOW && (
+                <Modal style={{ minWidth: window.innerWidth > 1000 && "900px" }} toggle={() => setShowBeneficiaryAddModal(false)} isOpen={showBeneficiaryAddModal}>
+                    <ModalBody style={{ padding: "0px" }}>
+                        <AddBeneficiary
+                            inInternationalModal={true}
+                            toggleHandler={async (addedBen) => {
+                                await getUserBeneficiaries()
+                                dataHandler("beneficiary", addedBen)
+                                setShowBeneficiaryAddModal(false)
+                            }}
+                        />
+                    </ModalBody>
+                </Modal>
+            )}
         </div>
     )
 }
