@@ -292,7 +292,6 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
     }, [userDetails, isAgentLogin])
 
 
-    console.log(subStep, "subStep")
 
     const disabledButton = useMemo(() => {
         switch (subStep) {
@@ -358,7 +357,6 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
             updateInternationalData("exchange_rate_error", "sww")
         }
     }
-
     // eslint-disable-next-line no-unused-vars
     const getConversionRate = async (amount = internationalData.amount, setLimitType, wallet_id = "", currency_code = "", avoid_balance = true, setLoading, fromOrTo = "from") => {
         if (internationalData.payer?.id && internationalData.payoutChannel?.id && amount) {
@@ -658,7 +656,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
             const getAmount = async () => {
                 try {
                     let amount;
-                    if (internationalData.payment_type?.value === "wallet" && internationalData?.wallet?.currency /*&& internationalData?.wallet?.currency?.code !== internationalData?.currency_wallet?.currency?.code*/) {
+                    if (internationalData.payment_type?.value === "wallet" && internationalData?.wallet?.currency && internationalData?.currency_wallet?.currency?.code /*&& internationalData?.wallet?.currency?.code !== internationalData?.currency_wallet?.currency?.code*/) {
                         amount = await getPlainExchangeRate(internationalData?.currency_wallet?.currency?.code, internationalData?.wallet?.currency?.code, Number(String(internationalData.amount)?.replaceAll(",", "")))
                     } else {
                         amount = Number(String(internationalData.amount)?.replaceAll(",", ""))

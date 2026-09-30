@@ -13,7 +13,7 @@ import {
     handleAmountInputChange,
     handleAmountInputKeyUp,
 } from "../../utils/amount"
-import { getAmountNumber, MIN_PAYOUT_AMOUNT } from "../../../../stateMachines/cryptoPayout"
+import { getAmountNumber, getQuickAmounts, MIN_PAYOUT_AMOUNT } from "../../../../stateMachines/cryptoPayout"
 import {
     getBeneficiaryCryptoChannels,
     getChannelAddress,
@@ -114,9 +114,7 @@ const SendCryptoPanel = ({ wallets = [], wallet, onSelectWallet }) => {
         ""
     )
 
-    const quickAmounts = QUICK_PERCENTAGES
-        .map((percent) => ({ percent, value: Number(((getAmountNumber(availableBalance) * percent) / 100).toFixed(2)) }))
-        .filter(({ value }) => value > 0)
+    const quickAmounts = getQuickAmounts(availableBalance, QUICK_PERCENTAGES)
 
     const editLink = canEditBeneficiary && (
         <>
