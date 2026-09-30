@@ -212,19 +212,19 @@
 }
 
 .bodySmall {
-  color: #333333;
-  font-family: var(--big-screen-bodysmall-font-family);
-  font-size: var(--big-screen-bodysmall-font-size);
-  font-style: var(--big-screen-bodysmall-font-style);
-  font-weight: var(--big-screen-bodysmall-font-weight);
-  letter-spacing: var(--big-screen-bodysmall-letter-spacing);
-  line-height: var(--big-screen-bodysmall-line-height);
-  position: relative;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  width: 100%;
-  min-width: 0;
+    color: #333333;
+    font-family: var(--big-screen-bodysmall-font-family);
+    font-size: var(--big-screen-bodysmall-font-size);
+    font-style: var(--big-screen-bodysmall-font-style);
+    font-weight: var(--big-screen-bodysmall-font-weight);
+    letter-spacing: var(--big-screen-bodysmall-letter-spacing);
+    line-height: var(--big-screen-bodysmall-line-height);
+    position: relative;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
+    min-width: 0;
 }
 
 .languageButton {
@@ -387,4 +387,10 @@
 
 .sideMenuCollapsed .profileInfo {
     width: auto;
+}
+
+@media (max-width: 780px) {
+    .sideMenu {
+        display: none !important;
+    }
 }

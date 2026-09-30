@@ -211,13 +211,13 @@
 }
 
 .tableHeaderRow:first-child th:first-child {
-  border-top-left-radius: 12px;
-  border-bottom-left-radius: 12px;
+    border-top-left-radius: 12px;
+    border-bottom-left-radius: 12px;
 }
 
 .tableHeaderRow:first-child th:last-child {
-  border-bottom-right-radius: 12px;
-  border-top-right-radius: 12px;
+    border-bottom-right-radius: 12px;
+    border-top-right-radius: 12px;
 }
 
 .tableDataRow {
@@ -230,10 +230,10 @@
 }
 
 .tableBody::before {
-  content: "";
-  display: block;
-  height: 10px; 
-  background-color: #f8f9fa;
+    content: "";
+    display: block;
+    height: 10px;
+    background-color: #f8f9fa;
 }
 
 .tdCell {
@@ -384,4 +384,54 @@
     background: #F4F3FF !important;
     color: #5926F0 !important;
     font-weight: 600;
+}
+
+@media (max-width: 780px) {
+    .buttons {
+        display: flex;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        padding-bottom: 8px;
+        gap: 6px;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+    }
+
+    .buttons::-webkit-scrollbar {
+        display: none;
+    }
+
+    .button {
+        flex-shrink: 0;
+        height: 30px;
+        padding: 6px 12px;
+        font-size: 11px;
+    }
+
+    .controlsRow {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+    }
+
+    .searchWrapper {
+        width: 100%;
+    }
+
+    .searchInput {
+        height: 36px;
+        font-size: 13px;
+    }
+
+    .actionGroup {
+        padding-top: 5px;
+    }
+
+    .secondaryBtn {
+        width: 50%;
+    }
+
+    .primaryBtn {
+        width: 50%;
+    }
 }

@@ -100,15 +100,7 @@ const Clients = () => {
                         <select
                             value={typeFilter}
                             onChange={handleTypeFilterChange}
-                            style={{
-                                padding: '8px 12px',
-                                borderRadius: '8px',
-                                border: '1px solid #D1D5DB',
-                                fontSize: '13px',
-                                backgroundColor: '#FFFFFF',
-                                cursor: 'pointer',
-                                fontWeight: 500
-                            }}
+                            className={styles.filterSelect}
                         >
                             <option value="all">{t("All Account Types")}</option>
                             <option value="business">{t("Business")}</option>
@@ -118,15 +110,8 @@ const Clients = () => {
                         <select
                             value={statusFilter}
                             onChange={handleStatusFilterChange}
-                            style={{
-                                padding: '8px 12px',
-                                borderRadius: '8px',
-                                border: '1px solid #D1D5DB',
-                                fontSize: '13px',
-                                backgroundColor: '#FFFFFF',
-                                cursor: 'pointer',
-                                fontWeight: 500
-                            }}
+                            className={styles.filterSelect}
+
                         >
                             <option value="all">{t("All Statuses")}</option>
                             <option value="active">{t("Active")}</option>
@@ -137,15 +122,8 @@ const Clients = () => {
                         <select
                             value={sortBy}
                             onChange={handleSortChange}
-                            style={{
-                                padding: '8px 12px',
-                                borderRadius: '8px',
-                                border: '1px solid #D1D5DB',
-                                fontSize: '13px',
-                                backgroundColor: '#FFFFFF',
-                                cursor: 'pointer',
-                                fontWeight: 500
-                            }}
+                            className={styles.filterSelect}
+
                         >
                             <option value="createdAt">{t("Sort by Date")}</option>
                             <option value="company_name">{t("Sort by Name")}</option>
@@ -155,10 +133,8 @@ const Clients = () => {
                         <button
                             type="button"
                             onClick={toggleSortOrder}
-                            className={styles.secondaryBtn}
-                            style={{ padding: '8px 12px', display: 'flex', alignItems: 'center', gap: '4px' }}
-                            title={t("Toggle Sort Order")}
-                        >
+                            className={`${styles.secondaryBtn} ${styles.sortToggleBtn}`}
+                            title={t("Toggle Sort Order")}>
                             {sortOrder === 'asc' ? <ArrowUp size={14} /> : <ArrowDown size={14} />}
                             <span>{sortOrder.toUpperCase()}</span>
                         </button>
