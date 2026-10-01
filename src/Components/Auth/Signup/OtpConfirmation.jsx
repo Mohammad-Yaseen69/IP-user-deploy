@@ -111,53 +111,31 @@ const OtpConfirmation = ({ verifyOTpHandler, resendHandler, timer = 120, type = 
                 e.preventDefault()
                 if (data.loading) return;
                 verifyOTpHandler(otpValues.join(""), setOTPValues, numberOfFields)
-            }} className={styles.otp} style={{ marginTop: 0 }}>
-                <div className={styles.left}>
-                    <h1>{type === "phone" ? (currentMethod === "whatsapp" ? t("WhatsApp Verification") : t("SMS Verification")) : t("Email Verification")}</h1>
-                    <p>{t("Start Your InstaPay Journey Today!")}</p>
-                    {
-                        window.innerWidth < 1000
-                        &&
-                        <LanguagePicker />
-                    }
+            }} className={`${styles.otp} ${styles.registerOtpForm}`} style={{ marginTop: 0 }}>
+                <div className={styles.registerFormTop}>
+                    <h1>{t(type === "phone" ? "Enter the code we texted you" : "Enter the code we emailed you")}</h1>
+                    <p>{type === "phone" ?
+                    t(`Enter the SMS code sent to +41********4053`).replace("+41********4053", `${data?.[type]?.slice(0, data?.[type]?.length - 4).split("").map(_ => "*").join("")}${data?.[type]?.slice(data?.[type]?.length - 4)}`).replace("SMS", currentMethod === "whatsapp" ? "WhatsApp" : "SMS") 
+                    :
+                    `${t("We sent a 6-digit code to")} ${getMaskedEmail()}`}</p>
                 </div>
-                <div className={styles.right}>
+                <div className={styles.registerOtpContainer}>
                     <div className={styles.top}>
-                        <div className={styles.otp_inp}>
-                            {type === 'phone' ?
-                                <label>{t(`Enter the SMS code sent to +41********4053`).replace("+41********4053", `${data?.[type]?.slice(0, data?.[type]?.length - 4).split("").map(_ => "*").join("")}${data?.[type]?.slice(data?.[type]?.length - 4)}`).replace("SMS", currentMethod === "whatsapp" ? "WhatsApp" : "SMS")}</label> :
-                                <label>{t(`Enter the Email code sent to +41********4053`).replace("+41********4053", getMaskedEmail())}</label>
-                            }
-                            <div
-                                style={{
-                                    fontSize: ".8rem",
-                                    textDecoration: "underline",
-                                    fontWeight: 500,
-                                    color: "#5926f0",
-                                    marginTop: "-1rem",
-                                    marginBottom: "2rem",
-                                    cursor: "pointer"
-                                }}
-                                onClick={() => {
-                                    dataHandler("step", 3)
-                                    dataHandler("show_otp", false)
-                                    dataHandler("phone_otp_verfied", false)
-                                    dataHandler("show_email_otp", false)
-                                }}
-                            >{t("Change Number").replace("Number", type === "phone" ? "Number" : "Email")}</div>
+                        <div className={styles.otp_inp}>                         
                             <div className={styles.otp_inputs}>
                                 {otpValues.map((value, index) => (
-                                    <input
-                                        key={index}
-                                        maxLength={1}
-                                        value={value}
-                                        onPaste={handlePaste}
-                                        onChange={(e) => {
-                                            handleInputChange(index, e.target.value)
-                                        }}
-                                        onKeyDown={(e) => handleInputKeyDown(index, e)}
-                                        ref={(input) => (inputRefs.current[index] = input)}
-                                    />
+                                    <div className={styles.otp_inputWrapper} key={index}>
+                                        <input
+                                            maxLength={1}
+                                            value={value}
+                                            onPaste={handlePaste}
+                                            onChange={(e) => {
+                                                handleInputChange(index, e.target.value)
+                                            }}
+                                            onKeyDown={(e) => handleInputKeyDown(index, e)}
+                                            ref={(input) => (inputRefs.current[index] = input)}
+                                        />
+                                    </div>
                                 ))}
                             </div>
                         </div>
@@ -197,13 +175,15 @@ const OtpConfirmation = ({ verifyOTpHandler, resendHandler, timer = 120, type = 
                                 {showToolTip && <span style={{ fontWeight: 600, fontSize: '10px', backgroundColor: "gray", padding: '1px 3px', borderRadius: "3px", color: 'white', position: "absolute", bottom: "-20px", right: '-40px' }}>{t("Wait For the Timer")}</span>}
                             </div>
                         }
-                        <div style={{ marginTop: '20px' }} className={styles.toggle_sms}>
+                        <div style={{ marginTop: '12px' }} className={styles.toggle_sms}>
                             <span>
                                 {
                                     resendTimer > 0
-                                        ? type === "email"
-                                            ? t("Resend Code In 100 Seconds").replace("100", formatTimer(resendTimer))
-                                            : t("Resend Code In 100 Seconds").replace("100", resendTimer)
+                                        ?
+                                        <>
+                                            {t("Didn't get it? You can resend in")}&nbsp;
+                                            <span className={styles.countDownTimer}>{type === "email" ? formatTimer(resendTimer) : resendTimer}</span>
+                                        </>
                                         :
                                         <>{t("Didn't receive OTP?") + " "} <span style={{ color: "#5926f0", cursor: "pointer" }} onClick={() => {
                                             setOTPValues(Array(numberOfFields).fill(''))
@@ -212,6 +192,17 @@ const OtpConfirmation = ({ verifyOTpHandler, resendHandler, timer = 120, type = 
                                         }}>{t("Resend Now")}</span></>
                                 }
                             </span>
+                            <div className={styles.changeContainer}>
+                                <p>{t("Wrong Number").replace("Number", type === "phone" ? "Number" : "Email")}?&nbsp;</p>
+                                <span  
+                                    onClick={() => {
+                                        dataHandler("step", 3)
+                                        dataHandler("show_otp", false)
+                                        dataHandler("phone_otp_verfied", false)
+                                        dataHandler("show_email_otp", false)
+                                    }}
+                                >{t('Change it')}</span>
+                            </div>
                         </div>
                         {
                             data.error
