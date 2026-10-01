@@ -1,28 +1,20 @@
 import axios from 'axios';
 import { useCallback, useContext, useEffect, useState } from 'react';
-import { CheckCircle, Clock, Copy, Plus, Shield, XCircle } from 'react-feather';
+import { CheckCircle, Clock, Copy, Edit2, Plus, Shield, XCircle } from 'react-feather';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
-import { Badge, Button, Card, CardBody, CardHeader, Col, FormGroup, Input, Label, Row, Spinner, Table } from 'reactstrap';
+import { Badge, Button, Card, CardBody, CardHeader, Col, Modal, ModalBody, ModalHeader, Row, Spinner } from 'reactstrap';
 import { UserContext } from '../../../Context/UserContext';
 import { decryptData } from '../../../Helper/EssentilaMethods/Decryption';
 import { encryptData } from '../../../Helper/EssentilaMethods/Encryption';
 import useWindowWidth from '../../../utils/useWindowWidth';
 import TopRight from '../../topRight';
 import styles from '../styles/index.module.css';
-
-const DEFAULT_FEE_ITEMS = [
-    { id: "iban_activation", name: "IBAN Activation Fee (One-Time)", flatEuro: 500, percentAmount: 0 },
-    { id: "monthly_iban_fee", name: "Monthly IBAN Fee", flatEuro: 50, percentAmount: 0 },
-    { id: "sepa_inward", name: "SEPA Inward Transfer", flatEuro: 1, percentAmount: 0 },
-    { id: "sepa_outward", name: "SEPA Outward Transfer", flatEuro: 2, percentAmount: 0 },
-    { id: "swift_inward", name: "SWIFT Inward Transfer", flatEuro: 10, percentAmount: 0.1 },
-    { id: "swift_outward", name: "SWIFT Outward Transfer", flatEuro: 15, percentAmount: 0.2 },
-    { id: "crypto_ramp", name: "Crypto On/Off Ramp", flatEuro: 0, percentAmount: 1.0 },
-    { id: "fx_margin", name: "FX Margin", flatEuro: 0, percentAmount: 0.5 },
-];
-
-const NO_PERCENT_FEE_IDS = ['iban_activation', 'monthly_iban_fee'];
+import FeeModelEditHistory from './FeeModelEditHistory';
+import FeeModelForm from './FeeModelForm';
+import { useEditFeeRequest, useFeeRequestEditHistory } from './hooks/useFeeRequestEdit';
+import { useIdempotency } from '../../../hooks/Payments/useIdempotency';
+import { DEFAULT_FEE_ITEMS, NO_PERCENT_FEE_IDS, sanitizeFeeSchedule, scheduleFromRequest, updateFeeItem } from './feeSchedule';
 
 const FeeModelRequests = () => {
     const { t } = useTranslation();
@@ -37,6 +29,13 @@ const FeeModelRequests = () => {
 
     const [requests, setRequests] = useState([]);
     const [loadingRequests, setLoadingRequests] = useState(false);
+
+    const [editingRequest, setEditingRequest] = useState(null);
+    const [editTitle, setEditTitle] = useState('');
+    const [editFeeSchedule, setEditFeeSchedule] = useState(DEFAULT_FEE_ITEMS);
+    const { getKey: getEditKey, reset: resetEditKey } = useIdempotency();
+
+    const { data: editHistory = [], isLoading: loadingEditHistory } = useFeeRequestEditHistory();
 
     const fetchRequests = useCallback(async () => {
         setLoadingRequests(true);
@@ -62,15 +61,20 @@ const FeeModelRequests = () => {
         fetchRequests();
     }, [fetchRequests]);
 
+    const { mutate: editFeeRequest, isPending: savingEdit } = useEditFeeRequest({
+        onSuccess: (dec) => {
+            toast.success(dec?.message || t("Fee model request updated successfully!"));
+            resetEditKey();
+            setEditingRequest(null);
+            fetchRequests();
+        },
+        onError: (decErr) => {
+            toast.error(decErr?.message || t("Failed to update fee model request."));
+        },
+    });
+
     const handleFeeChange = (index, field, value) => {
-        const updated = [...feeSchedule];
-        const targetItem = updated[index];
-        if (field === 'percentAmount' && NO_PERCENT_FEE_IDS.includes(targetItem.id)) {
-            updated[index] = { ...targetItem, percentAmount: 0 };
-        } else {
-            updated[index] = { ...targetItem, [field]: parseFloat(value) || 0 };
-        }
-        setFeeSchedule(updated);
+        setFeeSchedule(prev => updateFeeItem(prev, index, field, value));
     };
 
     const handleSubmit = async (e) => {
@@ -82,12 +86,7 @@ const FeeModelRequests = () => {
 
         setSubmitting(true);
         try {
-            const sanitizedSchedule = feeSchedule.map(item => {
-                if (NO_PERCENT_FEE_IDS.includes(item.id)) {
-                    return { ...item, percentAmount: 0 };
-                }
-                return item;
-            });
+            const sanitizedSchedule = sanitizeFeeSchedule(feeSchedule);
 
             const payload = {
                 account_id: userDetails?._id,
@@ -115,6 +114,42 @@ const FeeModelRequests = () => {
         } finally {
             setSubmitting(false);
         }
+    };
+
+    const openEditModal = (req) => {
+        resetEditKey();
+        setEditingRequest(req);
+        setEditTitle(req.title || '');
+        setEditFeeSchedule(scheduleFromRequest(req.fee_schedule));
+    };
+
+    const closeEditModal = () => {
+        if (savingEdit) return;
+        setEditingRequest(null);
+    };
+
+    const handleEditFeeChange = (index, field, value) => {
+        setEditFeeSchedule(prev => updateFeeItem(prev, index, field, value));
+    };
+
+    const handleEditSubmit = async (e) => {
+        e.preventDefault();
+        if (!editTitle.trim()) {
+            toast.error(t("Please enter a title for the fee model request."));
+            return;
+        }
+
+        editFeeRequest({
+            requestId: editingRequest._id,
+            idempotencyKey: getEditKey(),
+            // Same shape as the create request: flat amounts in EUR, percentages in %.
+            payload: {
+                account_id: userDetails?._id,
+                title: editTitle.trim(),
+                fee_schedule: sanitizeFeeSchedule(editFeeSchedule),
+                agent_revenue_model: editingRequest.agent_revenue_model || revenueModel,
+            },
+        });
     };
 
     const copyToClipboard = (text, type = "code") => {
@@ -229,7 +264,15 @@ const FeeModelRequests = () => {
                                                         {t("Requested on")}: {new Date(req.createdAt).toLocaleDateString()}
                                                     </span>
                                                 </div>
-                                                <div>
+                                                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                                    <Button
+                                                        size="sm"
+                                                        outline
+                                                        style={{ padding: '4px 8px', color: '#5926F0', borderColor: '#5926F0', display: 'flex', alignItems: 'center', gap: '4px' }}
+                                                        onClick={() => openEditModal(req)}
+                                                    >
+                                                        <Edit2 size={12} /> {t("Edit")}
+                                                    </Button>
                                                     {req.status === 'pending' && (
                                                         <Badge color="warning" pill style={{ padding: '6px 12px', fontSize: '12px' }}>
                                                             <Clock size={12} style={{ marginRight: '4px' }} /> {t("PENDING REVIEW")}
@@ -367,88 +410,49 @@ const FeeModelRequests = () => {
                                 ))}
                             </Row>
                         )}
+
+                        <FeeModelEditHistory history={editHistory} loading={loadingEditHistory} />
                     </div>
                 ) : (
                     <Card style={{ borderRadius: '12px', border: '1px solid #E5E7EB', padding: '24px' }}>
-                        <form onSubmit={handleSubmit}>
-                            <h3 style={{ fontSize: '18px', fontWeight: 700, margin: '0 0 16px 0', color: '#111827' }}>
-                                {t("Request New Fee Model")}
-                            </h3>
-                            <FormGroup>
-                                <Label style={{ fontWeight: 600, fontSize: '14px', color: '#374151' }}>
-                                    {t("Fee Model Title / Name")} <span style={{ color: 'red' }}>*</span>
-                                </Label>
-                                <Input
-                                    type="text"
-                                    placeholder={t("e.g. VIP Corporate Pricing Plan")}
-                                    value={title}
-                                    onChange={(e) => setTitle(e.target.value)}
-                                    required
-                                    style={{ maxWidth: '500px' }}
-                                />
-                                <small style={{ color: '#6B7280' }}>
-                                    {t("Give this fee model a descriptive title for your reference.")}
-                                </small>
-                            </FormGroup>
-
-                            <div style={{ marginTop: '24px', marginBottom: '16px', fontWeight: 700, fontSize: '16px', color: '#111827' }}>
-                                {t("Fee Schedule Configuration")}
-                            </div>
-
-                            <Table responsive bordered hover>
-                                <thead>
-                                    <tr style={{ background: '#F9FAFB' }}>
-                                        <th>{t("Fee Line Item")}</th>
-                                        <th>{t("Flat Amount (€ EUR)")}</th>
-                                        <th>{t("Percentage (%)")}</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {feeSchedule.map((item, idx) => {
-                                        const isNoPercent = NO_PERCENT_FEE_IDS.includes(item.id);
-                                        return (
-                                            <tr key={item.id}>
-                                                <td style={{ verticalAlign: 'middle', fontWeight: 600, fontSize: '13px', color: '#374151' }}>{item.name}</td>
-                                                <td>
-                                                    <Input
-                                                        type="number"
-                                                        step="any"
-                                                        value={item.flatEuro}
-                                                        onChange={(e) => handleFeeChange(idx, 'flatEuro', e.target.value)}
-                                                        style={{ width: '130px' }}
-                                                    />
-                                                </td>
-                                                <td style={{ verticalAlign: 'middle' }}>
-                                                    {isNoPercent ? (
-                           <></>
-                                                    ) : (
-                                                        <Input
-                                                            type="number"
-                                                            step="any"
-                                                            value={item.percentAmount}
-                                                            onChange={(e) => handleFeeChange(idx, 'percentAmount', e.target.value)}
-                                                            style={{ width: '130px' }}
-                                                        />
-                                                    )}
-                                                </td>
-                                            </tr>
-                                        );
-                                    })}
-                                </tbody>
-                            </Table>
-
-                            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px', marginTop: '24px' }}>
-                                <Button type="button" outline onClick={() => setActiveTab('list')}>
-                                    {t("Cancel")}
-                                </Button>
-                                <Button type="submit" disabled={submitting} style={{ background: '#5926F0', border: 'none', padding: '10px 24px' }}>
-                                    {submitting ? t("Submitting Request...") : t("Submit Request to Admin")}
-                                </Button>
-                            </div>
-                        </form>
+                        <FeeModelForm
+                            heading={t("Request New Fee Model")}
+                            title={title}
+                            onTitleChange={setTitle}
+                            feeSchedule={feeSchedule}
+                            onFeeChange={handleFeeChange}
+                            onSubmit={handleSubmit}
+                            onCancel={() => setActiveTab('list')}
+                            submitting={submitting}
+                            submitLabel={t("Submit Request to Admin")}
+                            submittingLabel={t("Submitting Request...")}
+                        />
                     </Card>
                 )}
             </div>
+
+            <Modal isOpen={!!editingRequest} toggle={closeEditModal} size="lg" centered>
+                <ModalHeader toggle={closeEditModal}>
+                    {t("Edit Fee Model Request")}
+                </ModalHeader>
+                <ModalBody style={{ padding: '24px' }}>
+                    {editingRequest && (
+                        <FeeModelForm
+                            title={editTitle}
+                            onTitleChange={setEditTitle}
+                            feeSchedule={editFeeSchedule}
+                            onFeeChange={handleEditFeeChange}
+                            onSubmit={handleEditSubmit}
+                            onCancel={closeEditModal}
+                            submitting={savingEdit}
+                            submitLabel={t("Save Changes")}
+                            submittingLabel={t("Saving...")}
+                        />
+                    )}
+                </ModalBody>
+            </Modal>
+
+
         </div>
     );
 };
