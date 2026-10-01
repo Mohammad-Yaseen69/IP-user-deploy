@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { apiWrapper } from '../../utils/Functions/apiWrapper'
 import { encryptData } from '../../Helper/EssentilaMethods/Encryption'
 
-const DEFAULT_DEBOUNCE_MS = 800
+const DEFAULT_DEBOUNCE_MS = 2000
 
 const draftEndpoint = (scope) => `/api/drafts/${scope}`
 
