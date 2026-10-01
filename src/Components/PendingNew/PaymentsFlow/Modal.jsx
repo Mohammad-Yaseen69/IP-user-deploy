@@ -32,7 +32,7 @@ import GeneralNoticeModal from '../../PaymentsNewer/GeneralNoticeModal'
 import PlaidBankTransfer from '../../AddFunds/WalletFundsFlow/PlaidBankTransfer'
 import { useQueryClient } from '@tanstack/react-query'
 import { useIdempotency } from '../../../hooks/Payments/useIdempotency'
-import PaytentlyHostedModal from '../../AddFunds/PaytentlyHostedModal'
+ import PaytentlyHostedModal from '../../AddFunds/PaytentlyHostedModal'
 import { initiatePaytentlyPayment, usePaytently } from '../../../utils/Functions/paytently'
 
 const headings = ["Select Payment Type", "Review Payment"]
