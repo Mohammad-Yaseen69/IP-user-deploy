@@ -326,8 +326,6 @@ const KYB = () => {
             })
 
             const decrypted = decryptData(res.data.data)
-            setUserDetails(prev => ({ ...prev, company: decrypted?.results?.company }))
-
 
             if (allowPayment) {
                 const data = await mutateAsync({
@@ -339,6 +337,9 @@ const KYB = () => {
                 } else {
                     await processWithoutCharge()
                 }
+            } else {
+                 toast.success(decrypted?.message);
+                 verifyToken(true);
             }
 
             console.log(decrypted)
