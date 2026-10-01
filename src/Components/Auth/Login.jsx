@@ -82,6 +82,9 @@ const Login = ({ country, setIsLoginForm, }) => {
     const [pendingLoginData, setPendingLoginData] = useState(null)
     const [capturedSecurityData, setCapturedSecurityData] = useState(null)
     const [isDataLoaded, setIsDataLoaded] = useState(false);
+    const [otpDeliveryInfo, setOtpDeliveryInfo] = useState({})
+    // Country the user picked in the dropdown; PhoneInput remounts when going back from the password step
+    const [phoneCountry, setPhoneCountry] = useState(null)
 
     const normalizeCredential = (value) => (value ?? "").toString().trim().toLowerCase();
     const getResolvedCredential = () => {

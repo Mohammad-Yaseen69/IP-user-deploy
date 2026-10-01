@@ -60,7 +60,7 @@ const CountryCode = ({ country, selectedCountry, setSelectedCountry, setCountry,
             setCountry(filtered)
             if (firstTime && !number) {
                 const dialCode = filtered?.dial_code?.replace("+", "")?.replace("-", "") ?? ""
-                const formatted = phone?.replace(dialCode, "") ?? ""
+                const formatted = (dialCode && phone?.startsWith(dialCode) ? phone.slice(dialCode.length) : phone) ?? ""
                 setNumber(formatted)
                 setFirstTime(false)
             }
