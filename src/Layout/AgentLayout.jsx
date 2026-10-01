@@ -8,7 +8,7 @@ import AssistantWidget from "../Components/AssistantWidget";
 import InstaPayLoader from "../Components/Loader";
 
 const AgentLayout = () => {
-    const { userDetails, verifyToken } = useContext(UserContext) || {};
+    const { userDetails, verifyToken, isSidebarOpen } = useContext(UserContext) || {};
     const token = localStorage.getItem("token");
     const location = useLocation();
 
@@ -32,7 +32,7 @@ const AgentLayout = () => {
 
     return (
         <div className={styles.layout}>
-            <aside className={styles.sidebar}>
+            <aside className={`${styles.sidebar} ${!isSidebarOpen && styles.sidebarCollpased}`}>
                 <NewMenu />
                 <div className={styles.agentSidebarContainer}>
                     <AgentSidebar />

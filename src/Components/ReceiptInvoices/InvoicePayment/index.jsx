@@ -50,18 +50,22 @@ function reducer(state, action) {
 }
 
 
-const Wrapper = ({ children, directCard = false }) => (
-  <div
-    style={{ background: directCard ? "#f5f6f8" : `url(${background})`, borderRadius: "none", minHeight: "100vh" }}
-    className={`${styles.container} ${directCard ? styles.directCardPage : ""}`}
-  >
-    {!directCard && <div className={styles.overlay} />}
-    {directCard && <div className={styles.directCardWatermark}>{t("InstaPay")}</div>}
-    <Card style={{ marginBottom: "0px" }} className={`${styles.sub_container} ${directCard ? styles.directCardShell : ""}`}>
-      {children}
-    </Card>
-  </div >
-)
+const Wrapper = ({ children, directCard = false }) => {
+  const { t } = useTranslation()
+
+  return (
+    <div
+      style={{ background: directCard ? "#f5f6f8" : `url(${background})`, borderRadius: "none", minHeight: "100vh" }}
+      className={`${styles.container} ${directCard ? styles.directCardPage : ""}`}
+    >
+      {!directCard && <div className={styles.overlay} />}
+      {directCard && <div className={styles.directCardWatermark}>{t("InstaPay")}</div>}
+      <Card style={{ marginBottom: "0px" }} className={`${styles.sub_container} ${directCard ? styles.directCardShell : ""}`}>
+        {children}
+      </Card>
+    </div >
+  )
+}
 
 const InvoicePayment = () => {
   const [state, dispatch] = useReducer(reducer, initialState)

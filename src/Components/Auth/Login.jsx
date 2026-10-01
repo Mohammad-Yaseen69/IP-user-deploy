@@ -5,20 +5,14 @@ import { UserContext } from "../../Context/UserContext";
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 import PhoneInput from "../PhoneInput";
-import { AlertTriangle, ChevronRight, Eye, EyeOff, Mail } from "react-feather";
+import { AlertTriangle, Eye, EyeOff, Mail } from "react-feather";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import gs from "./files/gs.svg"
 import as from "./files/as.svg"
 import authenticator from "./files/authenticator.webp"
 import axios from "axios";
-import LanguagePicker from "../LanguagePicker";
 import FaceAnimation from "./FaceAnimation"
 import BiometricSvg from "../../assets/icons/fingerprint.png"
-import authenticatorBlack from '../../assets/images/authenticatorBlack.jpg'
-import instaBlack from '../../assets/images/instaBlack.png'
-import biometricBlack from '../../assets/images/biometricBlack.jpg'
-import whatsappBlack from '../../assets/images/whatsappBlack.png'
-import emailBlack from '../../assets/images/emailBlack.png'
 import { startAuthentication } from "@simplewebauthn/browser"
 import * as rdd from "react-device-detect";
 import { authIcon, instaIcon, smsIcon, whatsappIcon, email as emailIcon } from "./files"
@@ -31,6 +25,22 @@ import InstaPayLoader from "../Loader";
 import { logger } from "@sentry/react";
 import VpnModal from "./VpnModal";
 import LocationDeniedModal from "./LocationDeniedModal";
+import { InputAdornment, Stack, TextField } from "@mui/material";
+import { AlarmIcon } from "../PaymentAddressPublic/PayAsGuest/Svgs";
+
+const linkStyle = {
+    color: "#5926F0",
+    fontSize: "12px",
+    fontStyle: "normal",
+    fontWeight: 700,
+    lineHeight: "150%",
+    letterSpacing: "-0.28px",
+    textDecoration: "underline"
+};
+
+const isPhoneNumber = /^\d{9,20}$/;
+const isEmail = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
 const Login = ({ country, setIsLoginForm, }) => {
     const navigate = useNavigate()
     const { t } = useTranslation()
@@ -39,9 +49,6 @@ const Login = ({ country, setIsLoginForm, }) => {
     const isQuickLoginRef = useRef(false)
     const redirectQuery = params.get("redirect");
     const redirect = location?.state?.redirect ?? (redirectQuery ? decodeURIComponent(redirectQuery) : null)
-    const isPhoneNumber = /^\d{9,20}$/;
-    const isEmail = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    const [emailVerified, setEmailVerified] = useState(false)
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [showPassword, setShowPassword] = useState(false)
@@ -71,14 +78,10 @@ const Login = ({ country, setIsLoginForm, }) => {
     const [biometricLoading, setBiometricLoading] = useState(false)
     const [biometricSuccessfull, setBiometricSuccessfull] = useState(false)
     const [showRestoreModal, setShowRestoreModal] = useState(false)
-    const [accountRestoreDetails, setAccountRestoreDetails] = useState(null)
     const [restoreLoading, setRestoreLoading] = useState(false)
     const [pendingLoginData, setPendingLoginData] = useState(null)
     const [capturedSecurityData, setCapturedSecurityData] = useState(null)
     const [isDataLoaded, setIsDataLoaded] = useState(false);
-    const [otpDeliveryInfo, setOtpDeliveryInfo] = useState({})
-    // Country the user picked in the dropdown; PhoneInput remounts when going back from the password step
-    const [phoneCountry, setPhoneCountry] = useState(null)
 
     const normalizeCredential = (value) => (value ?? "").toString().trim().toLowerCase();
     const getResolvedCredential = () => {
@@ -136,23 +139,6 @@ const Login = ({ country, setIsLoginForm, }) => {
         const loginWith = localStorage.getItem("loginWith")
         setLoginMethod(loginWith ?? "phone")
     }, [])
-
-    const checkEmailHandler = (e) => {
-        e.preventDefault()
-        setIsPressed(true)
-        setIsLoginError("")
-        const credential = getResolvedCredential();
-        if (!isPhoneNumber.test(credential) && !isEmail.test(credential)) {
-            setIsLoginError("Uh-Oh! Please enter a valid email or phone number.")
-            setIsPressed(false)
-            return
-        }
-        if (credential !== email) {
-            setEmail(credential)
-        }
-        setEmailVerified(true)
-        setIsPressed(false)
-    }
 
     useEffect(() => {
         function isInstagramBrowser() {
@@ -285,14 +271,12 @@ const Login = ({ country, setIsLoginForm, }) => {
                 const isLocationRequired = decrypted?.isLocationRequired
                 setFirstTime(false)
                 if (!restoreAccount && decrypted?.status === false && decrypted?.accountDetails?.requiresConfirmation === true) {
-                    setAccountRestoreDetails(decrypted)
                     setShowRestoreModal(true)
                     setIsPressed(false)
                     setMethodLoading(false)
                     return
                 }
                 // console.log("FULL LOGIN RESPONSE:", decrypted)
-                setOtpDeliveryInfo({ email: decrypted?.email, phone: decrypted?.phone })
                 setMethods(prevMethods => prevMethods.map(method => {
                     switch (method.attr) {
                         case 'auth':
@@ -348,7 +332,6 @@ const Login = ({ country, setIsLoginForm, }) => {
                 setLoginToken(decrypted?.token)
                 if (restoreAccount) {
                     setShowRestoreModal(false)
-                    setAccountRestoreDetails(null)
                     setRestoreLoading(false)
                 }
 
@@ -844,7 +827,7 @@ const Login = ({ country, setIsLoginForm, }) => {
         if (resendTimer > 0 && lastOtpSentTo && (method === 'sms' || method === 'insta' || method === "wp" || method === "email")) {
             if (!hasChangedMethodOnce || lastOtpSentTo === method) {
                 setHasChangedMethodOnce(true);
-                if (resendTimer === 0 || !hasChangedMethodOnce) {
+                if (!hasChangedMethodOnce) {
                     shouldCallLoginHandler = true;
                 } else {
                     setCurrentOtpMethod(method);
@@ -1018,7 +1001,6 @@ const Login = ({ country, setIsLoginForm, }) => {
     const resetLoginStates = () => {
         setEmail("")
         setPassword("")
-        setEmailVerified(false)
         setIsPressed(false)
         setIsLoginError("")
         setLoginToken("")
@@ -1026,68 +1008,14 @@ const Login = ({ country, setIsLoginForm, }) => {
         setCurrentOtpMethod("auth")
         resetOtpStates()
         setShowRestoreModal(false)
-        setAccountRestoreDetails(null)
     }
 
-
-    const getOtpLabel = () => {
-        const maskValue = (value) => {
-            const str = String(value ?? "");
-            if (!str) return "";
-
-            if (str.includes("@")) {
-                const [username, domain] = str.split("@");
-
-                if (!username || !domain) return str;
-
-                if (username.length <= 3) {
-                    return `${"*".repeat(username.length)}@${domain}`;
-                }
-
-                const visibleSuffix = username.slice(-3);
-                const maskedLength = username.length - 3;
-                return `${"*".repeat(maskedLength)}${visibleSuffix}@${domain}`;
-            }
-
-            if (str.length <= 4) {
-                return str.replace(/./g, "*");
-            }
-
-            return `${str.slice(0, str.length - 4).replace(/./g, "*")}${str.slice(-4)}`;
-        };
-
-        const maskedEmail = maskValue(otpDeliveryInfo.email)
-        const maskedPhone = maskValue(otpDeliveryInfo.phone)
-        const service = String(otpDeliveryInfo.phone ?? "").slice(0, 3) === "971" ? "Whatsapp" : "SMS"
-
-        switch (currentOtpMethod) {
-            case "auth": return t("Google Authenticator Code")
-            case "insta": return t("Enter the code sent to your Instagram Account")
-            case "wp": return t("Enter the code sent to your Whatsapp on {{phone}}", { phone: `\u200E${maskedPhone}\u200E` })
-            case "email":
-                return t(
-                    "Enter the code sent to {{email}} via Email",
-                    {
-                        email: `\u200E${maskedEmail}\u200E`
-                    }
-                );
-            default: return t("Enter the code sent to {{phone}} via {{service}}", { phone: `\u200E${maskedPhone}\u200E`, service })
-        }
-    };
     const resolvedCredential = getResolvedCredential();
-    const isCredentialValid = isPhoneNumber.test(resolvedCredential) || isEmail.test(resolvedCredential);
+    const isCredentialValid = (isPhoneNumber.test(resolvedCredential) || isEmail.test(resolvedCredential)) && password;
     const availableMethods = methods.filter(
         m => m.avail && m.attr !== currentOtpMethod
     )
-    const linkStyle = {
-        color: "#5926F0",
-        fontSize: "12px",
-        fontStyle: "normal",
-        fontWeight: 700,
-        lineHeight: "150%",
-        letterSpacing: "-0.28px",
-        textDecoration: "underline"
-    };
+
     return (
         <>
 
@@ -1144,593 +1072,339 @@ const Login = ({ country, setIsLoginForm, }) => {
                 </ModalFooter>
             </Modal>
 
-            <form
-                autoComplete="off"
-                onSubmit={(e) => {
-                    emailVerified ? loginHandler(e, undefined, false, true) : checkEmailHandler(e)
-                }}
-                className={styles.form_details}
-                style={width > 1000 ? { opacity: step === 1 ? 1 : 0, pointerEvents: step === 1 ? "all" : "none" } : { display: step === 1 ? "inherit" : "none" }}
-            >
-                <div className={styles.left}>
-                    <h1>{t("Login")}</h1>
-                    <p>{t("Start Your InstaPay Journey Today!")}</p>
-                    {
-                        width < 1000
-                        &&
-                        <LanguagePicker />
-                    }
-                </div>
-                <div className={styles.right}>
-                    {
-                        !emailVerified
-                            ?
-                            <>
-                                {!showQuickLogin ? <>
-                                    <div className={styles.inp_con}>
-                                        <label>{loginMethod === "phone" ? t("Enter your phone number") : t("Enter Your Email")}</label>
-                                        {
-                                            loginMethod === "phone"
-                                                ?
-                                                <PhoneInput
-                                                    phone={email}
-                                                    setPhone={setEmail}
-                                                    country={phoneCountry ?? country}
-                                                    setCountry={(item) => setPhoneCountry(item?.alpha3 ?? null)}
-                                                />
-                                                :
-                                                <input type="email" placeholder={t("eg: john@doe.org")} value={email} onChange={e => setEmail(e.target.value?.toLowerCase())} autoComplete="off" name="email" />
-                                        }
-                                        <div
-                                            className={styles.loginWith}
-                                            onClick={() => {
-                                                setLoginMethod(loginMethod === "email" ? "phone" : "email")
-                                                localStorage.setItem("loginWith", loginMethod === "email" ? "phone" : "email")
-                                                setEmail("")
-                                            }}
-                                        >
-                                            {
-                                                loginMethod === "email"
-                                                    ?
-                                                    t("Login With Phone Number")
-                                                    :
-                                                    t("Login with email")
-                                            }
-                                        </div>
-                                    </div>
-                                </> :
-                                    <>
-                                        <div className={styles.inp_con}>
-                                            <label>{t("Welcome Back!")}</label>
-                                            <div className={styles.user_info}>
-                                                <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                                                    {loginData?.pfp ?
-                                                        <img style={{ width: "50px", borderRadius: "100%", height: "50px", objectFit: "cover", flexShrink: 0 }} src={loginData?.pfp} alt="" /> :
-                                                        <div className={styles.dp}>{loginData?.name?.[0]?.toUpperCase()}</div>
-                                                    }
-                                                    <div>
-                                                        <h4 style={{ marginBottom: "0", fontWeight: 600, color: "black", fontSize: "15px" }}>{loginData?.name}</h4>
-                                                    </div>
-                                                </div>
-                                                {width > 1000 &&
-                                                    <div
-                                                        className={styles.loginWith}
-                                                        onClick={() => {
-                                                            setShowQuickLogin(false)
-                                                            setEmail("")
-                                                            setPassword("")
-                                                            setEmailVerified(false)
-                                                            setProfileLockTime(0)
-                                                        }}
-                                                        style={{ position: "relative", top: "0", left: "0px", flexShrink: 0 }}
-                                                    >
-                                                        {t("Change Account")}
-                                                    </div>
-                                                }
-                                            </div>
-
-                                            {width < 1000 &&
-                                                <div
-                                                    className={styles.loginWith}
-                                                    onClick={() => {
-                                                        setShowQuickLogin(false)
-                                                        setEmail("")
-                                                        setPassword("")
-                                                        setEmailVerified(false)
-                                                        setProfileLockTime(0)
-                                                    }}
-                                                    style={{ position: "relative", top: "0", left: "0px", margin: "20px auto" }}
-                                                >
-                                                    {t("Change Account")}
-                                                </div>
-                                            }
-                                        </div>
-                                    </>
-                                }
-                            </>
-                            :
-                            <div className={`${styles.inp_con} ${styles.password_field}`}>
-                                <label>{t("Enter Your Password")}</label>
-                                <div style={{
-                                    position: "relative",
-                                    width: "100%",
-                                    display: "flex",
-                                    alignItems: "center"
-                                }}>
-                                    <input className={styles.inp_con} type={showPassword ? "text" : "password"}
-                                        placeholder={t("Enter your password")}
-                                        value={password} onChange={e => setPassword(e.target.value)}
-                                        disabled={isPressed}
-                                        autoComplete="off" />
-                                    <div style={{
-                                        position: "absolute",
-                                        top: "55%",
-                                        right: "10px",
-                                        transform: "translateY(-50%)",
-                                        cursor: "pointer"
-                                    }}
-                                        onClick={() => setShowPassword(prev => !prev)}
-                                    >
-                                        {
-                                            showPassword
-                                                ?
-                                                <EyeOff />
-                                                :
-                                                <Eye />
-                                        }
-                                    </div>
-                                </div>
-                                <Link to={"/forgot-password"} className={styles.forgot_pass}>
-                                    {t("Forgot Password?")}
-                                </Link>
-                            </div>
-                    }
-                    {
-                        isLoginError
-                        &&
-                        <div className={styles.input_error}>
-                            <AlertTriangle size={17} color="#F32D2D" />
-                            <span>{profileLockTIme > 0 ? isLoginError : t(isLoginError)}</span>
+            {step === 1 ?
+                <form
+                    autoComplete="off"
+                    onSubmit={(e) => {
+                        loginHandler(e, undefined, false, true)
+                    }}
+                    className={styles.login_form}
+                    style={width > 1000 ? { opacity: step === 1 ? 1 : 0, pointerEvents: step === 1 ? "all" : "none" } : { display: step === 1 ? "inherit" : "none" }}
+                >
+                    <div className={styles.right}>
+                        <div className={styles.topSection}>
+                            <label>{t("Welcome Back")} {t("👋")}</label>
+                            <p>{t('Enter your phone and password to access your account')}</p>
                         </div>
-                    }
-                    {
-                        locationLoading
-                        &&
-                        <div className={styles.location_status}>
-                            <div className={styles.loader_dots}>
-                                <span>.</span><span>.</span><span>.</span>
-                            </div>
-                            <span>{t("Reading Location...")}</span>
-                        </div>
-                    }
-                    <div className={styles.center_bottom}>
-                        {
-                            (emailVerified && width < 1000)
-                            &&
-                            <button type="button" className={styles.go_back_btn}
-                                onClick={() => {
-                                    setPassword("")
-                                    setEmailVerified(false)
-                                }}>
-                                {t("Back")}
-                            </button>
-                        }
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', alignItems: 'flex-start' }}>
-                            {
-                                isPressed ? (<>
-                                    ‎
-                                </>) : (
-                                    <>
-                                        <div className={styles.bottom_text}>
-                                            <span>{t("Don't Have an Account? Sign Up").split("?")?.[0]} </span>
-                                        </div>
-
-                                        <div
-                                            style={{
+                        <div className={styles.formWrapper}>
+                            <div className={styles.fieldsContainer}>
+                                {
+                                    loginMethod === "email" ? 
+                                    <TextField    
+                                        className={styles.inputField}
+                                        type="email"
+                                        placeholder={t("Enter Your Email")}
+                                        value={email}
+                                        onChange={e => setEmail(e.target.value?.toLowerCase())}
+                                        name="email"
+                                        InputProps={{
+                                            startAdornment: (
+                                                <InputAdornment position="start">
+                                                    <Mail size={20}/>
+                                                </InputAdornment>
+                                            )
+                                        }}
+                                    />
+                                    :                                                 
+                                        <PhoneInput
+                                            phone={email}
+                                            setPhone={setEmail}
+                                            country={country}
+                                            customStyles={{
                                                 display: "flex",
+                                                height: "100%",
+                                                padding: "12px",
                                                 alignItems: "center",
-                                                gap: "5px",
-                                                justifyContent: "center",
+                                                gap: "12px",
+                                                alignSelf: "stretch",
+                                                borderRadius: "6px",
+                                                border: "1px solid #E1E5EE",
+                                                background: "#FFF",
+                                                boxShadow: "0 1px 1.5px 0 rgba(44, 54, 53, 0.03)",
+                                                width: "100%",
                                             }}
-                                        >
-                                            <Link style={linkStyle}
-                                                to="/signup" onClick={() => setIsLoginForm(false)}>
-                                                {t("Sign Up")}
-                                            </Link>
-
-                                            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                                                <span style={{ color: "#888", fontWeight: 600 }}>{t("OR")}</span>
-                                            </div>
-
-                                            <Link style={linkStyle} to="/agent-login">
-                                                {t("Sign in as Agent")}
-                                            </Link>
-                                        </div></>
-                                )
-                            }
-                        </div>
-                        <div className={styles.btns}>
+                                        />                                              
+                                }
+                                <TextField    
+                                    className={styles.inputField}
+                                    type={showPassword ? "text" : "password"}
+                                    placeholder={t(" Password")}
+                                    value={password} onChange={e => setPassword(e.target.value)}
+                                    name="password"
+                                    InputProps={{
+                                        startAdornment: (
+                                            <InputAdornment position="start">
+                                                <AlarmIcon />
+                                            </InputAdornment>
+                                        ),
+                                        endAdornment: (
+                                            <InputAdornment onClick={() => setShowPassword(prev => !prev)} position="end">
+                                                {showPassword ?
+                                                    <EyeOff size={20} />
+                                                    :
+                                                    <Eye size={20} />
+                                                }
+                                            </InputAdornment>
+                                        )
+                                    }}
+                                />
+                            </div>
                             {
-                                (emailVerified && width > 1000)
-                                &&
-                                <button type="button" disabled={isPressed} className={styles.go_back_btn}
+                            isLoginError
+                            &&
+                            <div className={styles.input_error}>
+                                <AlertTriangle size={17} color="#F32D2D" />
+                                <span>{profileLockTIme > 0 ? isLoginError : t(isLoginError)}</span>
+                            </div>
+                        }
+                            <span className={styles.para}>{t("By logging in, you agree to the terms outlined in InstaPay's Privacy Policy.")}</span>
+                            <button type="submit" className={styles.form_btn} disabled={isLoginError || isPressed || !isCredentialValid}>
+                                {t('Login')}
+                            </button>
+                            <Stack direction={'row'} padding={'8px 12px'} justifyContent={'space-between'}>
+                                <div
+                                    className={styles.toggleLoginBtn}
                                     onClick={() => {
-                                        setPassword("")
-                                        setEmailVerified(false)
-                                        setProfileLockTime(0)
-
+                                        setLoginMethod(loginMethod === "email" ? "phone" : "email")
+                                        localStorage.setItem("loginWith", loginMethod === "email" ? "phone" : "email")
+                                        setEmail("")
                                     }}
                                 >
+                                    {
+                                        loginMethod === "email"
+                                            ?
+                                            t("Sign in with phone")
+                                            :
+                                            t("Sign in with email")
+                                    }
+                                </div>
+                                <Link to="/forgot-password" className={styles.forgot_pass}>
+                                    {t('Forgot Password?')}
+                                </Link>
+                            </Stack>
+                            <span className={styles.para}>
+                                {t("If you don't have an account")}&nbsp;•&nbsp;
+                                <Link style={linkStyle} onClick={() => setIsLoginForm(false)}>
+                                    {t("Create an Account")}
+                                </Link>
+                            </span>
+                        </div>                    
+                        {
+                            locationLoading
+                            &&
+                            <div className={styles.location_status}>
+                                <div className={styles.loader_dots}>
+                                    <span>.</span><span>.</span><span>.</span>
+                                </div>
+                                <span>{t("Reading Location...")}</span>
+                            </div>
+                        }
+                    </div>
+                </form>
+            :
+                <form onSubmit={verifyOTpHandler} className={styles.otp}>                
+                    <div className={styles.right}>
+                        <div className={`${styles.topSection} ${styles.otpTopSection}`}>
+                            {currentOtpMethod !== "biometric" && <label>{t("Enter OTP")}</label>}
+                            <p>{t(currentOtpMethod === "biometric" ? "Verify identity using your created Passkey on this device" : 'Please enter the one-time password (OTP) sent to your phone to access your account.')}</p>
+                        </div>
+                        <div className={styles.top}>
+                            {currentOtpMethod === "biometric" ? (
+                                <div className={styles.biometric_section}>
+                                    {biometricLoading || biometricSuccessfull ? (
+                                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem', flexDirection: "column" }}>
+                                            <span style={{ fontWeight: 600 }}>{biometricSuccessfull ? t("Biometric verification successful, We will redirect you to the dashboard page in a while.") : t('Please wait while we verify your biometric...')}</span>
+                                            <div style={{ width: "100px" }}>
+                                                <InstaPayLoader />
+                                            </div>
+                                        </div>
+                                    ) : (
+                                        <button
+                                            onClick={handleBiometricVerification}
+                                            type="button"
+                                            style={{
+                                                display: "flex",
+                                                padding: "22px 8px",
+                                                alignItems: "center",
+                                                gap: "6px",
+                                                flex: "1 0 0",
+                                                borderRadius: "8px",
+                                                border: "1px solid rgba(18, 18, 18, 0.20)",
+                                                background: "#FFF",
+                                                overflow: "hidden",
+                                                width: "100%",
+                                                fontWeight: 600,
+                                                fontSize: "12px"
+                                            }}
+                                            disabled={biometricLoading}
+                                        >
+                                            <img width={30} src={BiometricSvg} alt="" />
+                                            <span>
+                                                {t("Click to Continue with Biometric")}
+                                            </span>
+                                        </button>
+                                    )}
+                                </div>
+                            ) : (
+                                <div className={styles.otp_inp}>
+                                    <FaceAnimation currentInput={currentActiveInput} verification={otpVerified} isCorrect={isOtpCorrect} startTyping />
+                                    <div
+                                        style={{ animation: otpVerified && !isOtpCorrect ? "horizontal-shaking 0.5s ease-in-out" : "" }}
+                                        className={styles.otp_inputs + " " + (otpVerified && (!isOtpCorrect ? "wrong" : "correct"))}
+                                    >
+                                        {otpValues.map((value, index) => (
+                                            <input
+                                                type="tel"
+                                                key={`otp-input-${index}`}
+                                                maxLength={1}
+                                                disabled={isOtpCorrect}
+                                                value={value}
+                                                onPaste={handlePaste}
+                                                onChange={(e) => {
+                                                    setIsLoginError("")
+                                                    handleInputChange(index, e.target.value)
+                                                }}
+                                                onKeyDown={(e) => handleInputKeyDown(index, e)}
+                                                ref={(input) => (inputRefs.current[index] = input)}
+                                            />
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+                            <div className={styles.optBtns}>                                 
+                                <button type="submit"
+                                    className={styles.form_btn}
+                                    disabled={isAnyFieldEmpty || otpValues.some(item => !item) || isPressed || isLoginError}
+                                >
+                                    <span>{
+                                        (isPressed && !methodLoading)
+                                            ?
+                                            t("Authorising")
+                                            :
+                                            t("Authorise")
+                                    }</span>
+                                </button>
+                                <button type="button" disabled={isPressed} className={styles.go_back_btn} onClick={resetOtpStates}>
                                     {t("Back")}
                                 </button>
+                            </div> 
+                             {
+                                isLoginError
+                                &&
+                                <div className={styles.input_error}>
+                                    <AlertTriangle size={17} color="#F32D2D" />
+                                    <span>{t(isLoginError)}</span>
+                                </div>
                             }
-                            <button type="submit" className={styles.form_btn} disabled={isLoginError || isPressed || (showQuickLogin ? (emailVerified ? !password : false) : (emailVerified ? !password || !isCredentialValid : !isCredentialValid))}>
-                                <span>{
-                                    !emailVerified
-                                        ?
-                                        <>
-                                            {
-                                                isPressed
-                                                    ?
-                                                    t("Continuing")
-                                                    :
-                                                    t("Continue")
-                                            }
-                                        </>
-                                        :
-                                        <>
-                                            {
-                                                isPressed
-                                                    ?
-                                                    t("Processing")
-                                                    :
-                                                    t("Login")
-                                            }
-                                        </>
-                                }</span>
-                                <ChevronRight size={28} color="white" />
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </form >
-
-            {
-                step === 1
-                    ?
-                    <AuthenticatorDetails />
-                    :
-                    <form onSubmit={verifyOTpHandler} className={styles.otp}>
-                        <div className={styles.left}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                                {(() => {
-                                    switch (currentOtpMethod) {
-                                        case "auth": return <img src={authenticatorBlack} alt="" width="32" />;
-                                        case "insta": return <img src={instaBlack} alt="" width="32" />;
-                                        case "wp": return <img src={whatsappBlack} alt="" width="32" />;
-                                        case "sms": return <img src={smsIcon} alt="" width="32" />;
-                                        case "email": return <img src={emailBlack} alt="" width="32" />;
-                                        case "biometric": return <img src={biometricBlack} alt="" width="32" />;
-                                        default: return null;
-                                    }
-                                })()}
-                                <h1>
-                                    {currentOtpMethod === "biometric" ? t("Biometric Verification") :
-                                        currentOtpMethod === "auth" ? t("Google Authenticator") :
-                                            currentOtpMethod === "insta" ? t("Instagram") :
-                                                currentOtpMethod === "wp" ? t("Whatsapp") :
-                                                    currentOtpMethod === "email" ? t("Email OTP Verification") :
-                                                        t("SMS Verification").replace("SMS", resolvedCredential.slice(0, 3) === "971" ? "Whatsapp" : "SMS")}
-                                </h1>
-                            </div>
-                            <p>{t("Start Your InstaPay Journey Today!")}</p>
-                            {width < 1000 && <LanguagePicker />}
-                        </div>
-                        <div className={styles.right}>
-                            <div className={styles.top}>
-                                {currentOtpMethod === "biometric" ? (
-                                    <div className={styles.biometric_section}>
-                                        <h4 style={{ color: "#545454", fontSize: "1rem", fontWeight: 600 }}>
-                                            {t("Verify identity using your created Passkey on this device")}
-                                        </h4>
-                                        {biometricLoading || biometricSuccessfull ? (
-                                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem', flexDirection: "column" }}>
-                                                <span style={{ fontWeight: 600 }}>{biometricSuccessfull ? t("Biometric verification successful, We will redirect you to the dashboard page in a while.") : t('Please wait while we verify your biometric...')}</span>
-                                                <div style={{ width: "100px" }}>
-                                                    <InstaPayLoader />
-                                                </div>
-                                            </div>
-                                        ) : (
-                                            <button
-                                                onClick={handleBiometricVerification}
-                                                // className={styles.otpMethodButton}
-                                                type="button"
-                                                style={{
-                                                    display: "flex",
-                                                    padding: "22px 8px",
-                                                    alignItems: "center",
-                                                    gap: "6px",
-                                                    flex: "1 0 0",
-                                                    borderRadius: "8px",
-                                                    border: "1px solid rgba(18, 18, 18, 0.20)",
-                                                    background: "#FFF",
-                                                    overflow: "hidden",
-                                                    width: "100%",
-                                                    fontWeight: 600,
-                                                    fontSize: "12px"
-                                                }}
-                                                disabled={biometricLoading}
-                                            >
-                                                <img width={30} src={BiometricSvg} alt="" />
-                                                <span>
-                                                    {t("Click to Continue with Biometric")}
-                                                </span>
-                                            </button>
-                                        )}
-                                    </div>
-                                ) : (
-                                    <div className={styles.otp_inp}>
-                                        <label>{getOtpLabel()}</label>
-
-                                        <FaceAnimation currentInput={currentActiveInput} verification={otpVerified} isCorrect={isOtpCorrect} startTyping />
-                                        <div
-                                            style={{ animation: otpVerified && !isOtpCorrect ? "horizontal-shaking 0.5s ease-in-out" : "" }}
-                                            className={styles.otp_inputs + " " + (otpVerified && (!isOtpCorrect ? "wrong" : "correct"))}
-                                        >
-                                            {otpValues.map((value, index) => (
-                                                <input
-                                                    type="tel"
-                                                    key={`otp-input-${index}`}
-                                                    maxLength={1}
-                                                    disabled={isOtpCorrect}
-                                                    value={value}
-                                                    onPaste={handlePaste}
-                                                    onChange={(e) => {
-                                                        setIsLoginError("")
-                                                        handleInputChange(index, e.target.value)
-                                                    }}
-                                                    onKeyDown={(e) => handleInputKeyDown(index, e)}
-                                                    ref={(input) => (inputRefs.current[index] = input)}
-                                                />
-                                            ))}
-                                        </div>
-                                    </div>
-                                )}
-
-                                {width < 1000 && (
-                                    <div className={styles.btns}>
-                                        <button type="submit"
-                                            className={styles.form_btn}
-                                            disabled={isAnyFieldEmpty || otpValues.some(item => !item) || isPressed || isLoginError}
-                                        >
-                                            <span>{
-                                                (isPressed && !methodLoading)
-                                                    ?
-                                                    t("Verifying")
-                                                    :
-                                                    t("Verify")
-                                            }</span>
-                                            <ChevronRight size={28} color="white" />
-                                        </button>
-                                    </div>
-                                )}
-                                <div style={{ paddingTop: "10px" }} className={styles.toggle_sms}>
-                                    {
-                                        (consecutiveCount >= 3 && !isLoginError.includes('account is locked') && methods?.length > 0) &&
-                                        <div className={styles.input_error}>
-                                            <span>{t("Having trouble receiving/verifying your code? Choose another method below or contact support.")}</span>
-                                        </div>
-                                    }
-
-                                    {
-                                        currentOtpMethod === "auth"
-                                        &&
-                                        <span>{t("Problem with the OTP?")}</span>
-                                    }
-
-                                    {methods.filter(m => m.avail).length > 1
-                                        &&
-                                        <p style={{ alignSelf: "baseline" }}>
-                                            {t("Choose your preferred method to verify your identity:")}
-                                        </p>
-                                    }
-                                    {methods.filter(m => m.avail).length > 1 &&
-                                        <div className={styles.otp_methods} style={{
-                                            gridTemplateColumns:
-                                                availableMethods.length === 1
-                                                    ? "1fr"
-                                                    : "repeat(2, minmax(0, 1fr))"
-                                        }}>
-                                            {isMobile ? (
-                                                <>
-                                                    {methods.map((method, index) => {
-                                                        if (method.avail && method.attr !== currentOtpMethod) {
-                                                            return (
-                                                                <button
-                                                                    key={index}
-                                                                    className={styles.otpMethodButton}
-                                                                    type="button"
-                                                                    disabled={isPressed || methodLoading || biometricLoading}
-                                                                    onClick={() => handleOtpMethod(method.attr)}
-                                                                >
-                                                                    <img
-                                                                        src={method.icon}
-                                                                        alt=""
-                                                                    />
-                                                                    <span className={styles.otpMethodText}>
-                                                                        {t(method.text)}
-                                                                    </span>
-                                                                </button>
-                                                            )
-                                                        }
-                                                        return null;
-                                                    })}
-                                                </>
-                                            ) : (
-                                                <>
-                                                    {methods.map((method, index) => {
-                                                        if (method.avail && method.attr !== currentOtpMethod) {
-                                                            return (
-                                                                <button
-                                                                    key={index}
-                                                                    className={styles.otpMethodButton}
-                                                                    type="button"
-                                                                    disabled={isPressed || methodLoading || biometricLoading}
-                                                                    onClick={() => handleOtpMethod(method.attr)}
-                                                                >
-                                                                    <img
-                                                                        src={method.icon}
-                                                                        alt=""
-                                                                    />
-                                                                    <span style={{ marginBottom: "0" }}>
-                                                                        {t(method.text)}
-                                                                    </span>
-                                                                </button>
-                                                            )
-                                                        }
-                                                        return null;
-                                                    })}
-                                                </>
-                                            )}
-                                        </div>
-                                    }
-                                    {
-                                        <span>
-                                            {
-                                                resendTimer > 0
-                                                    ? (methods.filter(m => m.avail).length > 1 && (lastOtpSentTo && ['sms', 'insta', 'wp', 'email'].includes(pendingOtpMethod || currentOtpMethod) && lastOtpSentTo !== (pendingOtpMethod || currentOtpMethod)) || (pendingOtpMethod && lastOtpSentTo !== currentOtpMethod))
-                                                        ?
-                                                        <span>
-                                                            {t(
-                                                                "You have already requested code on {{lastOtpMethod}}, wait {{timer}} seconds to get code on {{nextOtpMethod}}",
-                                                                {
-                                                                    lastOtpMethod:
-                                                                        lastOtpSentTo === "sms"
-                                                                            ? "SMS"
-                                                                            : lastOtpSentTo === "wp"
-                                                                                ? "WhatsApp"
-                                                                                : lastOtpSentTo === "email"
-                                                                                    ? "Email"
-                                                                                    : "Instagram",
-
-                                                                    nextOtpMethod:
-                                                                        (pendingOtpMethod || currentOtpMethod) === "sms"
-                                                                            ? "SMS"
-                                                                            : (pendingOtpMethod || currentOtpMethod) === "wp"
-                                                                                ? "WhatsApp"
-                                                                                : (pendingOtpMethod || currentOtpMethod) === "email"
-                                                                                    ? "Email"
-                                                                                    : "Instagram",
-
-                                                                    timer: resendTimer,
-                                                                }
-                                                            )}
-                                                        </span> :
-                                                        currentOtpMethod !== "auth" && currentOtpMethod !== "biometric" && <span>
-                                                            {t("Resend code in {{timer}} seconds", {
-                                                                timer: resendTimer,
-                                                            })}
-                                                        </span>
-                                                    :
-                                                    <>
-                                                        {currentOtpMethod !== "auth" && currentOtpMethod !== "biometric" &&
-                                                            <>
-                                                                <span>{t("Didn't receive OTP?") + " "}</span>
-                                                                <span
-                                                                    style={{ color: "#5926f0", cursor: "pointer" }}
-                                                                    onClick={() => {
-                                                                        setLastOtpSentTo(currentOtpMethod);
-                                                                        setOTPValues(Array(numberOfFields).fill(''))
-                                                                        loginHandler({ preventDefault: () => { } }, currentOtpMethod)
-                                                                        setResendTimer(120)
-                                                                    }}>{t("Resend Now")}
-                                                                </span>
-                                                            </>
-                                                        }
-                                                    </>
-                                            }
-                                        </span>
-                                    }
-
-                                </div>
+                            <div className={styles.lineBreak} />                
+                            <div className={styles.toggle_sms}>
                                 {
-                                    isLoginError
-                                    &&
+                                    (consecutiveCount >= 3 && !isLoginError.includes('account is locked') && methods?.length > 0) &&
                                     <div className={styles.input_error}>
-                                        <AlertTriangle size={17} color="#F32D2D" />
-                                        <span>{t(isLoginError)}</span>
+                                        <span>{t("Having trouble receiving/verifying your code? Choose another method below or contact support.")}</span>
                                     </div>
                                 }
-                            </div>
-                            <div className={styles.center_bottom}>
-                                {
-                                    width < 1000
+
+                                {methods.filter(m => m.avail).length > 1
                                     &&
-                                    <button type="button" className={styles.go_back_btn} onClick={resetOtpStates}>
-                                        {t("Back")}
-                                    </button>
+                                    <p style={{ alignSelf: "baseline" }}>
+                                        {t("Choose your preferred method to receive your verification code:")}
+                                    </p>
                                 }
-                                <div className={styles.bottom_class}>
-                                    {
-                                        isPressed ? (<>
-                                            ‎
-                                        </>) : (
-                                            <>
-                                                <div className={styles.bottom_text}>
-                                                    <span>{t("Don't Have an Account? Sign Up").split("?")?.[0]} </span>
-                                                </div>
-
-                                                <div
-                                                    style={{
-                                                        display: "flex",
-                                                        alignItems: "center",
-                                                        gap: "5px",
-                                                        justifyContent: "center",
-                                                    }}
-                                                >
-                                                    <Link style={linkStyle}
-                                                        to="/signup" onClick={() => setIsLoginForm(false)}>
-                                                        {t("Sign Up")}
-                                                    </Link>
-
-                                                    <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                                                        <span style={{ color: "#888", fontWeight: 600 }}>{t("OR")}</span>
-                                                    </div>
-
-                                                    <Link style={linkStyle} to="/agent-login">
-                                                        {t("Sign in as Agent")}
-                                                    </Link>
-                                                </div></>
-                                        )
-                                    }
-                                </div>
-                                <div className={styles.btns}>
-                                    {
-                                        width > 1000
-                                        &&
-                                        <button type="button" disabled={isPressed} className={styles.go_back_btn} onClick={resetOtpStates}>
-                                            {t("Back")}
-                                        </button>
-                                    }
-                                    {width > 1000 &&
-                                        <button type="submit"
-                                            className={styles.form_btn}
-                                            disabled={isAnyFieldEmpty || otpValues.some(item => !item) || isPressed || isLoginError}
-                                        >
-                                            <span>{
-                                                (isPressed && !methodLoading)
+                                {methods.filter(m => m.avail).length > 1 &&
+                                    <div className={styles.otp_methods} style={{
+                                        marginTop:'20px',
+                                        gridTemplateColumns:
+                                            (availableMethods.length === 1 || width <= 600)
+                                                ? "1fr"
+                                                : "repeat(2, minmax(0, 1fr))"
+                                    }}>
+                                        {methods.map((method, index) => {
+                                            if (method.avail && method.attr !== currentOtpMethod) {
+                                                return (
+                                                    <button
+                                                        key={index}
+                                                        className={styles.otpMethodButton}
+                                                        type="button"
+                                                        disabled={isPressed || methodLoading || biometricLoading}
+                                                        onClick={() => handleOtpMethod(method.attr)}
+                                                    >
+                                                        <img
+                                                            src={method.icon}
+                                                            alt=""
+                                                        />
+                                                        <span className={isMobile && styles.otpMethodText} style={!isMobile && { marginBottom: "0" }}>
+                                                            {t(method.text)}
+                                                        </span>
+                                                    </button>
+                                                )
+                                            }
+                                            return null;
+                                        })}
+                                    </div>
+                                }
+                                {
+                                    <span>
+                                        {
+                                            resendTimer > 0
+                                                ? (methods.filter(m => m.avail).length > 1 && (lastOtpSentTo && ['sms', 'insta', 'wp', 'email'].includes(pendingOtpMethod || currentOtpMethod) && lastOtpSentTo !== (pendingOtpMethod || currentOtpMethod)) || (pendingOtpMethod && lastOtpSentTo !== currentOtpMethod))
                                                     ?
-                                                    t("Verifying")
-                                                    :
-                                                    t("Verify")
-                                            }</span>
-                                            <ChevronRight size={28} color="white" />
-                                        </button>
-                                    }
-                                </div>
-                            </div>
-                        </div>
-                    </form >
+                                                    <span>
+                                                        {t(
+                                                            "You have already requested code on {{lastOtpMethod}}, wait {{timer}} seconds to get code on {{nextOtpMethod}}",
+                                                            {
+                                                                lastOtpMethod:
+                                                                    lastOtpSentTo === "sms"
+                                                                        ? "SMS"
+                                                                        : lastOtpSentTo === "wp"
+                                                                            ? "WhatsApp"
+                                                                            : lastOtpSentTo === "email"
+                                                                                ? "Email"
+                                                                                : "Instagram",
+
+                                                                nextOtpMethod:
+                                                                    (pendingOtpMethod || currentOtpMethod) === "sms"
+                                                                        ? "SMS"
+                                                                        : (pendingOtpMethod || currentOtpMethod) === "wp"
+                                                                            ? "WhatsApp"
+                                                                            : (pendingOtpMethod || currentOtpMethod) === "email"
+                                                                                ? "Email"
+                                                                                : "Instagram",
+
+                                                                timer: resendTimer,
+                                                            }
+                                                        )}
+                                                    </span> :
+                                                    currentOtpMethod !== "auth" && currentOtpMethod !== "biometric" && <span>
+                                                        {t("Resend code in {{timer}} seconds", {
+                                                            timer: resendTimer,
+                                                        })}
+                                                    </span>
+                                                :
+                                                <>
+                                                    {currentOtpMethod !== "auth" && currentOtpMethod !== "biometric" &&
+                                                        <>
+                                                            <span>{t("Didn't receive OTP?") + " "}</span>
+                                                            <span
+                                                                style={{ color: "#5926f0", cursor: "pointer" }}
+                                                                onClick={() => {
+                                                                    setLastOtpSentTo(currentOtpMethod);
+                                                                    setOTPValues(Array(numberOfFields).fill(''))
+                                                                    loginHandler({ preventDefault: () => { } }, currentOtpMethod)
+                                                                    setResendTimer(120)
+                                                                }}>{t("Resend Now")}
+                                                            </span>
+                                                        </>
+                                                    }
+                                                </>
+                                        }
+                                    </span>
+                                }
+
+                            </div>                           
+                        </div>                        
+                    </div>
+                </form>
             }
         </>
     );
