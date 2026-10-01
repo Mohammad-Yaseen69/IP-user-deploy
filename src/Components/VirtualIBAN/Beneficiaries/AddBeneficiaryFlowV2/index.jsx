@@ -301,8 +301,8 @@ const AddBeneficiaryFlowV2 = ({
             (requirements.requiredBeneficiary || []).forEach((name) => {
                 if (!String(form.beneficiary[name] || '').trim()) {
                     next.beneficiary[name] = 'Required.';
-                } else if (nameFields.includes(name.toLowerCase())  && !/^(?!\d+$)[A-Za-z0-9\s'-]+$/i.test(form.beneficiary[name])) {
-                    next.beneficiary[name] = 'Please enter at least one letter!';
+                } else if (nameFields.includes(name.toLowerCase())  && !/^[\p{L}\s'_-]+$/u.test(form.beneficiary[name])) {
+                    next.beneficiary[name] = 'Invalid.';
                 }
             });
             (requirements.requiredChannel || []).forEach((name) => {
