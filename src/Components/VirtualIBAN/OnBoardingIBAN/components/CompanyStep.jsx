@@ -89,7 +89,6 @@ const CompanyStep = ({ onNext, onBack, onChange, userType, data = {}, currentSte
         }
     }, [userDetails?.company?.date_of_incorporation, data.dateOfIncorporation]);
 
-    // Keeps the parent (and the saved draft) in sync while the user types
     useEffect(() => {
         onChange?.(form)
     }, [form]);

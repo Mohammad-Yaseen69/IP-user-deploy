@@ -68,7 +68,6 @@ const ActivityStep = ({ onNext, onBack, onChange, data = {}, currentStep}) => {
         outgoingPayments: data.outgoingPayments || '',
     })
 
-    // Keeps the parent (and the saved draft) in sync while the user fills the form
     useEffect(() => {
         onChange?.(form)
     }, [form])

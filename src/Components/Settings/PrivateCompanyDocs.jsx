@@ -27,7 +27,6 @@ const FileUploadWithPreview = ({
         const file = e.target.files[0];
         if (file) {
             setLocalFile(file);
-            // KYB saves the file to the shared draft and tracks it
             if (onFileSelected) {
                 onFileSelected(docName, file)
                 return

@@ -6,7 +6,6 @@ const DEFAULT_DEBOUNCE_MS = 800
 
 const draftEndpoint = (scope) => `/api/drafts/${scope}`
 
-// Saves whatever is still pending while the tab is closing; axios requests would be cancelled.
 const sendKeepalive = (scope, patch) => {
     try {
         fetch(`${import.meta.env.VITE_IP_DEV_API}${draftEndpoint(scope)}`, {
@@ -24,14 +23,6 @@ const sendKeepalive = (scope, patch) => {
     }
 }
 
-/**
- * Server-side draft for a multi-step form, so users can leave and continue later.
- * Scopes are registered on the backend (utils/drafts/draftScopes.js).
- *
- * - data:   saved form values; update(patch) merges top-level keys and autosaves them
- * - files:  documents already uploaded to the draft ({ slot, name, file_link, mime, meta })
- * - update() is ignored until the draft has loaded, so an empty form never overwrites it
- */
 const useDraft = (scope, { enabled = true, debounceMs = DEFAULT_DEBOUNCE_MS } = {}) => {
     const [data, setData] = useState({})
     const [files, setFiles] = useState([])
@@ -54,7 +45,6 @@ const useDraft = (scope, { enabled = true, debounceMs = DEFAULT_DEBOUNCE_MS } = 
             setData(dataRef.current)
             setFiles(draft?.files || [])
         } catch (err) {
-            // Without a draft the form simply starts empty
             console.error(`Unable to load ${scope} draft`, err)
             dataRef.current = {}
             setData({})
@@ -89,7 +79,6 @@ const useDraft = (scope, { enabled = true, debounceMs = DEFAULT_DEBOUNCE_MS } = 
             setSaveStatus('saved')
         } catch (err) {
             console.error(`Unable to save ${scope} draft`, err)
-            // Keep the values so the next save retries them
             pendingRef.current = { ...patch, ...pendingRef.current }
             setSaveStatus('error')
         }
@@ -112,15 +101,12 @@ const useDraft = (scope, { enabled = true, debounceMs = DEFAULT_DEBOUNCE_MS } = 
         timerRef.current = setTimeout(flush, debounceMs)
     }, [debounceMs, flush])
 
-    // Drops unsaved changes, e.g. right before a final submit that clears the draft
     const cancelPending = useCallback(() => {
         clearTimeout(timerRef.current)
         timerRef.current = null
         pendingRef.current = {}
     }, [])
 
-    // Uploads to the same slot run one after another, so the server always ends up with the
-    // file that was picked last
     const uploadFile = useCallback((slot, file, meta) => {
         const run = async () => {
             const formData = new FormData()
@@ -157,7 +143,6 @@ const useDraft = (scope, { enabled = true, debounceMs = DEFAULT_DEBOUNCE_MS } = 
         setFiles([])
     }, [scope, cancelPending])
 
-    // Re-reads the draft after the server changed it (e.g. a submission consumed part of it)
     const reload = useCallback(async () => {
         cancelPending()
         await load()
@@ -173,7 +158,6 @@ const useDraft = (scope, { enabled = true, debounceMs = DEFAULT_DEBOUNCE_MS } = 
         window.addEventListener('beforeunload', handleBeforeUnload)
         return () => {
             window.removeEventListener('beforeunload', handleBeforeUnload)
-            // Leaving the page inside the app: save what is still waiting
             flush()
         }
     }, [scope, flush])

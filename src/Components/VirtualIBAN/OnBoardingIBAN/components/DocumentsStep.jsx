@@ -16,7 +16,6 @@ const DocumentsStep = ({ onNext, onBack, onChange, onUploadDraftFile, userType, 
     const inputRefs = useRef({})
     const isMobile = useMediaQuery('(max-width:600px)');
 
-    // Keeps the parent in sync so the files survive going back and forth between steps
     useEffect(() => {
         onChange?.(files)
     }, [files])
@@ -31,7 +30,6 @@ const DocumentsStep = ({ onNext, onBack, onChange, onUploadDraftFile, userType, 
     const isKybDone = ['approved', 'verified'].includes(kybStatus)
     const companyType = (companyDetails?.businessType || userDetails?.company?.business_verification_type || '').toLowerCase()
 
-    // IBAN_POA_SLOT stands for "any one of the company proof of address options"
     let requiredDocKeys = ['commercial_register', 'articles_association', IBAN_POA_SLOT, 'shareholders_register', 'ownership_chart', 'ubo_declaration', 'ubo_passport', 'ubo_address_proof']
     if (!isKybDone) {
         if (companyType.includes('sole')) {
@@ -43,7 +41,6 @@ const DocumentsStep = ({ onNext, onBack, onChange, onUploadDraftFile, userType, 
         }
     }
 
-    // Only one proof of address is kept, so choosing another option replaces the previous one
     const setDocFile = (key, value) => {
         setFiles(prev => {
             const next = { ...prev }
@@ -69,8 +66,6 @@ const DocumentsStep = ({ onNext, onBack, onChange, onUploadDraftFile, userType, 
         const slot = IBAN_DOC_KEY_TO_SLOT[key]
         if (!onUploadDraftFile || !slot) return
 
-        // Save the file to the draft right away so it is still there if the user leaves.
-        // If that fails the file stays selected and is sent with the final submission as before.
         setUploadingKeys(prev => ({ ...prev, [key]: true }))
         try {
             const entry = await onUploadDraftFile(slot, file, slot === IBAN_POA_SLOT ? { variant: key } : undefined)

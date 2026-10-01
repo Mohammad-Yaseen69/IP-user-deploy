@@ -34,9 +34,7 @@ import {
 const STEPS_BUSINESS = ['landing', 'selection', 'account', 'company', 'activity', 'ownership', 'documents', 'review']
 const STEPS_INDIVIDUAL = ['landing', 'selection', 'account', 'review']
 
-// Steps whose progress is saved to the draft and restored when the user comes back
 const DRAFT_STEPS = ['company', 'activity', 'ownership', 'documents', 'review', 'pricing', 'ActivateAccount']
-// Company fields the IBAN form edits; the rest come from the account and are not drafted
 const DRAFT_COMPANY_KEYS = ['registrationNumber', 'taxNumber', 'dateOfIncorporation', 'tradingName', 'website', 'mainContact']
 
 const initialState = {
@@ -116,7 +114,6 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
     const [codeType, setCodeType] = useState('sms')
     const [otpMethods, setOtpMethods] = useState(null)
     const [loadingStatus, setLoadingStatus] = useState(true)
-    // Account whose request status has been fetched; drafts are restored only after that
     const [statusCheckedFor, setStatusCheckedFor] = useState(null)
     const [draftHydrated, setDraftHydrated] = useState(false)
     const hydratedForRef = useRef(null)
@@ -166,8 +163,6 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
         checkRequestStatus();
     }, [userDetails?._id]);
 
-    // Restore saved progress once: shared business details (also filled from KYB) and,
-    // if the user had started, the step they left on. Skipped when a request already exists.
     useEffect(() => {
         if (!draftEnabled || hydratedForRef.current === userDetails._id) return
         if (statusCheckedFor !== userDetails._id || !profileDraft.isLoaded || !ibanDraft.isLoaded) return
@@ -202,7 +197,6 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
         setDraftHydrated(true)
     }, [draftEnabled, userDetails?._id, statusCheckedFor, profileDraft.isLoaded, ibanDraft.isLoaded])
 
-    // Autosave progress while the user is filling in the application
     useEffect(() => {
         if (!draftHydrated || !DRAFT_STEPS.includes(state.step)) return
 
@@ -214,7 +208,6 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
                 ...companyPatch,
                 ...(state.activity?.industryReference ? { industryReference: state.activity.industryReference } : {}),
             },
-            // Partners already on the company come from the server, only drafted ones are saved
             partners: (state.ownership?.owners || [])
                 .filter(owner => !owner.isImportedPartner)
                 .map(({ id, type, fullName, email, role, ownershipPercent, isPep }) => ({ id, type, fullName, email, role, ownershipPercent, isPep })),
@@ -343,7 +336,6 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
                 email: state.account.email,
             }
 
-            // Documents already uploaded to the draft are referenced by slot; the rest are sent as files
             const draftFiles = []
             const appendDoc = (field, f) => {
                 if (isDraftFileRef(f)) {
@@ -364,7 +356,6 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
 
             formData.append('data', encryptData({ ...payloadData, draft_files: draftFiles }))
 
-            // The backend clears the drafts on success; don't let a late autosave recreate them
             profileDraft.cancelPending()
             ibanDraft.cancelPending()
 

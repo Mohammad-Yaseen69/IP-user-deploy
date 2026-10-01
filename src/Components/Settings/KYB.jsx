@@ -112,7 +112,6 @@ const KYB = () => {
     const [draftHydrated, setDraftHydrated] = useState(false)
     const filesHydratedRef = useRef(false)
 
-    // Shared with Business IBAN onboarding: details entered in either flow show up in the other
     const draftEnabled = Boolean(userDetails?._id)
         && userDetails?.account_type === 'business'
         && !isKybActionBlocked(userDetails?.company?.kyb_status)
@@ -163,7 +162,6 @@ const KYB = () => {
             const response = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/company/get-partners/${userDetails?._id}`)
             const data = await decryptData(response.data.data)
             const serverPartners = data?.partners || []
-            // Keep directors added locally (not submitted yet) unless they are now saved
             setPartners(prev => [
                 ...serverPartners,
                 ...prev.filter(p => !p?._id && !serverPartners.some(s => s?.email?.toLowerCase() === p?.email?.toLowerCase())),
@@ -282,7 +280,6 @@ const KYB = () => {
 
     const kybDocSlots = useMemo(() => getKybDocSlots(companyType?.name, t), [companyType, t])
 
-    // Restore draft details once. Values already saved on the company always win.
     useEffect(() => {
         if (!draftEnabled || draftHydrated || !profileDraft.isLoaded || !userDetails?.company) return
 
@@ -310,8 +307,6 @@ const KYB = () => {
         setDraftHydrated(true)
     }, [draftEnabled, draftHydrated, profileDraft.isLoaded, userDetails?.company])
 
-    // Documents already uploaded to the draft (here or in IBAN onboarding) count as provided.
-    // A draft never replaces a document that has already been approved.
     useEffect(() => {
         if (!draftHydrated || filesHydratedRef.current || !kybDocSlots.length) return
         filesHydratedRef.current = true
@@ -340,7 +335,6 @@ const KYB = () => {
         setCompanyFileNames(prev => [...prev, ...restored.map(ref => ref.document_name).filter(name => !prev.includes(name))])
     }, [draftHydrated, kybDocSlots])
 
-    // Autosave what the user enters so KYB (and IBAN onboarding) can continue from here
     useEffect(() => {
         if (!draftHydrated || !draftEnabled) return
 
@@ -355,7 +349,6 @@ const KYB = () => {
                 industryReference: industryReference || draftCompany.industryReference || null,
             },
         }
-        // Directors are only kept locally before the first submission; afterwards they are saved directly
         if (isFirstSubmission) {
             const draftPartners = Array.isArray(profileDraft.data?.partners) ? profileDraft.data.partners : []
             patch.partners = partners.filter(p => !p?._id).map(p => kybPartnerToDraft(p, draftPartners))
@@ -363,8 +356,6 @@ const KYB = () => {
         profileDraft.update(patch)
     }, [draftHydrated, draftEnabled, registrationNum, taxId, dateOfI, industryReference, partners, isFirstSubmission])
 
-    // Puts a picked document in the form and saves it to the draft straight away. If saving to
-    // the draft fails, the file stays in the form and is uploaded on submit as before.
     const handleKybFileSelected = async (docName, file) => {
         setCompanyFiles(prev => {
             const idx = prev.findIndex(f => f?.document_name === docName)
@@ -407,7 +398,6 @@ const KYB = () => {
         const editedEntries = compnanyFiles
             .map((file, idx) => ({ file, name: file?.document_name || compnanyFileNames[idx] }))
             .filter(({ file }) => file && (file instanceof File || !('status' in file)))?.filter(entry => entry.name !== undefined);
-        // Documents already uploaded to the draft are referenced instead of uploaded again
         const draftEntries = editedEntries.filter(({ file }) => isDraftFileRef(file))
         const fileEntries = editedEntries.filter(({ file }) => !isDraftFileRef(file))
 
@@ -469,8 +459,6 @@ const KYB = () => {
             const decrypted = decryptData(res.data.data)
             setUserDetails(prev => ({ ...prev, company: decrypted?.results?.company }))
 
-            // The server took what it used from the draft. Documents that were sent as files
-            // (draft save had failed) shouldn't linger in the draft either.
             if (draftEnabled) {
                 const submittedSlots = fileEntries
                     .map(({ name }) => kybDocSlots.find(doc => doc.docName === name)?.slot)

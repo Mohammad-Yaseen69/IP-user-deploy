@@ -55,7 +55,6 @@ const OwnershipStep = ({ onNext, onBack, onChange, userType, data = {}, userDeta
 
     const [owners, setOwners] = useState(initialOwners)
 
-    // Keeps the parent (and the saved draft) in sync as owners are added or edited
     useEffect(() => {
         onChange?.(owners)
     }, [owners])
