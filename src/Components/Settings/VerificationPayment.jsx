@@ -21,6 +21,7 @@ import MobileWalletStatus from '../PaymentAddressPublic/PayAsGuest/MobileWalletS
 import PlaidBankTransfer from '../AddFunds/WalletFundsFlow/PlaidBankTransfer'
 import ErrorModal from '../PaymentsNewer/InternationalFlow/ErrorModal'
 import { useIdempotency } from '../../hooks/Payments/useIdempotency'
+import { usePaytently } from '../../utils/Functions/paytently'
 
 const paymentChannels = [
     {
@@ -245,7 +246,13 @@ const VerificationPayment = ({ isOpen, toggle, verify, desc, occupation, loading
     const handleClick = async () => {
         if (step === 1) {
             const skipStepMethods = ["paypal", "mobile_wallet"]
-            if (skipStepMethods?.includes(payoutChannel?.value)) {
+            // Paytently collects the card itself, so skip the card form and go to confirm.
+            if (usePaytently && payoutChannel?.value === "card") {
+                if (isKYB && !partnerId) {
+                    setFeeDetails(await getFeeDetails({ payment_type: "card" }))
+                }
+                setStep(3)
+            } else if (skipStepMethods?.includes(payoutChannel?.value)) {
                 if (payoutChannel?.value === "paypal") {
                     initiatePaypal()
                 }
@@ -305,7 +312,7 @@ const VerificationPayment = ({ isOpen, toggle, verify, desc, occupation, loading
                                         paymentChannels
                                             .filter(item => item?.value === "wallet" ? wallets.length > 0 : methods?.includes(item?.value))
                                             .map(item => {
-                                                const isPaypalDisabled = isKYB && item?.value === "paypal" || item.value === "card";
+                                                const isPaypalDisabled = (isKYB && item?.value === "paypal") || (item.value === "card" && !usePaytently);
                                                 return (
                                                     <Card
                                                         key={item.name}

@@ -25,6 +25,7 @@ import SoleTradedDocs from './SoleTradedDocs'
 import VerificationPayment from './VerificationPayment'
 import { usePermission } from '../../hooks/GeneralUse/usePermission'
 import AdditionalFilesSection from './AdditionalFilesSection'
+import { verifyPaytentlyReturn } from '../../utils/Functions/paytently'
 
 function getFirstLargeFileName(files) {
     if (!files || files.length === 0) return false
@@ -108,6 +109,14 @@ const KYB = () => {
     const code = queryParams.get("code");
     const scroll = queryParams.get("scroll");
     const isModalOpen = !!status;
+
+    // Settles a Paytently card fee now in case the webhook is late; no-op for other providers.
+    useEffect(() => {
+        if (!status) return
+        verifyPaytentlyReturn().then((result) => {
+            if (result) verifyToken(true)
+        })
+    }, [status])
 
     useEffect(() => {
         if (scroll === "additional-files") {

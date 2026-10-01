@@ -22,6 +22,7 @@ import { apiWrapper } from "../../utils/Functions/apiWrapper";
 import MobileWalletStatus from "../PaymentAddressPublic/PayAsGuest/MobileWalletStatus";
 import { useIdempotency } from "../../hooks/Payments/useIdempotency";
 import { LimitsErrorMessage } from "../../utils/Functions/paymentLimits";
+import { initiatePaytentlyVerificationPayment } from "../../utils/Functions/paytently";
 
 
 const sdk = new WidgetSDK({
@@ -69,11 +70,26 @@ const ConfirmWalletFund = ({ setSubStep, wallet = {}, amount, payoutChannel, car
 
     const [showCardModal, setShowCardModal] = useState(false)
     const [paytentlyHosted, setPaytentlyHosted] = useState(null)
-    const isPaytentlyCard = usePaytently && payoutChannel?.value === "card" && type === "add_fund"
+    const isVerificationFee = type === "kyc_fee" || type === "kyb"
+    const isPaytentlyCard = usePaytently && payoutChannel?.value === "card" && (type === "add_fund" || isVerificationFee)
     useEffect(() => {
         const createTransaction = async () => {
             if (payoutChannel?.value === "card") {
                 try {
+                    if (usePaytently && isVerificationFee) {
+                        const dec = await initiatePaytentlyVerificationPayment({
+                            kind: partnerId ? "partner_kyc" : type === "kyc_fee" ? "kyc" : "kyb",
+                            partnerId,
+                            idempotencyKey: getKey(),
+                        })
+                        if (dec?.hosted_forms_url) {
+                            setPaytentlyHosted({ hostedUrl: dec.hosted_forms_url, authorizeUrl: dec.authorize_url })
+                            return
+                        }
+                        setError(dec?.message ?? "We cannot process your request at the moment, please try again later.")
+                        return
+                    }
+
                     // Paytently collects the card in its hosted-forms iframe, so run before building card data.
                     if (usePaytently && type === "add_fund") {
                         const hostedEnc = encryptData({ wallet_id: wallet?._id, amount: +amount * 100 })
@@ -408,7 +424,7 @@ const ConfirmWalletFund = ({ setSubStep, wallet = {}, amount, payoutChannel, car
                                     type === "add_fund" &&
                                     <SelectedWallet setSubStep={setSubStep} wallet={wallet} />
                                 }
-                                <SelectedAmountAndCurrency amount={payoutChannel?.value === "crypto" ? exchangeRate?.sending?.amount : amount} currency={kybFeeDets ? "USD" : payoutChannel?.value === "crypto" ? exchangeRate?.sending?.currency : wallet?.currency?.code} setSubStep={setSubStep} step={2} />
+                                <SelectedAmountAndCurrency amount={payoutChannel?.value === "crypto" ? exchangeRate?.sending?.amount : amount} currency={kybFeeDets || isVerificationFee ? "USD" : payoutChannel?.value === "crypto" ? exchangeRate?.sending?.currency : wallet?.currency?.code} setSubStep={setSubStep} step={2} />
                                 {
                                     payoutChannel?.icon
                                     &&

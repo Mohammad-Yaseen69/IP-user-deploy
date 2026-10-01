@@ -33,6 +33,24 @@ export const initiatePaytentlyPayment = async ({
     return dec;
 };
 
+// kind: "kyc" | "kyb" | "partner_kyc"
+export const initiatePaytentlyVerificationPayment = async ({ kind, partnerId, idempotencyKey }) => {
+    const dec = await apiWrapper({
+        endpoint: "/api/paytently/verification/pay",
+        method: "POST",
+        isEncrypted: true,
+        payload: { kind, ...(partnerId && { partner_id: partnerId }) },
+        idempotencyKey,
+    });
+
+    try {
+        localStorage.setItem(AUTHORIZE_URL_KEY, dec?.authorize_url || "");
+        localStorage.setItem(PAYMENT_ID_KEY, dec?.payment_id || "");
+    } catch { "" }
+
+    return dec;
+};
+
 const GUEST_PAYMENT_ID_KEY = "paytently_guest_payment_id";
 const GUEST_USERNAME_KEY = "paytently_guest_username";
 
