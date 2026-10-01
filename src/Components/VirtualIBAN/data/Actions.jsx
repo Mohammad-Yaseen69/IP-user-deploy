@@ -37,7 +37,7 @@ export const actions = [
             <path d="M9 1.125V16.875" stroke="#5926F0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
             <path d="M15.1875 9L9 11.8125L2.8125 9" stroke="#5926F0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
             <path d="M9 1.125L15.1875 9L9 16.875L2.8125 9L9 1.125Z" stroke="#5926F0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-        </svg>, label: "Crypto", sub: "Receive funds via crypto", color: "#64748b"
+        </svg>, label: "Crypto", sub: "Top up, convert and send crypto", color: "#64748b"
     },
     {
         id: 6, icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
