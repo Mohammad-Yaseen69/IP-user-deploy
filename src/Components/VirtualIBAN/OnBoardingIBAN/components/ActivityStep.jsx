@@ -36,7 +36,7 @@ const countrySelectStyle = {
     borderRadius: '12px', padding: '13px 15px', border: '1px solid #1412201F'
 }
 
-const ActivityStep = ({ onNext, onBack, data = {}, currentStep}) => {
+const ActivityStep = ({ onNext, onBack, onChange, data = {}, currentStep}) => {
     const { t } = useTranslation()
     const [showCountryDropdown, setShowCountryDropdown] = useState(false)
     const isMobile = useMediaQuery('(max-width:600px)');
@@ -67,6 +67,11 @@ const ActivityStep = ({ onNext, onBack, data = {}, currentStep}) => {
         incomingPayments: data.incomingPayments || '',
         outgoingPayments: data.outgoingPayments || '',
     })
+
+    // Keeps the parent (and the saved draft) in sync while the user fills the form
+    useEffect(() => {
+        onChange?.(form)
+    }, [form])
 
     const industryOptions = useMemo(() => {
         return bvnkIndustryReference.map(group => ({

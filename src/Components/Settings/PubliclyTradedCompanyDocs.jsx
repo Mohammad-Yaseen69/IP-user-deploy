@@ -5,15 +5,21 @@ import { CheckCircle, Info } from 'react-feather'
 import { UserContext } from '../../Context/UserContext'
 import { useTranslation } from 'react-i18next'
 
-const FileUploadWithPreview = ({ docName, setCompanyFiles, setCompanyFileNames, userDetails, checkFileStatus, isReadOnly }) => {
+const FileUploadWithPreview = ({ docName, setCompanyFiles, setCompanyFileNames, userDetails, checkFileStatus, isReadOnly, onFileSelected, getDraftFile }) => {
     const existingFile = userDetails?.company?.kyb_files?.find(f => f.document_name === docName)
     const [localFile, setLocalFile] = useState(null)
+    const draftFile = !localFile && getDraftFile ? getDraftFile(docName) : null
     const { t } = useTranslation();
 
     const handleFileChange = (e) => {
         const file = e.target.files[0]
         if (file) {
             setLocalFile(file)
+            // KYB saves the file to the shared draft and tracks it
+            if (onFileSelected) {
+                onFileSelected(docName, file)
+                return
+            }
             setCompanyFiles(prev => {
                 const idx = prev.findIndex(f => f?.document_name === docName)
                 if (idx !== -1) {
@@ -38,10 +44,17 @@ const FileUploadWithPreview = ({ docName, setCompanyFiles, setCompanyFileNames, 
 
     return (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '.5rem' }}>
-            {existingFile && !localFile && (
+            {existingFile && !localFile && !draftFile && (
                 <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                     <span style={{ fontWeight: 500 }}>
                         {t("Uploaded")}: <a href={existingFile.file_link} target="_blank" rel="noopener noreferrer">{existingFile.key?.split('/')?.[2]}</a>
+                    </span>
+                </div>
+            )}
+            {draftFile && (
+                <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+                    <span style={{ fontWeight: 500 }}>
+                        {t("Uploaded")}: <a href={draftFile.file_link} target="_blank" rel="noopener noreferrer">{draftFile.name}</a>
                     </span>
                 </div>
             )}
@@ -51,14 +64,14 @@ const FileUploadWithPreview = ({ docName, setCompanyFiles, setCompanyFileNames, 
                 </div>
             )}
             {!isReadOnly && <Input type='file' name={docName} onChange={handleFileChange} style={{ maxWidth: 300 }} />}
-            {existingFile && !localFile && (
+            {existingFile && !localFile && !draftFile && (
                 <small style={{ color: '#888' }}>{t("Choose a new file to replace the existing one.")}</small>
             )}
         </div>
     )
 }
 
-const PubliclyTradedCompanyDocs = ({ setCompanyFiles, setCompanyFileNames, checkFileStatus, isReadOnly }) => {
+const PubliclyTradedCompanyDocs = ({ setCompanyFiles, setCompanyFileNames, checkFileStatus, isReadOnly, onFileSelected, getDraftFile }) => {
     const { t } = useTranslation();
 
     const [modalOne, setModalOne] = useState(false)
@@ -77,6 +90,8 @@ const PubliclyTradedCompanyDocs = ({ setCompanyFiles, setCompanyFileNames, check
                         docName={`Official Company Registry Extract (Entity's Registration/Incorporation Document)`}
                         setCompanyFiles={setCompanyFiles}
                         setCompanyFileNames={setCompanyFileNames}
+                        onFileSelected={onFileSelected}
+                        getDraftFile={getDraftFile}
                         userDetails={userDetails}
                         checkFileStatus={checkFileStatus}
                         isReadOnly={isReadOnly}
@@ -123,6 +138,8 @@ const PubliclyTradedCompanyDocs = ({ setCompanyFiles, setCompanyFileNames, check
                         docName={`Proof of Legal Representative's Authority`}
                         setCompanyFiles={setCompanyFiles}
                         setCompanyFileNames={setCompanyFileNames}
+                        onFileSelected={onFileSelected}
+                        getDraftFile={getDraftFile}
                         userDetails={userDetails}
                         checkFileStatus={checkFileStatus}
                         isReadOnly={isReadOnly}
@@ -152,6 +169,8 @@ const PubliclyTradedCompanyDocs = ({ setCompanyFiles, setCompanyFileNames, check
                         docName={t(`Ownership Structure and Ultimate Beneficial Owners (UBOs) Documentation`)}
                         setCompanyFiles={setCompanyFiles}
                         setCompanyFileNames={setCompanyFileNames}
+                        onFileSelected={onFileSelected}
+                        getDraftFile={getDraftFile}
                         userDetails={userDetails}
                         checkFileStatus={checkFileStatus}
                         isReadOnly={isReadOnly}
@@ -177,6 +196,8 @@ const PubliclyTradedCompanyDocs = ({ setCompanyFiles, setCompanyFileNames, check
                         docName={`Collection of Identification Documents`}
                         setCompanyFiles={setCompanyFiles}
                         setCompanyFileNames={setCompanyFileNames}
+                        onFileSelected={onFileSelected}
+                        getDraftFile={getDraftFile}
                         userDetails={userDetails}
                         checkFileStatus={checkFileStatus}
                         isReadOnly={isReadOnly}
@@ -212,6 +233,8 @@ const PubliclyTradedCompanyDocs = ({ setCompanyFiles, setCompanyFileNames, check
                         docName={t(`Proof of Address`)}
                         setCompanyFiles={setCompanyFiles}
                         setCompanyFileNames={setCompanyFileNames}
+                        onFileSelected={onFileSelected}
+                        getDraftFile={getDraftFile}
                         userDetails={userDetails}
                         checkFileStatus={checkFileStatus}
                         isReadOnly={isReadOnly}

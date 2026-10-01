@@ -29,7 +29,7 @@ export const getInitials = (name) => {
     return name.substring(0, 2).toUpperCase()
 }
 
-const OwnershipStep = ({ onNext, onBack, userType, data = {}, userDetails, currentStep }) => {
+const OwnershipStep = ({ onNext, onBack, onChange, userType, data = {}, userDetails, currentStep }) => {
     const { t } = useTranslation()
     const isMobile = useMediaQuery('(max-width:600px)');
 
@@ -54,6 +54,11 @@ const OwnershipStep = ({ onNext, onBack, userType, data = {}, userDetails, curre
     }
 
     const [owners, setOwners] = useState(initialOwners)
+
+    // Keeps the parent (and the saved draft) in sync as owners are added or edited
+    useEffect(() => {
+        onChange?.(owners)
+    }, [owners])
 
     const [isModalOpen, setIsModalOpen] = useState(false)
     const [formData, setFormData] = useState({ ...EMPTY_FORM })

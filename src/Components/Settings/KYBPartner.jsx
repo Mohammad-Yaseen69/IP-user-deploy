@@ -59,6 +59,13 @@ const KYBPartner = ({ partner, partners, setPartners, refreshPartners, index, se
             return;
         }
 
+        // Not saved yet (added before the first KYB submission): edit it locally
+        if (!partner?._id) {
+            setPartners(prev => prev.map((p, i) => (i === index ? { ...p, name: partnerName, email: partnerEmail, designation: partnerDesignation } : p)))
+            setShowEditModal(false)
+            return
+        }
+
         setUpdating(true)
         try {
             const payload = {
@@ -99,6 +106,13 @@ const KYBPartner = ({ partner, partners, setPartners, refreshPartners, index, se
         if (isKybActionBlocked(userDetails?.company?.kyb_status)) {
             toast.error(t("No action is allowed for the current business verification status."));
             return;
+        }
+
+        // Not saved yet (added before the first KYB submission): remove it locally
+        if (!partner?._id) {
+            setPartners(prev => prev.filter((_, i) => i !== index))
+            setShowDeleteModal(false)
+            return
         }
 
         setUpdating(true)
