@@ -77,6 +77,8 @@ const Login = ({ country, setIsLoginForm, }) => {
     const [capturedSecurityData, setCapturedSecurityData] = useState(null)
     const [isDataLoaded, setIsDataLoaded] = useState(false);
     const [otpDeliveryInfo, setOtpDeliveryInfo] = useState({})
+    // Country the user picked in the dropdown; PhoneInput remounts when going back from the password step
+    const [phoneCountry, setPhoneCountry] = useState(null)
 
     const normalizeCredential = (value) => (value ?? "").toString().trim().toLowerCase();
     const getResolvedCredential = () => {
@@ -1173,7 +1175,8 @@ const Login = ({ country, setIsLoginForm, }) => {
                                                 <PhoneInput
                                                     phone={email}
                                                     setPhone={setEmail}
-                                                    country={country}
+                                                    country={phoneCountry ?? country}
+                                                    setCountry={(item) => setPhoneCountry(item?.alpha3 ?? null)}
                                                 />
                                                 :
                                                 <input type="email" placeholder={t("eg: john@doe.org")} value={email} onChange={e => setEmail(e.target.value?.toLowerCase())} autoComplete="off" name="email" />
