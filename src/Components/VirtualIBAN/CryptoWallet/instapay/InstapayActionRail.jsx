@@ -2,14 +2,15 @@ import { useState } from "react"
 import { useTranslation } from "react-i18next"
 import styles from "../cryptoPage.module.scss"
 import SendCryptoPanel from "./SendCryptoPanel"
+import WithdrawCryptoPanel from "./WithdrawCryptoPanel"
 import ConvertCryptoPanel from "./ConvertCryptoPanel"
 
 const TABS = ["Send", "Withdraw", "Convert"]
 
 /**
  * Send / Withdraw / Convert for InstaPay crypto wallets. Send is the crypto payout
- * drawn in place, Convert the wallet conversion held to crypto <-> fiat; Withdraw is
- * still to come.
+ * to a beneficiary, Withdraw the payout to the user's own saved crypto withdrawal
+ * account, Convert the wallet conversion held to crypto <-> fiat.
  */
 const InstapayActionRail = ({ wallets = [], wallet, onSelectWallet }) => {
     const { t } = useTranslation()
@@ -32,15 +33,10 @@ const InstapayActionRail = ({ wallets = [], wallet, onSelectWallet }) => {
 
             {tab === "Send" ? (
                 <SendCryptoPanel wallets={wallets} wallet={wallet} onSelectWallet={onSelectWallet} />
-            ) : tab === "Convert" ? (
-                <ConvertCryptoPanel key={wallet?._id} wallet={wallet} />
+            ) : tab === "Withdraw" ? (
+                <WithdrawCryptoPanel wallets={wallets} wallet={wallet} onSelectWallet={onSelectWallet} />
             ) : (
-                <div className={styles.railBody}>
-                    <div className={styles.placeholder}>
-                        <h5 className={styles.placeholderTitle}>{t(tab)}</h5>
-                        <p className={styles.placeholderText}>{t("Coming Soon")}</p>
-                    </div>
-                </div>
+                <ConvertCryptoPanel key={wallet?._id} wallet={wallet} />
             )}
         </aside>
     )
