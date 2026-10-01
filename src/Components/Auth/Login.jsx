@@ -82,6 +82,9 @@ const Login = ({ country, setIsLoginForm, }) => {
     const [pendingLoginData, setPendingLoginData] = useState(null)
     const [capturedSecurityData, setCapturedSecurityData] = useState(null)
     const [isDataLoaded, setIsDataLoaded] = useState(false);
+    const [otpDeliveryInfo, setOtpDeliveryInfo] = useState({})
+    // Country the user picked in the dropdown; PhoneInput remounts when going back from the password step
+    const [phoneCountry, setPhoneCountry] = useState(null)
 
     const normalizeCredential = (value) => (value ?? "").toString().trim().toLowerCase();
     const getResolvedCredential = () => {
@@ -1071,8 +1074,8 @@ const Login = ({ country, setIsLoginForm, }) => {
                     </Button>
                 </ModalFooter>
             </Modal>
-
-            {step === 1 ?
+                    
+            {step === 1 ?              
                 <form
                     autoComplete="off"
                     onSubmit={(e) => {
@@ -1084,11 +1087,21 @@ const Login = ({ country, setIsLoginForm, }) => {
                     <div className={styles.right}>
                         <div className={styles.topSection}>
                             <label>{t("Welcome Back")} {t("👋")}</label>
-                            <p>{t('Enter your phone and password to access your account')}</p>
+                            {!showQuickLogin && <p>{t('Enter your phone and password to access your account')}</p>}
                         </div>
-                        <div className={styles.formWrapper}>
+                        <div className={styles.formWrapper}>                           
                             <div className={styles.fieldsContainer}>
-                                {
+                                {showQuickLogin ?
+                                    <div className={styles.user_info}>
+                                        <Stack gap={'10px'} direction={'row'} alignItems={'center'}>
+                                            {loginData?.pfp ?
+                                                <img style={{ width: "50px", borderRadius: "100%", height: "50px", objectFit: "cover", flexShrink: 0 }} src={loginData?.pfp} alt="" /> :
+                                                <div className={styles.dp}>{loginData?.name?.[0]?.toUpperCase()}</div>
+                                            }
+                                            <h4 style={{ marginBottom: "0", fontWeight: 600, color: "black", fontSize: "15px" }}>{loginData?.name}</h4>
+                                        </Stack>
+                                    </div>
+                                    :(
                                     loginMethod === "email" ? 
                                     <TextField    
                                         className={styles.inputField}
@@ -1123,7 +1136,7 @@ const Login = ({ country, setIsLoginForm, }) => {
                                                 boxShadow: "0 1px 1.5px 0 rgba(44, 54, 53, 0.03)",
                                                 width: "100%",
                                             }}
-                                        />                                              
+                                        />)                                              
                                 }
                                 <TextField    
                                     className={styles.inputField}
@@ -1165,17 +1178,24 @@ const Login = ({ country, setIsLoginForm, }) => {
                                 <div
                                     className={styles.toggleLoginBtn}
                                     onClick={() => {
+                                        if(showQuickLogin) {
+                                            setShowQuickLogin(false)
+                                            setEmail("")
+                                            setPassword("")
+                                            setProfileLockTime(0)
+                                        } else {
                                         setLoginMethod(loginMethod === "email" ? "phone" : "email")
                                         localStorage.setItem("loginWith", loginMethod === "email" ? "phone" : "email")
                                         setEmail("")
+                                        }
                                     }}
                                 >
-                                    {
-                                        loginMethod === "email"
+                                    {showQuickLogin ? t("Change Account") :
+                                        (loginMethod === "email"
                                             ?
                                             t("Sign in with phone")
                                             :
-                                            t("Sign in with email")
+                                            t("Sign in with email"))
                                     }
                                 </div>
                                 <Link to="/forgot-password" className={styles.forgot_pass}>

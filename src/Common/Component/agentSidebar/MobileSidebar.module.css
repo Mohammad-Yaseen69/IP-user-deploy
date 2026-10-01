@@ -1,0 +1,232 @@
+.mobileContainer {
+    display: none;
+    width: 100%;
+}
+
+@media (max-width: 780px) {
+    .mobileContainer {
+        display: block;
+        padding: 12px 16px;
+        background-color: #f8f9fc;
+    }
+
+    .topHeader {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+    }
+
+    .profilePill {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: #ffffff;
+        border: 1px solid #eaecf0;
+        border-radius: 999px;
+        padding: 4px 12px 4px 4px;
+        cursor: pointer;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        max-width: 200px;
+    }
+
+    .avatarBadge {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #7f56d9 0%, #5626e6 100%);
+        color: #ffffff;
+        font-weight: 700;
+        font-size: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+    .profileName {
+        font-size: 13px;
+        font-weight: 500;
+        color: #101828;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .chevronIcon {
+        color: #667085;
+        flex-shrink: 0;
+    }
+
+    .actionIcons {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .iconBtn {
+        position: relative;
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        background: #ffffff;
+        border: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #344054;
+        cursor: pointer;
+    }
+
+    .languagePickerWrapper {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+    }
+
+    .overlay {
+        position: fixed;
+        inset: 0;
+        background-color: rgba(0, 0, 0, 0.4);
+        z-index: 9999;
+        display: flex;
+        justify-content: flex-start;
+    }
+
+    .drawer {
+        width: 100vw;
+        height: 100vh;
+        background: #ffffff;
+        display: flex;
+        flex-direction: column;
+        padding: 20px;
+        overflow-y: auto;
+    }
+
+    .drawerHeader {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding-bottom: 16px;
+    }
+
+    .brandWrapper {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .brandLogo {
+        height: 24px;
+        object-fit: contain;
+    }
+
+    .businessBadge {
+        font-size: 10px;
+        font-weight: 700;
+        color: #5626e6;
+        background: #f4f0ff;
+        padding: 2px 6px;
+        border-radius: 4px;
+    }
+
+    .closeBtn {
+        background: transparent;
+        border: none;
+        color: #101828;
+        cursor: pointer;
+        padding: 4px;
+    }
+
+    .drawerProfileCard {
+        background: #f8f9fc;
+        border-radius: 16px;
+        padding: 16px;
+        margin-top: 12px;
+        margin-bottom: 20px;
+    }
+
+    .greetingText {
+        font-size: 11px;
+        color: #667085;
+        margin-bottom: 4px;
+    }
+
+    .drawerProfileInfo {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .drawerProfileName {
+        font-size: 15px;
+        font-weight: 600;
+        color: #101828;
+    }
+
+    .avatarBadgeLarge {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #7f56d9 0%, #5626e6 100%);
+        color: #ffffff;
+        font-weight: 700;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .navigationScrollArea {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .navGroup {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    .sectionLabel {
+        font-size: 11px;
+        font-weight: 700;
+        color: #5626e6;
+        letter-spacing: 0.5px;
+        margin-bottom: 4px;
+    }
+
+    .navItemWrapper {
+        cursor: pointer;
+    }
+
+    .drawerFooter {
+        border-top: 1px solid #eaecf0;
+        padding-top: 16px;
+        margin-top: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .footerItem {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        width: 100%;
+        padding: 10px 12px;
+        border: none;
+        background: transparent;
+        border-radius: 8px;
+        color: #344054;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+    }
+
+    .logoutBtn {
+        color: #d92d20;
+    }
+}

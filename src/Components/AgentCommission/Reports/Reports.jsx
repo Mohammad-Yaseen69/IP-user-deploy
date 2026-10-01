@@ -235,7 +235,7 @@ const RiskDistribution = () => {
                     <div key={r.label} className={styles.riskRow}>
                         <div className={styles.riskRowTop}>
                             <span className={styles.riskLabel}>{t(r.label)}</span>
-                            <span className={`${styles.riskBadge} ${r.badgeCls}`}>{r.count}</span>
+                            <span className={`${styles.riskBadge} ${r.badgeCls}`}>{r.count}%</span>
                         </div>
                         <div className={styles.riskBarTrack}>
                             <div

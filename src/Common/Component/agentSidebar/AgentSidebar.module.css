@@ -221,7 +221,10 @@
     line-height: var(--big-screen-bodysmall-line-height);
     position: relative;
     white-space: nowrap;
-    width: fit-content;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
+    min-width: 0;
 }
 
 .languageButton {
@@ -255,6 +258,7 @@
     gap: 8px;
     position: relative;
     width: 86px;
+    min-width: 0;
 }
 
 .avatar {
@@ -265,6 +269,7 @@
     height: 24px;
     position: relative;
     width: 24px;
+    flex-shrink: 0;
 }
 
 .navGroup {
@@ -382,4 +387,10 @@
 
 .sideMenuCollapsed .profileInfo {
     width: auto;
+}
+
+@media (max-width: 780px) {
+    .sideMenu {
+        display: none !important;
+    }
 }

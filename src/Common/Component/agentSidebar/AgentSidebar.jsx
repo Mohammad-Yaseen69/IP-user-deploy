@@ -30,24 +30,24 @@ const NAV_SECTIONS = [
             { icon: Grid, text: "Overview", to: "/agent-commission" },
             { icon: Target, text: "Leads", to: "/leads" },
             { icon: Users, text: "Clients", to: "/clients" },
-            { icon: UserCheck, text: "Sub-Agents", to: "/sub-agents" },
+            // { icon: UserCheck, text: "Sub-Agents", to: "/sub-agents" },
         ],
     },
     {
         label: "EARN",
         items: [
             { icon: DollarSign, text: "Commissions", to: "/commissions" },
-            { icon: BarChart2, text: "Reports", to: "/reports" },
+            // { icon: BarChart2, text: "Reports", to: "/reports" },
             { icon: Tag, text: "Fee Model Requests", to: "/fee-model-requests" },
         ],
     },
-    {
-        label: "ACCOUNT",
-        items: [
-            { icon: FileText, text: "Documents", to: "/documents" },
-            { icon: User, text: "Profile", to: "/agent-profile" },
-        ],
-    },
+    // {
+    //     label: "ACCOUNT",
+    //     items: [
+    //         { icon: FileText, text: "Documents", to: "/documents" },
+    //         { icon: User, text: "Profile", to: "/agent-profile" },
+    //     ],
+    // },
 ];
 
 export const AgentSidebar = () => {
