@@ -42,9 +42,8 @@ const FeeModelRequestModal = ({ isOpen, toggle }) => {
                 headers: authHeader,
             });
             const dec = decryptData(res.data?.data);
-            if (Array.isArray(dec?.data || dec)) {
-                setRequests(dec?.data);
-            }
+            const list = Array.isArray(dec?.data) ? dec.data : Array.isArray(dec) ? dec : [];
+            setRequests(list);
         } catch (err) {
             console.error("Error fetching agent fee requests:", err);
         } finally {
