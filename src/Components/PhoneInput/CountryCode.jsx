@@ -57,6 +57,7 @@ const CountryCode = ({ country, selectedCountry, setSelectedCountry, setCountry,
             const filtered = countriesData?.filter(item => item?.alpha3 === country)?.[0]
             console.log(filtered)
             setSelectedCountry(filtered)
+            setCountry(filtered)
             if (firstTime && !number) {
                 const dialCode = filtered?.dial_code?.replace("+", "")?.replace("-", "") ?? ""
                 const formatted = (dialCode && phone?.startsWith(dialCode) ? phone.slice(dialCode.length) : phone) ?? ""
