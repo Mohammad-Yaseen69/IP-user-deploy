@@ -1353,7 +1353,7 @@ const Login = ({ country, setIsLoginForm, }) => {
                                                             src={method.icon}
                                                             alt=""
                                                         />
-                                                        <span className={isMobile && styles.otpMethodText} style={!isMobile && { marginBottom: "0" }}>
+                                                        <span className={isMobile ? styles.otpMethodText : undefined} style={isMobile ? undefined : { marginBottom: "0" }}>
                                                             {t(method.text)}
                                                         </span>
                                                     </button>
