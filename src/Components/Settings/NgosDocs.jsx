@@ -254,7 +254,7 @@ const NgosDocs = ({ setCompanyFiles, setCompanyFileNames, checkFileStatus, isRea
             </div>
             <div>
                 <FormGroup>
-                    <Label>{t("Proof of Address ")}<Info className={styles.info_icon} size={16} onClick={() => setModalSix(!modalSix)} /></Label>
+                    <Label>{t("Proof of address of the company ")}<Info className={styles.info_icon} size={16} onClick={() => setModalSix(!modalSix)} /></Label>
                     <FileUploadWithPreview
                         docName={t(`Proof of Address`)}
                         setCompanyFiles={setCompanyFiles}
