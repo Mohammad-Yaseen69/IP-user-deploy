@@ -160,7 +160,7 @@ const SoleTradedDocs = ({ setCompanyFiles, setCompanyFileNames, checkFileStatus,
             </div>
             <div>
                 <FormGroup>
-                    <Label>{t("Proof of Address")} <Info className={styles.info_icon} size={16} onClick={() => setModalThree(!modalThree)} /></Label>
+                    <Label>{t("Proof of address of the company")} <Info className={styles.info_icon} size={16} onClick={() => setModalThree(!modalThree)} /></Label>
                     <FileUploadWithPreview
                         docName={t(`Proof of Address`)}
                         setCompanyFiles={setCompanyFiles}

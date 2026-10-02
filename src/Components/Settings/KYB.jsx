@@ -616,7 +616,7 @@ const KYB = () => {
                         </FormGroup>
                         <FormGroup>
                             <Label>
-                                {t("Taxation Id")} <span style={{ color: "red", fontWeight: 600 }}>*</span>
+                                {t("Taxation ID")} <span style={{ color: "red", fontWeight: 600 }}>*</span>
                             </Label>
                             <Input
                                 type='text'
@@ -858,13 +858,13 @@ const KYB = () => {
             {showProcessSuccessModal && (
                 <Modal isOpen={showProcessSuccessModal} toggle={() => setShowProcessSuccessModal(false)}>
                     <ModalHeader toggle={() => setShowProcessSuccessModal(false)}>
-                        {t("Payment Successful!")}
+                        {t("Files Submitted Successfully!")}
                     </ModalHeader>
                     <ModalBody>
                         <div className="text-center">
                             <CheckCircle size={64} className="text-success" style={{ marginBottom: "1rem" }} />
                             <h5 className='modal-title' style={{ marginBottom: "1rem" }}>
-                                {t("Payment Successful!")}
+                                {t("Files Submitted Successfully!")}
                             </h5>
                             <p>
                                 {t("Thank you for submitting the required documents for business verification. An email has been sent to the business directors to complete their KYC verification.")}
