@@ -279,6 +279,7 @@ const Login = ({ country, setIsLoginForm, }) => {
                     setMethodLoading(false)
                     return
                 }
+                setOtpDeliveryInfo({ email: decrypted?.email, phone: decrypted?.phone })
                 // console.log("FULL LOGIN RESPONSE:", decrypted)
                 setMethods(prevMethods => prevMethods.map(method => {
                     switch (method.attr) {
@@ -1019,6 +1020,51 @@ const Login = ({ country, setIsLoginForm, }) => {
         m => m.avail && m.attr !== currentOtpMethod
     )
 
+     const getOtpLabel = () => {
+        const maskValue = (value) => {
+            const str = String(value ?? "");
+            if (!str) return "";
+
+            if (str.includes("@")) {
+                const [username, domain] = str.split("@");
+
+                if (!username || !domain) return str;
+
+                if (username.length <= 3) {
+                    return `${"*".repeat(username.length)}@${domain}`;
+                }
+
+                const visibleSuffix = username.slice(-3);
+                const maskedLength = username.length - 3;
+                return `${"*".repeat(maskedLength)}${visibleSuffix}@${domain}`;
+            }
+
+            if (str.length <= 4) {
+                return str.replace(/./g, "*");
+            }
+
+            return `${str.slice(0, str.length - 4).replace(/./g, "*")}${str.slice(-4)}`;
+        };
+
+        const maskedEmail = maskValue(otpDeliveryInfo.email)
+        const maskedPhone = maskValue(otpDeliveryInfo.phone)
+        const service = String(otpDeliveryInfo.phone ?? "").slice(0, 3) === "971" ? "WhatsApp" : "SMS"
+
+        switch (currentOtpMethod) {
+            case "auth": return t("Please enter the one-time password (OTP) from your Google Authenticator app to access your account")
+            case "insta": return t("Please enter the one-time password (OTP) sent to your Instagram Account")
+            case "wp": return t("Please enter the one-time password (OTP) sent to your WhatsApp on {{phone}}", { phone: `\u200E${maskedPhone}\u200E` })
+            case "email":
+                return t(
+                    "Please enter the one-time password (OTP) sent to {{email}} via email",
+                    {
+                        email: `\u200E${maskedEmail}\u200E`
+                    }
+                );
+            default: return t("Please enter the one-time password (OTP) sent to {{phone}} via {{service}}", { phone: `\u200E${maskedPhone}\u200E`, service })
+        }
+    };
+
     return (
         <>
 
@@ -1226,7 +1272,7 @@ const Login = ({ country, setIsLoginForm, }) => {
                     <div className={styles.right}>
                         <div className={`${styles.topSection} ${styles.otpTopSection}`}>
                             {currentOtpMethod !== "biometric" && <label>{t("Enter OTP")}</label>}
-                            <p>{t(currentOtpMethod === "biometric" ? "Verify identity using your created Passkey on this device" : 'Please enter the one-time password (OTP) sent to your phone to access your account.')}</p>
+                            <p>{currentOtpMethod === "biometric" ? t("Verify your identity with your passkey on this device") : getOtpLabel()}</p>
                         </div>
                         <div className={styles.top}>
                             {currentOtpMethod === "biometric" ? (
