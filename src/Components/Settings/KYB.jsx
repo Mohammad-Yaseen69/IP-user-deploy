@@ -474,7 +474,7 @@ const KYB = () => {
                         </FormGroup>
                         <FormGroup>
                             <Label>
-                                {t("Taxation Id")} <span style={{ color: "red", fontWeight: 600 }}>*</span>
+                                {t("Taxation ID")} <span style={{ color: "red", fontWeight: 600 }}>*</span>
                             </Label>
                             <Input
                                 type='text'
