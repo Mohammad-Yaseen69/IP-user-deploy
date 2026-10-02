@@ -14,16 +14,23 @@ const FileUploadWithPreview = ({
     setCompanyFileNames,
     userDetails,
     checkFileStatus,
-    isReadOnly
+    isReadOnly,
+    onFileSelected,
+    getDraftFile
 }) => {
     const { t } = useTranslation()
     const existingFile = userDetails?.company?.kyb_files?.find(f => f.document_name === docName);
     const [localFile, setLocalFile] = useState(null);
+    const draftFile = !localFile && getDraftFile ? getDraftFile(docName) : null
 
     const handleFileChange = (e) => {
         const file = e.target.files[0];
         if (file) {
             setLocalFile(file);
+            if (onFileSelected) {
+                onFileSelected(docName, file)
+                return
+            }
             setCompanyFiles(prev => {
                 const idx = prev.findIndex(f => f.document_name === docName);
                 console.log(idx)
@@ -52,10 +59,17 @@ const FileUploadWithPreview = ({
 
     return (
         <div style={{ display: "flex", flexDirection: "column", gap: ".5rem" }}>
-            {existingFile && !localFile && (
+            {existingFile && !localFile && !draftFile && (
                 <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
                     <span style={{ fontWeight: 500 }}>
                         {t("Uploaded")}: <a href={existingFile.file_link} target="_blank" rel="noopener noreferrer">{existingFile.key?.split("/")[2]}</a>
+                    </span>
+                </div>
+            )}
+            {draftFile && (
+                <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+                    <span style={{ fontWeight: 500 }}>
+                        {t("Uploaded")}: <a href={draftFile.file_link} target="_blank" rel="noopener noreferrer">{draftFile.name}</a>
                     </span>
                 </div>
             )}
@@ -72,14 +86,14 @@ const FileUploadWithPreview = ({
                     style={{ maxWidth: 300 }}
                 />
             }
-            {existingFile && !localFile && (
+            {existingFile && !localFile && !draftFile && (
                 <small style={{ color: '#888' }}>{t("Choose a new file to replace the existing one.")}</small>
             )}
         </div>
     );
 };
 
-const PrivateCompanyDocs = ({ setCompanyFiles, setCompanyFileNames, checkFileStatus, isReadOnly }) => {
+const PrivateCompanyDocs = ({ setCompanyFiles, setCompanyFileNames, checkFileStatus, isReadOnly, onFileSelected, getDraftFile }) => {
     const [modalOne, setModalOne] = useState(false)
     const [modalTwo, setModalTwo] = useState(false)
     const [modalThree, setModalThree] = useState(false)
@@ -104,6 +118,8 @@ const PrivateCompanyDocs = ({ setCompanyFiles, setCompanyFileNames, checkFileSta
                         modalOpen={modalOne}
                         setCompanyFiles={setCompanyFiles}
                         setCompanyFileNames={setCompanyFileNames}
+                        onFileSelected={onFileSelected}
+                        getDraftFile={getDraftFile}
                         userDetails={userDetails}
                         checkFileStatus={checkFileStatus}
                         isReadOnly={isReadOnly}
@@ -155,6 +171,8 @@ const PrivateCompanyDocs = ({ setCompanyFiles, setCompanyFileNames, checkFileSta
                         modalOpen={modalTwo}
                         setCompanyFiles={setCompanyFiles}
                         setCompanyFileNames={setCompanyFileNames}
+                        onFileSelected={onFileSelected}
+                        getDraftFile={getDraftFile}
                         userDetails={userDetails}
                         checkFileStatus={checkFileStatus}
                         isReadOnly={isReadOnly}
@@ -188,6 +206,8 @@ const PrivateCompanyDocs = ({ setCompanyFiles, setCompanyFileNames, checkFileSta
                         modalOpen={modalThree}
                         setCompanyFiles={setCompanyFiles}
                         setCompanyFileNames={setCompanyFileNames}
+                        onFileSelected={onFileSelected}
+                        getDraftFile={getDraftFile}
                         userDetails={userDetails}
                         checkFileStatus={checkFileStatus}
                         isReadOnly={isReadOnly}
@@ -218,6 +238,8 @@ const PrivateCompanyDocs = ({ setCompanyFiles, setCompanyFileNames, checkFileSta
                         modalOpen={modalFour}
                         setCompanyFiles={setCompanyFiles}
                         setCompanyFileNames={setCompanyFileNames}
+                        onFileSelected={onFileSelected}
+                        getDraftFile={getDraftFile}
                         userDetails={userDetails}
                         checkFileStatus={checkFileStatus}
                         isReadOnly={isReadOnly}
@@ -257,6 +279,8 @@ const PrivateCompanyDocs = ({ setCompanyFiles, setCompanyFileNames, checkFileSta
                         modalOpen={modalFive}
                         setCompanyFiles={setCompanyFiles}
                         setCompanyFileNames={setCompanyFileNames}
+                        onFileSelected={onFileSelected}
+                        getDraftFile={getDraftFile}
                         userDetails={userDetails}
                         checkFileStatus={checkFileStatus}
                         isReadOnly={isReadOnly}

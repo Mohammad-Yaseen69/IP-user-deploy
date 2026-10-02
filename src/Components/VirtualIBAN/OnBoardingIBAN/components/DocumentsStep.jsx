@@ -7,12 +7,18 @@ import SidebarProgress from './SidebarProgress'
 import StepProgress from './StepProgress'
 import { useMediaQuery } from '@mui/material'
 import AlertBox from './AlertBox'
+import { IBAN_DOC_KEY_TO_SLOT, IBAN_POA_DOC_KEYS, IBAN_POA_SLOT, toDraftFileRef } from '../../../../utils/Data/businessDraft'
 
-const DocumentsStep = ({ onNext, onBack, userType, data = {}, userDetails, companyDetails, currentStep }) => {
+const DocumentsStep = ({ onNext, onBack, onChange, onUploadDraftFile, userType, data = {}, userDetails, companyDetails, currentStep }) => {
     const { t } = useTranslation()
     const [files, setFiles] = useState(data.files || {})
+    const [uploadingKeys, setUploadingKeys] = useState({})
     const inputRefs = useRef({})
     const isMobile = useMediaQuery('(max-width:600px)');
+
+    useEffect(() => {
+        onChange?.(files)
+    }, [files])
 
     useEffect(() => {
         window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
@@ -24,10 +30,10 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {}, userDetails, compa
     const isKybDone = ['approved', 'verified'].includes(kybStatus)
     const companyType = (companyDetails?.businessType || userDetails?.company?.business_verification_type || '').toLowerCase()
 
-    let requiredDocKeys = ['commercial_register', 'articles_association', 'bank_statement', 'shareholders_register', 'ownership_chart', 'ubo_declaration', 'ubo_passport', 'ubo_address_proof']
+    let requiredDocKeys = ['commercial_register', 'articles_association', IBAN_POA_SLOT, 'shareholders_register', 'ownership_chart', 'ubo_declaration', 'ubo_passport', 'ubo_address_proof']
     if (!isKybDone) {
         if (companyType.includes('sole')) {
-            requiredDocKeys = ['commercial_register', 'bank_statement', 'ubo_passport', 'ubo_address_proof']
+            requiredDocKeys = ['commercial_register', IBAN_POA_SLOT, 'ubo_passport', 'ubo_address_proof']
         } else {
             if (!requiredDocKeys.includes('authority_letter')) {
                 requiredDocKeys.push('authority_letter')
@@ -35,7 +41,18 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {}, userDetails, compa
         }
     }
 
-    const handleFileChange = (key, e) => {
+    const setDocFile = (key, value) => {
+        setFiles(prev => {
+            const next = { ...prev }
+            if (IBAN_POA_DOC_KEYS.includes(key)) {
+                IBAN_POA_DOC_KEYS.forEach(poaKey => { delete next[poaKey] })
+            }
+            next[key] = value
+            return next
+        })
+    }
+
+    const handleFileChange = async (key, e) => {
         const file = e.target.files?.[0]
         if (!file) return
         if (file.size > 5 * 1024 * 1024) {
@@ -43,8 +60,23 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {}, userDetails, compa
             e.target.value = ''
             return
         }
-        setFiles(prev => ({ ...prev, [key]: file }))
         e.target.value = ''
+        setDocFile(key, file)
+
+        const slot = IBAN_DOC_KEY_TO_SLOT[key]
+        if (!onUploadDraftFile || !slot) return
+
+        setUploadingKeys(prev => ({ ...prev, [key]: true }))
+        try {
+            const entry = await onUploadDraftFile(slot, file, slot === IBAN_POA_SLOT ? { variant: key } : undefined)
+            if (entry?.slot) {
+                setFiles(prev => (prev[key] === file ? { ...prev, [key]: toDraftFileRef(entry) } : prev))
+            }
+        } catch (err) {
+            console.error(`Unable to save ${key} to the draft`, err)
+        } finally {
+            setUploadingKeys(prev => ({ ...prev, [key]: false }))
+        }
     }
 
     const openFilePicker = (key) => {
@@ -150,7 +182,9 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {}, userDetails, compa
             <div className={styles.right}>
                 {selectedFile ? (
                     <>
-                        <span className={styles.provided}>{isMobile ? t('PROVIDED') : selectedFile.name}</span>
+                        <span className={styles.provided}>
+                            {uploadingKeys[key] ? t('Uploading...') : isMobile ? t('PROVIDED') : selectedFile.name}
+                        </span>
                         <button type="button" className={styles.uploadBtn} onClick={() => openFilePicker(key)}>
                             <Upload size={10} /> {t('Replace')}
                         </button>
@@ -180,7 +214,10 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {}, userDetails, compa
         )
     }
 
-    const isDocsValid = requiredDocKeys.every(k => Boolean(files[k]) || isKeyVerifiedFromKyb(k))
+    const isDocProvided = (key) => Boolean(files[key]) || isKeyVerifiedFromKyb(key)
+    const isDocsValid = requiredDocKeys.every(k => (
+        k === IBAN_POA_SLOT ? IBAN_POA_DOC_KEYS.some(isDocProvided) : isDocProvided(k)
+    )) && !Object.values(uploadingKeys).some(Boolean)
     return (
         <div className={styles.onboardingLayout}>
             <div>
@@ -353,7 +390,7 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {}, userDetails, compa
                                     </span>
                                 </div>
 
-                                {renderUploadControl('authority_letter')}
+                                {renderUploadControl('tax_authority_letter')}
                             </div>
                         </div>
                     </div>
