@@ -122,6 +122,29 @@ export const useVirtualIbanBlock = () => {
     })
 }
 
+export const useVirtualIbanUserBlock = () => {
+    const queryClient = useQueryClient()
+
+    return useMutation({
+        mutationFn: ({ ibanId, action }) =>
+            apiWrapper({
+                endpoint: `/api/virtual-iban/block/action/${ibanId}`,
+                method: "PUT",
+                payload: { action },
+                // isDecrypted: true,
+                isEncrypted: true,
+            }),
+        onSuccess: (_, variables) => {
+            const ibanId = variables?.ibanId
+            queryClient.invalidateQueries({ queryKey: virtualIbanQueryKeys.list() })
+            if (ibanId) {
+                queryClient.invalidateQueries({ queryKey: virtualIbanQueryKeys.detail(ibanId) })
+                queryClient.invalidateQueries({ queryKey: virtualIbanQueryKeys.balance(ibanId) })
+            }
+        },
+    })
+}
+
 export const useSyncVirtualIbanBalance = (ibanId) =>
     useQuery({
         queryKey: virtualIbanQueryKeys.balance(ibanId),
@@ -206,6 +229,41 @@ export const useExecuteVirtualIbanTransfer = () => {
             }),
         onSuccess: (_, variables) => {
             queryClient.invalidateQueries({ queryKey: virtualIbanQueryKeys.all })
+            queryClient.invalidateQueries({ queryKey: virtualIbanQueryKeys.list() })
+            if (variables?.iban_id) {
+                queryClient.invalidateQueries({ queryKey: virtualIbanQueryKeys.detail(variables.iban_id) })
+                queryClient.invalidateQueries({ queryKey: virtualIbanQueryKeys.balance(variables.iban_id) })
+            }
+        },
+    })
+}
+
+export const useVirtualIbanCryptoTransferFee = () =>
+    useMutation({
+        mutationFn: (payload) =>
+            apiWrapper({
+                endpoint: "/api/virtual-iban/transfer/crypto/fee",
+                method: "POST",
+                payload,
+                isEncrypted: true,
+                isDecrypted: true,
+            }),
+    })
+
+export const useExecuteVirtualIbanCryptoTransfer = () => {
+    const queryClient = useQueryClient()
+
+    return useMutation({
+        mutationFn: ({ idempotencyKey, ...payload }) =>
+            apiWrapper({
+                endpoint: "/api/virtual-iban/transfer/crypto",
+                method: "POST",
+                payload,
+                isEncrypted: true,
+                isDecrypted: true,
+                idempotencyKey,
+            }),
+        onSuccess: (_, variables) => {
             queryClient.invalidateQueries({ queryKey: virtualIbanQueryKeys.list() })
             if (variables?.iban_id) {
                 queryClient.invalidateQueries({ queryKey: virtualIbanQueryKeys.detail(variables.iban_id) })

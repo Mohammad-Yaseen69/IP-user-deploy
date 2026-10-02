@@ -25,7 +25,6 @@ const Cover = React.lazy(() => import("./Cover"));
 const Header = React.lazy(() => import("./Header"));
 const HowOthersFindYou = React.lazy(() => import("./HowOthersFindYou"));
 const WithdrawalsNew = React.lazy(() => import("./WithdrawalsNew"));
-const CryptoWithdrawalChannel = React.lazy(() => import("./CryptoWithdrawalChannel"));
 const Threshold = React.lazy(() => import("./Threshold"));
 const ManageSaveCards = React.lazy(() => import("./ManageSaveCards"));
 const FinancialInfo = React.lazy(() => import("./FinancialInfo"));
@@ -109,7 +108,6 @@ const Settings = () => {
                                     {currentTab === "My Social Network Accounts" && <Accounts />}
                                     {currentTab === "Login Activity" && <Sessions />}
                                     {currentTab === "Receiving Accounts" && <WithdrawalsNew />}
-                                    {currentTab === "Crypto Receiving Accounts" && <CryptoWithdrawalChannel />}
                                     {currentTab === "Payment Threshold" && <Threshold setUpdateToken={setUpdateToken} userDetails={userDetails} authHeader={authHeader} />}
                                     {currentTab === "Download Your Data" && <DownloadData />}
                                     {currentTab === "Delete Your Account" && <DeleteAccount />}
@@ -172,7 +170,6 @@ const Settings = () => {
                                     {currentTab === "My Social Network Accounts" && <Accounts />}
                                     {currentTab === "Login Activity" && <Sessions />}
                                     {currentTab === "Receiving Accounts" && <WithdrawalsNew />}
-                                    {currentTab === "Crypto Receiving Accounts" && <CryptoWithdrawalChannel />}
                                     {currentTab === "Download Your Data" && <DownloadData />}
                                     {currentTab === "Delete Your Account" && <DeleteAccount />}
                                     {currentTab === "API Key" && <ApiKey />}

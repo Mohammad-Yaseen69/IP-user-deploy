@@ -64,9 +64,9 @@ const Commissions = () => {
             const amt = Number(item.commission || 0);
             totalEarned += amt;
 
-            if (item.status === 'Paid') {
+            if (item.status === 'paid') {
                 totalPaid += amt;
-            } else if (item.status === 'Pending') {
+            } else if (item.status === 'pending') {
                 totalPending += amt;
             }
 

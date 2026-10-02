@@ -8,42 +8,32 @@
 .inp {
     display: flex;
     flex-direction: column;
-    gap: .8rem;
+    gap: 8px;
 }
 
 .inp>label {
     margin-bottom: 0;
-    color: #000;
-    leading-trim: both;
-    text-edge: cap;
-    font-family: Manrope;
+    color: #0C0A20;
+    font-family: Inter;
     font-size: 14px;
-    font-style: normal;
-    font-weight: 600;
+    font-weight: 500;
     line-height: 150%;
+    letter-spacing: -0.42px;
 }
 
 .inp input {
-    border-radius: 8px;
+    border-radius: 6px;
+    border: 1px solid #E4E3E5;
     background: #FFF;
-    box-shadow: 0px -0.5px 7.2px 0px rgba(0, 0, 0, 0.20), 0px 0px 4px 6px #FDFDFD inset;
-    color: #000;
-    leading-trim: both;
-    text-edge: cap;
-    font-family: Manrope;
-    font-size: 1rem;
-    font-style: normal;
-    font-weight: 600;
-    line-height: 150%;
-    padding: .7rem 1.25rem;
+    box-shadow: 0 1px 1.5px 0 rgba(44, 54, 53, 0.03);
+    height: 48px;
+    padding: 8px 12px;
+    outline: none;
 }
 
 .inp input:focus,
 .inp input:focus-within {
-    border-radius: 8px;
-    border: 2px solid #5926F0;
-    background: #FFF;
-    box-shadow: 0px -0.5px 7.2px 0px rgba(0, 0, 0, 0.20), 0px 0px 4px 6px #FDFDFD inset;
+    border: 1px solid #5926F0;
 }
 
 .info {

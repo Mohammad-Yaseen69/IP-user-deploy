@@ -98,9 +98,10 @@ const Steptwo = ({ data, dataHandler }) => {
                                 console.log(item)
                                 dataHandler("country", item)
                             }}
-                            padding=".7rem 1.25rem"
-                            shadow={true}
-
+                            padding="12px 16px 12px 12px"
+                            shadow={false}
+                            containerStyle={{  border: '1px solid #E4E3E5', boxShadow: 'none', borderRadius:'6px'}}
+                            selectedCountryStyle={styles.selectedCountry}
                         />
                     </div>
                     <div className={styles.inp}>

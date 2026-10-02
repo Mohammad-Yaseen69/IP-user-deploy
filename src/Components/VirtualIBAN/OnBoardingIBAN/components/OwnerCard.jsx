@@ -2,7 +2,7 @@ import { Avatar, Chip } from "@mui/material";
 import styles from "../style/OwnerCard.module.css";
 import Badge from "./badge";
 import { useTranslation } from "react-i18next";
-import { getInitials } from "./OwnershipStep";
+import { getInitials } from "../../../../utils/Functions/getInitials";
 
 const OwnerCard = ({ owner, handleDelete }) => {
   const { t } = useTranslation();

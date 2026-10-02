@@ -1,33 +1,28 @@
-import { useMemo, useState, useContext, useEffect } from "react"
-import { useTranslation } from "react-i18next"
-import { Modal, ModalBody } from "reactstrap"
-import axios from "axios"
-import { toast } from "react-toastify"
 import { useQueryClient } from "@tanstack/react-query"
+import axios from "axios"
+import { useContext, useEffect, useMemo, useState } from "react"
+import { useTranslation } from "react-i18next"
+import { toast } from "react-toastify"
+import { Modal, ModalBody } from "reactstrap"
+import { UserContext } from "../../../Context/UserContext"
+import { decryptData } from "../../../Helper/EssentilaMethods/Decryption"
 import useWindowWidth from "../../../utils/useWindowWidth"
+import { CARD_TYPES } from "../../CreditInput/CreditCardTypes"
 import {
-    CircleCheck,
-    Currency,
-    Lock,
-    Payment,
-    Receipt,
-    Wallet2,
+    Payment
 } from "../../MyMasterCard/files"
 import ConfirmationStep from "../../MyMasterCard/PaymentModal/ConfirmationStep"
 import ContactBox from "../../MyMasterCard/PaymentModal/ContactBox"
 import PaymentSelect from "../../MyMasterCard/PaymentModal/PaymentSelectStep"
 import PaymentStep from "../../MyMasterCard/PaymentModal/PaymentStep"
 import addFundsStyles from "../WithdrawBalanceModal/withdrawBalance.module.scss"
-import { UserContext } from "../../../Context/UserContext"
-import { decryptData } from "../../../Helper/EssentilaMethods/Decryption"
-import { CARD_TYPES } from "../../CreditInput/CreditCardTypes"
-import JurisIcon from "./icons/gpsFix.svg"
 import Coins from "./icons/coins.svg"
-import Verification from "./icons/verification.svg"
+import JurisIcon from "./icons/gpsFix.svg"
 import SealCheck from "./icons/SealCheck.svg"
+import Verification from "./icons/verification.svg"
 
+import useSendOtp from "../../../hooks/GeneralUse/useSendOtp"
 import {
-
     buildMockFeeDetails,
     getContinueLabel,
     getDisabledState,
@@ -46,18 +41,17 @@ import FeesStep from "./FeesStep"
 import JurisdictionStep from "./JurisdictionStep"
 import PendingStep from "./PendingStep"
 import SidebarProgress from "./SidebarProgress"
-import styles from "./virtualIbanModal.module.scss"
 import VerificationStep from "./VerificationStep"
-import useSendOtp from "../../../hooks/GeneralUse/useSendOtp"
+import styles from "./virtualIbanModal.module.scss"
 
-import { getVirtualIbanCountry, normalizeVirtualIban } from "../utils/virtualIban"
-import SocketsService from "../../../Services/Socket"
-import usePlainFx from "../../../hooks/Payments/usePlainFx"
-import InstaPayLoader from "../../Loader"
-import { useCreateVirtualIban, useVirtualIbans, virtualIbanQueryKeys } from "../../../hooks/useVirtualIban"
-import { handlePaymentApiError } from "../../../utils/Functions/handlePaymentApiError"
 import { useNavigate } from "react-router"
 import OTPConfirmation from "../../../Common/Component/OtpVerification"
+import usePlainFx from "../../../hooks/Payments/usePlainFx"
+import { useCreateVirtualIban, useVirtualIbans, virtualIbanQueryKeys } from "../../../hooks/useVirtualIban"
+import SocketsService from "../../../Services/Socket"
+import { handlePaymentApiError } from "../../../utils/Functions/handlePaymentApiError"
+import InstaPayLoader from "../../Loader"
+import { getVirtualIbanCountry, normalizeVirtualIban } from "../utils/virtualIban"
 import {
     getActivationFeeConfig,
     getActiveInstaWallets,

@@ -126,11 +126,20 @@ export const asVirtualIbanArray = (value) => {
     return data.map(normalizeVirtualIban).filter(Boolean)
 }
 
-export const isVirtualIbanInactive = (iban) => {
-    if (!iban) return false
+// The balance endpoint returns the freshest copy of these flags, so it wins
+// over the cached list record whenever it carries them.
+export const mergeVirtualIbanState = (iban, syncedBalance) => ({
+    ...(iban || {}),
+    ...(syncedBalance || {}),
+})
 
-    return Boolean(iban?.adminBlocked) || String(iban?.status || "").toUpperCase() === "INACTIVE"
-}
+export const isVirtualIbanAdminBlocked = (iban) => Boolean(iban?.adminBlocked)
+
+export const isVirtualIbanFrozen = (iban) => Boolean(iban?.freezeIban)
+
+export const isVirtualIbanUserBlocked = (iban) => Boolean(iban?.userBlocked)
+
+export const isVirtualIbanOutboundBlocked = (iban) => Boolean(iban?.blockOutbound)
 
 export const asVirtualIban = (value) => {
     const unwrapped = unwrapVirtualIbanResponse(value)

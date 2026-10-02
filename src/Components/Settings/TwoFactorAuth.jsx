@@ -1,32 +1,31 @@
-import React, { useContext, useEffect, useState } from 'react'
-import { Button, Card, CardBody, CardHeader, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap'
-import { H4 } from '../../AbstractElements'
-import { useTranslation } from 'react-i18next';
-import { UserContext } from '../../Context/UserContext';
+import { startRegistration } from "@simplewebauthn/browser";
 import axios from 'axios';
-import { encryptData } from '../../Helper/EssentilaMethods/Encryption';
-import { decryptData } from '../../Helper/EssentilaMethods/Decryption';
-import Switch from './Switch';
-import styles from "./styles/NotifTable.module.css"
-import { toast } from "react-toastify"
-import GoogleAuthenticatorModal from '../GoogleAuthenticatorModal';
-import { useLocation, useNavigate } from 'react-router';
-import { AuthenticatorDetails } from '../Auth/Login';
-import { startRegistration } from "@simplewebauthn/browser"
-import OTPConfirmation from '../../Common/Component/OtpVerification';
-import AuthIcon from "./a_items/auth.svg"
-import EmailIcon from "./a_items/email.svg"
-import PhoneIcon from "./a_items/phone.svg"
-import BioIcon from "./a_items/bio.svg"
-import SettingsIcon from './a_items/settings.svg'
-import Cancel from "./a_items/cancel.svg"
-import Plus from "./a_items/plus.svg"
-import Finger from "./a_items/finger/finger.svg"
-import FingerSuccess from "./a_items/finger/finger_success.svg"
-import FingerFailed from "./a_items/finger/finger_failed.svg"
-import "./styles/styles.css"
+import { useContext, useEffect, useState } from 'react';
 import { ChevronDown } from 'react-feather';
-import sideImg from "./bio files/side-img.png"
+import { useTranslation } from 'react-i18next';
+import { useLocation, useNavigate } from 'react-router';
+import { toast } from "react-toastify";
+import { Button, Card, CardBody, CardHeader, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
+import { H4 } from '../../AbstractElements';
+import OTPConfirmation from '../../Common/Component/OtpVerification';
+import { UserContext } from '../../Context/UserContext';
+import { decryptData } from '../../Helper/EssentilaMethods/Decryption';
+import { encryptData } from '../../Helper/EssentilaMethods/Encryption';
+import { AuthenticatorDetails } from '../Auth/Login';
+import GoogleAuthenticatorModal from '../GoogleAuthenticatorModal';
+import Switch from './Switch';
+import AuthIcon from "./a_items/auth.svg";
+import BioIcon from "./a_items/bio.svg";
+import Cancel from "./a_items/cancel.svg";
+import EmailIcon from "./a_items/email.svg";
+import Finger from "./a_items/finger/finger.svg";
+import FingerFailed from "./a_items/finger/finger_failed.svg";
+import FingerSuccess from "./a_items/finger/finger_success.svg";
+import PhoneIcon from "./a_items/phone.svg";
+import Plus from "./a_items/plus.svg";
+import sideImg from "./bio files/side-img.png";
+import styles from "./styles/NotifTable.module.css";
+import "./styles/styles.css";
 
 const TwoFactorAuth = () => {
     const { t } = useTranslation()
@@ -267,7 +266,7 @@ const TwoFactorAuth = () => {
             method = eventOrMethod
         }
         setIsSaving(true)
-        const type = method || codeType
+        const type = method || (userDetails?.tfa ? "authenticator" : userDetails?.email_verification ? "email" : userDetails?.whatsapp_verification ? "whatsapp" : "sms")
         try {
             const data = {
                 data: {
@@ -284,7 +283,9 @@ const TwoFactorAuth = () => {
 
             const dec = decryptData(res.data.data)
             setOtpMethods(dec)
-            if (!showFinger) setCodeType(dec?.otp_sent_on || "sms")
+            // if (!showFinger) setCodeType(dec?.otp_sent_on || "sms")
+
+            if (!method) setCodeType(dec?.otp_sent_on || type)
             setShowFinger(true)
 
             setToken(dec?.token)
@@ -475,7 +476,7 @@ const TwoFactorAuth = () => {
                                         </button>
                                     </div>
 
-                                    
+
                                 }
                             </td>
                         </tr>

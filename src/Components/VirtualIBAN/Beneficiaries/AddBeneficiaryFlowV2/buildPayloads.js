@@ -86,6 +86,8 @@ export const prefillEditBag = (beneficiary) => {
     const bag = {
         firstname: firstValue(beneficiary.first_name, extras.firstname, extras.firstName),
         lastname: firstValue(beneficiary.last_name, extras.lastname, extras.lastName),
+        firstName: firstValue(beneficiary.first_name, extras.firstname, extras.firstName),
+        lastName: firstValue(beneficiary.last_name, extras.lastname, extras.lastName),
         legalName: firstValue(beneficiary.company_name, extras.legalName, extras.company_name),
         email: firstValue(beneficiary.email, extras.email),
         msisdn: firstValue(beneficiary.phone, extras.msisdn),
