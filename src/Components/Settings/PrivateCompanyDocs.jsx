@@ -247,7 +247,7 @@ const PrivateCompanyDocs = ({ setCompanyFiles, setCompanyFileNames, checkFileSta
             <div>
                 <FormGroup>
                     <Label>
-                        {t("Proof of Address")}
+                        {t("Proof of address of the company")}
                         <Info className={styles.info_icon} size={16} onClick={() => setModalFive(!modalFive)} />
                     </Label>
                     <FileUploadWithPreview
