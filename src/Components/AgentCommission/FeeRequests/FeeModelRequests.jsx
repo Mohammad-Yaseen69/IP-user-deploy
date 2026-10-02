@@ -1,9 +1,9 @@
+import { Box, Button, Card, Chip, CircularProgress, Dialog, DialogContent, DialogTitle, Grid, IconButton, Typography } from '@mui/material';
 import axios from 'axios';
 import { useCallback, useContext, useEffect, useState } from 'react';
-import { CheckCircle, Clock, Copy, Edit2, Plus, Shield, XCircle } from 'react-feather';
+import { CheckCircle, Clock, Copy, Edit2, Plus, Shield, X, XCircle } from 'react-feather';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
-import { Badge, Button, Card, CardBody, CardHeader, Col, Modal, ModalBody, ModalHeader, Row, Spinner } from 'reactstrap';
 import { UserContext } from '../../../Context/UserContext';
 import { decryptData } from '../../../Helper/EssentilaMethods/Decryption';
 import { encryptData } from '../../../Helper/EssentilaMethods/Encryption';
@@ -15,6 +15,9 @@ import FeeModelForm from './FeeModelForm';
 import { useEditFeeRequest, useFeeRequestEditHistory } from './hooks/useFeeRequestEdit';
 import { useIdempotency } from '../../../hooks/Payments/useIdempotency';
 import { DEFAULT_FEE_ITEMS, NO_PERCENT_FEE_IDS, sanitizeFeeSchedule, scheduleFromRequest, updateFeeItem } from './feeSchedule';
+
+const primaryButtonSx = { textTransform: 'none', background: '#5926F0', '&:hover': { background: '#4A1FD0' } };
+const chipSx = { fontWeight: 600, fontSize: '12px', px: 0.5 };
 
 const FeeModelRequests = () => {
     const { t } = useTranslation();
@@ -160,6 +163,20 @@ const FeeModelRequests = () => {
         }
     };
 
+    const tabButtonStyle = (tab) => ({
+        padding: '12px 20px',
+        background: 'none',
+        border: 'none',
+        fontSize: '15px',
+        fontWeight: 600,
+        color: activeTab === tab ? '#5926F0' : '#6B7280',
+        borderBottom: activeTab === tab ? '2px solid #5926F0' : '2px solid transparent',
+        cursor: 'pointer',
+        display: 'flex',
+        alignItems: 'center',
+        gap: '6px'
+    });
+
     return (
         <div className={styles.container}>
             <div className={styles.top}>
@@ -173,123 +190,81 @@ const FeeModelRequests = () => {
             </div>
 
             <div className={styles.main}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
-                    <div style={{ display: 'flex', gap: '16px', borderBottom: '1px solid #E5E7EB' }}>
-                        <button
-                            onClick={() => setActiveTab('list')}
-                            style={{
-                                padding: '12px 20px',
-                                background: 'none',
-                                border: 'none',
-                                fontSize: '15px',
-                                fontWeight: 600,
-                                color: activeTab === 'list' ? '#5926F0' : '#6B7280',
-                                borderBottom: activeTab === 'list' ? '2px solid #5926F0' : '2px solid transparent',
-                                cursor: 'pointer'
-                            }}
-                        >
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+                    <Box sx={{ display: 'flex', gap: '16px', borderBottom: '1px solid #E5E7EB' }}>
+                        <button onClick={() => setActiveTab('list')} style={tabButtonStyle('list')}>
                             {t("Requested Models")} ({requests.length})
                         </button>
-                        <button
-                            onClick={() => setActiveTab('create')}
-                            style={{
-                                padding: '12px 20px',
-                                background: 'none',
-                                border: 'none',
-                                fontSize: '15px',
-                                fontWeight: 600,
-                                color: activeTab === 'create' ? '#5926F0' : '#6B7280',
-                                borderBottom: activeTab === 'create' ? '2px solid #5926F0' : '2px solid transparent',
-                                cursor: 'pointer',
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: '6px'
-                            }}
-                        >
+                        <button onClick={() => setActiveTab('create')} style={tabButtonStyle('create')}>
                             <Plus size={16} /> {t("New Model Request")}
                         </button>
-                    </div>
+                    </Box>
 
                     {activeTab === 'list' && (
-                        <Button
-                            style={{ background: '#5926F0', border: 'none' }}
-                            onClick={() => setActiveTab('create')}
-                        >
-                            <Plus size={16} style={{ marginRight: '6px' }} />
+                        <Button variant="contained" startIcon={<Plus size={16} />} sx={primaryButtonSx} onClick={() => setActiveTab('create')}>
                             {t("Request New Fee Model")}
                         </Button>
                     )}
-                </div>
+                </Box>
 
                 {activeTab === 'list' ? (
                     <div>
                         {loadingRequests ? (
-                            <div style={{ padding: '60px', textAlign: 'center' }}>
-                                <Spinner style={{ color: '#5926F0', width: '2.5rem', height: '2.5rem' }} />
-                                <div style={{ marginTop: '12px', fontSize: '14px', color: '#6B7280' }}>
+                            <Box sx={{ p: '60px', textAlign: 'center' }}>
+                                <CircularProgress sx={{ color: '#5926F0' }} />
+                                <Typography sx={{ mt: 1.5, fontSize: '14px', color: '#6B7280' }}>
                                     {t("Loading fee model requests...")}
-                                </div>
-                            </div>
+                                </Typography>
+                            </Box>
                         ) : requests.length === 0 ? (
-                            <Card style={{ borderRadius: '12px', border: '1px solid #E5E7EB', padding: '40px', textAlign: 'center' }}>
+                            <Card variant="outlined" sx={{ borderRadius: '12px', borderColor: '#E5E7EB', p: '40px', textAlign: 'center' }}>
                                 <Shield size={42} color="#9CA3AF" style={{ marginBottom: '12px' }} />
-                                <h3 style={{ fontSize: '18px', fontWeight: 700, color: '#111827', margin: 0 }}>
+                                <Typography component="h3" sx={{ fontSize: '18px', fontWeight: 700, color: '#111827' }}>
                                     {t("No Fee Model Requests Submitted")}
-                                </h3>
-                                <p style={{ fontSize: '14px', color: '#6B7280', marginTop: '6px', marginBottom: '20px' }}>
+                                </Typography>
+                                <Typography sx={{ fontSize: '14px', color: '#6B7280', mt: 0.75, mb: 2.5 }}>
                                     {t("Request custom fee schedules for your clients. Once approved by admin, you will receive a unique referral code.")}
-                                </p>
-                                <div>
-                                    <Button
-                                        style={{ background: '#5926F0', border: 'none' }}
-                                        onClick={() => setActiveTab('create')}
-                                    >
-                                        <Plus size={16} style={{ marginRight: '6px' }} />
-                                        {t("Create Your First Request")}
-                                    </Button>
-                                </div>
+                                </Typography>
+                                <Button variant="contained" startIcon={<Plus size={16} />} sx={primaryButtonSx} onClick={() => setActiveTab('create')}>
+                                    {t("Create Your First Request")}
+                                </Button>
                             </Card>
                         ) : (
-                            <Row>
+                            <Grid container spacing={2.5} sx={{ mb: 2.5 }}>
                                 {requests.map((req) => (
-                                    <Col md={12} lg={6} key={req._id} style={{ marginBottom: '20px' }}>
-                                        <Card style={{ borderRadius: '12px', border: '1px solid #E5E7EB', height: '100%', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
-                                            <CardHeader style={{ background: '#FFFFFF', borderBottom: '1px solid #F3F4F6', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 20px' }}>
+                                    <Grid item xs={12} lg={6} key={req._id}>
+                                        <Card variant="outlined" sx={{ borderRadius: '12px', borderColor: '#E5E7EB', height: '100%', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
+                                            <Box sx={{ background: '#FFFFFF', borderBottom: '1px solid #F3F4F6', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 1, p: '16px 20px' }}>
                                                 <div>
-                                                    <h4 style={{ fontSize: '17px', fontWeight: 700, margin: 0, color: '#111827' }}>
+                                                    <Typography component="h4" sx={{ fontSize: '17px', fontWeight: 700, color: '#111827' }}>
                                                         {req.title}
-                                                    </h4>
-                                                    <span style={{ fontSize: '12px', color: '#6B7280' }}>
+                                                    </Typography>
+                                                    <Typography component="span" sx={{ fontSize: '12px', color: '#6B7280' }}>
                                                         {t("Requested on")}: {new Date(req.createdAt).toLocaleDateString()}
-                                                    </span>
+                                                    </Typography>
                                                 </div>
-                                                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                                                     <Button
-                                                        size="sm"
-                                                        outline
-                                                        style={{ padding: '4px 8px', color: '#5926F0', borderColor: '#5926F0', display: 'flex', alignItems: 'center', gap: '4px' }}
+                                                        size="small"
+                                                        variant="outlined"
+                                                        startIcon={<Edit2 size={12} />}
+                                                        sx={{ textTransform: 'none', color: '#5926F0', borderColor: '#5926F0', p: '2px 10px', minWidth: 0 }}
                                                         onClick={() => openEditModal(req)}
                                                     >
-                                                        <Edit2 size={12} /> {t("Edit")}
+                                                        {t("Edit")}
                                                     </Button>
                                                     {req.status === 'pending' && (
-                                                        <Badge color="warning" pill style={{ padding: '6px 12px', fontSize: '12px' }}>
-                                                            <Clock size={12} style={{ marginRight: '4px' }} /> {t("PENDING REVIEW")}
-                                                        </Badge>
+                                                        <Chip size="small" color="warning" icon={<Clock size={12} />} label={t("PENDING REVIEW")} sx={chipSx} />
                                                     )}
                                                     {req.status === 'approved' && (
-                                                        <Badge color="success" pill style={{ padding: '6px 12px', fontSize: '12px' }}>
-                                                            <CheckCircle size={12} style={{ marginRight: '4px' }} /> {t("APPROVED")}
-                                                        </Badge>
+                                                        <Chip size="small" color="success" icon={<CheckCircle size={12} />} label={t("APPROVED")} sx={chipSx} />
                                                     )}
                                                     {req.status === 'rejected' && (
-                                                        <Badge color="danger" pill style={{ padding: '6px 12px', fontSize: '12px' }}>
-                                                            <XCircle size={12} style={{ marginRight: '4px' }} /> {t("REJECTED")}
-                                                        </Badge>
+                                                        <Chip size="small" color="error" icon={<XCircle size={12} />} label={t("REJECTED")} sx={chipSx} />
                                                     )}
-                                                </div>
-                                            </CardHeader>
-                                            <CardBody style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '14px' }}>
+                                                </Box>
+                                            </Box>
+                                            <Box sx={{ p: '20px', display: 'flex', flexDirection: 'column', gap: '14px' }}>
                                                 <div style={{ background: '#F9FAFB', padding: '12px 16px', borderRadius: '8px', border: '1px solid #F3F4F6' }}>
                                                     <div style={{ fontSize: '12px', color: '#6B7280', fontWeight: 600, marginBottom: '2px' }}>
                                                         {t("PRICING SUMMARY")}
@@ -327,9 +302,12 @@ const FeeModelRequests = () => {
                                                                         </div>
                                                                     </div>
 
-                                                                    <Badge color={hasCommission ? "success" : "secondary"} pill style={{ padding: '6px 12px', fontSize: '11px' }}>
-                                                                        {hasCommission ? t("Commission Active") : t("No Commission")}
-                                                                    </Badge>
+                                                                    <Chip
+                                                                        size="small"
+                                                                        color={hasCommission ? "success" : "default"}
+                                                                        label={hasCommission ? t("Commission Active") : t("No Commission")}
+                                                                        sx={{ ...chipSx, fontSize: '11px' }}
+                                                                    />
                                                                 </div>
 
                                                                 <div style={{ fontSize: '12px', color: hasCommission ? '#047857' : '#6B7280' }}>
@@ -353,11 +331,13 @@ const FeeModelRequests = () => {
                                                                 </div>
                                                             </div>
                                                             <Button
-                                                                size="sm"
-                                                                style={{ background: '#4F46E5', border: 'none', display: 'flex', alignItems: 'center', gap: '6px' }}
+                                                                size="small"
+                                                                variant="contained"
+                                                                startIcon={<Copy size={14} />}
+                                                                sx={{ textTransform: 'none', background: '#4F46E5', '&:hover': { background: '#4338CA' } }}
                                                                 onClick={() => copyToClipboard(req.model_code, "code")}
                                                             >
-                                                                <Copy size={14} /> {t("Copy Code")}
+                                                                {t("Copy Code")}
                                                             </Button>
                                                         </div>
 
@@ -371,12 +351,13 @@ const FeeModelRequests = () => {
                                                                 </div>
                                                             </div>
                                                             <Button
-                                                                size="sm"
-                                                                outline
-                                                                style={{ color: '#4F46E5', borderColor: '#4F46E5', display: 'flex', alignItems: 'center', gap: '6px', whiteSpace: 'nowrap' }}
+                                                                size="small"
+                                                                variant="outlined"
+                                                                startIcon={<Copy size={14} />}
+                                                                sx={{ textTransform: 'none', color: '#4F46E5', borderColor: '#4F46E5', whiteSpace: 'nowrap' }}
                                                                 onClick={() => copyToClipboard(`${window.location.origin}/signup/${req.model_code}`, "link")}
                                                             >
-                                                                <Copy size={14} /> {t("Copy Link")}
+                                                                {t("Copy Link")}
                                                             </Button>
                                                         </div>
                                                     </div>
@@ -417,17 +398,17 @@ const FeeModelRequests = () => {
                                                         ))}
                                                     </div>
                                                 </div>
-                                            </CardBody>
+                                            </Box>
                                         </Card>
-                                    </Col>
+                                    </Grid>
                                 ))}
-                            </Row>
+                            </Grid>
                         )}
 
                         <FeeModelEditHistory history={editHistory} loading={loadingEditHistory} />
                     </div>
                 ) : (
-                    <Card style={{ borderRadius: '12px', border: '1px solid #E5E7EB', padding: '24px' }}>
+                    <Card variant="outlined" sx={{ borderRadius: '12px', borderColor: '#E5E7EB', p: '24px' }}>
                         <FeeModelForm
                             heading={t("Request New Fee Model")}
                             title={title}
@@ -444,11 +425,14 @@ const FeeModelRequests = () => {
                 )}
             </div>
 
-            <Modal isOpen={!!editingRequest} toggle={closeEditModal} size="lg" centered>
-                <ModalHeader toggle={closeEditModal}>
+            <Dialog open={!!editingRequest} onClose={closeEditModal} maxWidth="md" fullWidth>
+                <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontWeight: 700 }}>
                     {t("Edit Fee Model Request")}
-                </ModalHeader>
-                <ModalBody style={{ padding: '24px' }}>
+                    <IconButton onClick={closeEditModal} disabled={savingEdit} size="small">
+                        <X size={18} />
+                    </IconButton>
+                </DialogTitle>
+                <DialogContent dividers sx={{ p: '24px' }}>
                     {editingRequest && (
                         <FeeModelForm
                             title={editTitle}
@@ -462,10 +446,8 @@ const FeeModelRequests = () => {
                             submittingLabel={t("Saving...")}
                         />
                     )}
-                </ModalBody>
-            </Modal>
-
-
+                </DialogContent>
+            </Dialog>
         </div>
     );
 };

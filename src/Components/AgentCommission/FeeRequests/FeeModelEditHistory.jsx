@@ -1,5 +1,5 @@
+import { Box, Card, CircularProgress, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { Card, Spinner, Table } from 'reactstrap';
 
 const STATUS_COLORS = {
     pending: '#B45309',
@@ -19,40 +19,42 @@ const FeeModelEditHistory = ({ history, loading }) => {
     const rows = Array.isArray(history) ? history.map(toHistoryRow) : [];
 
     return (
-        <Card style={{ borderRadius: '12px', border: '1px solid #E5E7EB', padding: '20px', marginTop: '8px' }}>
-            <h4 style={{ fontSize: '16px', fontWeight: 700, margin: '0 0 12px 0', color: '#111827' }}>
+        <Card variant="outlined" sx={{ borderRadius: '12px', borderColor: '#E5E7EB', padding: '20px', mt: 1 }}>
+            <Typography component="h4" sx={{ fontSize: '16px', fontWeight: 700, mb: 1.5, color: '#111827' }}>
                 {t("Edit History")} ({rows.length})
-            </h4>
+            </Typography>
 
             {loading ? (
-                <div style={{ padding: '20px', textAlign: 'center' }}>
-                    <Spinner size="sm" style={{ color: '#5926F0' }} />
-                </div>
+                <Box sx={{ p: 2.5, textAlign: 'center' }}>
+                    <CircularProgress size={20} sx={{ color: '#5926F0' }} />
+                </Box>
             ) : rows.length === 0 ? (
-                <div style={{ fontSize: '13px', color: '#6B7280' }}>
+                <Typography sx={{ fontSize: '13px', color: '#6B7280' }}>
                     {t("No edits made yet.")}
-                </div>
+                </Typography>
             ) : (
-                <Table responsive bordered hover size="sm" style={{ fontSize: '13px', marginBottom: 0 }}>
-                    <thead>
-                        <tr style={{ background: '#F9FAFB' }}>
-                            <th>{t("Title")}</th>
-                            <th>{t("Timestamp")}</th>
-                            <th>{t("Previous Status")}</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {rows.map((row, i) => (
-                            <tr key={i}>
-                                <td>{row.title || '-'}</td>
-                                <td>{row.timestamp ? new Date(row.timestamp).toLocaleString() : '-'}</td>
-                                <td style={{ fontWeight: 600, textTransform: 'uppercase', color: STATUS_COLORS[row.previousStatus] || '#374151' }}>
-                                    {row.previousStatus ? t(row.previousStatus) : '-'}
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </Table>
+                <TableContainer sx={{ border: '1px solid #E5E7EB', borderRadius: '8px' }}>
+                    <Table size="small">
+                        <TableHead>
+                            <TableRow sx={{ background: '#F9FAFB' }}>
+                                <TableCell sx={{ fontWeight: 700 }}>{t("Title")}</TableCell>
+                                <TableCell sx={{ fontWeight: 700 }}>{t("Timestamp")}</TableCell>
+                                <TableCell sx={{ fontWeight: 700 }}>{t("Previous Status")}</TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {rows.map((row, i) => (
+                                <TableRow key={i} hover>
+                                    <TableCell sx={{ fontSize: '13px' }}>{row.title || '-'}</TableCell>
+                                    <TableCell sx={{ fontSize: '13px' }}>{row.timestamp ? new Date(row.timestamp).toLocaleString() : '-'}</TableCell>
+                                    <TableCell sx={{ fontSize: '13px', fontWeight: 600, textTransform: 'uppercase', color: STATUS_COLORS[row.previousStatus] || '#374151' }}>
+                                        {row.previousStatus ? t(row.previousStatus) : '-'}
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
             )}
         </Card>
     );
