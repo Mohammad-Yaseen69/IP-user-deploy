@@ -84,7 +84,6 @@ const Login = ({ country, setIsLoginForm, }) => {
     const [isDataLoaded, setIsDataLoaded] = useState(false);
     const [otpDeliveryInfo, setOtpDeliveryInfo] = useState({})
     // Country the user picked in the dropdown; PhoneInput remounts when going back from the password step
-    const [phoneCountry, setPhoneCountry] = useState(null)
 
     const normalizeCredential = (value) => (value ?? "").toString().trim().toLowerCase();
     const getResolvedCredential = () => {
@@ -279,6 +278,7 @@ const Login = ({ country, setIsLoginForm, }) => {
                     setMethodLoading(false)
                     return
                 }
+                setOtpDeliveryInfo({ email: decrypted?.email, phone: decrypted?.phone })
                 // console.log("FULL LOGIN RESPONSE:", decrypted)
                 setMethods(prevMethods => prevMethods.map(method => {
                     switch (method.attr) {
@@ -1019,6 +1019,51 @@ const Login = ({ country, setIsLoginForm, }) => {
         m => m.avail && m.attr !== currentOtpMethod
     )
 
+     const getOtpLabel = () => {
+        const maskValue = (value) => {
+            const str = String(value ?? "");
+            if (!str) return "";
+
+            if (str.includes("@")) {
+                const [username, domain] = str.split("@");
+
+                if (!username || !domain) return str;
+
+                if (username.length <= 3) {
+                    return `${"*".repeat(username.length)}@${domain}`;
+                }
+
+                const visibleSuffix = username.slice(-3);
+                const maskedLength = username.length - 3;
+                return `${"*".repeat(maskedLength)}${visibleSuffix}@${domain}`;
+            }
+
+            if (str.length <= 4) {
+                return str.replace(/./g, "*");
+            }
+
+            return `${str.slice(0, str.length - 4).replace(/./g, "*")}${str.slice(-4)}`;
+        };
+
+        const maskedEmail = maskValue(otpDeliveryInfo.email)
+        const maskedPhone = maskValue(otpDeliveryInfo.phone)
+        const service = String(otpDeliveryInfo.phone ?? "").slice(0, 3) === "971" ? "WhatsApp" : "SMS"
+
+        switch (currentOtpMethod) {
+            case "auth": return t("Please enter the one-time password (OTP) from your Google Authenticator app to access your account")
+            case "insta": return t("Please enter the one-time password (OTP) sent to your Instagram Account")
+            case "wp": return t("Please enter the one-time password (OTP) sent to your WhatsApp on {{phone}}", { phone: `\u200E${maskedPhone}\u200E` })
+            case "email":
+                return t(
+                    "Please enter the one-time password (OTP) sent to {{email}} via email",
+                    {
+                        email: `\u200E${maskedEmail}\u200E`
+                    }
+                );
+            default: return t("Please enter the one-time password (OTP) sent to {{phone}} via {{service}}", { phone: `\u200E${maskedPhone}\u200E`, service })
+        }
+    };
+
     return (
         <>
 
@@ -1075,14 +1120,13 @@ const Login = ({ country, setIsLoginForm, }) => {
                 </ModalFooter>
             </Modal>
                     
-            {step === 1 ?              
                 <form
                     autoComplete="off"
                     onSubmit={(e) => {
                         loginHandler(e, undefined, false, true)
                     }}
                     className={styles.login_form}
-                    style={width > 1000 ? { opacity: step === 1 ? 1 : 0, pointerEvents: step === 1 ? "all" : "none" } : { display: step === 1 ? "inherit" : "none" }}
+                    style={{ display: step === 1 ? "inherit" : "none" }}
                 >
                     <div className={styles.right}>
                         <div className={styles.topSection}>
@@ -1141,9 +1185,10 @@ const Login = ({ country, setIsLoginForm, }) => {
                                 <TextField    
                                     className={styles.inputField}
                                     type={showPassword ? "text" : "password"}
-                                    placeholder={t(" Password")}
+                                    placeholder={t("Password")}
                                     value={password} onChange={e => setPassword(e.target.value)}
                                     name="password"
+                                    disabled={isPressed}
                                     InputProps={{
                                         startAdornment: (
                                             <InputAdornment position="start">
@@ -1172,7 +1217,7 @@ const Login = ({ country, setIsLoginForm, }) => {
                         }
                             <span className={styles.para}>{t("By logging in, you agree to the terms outlined in InstaPay's Privacy Policy.")}</span>
                             <button type="submit" className={styles.form_btn} disabled={isLoginError || isPressed || !isCredentialValid}>
-                                {t('Login')}
+                                {isPressed ? t("Processing") : t('Login')}
                             </button>
                             <Stack direction={'row'} padding={'8px 12px'} justifyContent={'space-between'}>
                                 <div
@@ -1183,6 +1228,7 @@ const Login = ({ country, setIsLoginForm, }) => {
                                             setEmail("")
                                             setPassword("")
                                             setProfileLockTime(0)
+                                            isQuickLoginRef.current = false
                                         } else {
                                         setLoginMethod(loginMethod === "email" ? "phone" : "email")
                                         localStorage.setItem("loginWith", loginMethod === "email" ? "phone" : "email")
@@ -1221,12 +1267,12 @@ const Login = ({ country, setIsLoginForm, }) => {
                         }
                     </div>
                 </form>
-            :
+            {step > 1 &&
                 <form onSubmit={verifyOTpHandler} className={styles.otp}>                
                     <div className={styles.right}>
                         <div className={`${styles.topSection} ${styles.otpTopSection}`}>
                             {currentOtpMethod !== "biometric" && <label>{t("Enter OTP")}</label>}
-                            <p>{t(currentOtpMethod === "biometric" ? "Verify identity using your created Passkey on this device" : 'Please enter the one-time password (OTP) sent to your phone to access your account.')}</p>
+                            <p>{currentOtpMethod === "biometric" ? t("Verify your identity with your passkey on this device") : getOtpLabel()}</p>
                         </div>
                         <div className={styles.top}>
                             {currentOtpMethod === "biometric" ? (
