@@ -55,6 +55,7 @@ const ForgotPassword = ({ setIsLoginForm, setIsForgot, country }) => {
     })
     const [availableMethods, setAvailableMethods] = useState({ sms: true })
     const whatsappAvailable = currentMethod === "sms" && availableMethods?.['whatsapp'];
+    const canSwitchMethod = whatsappAvailable || availableMethods?.sms;
 
     const changePassHandler = (e) => {
         const { name, value } = e.target;
@@ -361,7 +362,7 @@ const ForgotPassword = ({ setIsLoginForm, setIsForgot, country }) => {
                                                 />
                                             ))}
                                         </div>
-                                        <div style={{ position: "relative" }}>
+                                        {canSwitchMethod && <div style={{ position: "relative" }}>
                                             <span
                                                 onClick={() => {
                                                     if (resendTimer === 0) {
@@ -394,7 +395,7 @@ const ForgotPassword = ({ setIsLoginForm, setIsForgot, country }) => {
                                             </span>
 
                                             {showToolTip && <span style={{ fontWeight: 600, fontSize: '10px', backgroundColor: "gray", padding: '1px 3px', borderRadius: "3px", color: 'white', position: "absolute", bottom: "-20px", right: '-40px' }}>{t("Wait For the Timer")}</span>}
-                                        </div>
+                                        </div>}
                                         <span style={{ fontSize: "12px", color: "#aeaeae", fontWeight: 600 }}
                                             className={styles.resend_text}
                                         >
