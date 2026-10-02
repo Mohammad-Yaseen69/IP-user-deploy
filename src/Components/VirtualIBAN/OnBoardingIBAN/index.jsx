@@ -30,6 +30,7 @@ import {
     draftFilesToIbanDocs,
     isDraftFileRef,
 } from '../../../utils/Data/businessDraft'
+import { useIdempotency } from '../../../hooks/Payments/useIdempotency';
 
 const STEPS_BUSINESS = ['landing', 'selection', 'account', 'company', 'activity', 'ownership', 'documents', 'review']
 const STEPS_INDIVIDUAL = ['landing', 'selection', 'account', 'review']
@@ -104,6 +105,7 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
     const { t } = useTranslation()
     const can = usePermission()
     const isMobile = useMediaQuery('(max-width:600px)');
+    const { getKey, reset } = useIdempotency()
 
     const canCreateIban = can("virtual-iban.account.create")
     const { userDetails, authHeader } = useContext(UserContext)
@@ -284,6 +286,7 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
     }
 
     const goBack = (target) => {
+        reset()
         if (typeof target === 'string' && stepOrder.includes(target)) {
             dispatch({ type: 'SET_STEP', payload: target })
             return
@@ -362,7 +365,7 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
             const response = await axios.post(
                 `${import.meta.env.VITE_IP_DEV_API}/api/iban-fees/confirm-activation`,
                 formData,
-                { headers: { ...authHeader, 'Content-Type': 'multipart/form-data' } }
+                { headers: { ...authHeader, 'Content-Type': 'multipart/form-data', "Idempotency-Key": getKey() } }
             )
 
             const dec = decryptData(response.data?.data)
@@ -623,7 +626,7 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
                 />
             )}
 
-            <Modal style={{ maxWidth: isMobile ? '90%' : 'auto' }} isOpen={showOtpModal} toggle={() => setShowOtpModal(false)} centered>
+            <Modal style={{ maxWidth: isMobile ? '90%' : 'auto' }} isOpen={showOtpModal} toggle={() => { reset(); setShowOtpModal(false) }} centered>
                 <ModalBody>
                     <OTPConfirmation
                         variant="card"
@@ -631,7 +634,7 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
                         setAuthType={setCodeType}
                         methods={otpMethods}
                         callback={handleVerifyOtpSubmit}
-                        hideOtp={() => setShowOtpModal(false)}
+                        hideOtp={() => { reset(); setShowOtpModal(false) }}
                         setter={() => { }}
                         resendHandler={(method) => {
                             const nextCodeType = method || codeType

@@ -42,9 +42,8 @@ const FeeModelRequestModal = ({ isOpen, toggle }) => {
                 headers: authHeader,
             });
             const dec = decryptData(res.data?.data);
-            if (Array.isArray(dec)) {
-                setRequests(dec);
-            }
+            const list = Array.isArray(dec?.data) ? dec.data : Array.isArray(dec) ? dec : [];
+            setRequests(list);
         } catch (err) {
             console.error("Error fetching agent fee requests:", err);
         } finally {
@@ -57,7 +56,6 @@ const FeeModelRequestModal = ({ isOpen, toggle }) => {
             fetchRequests();
         }
     }, [isOpen, fetchRequests]);
-
     const handleFeeChange = (index, field, value) => {
         const updated = [...feeSchedule];
         const targetItem = updated[index];
