@@ -25,10 +25,11 @@ const Channels = ({
   const [showCardMaintenanceModal, setShowCardMaintenanceModal] = useState(false);
   const [showVerificationModal, setShowVerificationModal] = useState(false);
   const { data: methods, isLoading } = useQuery({
-    queryKey: ["AvailableMethods"],
+    // Own cache key: the KYC screen caches the same endpoint without purpose=topup.
+    queryKey: ["AvailableMethods", "topup"],
     queryFn: () =>
       apiWrapper({
-        endpoint: `/api/payment/get-available-methods/${userDetails?._id}/${userDetails?.country_iso_code}`,
+        endpoint: `/api/payment/get-available-methods/${userDetails?._id}/${userDetails?.country_iso_code}?purpose=topup`,
       }).then((dec) => dec?.data),
     retry: 3,
   });
