@@ -1,5 +1,3 @@
-// Fee schedule helpers shared by the create form and the edit modal.
-// All flat amounts are EUR; percentages are percent of the transaction amount.
 
 export const DEFAULT_FEE_ITEMS = [
     { id: "iban_activation", name: "IBAN Activation Fee (One-Time)", flatEuro: 500, percentAmount: 0 },
@@ -28,8 +26,6 @@ export const updateFeeItem = (schedule, index, field, value) => {
 export const sanitizeFeeSchedule = (schedule) =>
     schedule.map(item => (NO_PERCENT_FEE_IDS.includes(item.id) ? { ...item, percentAmount: 0 } : item));
 
-// Builds an editable schedule from a saved request: every default row is present, saved values win.
-// Only the editable fields are kept, so admin-set commission fields are never sent back.
 export const scheduleFromRequest = (savedSchedule = []) =>
     DEFAULT_FEE_ITEMS.map(defaultItem => {
         const saved = savedSchedule.find(f => f.id === defaultItem.id);
