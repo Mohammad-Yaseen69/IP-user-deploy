@@ -142,7 +142,6 @@ const FeeModelRequests = () => {
         editFeeRequest({
             requestId: editingRequest._id,
             idempotencyKey: getEditKey(),
-            // Same shape as the create request: flat amounts in EUR, percentages in %.
             payload: {
                 account_id: userDetails?._id,
                 title: editTitle.trim(),

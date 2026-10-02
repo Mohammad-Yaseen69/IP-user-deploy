@@ -2,7 +2,6 @@ import { useTranslation } from 'react-i18next';
 import { Button, FormGroup, Input, Label, Table } from 'reactstrap';
 import { NO_PERCENT_FEE_IDS } from './feeSchedule';
 
-// Stops a minus sign (or exponent like 1e-5) being typed into fee inputs.
 const blockNegativeInput = (e) => {
     if (['-', 'e', 'E'].includes(e.key)) e.preventDefault();
 };
