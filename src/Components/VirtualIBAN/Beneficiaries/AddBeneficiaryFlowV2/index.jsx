@@ -155,19 +155,39 @@ const AddBeneficiaryFlowV2 = ({
 
         const channelDetails = existingBeneficiary?.bank_details?.[0]?.extras ?? existingBeneficiary?.mobile_wallet?.[0]?.extras ?? existingBeneficiary?.crypto?.[0]?.extras;
 
+        const beneficiaryData = isBeneficiaryMode
+            ? prefillEditBag(existingBeneficiary)
+            : prefillBeneficiaryBag(existingBeneficiary);
+
+        // Business Name & Type Extraction
+        const companyVal = existingBeneficiary.company_name ||
+            existingBeneficiary.legalName ||
+            existingBeneficiary.legal_name ||
+            beneficiaryData?.company_name ||
+            beneficiaryData?.legalName || '';
+
+        const recipientType = existingBeneficiary.beneficiary_type ||
+            existingBeneficiary.recipient_type ||
+            (companyVal ? 'business' : 'individual');
+
         setForm({
             ...INITIAL_FORM,
             ...fixed,
-            recipient_type: existingBeneficiary.beneficiary_type || 'individual',
-            country: existingBeneficiary.country_iso_code || initialCountry || '',
+            recipient_type: recipientType,
+            country: existingBeneficiary.country_iso_code || existingBeneficiary.country || initialCountry || '',
             service_id: channelDetails?.service_id,
             method: channelDetails?.method,
-            channel: channelDetails,
-            beneficiary: isBeneficiaryMode
-                ? prefillEditBag(existingBeneficiary)
-                : prefillBeneficiaryBag(existingBeneficiary),
+            channel: channelDetails || {},
+            beneficiary: {
+                ...beneficiaryData,
+                firstname: beneficiaryData?.firstname || existingBeneficiary.first_name || existingBeneficiary.firstname || '',
+                lastname: beneficiaryData?.lastname || existingBeneficiary.last_name || existingBeneficiary.lastname || '',
+                // Dono keys set hongi taaki ContextCard, Thunes aur BVNK teeno ko correct value mile
+                legalName: companyVal,
+                company_name: companyVal,
+            },
         });
-    }, [open, mode, existingBeneficiary, fixedMethod, initialCountry]);
+    }, [open, mode, existingBeneficiary, fixedMethod, initialCountry, isBeneficiaryMode, stages]);
 
     const isTransferMethod = !!THUNES_SERVICE_BY_METHOD[form.method];
 
@@ -571,69 +591,69 @@ const AddBeneficiaryFlowV2 = ({
     return (
         <Modal open={open} onClose={handleClose} aria-labelledby="add-beneficiary-v2">
             <MuiPickersUtilsProvider utils={DateMomentUtils}>
-            <div className={styles.root}>
-                <div className={styles.modal}>
-                    <div className={styles.header}>
-                        <div className={styles.titleRow}>
-                            <div className={styles.titleText}>
-                                <h2 className={styles.title} id="add-beneficiary-v2">
-                                    {MODE_TITLES[mode] || MODE_TITLES.create}
-                                </h2>
-                                <p className={styles.subtitle}>{subtitle()}</p>
+                <div className={styles.root}>
+                    <div className={styles.modal}>
+                        <div className={styles.header}>
+                            <div className={styles.titleRow}>
+                                <div className={styles.titleText}>
+                                    <h2 className={styles.title} id="add-beneficiary-v2">
+                                        {MODE_TITLES[mode] || MODE_TITLES.create}
+                                    </h2>
+                                    <p className={styles.subtitle}>{subtitle()}</p>
+                                </div>
+                                <button type="button" className={styles.closeBtn} onClick={handleClose}>
+                                    <X size={16} />
+                                </button>
                             </div>
-                            <button type="button" className={styles.closeBtn} onClick={handleClose}>
-                                <X size={16} />
-                            </button>
-                        </div>
 
-                        {stages.length > 1 && (
-                            <Stepper
-                                steps={stages.map((item) => STAGE_LABELS[item])}
-                                current={stages.indexOf(stage) + 1}
-                            />
-                        )}
-                    </div>
-
-                    <div className={styles.body}>{renderBody()}</div>
-
-                    <div className={styles.footer}>
-                        <div className={styles.footerSide}>
-                            {stage === stages[0] ? (
-                                <button
-                                    type="button"
-                                    className={`${styles.btn} ${styles.btnGhost}`}
-                                    onClick={handleClose}
-                                >
-                                    {isViewMode ? 'Close' : 'Cancel'}
-                                </button>
-                            ) : (
-                                <button
-                                    type="button"
-                                    className={`${styles.btn} ${styles.btnGhost}`}
-                                    onClick={goBack}
-                                    disabled={saving}
-                                >
-                                    <ArrowLeft size={20} />
-                                    Back
-                                </button>
+                            {stages.length > 1 && (
+                                <Stepper
+                                    steps={stages.map((item) => STAGE_LABELS[item])}
+                                    current={stages.indexOf(stage) + 1}
+                                />
                             )}
                         </div>
 
-                        <div className={styles.footerSide}>
-                            {!isViewMode && (
-                                <button
-                                    type="button"
-                                    className={`${styles.btn} ${styles.btnPrimary}`}
-                                    onClick={goNext}
-                                    disabled={primaryDisabled()}
-                                >
-                                    {primaryLabel()}
-                                </button>
-                            )}
+                        <div className={styles.body}>{renderBody()}</div>
+
+                        <div className={styles.footer}>
+                            <div className={styles.footerSide}>
+                                {stage === stages[0] ? (
+                                    <button
+                                        type="button"
+                                        className={`${styles.btn} ${styles.btnGhost}`}
+                                        onClick={handleClose}
+                                    >
+                                        {isViewMode ? 'Close' : 'Cancel'}
+                                    </button>
+                                ) : (
+                                    <button
+                                        type="button"
+                                        className={`${styles.btn} ${styles.btnGhost}`}
+                                        onClick={goBack}
+                                        disabled={saving}
+                                    >
+                                        <ArrowLeft size={20} />
+                                        Back
+                                    </button>
+                                )}
+                            </div>
+
+                            <div className={styles.footerSide}>
+                                {!isViewMode && (
+                                    <button
+                                        type="button"
+                                        className={`${styles.btn} ${styles.btnPrimary}`}
+                                        onClick={goNext}
+                                        disabled={primaryDisabled()}
+                                    >
+                                        {primaryLabel()}
+                                    </button>
+                                )}
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
             </MuiPickersUtilsProvider>
         </Modal>
     );
