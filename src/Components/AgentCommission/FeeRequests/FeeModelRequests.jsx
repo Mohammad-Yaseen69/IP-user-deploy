@@ -301,33 +301,47 @@ const FeeModelRequests = () => {
                                                 </div>
 
                                                 {req.status === 'approved' && (
-                                                    <div style={{ background: '#ECFDF5', padding: '14px 16px', borderRadius: '8px', border: '1px solid #A7F3D0', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                                            <div>
-                                                                <div style={{ fontSize: '11px', color: '#065F46', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-                                                                    {t("APPROVED COMMISSION")}
+                                                    (() => {
+                                                        const cType = req.comissionType || req.created_pack_id?.comissionType || 'percentage';
+                                                        const cVal = req.feesCommisionValue ?? req.created_pack_id?.feesCommisionValue ?? 0;
+                                                        const cFix = req.feesCommisionFixed ?? req.created_pack_id?.feesCommisionFixed ?? 0;
+
+                                                        const hasCommission = cVal > 0 || cFix > 0;
+
+                                                        return (
+                                                            <div style={{
+                                                                background: hasCommission ? '#ECFDF5' : '#F3F4F6',
+                                                                padding: '14px 16px',
+                                                                borderRadius: '8px',
+                                                                border: `1px solid ${hasCommission ? '#A7F3D0' : '#E5E7EB'}`,
+                                                                display: 'flex',
+                                                                flexDirection: 'column',
+                                                                gap: '8px'
+                                                            }}>
+                                                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                                                    <div>
+                                                                        <div style={{ fontSize: '11px', color: hasCommission ? '#065F46' : '#4B5563', fontWeight: 700, textTransform: 'uppercase' }}>
+                                                                            {t("APPROVED COMMISSION")}
+                                                                        </div>
+                                                                        <div style={{ fontSize: '18px', fontWeight: 800, color: hasCommission ? '#047857' : '#374151', marginTop: '2px' }}>
+                                                                            {cType === 'both' ? `${cVal}% + €${cFix}` : cType === 'fixed' ? `€${cFix > 0 ? cFix : cVal}` : `${cVal}%`}
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <Badge color={hasCommission ? "success" : "secondary"} pill style={{ padding: '6px 12px', fontSize: '11px' }}>
+                                                                        {hasCommission ? t("Commission Active") : t("No Commission")}
+                                                                    </Badge>
                                                                 </div>
-                                                                <div style={{ fontSize: '18px', fontWeight: 800, color: '#047857', marginTop: '2px' }}>
-                                                                    {(() => {
-                                                                        const cType = req.comissionType || req.created_pack_id?.comissionType || 'percentage';
-                                                                        const cVal = req.feesCommisionValue ?? req.created_pack_id?.feesCommisionValue ?? 0;
-                                                                        const cFix = req.feesCommisionFixed ?? req.created_pack_id?.feesCommisionFixed ?? 0;
-                                                                        if (cType === 'both') return `${cVal}% + €${cFix}`;
-                                                                        if (cType === 'fixed') return `€${cFix > 0 ? cFix : cVal}`;
-                                                                        return `${cVal}%`;
-                                                                    })()}
+
+                                                                <div style={{ fontSize: '12px', color: hasCommission ? '#047857' : '#6B7280' }}>
+                                                                    {hasCommission
+                                                                        ? t("You earn this commission payout on all fees collected from clients under this referral model.")
+                                                                        : t("This model is active with standard zero-commission payout.")}
                                                                 </div>
                                                             </div>
-                                                            <Badge color="success" pill style={{ padding: '6px 12px', fontSize: '11px' }}>
-                                                                {t("Commission Active")}
-                                                            </Badge>
-                                                        </div>
-                                                        <div style={{ fontSize: '12px', color: '#047857' }}>
-                                                            {t("You earn this commission payout on all fees collected from clients under this referral model.")}
-                                                        </div>
-                                                    </div>
+                                                        );
+                                                    })()
                                                 )}
-
                                                 {req.status === 'approved' && req.model_code && (
                                                     <div style={{ background: '#EEF2FF', padding: '14px 16px', borderRadius: '8px', border: '1px solid #C7D2FE', display: 'flex', flexDirection: 'column', gap: '10px' }}>
                                                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>

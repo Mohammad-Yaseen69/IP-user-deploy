@@ -94,16 +94,18 @@
     background: #FFFFFF;
     border-radius: 12px;
     border: 1px solid #EAECF0;
-    overflow: hidden;
+    overflow: auto;
+    width: 100%;
 }
 
 .tableHeaderRow,
 .tableDataRow {
     display: grid;
-    grid-template-columns: 1.8fr 1fr 1fr 1.3fr 1.1fr 1fr 1fr 0.9fr;
+    grid-template-columns: minmax(220px, 1.8fr) minmax(110px, 1fr) minmax(120px, 1fr) minmax(160px, 1.3fr) minmax(130px, 1.1fr) minmax(110px, 1fr) minmax(100px, 1fr) minmax(80px, 0.8fr);
     align-items: center;
     padding: 14px 24px;
     gap: 12px;
+    min-width: 1200px;
 }
 
 .feePackBadge {
@@ -308,6 +310,23 @@
     background: #a87500;
 }
 
+.filterSelect {
+    padding: 8px 10px;
+    border-radius: 8px;
+    border: 1px solid #D1D5DB;
+    font-size: 13px;
+    background-color: #FFFFFF;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.sortToggleBtn {
+    padding: 8px 10px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
 @media (max-width: 650px) {
     .missingDocumentsCard {
         overflow-x: auto;
@@ -315,5 +334,27 @@
 
     .missingDocumentsTable {
         min-width: 490px;
+    }
+}
+
+@media (max-width: 480px) {
+    .actionGroup {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        width: 100%;
+    }
+
+    .filterSelect {
+        width: 100%;
+        padding: 8px 10px;
+        font-size: 12px;
+    }
+
+    .sortToggleBtn {
+        width: 100%;
+        justify-content: center;
+        padding: 8px 10px;
+        font-size: 12px;
     }
 }

@@ -7,19 +7,17 @@
 .inp {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: 8px;
 }
 
 .inp label {
-    margin-bottom: 0;
-    color: #000;
-    leading-trim: both;
-    text-edge: cap;
-    font-family: Manrope;
+    margin: 0;
+    color: #0C0A20;
+    font-family: Inter;
     font-size: 14px;
-    font-style: normal;
-    font-weight: 600;
+    font-weight: 500;
     line-height: 150%;
+    letter-spacing: -0.42px;
 }
 
 .input {
@@ -28,13 +26,19 @@
 }
 
 .input input {
+    height: 48px;
+    padding: 8px 12px;
     width: 100%;
-    padding: .8rem 1rem;
-    border-radius: 8px;
+    border-radius: 6px;
+    border: 1px solid #E4E3E5;
     background: #FFF;
-    box-shadow: 0px -0.5px 7.2px 0px rgba(0, 0, 0, 0.20), 0px 0px 4px 6px #FDFDFD inset;
-    outline: none;
+    box-shadow: 0 1px 1.5px 0 rgba(44, 54, 53, 0.03);
     padding-right: 2.4rem;
+    outline: none;
+}
+
+.input input:focus {
+    border: 1px solid #4A32E3;
 }
 
 .input div {
@@ -48,64 +52,30 @@
     z-index: 10;
 }
 
-.password_guide {
+.pillsContainer {
     display: flex;
-    padding: 1.1rem;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 1.1rem;
-    border-radius: 7.295px;
-    background: #F0F0F0;
+    gap: 6px;
+    flex-wrap: wrap;
 }
 
-.password_guide span {
-    color: #000;
-    leading-trim: both;
-    text-edge: cap;
-    font-family: Manrope;
-    font-size: .66rem;
-    font-style: normal;
-    font-weight: 600;
-    line-height: 170%;
-    /* 21.704px */
-}
-
-.regex_item {
+.pill {
     display: flex;
+    padding: 8px 10px;
     align-items: center;
-    gap: .7rem;
+    gap: 6px;
+    border-radius: 100px;
+    background: #F3F3F4;
+    color: #141414;
+    font-family: Inter;
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 20px;
+    letter-spacing: -0.33px;
+    width: fit-content;
+    height: 24px;
 }
 
-.regex_item span {
-    color: #1F1F1F;
-    leading-trim: both;
-    text-edge: cap;
-    font-family: Manrope;
-    font-size: .66rem;
-    font-style: normal;
-    font-weight: 600;
-    line-height: 190%;
-}
-
-.cross,
-.check {
-    width: 14px;
-    height: 14px;
-    flex-shrink: 0;
-    background-color: #FE3D3D;
-    border-radius: 10px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.check {
-    background-color: #19AE28;
-}
-
-.regex_grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 1.1rem;
-    padding-left: 1.25rem;
+.activePill {
+    background: #EDFAF0;
+    color: #097224;
 }

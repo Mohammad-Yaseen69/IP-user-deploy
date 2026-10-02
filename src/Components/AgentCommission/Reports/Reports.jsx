@@ -9,6 +9,7 @@ import { useTranslation } from 'react-i18next';
 import useWindowWidth from '../../../utils/useWindowWidth';
 import TopRight from '../../topRight';
 import styles from '../styles/reports.module.css';
+import { getInitials } from '../../../utils/Functions/getInitials';
 
 const CommissionEarnedChart = () => {
     const { t } = useTranslation();
@@ -55,6 +56,7 @@ const CommissionEarnedChart = () => {
                 formatter: (val) => `${val}k`,
             },
             max: 7,
+            min: 1,
             tickAmount: 4,
         },
         grid: {
@@ -104,7 +106,7 @@ const VolumeByProductChart = () => {
         { name: 'SWIFT', price: '$45,15.00', color: '#904CBC', value: 20 },
         { name: 'Crypto', price: '$90,30.00', color: '#6EC1E1', value: 30 },
         { name: 'IBAN activ.', price: '$75,20.00', color: '#5926F0', value: 25 },
-        { name: 'Cards', price: '$85,22.00', color: '#EDEDED', value: 15 },
+        { name: 'Cards', price: '$85,22.00', color: '#d5d5d5', value: 15 },
         { name: 'Remittance', price: '$120,40.00', color: '#9FE870', value: 10 },
     ];
 
@@ -196,7 +198,7 @@ const SubAgentRanking = () => {
                             <tr key={i}>
                                 <td>
                                     <div className={styles.agentCell}>
-                                        <div className={`${styles.agentAvatar} ${agent.avatarCls}`}>{t("SC")}</div>
+                                        <div className={`${styles.agentAvatar} ${agent.avatarCls}`}>{getInitials(agent?.name)}</div>
                                         <span>{agent.name}</span>
                                     </div>
                                 </td>
@@ -233,7 +235,7 @@ const RiskDistribution = () => {
                     <div key={r.label} className={styles.riskRow}>
                         <div className={styles.riskRowTop}>
                             <span className={styles.riskLabel}>{t(r.label)}</span>
-                            <span className={`${styles.riskBadge} ${r.badgeCls}`}>{r.count}</span>
+                            <span className={`${styles.riskBadge} ${r.badgeCls}`}>{r.count}%</span>
                         </div>
                         <div className={styles.riskBarTrack}>
                             <div

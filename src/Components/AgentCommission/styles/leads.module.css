@@ -187,48 +187,19 @@
 }
 
 .tableContainer {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: flex-start;
-    flex: 1 0 0;
-    align-self: stretch;
-    border-radius: 12px;
-    width: 100%;
-}
-
-.tableWrapper {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    align-self: stretch;
     width: 100%;
     overflow-x: auto;
-    min-width: 1000px;
-}
-
-.tableHeaderRow,
-.tableDataRow {
-    display: grid;
-    grid-template-columns: minmax(180px, 2fr) minmax(85px, 0.8fr) minmax(95px, 0.9fr) minmax(150px, 1.4fr) minmax(180px, 1.6fr) minmax(140px, 1.2fr) minmax(85px, 0.8fr);
-    align-items: center;
-    align-self: stretch;
-    width: 100%;
+    table{
+        width: 100%;
+    }
 }
 
 .tableHeaderRow {
     background: var(--bg-surface, #EFF1F6);
-    border-bottom: 1px solid #EAECF0;
-    margin-bottom: 10px;
-    border-radius: 10px;
 }
 
 .thCell {
-    display: flex;
     padding: 10px 16px;
-    flex-direction: row;
-    align-items: center;
-    align-self: stretch;
     color: var(--gray-gray-600, #6E7687);
     font-family: Inter;
     font-size: 13.5px;
@@ -239,6 +210,16 @@
     white-space: nowrap;
 }
 
+.tableHeaderRow:first-child th:first-child {
+    border-top-left-radius: 12px;
+    border-bottom-left-radius: 12px;
+}
+
+.tableHeaderRow:first-child th:last-child {
+    border-bottom-right-radius: 12px;
+    border-top-right-radius: 12px;
+}
+
 .tableDataRow {
     border-bottom: 1px solid #EAECF0;
 }
@@ -246,22 +227,29 @@
 .tableBody {
     background: var(--bg-surface, #fff);
     border-radius: 10px;
-    width: 100%;
+}
+
+.tableBody::before {
+    content: "";
+    display: block;
+    height: 10px;
+    background-color: #f8f9fa;
 }
 
 .tdCell {
-    display: flex;
     padding: 14px 16px;
-    align-items: center;
     color: #475467;
     font-size: 13.5px;
     font-weight: 400;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    width: 100%;
 }
 
 .clientCell {
+    display: flex;
+    align-items: center;
     gap: 10px;
     white-space: nowrap;
     overflow: hidden;
@@ -362,20 +350,18 @@
 }
 
 .paginationRow {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    padding: 12px 24px;
-    width: 100%;
-    background: #FFF;
     border-top: 1px solid #EAECF0;
-    align-self: stretch;
+    background-color: #fff;
 }
 
 .paginationPages {
+    padding: 12px 24px;
+    width: 100%;
+    background: #FFF;
     display: flex;
     align-items: center;
     gap: 4px;
+    justify-content: end;
 }
 
 .pageNumber,
@@ -398,4 +384,54 @@
     background: #F4F3FF !important;
     color: #5926F0 !important;
     font-weight: 600;
+}
+
+@media (max-width: 780px) {
+    .buttons {
+        display: flex;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        padding-bottom: 8px;
+        gap: 6px;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+    }
+
+    .buttons::-webkit-scrollbar {
+        display: none;
+    }
+
+    .button {
+        flex-shrink: 0;
+        height: 30px;
+        padding: 6px 12px;
+        font-size: 11px;
+    }
+
+    .controlsRow {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+    }
+
+    .searchWrapper {
+        width: 100%;
+    }
+
+    .searchInput {
+        height: 36px;
+        font-size: 13px;
+    }
+
+    .actionGroup {
+        padding-top: 5px;
+    }
+
+    .secondaryBtn {
+        width: 50%;
+    }
+
+    .primaryBtn {
+        width: 50%;
+    }
 }
