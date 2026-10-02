@@ -7,6 +7,7 @@ import SidebarProgress from './SidebarProgress'
 import StepProgress from './StepProgress'
 import { useMediaQuery } from '@mui/material'
 import AlertBox from './AlertBox'
+import useStepValidation from '../../../../hooks/useStepValidation'
 
 const DocumentsStep = ({ onNext, onBack, userType, data = {}, userDetails, companyDetails, currentStep }) => {
     const { t } = useTranslation()
@@ -49,10 +50,6 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {}, userDetails, compa
 
     const openFilePicker = (key) => {
         inputRefs.current[key]?.click()
-    }
-
-    const handleContinue = () => {
-        onNext({ files }, 'documents')
     }
 
     const steps = [
@@ -140,11 +137,17 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {}, userDetails, compa
             return keywords.some(kw => name.includes(kw))
         })
     }
+    const rules = Object.fromEntries(
+        requiredDocKeys.map((k) => [k, (f) => !f[k] && !isKeyVerifiedFromKyb(k)])
+    )
+    const { isValid: isDocsValid, err, validate } = useStepValidation(files, rules)
+
     const uploadedCount = Object.keys(files).length
     const progressPercent = Math.min(100, Math.round((uploadedCount / requiredDocKeys.length) * 100))
     const renderUploadControl = (key) => {
         const selectedFile = files[key]
         const isVerified = isKeyVerifiedFromKyb(key)
+        const isRequired = requiredDocKeys.includes(key)
 
         return (
             <div className={styles.right}>
@@ -164,7 +167,11 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {}, userDetails, compa
                     </span>
                 ) : (
                     <>
-                        <span className={styles.required}>{t('REQUIRED')}</span>
+                        <span className={isRequired ? styles.required : styles.optional}
+                        style={isRequired && err(key,true) ? { backgroundColor:  '#ff000021', color: 'red' } : {}}
+                        >
+                            {isRequired ? t('REQUIRED') : t('OPTIONAL')}
+                        </span>
                         <button type="button" className={styles.uploadBtn} onClick={() => openFilePicker(key)}>
                             <Upload size={10} /> {t('Upload')}
                         </button>
@@ -180,7 +187,10 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {}, userDetails, compa
         )
     }
 
-    const isDocsValid = requiredDocKeys.every(k => Boolean(files[k]) || isKeyVerifiedFromKyb(k))
+     const handleContinue = () => {
+       if (validate()) onNext({ files }, 'documents')
+    }
+
     return (
         <div className={styles.onboardingLayout}>
             <div>
@@ -456,7 +466,7 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {}, userDetails, compa
                 </button>
                 <button
                     onClick={handleContinue}
-                    disabled={!isDocsValid}
+                    aria-disabled={!isDocsValid}
                     className={styles.continueButton}
                     style={{ opacity: !isDocsValid ? 0.5 : 1, cursor: !isDocsValid ? 'not-allowed' : 'pointer' }}
                 >
