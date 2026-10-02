@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { useCallback, useContext, useEffect, useState } from 'react';
-import { CheckCircle, Clock, Copy, Plus, Shield, XCircle } from 'react-feather';
+import { CheckCircle, Clock, Copy, Plus, Shield, Trash, XCircle } from 'react-feather';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 import { Badge, Button, Card, CardBody, CardHeader, Col, FormGroup, Input, Label, Row, Spinner, Table } from 'reactstrap';
@@ -10,6 +10,9 @@ import { encryptData } from '../../../Helper/EssentilaMethods/Encryption';
 import useWindowWidth from '../../../utils/useWindowWidth';
 import TopRight from '../../topRight';
 import styles from '../styles/index.module.css';
+import { IconButton, Stack } from '@mui/material';
+import { useMutation } from '@tanstack/react-query';
+import { apiWrapper } from '../../../utils/Functions/apiWrapper';
 
 const DEFAULT_FEE_ITEMS = [
     { id: "iban_activation", name: "IBAN Activation Fee (One-Time)", flatEuro: 500, percentAmount: 0 },
@@ -126,6 +129,24 @@ const FeeModelRequests = () => {
         }
     };
 
+    const { mutate: deleteRequest, isPending } = useMutation({
+        mutationFn: (requestId) =>
+            apiWrapper({
+                endpoint: `/api/iban-fees/delete-request-pack/${requestId}`,
+                method: "DELETE",
+                isEncrypted: true,
+                isDecrypted: true,
+            }),
+        onSuccess: (res) => {
+            fetchRequests();
+            toast.success(res?.message ?? t("Request deleted successfully."))
+        },
+        onError: (error) => {
+            const message = error?.message || error?.data?.message
+            toast.error(message ?? t("Failed to delete request."))
+        },
+    })
+
     return (
         <div className={styles.container}>
             <div className={styles.top}>
@@ -229,7 +250,14 @@ const FeeModelRequests = () => {
                                                         {t("Requested on")}: {new Date(req.createdAt).toLocaleDateString()}
                                                     </span>
                                                 </div>
-                                                <div>
+                                                <Stack direction={'row'} alignItems={'center'} gap={'8px'}>
+                                                    <IconButton 
+                                                        sx={{ bgcolor:'#e64067',color:'white', '&:hover':{ color: 'black'} }}
+                                                        onClick={() => deleteRequest(req._id)}
+                                                        disabled={isPending}
+                                                    >
+                                                        <Trash size={16} />
+                                                    </IconButton>
                                                     {req.status === 'pending' && (
                                                         <Badge color="warning" pill style={{ padding: '6px 12px', fontSize: '12px' }}>
                                                             <Clock size={12} style={{ marginRight: '4px' }} /> {t("PENDING REVIEW")}
@@ -245,7 +273,7 @@ const FeeModelRequests = () => {
                                                             <XCircle size={12} style={{ marginRight: '4px' }} /> {t("REJECTED")}
                                                         </Badge>
                                                     )}
-                                                </div>
+                                                </Stack>
                                             </CardHeader>
                                             <CardBody style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '14px' }}>
                                                 <div style={{ background: '#F9FAFB', padding: '12px 16px', borderRadius: '8px', border: '1px solid #F3F4F6' }}>
