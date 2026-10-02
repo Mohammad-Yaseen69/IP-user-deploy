@@ -479,6 +479,9 @@ const KYB = () => {
                 } else {
                     await processWithoutCharge()
                 }
+            } else {
+                 toast.success(decrypted?.message);
+                 verifyToken(true);
             }
 
             console.log(decrypted)

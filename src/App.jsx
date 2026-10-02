@@ -36,7 +36,7 @@ const App = () => {
     // unique id for this tab/instance so we can ignore our own messages
     const instanceId = typeof crypto !== 'undefined' && crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random()}`;
     let appInUse = false;
-    const paths = ["/profile/", "/pay/", "/invoice"];
+    const paths = ["/profile/", "/pay/", "/invoice", "/paytently/"];
 
     const closeWindow = (e) => {
       try {
