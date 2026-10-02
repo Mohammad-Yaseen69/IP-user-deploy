@@ -84,7 +84,6 @@ const Login = ({ country, setIsLoginForm, }) => {
     const [isDataLoaded, setIsDataLoaded] = useState(false);
     const [otpDeliveryInfo, setOtpDeliveryInfo] = useState({})
     // Country the user picked in the dropdown; PhoneInput remounts when going back from the password step
-    const [phoneCountry, setPhoneCountry] = useState(null)
 
     const normalizeCredential = (value) => (value ?? "").toString().trim().toLowerCase();
     const getResolvedCredential = () => {
@@ -1121,14 +1120,13 @@ const Login = ({ country, setIsLoginForm, }) => {
                 </ModalFooter>
             </Modal>
                     
-            {step === 1 ?              
                 <form
                     autoComplete="off"
                     onSubmit={(e) => {
                         loginHandler(e, undefined, false, true)
                     }}
                     className={styles.login_form}
-                    style={width > 1000 ? { opacity: step === 1 ? 1 : 0, pointerEvents: step === 1 ? "all" : "none" } : { display: step === 1 ? "inherit" : "none" }}
+                    style={{ display: step === 1 ? "inherit" : "none" }}
                 >
                     <div className={styles.right}>
                         <div className={styles.topSection}>
@@ -1187,9 +1185,10 @@ const Login = ({ country, setIsLoginForm, }) => {
                                 <TextField    
                                     className={styles.inputField}
                                     type={showPassword ? "text" : "password"}
-                                    placeholder={t(" Password")}
+                                    placeholder={t("Password")}
                                     value={password} onChange={e => setPassword(e.target.value)}
                                     name="password"
+                                    disabled={isPressed}
                                     InputProps={{
                                         startAdornment: (
                                             <InputAdornment position="start">
@@ -1218,7 +1217,7 @@ const Login = ({ country, setIsLoginForm, }) => {
                         }
                             <span className={styles.para}>{t("By logging in, you agree to the terms outlined in InstaPay's Privacy Policy.")}</span>
                             <button type="submit" className={styles.form_btn} disabled={isLoginError || isPressed || !isCredentialValid}>
-                                {t('Login')}
+                                {isPressed ? t("Processing") : t('Login')}
                             </button>
                             <Stack direction={'row'} padding={'8px 12px'} justifyContent={'space-between'}>
                                 <div
@@ -1229,6 +1228,7 @@ const Login = ({ country, setIsLoginForm, }) => {
                                             setEmail("")
                                             setPassword("")
                                             setProfileLockTime(0)
+                                            isQuickLoginRef.current = false
                                         } else {
                                         setLoginMethod(loginMethod === "email" ? "phone" : "email")
                                         localStorage.setItem("loginWith", loginMethod === "email" ? "phone" : "email")
@@ -1267,7 +1267,7 @@ const Login = ({ country, setIsLoginForm, }) => {
                         }
                     </div>
                 </form>
-            :
+            {step > 1 &&
                 <form onSubmit={verifyOTpHandler} className={styles.otp}>                
                     <div className={styles.right}>
                         <div className={`${styles.topSection} ${styles.otpTopSection}`}>
