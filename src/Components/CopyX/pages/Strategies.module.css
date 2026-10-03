@@ -1,0 +1,123 @@
+/* WEB-02 strategy catalog and WEB-02b strategy details drawer (Figma 14235:37040, 14235:37200). */
+
+.content { display: flex; flex-direction: column; gap: 32px; padding-top: 8px; }
+
+/* ------------------------------------ toolbar ------------------------------------ */
+
+.toolbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; }
+
+.search {
+    display: flex; align-items: center; gap: 12px; width: 280px; height: 40px; padding: 8px 12px;
+    border: 1px solid #EFF1F6; border-radius: 6px; background: #FFFFFF;
+    filter: drop-shadow(0 1px 0.75px rgba(27, 31, 42, 0.04));
+}
+.search img { width: 21.333px; height: 21.333px; flex-shrink: 0; }
+.search input {
+    flex: 1; min-width: 0; padding: 0; border: none; outline: none; background: transparent;
+    font: inherit; font-size: 14px; font-weight: 400; line-height: normal; color: #1B1F2A;
+}
+.search input::placeholder { color: #6E7687; opacity: 1; }
+.search:focus-within { border-color: #5926F0; }
+
+/* ------------------------------------ table ------------------------------------ */
+
+.tableCard { padding: 12px 16px; border-radius: 14px; background: #FFFFFF; }
+.tableWrap { overflow-x: auto; }
+
+.table { width: 100%; border-collapse: separate; border-spacing: 0; }
+.table th {
+    padding: 12px 16px; border-bottom: 1px solid #EFF1F6; text-align: left; white-space: nowrap;
+    font-size: 12px; line-height: 1.5; font-weight: 500; color: #6E7687;
+}
+.table td {
+    padding: 0 16px; border-bottom: 1px solid #EFF1F6; vertical-align: middle; white-space: nowrap;
+    font-size: 14px; line-height: normal; font-weight: 400; color: #1B1F2A;
+}
+/* Body is inset by 4px top and bottom inside the card. */
+.table tbody tr:first-child td { border-top: 4px solid transparent; }
+.table tbody tr:last-child td { border-bottom: 4px solid transparent; }
+
+.colTrack { width: 104.88px; }
+.colDrawdown { width: 119.89px; }
+.colFee { width: 143.31px; }
+.colCaret { width: 32px; height: 39.5px; padding: 0 !important; }
+
+.row { cursor: pointer; }
+.row:hover td { background: #FAFAFC; background-clip: padding-box; }
+.row:focus-visible { outline: 2px solid #5926F0; outline-offset: -2px; }
+
+.strategyCell { padding: 20px 16px !important; }
+.strategy { display: flex; align-items: center; gap: 12px; }
+.avatar {
+    width: 40px; height: 40px; border-radius: 10px; flex-shrink: 0; display: grid; place-items: center;
+    background: #5926F0; color: #FFFFFF; font-size: 14px; line-height: 1.5; font-weight: 600;
+}
+.strategyName { display: block; font-size: 14px; line-height: 1.5; font-weight: 600; color: #1B1F2A; }
+.strategyMeta { display: block; font-size: 12px; line-height: 1.5; font-weight: 400; color: #6E7687; }
+
+.caretCell { width: 32px; padding: 0 0 0 16px !important; }
+.caretCell img { display: block; width: 16px; height: 16px; }
+
+.empty { padding: 20px 16px !important; font-size: 12px !important; line-height: 1.5 !important; color: #5E5A6B !important; }
+
+.footnote { min-height: 17px; font-size: 12px; line-height: 1.5; font-weight: 400; color: #5E5A6B; }
+
+/* ------------------------------------ drawer ------------------------------------ */
+
+.scrim.scrim { background: rgba(23, 20, 31, 0.32); }
+.drawerPaper.drawerPaper {
+    max-width: 100vw; overflow: hidden; border-radius: 16px 0 0 16px;
+    box-shadow: -8px 0 40px 0 rgba(23, 20, 31, 0.16);
+}
+
+.drawer { width: 440px; }
+.drawerBody { flex: 1; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; gap: 24px; padding: 24px; }
+
+.drawerHead { display: flex; align-items: center; gap: 12px; }
+.drawerAvatar {
+    width: 54px; flex-shrink: 0; padding: 13.5px 0 14.5px; border-radius: 13px; text-align: center;
+    background: #5926F0; color: #FFFFFF; font-size: 18px; line-height: 1.2; font-weight: 600; letter-spacing: 0;
+}
+.drawerHeadText { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.drawerTitle { margin-bottom: -0.5px; font-size: 24px; line-height: 1.2; font-weight: 600; color: #17141F; }
+.drawerSub { font-size: 14px; line-height: normal; font-weight: 400; color: #8C889A; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.closeBtn {
+    width: 36px; height: 36px; flex-shrink: 0; display: grid; place-items: center; padding: 0;
+    border: none; border-radius: 6px; background: transparent; cursor: pointer;
+}
+.closeBtn:hover { background: #F3EFFF; }
+.closeBtn img { width: 20px; height: 20px; }
+
+.drawerLead { font-size: 14px; line-height: normal; font-weight: 400; color: #5E5A6B; }
+
+.metric {
+    display: flex; flex-direction: column; justify-content: space-between; gap: 4px; height: 80px;
+    padding: 20px 24px; border-radius: 14px; background: #F7F6FA;
+}
+.metricLabel { font-size: 12px; line-height: 1.5; font-weight: 400; color: #5E5A6B; }
+.metricValue { font-size: 14px; line-height: normal; font-weight: 400; color: #17141F; }
+
+.warning { display: flex; align-items: flex-start; gap: 12px; padding: 16px 18px; border-radius: 10px; background: #FFF4E0; }
+.warning img { width: 18px; height: 18px; flex-shrink: 0; }
+.warning p { flex: 1; min-width: 0; font-size: 14px; line-height: normal; font-weight: 400; color: #17141F; }
+
+.drawerFoot {
+    flex-shrink: 0; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 20px 24px;
+    border: 1px solid #EFF1F6; box-shadow: inset 0 1px 0 #E9E7EF;
+}
+.backBtn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 48px; padding: 0 24px;
+    border: none; border-radius: 6px; background: transparent; cursor: pointer;
+    font: inherit; font-size: 16px; line-height: normal; font-weight: 500; color: #5926F0;
+}
+.backBtn:hover { background: #F3EFFF; }
+.backBtn img { width: 20px; height: 20px; }
+
+@media (max-width: 900px) {
+    .search { width: 100%; }
+}
+
+@media (max-width: 480px) {
+    .drawer { width: 100vw; }
+    .drawerPaper.drawerPaper { border-radius: 0; }
+}
