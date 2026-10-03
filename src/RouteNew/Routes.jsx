@@ -78,6 +78,7 @@ const LogActivity = lazy(() => import("../Components/LogActivity"))
 const VirtyalBank = lazy(() => import("../Components/VirtualIBAN"))
 // const KYBOnboarding = lazy(() => import("../Components/KYBOnboarding/index"))
 const ThirdPartySenders = lazy(() => import("../Components/ThirdPartySenders"))
+const CopyX = lazy(() => import("../Components/CopyX"))
 const OnboardingIBAN = lazy(() => import("../Components/VirtualIBAN/OnBoardingIBAN"))
 const PriceActivation = lazy(() => import("../Components/VirtualIBAN/OnBoardingIBAN/PriceActivation/PriceActivation.jsx"))
 const MoveMoney = lazy(() => import("../Components/VirtualIBAN/OnBoardingIBAN/moveMoney/MoveMoney.jsx"))
@@ -203,6 +204,8 @@ export const routes = [
     { path: "/onboarding-IBAN/crypto", component: <PermissionRoute permission="virtual-iban.view"><CryptoActions /></PermissionRoute> },
     { path: "/crypto-wallets", component: <PermissionRoute permission="wallet.view"><CryptoWalletsPage /></PermissionRoute> },
     { path: "/third-party-senders", component: <PermissionRoute permission="payments.send-as-third-party.view"><ThirdPartySenders /></PermissionRoute> },
+    { path: "/copy-trading", component: <CopyX /> },
+    { path: "/copy-trading/:screen", component: <CopyX /> },
     { path: "*", component: <NotFound type='Page' /> }
 ]
 
