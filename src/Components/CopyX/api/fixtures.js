@@ -109,13 +109,28 @@ export const CRYPTO_ASSETS = [
 
 export const PAYOUT_PURPOSES = ["Personal savings", "Family support", "Living expenses", "Investment proceeds"]
 
-/* Broker-reported figures once copying is live (USD cents). */
-export const BROKER_SNAPSHOT = {
-    withdrawableCents: 11860,
-    positions: [
+/* Broker-reported figures per strategy once copying is live (USD cents). Each strategy has its own funds. */
+const POSITIONS = {
+    "atlas-fx": [
         { symbol: "EUR/USD", side: "Buy", lots: "0.04", open: "1.0842", current: "1.0865", pnlCents: 920 },
         { symbol: "GBP/USD", side: "Buy", lots: "0.03", open: "1.2710", current: "1.2727", pnlCents: 510 },
         { symbol: "USD/JPY", side: "Sell", lots: "0.02", open: "148.32", current: "148.46", pnlCents: -190 },
     ],
-    realizedCents: 0,
+    "meridian-gold": [
+        { symbol: "XAU/USD", side: "Buy", lots: "0.01", open: "2368.40", current: "2381.10", pnlCents: 1270 },
+        { symbol: "XAG/USD", side: "Buy", lots: "0.05", open: "29.12", current: "29.05", pnlCents: -350 },
+    ],
+    "baobab-indices": [
+        { symbol: "US500", side: "Buy", lots: "0.10", open: "5432.1", current: "5451.8", pnlCents: 1970 },
+        { symbol: "GER40", side: "Sell", lots: "0.05", open: "18710", current: "18742", pnlCents: -160 },
+    ],
+    "sahel-energy": [
+        { symbol: "UKOIL", side: "Buy", lots: "0.10", open: "79.40", current: "80.12", pnlCents: 720 },
+    ],
 }
+
+export const brokerSnapshotFor = (strategyId, capitalCents) => ({
+    withdrawableCents: Math.round(capitalCents * 0.2372),
+    positions: POSITIONS[strategyId] || [],
+    realizedCents: 0,
+})

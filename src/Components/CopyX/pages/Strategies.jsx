@@ -2,7 +2,7 @@ import { useMemo, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { Drawer as MuiDrawer } from "@mui/material"
 import abf from "../../VirtualIBAN/Beneficiaries/AddBeneficiaryFlowV2/AddBeneficiaryFlowV2.module.css"
-import { PAGES } from "../../../stateMachines/copyTrading"
+import { COPY_STATUS, PAGES } from "../../../stateMachines/copyTrading"
 import { selectStrategy } from "../api"
 import { ALLOCATION_LIMITS_USD, STRATEGY_CATEGORIES } from "../api/fixtures"
 import arrowLeftIcon from "../assets/figma/str-arrow-left.svg"
@@ -12,12 +12,20 @@ import searchIcon from "../assets/figma/str-magnifying-glass.svg"
 import warningIcon from "../assets/figma/str-warning.svg"
 import useCopyTrading from "../hooks/useCopyTrading"
 import { formatUsd } from "../state/money"
+import { copyStatusFor, strategyCopies } from "../state/selectors"
 import styles from "../styles/copyTrading.module.css"
 import { Crumbs, Page } from "../ui/layout"
-import { Button, Rows, Segmented } from "../ui/primitives"
+import { Badge, Button, Rows, Segmented } from "../ui/primitives"
 import s from "./Strategies.module.css"
 
 const CATEGORY_LABELS = { all: "All", forex: "Forex", metals: "Metals", indices: "Indices", energy: "Energy" }
+
+const STATUS_BADGE = {
+    [COPY_STATUS.ACTIVE]: ["success", "Copying"],
+    [COPY_STATUS.PAUSED]: ["neutral", "Paused"],
+    [COPY_STATUS.STOPPED]: ["error", "Stopped"],
+}
+const statusBadge = (status) => STATUS_BADGE[status] || ["warning", "Pending"]
 
 /* WEB-02 catalog and WEB-02b details drawer. The drawer is local because the shared one has no rounded, shadowed surface. */
 const Strategies = () => {
@@ -34,9 +42,16 @@ const Strategies = () => {
     const details = state.strategies.find(item => item.id === openId)
     const close = () => setOpenId(null)
 
+    const detailsStatus = details ? copyStatusFor(state, details.id) : COPY_STATUS.NONE
+    const othersRunning = strategyCopies(state).filter(item => item.id !== details?.id).length
+
+    /* Strategies run in parallel with separate funds: a running one opens, a new one starts its own allocation. */
     const choose = () => {
+        const setupStarted = !!state.copies[details.id]?.funding
         selectStrategy(details.id)
         close()
+        if (detailsStatus !== COPY_STATUS.NONE) return go(PAGES.WORKSPACE)
+        if (setupStarted) return go(PAGES.FUNDING)
         go(state.profile.brokerLink === "linked" ? PAGES.ALLOCATION : PAGES.ACCOUNTS)
     }
 
@@ -81,7 +96,12 @@ const Strategies = () => {
                                             <span className={s.strategy}>
                                                 <span className={s.avatar}>{item.name[0]}</span>
                                                 <span>
-                                                    <span className={s.strategyName}>{item.name}</span>
+                                                    <span className={s.strategyName}>
+                                                        {item.name}
+                                                        {copyStatusFor(state, item.id) !== COPY_STATUS.NONE && (
+                                                            <span className={s.nameBadge}><Badge tone={statusBadge(copyStatusFor(state, item.id))[0]}>{t(statusBadge(copyStatusFor(state, item.id))[1])}</Badge></span>
+                                                        )}
+                                                    </span>
                                                     <span className={s.strategyMeta}>{item.code} · {t(item.focus)}</span>
                                                 </span>
                                             </span>
@@ -121,7 +141,13 @@ const Strategies = () => {
                                 </span>
                                 <button type="button" className={s.closeBtn} onClick={close} aria-label={t("Close")}><img src={closeIcon} alt="" /></button>
                             </div>
-                            <p className={s.drawerLead}>{t("Review instruments, history, costs and copying behaviour before choosing.")}</p>
+                            <p className={s.drawerLead}>
+                                {detailsStatus !== COPY_STATUS.NONE
+                                    ? t("You are copying this strategy. Its allocation and funds are kept separate from your other strategies.")
+                                    : othersRunning
+                                        ? t("You can copy this strategy alongside your other strategies. It gets its own allocation and funds.")
+                                        : t("Review instruments, history, costs and copying behaviour before choosing.")}
+                            </p>
                             <div className={s.metric}>
                                 <p className={s.metricLabel}>{t("Historical maximum drawdown")}</p>
                                 <p className={s.metricValue}>{details.maxDrawdown} · {t("as of {{date}}", { date: details.historyAsOf })}</p>
@@ -141,7 +167,7 @@ const Strategies = () => {
                         </div>
                         <div className={s.drawerFoot}>
                             <button type="button" className={s.backBtn} onClick={close}><img src={arrowLeftIcon} alt="" />{t("Back")}</button>
-                            <Button size="lg" onClick={choose} disabled={!details.available}>{t("Select strategy")}</Button>
+                            <Button size="lg" onClick={choose} disabled={!details.available}>{t(detailsStatus !== COPY_STATUS.NONE ? "Open strategy" : "Select strategy")}</Button>
                         </div>
                     </div>
                 )}

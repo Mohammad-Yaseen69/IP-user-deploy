@@ -2,7 +2,8 @@ import { useState } from "react"
 import { useTranslation } from "react-i18next"
 import { useNavigate } from "react-router"
 import { EyeOff } from "lucide-react"
-import { COPY_STATUS, PAGES } from "../../../stateMachines/copyTrading"
+import { COPY_STATUS, PAGES, isCopyLive } from "../../../stateMachines/copyTrading"
+import { selectStrategy } from "../api"
 import activityCopyIcon from "../assets/figma/dash-activity-copy.svg"
 import activityCreditIcon from "../assets/figma/dash-activity-credit.svg"
 import activityReceiptIcon from "../assets/figma/dash-activity-receipt.svg"
@@ -24,7 +25,7 @@ import walletIcon from "../assets/figma/dash-wallet.svg"
 import warningIcon from "../assets/figma/dash-warning.svg"
 import useCopyTrading from "../hooks/useCopyTrading"
 import { formatAmount, formatAmountNumber, formatDateTime, formatTime, formatUsd, formatUsdNumber } from "../state/money"
-import { activeStrategy, copyIsLive, equityCents, unitsPerUsd, withdrawableCents } from "../state/selectors"
+import { strategyCopies, totalEquityCents, totalWithdrawableCents, unitsPerUsd } from "../state/selectors"
 import { ACCOUNT_STATUS } from "../ui/icons"
 import { Page } from "../ui/layout"
 import { Modal } from "../ui/overlays"
@@ -43,6 +44,13 @@ const JOURNEY = [
 ]
 
 const STATUS_PILL = { done: [s.pillSuccess, "Completed"], failed: [s.pillError, "Failed"] }
+
+const COPY_PILL = {
+    [COPY_STATUS.ACTIVE]: [s.pillSuccess, "Copying"],
+    [COPY_STATUS.PAUSED]: [s.pillNeutral, "Paused"],
+    [COPY_STATUS.STOPPED]: [s.pillError, "Stopped"],
+}
+const copyPill = (status) => COPY_PILL[status] || [s.pillWarning, "Pending"]
 const ACCOUNT_TONE = { success: s.toneSuccess, warning: s.toneWarning, error: s.toneError }
 const HIDDEN = "••••••"
 
@@ -100,9 +108,12 @@ const Dashboard = () => {
     const [howOpen, setHowOpen] = useState(false)
 
     const linked = state.profile.brokerLink === "linked"
-    const live = copyIsLive(state)
-    const activating = state.copy.status === COPY_STATUS.ACTIVATION_PENDING
-    const strategy = activeStrategy(state)
+    /* Strategies run in parallel with separate funds; the cards add them up, the table lists each one. */
+    const copies = strategyCopies(state)
+    const live = copies.some(item => isCopyLive(item.status))
+    const activating = !live && copies.some(item => item.status === COPY_STATUS.ACTIVATION_PENDING)
+    const lastRefresh = Object.values(state.copies).map(slot => slot.broker?.refreshedAt).filter(Boolean).sort().pop()
+    const strategyName = (id) => state.strategies.find(item => item.id === id)?.name
     const brokerLast4 = state.profile.brokerAccountId?.slice(-4)
     /* The hero shows the wallet copy trading pays from; the other real wallets are listed in the aside. */
     const wallet = fundingWallet || wallets[0] || null
@@ -116,7 +127,11 @@ const Dashboard = () => {
     const doneActivity = state.activity.filter(item => item.status !== "pending").slice(0, 5)
     const brokerStatus = linked ? "Connected" : state.profile.brokerLink === "pending" ? "In review" : "Not connected"
 
-    const openCopyTrading = () => go(live || activating ? PAGES.WORKSPACE : PAGES.STRATEGIES)
+    const openStrategy = (id) => { selectStrategy(id); go(PAGES.WORKSPACE) }
+    const openCopyTrading = () => {
+        if (!copies.length) return go(PAGES.STRATEGIES)
+        openStrategy(copies.some(item => item.id === state.draft.strategyId) ? state.draft.strategyId : copies[0].id)
+    }
 
     return (
         <Page title={t("Dashboard")} subtitle={t("Copy Trading with Tag Markets")}>
@@ -169,7 +184,7 @@ const Dashboard = () => {
                                 <div className={s.promoActions}>
                                     <button type="button" className={s.primaryBtn} onClick={() => go(PAGES.STRATEGIES)}>{t("Explore strategies")}</button>
                                     {live || activating
-                                        ? <button type="button" className={s.textBtn} onClick={() => go(PAGES.WORKSPACE)}>{t("Manage copying")}</button>
+                                        ? <button type="button" className={s.textBtn} onClick={openCopyTrading}>{t("Manage copying")}</button>
                                         : <button type="button" className={s.textBtn} onClick={() => setHowOpen(true)}>{t("How it works")}</button>}
                                 </div>
                             </div>
@@ -192,12 +207,12 @@ const Dashboard = () => {
 
                     <div className={s.statusCards}>
                         {live || activating ? (
-                            <StatusCard icon={searchIcon} title={t("Strategies")} subtitle={strategy?.name} value="1" unit={t("active")} success={!activating} foot={t(activating ? "Activation pending" : "Copying")} compact={live} onClick={() => go(PAGES.WORKSPACE)} />
+                            <StatusCard icon={searchIcon} title={t("Strategies")} subtitle={copies.map(item => item.strategy?.name).join(" · ")} value={String(copies.length)} unit={t("active")} success={!activating} foot={t(activating ? "Activation pending" : "Copying in parallel")} compact={live} onClick={openCopyTrading} />
                         ) : (
                             <StatusCard icon={searchIcon} title={t("Strategies")} subtitle={t("Compare drawdown and fees")} value={String(state.strategies.length || 4)} unit={t("strategies")} success foot={t("Browse strategies")} onClick={() => go(PAGES.STRATEGIES)} />
                         )}
                         {live ? (
-                            <StatusCard icon={bankIcon} title={t("Tag Markets")} subtitle={t("Trading equity")} value={formatUsdNumber(equityCents(state))} unit="USD" success foot={t("Updated {{time}}", { time: formatTime(state.broker?.refreshedAt) })} compact onClick={() => go(PAGES.WORKSPACE)} />
+                            <StatusCard icon={bankIcon} title={t("Tag Markets")} subtitle={t(copies.length > 1 ? "Total trading equity" : "Trading equity")} value={formatUsdNumber(totalEquityCents(state))} unit="USD" success foot={t("Updated {{time}}", { time: formatTime(lastRefresh) })} compact onClick={openCopyTrading} />
                         ) : (
                             <StatusCard
                                 icon={bankIcon}
@@ -210,13 +225,54 @@ const Dashboard = () => {
                             />
                         )}
                         {live ? (
-                            <StatusCard icon={walletIcon} title={t("Withdraw")} subtitle={t("Broker cash only")} value={formatUsdNumber(withdrawableCents(state))} unit="USD" success foot={t("Broker-confirmed")} compact onClick={() => go(PAGES.WITHDRAW)} />
+                            <StatusCard icon={walletIcon} title={t("Withdraw")} subtitle={t(copies.length > 1 ? "Cash across strategies" : "Broker cash only")} value={formatUsdNumber(totalWithdrawableCents(state))} unit="USD" success foot={t("Broker-confirmed")} compact onClick={openCopyTrading} />
                         ) : linked ? (
-                            <StatusCard icon={walletIcon} title={t("Withdraw")} subtitle={t("Broker cash only")} value={formatUsdNumber(withdrawableCents(state))} unit="USD" foot={t("After copying starts")} onClick={() => go(PAGES.STRATEGIES)} />
+                            <StatusCard icon={walletIcon} title={t("Withdraw")} subtitle={t("Broker cash only")} value={formatUsdNumber(totalWithdrawableCents(state))} unit="USD" foot={t("After copying starts")} onClick={() => go(PAGES.STRATEGIES)} />
                         ) : (
                             <StatusCard icon={walletIcon} title={t("Withdraw")} subtitle={t("Broker cash only")} value={t("Connect to view")} foot={t("Withdrawable balance")} onClick={() => go(PAGES.STRATEGIES)} />
                         )}
                     </div>
+
+                    {copies.length > 0 && (
+                        <section className={s.panel}>
+                            <div className={s.panelHead}>
+                                <h3 className={s.panelTitle}>{t("Your strategies")}</h3>
+                                <button type="button" className={s.manage} onClick={() => go(PAGES.STRATEGIES)}>{t("Copy another strategy")}</button>
+                            </div>
+                            <table className={s.table}>
+                                <thead>
+                                    <tr>
+                                        <th>{t("Strategy")}</th>
+                                        <th className={s.colStatus}>{t("Status")}</th>
+                                        <th className={s.colAmount}>{t("Equity · withdrawable")}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {copies.map(item => {
+                                        const [pillClass, label] = copyPill(item.status)
+                                        return (
+                                            <tr key={item.id} className={s.rowLink} onClick={() => openStrategy(item.id)} tabIndex={0} onKeyDown={e => e.key === "Enter" && openStrategy(item.id)}>
+                                                <td>
+                                                    <span className={s.activityCell}>
+                                                        <span className={s.activityIcon}><img src={activityCopyIcon} alt="" /></span>
+                                                        <span className={s.activityText}>
+                                                            <span className={s.activityTitle}>{item.strategy?.name}</span>
+                                                            <span className={s.activityMeta}>{t("{{count}} open positions", { count: item.positions })}{item.withdrawing ? ` · ${t("Withdrawal in progress")}` : ""}</span>
+                                                        </span>
+                                                    </span>
+                                                </td>
+                                                <td className={s.colStatus}><span className={cx(s.pill, pillClass)}>{t(label)}</span></td>
+                                                <td className={s.colAmount}>
+                                                    <p className={s.amountValue}>{formatUsdNumber(item.equityCents)}</p>
+                                                    <p className={s.amountUnit}>{t("{{amount}} withdrawable", { amount: formatUsd(item.withdrawableCents) })}</p>
+                                                </td>
+                                            </tr>
+                                        )
+                                    })}
+                                </tbody>
+                            </table>
+                        </section>
+                    )}
 
                     <section className={s.panel}>
                         <h3 className={s.panelTitle}>{t("Recent copy-trading activity")}</h3>
@@ -242,7 +298,7 @@ const Dashboard = () => {
                                                         <span className={s.activityIcon}><img src={activityIcon(item)} alt="" /></span>
                                                         <span className={s.activityText}>
                                                             <span className={s.activityTitle}>{t(item.label)}</span>
-                                                            <span className={s.activityMeta}>{formatDateTime(item.at)}</span>
+                                                            <span className={s.activityMeta}>{formatDateTime(item.at)}{strategyName(item.strategyId) ? ` · ${strategyName(item.strategyId)}` : ""}</span>
                                                         </span>
                                                     </span>
                                                 </td>

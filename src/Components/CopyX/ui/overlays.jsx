@@ -1,4 +1,4 @@
-import { Drawer as MuiDrawer, Modal as MuiModal } from "@mui/material"
+import { Modal as MuiModal } from "@mui/material"
 import { X } from "lucide-react"
 import { useTranslation } from "react-i18next"
 import abf from "../../VirtualIBAN/Beneficiaries/AddBeneficiaryFlowV2/AddBeneficiaryFlowV2.module.css"
@@ -25,12 +25,3 @@ export const Modal = ({ open, onClose, title, subtitle, children, footer, maxWid
         </MuiModal>
     )
 }
-
-export const Drawer = ({ open, onClose, children, footer }) => (
-    <MuiDrawer anchor="right" open={open} onClose={onClose}>
-        <div className={`${abf.root} ${styles.drawer}`}>
-            <div className={styles.drawerBody}>{children}</div>
-            {footer && <div className={styles.drawerFoot}>{footer}</div>}
-        </div>
-    </MuiDrawer>
-)

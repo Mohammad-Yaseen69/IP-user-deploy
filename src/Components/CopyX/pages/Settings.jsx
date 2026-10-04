@@ -3,13 +3,14 @@ import { useTranslation } from "react-i18next"
 import { useNavigate } from "react-router"
 import { OP_STATUS, PAGES, STAGE } from "../../../stateMachines/copyTrading"
 import AddAccountFlow from "../../Settings/WithdrawalsNew/AddAccountFlow"
+import { selectStrategy } from "../api"
 import copyIcon from "../assets/figma/copy.svg"
 import bankIcon from "../assets/figma/set-bank.svg"
 import mobileIcon from "../assets/figma/set-device-mobile.svg"
 import plusIcon from "../assets/figma/set-plus.svg"
 import useCopyTrading from "../hooks/useCopyTrading"
 import { formatUsd } from "../state/money"
-import { activeStrategy, copyIsLive, withdrawableCents } from "../state/selectors"
+import { activeStrategy, strategyCopies, totalWithdrawableCents } from "../state/selectors"
 import styles from "../styles/copyTrading.module.css"
 import { ACCOUNT_STATUS } from "../ui/icons"
 import { methodTitle } from "../ui/methodDisplay"
@@ -40,6 +41,13 @@ const Settings = () => {
     const { withdrawal } = state
     const draftOpen = withdrawal && !withdrawal.payout && withdrawal.release?.status === OP_STATUS.COMPLETED
 
+    const copies = strategyCopies(state)
+    const backToCopying = () => {
+        if (!copies.length) return go(PAGES.STRATEGIES)
+        if (!copies.some(item => item.id === state.draft.strategyId)) selectStrategy(copies[0].id)
+        go(PAGES.WORKSPACE)
+    }
+
     const returnToDraft = () => go(withdrawal?.destination ? PAGES.PAYOUT : PAGES.DESTINATION)
 
     return (
@@ -65,13 +73,13 @@ const Settings = () => {
                     ) : (
                         <SummaryPanel
                             title={t("Copy Trading")}
-                            rows={copyIsLive(state) ? [
-                                { label: t("Strategy"), value: strategy?.name },
-                                { label: t("Withdrawable"), value: formatUsd(withdrawableCents(state)) },
+                            rows={copies.length ? [
+                                { label: t(copies.length > 1 ? "Strategies" : "Strategy"), value: copies.map(item => item.strategy?.name).join(", ") },
+                                { label: t("Withdrawable"), value: formatUsd(totalWithdrawableCents(state)) },
                             ] : [{ label: t("Status"), value: t("Not started") }]}
                             note={t("Payouts go only to verified accounts in your own name.")}
                             onSupport={openSupport}
-                            actions={<Button size="lg" block onClick={() => go(copyIsLive(state) ? PAGES.WORKSPACE : PAGES.STRATEGIES)}>{t(copyIsLive(state) ? "Back to copying" : "Explore strategies")}</Button>}
+                            actions={<Button size="lg" block onClick={backToCopying}>{t(copies.length ? "Back to copying" : "Explore strategies")}</Button>}
                         />
                     )}
                 >

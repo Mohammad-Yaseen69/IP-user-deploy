@@ -6,7 +6,7 @@ import {
     PAYOUT_STAGES,
     RELEASE_STAGES,
 } from "../../../stateMachines/copyTrading"
-import { getState, setState } from "../state/store"
+import { emptySlot, getState, getStateFor, setState, setStateFor } from "../state/store"
 import {
     toBrokerSnapshot,
     toFundingQuote,
@@ -32,15 +32,17 @@ const OPS = {
     payout: { defs: PAYOUT_STAGES, put: (s, op) => ({ ...s, withdrawal: { ...s.withdrawal, payout: { ...s.withdrawal.payout, ...op } } }) },
 }
 
+const focused = () => getState().draft.strategyId
+
 /* Status is re-read from the server, never inferred: a timeout keeps polling the same operation. */
-const track = (kind, id) => {
+const track = (kind, strategyId, id) => {
     const tick = async () => {
         try {
             const raw = await get(ENDPOINTS.operation(id))
             const op = toOperation(raw, OPS[kind].defs)
-            setState(s => OPS[kind].put(s, op))
+            setStateFor(strategyId, s => OPS[kind].put(s, op))
             if (TERMINAL.includes(op.status)) {
-                if (kind === "funding" || kind === "release") await refreshCopyState()
+                if (kind === "funding" || kind === "release") await refreshCopyState(strategyId)
                 return
             }
         } catch {
@@ -51,27 +53,29 @@ const track = (kind, id) => {
     tick()
 }
 
-const refreshCopyState = async () => {
-    const raw = await get(ENDPOINTS.copyState)
-    setState(s => ({
+const toCopy = (raw, current) => ({
+    ...current,
+    status: raw.status ?? current.status,
+    strategyId: raw.strategy_id ?? current.strategyId,
+    capitalCents: raw.capital !== undefined ? Math.round(raw.capital * 100) : current.capitalCents,
+    activatedAt: raw.activated_at ?? current.activatedAt,
+    lastAckAt: raw.acknowledged_at ?? current.lastAckAt,
+    pending: raw.pending_operation ?? null,
+})
+
+const refreshCopyState = async (strategyId) => {
+    const raw = await get(ENDPOINTS.copyState(strategyId))
+    setStateFor(strategyId, s => ({
         ...s,
         broker: raw.broker ? toBrokerSnapshot(raw.broker) : s.broker,
-        copy: {
-            ...s.copy,
-            status: raw.status ?? s.copy.status,
-            strategyId: raw.strategy_id ?? s.copy.strategyId,
-            capitalCents: raw.capital !== undefined ? Math.round(raw.capital * 100) : s.copy.capitalCents,
-            activatedAt: raw.activated_at ?? s.copy.activatedAt,
-            lastAckAt: raw.acknowledged_at ?? s.copy.lastAckAt,
-            pending: raw.pending_operation ?? null,
-        },
+        copy: toCopy(raw, s.copy),
     }))
-    return getState().copy
+    return getStateFor(strategyId).copy
 }
 
-const trackCopy = () => {
+const trackCopy = (strategyId) => {
     const tick = async () => {
-        const copy = await refreshCopyState().catch(() => getState().copy)
+        const copy = await refreshCopyState(strategyId).catch(() => getStateFor(strategyId).copy)
         if (copy.pending) setTimeout(tick, POLL_INTERVAL_MS)
     }
     tick()
@@ -92,6 +96,16 @@ export const loadCatalog = async () => {
     }))
     const broker = await get(ENDPOINTS.brokerAccount).catch(() => null)
     if (broker) setState(s => ({ ...s, profile: { brokerLink: broker.status, brokerAccountId: broker.account_id } }))
+
+    /* Every copy the customer has, one per strategy, each with its own broker figures. */
+    const copies = await get(ENDPOINTS.copies).catch(() => [])
+    setState(s => ({
+        ...s,
+        copies: { ...s.copies, ...Object.fromEntries((copies || []).map(item => {
+            const slot = s.copies[item.strategy_id] || emptySlot()
+            return [item.strategy_id, { ...slot, copy: toCopy(item, slot.copy), broker: item.broker ? toBrokerSnapshot(item.broker) : slot.broker }]
+        })) },
+    }))
 }
 
 export const linkBrokerAccount = async () => {
@@ -103,25 +117,27 @@ export const linkBrokerAccount = async () => {
 /* ------------------------------ funding ------------------------------ */
 
 export const createFundingQuote = async () => {
-    const { draft } = getState()
+    const strategyId = focused()
+    const { draft } = getStateFor(strategyId)
     const quote = toFundingQuote(await post(ENDPOINTS.fundingQuote, {
         strategy_id: draft.strategyId,
         amount: draft.allocation,
-        currency: "XOF",
+        currency: draft.currency,
         method: draft.method,
     }))
-    setState(s => ({ ...s, draft: { ...s.draft, quote } }))
+    setStateFor(strategyId, s => ({ ...s, draft: { ...s.draft, quote } }))
     return quote
 }
 
 export const submitFunding = async ({ idempotencyKey }) => {
+    const strategyId = focused()
     const existing = replayed(idempotencyKey)
     if (existing) return existing
-    const { draft } = getState()
+    const { draft } = getStateFor(strategyId)
     const raw = await post(ENDPOINTS.fundingSubmit, { quote_id: draft.quote.id }, idempotencyKey)
     const op = toOperation(raw, FUNDING_STAGES)
-    setState(s => remember({ ...s, funding: { ...op, family: draft.method.family, method: draft.method, quote: draft.quote }, draft: { ...s.draft, quote: null } }, idempotencyKey, op.id))
-    track("funding", op.id)
+    setStateFor(strategyId, s => remember({ ...s, funding: { ...op, family: draft.method.family, method: draft.method, quote: draft.quote }, draft: { ...s.draft, quote: null } }, idempotencyKey, op.id))
+    track("funding", strategyId, op.id)
     return op.id
 }
 
@@ -130,65 +146,71 @@ export const retryFunding = async () => setState(s => ({ ...s, funding: null, dr
 /* ------------------------------ mandate + lifecycle ------------------------------ */
 
 export const submitMandate = async ({ idempotencyKey }) => {
-    const { funding, draft, copy } = getState()
+    const strategyId = focused()
+    const { funding, draft, copy } = getStateFor(strategyId)
     const raw = await post(ENDPOINTS.mandate, {
         strategy_id: draft.strategyId,
         funding_operation_id: funding.id,
         amendment: draft.amendment && copy.status !== COPY_STATUS.NONE,
         accepted_at: now(),
     }, idempotencyKey)
-    setState(s => remember(addActivity({ ...s, copy: { ...s.copy, mandateVersion: raw.mandate_version, consentedAt: now() } }, { kind: "copy", label: "Copy mandate submitted", status: "pending", ref: raw.operation_id }), idempotencyKey, raw.operation_id))
-    trackCopy()
+    setStateFor(strategyId, s => remember(addActivity({ ...s, copy: { ...s.copy, mandateVersion: raw.mandate_version, consentedAt: now() } }, { kind: "copy", label: "Copy mandate submitted", status: "pending", ref: raw.operation_id }), idempotencyKey, raw.operation_id))
+    trackCopy(strategyId)
     return raw.operation_id
 }
 
 export const submitCopyAction = async ({ type, closePositions = false, idempotencyKey }) => {
-    const raw = await post(ENDPOINTS.lifecycle, { action: type, close_positions: closePositions }, idempotencyKey)
-    trackCopy()
+    const strategyId = focused()
+    const raw = await post(ENDPOINTS.lifecycle(strategyId), { action: type, close_positions: closePositions }, idempotencyKey)
+    trackCopy(strategyId)
     return raw.operation_id
 }
 
 /* ------------------------------ withdrawal + payout ------------------------------ */
 
 export const requestRelease = async ({ amountCents, mode, idempotencyKey }) => {
+    const strategyId = focused()
     const existing = replayed(idempotencyKey)
     if (existing) return existing
-    const raw = await post(ENDPOINTS.release, { amount: amountCents / 100, currency: "USD", mode }, idempotencyKey)
+    const raw = await post(ENDPOINTS.release, { strategy_id: strategyId, amount: amountCents / 100, currency: "USD", mode }, idempotencyKey)
     const release = { ...toOperation(raw, RELEASE_STAGES), amountCents }
-    setState(s => remember({ ...s, withdrawal: { id: raw.withdrawal_id, amountCents, mode, release, destination: null, purpose: null, quote: null, payout: null } }, idempotencyKey, release.id))
-    track("release", release.id)
+    setStateFor(strategyId, s => remember({ ...s, withdrawal: { id: raw.withdrawal_id, amountCents, mode, release, destination: null, purpose: null, quote: null, payout: null } }, idempotencyKey, release.id))
+    track("release", strategyId, release.id)
     return release.id
 }
 
 export const createPayoutQuote = async () => {
-    const { withdrawal } = getState()
+    const strategyId = focused()
+    const { withdrawal } = getStateFor(strategyId)
     const quote = toPayoutQuote(await post(ENDPOINTS.payoutQuote, {
         withdrawal_id: withdrawal.id,
         receiving_account_id: withdrawal.destination.id,
         mode: withdrawal.mode,
         purpose: withdrawal.purpose,
     }))
-    setState(s => ({ ...s, withdrawal: { ...s.withdrawal, quote } }))
+    setStateFor(strategyId, s => ({ ...s, withdrawal: { ...s.withdrawal, quote } }))
     return quote
 }
 
 export const submitPayout = async ({ idempotencyKey }) => {
+    const strategyId = focused()
     const existing = replayed(idempotencyKey)
     if (existing) return existing
-    const { withdrawal } = getState()
+    const { withdrawal } = getStateFor(strategyId)
     const raw = await post(ENDPOINTS.payoutSubmit, { quote_id: withdrawal.quote.id }, idempotencyKey)
     const payout = { ...toOperation(raw, PAYOUT_STAGES), quote: withdrawal.quote, destination: withdrawal.destination, purpose: withdrawal.purpose }
-    setState(s => remember({ ...s, withdrawal: { ...s.withdrawal, payout } }, idempotencyKey, payout.id))
-    track("payout", payout.id)
+    setStateFor(strategyId, s => remember({ ...s, withdrawal: { ...s.withdrawal, payout } }, idempotencyKey, payout.id))
+    track("payout", strategyId, payout.id)
     return payout.id
 }
 
 export const retryPayout = async () => setState(s => ({ ...s, withdrawal: { ...s.withdrawal, payout: null, quote: null, destination: null } }))
 
 export const resumePendingWork = () => {
-    const { funding, withdrawal, copy } = getState()
-    if (funding?.status === OP_STATUS.PROCESSING) track("funding", funding.id)
-    if (withdrawal?.release?.status === OP_STATUS.PROCESSING) track("release", withdrawal.release.id)
-    if (withdrawal?.payout?.status === OP_STATUS.PROCESSING) track("payout", withdrawal.payout.id)
-    if (copy.pending) trackCopy()
+    Object.entries(getState().copies).forEach(([strategyId, { funding, withdrawal, copy }]) => {
+        if (funding?.status === OP_STATUS.PROCESSING) track("funding", strategyId, funding.id)
+        if (withdrawal?.release?.status === OP_STATUS.PROCESSING) track("release", strategyId, withdrawal.release.id)
+        if (withdrawal?.payout?.status === OP_STATUS.PROCESSING) track("payout", strategyId, withdrawal.payout.id)
+        if (copy.pending) trackCopy(strategyId)
+    })
 }

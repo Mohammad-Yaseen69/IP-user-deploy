@@ -10,16 +10,16 @@ export const now = () => new Date().toISOString()
 
 export const addActivity = (state, entry) => ({
     ...state,
-    activity: [{ id: newId("ACT"), at: now(), ...entry }, ...state.activity].slice(0, 30),
+    activity: [{ id: newId("ACT"), at: now(), strategyId: state.draft?.strategyId ?? null, ...entry }, ...state.activity].slice(0, 40),
 })
 
 export const remember = (state, key, opId) => (key ? { ...state, idempotency: { ...state.idempotency, [key]: opId } } : state)
 export const replayed = (key) => (key ? getState().idempotency[key] : null)
 
-export const selectStrategy = (strategyId) => setState(s => ({
-    ...s,
-    draft: { ...s.draft, strategyId, catalogVersion: CATALOG_VERSION, quote: null },
-}))
+/* Focuses a strategy. Each strategy keeps its own copy and funds, so picking another one starts its own allocation. */
+export const selectStrategy = (strategyId) => setState(s => (s.draft.strategyId === strategyId
+    ? { ...s, draft: { ...s.draft, catalogVersion: CATALOG_VERSION, quote: null } }
+    : { ...s, draft: { ...s.draft, strategyId, catalogVersion: CATALOG_VERSION, quote: null, amendment: false, allocation: 0 } }))
 
 export const setAllocation = (allocation) => setState(s => ({ ...s, draft: { ...s.draft, allocation, quote: null } }))
 

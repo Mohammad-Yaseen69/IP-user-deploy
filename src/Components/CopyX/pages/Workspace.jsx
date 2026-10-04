@@ -2,6 +2,7 @@ import { useTranslation } from "react-i18next"
 import { COPY_STATUS, OP_STATUS, PAGES, SETUP_STEPS } from "../../../stateMachines/copyTrading"
 import arrowUpRightIcon from "../assets/figma/ws-arrow-up-right.svg"
 import stepCheckIcon from "../assets/figma/step-check.svg"
+import { selectStrategy } from "../api"
 import useCopyTrading from "../hooks/useCopyTrading"
 import { formatAmount, formatSignedUsd, formatTime, formatUsd } from "../state/money"
 import { activeStrategy, equityCents, openPositionsCount, unrealizedCents, withdrawableCents, withdrawalInProgress } from "../state/selectors"
@@ -9,6 +10,7 @@ import styles from "../styles/copyTrading.module.css"
 import { Crumbs, FlowCard, Intro, Page, Split, SummaryPanel } from "../ui/layout"
 import { Badge, Button, Notice, Rows, Section } from "../ui/primitives"
 import { buildSteps } from "../ui/steps"
+import StrategySwitcher from "../ui/StrategySwitcher"
 import s from "./Workspace.module.css"
 
 const STATUS_VIEW = {
@@ -39,7 +41,8 @@ const Workspace = () => {
     const unrealized = unrealizedCents(state)
     const refreshed = formatTime(state.broker?.refreshedAt || state.copy.lastAckAt)
     const positions = state.broker?.positions || []
-    const events = state.activity.filter(item => item.status === "done").slice(0, 6)
+    const focusId = state.draft.strategyId
+    const events = state.activity.filter(item => item.status === "done" && (!item.strategyId || item.strategyId === focusId)).slice(0, 6)
 
     // Setup is complete once the workspace is reachable: every step done, "Active" current without a meta line.
     const metas = {
@@ -61,6 +64,7 @@ const Workspace = () => {
                     { label: strategy?.name || t("Strategy") },
                 ]}
             />
+            <StrategySwitcher state={state} activeId={focusId} onSelect={selectStrategy} onAdd={() => go(PAGES.STRATEGIES)} />
             <FlowCard
                 label={t("Copy Trading")}
                 asideTitle={strategy?.name}
