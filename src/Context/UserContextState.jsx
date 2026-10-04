@@ -378,7 +378,7 @@ const UserState = ({ children }) => {
         axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/get-user-wallet/${userDetails?._id}`, { headers: authHeader })
             .then(async (res) => {
                 const decrypted = decryptData(res.data.data)
-                const sorted = decrypted.walletList.filter(x=> x.wallet_type !== 'crypto').sort((a, b) => {
+                const sorted = decrypted.walletList.sort((a, b) => {
                     if (a.wallet_type === 'insta') {
                         return -1;
                     } else if (b.wallet_type === 'insta') {
