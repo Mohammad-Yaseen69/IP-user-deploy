@@ -216,6 +216,8 @@
 /* ------------------------------------ activity ------------------------------------ */
 
 .panel { display: flex; flex-direction: column; overflow: auto; padding: 24px; border-radius: 14px; background: #FFFFFF; }
+.panelHead { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+.panelHead .panelTitle { flex: 1; }
 .panelTitle { padding-bottom: 12px; font-size: 16px; line-height: 1.5; font-weight: 600; color: #17141F; }
 .empty { padding: 14px 16px; border-radius: 10px; background: #F4F3F7; font-size: 14px; line-height: normal; color: #5E5A6B; }
 
@@ -238,6 +240,10 @@
 .pill { display: inline-flex; align-items: center; height: 20px; padding: 0 8px; border-radius: 100px; font-size: 11px; line-height: 20px; font-weight: 500; white-space: nowrap; }
 .pillSuccess { background: #ECFDF5; color: #047857; }
 .pillError { background: #FEF2F2; color: #D54033; }
+.pillWarning { background: #FFFBDF; color: #976600; }
+.pillNeutral { background: #F1F0F5; color: #5E5A6B; }
+.rowLink { cursor: pointer; }
+.rowLink:hover td { background: #FBF9FF; }
 
 /* ------------------------------------ wallet aside ------------------------------------ */
 

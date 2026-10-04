@@ -1285,6 +1285,21 @@ const fr = {
     "You have reached the limit of 3 countries.": "Vous avez atteint la limite de 3 pays.",
     "{{currency}} Wallet · IBAN ending {{last4}}": "Portefeuille {{currency}} · IBAN se terminant par {{last4}}",
     "{{wallet}} · IBAN ending {{last4}}": "{{wallet}} · IBAN se terminant par {{last4}}",
+    "100 USD released from Atlas FX, choose payout": "100 USD libérés d'Atlas FX, choisir le versement",
+    "Cash across strategies": "Liquidités de toutes les stratégies",
+    "Copy another strategy": "Copier une autre stratégie",
+    "Copying Atlas FX": "Copie d'Atlas FX",
+    "Copying in parallel": "Copie en parallèle",
+    "Equity · withdrawable": "Capitaux · retirable",
+    "Open strategy": "Ouvrir la stratégie",
+    "Total trading equity": "Capitaux de trading totaux",
+    "Two strategies copying in parallel": "Deux stratégies copiées en parallèle",
+    "Withdrawal in progress": "Retrait en cours",
+    "You are copying this strategy. Its allocation and funds are kept separate from your other strategies.": "Vous copiez cette stratégie. Son allocation et ses fonds sont séparés de vos autres stratégies.",
+    "You can copy this strategy alongside your other strategies. It gets its own allocation and funds.": "Vous pouvez copier cette stratégie en plus de vos autres stratégies. Elle a sa propre allocation et ses propres fonds.",
+    "Your strategies": "Vos stratégies",
+    "{{amount}} withdrawable": "{{amount}} retirable",
+    "{{count}} open positions": "{{count}} positions ouvertes",
 }
 
 export default fr

@@ -13,8 +13,10 @@ export const ENDPOINTS = {
     fundingQuote: "/api/copy-trading/funding/quote",
     fundingSubmit: "/api/copy-trading/funding",
     mandate: "/api/copy-trading/mandate",
-    lifecycle: "/api/copy-trading/copy/action",
-    copyState: "/api/copy-trading/copy",
+    /* one copy per strategy: strategies run in parallel with separate funds */
+    copies: "/api/copy-trading/copies",
+    copyState: (strategyId) => `/api/copy-trading/copies/${strategyId}`,
+    lifecycle: (strategyId) => `/api/copy-trading/copies/${strategyId}/action`,
     release: "/api/copy-trading/withdrawals/release",
     payoutQuote: "/api/copy-trading/payouts/quote",
     payoutSubmit: "/api/copy-trading/payouts",

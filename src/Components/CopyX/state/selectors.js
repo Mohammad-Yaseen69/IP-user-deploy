@@ -54,12 +54,11 @@ export const allocationError = (state, t) => {
 }
 
 /* Broker figures: equity includes open positions, only withdrawable cash can leave the broker. */
-export const unrealizedCents = (state) => (state.broker?.positions || []).reduce((sum, p) => sum + p.pnlCents, 0)
+const slotUnrealized = (slot) => (slot.broker?.positions || []).reduce((sum, p) => sum + p.pnlCents, 0)
+export const unrealizedCents = (state) => slotUnrealized(state)
 export const equityCents = (state) => (state.broker ? state.copy.capitalCents + unrealizedCents(state) : state.copy.capitalCents)
 export const withdrawableCents = (state) => state.broker?.withdrawableCents || 0
 export const openPositionsCount = (state) => state.broker?.positions?.length || 0
-
-export const copyIsLive = (state) => ![COPY_STATUS.NONE, COPY_STATUS.ACTIVATION_PENDING].includes(state.copy.status)
 
 export const withdrawalInProgress = (state) => {
     const w = state.withdrawal
@@ -80,3 +79,29 @@ export const grossCentsForNet = (state, netAmount, currency) => {
     if (!rate) return 0
     return Math.round((netAmount / rate) * 100) + PAYOUT_FEE_USD_CENTS
 }
+
+/* ------------------------------ all strategies ------------------------------ */
+
+/* Every strategy the customer has started, each with its own copy, funds and broker figures. */
+export const strategyCopies = (state) => Object.entries(state.copies || {})
+    .filter(([, slot]) => slot.copy.status !== COPY_STATUS.NONE)
+    .map(([id, slot]) => {
+        const unrealized = slotUnrealized(slot)
+        return {
+            id,
+            strategy: getStrategyById(state, id),
+            status: slot.copy.status,
+            pending: slot.copy.pending,
+            capitalCents: slot.copy.capitalCents,
+            equityCents: slot.broker ? slot.copy.capitalCents + unrealized : slot.copy.capitalCents,
+            unrealizedCents: unrealized,
+            withdrawableCents: slot.broker?.withdrawableCents || 0,
+            positions: slot.broker?.positions?.length || 0,
+            withdrawing: !!slot.withdrawal && ![OP_STATUS.COMPLETED, OP_STATUS.REVERSED].includes(slot.withdrawal.payout?.status),
+        }
+    })
+
+export const copyStatusFor = (state, id) => state.copies?.[id]?.copy.status || COPY_STATUS.NONE
+
+export const totalEquityCents = (state) => strategyCopies(state).reduce((sum, item) => sum + item.equityCents, 0)
+export const totalWithdrawableCents = (state) => strategyCopies(state).reduce((sum, item) => sum + item.withdrawableCents, 0)

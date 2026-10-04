@@ -6,16 +6,16 @@ import {
     RELEASE_STAGES,
     STAGE,
 } from "../../../stateMachines/copyTrading"
-import { getState, setState } from "../state/store"
+import { getState, getStateFor, setState, setStateFor } from "../state/store"
 import { addActivity, ensureRate, isQuoteExpired, newId, now, remember, replayed } from "./draft"
 import {
     BROKER_ACCOUNT_ID,
-    BROKER_SNAPSHOT,
     MANDATE_VERSION,
     PAYMENT_METHODS,
     PAYOUT_FEE_USD_CENTS,
     QUOTE_TTL_SECONDS,
     STRATEGIES,
+    brokerSnapshotFor,
 } from "./fixtures"
 
 /* In-browser stand-in for the CopyX backend. Same function names and results as api/http.js. */
@@ -64,9 +64,10 @@ const settleSideEffects = (kind, state, op, stage, completed) => {
     return next
 }
 
-const advance = (kind, opId, index) => {
+/* Operations belong to one strategy and keep running while the customer looks at another one. */
+const advance = (kind, strategyId, opId, index) => {
     let keepGoing = false
-    setState(state => {
+    setStateFor(strategyId, state => {
         const op = OPS[kind].get(state)
         if (!op || op.id !== opId || op.status !== OP_STATUS.PROCESSING) return state
         if (op.stages[index]?.state !== STAGE.PENDING) return state
@@ -87,14 +88,16 @@ const advance = (kind, opId, index) => {
         const next = OPS[kind].put(state, { ...op, stages, status: completed ? OP_STATUS.COMPLETED : OP_STATUS.PROCESSING, completedAt: completed ? now() : null })
         return settleSideEffects(kind, next, op, op.stages[index], completed)
     })
-    if (keepGoing) schedule(kind)
+    if (keepGoing) schedule(kind, strategyId)
 }
 
-const schedule = (kind) => {
-    const op = OPS[kind].get(getState())
+const focused = () => getState().draft.strategyId
+
+const schedule = (kind, strategyId = focused()) => {
+    const op = OPS[kind].get(getStateFor(strategyId))
     if (!op || op.status !== OP_STATUS.PROCESSING) return
     const index = op.stages.findIndex(stage => stage.state === STAGE.PENDING)
-    if (index >= 0) setTimeout(() => advance(kind, op.id, index), stepMs())
+    if (index >= 0) setTimeout(() => advance(kind, strategyId, op.id, index), stepMs())
 }
 
 /* ------------------------------ catalog ------------------------------ */
@@ -122,8 +125,9 @@ const scheduleLinkReview = () => setTimeout(() => setState(s => (
 /* ------------------------------ funding ------------------------------ */
 
 export const createFundingQuote = async () => {
+    const strategyId = focused()
     await latency()
-    const { draft, paymentMethods } = getState()
+    const { draft, paymentMethods } = getStateFor(strategyId)
     const method = paymentMethods.find(item => item.id === draft.method?.family)
     if (!method) throw new ApiError("method_required", "Choose a payment method first.")
     const rate = await ensureRate(draft.currency)
@@ -139,16 +143,17 @@ export const createFundingQuote = async () => {
         rate,
         expiresAt: expiry(),
     }
-    setState(s => ({ ...s, draft: { ...s.draft, quote } }))
+    setStateFor(strategyId, s => ({ ...s, draft: { ...s.draft, quote } }))
     return quote
 }
 
 /* walletBalance: the live balance of the funding wallet, checked the way the ledger would. */
 export const submitFunding = async ({ idempotencyKey, walletBalance }) => {
+    const strategyId = focused()
     const existing = replayed(idempotencyKey)
     if (existing) return existing
 
-    const { draft } = getState()
+    const { draft } = getStateFor(strategyId)
     if (isQuoteExpired(draft.quote)) throw new ApiError("quote_expired", "This quote expired. Review the new quote before you authorize.")
     if (draft.method.family === "instapay_wallet" && walletBalance !== undefined && draft.quote.debit > walletBalance) {
         throw new ApiError("insufficient_balance", "Your wallet balance is lower than the total debit.")
@@ -156,7 +161,7 @@ export const submitFunding = async ({ idempotencyKey, walletBalance }) => {
 
     await latency()
     const id = newId("FUND")
-    setState(s => {
+    setStateFor(strategyId, s => {
         const op = {
             id,
             family: draft.method.family,
@@ -169,7 +174,7 @@ export const submitFunding = async ({ idempotencyKey, walletBalance }) => {
         const next = remember({ ...s, funding: op, draft: { ...s.draft, quote: null } }, idempotencyKey, id)
         return addActivity(next, { kind: "funding", label: "Funding submitted", amount: draft.quote.debit, currency: draft.quote.currency, status: "pending", ref: id })
     })
-    schedule("funding")
+    schedule("funding", strategyId)
     return id
 }
 
@@ -185,7 +190,7 @@ const COPY_FLOW = {
     stop: { pending: COPY_STATUS.STOP_PENDING, final: COPY_STATUS.STOPPED, label: "Copying stopped" },
 }
 
-const resolveCopyAction = (pendingId) => setState(state => {
+const resolveCopyAction = (strategyId, pendingId) => setStateFor(strategyId, state => {
     const { pending } = state.copy
     if (!pending || pending.id !== pendingId) return state
     const flow = COPY_FLOW[pending.type]
@@ -194,9 +199,12 @@ const resolveCopyAction = (pendingId) => setState(state => {
 
     if (pending.type === "activate") {
         copy = { ...copy, activatedAt: now(), capitalCents: pending.creditCents }
-        broker = { ...BROKER_SNAPSHOT, refreshedAt: now() }
+        broker = { ...brokerSnapshotFor(strategyId, pending.creditCents), refreshedAt: now() }
     }
-    if (pending.type === "amend") copy = { ...copy, capitalCents: copy.capitalCents + pending.creditCents }
+    if (pending.type === "amend") {
+        copy = { ...copy, capitalCents: copy.capitalCents + pending.creditCents }
+        broker = { ...broker, withdrawableCents: (broker?.withdrawableCents || 0) + pending.creditCents, refreshedAt: now() }
+    }
     if (pending.type === "stop" && pending.closePositions) {
         const unrealized = (broker?.positions || []).reduce((sum, p) => sum + p.pnlCents, 0)
         broker = { ...broker, positions: [], realizedCents: (broker?.realizedCents || 0) + unrealized, withdrawableCents: copy.capitalCents + unrealized }
@@ -207,41 +215,44 @@ const resolveCopyAction = (pendingId) => setState(state => {
     return addActivity(next, { kind: "copy", label: flow.label, status: "done", ref: pending.id })
 })
 
-const requestCopyAction = (type, payload, idempotencyKey) => {
+const requestCopyAction = (type, payload, idempotencyKey, strategyId) => {
     const existing = replayed(idempotencyKey)
     if (existing) return existing
 
     const id = newId("COPY")
-    setState(state => {
+    setStateFor(strategyId, state => {
         const flow = COPY_FLOW[type]
         const copy = { ...state.copy, status: flow.pending || state.copy.status, pending: { id, type, requestedAt: now(), ...payload } }
         return remember(addActivity({ ...state, copy }, { kind: "copy", label: `${flow.label} - requested`, status: "pending", ref: id }), idempotencyKey, id)
     })
-    setTimeout(() => resolveCopyAction(id), stepMs() * 1.6)
+    setTimeout(() => resolveCopyAction(strategyId, id), stepMs() * 1.6)
     return id
 }
 
 export const submitMandate = async ({ idempotencyKey }) => {
-    const { funding, draft, copy } = getState()
+    const strategyId = focused()
+    const { funding, draft, copy } = getStateFor(strategyId)
     if (funding?.status !== OP_STATUS.COMPLETED) throw new ApiError("not_credited", "Broker credit is not confirmed yet.")
     await latency()
-    setState(s => ({ ...s, copy: { ...s.copy, strategyId: draft.strategyId, mandateVersion: MANDATE_VERSION, consentedAt: now() } }))
+    setStateFor(strategyId, s => ({ ...s, copy: { ...s.copy, strategyId: draft.strategyId, mandateVersion: MANDATE_VERSION, consentedAt: now() } }))
     const amending = draft.amendment && copy.status !== COPY_STATUS.NONE
-    return requestCopyAction(amending ? "amend" : "activate", { creditCents: funding.quote.creditCents }, idempotencyKey)
+    return requestCopyAction(amending ? "amend" : "activate", { creditCents: funding.quote.creditCents }, idempotencyKey, strategyId)
 }
 
 export const submitCopyAction = async ({ type, closePositions = false, idempotencyKey }) => {
+    const strategyId = focused()
     await latency()
-    return requestCopyAction(type, { closePositions }, idempotencyKey)
+    return requestCopyAction(type, { closePositions }, idempotencyKey, strategyId)
 }
 
 /* ------------------------------ withdrawal + payout ------------------------------ */
 
 export const requestRelease = async ({ amountCents, mode, idempotencyKey }) => {
+    const strategyId = focused()
     const existing = replayed(idempotencyKey)
     if (existing) return existing
 
-    const { broker } = getState()
+    const { broker } = getStateFor(strategyId)
     if (amountCents <= 0) throw new ApiError("invalid_amount", "Enter an amount greater than zero.")
     if (amountCents > (broker?.withdrawableCents || 0)) {
         throw new ApiError("exceeds_cash", "This is more than your available cash. Open positions are never closed to cover it.")
@@ -249,7 +260,7 @@ export const requestRelease = async ({ amountCents, mode, idempotencyKey }) => {
 
     await latency()
     const id = newId("REL")
-    setState(s => {
+    setStateFor(strategyId, s => {
         const withdrawal = {
             id: newId("WDL"),
             amountCents,
@@ -262,13 +273,14 @@ export const requestRelease = async ({ amountCents, mode, idempotencyKey }) => {
         }
         return remember(addActivity({ ...s, withdrawal }, { kind: "withdrawal", label: "Release requested", amountCents, status: "pending", ref: id }), idempotencyKey, id)
     })
-    schedule("release")
+    schedule("release", strategyId)
     return id
 }
 
 export const createPayoutQuote = async () => {
+    const strategyId = focused()
     await latency()
-    const { withdrawal } = getState()
+    const { withdrawal } = getStateFor(strategyId)
     const { currency } = withdrawal.destination
     const rate = await ensureRate(currency)
     const converted = (withdrawal.amountCents / 100) * rate
@@ -286,25 +298,26 @@ export const createPayoutQuote = async () => {
         eta: "Usually within minutes",
         expiresAt: expiry(),
     }
-    setState(s => ({ ...s, withdrawal: { ...s.withdrawal, quote } }))
+    setStateFor(strategyId, s => ({ ...s, withdrawal: { ...s.withdrawal, quote } }))
     return quote
 }
 
 export const submitPayout = async ({ idempotencyKey }) => {
+    const strategyId = focused()
     const existing = replayed(idempotencyKey)
     if (existing) return existing
 
-    const { withdrawal } = getState()
+    const { withdrawal } = getStateFor(strategyId)
     if (isQuoteExpired(withdrawal.quote)) throw new ApiError("quote_expired", "This quote expired. Review the new quote before you authorize.")
 
     await latency()
     const id = newId("PAYOUT")
-    setState(s => {
+    setStateFor(strategyId, s => {
         const stages = buildStages(PAYOUT_STAGES).map((stage, i) => (i === 0 ? { ...stage, state: STAGE.DONE, at: now() } : i === 1 ? { ...stage, state: STAGE.PENDING } : stage))
         const payout = { id, quote: s.withdrawal.quote, destination: s.withdrawal.destination, purpose: s.withdrawal.purpose, stages, status: OP_STATUS.PROCESSING, createdAt: now() }
         return remember(addActivity({ ...s, withdrawal: { ...s.withdrawal, payout } }, { kind: "payout", label: "Payout submitted", amount: payout.quote.net, currency: payout.quote.currency, status: "pending", ref: id }), idempotencyKey, id)
     })
-    schedule("payout")
+    schedule("payout", strategyId)
     return id
 }
 
@@ -314,7 +327,9 @@ export const retryPayout = async () => setState(s => ({ ...s, withdrawal: { ...s
 /* After a reload, pick every pending operation up where it stopped. */
 export const resumePendingWork = () => {
     const state = getState()
-    Object.keys(OPS).forEach(schedule)
-    if (state.copy.pending) setTimeout(() => resolveCopyAction(state.copy.pending.id), stepMs())
+    Object.entries(state.copies).forEach(([strategyId, slot]) => {
+        Object.keys(OPS).forEach(kind => schedule(kind, strategyId))
+        if (slot.copy.pending) setTimeout(() => resolveCopyAction(strategyId, slot.copy.pending.id), stepMs())
+    })
     if (state.profile.brokerLink === "pending") scheduleLinkReview()
 }
