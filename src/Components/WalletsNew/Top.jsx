@@ -38,7 +38,7 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
     const userWallets = useMemo(
         () => (allWallets || []).filter((w) => w?.provider !== "bvnk"),
         [allWallets]
-    )
+    ).filter(wallet => wallet?.wallet_type !== 'crypto')
     const [activeDot, setActiveDot] = useState(0)
     const [currentDefault, setCurrentDefault] = useState(false)
     const [currentActive, setCurrentActive] = useState(false)
