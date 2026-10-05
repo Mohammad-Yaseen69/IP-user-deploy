@@ -5,22 +5,23 @@ import { decryptData } from "../../../Helper/EssentilaMethods/Decryption";
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../../../Context/UserContext";
 import er_icon from "./files/exchange_rate.svg"
+import { getBeneficiaryDisplayName } from "./beneficiaryHelpers"
 
-const StepFive = ({ data, dataHandler }) => {
+const StepFive = ({ data }) => {
     const { t } = useTranslation()
     const { authHeader } = useContext(UserContext)
     const [exchangedAmount, setExchangedAmount] = useState(0)
 
     useEffect(() => {
         if (data.currency_wallet?._id !== data?.wallet?._id) {
-            const getExchangedAmounts = async (from, to, amount) => {
+            const getExchangedAmounts = async () => {
                 try {
                     const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/get-plain-exchange-rate?from=${data?.currency?.currency?.code || data?.currency}&to=${data.payment_type?.value !== "wallet" ? data.currency_wallet?.currency?.code : data.wallet?.currency?.code}&amount=${data.amount}`, {
                         headers: authHeader
                     });
                     const dec = decryptData(res?.data?.data);
                     setExchangedAmount(dec?.exchangeRate?.exchanged_amount ?? 0);
-                } catch (error) {
+                } catch {
                     return 0;
                 }
             };
@@ -32,7 +33,7 @@ const StepFive = ({ data, dataHandler }) => {
     console.log(data.wallet, data.exchange_rate, data.currency)
     return (
         <div className={styles.container}>
-            <h4>{data.beneficiary?.first_name} {data?.beneficiary?.last_name}</h4>
+            <h4>{getBeneficiaryDisplayName(data.beneficiary)}</h4>
             <div className={styles.receiver_amount}>
                 <h5>{data.exchange_rate?.receiver?.amount?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</h5>
                 <h5>{data.exchange_rate?.receiver?.currency}</h5>

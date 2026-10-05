@@ -242,3 +242,23 @@ export const buildChannelPayload = ({ form, transactionType }) => {
 
     return payload;
 };
+
+/* A recipient added mid transfer is not saved on its own: it travels inside the transaction
+   in the same shape as a saved beneficiary, with its channel details as a one-item list
+   under the channel's own key (bank_details, mobile_wallet, cash_pickup, card). */
+export const buildTransactionBeneficiaryDetails = ({ beneficiaryPayload, channelPayload, saveForFuture }) => {
+    const { country, extras, ...beneficiary } = beneficiaryPayload;
+    const { channel_type: channelType } = channelPayload;
+    const channelKey = CHANNEL_PAYLOAD_KEY[channelType] || CHANNEL_PAYLOAD_KEY.bank;
+
+    return {
+        saveForFuture: !!saveForFuture,
+        ...beneficiary,
+        extras: {
+            ...extras,
+            channel_type: channelType,
+            ...(country ? { country } : {}),
+        },
+        [channelKey]: [channelPayload[channelKey]],
+    };
+};
