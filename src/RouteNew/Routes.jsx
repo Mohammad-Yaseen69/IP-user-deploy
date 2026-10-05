@@ -78,6 +78,7 @@ const LogActivity = lazy(() => import("../Components/LogActivity"))
 const VirtyalBank = lazy(() => import("../Components/VirtualIBAN"))
 // const KYBOnboarding = lazy(() => import("../Components/KYBOnboarding/index"))
 const ThirdPartySenders = lazy(() => import("../Components/ThirdPartySenders"))
+const CopyX = lazy(() => import("../Components/CopyX"))
 const OnboardingIBAN = lazy(() => import("../Components/VirtualIBAN/OnBoardingIBAN"))
 const PriceActivation = lazy(() => import("../Components/VirtualIBAN/OnBoardingIBAN/PriceActivation/PriceActivation.jsx"))
 const MoveMoney = lazy(() => import("../Components/VirtualIBAN/OnBoardingIBAN/moveMoney/MoveMoney.jsx"))
@@ -98,6 +99,7 @@ const Support = lazy(() => import("../Components/AgentCommission/Support/Support
 const AgentProfile = lazy(() => import("../Components/AgentCommission/Profile/Profile.jsx"))
 const FeeModelRequests = lazy(() => import("../Components/AgentCommission/FeeRequests/FeeModelRequests.jsx"))
 const LeadClaimConfirm = lazy(() => import("../Components/Auth/LeadClaimConfirm.jsx"))
+const PaytentlyCardCollected = lazy(() => import("../Components/PaytentlyCardCollected"))
 
 
 const PermissionRoute = ({ permission, children }) => {
@@ -203,6 +205,8 @@ export const routes = [
     { path: "/onboarding-IBAN/crypto", component: <PermissionRoute permission="virtual-iban.view"><CryptoActions /></PermissionRoute> },
     { path: "/crypto-wallets", component: <PermissionRoute permission="wallet.view"><CryptoWalletsPage /></PermissionRoute> },
     { path: "/third-party-senders", component: <PermissionRoute permission="payments.send-as-third-party.view"><ThirdPartySenders /></PermissionRoute> },
+    { path: "/copy-trading", component: <CopyX /> },
+    { path: "/copy-trading/:screen", component: <CopyX /> },
     { path: "*", component: <NotFound type='Page' /> }
 ]
 
@@ -244,6 +248,7 @@ export const publicRoutes = [
     { path: "/v/:ibanId", component: <IbanValidationPage /> },
     { path: "/Insta-media", component: <InstaMedia /> },
     { path: "/lead-claim-confirm", component: <LeadClaimConfirm /> },
+    { path: "/paytently/card-collected", component: <PaytentlyCardCollected /> },
     { path: "*", component: <NotFound type='Page' /> }
 ]
 export const authRoutes = [

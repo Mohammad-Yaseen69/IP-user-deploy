@@ -2,6 +2,7 @@ import { Navigate } from "react-router-dom";
 import { useContext, useEffect } from "react";
 import { UserContext } from "../../Context/UserContext";
 import InstaPayLoader from "../../Components/Loader";
+import { getLoginPath } from "../../utils/Functions/loginPage";
 
 export const AgentRoute = ({ children }) => {
     const { userDetails, verifyToken } = useContext(UserContext) || {};
@@ -14,7 +15,7 @@ export const AgentRoute = ({ children }) => {
     }, [token, userDetails, verifyToken]);
 
     if (!token) {
-        return <Navigate to="/login" replace />;
+        return <Navigate to={getLoginPath()} replace />;
     }
 
     if (userDetails === null) {

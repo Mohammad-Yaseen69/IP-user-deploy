@@ -5,14 +5,19 @@ import { CheckCircle, Info } from 'react-feather'
 import { UserContext } from '../../Context/UserContext'
 import { useTranslation } from 'react-i18next';
 
-const FileUploadWithPreview = ({ docName, setCompanyFiles, setCompanyFileNames, userDetails, checkFileStatus, isReadOnly }) => {
+const FileUploadWithPreview = ({ docName, setCompanyFiles, setCompanyFileNames, userDetails, checkFileStatus, isReadOnly, onFileSelected, getDraftFile }) => {
     const existingFile = userDetails?.company?.kyb_files?.find(f => f.document_name === docName);
     const [localFile, setLocalFile] = useState(null);
+    const draftFile = !localFile && getDraftFile ? getDraftFile(docName) : null
     const { t } = useTranslation()
     const handleFileChange = (e) => {
         const file = e.target.files[0];
         if (file) {
             setLocalFile(file);
+            if (onFileSelected) {
+                onFileSelected(docName, file)
+                return
+            }
             setCompanyFiles(prev => {
                 const idx = prev.findIndex(f => f?.document_name === docName);
                 if (idx !== -1) {
@@ -37,10 +42,17 @@ const FileUploadWithPreview = ({ docName, setCompanyFiles, setCompanyFileNames, 
 
     return (
         <div style={{ display: "flex", flexDirection: "column", gap: ".5rem" }}>
-            {existingFile && !localFile && (
+            {existingFile && !localFile && !draftFile && (
                 <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
                     <span style={{ fontWeight: 500 }}>
                         {t("Uploaded")}: <a href={existingFile.file_link} target="_blank" rel="noopener noreferrer">{existingFile.key?.split("/")?.[2]}</a>
+                    </span>
+                </div>
+            )}
+            {draftFile && (
+                <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+                    <span style={{ fontWeight: 500 }}>
+                        {t("Uploaded")}: <a href={draftFile.file_link} target="_blank" rel="noopener noreferrer">{draftFile.name}</a>
                     </span>
                 </div>
             )}
@@ -57,7 +69,7 @@ const FileUploadWithPreview = ({ docName, setCompanyFiles, setCompanyFileNames, 
     );
 };
 
-const SoleTradedDocs = ({ setCompanyFiles, setCompanyFileNames, checkFileStatus, isReadOnly }) => {
+const SoleTradedDocs = ({ setCompanyFiles, setCompanyFileNames, checkFileStatus, isReadOnly, onFileSelected, getDraftFile }) => {
     const [modalOne, setModalOne] = useState(false)
     const [modalTwo, setModalTwo] = useState(false)
     const [modalThree, setModalThree] = useState(false)
@@ -76,6 +88,8 @@ const SoleTradedDocs = ({ setCompanyFiles, setCompanyFileNames, checkFileStatus,
                         docName={t(`Sole Trader's Registry Extract (Entity's Registration/Creation Document)`)}
                         setCompanyFiles={setCompanyFiles}
                         setCompanyFileNames={setCompanyFileNames}
+                        onFileSelected={onFileSelected}
+                        getDraftFile={getDraftFile}
                         userDetails={userDetails}
                         checkFileStatus={checkFileStatus}
                         isReadOnly={isReadOnly}
@@ -119,6 +133,8 @@ const SoleTradedDocs = ({ setCompanyFiles, setCompanyFileNames, checkFileStatus,
                         docName={t(`Collection of Identification Documents`)}
                         setCompanyFiles={setCompanyFiles}
                         setCompanyFileNames={setCompanyFileNames}
+                        onFileSelected={onFileSelected}
+                        getDraftFile={getDraftFile}
                         userDetails={userDetails}
                         checkFileStatus={checkFileStatus}
                         isReadOnly={isReadOnly}
@@ -144,11 +160,13 @@ const SoleTradedDocs = ({ setCompanyFiles, setCompanyFileNames, checkFileStatus,
             </div>
             <div>
                 <FormGroup>
-                    <Label>{t("Proof of Address")} <Info className={styles.info_icon} size={16} onClick={() => setModalThree(!modalThree)} /></Label>
+                    <Label>{t("Proof of address of the company")} <Info className={styles.info_icon} size={16} onClick={() => setModalThree(!modalThree)} /></Label>
                     <FileUploadWithPreview
                         docName={t(`Proof of Address`)}
                         setCompanyFiles={setCompanyFiles}
                         setCompanyFileNames={setCompanyFileNames}
+                        onFileSelected={onFileSelected}
+                        getDraftFile={getDraftFile}
                         userDetails={userDetails}
                         checkFileStatus={checkFileStatus}
                         isReadOnly={isReadOnly}

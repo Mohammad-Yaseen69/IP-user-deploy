@@ -1,0 +1,120 @@
+/* WEB-05 payment method dialog (Figma 14235:38939). */
+
+.scrim.scrim { background: rgba(23, 20, 31, 0.4); }
+
+.dialog {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    display: flex; flex-direction: column; gap: 12px;
+    width: calc(100% - 32px); max-width: 600px; max-height: 92vh; overflow-y: auto;
+    padding: 32px; border-radius: 20px; background: #FFFFFF; outline: none;
+    box-shadow: 0 30px 80px -20px rgba(28, 14, 79, 0.28);
+    color: #17141F; letter-spacing: -0.03em;
+}
+.dialog h2, .dialog p { margin: 0; }
+
+/* ------------------------------------ header ------------------------------------ */
+
+.head { display: flex; align-items: flex-start; gap: 16px; }
+.titleBlock { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+.title { font-size: 20px; line-height: 1.2; font-weight: 600; color: #17141F; }
+.subtitle { font-size: 14px; line-height: normal; font-weight: 400; color: #6E7687; }
+.close {
+    width: 36px; height: 36px; flex-shrink: 0; display: grid; place-items: center;
+    border: none; border-radius: 6px; background: transparent; cursor: pointer;
+}
+.close:hover { background: #F3EFFF; }
+.close img { width: 20px; height: 20px; }
+
+/* ------------------------------------ filters ------------------------------------ */
+
+.filters { display: flex; align-items: flex-start; gap: 12px; }
+.field {
+    display: flex; align-items: center; gap: 12px; height: 40px; padding: 8px 12px;
+    border: 1px solid #EFF1F6; border-radius: 6px; background: #FFFFFF;
+    filter: drop-shadow(0 1px 0.75px rgba(27, 31, 42, 0.04));
+    font-size: 14px; line-height: normal; color: #1B1F2A;
+}
+.field img { width: 21.333px; height: 21.333px; flex-shrink: 0; }
+.search { flex: 1; min-width: 0; }
+.search:focus-within { border-color: #5926F0; }
+.search input {
+    flex: 1; min-width: 0; padding: 0; border: none; outline: none; background: transparent;
+    font: inherit; letter-spacing: inherit; color: #1B1F2A;
+}
+.search input::placeholder { color: #6E7687; opacity: 1; }
+.country { width: 180px; flex-shrink: 0; }
+
+/* ------------------------------------ methods ------------------------------------ */
+
+.group { font-size: 12px; line-height: 1.5; font-weight: 600; color: #6E7687; }
+.groupSpaced { margin-top: 4px; }
+.list { display: flex; flex-direction: column; gap: 12px; }
+
+.method { display: flex; flex-direction: column; padding: 12px 16px; border: 1px solid #E9E7EF; border-radius: 12px; background: #FFFFFF; }
+.methodSelected { padding: 11.5px 15.5px; border: 1.5px solid #5926F0; background: #FBF9FF; }
+.methodDisabled { opacity: 0.6; }
+
+.methodRow {
+    display: flex; align-items: center; gap: 14px; width: 100%; padding: 0; border: none; background: none;
+    font: inherit; letter-spacing: inherit; text-align: left; color: inherit; cursor: pointer;
+}
+.methodRow:disabled { cursor: not-allowed; }
+
+.radio {
+    width: 20px; height: 20px; flex-shrink: 0; border-radius: 100px; background: #FFFFFF;
+    border: 1px solid #D1D6E0; box-shadow: 0 1px 1.5px rgba(27, 31, 42, 0.04);
+}
+.radioImg, .lock { width: 20px; height: 20px; flex-shrink: 0; }
+
+.tile { width: 34px; height: 34px; flex-shrink: 0; display: grid; place-items: center; border-radius: 10px; background: #F3EFFF; }
+.tile img { width: 18px; height: 18px; }
+
+.text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.methodTitle { font-size: 14px; line-height: 1.5; font-weight: 500; color: #17141F; }
+.methodSub { font-size: 12px; line-height: 1.5; font-weight: 400; color: #5E5A6B; }
+
+.tag {
+    display: inline-flex; align-items: center; height: 20px; padding: 0 8px; flex-shrink: 0; border-radius: 100px;
+    background: #ECFDF5; font-size: 11px; line-height: 20px; font-weight: 500; color: #047857; white-space: nowrap;
+}
+
+/* Operator and crypto asset → network sub-choices, aligned with the method text. */
+.extra { display: flex; flex-direction: column; gap: 12px; padding: 12px 0 0 82px; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip {
+    height: 32px; padding: 0 12px; border: 1px solid #E9E7EF; border-radius: 100px; background: #FFFFFF;
+    font: inherit; font-size: 12px; line-height: 1.5; font-weight: 500; letter-spacing: inherit; color: #1B1F2A; cursor: pointer;
+}
+.chip:hover:not(:disabled) { border-color: #D6D3E0; }
+.chipActive, .chipActive:hover:not(:disabled) { border-color: #5926F0; background: #F3EFFF; color: #5926F0; }
+.chip:disabled { color: #9AA3B2; cursor: not-allowed; }
+.hint { font-size: 12px; line-height: 1.5; color: #5E5A6B; }
+
+/* ------------------------------------ footer ------------------------------------ */
+
+.foot { display: flex; align-items: center; gap: 12px; padding-top: 20px; border-top: 1px solid #E9E7EF; }
+.footNote { flex: 1; min-width: 0; font-size: 12px; line-height: 1.5; color: #5E5A6B; }
+
+.btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 40px; padding: 0 20px; flex-shrink: 0;
+    border: none; border-radius: 6px; font: inherit; font-size: 14px; line-height: normal; font-weight: 500;
+    letter-spacing: inherit; white-space: nowrap; cursor: pointer; transition: background 0.15s ease;
+}
+.btnTertiary { background: transparent; color: #5926F0; }
+.btnTertiary:hover { background: #F3EFFF; }
+.btnSecondary { background: #EFF1F6; color: #22106B; }
+.btnSecondary:hover { background: #E4E7EF; }
+.btnPrimary { background: #5926F0; color: #FFFFFF; }
+.btnPrimary:hover:not(:disabled) { background: #4C1ED1; }
+.btnPrimary:disabled { background: #A88BFF; cursor: not-allowed; }
+
+.dialog :focus-visible { outline: 2px solid #5926F0; outline-offset: 2px; }
+
+@media (max-width: 560px) {
+    .dialog { padding: 24px 20px; }
+    .filters { flex-direction: column; align-items: stretch; }
+    .country { width: 100%; }
+    .extra { padding-left: 0; }
+    .foot { flex-wrap: wrap; }
+    .footNote { flex-basis: 100%; order: -1; }
+}

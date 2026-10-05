@@ -68,11 +68,7 @@ export const AgentSidebar = () => {
 
     const handleLogout = () => {
         handleClose();
-        if (typeof logout === "function") {
-            logout();
-        } else {
-            navigate("/login");
-        }
+        logout();
     };
 
     const handleClose = () => setShowProfileMenu(null);

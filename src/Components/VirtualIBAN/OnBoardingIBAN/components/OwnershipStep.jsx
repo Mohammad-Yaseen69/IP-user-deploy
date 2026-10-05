@@ -9,8 +9,8 @@ import SidebarProgress from './SidebarProgress'
 import StepProgress from './StepProgress'
 import AlertBox from './AlertBox'
 import { useMediaQuery } from '@mui/material'
-import OwnerCard from './OwnerCard'
 import { getInitials } from '../../../../utils/Functions/getInitials'
+import useStepValidation, { required } from '../../../../hooks/useStepValidation'
 
 
 const EMPTY_FORM = {
@@ -23,7 +23,16 @@ const EMPTY_FORM = {
     isPep: false
 }
 
-const OwnershipStep = ({ onNext, onBack, userType, data = {}, userDetails, currentStep }) => {
+const OWNER_RULES = {
+    fullName: required.text('fullName'),
+    email: (f) => !/^\S+@\S+\.\S+$/.test(f.email.trim()),
+    role: required.text('role'),
+    ownershipPercent: (f) =>
+        f.ownershipPercent !== '' &&
+        (Number(f.ownershipPercent) < 0 || Number(f.ownershipPercent) > 100),
+}
+
+const OwnershipStep = ({ onNext, onBack, userType, data = {}, userDetails, currentStep, onChange }) => {
     const { t } = useTranslation()
     const isMobile = useMediaQuery('(max-width:600px)');
 
@@ -49,9 +58,14 @@ const OwnershipStep = ({ onNext, onBack, userType, data = {}, userDetails, curre
 
     const [owners, setOwners] = useState(initialOwners)
 
+    useEffect(() => {
+        onChange?.(owners)
+    }, [owners])
+
     const [isModalOpen, setIsModalOpen] = useState(false)
     const [formData, setFormData] = useState({ ...EMPTY_FORM })
     const [isEditing, setIsEditing] = useState(false)
+    const { err, validate, reset } = useStepValidation(formData, OWNER_RULES);
 
     useEffect(() => {
         window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
@@ -106,6 +120,7 @@ const OwnershipStep = ({ onNext, onBack, userType, data = {}, userDetails, curre
 
     const openAddModal = (type = 'individual') => {
         if (isKybDone) return
+        reset();
         setFormData({
             ...EMPTY_FORM,
             id: Date.now(),
@@ -117,6 +132,7 @@ const OwnershipStep = ({ onNext, onBack, userType, data = {}, userDetails, curre
 
     const openEditModal = (owner) => {
         if (isKybDone) return
+        reset();
         setFormData({ ...owner })
         setIsEditing(true)
         setIsModalOpen(true)
@@ -129,7 +145,7 @@ const OwnershipStep = ({ onNext, onBack, userType, data = {}, userDetails, curre
 
     const handleSaveOwner = (e) => {
         e?.preventDefault()
-        if (isKybDone || !formData.fullName?.trim()) return
+        if (!validate() || isKybDone) return
 
         if (isEditing) {
             setOwners(prev => prev.map(o => o.id === formData.id ? { ...formData } : o))
@@ -187,15 +203,11 @@ const OwnershipStep = ({ onNext, onBack, userType, data = {}, userDetails, curre
                     />
                 </div>
             </div>
-
             <div className={styles.mainArea}>
                 <div className={styles.onboardingFormOwnership}>
                     {owners.map((owner) => 
-                        isMobile?
-                        <OwnerCard owner={owner} key={owner.id} handleDelete={handleDeleteOwner}/>
-                            :
-                        <div key={owner.id} className={styles.card} style={{ marginBottom: "15px", padding: "16px", borderRadius: "10px", border: "1px solid #e5e7eb", background: "#ffffff", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                            <div className={styles.left} style={{ display: "flex", alignItems: "center", gap: "15px" }}>
+                        <div key={owner.id} className={styles.card} style={{ marginBottom: "15px", padding: "16px", borderRadius: "10px", border: "1px solid #e5e7eb", background: "#ffffff", display: "flex", justifyContent: "space-between", alignItems: isMobile? 'start': "center", flexDirection: isMobile?'column':'row', gap: isMobile && '13px' }}>
+                            <div className={styles.left} style={{ display: "flex", alignItems: isMobile ? 'start' : "center", gap: isMobile ? '10px' : "15px" , order: isMobile && 1}}>
                                 {owner.type === 'entity' ? (
                                     <div className={styles.companyIcon} style={{ background: "#eff6ff", color: "#2563eb", padding: "10px", borderRadius: "8px", display: "flex", alignItems: "center", justifyContent: "center" }}>
                                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -205,16 +217,16 @@ const OwnershipStep = ({ onNext, onBack, userType, data = {}, userDetails, curre
                                         </svg>
                                     </div>
                                 ) : (
-                                    <div className={styles.avatar} style={{ background: "#0284c7", color: "#fff", width: "42px", height: "42px", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 700, fontSize: "14px" }}>
+                                    <div className={isMobile ? styles.avatar : ''} style={{ background: "#0284c7", color: "#fff", width: "42px", height: "42px", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 700, fontSize: "14px", marginRight: '12px' }}>
                                         {getInitials(owner.fullName)}
                                     </div>
                                 )}
 
                                 <div className={styles.info}>
-                                    <h4 style={{ margin: 0, fontSize: "16px", fontWeight: 600, color: "#111827" }}>
+                                    <h4 style={{ margin: 0, fontSize: isMobile ? 14 : "16px", fontWeight: 600, color: "#111827" }}>
                                         {owner.fullName} {owner.type === 'entity' ? '• Entity' : ''}
                                     </h4>
-                                    <p style={{ margin: "4px 0 8px 0", fontSize: "13px", color: "#6b7280" }}>
+                                    <p style={{ margin: "4px 0 8px 0", fontSize: isMobile ? '11px' : "13px !important", color: "#6b7280" }}>
                                         {owner.role || 'UBO'} • {owner.ownershipPercent ? `${owner.ownershipPercent}% Ownership` : 'Shareholder'} {owner.email ? `• ${owner.email}` : ''}
                                     </p>
 
@@ -319,7 +331,7 @@ const OwnershipStep = ({ onNext, onBack, userType, data = {}, userDetails, curre
                             <input
                                 type="text"
                                 className="form-control"
-                                required
+                                style={err('fullName')}
                                 minLength={2}
                                 maxLength={255}
                                 value={formData.fullName}
@@ -340,7 +352,7 @@ const OwnershipStep = ({ onNext, onBack, userType, data = {}, userDetails, curre
                             <input
                                 type="email"
                                 className="form-control"
-                                required
+                                style={err('email')}
                                 value={formData.email}
                                 onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
                                 placeholder="john@example.com"
@@ -353,7 +365,7 @@ const OwnershipStep = ({ onNext, onBack, userType, data = {}, userDetails, curre
                                 <input
                                     type="text"
                                     className="form-control"
-                                    required
+                                    style={err('role')}
                                     value={formData.role}
                                     onChange={(e) => setFormData(prev => ({ ...prev, role: e.target.value }))}
                                     placeholder="e.g. Director, UBO, CEO"
@@ -365,6 +377,7 @@ const OwnershipStep = ({ onNext, onBack, userType, data = {}, userDetails, curre
                                 <input
                                     type="number"
                                     className="form-control"
+                                    style={err('ownershipPercent')}
                                     min="0"
                                     max="100"
                                     value={formData.ownershipPercent}

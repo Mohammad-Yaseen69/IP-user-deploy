@@ -25,7 +25,7 @@ const getGreeting = () => {
 };
 
 const MobileSidebar = ({ setShowModal }) => {
-    const { userDetails, verifyToken, profileCompletedPercentage, clearData } = useContext(UserContext)
+    const { userDetails, verifyToken, profileCompletedPercentage, logout } = useContext(UserContext)
     const { t } = useTranslation()
     const { toggleSidebar, mobileSidebar } = useContext(MobileSbContext)
     const checkPermission = usePermission();
@@ -97,14 +97,13 @@ const MobileSidebar = ({ setShowModal }) => {
                                             ?
                                             <span>{t(item.title)}</span>
                                             :
-                                            <Link to={item.url} onClick={() => {
+                                            <Link to={item.url} onClick={(e) => {
                                                 window.scrollTo({ top: 0, behavior: "smooth" })
                                                 toggleSidebar()
                                                 if (item.title === "Logout") {
-                                                    const coun = localStorage.getItem("ip_country")
-                                                    localStorage.clear()
-                                                    localStorage.setItem("ip_country", coun)
-                                                    clearData()
+                                                    // logout() navigates to the correct login page itself
+                                                    e.preventDefault()
+                                                    logout()
                                                 }
                                             }}>
                                                 {item.title === "Logout" ? item.activeIcon : window.location.pathname === item.url ? item.activeIcon : item.icon}

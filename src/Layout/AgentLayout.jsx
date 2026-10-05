@@ -8,6 +8,7 @@ import InstaPayLoader from "../Components/Loader";
 import SidebarIndex from "../Common/Component/agentSidebar";
 import useWindowWidth from "../utils/useWindowWidth";
 import MobileSidebar from "../Common/Component/agentSidebar/MobileSidebar";
+import { getLoginPath } from "../utils/Functions/loginPage";
 
 const AgentLayout = () => {
     const width = useWindowWidth();
@@ -23,7 +24,7 @@ const AgentLayout = () => {
     }, [location]);
 
     if (!token) {
-        return <Navigate to="/login" replace />;
+        return <Navigate to={getLoginPath()} replace />;
     }
 
     if (userDetails === null) {
