@@ -71,7 +71,6 @@ const datePickerInputProps = {
         border: 'none',
         boxShadow: 'none',
         padding: '0 10px',
-        minHeight: '40px',
         fontWeight: 500,
     },
 };
@@ -82,7 +81,6 @@ const datePickerInnerInputProps = {
         border: 'none',
         boxShadow: 'none',
         padding: '2px 0px',
-        minHeight: '40px',
     },
 };
 
