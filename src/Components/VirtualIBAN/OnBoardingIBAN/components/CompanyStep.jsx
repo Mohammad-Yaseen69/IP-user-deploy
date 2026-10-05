@@ -57,7 +57,7 @@ const COMPANY_RULES = {
     dateOfIncorporation: required.list('dateOfIncorporation'),
 }
 
-const CompanyStep = ({ onNext, onBack, userType, data = {}, currentStep }) => {
+const CompanyStep = ({ onNext, onBack, onChange, userType, data = {}, currentStep }) => {
     const { t } = useTranslation()
     const { userDetails } = useContext(UserContext)
 
@@ -97,6 +97,10 @@ const CompanyStep = ({ onNext, onBack, userType, data = {}, currentStep }) => {
             }
         }
     }, [userDetails?.company?.date_of_incorporation, data.dateOfIncorporation]);
+
+    useEffect(() => {
+        onChange?.(form)
+    }, [form]);
 
     const isFormValid = Boolean(
         form.countryOfIncorporation?.trim() &&

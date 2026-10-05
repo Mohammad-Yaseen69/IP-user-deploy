@@ -250,6 +250,41 @@ export const useVirtualIbanCryptoTransferFee = () =>
             }),
     })
 
+export const useVirtualIbanCryptoPayoutFee = () =>
+    useMutation({
+        mutationFn: (payload) =>
+            apiWrapper({
+                endpoint: "/api/virtual-iban/payout/crypto/fee",
+                method: "POST",
+                payload,
+                isEncrypted: true,
+                isDecrypted: true,
+            }),
+    })
+
+export const useExecuteVirtualIbanCryptoPayout = () => {
+    const queryClient = useQueryClient()
+
+    return useMutation({
+        mutationFn: ({ idempotencyKey, payload }) =>
+            apiWrapper({
+                endpoint: "/api/virtual-iban/payout/crypto",
+                method: "POST",
+                payload,
+                isEncrypted: true,
+                isDecrypted: true,
+                idempotencyKey,
+            }),
+        onSuccess: (_, variables) => {
+            queryClient.invalidateQueries({ queryKey: virtualIbanQueryKeys.list() })
+            if (variables?.ibanId) {
+                queryClient.invalidateQueries({ queryKey: virtualIbanQueryKeys.detail(variables.ibanId) })
+                queryClient.invalidateQueries({ queryKey: virtualIbanQueryKeys.balance(variables.ibanId) })
+            }
+        },
+    })
+}
+
 export const useExecuteVirtualIbanCryptoTransfer = () => {
     const queryClient = useQueryClient()
 

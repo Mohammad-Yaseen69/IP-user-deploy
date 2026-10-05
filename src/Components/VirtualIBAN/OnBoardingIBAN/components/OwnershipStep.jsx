@@ -33,7 +33,7 @@ const OWNER_RULES = {
         (Number(f.ownershipPercent) < 0 || Number(f.ownershipPercent) > 100),
 }
 
-const OwnershipStep = ({ onNext, onBack, userType, data = {}, userDetails, currentStep }) => {
+const OwnershipStep = ({ onNext, onBack, userType, data = {}, userDetails, currentStep, onChange }) => {
     const { t } = useTranslation()
     const isMobile = useMediaQuery('(max-width:600px)');
 
@@ -58,6 +58,10 @@ const OwnershipStep = ({ onNext, onBack, userType, data = {}, userDetails, curre
     }
 
     const [owners, setOwners] = useState(initialOwners)
+
+    useEffect(() => {
+        onChange?.(owners)
+    }, [owners])
 
     const [isModalOpen, setIsModalOpen] = useState(false)
     const [formData, setFormData] = useState({ ...EMPTY_FORM })

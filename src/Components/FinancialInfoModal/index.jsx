@@ -15,6 +15,7 @@ import { toast } from 'react-toastify'
 import useWindowWidth from '../../utils/useWindowWidth'
 import LanguagePicker from '../LanguagePicker'
 import { useNavigate } from 'react-router-dom'
+import { getLoginPath } from '../../utils/Functions/loginPage'
 
 const FinancialInfoModal = ({ isOpen, toggle, toggleOnSuccess, setShowSuccessModal }) => {
     const [activeStep, setActiveStep] = useState()
@@ -33,7 +34,7 @@ const FinancialInfoModal = ({ isOpen, toggle, toggleOnSuccess, setShowSuccessMod
 
     const handleLogout = () => {
         localStorage.removeItem("token");
-        navigate("/login");
+        navigate(getLoginPath());
     };
 
     const handleSearch = (query) => {

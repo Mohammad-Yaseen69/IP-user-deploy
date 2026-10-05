@@ -31,8 +31,10 @@ const sdk = new WidgetSDK({
 
 const isBig = window.innerWidth > 1000
 const base_url = window.location.origin || 'https://my.insta-pay.ch';
+// Paytently is the card provider (hosted-forms iframe).
+const usePaytently = true;
 
-const ConfirmWalletFund = ({ setSubStep, wallet = {}, amount, payoutChannel, card_number, card_expiry, card_cvc, saveCard, type = "add_fund", paymentWithSavedCard = false, currentCard, merchant = "", payer = {}, setExternalLink = () => { }, paypalAmount, token, rate, reEnterCallback = () => { }, sendKybWalletOTP, kybFeeDets, partnerId, exchangeRate, }) => {
+const ConfirmWalletFund = ({ setSubStep, wallet = {}, amount, payoutChannel, card_number, card_expiry, card_cvc, saveCard, type = "add_fund", paymentWithSavedCard = false, currentCard, merchant = "", payer = {}, setExternalLink = () => { }, paypalAmount, token, rate, reEnterCallback = () => { }, sendKybWalletOTP, kybFeeDets, partnerId, exchangeRate, sriPayMethod = null, onSriPayInitiated = () => { }, }) => {
     const navigate = useNavigate()
     const { t } = useTranslation()
     const [complete, setComplete] = useState(false);
@@ -66,10 +68,32 @@ const ConfirmWalletFund = ({ setSubStep, wallet = {}, amount, payoutChannel, car
     };
 
     const [showCardModal, setShowCardModal] = useState(false)
+    const [paytentlyHosted, setPaytentlyHosted] = useState(null)
+    const isPaytentlyCard = usePaytently && payoutChannel?.value === "card" && type === "add_fund"
     useEffect(() => {
         const createTransaction = async () => {
             if (payoutChannel?.value === "card") {
                 try {
+                    // Paytently collects the card in its hosted-forms iframe, so run before building card data.
+                    if (usePaytently && type === "add_fund") {
+                        const hostedEnc = encryptData({ wallet_id: wallet?._id, amount: +amount * 100 })
+                        const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/paytently/initiate-topup`, {
+                            data: hostedEnc
+                        }, { headers: { ...authHeader, "idempotency-key": getKey() } })
+                        const dec = decryptData(res.data.data)
+                        if (dec?.hosted_forms_url) {
+                            // Saved for the success page to continue to 3DS and to reconcile the wallet credit.
+                            try {
+                                localStorage.setItem("paytently_authorize_url", dec.authorize_url || "")
+                                localStorage.setItem("paytently_payment_id", dec.payment_id || "")
+                            } catch { }
+                            setPaytentlyHosted({ hostedUrl: dec.hosted_forms_url, authorizeUrl: dec.authorize_url })
+                            return
+                        }
+                        setError(dec?.message ?? "We cannot process your request at the moment, please try again later.")
+                        return
+                    }
+
                     let data = paymentWithSavedCard ? {
                         wallet_id: wallet?._id,
                         amount: +amount * 100,
@@ -225,7 +249,8 @@ const ConfirmWalletFund = ({ setSubStep, wallet = {}, amount, payoutChannel, car
                 const payload = {
                     wallet_id: wallet?.wallet_id,
                     token: exchangeRate?.token,
-                    payment_type: "topup_mobile_wallet"
+                    payment_type: "topup_mobile_wallet",
+                    ...(sriPayMethod ? { payment_method_type: sriPayMethod.payment_method_type } : {})
                 }
 
                 try {
@@ -239,8 +264,13 @@ const ConfirmWalletFund = ({ setSubStep, wallet = {}, amount, payoutChannel, car
 
                     console.log(response, "response from api")
 
-                    setMobileWalletTrxId(response?.transaction_id)
-                    setMobileSuccess(true)
+                    if (response?.vendor === "sripay" && response?.redirect_url) {
+                        // SriPay: the user pays on SriPay's page; the parent watches the status.
+                        onSriPayInitiated({ transactionId: response.transaction_id, redirectUrl: response.redirect_url })
+                    } else {
+                        setMobileWalletTrxId(response?.transaction_id)
+                        setMobileSuccess(true)
+                    }
 
                 } catch (error) {
                     const dec = decryptData(error?.response?.data?.data)
@@ -369,10 +399,11 @@ const ConfirmWalletFund = ({ setSubStep, wallet = {}, amount, payoutChannel, car
                         flexDirection: "column",
                         justifyContent: "space-between",
                         borderRadius: "20px",
-                        padding: isBig ? (window.innerWidth < 1500 ? "20px" : "20px 40px") : "5px",
+                        padding: (isPaytentlyCard && paytentlyHosted?.hostedUrl) ? "0" : isBig ? (window.innerWidth < 1500 ? "20px" : "20px 40px") : "5px",
                         paddingBottom: 0,
                         boxShadow: "0px 2px 20px -5.704601287841797px rgba(89, 38, 240, 0.07)"
                     }} className="conf_cont">
+                        {!(isPaytentlyCard && paytentlyHosted?.hostedUrl) && (
                         <div>
                             <button onClick={() => setSubStep(3)} className="btn btn-link">
                                 &larr; {t("Back")}
@@ -391,7 +422,48 @@ const ConfirmWalletFund = ({ setSubStep, wallet = {}, amount, payoutChannel, car
                                 }
                             </div>
                         </div>
+                        )}
 
+                        {isPaytentlyCard ? (
+                            paytentlyHosted?.hostedUrl ? (
+                                <iframe
+                                    title={t("Card payment")}
+                                    src={paytentlyHosted.hostedUrl}
+                                    allow="payment"
+                                    style={{
+                                        width: isBig ? "calc(100% + 72px)" : "100%",
+                                        marginLeft: isBig ? "-36px" : 0,
+                                        marginRight: isBig ? "-36px" : 0,
+                                        height: "clamp(620px, 85vh, 720px)",
+                                        border: 0,
+                                        borderRadius: isBig ? 0 : "16px",
+                                        marginTop: "1rem",
+                                        display: "block",
+                                    }}
+                                />
+                            ) : (
+                                <button
+                                    type="button"
+                                    disabled={loading}
+                                    onClick={() => { setLoading(true); setComplete(true); }}
+                                    style={{
+                                        marginTop: "1rem",
+                                        width: "100%",
+                                        border: "none",
+                                        borderRadius: "16px",
+                                        padding: "1rem",
+                                        color: "white",
+                                        fontSize: "1.1rem",
+                                        fontWeight: 500,
+                                        cursor: loading ? "not-allowed" : "pointer",
+                                        background: "radial-gradient(182.3% 794.57% at 91.57% -107.9%, #E64067 0%, #5926F0 55.65%, #4828A0 100%)",
+                                        boxShadow: "0px 6px 13px -5.4094px rgba(89, 38, 240, 0.17)",
+                                    }}
+                                >
+                                    {loading ? t("Loading...") : t("Enter Card Details")}
+                                </button>
+                            )
+                        ) : (
                         <div ref={divRef}
                             style={{
                                 textAlign: "center",
@@ -468,6 +540,7 @@ const ConfirmWalletFund = ({ setSubStep, wallet = {}, amount, payoutChannel, car
                                 </p>
                             }
                         </div>
+                        )}
                     </CardBody>
                 </Card>
             }
