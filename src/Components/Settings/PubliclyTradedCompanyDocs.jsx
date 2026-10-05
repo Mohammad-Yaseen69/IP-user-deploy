@@ -207,7 +207,7 @@ const PubliclyTradedCompanyDocs = ({ setCompanyFiles, setCompanyFileNames, check
             </div>
             <div>
                 <FormGroup>
-                    <Label>{t("Proof of Address")} <Info className={styles.info_icon} size={16} onClick={() => setModalFive(!modalFive)} /></Label>
+                    <Label>{t("Proof of address of the company")} <Info className={styles.info_icon} size={16} onClick={() => setModalFive(!modalFive)} /></Label>
                     <FileUploadWithPreview
                         docName={t(`Proof of Address`)}
                         setCompanyFiles={setCompanyFiles}
