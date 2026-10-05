@@ -1,0 +1,26 @@
+/* WEB-12b / WEB-13 / WEB-13b — page-specific values on top of copyTrading.module.css. */
+
+.noticeText { flex: 1; min-width: 0; padding-right: 17px; font-size: 14px; line-height: normal; letter-spacing: -0.42px; color: #17141F; }
+div.notice_info { background: #F1ECFE; }
+div.notice_success { background: #E8F7EE; }
+div.notice_warning { background: #FDF3E2; }
+div.notice_error { background: #FEF2F2; }
+
+p.eyebrow_processing { color: #5C2EF0; }
+p.eyebrow_success { color: #12A150; }
+p.eyebrow_warning { color: #B54708; }
+p.eyebrow_error { color: #B91C1C; }
+
+/* Sections sit directly in the main column; each one opens with its divider and 40px of air. */
+.sections { display: contents; }
+.sections > section { padding-top: 40px; }
+
+.sectionText { font-size: 14px; line-height: normal; letter-spacing: -0.42px; color: #5E5A6B; }
+
+.chips { display: flex; gap: 8px; align-items: flex-start; flex-wrap: wrap; }
+.chips > span { height: 24px; padding: 0 10px; }
+
+.actions { display: flex; flex-direction: column; gap: 10px; width: 100%; }
+
+.receiptLabel { font-size: 13px; color: #6E7687; }
+.receiptAmount { margin: 4px 0 16px; font-size: 34px; font-weight: 600; }

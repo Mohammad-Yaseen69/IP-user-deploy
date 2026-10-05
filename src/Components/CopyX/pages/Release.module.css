@@ -1,0 +1,9 @@
+/* WEB-10a · Review release / WEB-10b · Release pending. */
+
+/* The first section sits 40px below the intro block in the design (section top padding is 20px). */
+.intro { padding-bottom: 20px; }
+
+span.mutedValue { color: var(--ct-muted); }
+
+/* Wrapper used as the "Track release" scroll target; keeps the 40px gap between sections. */
+.timelineSection > section { padding-top: 40px; }

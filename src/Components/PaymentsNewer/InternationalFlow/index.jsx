@@ -666,7 +666,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                     const receivingCurrency = internationalData?.recipient_currency || internationalData?.exchange_rate?.receiver?.currency
                     const walletCurrency = internationalData?.wallet?.currency?.code
 
-                    if (internationalData.payment_type?.value === "wallet" && internationalData?.wallet?.currency) {
+                    if (internationalData.payment_type?.value === "wallet" && internationalData?.wallet?.currency && internationalData?.currency_wallet?.currency?.code) {
                         if (receivingCurrency && walletCurrency && receivingCurrency === walletCurrency) {
                             amount = Number(String(internationalData.receiving_amount)?.replaceAll(",", ""))
                         } else {
@@ -1173,7 +1173,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                 }
                 // })
                 else {
-                    if (internationalData.payment_type?.value !== "wallet" || internationalData?.wallet?._id) {
+                    if (internationalData.payment_type?.value !== "wallet" || internationalData?.wallet?._id ) {
                         if (internationalData.payoutChannel?.vendor === "thunes") {
                             createQuotation(Number(String(internationalData.amount)?.replaceAll(",", "")))
                         } else {

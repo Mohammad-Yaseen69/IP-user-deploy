@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { Inbox, Plus } from "react-feather"
 import InstaPayLoader from "../../Loader"
-// import DepositAddress from "../CryptoWallet/WalletDetail/DepositAddress"
+import DepositAddress from "../CryptoWallet/WalletDetail/DepositAddress"
 import NetworkSelector from "../CryptoWallet/WalletDetail/NetworkSelector"
 import { getAssetFullName, getWalletAccentColor } from "../CryptoWallet/utils/format"
 import styles from "../CryptoWallet/cryptoPage.module.scss"
@@ -137,7 +137,7 @@ const CryptoChannels = ({ selectedIban }) => {
                             selectedIndex={networkIndex}
                             onSelect={setNetworkIndex}
                         />
-                        {/* <DepositAddress currencyCode={selectedChannel?.payCurrency} network={currentNetwork} /> */}
+                        <DepositAddress currencyCode={selectedChannel?.payCurrency} network={currentNetwork} />
                     </div>
                 </section>
             ) : (

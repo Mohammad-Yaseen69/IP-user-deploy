@@ -34,7 +34,7 @@ const base_url = window.location.origin || 'https://my.insta-pay.ch';
 // Paytently is the card provider (hosted-forms iframe).
 const usePaytently = true;
 
-const ConfirmWalletFund = ({ setSubStep, wallet = {}, amount, payoutChannel, card_number, card_expiry, card_cvc, saveCard, type = "add_fund", paymentWithSavedCard = false, currentCard, merchant = "", payer = {}, setExternalLink = () => { }, paypalAmount, token, rate, reEnterCallback = () => { }, sendKybWalletOTP, kybFeeDets, partnerId, exchangeRate, }) => {
+const ConfirmWalletFund = ({ setSubStep, wallet = {}, amount, payoutChannel, card_number, card_expiry, card_cvc, saveCard, type = "add_fund", paymentWithSavedCard = false, currentCard, merchant = "", payer = {}, setExternalLink = () => { }, paypalAmount, token, rate, reEnterCallback = () => { }, sendKybWalletOTP, kybFeeDets, partnerId, exchangeRate, sriPayMethod = null, onSriPayInitiated = () => { }, }) => {
     const navigate = useNavigate()
     const { t } = useTranslation()
     const [complete, setComplete] = useState(false);
@@ -249,7 +249,8 @@ const ConfirmWalletFund = ({ setSubStep, wallet = {}, amount, payoutChannel, car
                 const payload = {
                     wallet_id: wallet?.wallet_id,
                     token: exchangeRate?.token,
-                    payment_type: "topup_mobile_wallet"
+                    payment_type: "topup_mobile_wallet",
+                    ...(sriPayMethod ? { payment_method_type: sriPayMethod.payment_method_type } : {})
                 }
 
                 try {
@@ -263,8 +264,13 @@ const ConfirmWalletFund = ({ setSubStep, wallet = {}, amount, payoutChannel, car
 
                     console.log(response, "response from api")
 
-                    setMobileWalletTrxId(response?.transaction_id)
-                    setMobileSuccess(true)
+                    if (response?.vendor === "sripay" && response?.redirect_url) {
+                        // SriPay: the user pays on SriPay's page; the parent watches the status.
+                        onSriPayInitiated({ transactionId: response.transaction_id, redirectUrl: response.redirect_url })
+                    } else {
+                        setMobileWalletTrxId(response?.transaction_id)
+                        setMobileSuccess(true)
+                    }
 
                 } catch (error) {
                     const dec = decryptData(error?.response?.data?.data)

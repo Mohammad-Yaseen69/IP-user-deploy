@@ -14,7 +14,7 @@ import MarqueeText from "../../Common/MarqueeText";
 
 const SidebarSubMenu = ({ menu, className, setIsOpen, isOpen, level, showModal, setShowModal, profileCompletedPercentage, inheritSize }) => {
     const { togglSidebar } = useContext(CustomizerContext)
-    const { clearData, userDetails } = useContext(UserContext)
+    const { logout, userDetails } = useContext(UserContext)
     const { pathname, search } = useLocation();
     const navigate = useNavigate()
     const { t } = useTranslation();
@@ -127,10 +127,7 @@ const SidebarSubMenu = ({ menu, className, setIsOpen, isOpen, level, showModal, 
                                             if (item?.type === "external_eshop") {
                                                 handleEshopClick()
                                             } else if (item.title.toLowerCase().includes("logout")) {
-                                                const coun = localStorage.getItem("ip_country")
-                                                localStorage.clear()
-                                                localStorage.setItem("ip_country", coun)
-                                                clearData()
+                                                logout()
                                             } else if (profileCompletedPercentage < 100 && !showModal) {
                                                 setShowModal(true)
                                             }
@@ -154,7 +151,8 @@ const SidebarSubMenu = ({ menu, className, setIsOpen, isOpen, level, showModal, 
                                                 }}
                                             to={item?.type === "external_eshop" ? "#" : (item.url ? item.url : Href)}
                                             onClick={(e) => {
-                                                if (item?.type === "external_eshop") {
+                                                // logout() navigates to the correct login page itself
+                                                if (item?.type === "external_eshop" || item.title.toLowerCase().includes("logout")) {
                                                     e.preventDefault()
                                                 }
                                                 const temp = isOpen;
