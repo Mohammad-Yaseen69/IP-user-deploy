@@ -45,6 +45,7 @@ import VendorBalanceModal from "./VendorBalanceModal"
 import WalletsComponent from "./WalletsComponent"
 import { useIdempotency } from "../../../hooks/Payments/useIdempotency"
 import SelectSender from "./SelectSender"
+import { getBeneficiaryDisplayName } from "./beneficiaryHelpers"
 import { usePermission } from "../../../hooks/GeneralUse/usePermission"
 
 const leftSideContent = [
@@ -255,7 +256,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
         retry: 3
     })
 
-    const { vendorBalance, vendorBalanceInUSD, vendorBalanceLoading } = useVendorBalance(internationalData.currency, internationalData.payoutChannel?.vendor?.toLowerCase(), (err) => updateInternationalData("error", err))
+    const { vendorBalance, vendorBalanceInUSD } = useVendorBalance(internationalData.currency, internationalData.payoutChannel?.vendor?.toLowerCase(), (err) => updateInternationalData("error", err))
 
     const checkVendorBalance = () => {
         const amount = Number(String(internationalData.amount)?.replaceAll(",", ""))
@@ -321,7 +322,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                         return !internationalData.selectedSender?._id
                     }
                 }
-                return !internationalData.beneficiary?._id
+                return !internationalData.beneficiary?._id && !internationalData.beneficiary?.isNew
 
             case 3:
                 return internationalData.reason.length < 1 || !internationalData.reason
@@ -744,11 +745,14 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
         setLoading(true)
         try {
             let payload = {}
+            const isNewBeneficiary = !!internationalData.beneficiary?.isNew
             const transaction_data = {
                 additional_information: internationalData.comment,
                 purpose_of_remittance: internationalData.reason,
                 user_id: userDetails?.account_type === "business" ? userDetails?.company?._id : userDetails?.user?._id,
-                beneficiary_id: internationalData.beneficiary?._id,
+                ...(isNewBeneficiary
+                    ? { beneficiaryDetails: internationalData.beneficiary.draftDetails }
+                    : { beneficiary_id: internationalData.beneficiary?._id }),
                 ...(internationalData.senderType === "third-party" && internationalData.selectedSender?._id ? {
                     sender_id: internationalData.selectedSender._id,
                 } : {}),
@@ -757,7 +761,6 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                 wallet_id: internationalData.wallet?._id ?? internationalData.currency_wallet?._id,
                 token: internationalData.quotation_details?.token,
                 vendor: internationalData.payoutChannel?.vendor,
-                sender_id: internationalData.senderType === "third-party" ? internationalData.selectedSender?._id : undefined,
             }
 
             if (internationalData.payoutChannel?.vendor === "thunes") {
@@ -775,7 +778,9 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                     }
                 }
 
-                internationalData.payoutChannel?.value?.toLowerCase()?.includes("bank") ? payload.bank_id = internationalData.beneficiary?.bank_details?.[0]?._id : payload.mobile_wallet_id = internationalData.beneficiary?.mobile_wallet?.[0]?._id
+                if (!isNewBeneficiary) {
+                    internationalData.payoutChannel?.value?.toLowerCase()?.includes("bank") ? payload.bank_id = internationalData.beneficiary?.bank_details?.[0]?._id : payload.mobile_wallet_id = internationalData.beneficiary?.mobile_wallet?.[0]?._id
+                }
             } else {
                 payload = {
                     data: {
@@ -783,7 +788,9 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                     },
                     type: codeType || internationalData.codeType
                 }
-                internationalData.payoutChannel?.value?.toLowerCase()?.includes("bank") ? payload.data.bank_id = internationalData.beneficiary?.bank_details?.[0]?._id : payload.data.mobile_wallet_id = internationalData.beneficiary?.mobile_wallet?.[0]?._id
+                if (!isNewBeneficiary) {
+                    internationalData.payoutChannel?.value?.toLowerCase()?.includes("bank") ? payload.data.bank_id = internationalData.beneficiary?.bank_details?.[0]?._id : payload.data.mobile_wallet_id = internationalData.beneficiary?.mobile_wallet?.[0]?._id
+                }
             }
             const enc = encryptData(payload)
             const thunesUrl = isResend ? `${import.meta.env.VITE_IP_DEV_API}/api/wallet/otp-send` : `${import.meta.env.VITE_THUNES_API}/createTransaction/${internationalData.created_quotation?.QuotationID}`
@@ -1074,6 +1081,16 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
 
                 if (internationalData.showSenderSelection) {
                     setSubStep(prev => prev + 1)
+                    return
+                }
+
+                // A new recipient's details were all collected in the add form, so there is nothing missing to ask for.
+                if (internationalData.beneficiary?.isNew) {
+                    if (internationalData.isThirdPartyAllowed && internationalData.senderType === "third-party") {
+                        updateInternationalData("showSenderSelection", true)
+                    } else {
+                        setSubStep(prev => prev + 1)
+                    }
                     return
                 }
 
@@ -1571,7 +1588,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                                                                             ?
                                                                             <SelectedCard
                                                                                 title="Name"
-                                                                                list={[{ text: `${internationalData.beneficiary?.first_name ?? internationalData?.beneficiary?.company_name} ${internationalData.beneficiary?.last_name ?? ""}` }]}
+                                                                                list={[{ text: getBeneficiaryDisplayName(internationalData.beneficiary) }]}
                                                                                 changeHandler={() => setSubStep(2)}
                                                                             />
                                                                             :
