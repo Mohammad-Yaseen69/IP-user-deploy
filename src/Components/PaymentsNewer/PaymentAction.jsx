@@ -110,7 +110,7 @@ const PaymentAction = ({ setAction, setStep }) => {
                 <ActionCard bg={s_quote} title={t("Send A Quote")} icon={q} desc={t("Send A Detailed Price Quote To Your Client Or Customer. Present Your Service, Products, Or Offers Professionally With A Personalized Quotation.")} setter={setAction} setterValue="send_quote" setStep={setStep} />
             }
             {canTopupOrEsim && <ActionCard bg={airtime} title={t("SEND TOP-UP AND E-SIM")} icon={airtime_s} desc={t("Keep yourself and your loved ones connected and covered, no matter where you are! InstaPay's Send Top-up service allows you to instantly recharge mobile phones, get eSIMs, purchase branded vouchers & gift cards, and pay for utilities & bills in over 150 countries. Ideal for gifts or ensuring you always have what you need, our service is designed for ease, speed, and security.")} setter={setAction} setterValue="airtime" setStep={setStep} />}
-            {
+            {/* {
                 (
                     userDetails?.account_type === "individual"
                         ?
@@ -144,7 +144,7 @@ const PaymentAction = ({ setAction, setStep }) => {
                         </div>
                     }
                 </div>
-            }
+            } */}
             <div style={{ position: "relative", cursor: "not-allowed" }} onMouseEnter={_ => setShowSoon(true)} onMouseLeave={_ => setShowSoon(false)}>
                 <ActionCard bg={request_q} title={t("Request A Quote")} icon={q} desc={t("Request a detailed price quote from your clients or customers. Present your services, products, or offers in a professional manner with a personalized quote.")} setter={setAction} setterValue="req_quote" setStep={setStep} disabled={true} />
                 {
