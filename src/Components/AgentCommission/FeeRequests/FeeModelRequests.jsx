@@ -1,7 +1,7 @@
 import { Box, Button, Card, Chip, CircularProgress, Dialog, DialogContent, DialogTitle, Grid, IconButton, Typography } from '@mui/material';
 import axios from 'axios';
 import { useCallback, useContext, useEffect, useState } from 'react';
-import { CheckCircle, Clock, Copy, Plus, Shield, Trash, XCircle } from 'react-feather';
+import { CheckCircle, Clock, Copy, Edit2, Plus, Shield, X, XCircle } from 'react-feather';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 import { UserContext } from '../../../Context/UserContext';
@@ -10,9 +10,11 @@ import { encryptData } from '../../../Helper/EssentilaMethods/Encryption';
 import useWindowWidth from '../../../utils/useWindowWidth';
 import TopRight from '../../topRight';
 import styles from '../styles/index.module.css';
-import { IconButton, Stack } from '@mui/material';
-import { useMutation } from '@tanstack/react-query';
-import { apiWrapper } from '../../../utils/Functions/apiWrapper';
+import FeeModelEditHistory from './FeeModelEditHistory';
+import FeeModelForm from './FeeModelForm';
+import { useEditFeeRequest, useFeeRequestEditHistory } from './hooks/useFeeRequestEdit';
+import { useIdempotency } from '../../../hooks/Payments/useIdempotency';
+import { DEFAULT_FEE_ITEMS, NO_PERCENT_FEE_IDS, sanitizeFeeSchedule, scheduleFromRequest, updateFeeItem } from './feeSchedule';
 
 const primaryButtonSx = { textTransform: 'none', background: '#5926F0', '&:hover': { background: '#4A1FD0' } };
 const chipSx = { fontWeight: 600, fontSize: '12px', px: 0.5 };
@@ -161,23 +163,19 @@ const FeeModelRequests = () => {
         }
     };
 
-    const { mutate: deleteRequest, isPending } = useMutation({
-        mutationFn: (requestId) =>
-            apiWrapper({
-                endpoint: `/api/iban-fees/delete-request-pack/${requestId}`,
-                method: "DELETE",
-                isEncrypted: true,
-                isDecrypted: true,
-            }),
-        onSuccess: (res) => {
-            fetchRequests();
-            toast.success(res?.message ?? t("Request deleted successfully."))
-        },
-        onError: (error) => {
-            const message = error?.message || error?.data?.message
-            toast.error(message ?? t("Failed to delete request."))
-        },
-    })
+    const tabButtonStyle = (tab) => ({
+        padding: '12px 20px',
+        background: 'none',
+        border: 'none',
+        fontSize: '15px',
+        fontWeight: 600,
+        color: activeTab === tab ? '#5926F0' : '#6B7280',
+        borderBottom: activeTab === tab ? '2px solid #5926F0' : '2px solid transparent',
+        cursor: 'pointer',
+        display: 'flex',
+        alignItems: 'center',
+        gap: '6px'
+    });
 
     return (
         <div className={styles.container}>
@@ -228,7 +226,7 @@ const FeeModelRequests = () => {
                                     {t("Request custom fee schedules for your clients. Once approved by admin, you will receive a unique referral code.")}
                                 </Typography>
                                 <Button variant="contained" startIcon={<Plus size={16} />} sx={primaryButtonSx} onClick={() => setActiveTab('create')}>
-                                        {t("Create Your First Request")}
+                                    {t("Create Your First Request")}
                                 </Button>
                             </Card>
                         ) : (
@@ -245,14 +243,16 @@ const FeeModelRequests = () => {
                                                         {t("Requested on")}: {new Date(req.createdAt).toLocaleDateString()}
                                                     </Typography>
                                                 </div>
-                                                <Stack direction={'row'} alignItems={'center'} gap={'8px'}>
-                                                    <IconButton 
-                                                        sx={{ bgcolor:'#e64067',color:'white', '&:hover':{ color: 'black'} }}
-                                                        onClick={() => deleteRequest(req._id)}
-                                                        disabled={isPending}
+                                                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                                    <Button
+                                                        size="small"
+                                                        variant="outlined"
+                                                        startIcon={<Edit2 size={12} />}
+                                                        sx={{ textTransform: 'none', color: '#5926F0', borderColor: '#5926F0', p: '2px 10px', minWidth: 0 }}
+                                                        onClick={() => openEditModal(req)}
                                                     >
-                                                        <Trash size={16} />
-                                                    </IconButton>
+                                                        {t("Edit")}
+                                                    </Button>
                                                     {req.status === 'pending' && (
                                                         <Chip size="small" color="warning" icon={<Clock size={12} />} label={t("PENDING REVIEW")} sx={chipSx} />
                                                     )}
@@ -262,9 +262,9 @@ const FeeModelRequests = () => {
                                                     {req.status === 'rejected' && (
                                                         <Chip size="small" color="error" icon={<XCircle size={12} />} label={t("REJECTED")} sx={chipSx} />
                                                     )}
-                                                </Stack>
-                                            </CardHeader>
-                                            <CardBody style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '14px' }}>
+                                                </Box>
+                                            </Box>
+                                            <Box sx={{ p: '20px', display: 'flex', flexDirection: 'column', gap: '14px' }}>
                                                 <div style={{ background: '#F9FAFB', padding: '12px 16px', borderRadius: '8px', border: '1px solid #F3F4F6' }}>
                                                     <div style={{ fontSize: '12px', color: '#6B7280', fontWeight: 600, marginBottom: '2px' }}>
                                                         {t("PRICING SUMMARY")}
