@@ -9,6 +9,7 @@ import { getBeneficiaryDisplayName } from '../../Components/PaymentsNewer/Intern
 const countries = [{ _id: 'country-are', country_iso_code: 'ARE', country_name: 'United Arab Emirates' }]
 
 const detailsFor = (form, saveForFuture) => buildTransactionBeneficiaryDetails({
+  form,
   beneficiaryPayload: buildBeneficiaryPayload({ form, countries }),
   channelPayload: buildChannelPayload({ form, transactionType: form.recipient_type === 'business' ? 'C2B' : 'C2C' }),
   saveForFuture,
@@ -36,7 +37,14 @@ describe('buildTransactionBeneficiaryDetails', () => {
       country_iso_code: 'ARE',
       country_name: 'United Arab Emirates',
     })
-    expect(details.extras).toMatchObject({ channel_type: 'bank', country: 'country-are', vendor: 'thunes' })
+    expect(details.extras).toEqual({
+      country_iso_code: 'ARE',
+      firstname: 'Khalid',
+      lastname: 'Chouhan',
+      vendor: 'thunes',
+      channel_type: 'bank',
+      country: 'country-are',
+    })
     expect(details.bank_details).toHaveLength(1)
     expect(details.bank_details[0]).toMatchObject({
       iban: 'AE912937420371099073059',
@@ -54,6 +62,9 @@ describe('buildTransactionBeneficiaryDetails', () => {
 
     expect(details.saveForFuture).toBe(true)
     expect(details.company_name).toBe('noor trading')
+    expect(details.extras).toMatchObject({ legalName: 'noor trading', city: 'Al Fujairah City' })
+    expect(details.extras).not.toHaveProperty('company_name')
+    expect(details.extras).not.toHaveProperty('beneficiaryCity')
     expect(details.beneficiary_type).toBe('business')
     expect(details.bank_details).toHaveLength(1)
   })

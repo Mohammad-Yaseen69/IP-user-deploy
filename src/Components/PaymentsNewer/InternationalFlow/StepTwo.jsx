@@ -64,6 +64,7 @@ const StepTwo = ({ data, dataHandler }) => {
        come from the same mapped details, so the later steps read it like a saved one. */
     const handleBeneficiarySaved = (draft, saveForFuture) => {
         const draftDetails = buildTransactionBeneficiaryDetails({
+            form: draft.form,
             beneficiaryPayload: draft.beneficiaryPayload,
             channelPayload: draft.channelPayload,
             saveForFuture,

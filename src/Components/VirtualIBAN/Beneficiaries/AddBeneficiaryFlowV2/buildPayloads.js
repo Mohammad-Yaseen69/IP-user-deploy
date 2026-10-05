@@ -64,8 +64,6 @@ const EXTRAS_ALIASES = {
 
 const firstValue = (...values) => values.find((value) => clean(value)) || '';
 
-/* Providers read the same detail under different keys: Thunes wants firstname, BVNK wants
-   firstName. Whichever form filled it, every alias carries the value. */
 const mirrorExtrasAliases = (extras) => {
     const mirrored = { ...extras };
 
@@ -243,19 +241,23 @@ export const buildChannelPayload = ({ form, transactionType }) => {
     return payload;
 };
 
-/* A recipient added mid transfer is not saved on its own: it travels inside the transaction
-   in the same shape as a saved beneficiary, with its channel details as a one-item list
-   under the channel's own key (bank_details, mobile_wallet, cash_pickup, card). */
-export const buildTransactionBeneficiaryDetails = ({ beneficiaryPayload, channelPayload, saveForFuture }) => {
+
+export const buildTransactionBeneficiaryDetails = ({ form, beneficiaryPayload, channelPayload, saveForFuture }) => {
     const { country, extras, ...beneficiary } = beneficiaryPayload;
     const { channel_type: channelType } = channelPayload;
     const channelKey = CHANNEL_PAYLOAD_KEY[channelType] || CHANNEL_PAYLOAD_KEY.bank;
+
+    const aliasKeys = Object.values(EXTRAS_ALIASES).flat();
+    const filledKeys = Object.keys(form?.beneficiary || {});
+    const ownExtras = Object.fromEntries(
+        Object.entries(extras || {}).filter(([key]) => !aliasKeys.includes(key) || filledKeys.includes(key)),
+    );
 
     return {
         saveForFuture: !!saveForFuture,
         ...beneficiary,
         extras: {
-            ...extras,
+            ...ownExtras,
             channel_type: channelType,
             ...(country ? { country } : {}),
         },
