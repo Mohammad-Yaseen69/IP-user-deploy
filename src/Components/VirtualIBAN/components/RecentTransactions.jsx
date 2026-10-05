@@ -9,6 +9,7 @@ import { generateProofOfPaymentPDF, isOutgoingTransaction } from "../../../utils
 import StatementModal from "../StatementModal";
 import styles from "../styles/RecentTransactions.module.css";
 import Empty from './Empty';
+import InstaPayLoader from '../../Loader';
 
 const statusColors = {
   COMPLETED: { bg: "rgba(34,197,94,0.1)", color: "#16a34a" },
@@ -227,7 +228,7 @@ const DetailItem = ({ label, value }) => (
 const RecentTransactions = ({
   setActiveTab, transactions, page, setPage,
   limit, setLimit, totalPages,
-  setStatusFilter, setQ, setOrder, selectedIban
+  setStatusFilter, setQ, setOrder, selectedIban, loading
 }) => {
   const { t } = useTranslation();
   const [search, setSearch] = useState("");
@@ -249,6 +250,7 @@ const RecentTransactions = ({
     return () => clearTimeout(searchDebounce.current);
   }, [search, setQ, setPage]);
 
+  if(loading) return <InstaPayLoader />;
   return (
     <>
       <div className={styles.header}>
