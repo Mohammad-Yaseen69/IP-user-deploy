@@ -131,7 +131,16 @@ const ActivityStep = ({ onNext, onBack, data = {}, currentStep}) => {
         form.outgoingPayments
     )
 
-    const set = (key) => (e) => setForm(prev => ({ ...prev, [key]: e.target.value }))
+    const set = (key) => (e) =>{
+        const numberFieldsKeys = ['averageTransaction', 'maximumTransaction', 'averageBalance', 'incomingPayments', 'outgoingPayments'];
+        if(numberFieldsKeys.includes(key)){
+            if(/^\d*$/.test(e.target.value)){
+                setForm(prev => ({ ...prev, [key]: e.target.value }));
+            }
+        } else {
+            setForm(prev => ({ ...prev, [key]: e.target.value }));
+        }
+    }
 
     const handleCountrySelect = (selectedCountry) => {
         const countryName = selectedCountry?.name?.trim()
@@ -572,7 +581,8 @@ const ActivityStep = ({ onNext, onBack, data = {}, currentStep}) => {
                                     <div className={styles.inputWrapper}>
                                         <input
                                             style={{ padding: "14.5px 52px 14.5px 14px", ...err('averageTransaction') }}
-                                            type="number"
+                                            type="text"
+                                            inputMode="numeric"
                                             min="0"
                                             placeholder="12000"
                                             className={styles.textInput}
@@ -590,7 +600,8 @@ const ActivityStep = ({ onNext, onBack, data = {}, currentStep}) => {
 
                                     <div className={styles.inputWrapper}>
                                         <input
-                                            type="number"
+                                            type="text"
+                                            inputMode="numeric"
                                             min="0"
                                             placeholder="25000"
                                             style={{ padding: "14.5px 52px 14.5px 14px", ...err('maximumTransaction') }}
@@ -612,7 +623,8 @@ const ActivityStep = ({ onNext, onBack, data = {}, currentStep}) => {
                                     <div className={styles.inputWrapper}>
                                         <input
                                             style={{ padding: "14.5px 52px 14.5px 14px", ...err('averageBalance') }}
-                                            type="number"
+                                            type="text"
+                                            inputMode="numeric"
                                             min="0"
                                             placeholder="24000"
                                             className={styles.textInput}
@@ -706,7 +718,8 @@ const PaymentsFields = ({ form, set, isMobile, err }) => {
         <div className={styles.inputWrapper}>
             <input
                 style={{ padding: "14.5px 52px 14.5px 14px", ...err('incomingPayments')  }}
-                type="number"
+                type="text"
+                inputMode="numeric"
                 min="0"
                 placeholder="50000"
                 className={styles.textInput}
@@ -725,7 +738,8 @@ const PaymentsFields = ({ form, set, isMobile, err }) => {
         <div className={styles.inputWrapper}>
             <input
                 style={{ padding: "14.5px 52px 14.5px 14px", ...err('outgoingPayments') }}
-                type="number"
+                type="text"
+                inputMode="numeric"
                 min="0"
                 placeholder="40000"
                 className={styles.textInput}
