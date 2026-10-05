@@ -1,7 +1,7 @@
 import { Box, Button, Card, Chip, CircularProgress, Dialog, DialogContent, DialogTitle, Grid, IconButton, Typography } from '@mui/material';
 import axios from 'axios';
 import { useCallback, useContext, useEffect, useState } from 'react';
-import { CheckCircle, Clock, Copy, Edit2, Plus, Shield, X, XCircle } from 'react-feather';
+import { CheckCircle, Clock, Copy, Edit2, Plus, Shield, X, Trash, XCircle } from 'react-feather';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 import { UserContext } from '../../../Context/UserContext';
@@ -15,6 +15,8 @@ import FeeModelForm from './FeeModelForm';
 import { useEditFeeRequest, useFeeRequestEditHistory } from './hooks/useFeeRequestEdit';
 import { useIdempotency } from '../../../hooks/Payments/useIdempotency';
 import { DEFAULT_FEE_ITEMS, NO_PERCENT_FEE_IDS, sanitizeFeeSchedule, scheduleFromRequest, updateFeeItem } from './feeSchedule';
+import { apiWrapper } from '../../../utils/Functions/apiWrapper';
+import { useMutation } from '@tanstack/react-query';
 
 const primaryButtonSx = { textTransform: 'none', background: '#5926F0', '&:hover': { background: '#4A1FD0' } };
 const chipSx = { fontWeight: 600, fontSize: '12px', px: 0.5 };
@@ -163,6 +165,24 @@ const FeeModelRequests = () => {
         }
     };
 
+    const { mutate: deleteRequest, isPending } = useMutation({
+        mutationFn: (requestId) =>
+            apiWrapper({
+                endpoint: `/api/iban-fees/delete-request-pack/${requestId}`,
+                method: "DELETE",
+                isEncrypted: true,
+                isDecrypted: true,
+            }),
+        onSuccess: (res) => {
+            fetchRequests();
+            toast.success(res?.message ?? t("Request deleted successfully."))
+        },
+        onError: (error) => {
+            const message = error?.message || error?.data?.message
+            toast.error(message ?? t("Failed to delete request."))
+        },
+    })
+
     const tabButtonStyle = (tab) => ({
         padding: '12px 20px',
         background: 'none',
@@ -226,7 +246,7 @@ const FeeModelRequests = () => {
                                     {t("Request custom fee schedules for your clients. Once approved by admin, you will receive a unique referral code.")}
                                 </Typography>
                                 <Button variant="contained" startIcon={<Plus size={16} />} sx={primaryButtonSx} onClick={() => setActiveTab('create')}>
-                                    {t("Create Your First Request")}
+                                        {t("Create Your First Request")}
                                 </Button>
                             </Card>
                         ) : (
@@ -247,12 +267,19 @@ const FeeModelRequests = () => {
                                                     <Button
                                                         size="small"
                                                         variant="outlined"
-                                                        startIcon={<Edit2 size={12} />}
+                                                        startIcon={<Edit2 size={12} />} 
                                                         sx={{ textTransform: 'none', color: '#5926F0', borderColor: '#5926F0', p: '2px 10px', minWidth: 0 }}
                                                         onClick={() => openEditModal(req)}
                                                     >
                                                         {t("Edit")}
                                                     </Button>
+                                                    <IconButton 
+                                                        sx={{ bgcolor:'#e64067',color:'white', '&:hover':{ color: 'black'} }}
+                                                        onClick={() => deleteRequest(req._id)}
+                                                        disabled={isPending}
+                                                    >
+                                                        <Trash size={16} />
+                                                    </IconButton>
                                                     {req.status === 'pending' && (
                                                         <Chip size="small" color="warning" icon={<Clock size={12} />} label={t("PENDING REVIEW")} sx={chipSx} />
                                                     )}
