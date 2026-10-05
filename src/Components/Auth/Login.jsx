@@ -27,6 +27,7 @@ import VpnModal from "./VpnModal";
 import LocationDeniedModal from "./LocationDeniedModal";
 import { InputAdornment, Stack, TextField } from "@mui/material";
 import { AlarmIcon } from "../PaymentAddressPublic/PayAsGuest/Svgs";
+import { LOGIN_PAGE_TYPES, setLastLoginUsedPage } from "../../utils/Functions/loginPage";
 
 const linkStyle = {
     color: "#5926F0",
@@ -585,6 +586,7 @@ const Login = ({ country, setIsLoginForm, }) => {
     const completeLoginProcess = async (userAccount, token) => {
         localStorage.setItem("login", true)
         localStorage.setItem("token", token)
+        setLastLoginUsedPage(LOGIN_PAGE_TYPES.NORMAL)
         setUserDetails(userAccount)
         const credential = getResolvedCredential();
         setData({

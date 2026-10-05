@@ -57,11 +57,7 @@ export const MobileSidebar = () => {
 
     const handleLogout = () => {
         setIsDrawerOpen(false);
-        if (typeof logout === "function") {
-            logout();
-        } else {
-            navigate("/login");
-        }
+        logout();
     };
 
     const handleNavigate = (path) => {
