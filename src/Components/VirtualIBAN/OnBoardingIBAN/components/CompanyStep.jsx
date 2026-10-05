@@ -256,11 +256,6 @@ const CompanyStep = ({ onNext, onBack, onChange, userType, data = {}, currentSte
                                     />
                                 </div>
                             </div>
-
-                            <button className={styles.lookupBtn}>
-                                <Search size={12}/> 
-                                <span>{t('Look up on registry')}</span>
-                            </button>
                         
                             <div className={styles.inputGroup}>
                                 <label className={styles.inputLabel}>
