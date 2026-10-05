@@ -30,5 +30,7 @@ export default function useStepValidation(form, rules) {
         return isValid
     }, [isValid])
 
-    return { errors, isValid, err, validate }
+    const reset = useCallback(() => setShowErrors(false), [])
+
+    return { errors, isValid, err, validate, reset }
 }

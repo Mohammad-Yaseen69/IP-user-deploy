@@ -62,7 +62,7 @@ const OwnershipStep = ({ onNext, onBack, userType, data = {}, userDetails, curre
     const [isModalOpen, setIsModalOpen] = useState(false)
     const [formData, setFormData] = useState({ ...EMPTY_FORM })
     const [isEditing, setIsEditing] = useState(false)
-    const { err, validate } = useStepValidation(formData, OWNER_RULES);
+    const { err, validate, reset } = useStepValidation(formData, OWNER_RULES);
 
     useEffect(() => {
         window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
@@ -117,6 +117,7 @@ const OwnershipStep = ({ onNext, onBack, userType, data = {}, userDetails, curre
 
     const openAddModal = (type = 'individual') => {
         if (isKybDone) return
+        reset();
         setFormData({
             ...EMPTY_FORM,
             id: Date.now(),
@@ -128,6 +129,7 @@ const OwnershipStep = ({ onNext, onBack, userType, data = {}, userDetails, curre
 
     const openEditModal = (owner) => {
         if (isKybDone) return
+        reset();
         setFormData({ ...owner })
         setIsEditing(true)
         setIsModalOpen(true)
