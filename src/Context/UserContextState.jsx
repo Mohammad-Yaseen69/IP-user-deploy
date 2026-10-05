@@ -11,6 +11,7 @@ import SessionExpireModal from "../Components/SessionExpireModal";
 import { useSearchParams } from "react-router-dom";
 import { apiWrapper } from "../utils/Functions/apiWrapper";
 import i18n from "../i18n";
+import { clearAuthStorage, getLoginPath } from "../utils/Functions/loginPage";
 
 
 
@@ -171,6 +172,13 @@ const UserState = ({ children }) => {
         setAgentDetails(null)
     }
 
+    // Ends the session and returns to the login page the user last signed in from.
+    const logout = () => {
+        clearAuthStorage()
+        clearData()
+        navigate(getLoginPath(), { replace: true })
+    }
+
     const getImage = async (dp, c, type, name) => {
         const croppedImage = await getCroppedImg(dp, c)
         const imgUrl = URL.createObjectURL(croppedImage);
@@ -233,19 +241,15 @@ const UserState = ({ children }) => {
                     setUserDetails(decrypted)
                     if (!decrypted?.country?.status) {
                         sessionStorage.setItem("country_status_error", "Service not available in your country!")
-                        const coun = localStorage.getItem("ip_country")
-                        localStorage.clear()
-                        localStorage.setItem("ip_country", coun)
+                        clearAuthStorage()
                         clearData()
-                        navigate("/login", { replace: true })
+                        navigate(getLoginPath(), { replace: true })
                     }
                     if (decrypted?.status !== "active") {
                         toast.error("Account Suspended!")
-                        const coun = localStorage.getItem("ip_country")
-                        localStorage.clear()
-                        localStorage.setItem("ip_country", coun)
+                        clearAuthStorage()
                         clearData()
-                        navigate("/login", { replace: true })
+                        navigate(getLoginPath(), { replace: true })
                     }
                     if (decrypted.profileImage?.coordinates) {
                         getImage(decrypted.profileImage?.url, decrypted.profileImage?.coordinates, "profile", "dp")
@@ -273,9 +277,7 @@ const UserState = ({ children }) => {
                 .catch(err => {
                     if (err?.response?.data?.data) {
                         decryptData(err.response.data.data)
-                        const coun = localStorage.getItem("ip_country")
-                        localStorage.clear()
-                        localStorage.setItem("ip_country", coun)
+                        clearAuthStorage()
                         clearData()
                         if (!publicRoutes.some(item => window.location.pathname.toLowerCase().includes(item.path.toLowerCase().split(":")[0])) && !window.location.pathname.toLowerCase().includes("profile/")) {
                             // sessionStorage.setItem("path", window.location.href?.split("pay.ch")?.[1])
@@ -285,7 +287,7 @@ const UserState = ({ children }) => {
                                 if (currentPath && currentPath !== "undefined" && !currentPath.includes("/login")) {
                                     sessionStorage.setItem("path", currentPath)
                                 }
-                                navigate("/login", { replace: true })
+                                navigate(getLoginPath(), { replace: true })
                             }
                         }
                     }
@@ -312,19 +314,15 @@ const UserState = ({ children }) => {
                 }
                 if (!decrypted?.country?.status) {
                     sessionStorage.setItem("country_status_error", "Service not available in your country!")
-                    const coun = localStorage.getItem("ip_country")
-                    localStorage.clear()
-                    localStorage.setItem("ip_country", coun)
+                    clearAuthStorage()
                     clearData()
-                    navigate("/login", { replace: true })
+                    navigate(getLoginPath(), { replace: true })
                 }
                 if (decrypted?.status !== "active") {
                     toast.error("Account Suspended!")
-                    const coun = localStorage.getItem("ip_country")
-                    localStorage.clear()
-                    localStorage.setItem("ip_country", coun)
+                    clearAuthStorage()
                     clearData()
-                    navigate("/login", { replace: true })
+                    navigate(getLoginPath(), { replace: true })
                 }
                 if (decrypted.profileImage?.coordinates) {
                     getImage(decrypted.profileImage?.url, decrypted.profileImage?.coordinates, "profile", "dp")
@@ -349,16 +347,14 @@ const UserState = ({ children }) => {
             })
             .catch((err) => {
                 const dec = decryptData(err?.response?.data?.data)
-                const coun = localStorage.getItem("ip_country")
-                localStorage.clear()
-                localStorage.setItem("ip_country", coun)
+                clearAuthStorage()
                 clearData()
                 if (dec?.message?.toLowerCase()?.includes("account not found")) {
-                    navigate("/login", { replace: true })
+                    navigate(getLoginPath(), { replace: true })
                 }
                 if (!publicRoutes.some(item => window.location.pathname.toLowerCase().includes(item.path.toLowerCase().split(":")[0])) && !window.location.pathname.toLowerCase().includes("profile/")) {
                     sessionStorage.setItem("path", window.location.href?.split("pay.ch")?.[1])
-                    navigate("/login", { replace: true })
+                    navigate(getLoginPath(), { replace: true })
                 }
             })
     }
@@ -382,7 +378,7 @@ const UserState = ({ children }) => {
         axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/get-user-wallet/${userDetails?._id}`, { headers: authHeader })
             .then(async (res) => {
                 const decrypted = decryptData(res.data.data)
-                const sorted = decrypted.walletList.filter(x=> x.wallet_type !== 'crypto').sort((a, b) => {
+                const sorted = decrypted.walletList.sort((a, b) => {
                     if (a.wallet_type === 'insta') {
                         return -1;
                     } else if (b.wallet_type === 'insta') {
@@ -726,7 +722,7 @@ const UserState = ({ children }) => {
             setIsSidebarOpen,
             selectedAccount,
             setSelectedAccount,
-            userDetails, setUserDetails, userWallets, setUserWallets, token, authHeader, beneficiaries, setBeneficiaries, userTransactions, setUserTransactions, searchQuery, setSearchQuery, apiDates, setApiDates, userSecurityQues, referralLink, userSessions, allowedFeatures, verifyToken, userWithdrawals, setUserWithdrawals, cryptoWithdrawals, setCryptoWithdrawals, allowedWithdrawals, registeredBeneficiaries, profileCompleted, allowedCountries, userPortfolio, profileIncompleteReason, setUserPortfolio, setUserVideos, getUserVideos, userVideos, checkRegisteredBenficiaries, getAllActiveCountries, getUserWallets, getUserBeneficiaries, getUserDocuments, checkAuth, getSecurityQuestions, getInvitationLink, getSessions, profileCompletedPercentage, getWithdrawals, getReferralCommission, totalReferralAmount, validateSendingLimits, validateReceivingLimits, validateTransactionsCount, profileLockTIme, setProfileLockTime, showInactivityModal, setShowInactivityModal, is30Days, setIs30Days, threeDaysReminder, set3DaysReminder, is30DaysInfo, setIs30DaysInfo, threeDaysReminderInfo, set3DaysReminderInfo, clearData, croppedImages, updateCoordinates, setCroppedImages, missingTabsData, setMissingTabsData, setAvailable, available, setBlocked, blocked, benLoading, balanceLoading, getUserBalances, refetchBalances, showModalState, setShowModalState, processReceivingNonIpFunds: processReceivingNonIpFunds.mutateAsync, showAnotherLoginModal, setShowAnotherLoginModal, isAgentLogin, setIsAgentLogin, agentDetails, setAgentDetails, commisions, shouldForceAuthenticator
+            userDetails, setUserDetails, userWallets, setUserWallets, token, authHeader, beneficiaries, setBeneficiaries, userTransactions, setUserTransactions, searchQuery, setSearchQuery, apiDates, setApiDates, userSecurityQues, referralLink, userSessions, allowedFeatures, verifyToken, userWithdrawals, setUserWithdrawals, cryptoWithdrawals, setCryptoWithdrawals, allowedWithdrawals, registeredBeneficiaries, profileCompleted, allowedCountries, userPortfolio, profileIncompleteReason, setUserPortfolio, setUserVideos, getUserVideos, userVideos, checkRegisteredBenficiaries, getAllActiveCountries, getUserWallets, getUserBeneficiaries, getUserDocuments, checkAuth, getSecurityQuestions, getInvitationLink, getSessions, profileCompletedPercentage, getWithdrawals, getReferralCommission, totalReferralAmount, validateSendingLimits, validateReceivingLimits, validateTransactionsCount, profileLockTIme, setProfileLockTime, showInactivityModal, setShowInactivityModal, is30Days, setIs30Days, threeDaysReminder, set3DaysReminder, is30DaysInfo, setIs30DaysInfo, threeDaysReminderInfo, set3DaysReminderInfo, clearData, logout, croppedImages, updateCoordinates, setCroppedImages, missingTabsData, setMissingTabsData, setAvailable, available, setBlocked, blocked, benLoading, balanceLoading, getUserBalances, refetchBalances, showModalState, setShowModalState, processReceivingNonIpFunds: processReceivingNonIpFunds.mutateAsync, showAnotherLoginModal, setShowAnotherLoginModal, isAgentLogin, setIsAgentLogin, agentDetails, setAgentDetails, commisions, shouldForceAuthenticator
         }}>
             {((showModalState || Boolean(isSessionExpired)) && !location.pathname.startsWith("/pay/")) &&
                 <SessionExpireModal

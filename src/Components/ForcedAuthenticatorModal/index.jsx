@@ -1,7 +1,6 @@
 import axios from "axios";
 import { useContext, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { Button, Modal, ModalBody, ModalFooter } from "reactstrap";
 import { UserContext } from "../../Context/UserContext";
@@ -16,22 +15,15 @@ import styles from "./styles/index.module.css";
 
 const ForcedAuthenticatorModal = () => {
     const { t } = useTranslation();
-    const navigate = useNavigate();
-    const { userDetails, authHeader, clearData } = useContext(UserContext);
+    const { userDetails, authHeader, logout } = useContext(UserContext);
 
     const [enablingAuth, setEnablingAuth] = useState(false);
     const [authenticatorDetails, setAuthenticatorDetails] = useState(null);
     const [showSetupModal, setShowSetupModal] = useState(false);
 
     const handleLogout = () => {
-        const country = localStorage.getItem("ip_country");
-        localStorage.clear();
         sessionStorage.clear();
-        if (country) {
-            localStorage.setItem("ip_country", country);
-        }
-        clearData();
-        navigate("/login");
+        logout();
     };
 
     const enableAuthenticator = async () => {

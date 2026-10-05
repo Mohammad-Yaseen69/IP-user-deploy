@@ -27,7 +27,7 @@ const RightContainer = ({ setCurrentWallet, showBusinessModal, setShowBusinessMo
     const { userDetails } = useContext(UserContext)
     const swiperRef = useRef(null)
     const can = usePermission()
-    const userWallets = allWallets.filter(w => w?.provider !== 'bvnk')
+    const userWallets = allWallets.filter(w => w?.wallet_type !== 'crypto')
 
     useEffect(() => {
         getUserWallets()

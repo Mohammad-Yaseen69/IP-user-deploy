@@ -17,6 +17,7 @@ import Receipt from '../PaymentsNewer/InternationalFlow/Receipt'
 import FailedTransaction from '../PaymentsNewer/InternationalFlow/FailedTransaction'
 import InstaPayLoader from '../Loader'
 import NotFound from '../NotFound'
+import { verifyPaytentlyGuestReturn } from '../../utils/Functions/paytently'
 
 const PaymentAddressPublic = () => {
     const { t } = useTranslation()
@@ -73,6 +74,8 @@ const PaymentAddressPublic = () => {
         const { pathname } = window.location;
         if (pathname.includes("success")) {
             setCurrentModal("success")
+           
+            verifyPaytentlyGuestReturn()
         }
         if (pathname.includes("failed") || pathname.includes("error")) {
             setCurrentModal("error")
