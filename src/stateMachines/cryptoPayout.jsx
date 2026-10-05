@@ -42,12 +42,24 @@ export const getAmountNumber = (value) => {
 
 export const MIN_PAYOUT_AMOUNT = 10
 
+const toCents = (value) => Math.round(getAmountNumber(value) * 100)
+const toSpendableCents = (balance) => Math.floor(getAmountNumber(balance) * 100 + 1e-6)
+
+export const getSpendableBalance = (availableBalance) => toSpendableCents(availableBalance) / 100
+
+export const getQuickAmounts = (availableBalance, percentages) => {
+    const spendableCents = toSpendableCents(availableBalance)
+    return percentages
+        .map((percent) => ({ percent, value: Math.floor((spendableCents * percent) / 100) / 100 }))
+        .filter(({ value }) => value > 0)
+}
+
 export const getAmountError = (amount, availableBalance, cryptoCurrency = "") => {
     const value = getAmountNumber(amount)
     if (!String(amount ?? "").trim()) return ""
     if (value <= 0) return "Enter an amount greater than zero."
     if (value < MIN_PAYOUT_AMOUNT) return `Minimum amount is ${MIN_PAYOUT_AMOUNT} ${cryptoCurrency}.`
-    if (value > getAmountNumber(availableBalance)) return "Amount exceeds your available balance."
+    if (toCents(value) > toSpendableCents(availableBalance)) return "Amount exceeds your available balance."
     return ""
 }
 

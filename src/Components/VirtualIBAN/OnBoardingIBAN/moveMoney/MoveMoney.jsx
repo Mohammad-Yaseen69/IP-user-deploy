@@ -18,7 +18,7 @@ import SepaTransfer from '../../SendMoney/SepaTransfer';
 import SwiftTransfer from '../../SendMoney/SwiftTransfer';
 import CryptoTopupModal from '../../CryptoTopupModal';
 import { useSyncVirtualIbanBalance, useVirtualIbans } from '../../../../hooks/useVirtualIban';
-import { asVirtualIbanArray } from '../../utils/virtualIban';
+import { asVirtualIbanArray, isVirtualIbanOutboundBlocked } from '../../utils/virtualIban';
 import { UserContext } from '../../../../Context/UserContext';
 import { useNavigate } from 'react-router';
 import MobileHeader from '../../../../Common/Component/MobileHeader';
@@ -57,6 +57,11 @@ const MoveMoney = () => {
 
     const currentBalance = syncedBalance?.balance ?? selectedIban?.balance ?? 0
 
+    // Outgoing transfers are switched off for this IBAN, so SEPA and SWIFT
+    // cannot be started from here.
+    const isOutboundBlocked =
+        isVirtualIbanOutboundBlocked(syncedBalance) || isVirtualIbanOutboundBlocked(selectedIban)
+    const outboundBlockedTooltip = t("Outgoing transfers are disabled for this virtual IBAN.")
     const handleClose = () => setShowSwiftPage(false);
     
     return (
@@ -128,8 +133,11 @@ const MoveMoney = () => {
                                 <div className={styles.sectionLabel}>{t("Send money out")} <span>{t("Instant, free transfers between InstaPay accounts")}</span></div>
                                 <div className={styles.cardsGrid3}>
 
-                                    <div className={styles.card} onClick={() => setShowSepaPage(true)}
-                                        style={{ cursor: "pointer" }}
+                                    <Tooltip title={isOutboundBlocked ? outboundBlockedTooltip : ""} arrow>
+                                    <div
+                                        className={`${styles.card} ${isOutboundBlocked ? styles.cardDisabled : ""}`}
+                                        onClick={isOutboundBlocked ? undefined : () => setShowSepaPage(true)}
+                                        style={{ cursor: isOutboundBlocked ? "not-allowed" : "pointer" }}
                                     >
                                         <div className={`${styles.iconBox} ${styles.bgBlue}`}>
                                             <Compass size={20} />
@@ -146,10 +154,12 @@ const MoveMoney = () => {
                                             </div>
                                         </div>
                                     </div>
+                                    </Tooltip>
+                                    <Tooltip title={isOutboundBlocked ? outboundBlockedTooltip : ""} arrow>
                                     <div
-                                        className={styles.card}
-                                        onClick={() => setShowSwiftPage(true)}
-                                        style={{ cursor: "pointer" }}
+                                        className={`${styles.card} ${isOutboundBlocked ? styles.cardDisabled : ""}`}
+                                        onClick={isOutboundBlocked ? undefined : () => setShowSwiftPage(true)}
+                                        style={{ cursor: isOutboundBlocked ? "not-allowed" : "pointer" }}
                                     >
                                         <div className={`${styles.iconBox} ${styles.bgYellow}`}>
                                             <Globe size={20} />
@@ -166,6 +176,7 @@ const MoveMoney = () => {
                                             </div>
                                         </div>
                                     </div>
+                                    </Tooltip>
                                     <Tooltip title="Coming Soon" arrow>
 
                                         <div className={`${styles.card}`}>

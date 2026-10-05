@@ -60,7 +60,17 @@ const SecurityQuestions = () => {
             type: typeof method === "string" ? method : codeType
         }
 
-        if (userDetails?.user?.question1 || userDetails?.user?.question2 || userDetails?.user?.question3) {
+        if (
+            userDetails?.user
+                ? (userDetails.user.question1 ||
+                    userDetails.user.question2 ||
+                    userDetails.user.question3)
+                : (
+                    userDetails?.company?.answer1 ||
+                    userDetails?.company?.answer2 ||
+                    userDetails?.company?.answer3
+                )
+        ) {
             try {
                 const encrypted = encryptData(data)
                 const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/send-otp`, {
@@ -163,7 +173,7 @@ const SecurityQuestions = () => {
     useEffect(() => {
         setIsEditable(editmode)
     }, [editmode])
-// console.log(userDetails,"userDetails?.user?.question1")
+    // console.log(userDetails.user, "userDetails?.user?.question1")
     return (
         <Form className="card" id='security'>
             <CardHeader className={`pb-0`}>

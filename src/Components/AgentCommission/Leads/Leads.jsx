@@ -193,24 +193,29 @@ const Leads = () => {
                         </button>
                     </div>
                 </div>
-
                 <div className={styles.tableContainer}>
-                    <div className={styles.tableWrapper}>
-                        <div className={styles.tableHeaderRow}>
-                            <div className={styles.thCell}>{t("Client / Lead")}</div>
-                            <div className={styles.thCell}>{t("Type")}</div>
-                            <div className={styles.thCell}>{t("Country")}</div>
-                            <div className={styles.thCell}>{t("Stage")}</div>
-                            <div className={styles.thCell}>{t("Contact")}</div>
-                            <div className={styles.thCell}>{t("Fee Pack")}</div>
-                            <div className={styles.thCell}>{t("Actions")}</div>
-                        </div>
+                    <table>
+                        <thead>
+                            <tr className={styles.tableHeaderRow}>
+                                <th className={styles.thCell}>{t("Client / Lead")}</th>
+                                <th className={styles.thCell}>{t("Type")}</th>
+                                <th className={styles.thCell}>{t("Country")}</th>
+                                <th className={styles.thCell}>{t("Stage")}</th>
+                                <th className={styles.thCell}>{t("Contact")}</th>
+                                <th className={styles.thCell}>{t("Fee Pack")}</th>
+                                <th className={styles.thCell}>{t("Actions")}</th>
+                            </tr>
+                        </thead>
 
-                        <div className={styles.tableBody}>
+                        <tbody className={styles.tableBody}>
                             {loading ? (
-                                <div style={{ padding: '24px', textAlign: 'center', color: '#666' }}>{t("Loading leads...")}</div>
+                                <tr>
+                                    <th colSpan={7} style={{ padding: '24px', textAlign: 'center', color: '#666' }}>{t("Loading leads...")}</th>
+                                </tr>
                             ) : leads.length === 0 ? (
-                                <div style={{ padding: '24px', textAlign: 'center', color: '#888' }}>{t("No leads found.")}</div>
+                                <tr>
+                                    <th colSpan={7} style={{ padding: '24px', textAlign: 'center', color: '#888' }}>{t("No leads found.")}</th>
+                                </tr>
                             ) : (
                                 leads.map((row) => {
                                     const displayName = row.company_name || `${row.first_name || ''} ${row.last_name || ''}`.trim() || t("Unnamed Lead");
@@ -219,35 +224,37 @@ const Leads = () => {
                                     const feePackSummary = row.fee_pack?.pricing_summary || feePackName;
 
                                     return (
-                                        <div key={row._id} className={styles.tableDataRow}>
-                                            <div className={`${styles.tdCell} ${styles.clientCell}`} title={displayName}>
-                                                <div className={`${styles.avatar} ${styles.avatarBlue}`}>
-                                                    {avatarText}
+                                        <tr key={row._id} className={styles.tableDataRow}>
+                                            <td className={styles.tdCell} title={displayName}>
+                                                <div className={styles.clientCell}>
+                                                    <div className={`${styles.avatar} ${styles.avatarBlue}`}>
+                                                        {avatarText}
+                                                    </div>
+                                                    <span className={styles.clientName}>{truncateStr(displayName, 22)}</span>
                                                 </div>
-                                                <span className={styles.clientName}>{truncateStr(displayName, 22)}</span>
-                                            </div>
+                                            </td>
 
-                                            <div className={styles.tdCell}>
+                                            <td className={styles.tdCell}>
                                                 <span style={{ textTransform: 'capitalize' }}>{t(row.leadType)}</span>
-                                            </div>
+                                            </td>
 
-                                            <div className={styles.tdCell} title={formatCountryName(row.country)}>
+                                            <td className={styles.tdCell} title={formatCountryName(row.country)}>
                                                 {formatCountryName(row.country)}
-                                            </div>
+                                            </td>
 
-                                            <div className={styles.tdCell}>
+                                            <td className={styles.tdCell}>
                                                 <span className={`${styles.badge} ${getStageBadgeClass(row.stage)}`}>
                                                     {getStageLabel(row.stage)}
                                                 </span>
-                                            </div>
+                                            </td>
 
-                                            <div className={styles.tdCell} title={row.email || row.phone || '—'}>
+                                            <td className={styles.tdCell} title={row.email || row.phone || '—'}>
                                                 <span style={{ fontSize: '13px', color: '#555' }}>
                                                     {truncateStr(row.email || row.phone || '—', 22)}
                                                 </span>
-                                            </div>
+                                            </td>
 
-                                            <div
+                                            <td
                                                 className={styles.tdCell}
                                                 title={feePackSummary}
                                                 style={{ cursor: 'pointer' }}
@@ -257,9 +264,9 @@ const Leads = () => {
                                                     {truncateStr(feePackName, 18)}
                                                     <Edit2 size={11} style={{ opacity: 0.7 }} />
                                                 </span>
-                                            </div>
+                                            </td>
 
-                                            <div className={styles.tdCell} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                            <td className={styles.tdCell} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                                                 <button
                                                     onClick={() => setSelectedLead(row)}
                                                     className={styles.secondaryBtn}
@@ -300,35 +307,38 @@ const Leads = () => {
                                                 >
                                                     <Trash2 size={12} />
                                                 </button>
-                                            </div>
-                                        </div>
+                                            </td>
+                                        </tr>
                                     );
                                 })
                             )}
-                        </div>
-                    </div>
-
-                    <div className={styles.paginationRow}>
-                        <div className={styles.paginationPages}>
-                            <button
-                                className={styles.pageArrow}
-                                onClick={() => setPage(p => Math.max(1, p - 1))}
-                                disabled={page === 1}
-                            >
-                                &lt;
-                            </button>
-                            <span className={styles.pageNumber} style={{ padding: '0 8px', fontSize: '14px' }}>
-                                {t("Page")} {page} {t("of")} {totalPages}
-                            </span>
-                            <button
-                                className={styles.pageArrow}
-                                onClick={() => setPage(p => Math.min(totalPages, p + 1))}
-                                disabled={page === totalPages}
-                            >
-                                &gt;
-                            </button>
-                        </div>
-                    </div>
+                        </tbody>
+                        <tfoot className={styles.paginationRow}>
+                            <tr>
+                                <td colSpan={7}>
+                                    <div className={styles.paginationPages}>
+                                        <button
+                                            className={styles.pageArrow}
+                                            onClick={() => setPage(p => Math.max(1, p - 1))}
+                                            disabled={page === 1}
+                                        >
+                                            &lt;
+                                        </button>
+                                        <span className={styles.pageNumber} style={{ padding: '0 8px', fontSize: '14px' }}>
+                                            {t("Page")} {page} {t("of")} {totalPages}
+                                        </span>
+                                        <button
+                                            className={styles.pageArrow}
+                                            onClick={() => setPage(p => Math.min(totalPages, p + 1))}
+                                            disabled={page === totalPages}
+                                        >
+                                            &gt;
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>                   
                 </div>
             </div>
 

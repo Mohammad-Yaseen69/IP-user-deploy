@@ -38,7 +38,7 @@ const QUOTE_ERROR_HINTS = [
     "waited too long",
 ]
 
-const isQuoteError = (message) => {
+export const isQuoteError = (message) => {
     const text = String(message || "").toLowerCase()
     return QUOTE_ERROR_HINTS.some((hint) => text.includes(hint))
 }
@@ -53,13 +53,7 @@ export const getBeneficiaryName = (beneficiary) => {
     return name || beneficiary?.company_name || beneficiary?.legalName || beneficiary?.name || "-"
 }
 
-/**
- * The crypto payout, step by step, with nothing about where it is drawn: the same
- * quote -> review -> OTP -> done sequence SendCryptoModal runs, so an inline panel and
- * the modal cannot drift apart on what gets validated or sent.
- *
- * `active` gates the beneficiary refresh so a panel that is closed does not refetch.
- */
+
 export const useCryptoSendFlow = (wallet, { active = true } = {}) => {
     const { t } = useTranslation()
     const navigate = useNavigate()
@@ -144,7 +138,6 @@ export const useCryptoSendFlow = (wallet, { active = true } = {}) => {
         if (userDetails?.tfa) setAuthType("authenticator")
     }, [userDetails?.tfa])
 
-    /* A wallet the sender switches to may not hold what this recipient takes. */
     useEffect(() => {
         if (!selectedBeneficiary) return
         const stillListed = cryptoBeneficiaries.some(
@@ -385,7 +378,7 @@ export const useCryptoSendFlow = (wallet, { active = true } = {}) => {
         !!selectedBeneficiary && (isMissingBeneficiaryDetailsError(beneficiaryError) || addressStatus === "invalid")
 
     const canGetQuote =
-        getAmountNumber(amount) > 0 &&
+        getAmountNumber(amount) >= 0 &&
         !amountError &&
         !!selectedBeneficiary &&
         !!address &&

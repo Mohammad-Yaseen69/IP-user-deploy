@@ -58,8 +58,6 @@ const StepTwo = ({ data, dataHandler }) => {
         getUserBeneficiaries()
     }, [])
 
-    /* The saved record arrives before its payout channel does, so the freshly fetched
-       one is picked up by id once the list comes back with it. */
     const handleBeneficiarySaved = async (savedBeneficiary) => {
         setSavedBeneficiaryId(savedBeneficiary?._id || savedBeneficiary?.id || "")
         setShowBeneficiaryAddModal(false)
@@ -330,11 +328,30 @@ const StepTwo = ({ data, dataHandler }) => {
                                                     </div>
                                                 } */}
                                             </div>
-                                            <span>
-                                                {data?.payoutChannel?.value === "mobile" ? t("Mobile Wallet") : data?.payoutChannel?.value === "cash" ? t("Cash Point") : t("Bank")}
-                                                :
-                                                {data?.payoutChannel?.value === "mobile" ? data?.payer?.name : data?.payoutChannel?.value === "cash" ? data?.payer?.name : service_name_formatter(item?.bank_details?.[0]?.bank_name ?? item?.bank_details?.[0]?.name ?? "N/A")}
-                                            </span>
+                                            {data?.payoutChannel?.value === "mobile"
+                                                ? (
+                                                    <span>
+                                                        {t("Mobile Wallet")} : {data?.payer?.name ?? ""}
+                                                    </span>
+                                                )
+                                                : data?.payoutChannel?.value === "cash"
+                                                    ? (
+                                                        <span>
+                                                            {t("Cash Point")} : {data?.payer?.name ?? ""}
+                                                        </span>
+                                                    )
+                                                    : (item?.bank_details?.[0]?.bank_name ||
+                                                        item?.bank_details?.[0]?.name)
+                                                        ? (
+                                                            <span>
+                                                                {t("Bank")} :{" "}
+                                                                {service_name_formatter(
+                                                                    item?.bank_details?.[0]?.bank_name ??
+                                                                    item?.bank_details?.[0]?.name
+                                                                )}
+                                                            </span>
+                                                        )
+                                                        : null}
                                             <span>
                                                 {
                                                     data.payoutChannel?.value === "bank"

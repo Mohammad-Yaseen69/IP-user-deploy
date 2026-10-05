@@ -1,112 +1,171 @@
-import axios from "axios"
-import { useContext, useEffect, useState } from "react"
-import { useTranslation } from 'react-i18next'
-import { BsInfoCircleFill } from "react-icons/bs"
-import { Button } from "reactstrap"
+import { useContext, useEffect, useMemo, useState } from "react"
+import { Plus } from "react-feather"
+import { useTranslation } from "react-i18next"
+import { useNavigate } from "react-router"
 import { UserContext } from "../../../Context/UserContext"
-import { decryptData } from "../../../Helper/EssentilaMethods/Decryption"
 import { usePermission } from "../../../hooks/GeneralUse/usePermission"
+import { apiWrapper } from "../../../utils/Functions/apiWrapper"
 import allCountries from "../../PaymentsNewer/CountriesData.json"
-import WithdrawalItem from "./WithdrawalItem"
-import add_wd from "./files/add_wd.svg"
-import styles from "./styles/index.module.css"
+import abf from "../../VirtualIBAN/Beneficiaries/AddBeneficiaryFlowV2/AddBeneficiaryFlowV2.module.css"
+import { Icon } from "../../VirtualIBAN/Beneficiaries/AddBeneficiaryFlowV2/components"
+import AddAccountFlow from "./AddAccountFlow"
+import AccountGroup from "./components/AccountGroup"
+import CountryMeter from "./components/CountryMeter"
+import EmptyState from "./components/EmptyState"
+import RemoveAccountModal from "./components/RemoveAccountModal"
+import styles from "./styles/WithdrawalsNew.module.css"
+import useWithdrawalActions from "./useWithdrawalActions"
+import { buildCountryGroups, buildCryptoRows } from "./withdrawalAccounts"
+import { MAX_COUNTRIES, MAX_CRYPTO_WALLETS, TRANSFER_METHODS } from "./withdrawalPayload"
 
 const WithdrawalsNew = () => {
     const { t } = useTranslation()
-    const { authHeader, allowedCountries, userWithdrawals, getWithdrawals, userDetails } = useContext(UserContext)
-    const [countries, setCountries] = useState([])
-    const [newWithdrawal, setNewWithdrawal] = useState(false)
-    useEffect(() => {
-        if (userDetails) {
-            getWithdrawals()
-        }
-    }, [userDetails])
+    const navigate = useNavigate()
+    const { allowedCountries, userWithdrawals, cryptoWithdrawals, getWithdrawals, userDetails } = useContext(UserContext)
     const can = usePermission()
-    const isEdit = can("settings.receiving-accounts.add")
-    useEffect(() => {
-        const getCountries = async () => {
-            try {
-                const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/payment/countries/${userDetails?.country?.country_iso_code}`, { headers: authHeader, timeout: 0 })
-                const decrypted = decryptData(res.data.data)
-                const countriesArray = allCountries.filter((item) => {
-                    return decrypted.some(apiCountry => apiCountry.countryIso3 === item?.alpha3)
-                })
-                const allowed = allowedCountries?.map(allowed => {
-                    const coun = countriesArray?.find(item => item?.alpha3 === allowed?.country_iso_code)
-                    if (!coun) return null;
-                    return {
-                        ...coun,
-                        id: allowed?._id
-                    }
-                })?.filter(item => item != null)
-                setCountries(allowed)
-            } catch (error) {
-                console.log(error)
-            }
-        }
+    const canAdd = can("settings.receiving-accounts.add")
+    const canDelete = can("settings.receiving-accounts.delete")
+    const { removeAccount, setDefault } = useWithdrawalActions()
 
-        getCountries()
-    }, [])
+    const [countries, setCountries] = useState([])
+    const [flow, setFlow] = useState(null)
+    const [removing, setRemoving] = useState(null)
+
+    useEffect(() => {
+        if (userDetails?._id) getWithdrawals()
+    }, [userDetails?._id])
+
+    /* Countries the user can pay out to, keyed by the allowed-country id the record stores. */
+    useEffect(() => {
+        const senderIso = userDetails?.country?.country_iso_code
+        if (!senderIso || !allowedCountries?.length) return
+
+        apiWrapper({ endpoint: `/api/payment/countries/${senderIso}` })
+            .then((payoutCountries) => {
+                const supported = allCountries.filter(item => (
+                    (payoutCountries || []).some(apiCountry => apiCountry.countryIso3 === item?.alpha3)
+                ))
+                setCountries(allowedCountries
+                    .map(allowed => {
+                        const country = supported.find(item => item?.alpha3 === allowed?.country_iso_code)
+                        return country ? { ...country, id: allowed?._id } : null
+                    })
+                    .filter(Boolean))
+            })
+            .catch(() => setCountries([]))
+    }, [userDetails?.country?.country_iso_code, allowedCountries])
+
+    const groups = useMemo(() => buildCountryGroups(userWithdrawals), [userWithdrawals])
+    const cryptoRows = useMemo(() => buildCryptoRows(cryptoWithdrawals), [cryptoWithdrawals])
+
+    const usedCountries = groups.length
+    const limitReached = usedCountries >= MAX_COUNTRIES
+    const cryptoFull = cryptoRows.length >= MAX_CRYPTO_WALLETS
+    const hasAccounts = groups.length > 0 || cryptoRows.length > 0
+
+    const rowProps = {
+        canEdit: canAdd,
+        canDelete,
+        onSetDefault: setDefault,
+        onEdit: (row) => setFlow({ mode: "edit", target: row }),
+        onRemove: setRemoving,
+    }
 
     return (
-        <div className={styles.container}>
-            {/* {
-                showWithdrawalGuide
-                &&
-                <AddWithdrawalsModal
-                    isOpen={showWithdrawalGuide}
-                    toggle={() => {
-                        setShowWithdrawalGuide(false)
-                        sessionStorage.setItem("withdrawal_guide", true)
-                    }}
-                />
-            } */}
-            <h1>{t("Unlock Instant Withdrawals: Set Up Your Receiving Accounts Now!")}</h1>
-            <p>{t("Easily manage where you want to receive payments by adding the details of your bank accounts, mobile wallets, crypto wallets, payment cards, or cash pick-up locations. Follow the steps below to ensure you can instantly access your funds whenever you need them.")}</p>
-            {
-                userWithdrawals?.length > 0
-                    ?
-                    userWithdrawals?.map((item, index) => {
-                        console.log(item)
+        <div className={`${abf.root} ${styles.page}`}>
+            <div className={styles.header}>
+                <div>
+                    <h2 className={styles.title}>{t("Withdrawal accounts")}</h2>
+                    <p className={styles.subtitle}>
+                        {t("Where InstaPay sends money when you withdraw. Accounts must be in your own name.")}
+                    </p>
+                </div>
+                {hasAccounts && (
+                    <button
+                        type="button"
+                        className={styles.primaryBtn}
+                        onClick={() => setFlow({ mode: "create" })}
+                        disabled={!canAdd || (limitReached && cryptoFull)}
+                    >
+                        <Plus size={18} />
+                        {t("Add account")}
+                    </button>
+                )}
+            </div>
+
+            {!hasAccounts ? (
+                <EmptyState canAdd={canAdd} onAdd={() => setFlow({ mode: "create" })} />
+            ) : (
+                <>
+                    <CountryMeter used={usedCountries} />
+
+                    {groups.map(group => {
+                        const name = group.country?.name ?? group.iso3
+                        const allMethodsUsed = TRANSFER_METHODS.every(method => group.usedMethods.includes(method))
                         return (
-                            <WithdrawalItem
-                                countries={countries}
-                                userWithdrawals={item}
-                                count={userWithdrawals?.length}
-                                key={item?._id}
-                                index={index}
-                                setNewWithdrawal={setNewWithdrawal}
+                            <AccountGroup
+                                key={group.record._id}
+                                title={name}
+                                flag={group.country?.file_url}
+                                addLabel={t("Add to {{country}}", { country: name })}
+                                onAdd={allMethodsUsed ? null : () => setFlow({ mode: "channel", target: { record: group.record } })}
+                                canAdd={canAdd}
+                                rows={group.rows}
+                                rowProps={rowProps}
+                                emptyText="No accounts in this country yet."
                             />
                         )
-                    })
-                    :
-                    ""
-            }
-            {
-                newWithdrawal
-                &&
-                <WithdrawalItem
-                    countries={countries}
-                    userWithdrawals={null}
-                    count={userWithdrawals?.length}
-                    key={"HEHE"}
-                    setNewWithdrawal={setNewWithdrawal}
-                />
-            }
-            {
-                userWithdrawals?.length < 3
-                &&
-                <div className={styles.info}>
-                    <div>
-                        <BsInfoCircleFill color="#EB8C1D" size={window.innerWidth > 1000 ? 30 : 16} style={{ flexShrink: 0 }} />
-                        <p>{t("Set up your receiving accounts in up to three countries and instantly cash out funds from approved payment requests to your activated payout channels.")}</p>
-                    </div>
-                    <Button disabled={!isEdit} onClick={() => setNewWithdrawal(true)}>
-                        <img src={add_wd} alt="" />
-                        <span>{t("Add New")}</span>
-                    </Button>
-                </div>
-            }
+                    })}
+
+                    {cryptoRows.length > 0 && (
+                        <AccountGroup
+                            title={t("Crypto wallets")}
+                            icon="coins"
+                            meta="USDT"
+                            addLabel={t("Add crypto wallet")}
+                            onAdd={cryptoFull ? null : () => setFlow({ mode: "crypto" })}
+                            canAdd={canAdd}
+                            rows={cryptoRows}
+                            rowProps={rowProps}
+                        />
+                    )}
+
+                    {limitReached ? (
+                        <div className={`${styles.footNote} ${styles.footNoteWarning}`}>
+                            <Icon name="warning" size={18} color="#B5A300" />
+                            <p>
+                                {t("You've reached {{max}} countries. To withdraw to another country, remove one of your accounts there first.", { max: MAX_COUNTRIES })}
+                            </p>
+                        </div>
+                    ) : (
+                        <div className={styles.footNote}>
+                            <Icon name="info" size={18} color="var(--abf-primary)" />
+                            <p>
+                                {t("Withdrawals can only go to accounts in your own name. To pay someone else, use")}{" "}
+                                <button type="button" className={styles.linkBtn} onClick={() => navigate("/beneficiaries")}>
+                                    {t("Beneficiaries")}
+                                </button>.
+                            </p>
+                        </div>
+                    )}
+                </>
+            )}
+
+            <AddAccountFlow
+                open={!!flow}
+                onClose={() => setFlow(null)}
+                mode={flow?.mode}
+                target={flow?.target}
+                countries={countries}
+                groups={groups}
+                cryptoRows={cryptoRows}
+            />
+
+            <RemoveAccountModal
+                account={removing}
+                onClose={() => setRemoving(null)}
+                onConfirm={removeAccount}
+            />
         </div>
     )
 }

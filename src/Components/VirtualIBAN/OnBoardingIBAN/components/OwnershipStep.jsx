@@ -10,6 +10,7 @@ import StepProgress from './StepProgress'
 import AlertBox from './AlertBox'
 import { useMediaQuery } from '@mui/material'
 import OwnerCard from './OwnerCard'
+import { getInitials } from '../../../../utils/Functions/getInitials'
 
 
 const EMPTY_FORM = {
@@ -20,13 +21,6 @@ const EMPTY_FORM = {
     role: 'Ultimate Beneficial Owner (UBO)',
     ownershipPercent: '25',
     isPep: false
-}
-
-export const getInitials = (name) => {
-    if (!name) return 'UB'
-    const parts = name.trim().split(' ')
-    if (parts.length >= 2) return `${parts[0][0]}${parts[1][0]}`.toUpperCase()
-    return name.substring(0, 2).toUpperCase()
 }
 
 const OwnershipStep = ({ onNext, onBack, userType, data = {}, userDetails, currentStep }) => {

@@ -383,9 +383,9 @@ const UserState = ({ children }) => {
             .then(async (res) => {
                 const decrypted = decryptData(res.data.data)
                 const sorted = decrypted.walletList.sort((a, b) => {
-                    if (a.wallet_type === 'insta' && b.wallet_type === 'crypto') {
+                    if (a.wallet_type === 'insta') {
                         return -1;
-                    } else if (a.wallet_type === 'crypto' && b.wallet_type === 'insta') {
+                    } else if (b.wallet_type === 'insta') {
                         return 1;
                     }
                     return 0;
@@ -718,9 +718,12 @@ const UserState = ({ children }) => {
     }, [userDetails])
 
     const [selectedAccount, setSelectedAccount] = useState(null);
+    const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
     return (
         <UserContext.Provider value={{
+            isSidebarOpen,
+            setIsSidebarOpen,
             selectedAccount,
             setSelectedAccount,
             userDetails, setUserDetails, userWallets, setUserWallets, token, authHeader, beneficiaries, setBeneficiaries, userTransactions, setUserTransactions, searchQuery, setSearchQuery, apiDates, setApiDates, userSecurityQues, referralLink, userSessions, allowedFeatures, verifyToken, userWithdrawals, setUserWithdrawals, cryptoWithdrawals, setCryptoWithdrawals, allowedWithdrawals, registeredBeneficiaries, profileCompleted, allowedCountries, userPortfolio, profileIncompleteReason, setUserPortfolio, setUserVideos, getUserVideos, userVideos, checkRegisteredBenficiaries, getAllActiveCountries, getUserWallets, getUserBeneficiaries, getUserDocuments, checkAuth, getSecurityQuestions, getInvitationLink, getSessions, profileCompletedPercentage, getWithdrawals, getReferralCommission, totalReferralAmount, validateSendingLimits, validateReceivingLimits, validateTransactionsCount, profileLockTIme, setProfileLockTime, showInactivityModal, setShowInactivityModal, is30Days, setIs30Days, threeDaysReminder, set3DaysReminder, is30DaysInfo, setIs30DaysInfo, threeDaysReminderInfo, set3DaysReminderInfo, clearData, croppedImages, updateCoordinates, setCroppedImages, missingTabsData, setMissingTabsData, setAvailable, available, setBlocked, blocked, benLoading, balanceLoading, getUserBalances, refetchBalances, showModalState, setShowModalState, processReceivingNonIpFunds: processReceivingNonIpFunds.mutateAsync, showAnotherLoginModal, setShowAnotherLoginModal, isAgentLogin, setIsAgentLogin, agentDetails, setAgentDetails, commisions, shouldForceAuthenticator

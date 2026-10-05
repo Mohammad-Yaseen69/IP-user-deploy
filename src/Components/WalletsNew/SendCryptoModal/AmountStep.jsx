@@ -10,7 +10,7 @@ import {
     handleAmountInputKeyUp,
     isSameAmount,
 } from "../../VirtualIBAN/utils/amount"
-import { getAmountNumber } from "../../../stateMachines/cryptoPayout"
+import { getAmountNumber, getQuickAmounts, getSpendableBalance } from "../../../stateMachines/cryptoPayout"
 
 const QUICK_PERCENTAGES = [25, 50, 75, 100]
 
@@ -18,14 +18,7 @@ const AmountStep = ({ amount, setAmount, amountError, availableBalance, cryptoCu
     const { t } = useTranslation()
 
     const numericAmount = getAmountNumber(amount)
-    const quickAmounts = useMemo(
-        () =>
-            QUICK_PERCENTAGES.map((percent) => ({
-                percent,
-                value: Number(((getAmountNumber(availableBalance) * percent) / 100).toFixed(2)),
-            })).filter(({ value }) => value > 0),
-        [availableBalance]
-    )
+    const quickAmounts = useMemo(() => getQuickAmounts(availableBalance, QUICK_PERCENTAGES), [availableBalance])
 
     return (
         <div>
@@ -55,7 +48,7 @@ const AmountStep = ({ amount, setAmount, amountError, availableBalance, cryptoCu
                 <div className={convertStyles.availableText}>
                     {t("Available")}:{" "}
                     <strong>
-                        {getAmountNumber(availableBalance).toLocaleString("en-US", {
+                        {getSpendableBalance(availableBalance).toLocaleString("en-US", {
                             minimumFractionDigits: 2,
                             maximumFractionDigits: 2,
                         })}{" "}
