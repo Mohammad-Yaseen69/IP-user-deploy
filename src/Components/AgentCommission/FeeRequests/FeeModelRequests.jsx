@@ -1,7 +1,7 @@
 import { Box, Button, Card, Chip, CircularProgress, Dialog, DialogContent, DialogTitle, Grid, IconButton, Typography } from '@mui/material';
 import axios from 'axios';
 import { useCallback, useContext, useEffect, useState } from 'react';
-import { CheckCircle, Clock, Copy, Edit2, Plus, Shield, X, Trash, XCircle } from 'react-feather';
+import { CheckCircle, Clock, Copy, Plus, Shield, Trash, XCircle } from 'react-feather';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 import { UserContext } from '../../../Context/UserContext';
@@ -10,13 +10,9 @@ import { encryptData } from '../../../Helper/EssentilaMethods/Encryption';
 import useWindowWidth from '../../../utils/useWindowWidth';
 import TopRight from '../../topRight';
 import styles from '../styles/index.module.css';
-import FeeModelEditHistory from './FeeModelEditHistory';
-import FeeModelForm from './FeeModelForm';
-import { useEditFeeRequest, useFeeRequestEditHistory } from './hooks/useFeeRequestEdit';
-import { useIdempotency } from '../../../hooks/Payments/useIdempotency';
-import { DEFAULT_FEE_ITEMS, NO_PERCENT_FEE_IDS, sanitizeFeeSchedule, scheduleFromRequest, updateFeeItem } from './feeSchedule';
-import { apiWrapper } from '../../../utils/Functions/apiWrapper';
+import { IconButton, Stack } from '@mui/material';
 import { useMutation } from '@tanstack/react-query';
+import { apiWrapper } from '../../../utils/Functions/apiWrapper';
 
 const primaryButtonSx = { textTransform: 'none', background: '#5926F0', '&:hover': { background: '#4A1FD0' } };
 const chipSx = { fontWeight: 600, fontSize: '12px', px: 0.5 };
@@ -183,20 +179,6 @@ const FeeModelRequests = () => {
         },
     })
 
-    const tabButtonStyle = (tab) => ({
-        padding: '12px 20px',
-        background: 'none',
-        border: 'none',
-        fontSize: '15px',
-        fontWeight: 600,
-        color: activeTab === tab ? '#5926F0' : '#6B7280',
-        borderBottom: activeTab === tab ? '2px solid #5926F0' : '2px solid transparent',
-        cursor: 'pointer',
-        display: 'flex',
-        alignItems: 'center',
-        gap: '6px'
-    });
-
     return (
         <div className={styles.container}>
             <div className={styles.top}>
@@ -263,16 +245,7 @@ const FeeModelRequests = () => {
                                                         {t("Requested on")}: {new Date(req.createdAt).toLocaleDateString()}
                                                     </Typography>
                                                 </div>
-                                                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                                                    <Button
-                                                        size="small"
-                                                        variant="outlined"
-                                                        startIcon={<Edit2 size={12} />} 
-                                                        sx={{ textTransform: 'none', color: '#5926F0', borderColor: '#5926F0', p: '2px 10px', minWidth: 0 }}
-                                                        onClick={() => openEditModal(req)}
-                                                    >
-                                                        {t("Edit")}
-                                                    </Button>
+                                                <Stack direction={'row'} alignItems={'center'} gap={'8px'}>
                                                     <IconButton 
                                                         sx={{ bgcolor:'#e64067',color:'white', '&:hover':{ color: 'black'} }}
                                                         onClick={() => deleteRequest(req._id)}
@@ -289,9 +262,9 @@ const FeeModelRequests = () => {
                                                     {req.status === 'rejected' && (
                                                         <Chip size="small" color="error" icon={<XCircle size={12} />} label={t("REJECTED")} sx={chipSx} />
                                                     )}
-                                                </Box>
-                                            </Box>
-                                            <Box sx={{ p: '20px', display: 'flex', flexDirection: 'column', gap: '14px' }}>
+                                                </Stack>
+                                            </CardHeader>
+                                            <CardBody style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '14px' }}>
                                                 <div style={{ background: '#F9FAFB', padding: '12px 16px', borderRadius: '8px', border: '1px solid #F3F4F6' }}>
                                                     <div style={{ fontSize: '12px', color: '#6B7280', fontWeight: 600, marginBottom: '2px' }}>
                                                         {t("PRICING SUMMARY")}

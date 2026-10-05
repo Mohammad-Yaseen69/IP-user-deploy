@@ -204,6 +204,8 @@ const UserState = ({ children }) => {
         }
     }
 
+    console.log(userDetails, "userDetailsss");
+
     const updateCoordinates = (type, name, coordinates) => {
         if (type === "profile") {
             if (name === "dp") {
@@ -239,7 +241,7 @@ const UserState = ({ children }) => {
                     }
 
                     setUserDetails(decrypted)
-                    if (!decrypted?.country?.status) {
+                    if (decrypted?.country?.status === false) {
                         sessionStorage.setItem("country_status_error", "Service not available in your country!")
                         clearAuthStorage()
                         clearData()
@@ -312,7 +314,7 @@ const UserState = ({ children }) => {
                     setIsAgentLogin(true)
                     setAgentDetails(decrypted?.agentDetails)
                 }
-                if (!decrypted?.country?.status) {
+                if (decrypted?.country?.status === false) {
                     sessionStorage.setItem("country_status_error", "Service not available in your country!")
                     clearAuthStorage()
                     clearData()
