@@ -1204,7 +1204,7 @@ const Login = ({ country, setIsLoginForm, }) => {
                             </Stack>
                             <span className={styles.para}>
                                 {t("If you don't have an account")}&nbsp;•&nbsp;
-                                <Link style={linkStyle} onClick={() => setIsLoginForm(false)}>
+                                <Link style={linkStyle} to='/signup' onClick={() => setIsLoginForm(false)}>
                                     {t("Create an Account")}
                                 </Link>
                             </span>
