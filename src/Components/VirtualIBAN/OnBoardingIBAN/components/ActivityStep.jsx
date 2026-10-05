@@ -81,7 +81,7 @@ const ActivityStep = ({ onNext, onBack, data = {}, currentStep}) => {
         outgoingPayments: data.outgoingPayments || '',
     })
 
-    const { err, validate } = useStepValidation(form, ACTIVITY_RULES)
+    const { err, validate } = useStepValidation(form, ACTIVITY_RULES);
 
     const industryOptions = useMemo(() => {
         return bvnkIndustryReference.map(group => ({
