@@ -11,6 +11,7 @@ import AlertBox from './AlertBox'
 import { useMediaQuery } from '@mui/material'
 import OwnerCard from './OwnerCard'
 import { getInitials } from '../../../../utils/Functions/getInitials'
+import useStepValidation, { required } from '../../../../hooks/useStepValidation'
 
 
 const EMPTY_FORM = {
@@ -21,6 +22,15 @@ const EMPTY_FORM = {
     role: 'Ultimate Beneficial Owner (UBO)',
     ownershipPercent: '25',
     isPep: false
+}
+
+const OWNER_RULES = {
+    fullName: required.text('fullName'),
+    email: (f) => !/^\S+@\S+\.\S+$/.test(f.email.trim()),
+    role: required.text('role'),
+    ownershipPercent: (f) =>
+        f.ownershipPercent !== '' &&
+        (Number(f.ownershipPercent) < 0 || Number(f.ownershipPercent) > 100),
 }
 
 const OwnershipStep = ({ onNext, onBack, userType, data = {}, userDetails, currentStep, onChange }) => {
@@ -56,6 +66,7 @@ const OwnershipStep = ({ onNext, onBack, userType, data = {}, userDetails, curre
     const [isModalOpen, setIsModalOpen] = useState(false)
     const [formData, setFormData] = useState({ ...EMPTY_FORM })
     const [isEditing, setIsEditing] = useState(false)
+    const { err, validate, reset } = useStepValidation(formData, OWNER_RULES);
 
     useEffect(() => {
         window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
@@ -110,6 +121,7 @@ const OwnershipStep = ({ onNext, onBack, userType, data = {}, userDetails, curre
 
     const openAddModal = (type = 'individual') => {
         if (isKybDone) return
+        reset();
         setFormData({
             ...EMPTY_FORM,
             id: Date.now(),
@@ -121,6 +133,7 @@ const OwnershipStep = ({ onNext, onBack, userType, data = {}, userDetails, curre
 
     const openEditModal = (owner) => {
         if (isKybDone) return
+        reset();
         setFormData({ ...owner })
         setIsEditing(true)
         setIsModalOpen(true)
@@ -133,7 +146,7 @@ const OwnershipStep = ({ onNext, onBack, userType, data = {}, userDetails, curre
 
     const handleSaveOwner = (e) => {
         e?.preventDefault()
-        if (isKybDone || !formData.fullName?.trim()) return
+        if (!validate() || isKybDone) return
 
         if (isEditing) {
             setOwners(prev => prev.map(o => o.id === formData.id ? { ...formData } : o))
@@ -323,7 +336,7 @@ const OwnershipStep = ({ onNext, onBack, userType, data = {}, userDetails, curre
                             <input
                                 type="text"
                                 className="form-control"
-                                required
+                                style={err('fullName')}
                                 minLength={2}
                                 maxLength={255}
                                 value={formData.fullName}
@@ -344,7 +357,7 @@ const OwnershipStep = ({ onNext, onBack, userType, data = {}, userDetails, curre
                             <input
                                 type="email"
                                 className="form-control"
-                                required
+                                style={err('email')}
                                 value={formData.email}
                                 onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
                                 placeholder="john@example.com"
@@ -357,7 +370,7 @@ const OwnershipStep = ({ onNext, onBack, userType, data = {}, userDetails, curre
                                 <input
                                     type="text"
                                     className="form-control"
-                                    required
+                                    style={err('role')}
                                     value={formData.role}
                                     onChange={(e) => setFormData(prev => ({ ...prev, role: e.target.value }))}
                                     placeholder="e.g. Director, UBO, CEO"
@@ -369,6 +382,7 @@ const OwnershipStep = ({ onNext, onBack, userType, data = {}, userDetails, curre
                                 <input
                                     type="number"
                                     className="form-control"
+                                    style={err('ownershipPercent')}
                                     min="0"
                                     max="100"
                                     value={formData.ownershipPercent}
