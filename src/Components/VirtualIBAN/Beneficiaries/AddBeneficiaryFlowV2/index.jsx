@@ -21,7 +21,7 @@ import {
     prefillEditBag,
 } from './buildPayloads';
 import { useAvailableMethods, useRequiredFields, useRequirements } from './useVendorRequirements';
-import { getEditRequirements, getFieldDef } from './vendorFields';
+import { BANK_COUNTRY_FIELD, getEditRequirements, getFieldDef } from './vendorFields';
 import { apiWrapper } from '../../../../utils/Functions/apiWrapper';
 import { UserContext } from '../../../../Context/UserContext';
 import { handlePaymentApiError } from '../../../../utils/Functions/handlePaymentApiError';
@@ -225,6 +225,18 @@ const AddBeneficiaryFlowV2 = ({
             beneficiary: stale.reduce((bag, name) => ({ ...bag, [name]: prev.country }), prev.beneficiary),
         }));
     }, [form.country, form.beneficiary, lockedFields]);
+
+
+    const asksBankCountry = (requirements?.channelFields || []).includes(BANK_COUNTRY_FIELD);
+
+    useEffect(() => {
+        if (!asksBankCountry || !form.country || form.channel[BANK_COUNTRY_FIELD]) return;
+
+        setForm((prev) => ({
+            ...prev,
+            channel: { ...prev.channel, [BANK_COUNTRY_FIELD]: prev.country },
+        }));
+    }, [asksBankCountry, form.country, form.channel]);
 
     const setField = useCallback((field, value) => {
         setForm((prev) => ({ ...prev, [field]: value }));
