@@ -457,7 +457,6 @@ const KYB = () => {
             })
 
             const decrypted = decryptData(res.data.data)
-            setUserDetails(prev => ({ ...prev, company: decrypted?.results?.company }))
 
             if (draftEnabled) {
                 const submittedSlots = fileEntries
@@ -479,6 +478,9 @@ const KYB = () => {
                 } else {
                     await processWithoutCharge()
                 }
+            } else {
+                 toast.success(decrypted?.message);
+                 verifyToken(true);
             }
 
             console.log(decrypted)

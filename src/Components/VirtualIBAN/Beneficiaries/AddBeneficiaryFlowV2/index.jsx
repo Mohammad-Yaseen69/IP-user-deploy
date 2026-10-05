@@ -301,11 +301,13 @@ const AddBeneficiaryFlowV2 = ({
 
     const validateDetails = () => {
         const next = { beneficiary: {}, channel: {} };
-
+        const nameFields = ['firstname', 'lastname', 'legalname', 'company_name']
         if (requirements) {
             (requirements.requiredBeneficiary || []).forEach((name) => {
                 if (!String(form.beneficiary[name] || '').trim()) {
                     next.beneficiary[name] = 'Required.';
+                } else if (nameFields.includes(name.toLowerCase())  && !/^[\p{L}\s'_-]+$/u.test(form.beneficiary[name])) {
+                    next.beneficiary[name] = 'Invalid.';
                 }
             });
             (requirements.requiredChannel || []).forEach((name) => {
