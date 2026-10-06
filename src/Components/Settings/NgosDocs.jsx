@@ -4,14 +4,19 @@ import { useTranslation } from 'react-i18next'
 import { FormGroup, Input, Label, Modal, ModalBody, ModalHeader } from 'reactstrap'
 import { UserContext } from '../../Context/UserContext'
 import styles from "./styles/doctype.module.css"
-const FileUploadWithPreview = ({ docName, setCompanyFiles, setCompanyFileNames, userDetails, checkFileStatus, isReadOnly }) => {
+const FileUploadWithPreview = ({ docName, setCompanyFiles, setCompanyFileNames, userDetails, checkFileStatus, isReadOnly, onFileSelected, getDraftFile }) => {
     const existingFile = userDetails?.company?.kyb_files?.find(f => f.document_name === docName)
     const [localFile, setLocalFile] = useState(null)
+    const draftFile = !localFile && getDraftFile ? getDraftFile(docName) : null
     const { t } = useTranslation()
     const handleFileChange = (e) => {
         const file = e.target.files[0]
         if (file) {
             setLocalFile(file)
+            if (onFileSelected) {
+                onFileSelected(docName, file)
+                return
+            }
             setCompanyFiles(prev => {
                 const idx = prev.findIndex(f => f?.document_name === docName)
                 if (idx !== -1) {
@@ -36,10 +41,17 @@ const FileUploadWithPreview = ({ docName, setCompanyFiles, setCompanyFileNames, 
 
     return (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '.5rem' }}>
-            {existingFile && !localFile && (
+            {existingFile && !localFile && !draftFile && (
                 <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                     <span style={{ fontWeight: 500 }}>
                         {t("Uploaded")}: <a href={existingFile.file_link} target="_blank" rel="noopener noreferrer">{existingFile.key?.split('/')?.[2]}</a>
+                    </span>
+                </div>
+            )}
+            {draftFile && (
+                <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+                    <span style={{ fontWeight: 500 }}>
+                        {t("Uploaded")}: <a href={draftFile.file_link} target="_blank" rel="noopener noreferrer">{draftFile.name}</a>
                     </span>
                 </div>
             )}
@@ -49,14 +61,14 @@ const FileUploadWithPreview = ({ docName, setCompanyFiles, setCompanyFileNames, 
                 </div>
             )}
             {!isReadOnly && <Input type='file' name={docName} onChange={handleFileChange} style={{ maxWidth: 300 }} />}
-            {existingFile && !localFile && (
+            {existingFile && !localFile && !draftFile && (
                 <small style={{ color: '#888' }}>{t("Choose a new file to replace the existing one.")}</small>
             )}
         </div>
     )
 }
 
-const NgosDocs = ({ setCompanyFiles, setCompanyFileNames, checkFileStatus, isReadOnly }) => {
+const NgosDocs = ({ setCompanyFiles, setCompanyFileNames, checkFileStatus, isReadOnly, onFileSelected, getDraftFile }) => {
     const [modalOne, setModalOne] = useState(false)
     const [modalTwo, setModalTwo] = useState(false)
     const [modalThree, setModalThree] = useState(false)
@@ -76,6 +88,8 @@ const NgosDocs = ({ setCompanyFiles, setCompanyFileNames, checkFileStatus, isRea
                         docName={t(`Entity's Registry Extract (Entity'sRegistration/Creation Document)`)}
                         setCompanyFiles={setCompanyFiles}
                         setCompanyFileNames={setCompanyFileNames}
+                        onFileSelected={onFileSelected}
+                        getDraftFile={getDraftFile}
                         userDetails={userDetails}
                         checkFileStatus={checkFileStatus}
                         isReadOnly={isReadOnly}
@@ -125,6 +139,8 @@ const NgosDocs = ({ setCompanyFiles, setCompanyFileNames, checkFileStatus, isRea
                         docName={t(`Articles of Association`)}
                         setCompanyFiles={setCompanyFiles}
                         setCompanyFileNames={setCompanyFileNames}
+                        onFileSelected={onFileSelected}
+                        getDraftFile={getDraftFile}
                         userDetails={userDetails}
                         checkFileStatus={checkFileStatus}
                         isReadOnly={isReadOnly}
@@ -165,6 +181,8 @@ const NgosDocs = ({ setCompanyFiles, setCompanyFileNames, checkFileStatus, isRea
                         docName={t(`Proof of Legal Representative's Authority`)}
                         setCompanyFiles={setCompanyFiles}
                         setCompanyFileNames={setCompanyFileNames}
+                        onFileSelected={onFileSelected}
+                        getDraftFile={getDraftFile}
                         userDetails={userDetails}
                         checkFileStatus={checkFileStatus}
                         isReadOnly={isReadOnly}
@@ -204,6 +222,8 @@ const NgosDocs = ({ setCompanyFiles, setCompanyFileNames, checkFileStatus, isRea
                         docName={t(`Ownership Structure & Ultimate Beneficial Owners (UBOs)`)}
                         setCompanyFiles={setCompanyFiles}
                         setCompanyFileNames={setCompanyFileNames}
+                        onFileSelected={onFileSelected}
+                        getDraftFile={getDraftFile}
                         userDetails={userDetails}
                         checkFileStatus={checkFileStatus}
                         isReadOnly={isReadOnly}
@@ -226,6 +246,8 @@ const NgosDocs = ({ setCompanyFiles, setCompanyFileNames, checkFileStatus, isRea
                         docName={t(`Collection of Identification Documents`)}
                         setCompanyFiles={setCompanyFiles}
                         setCompanyFileNames={setCompanyFileNames}
+                        onFileSelected={onFileSelected}
+                        getDraftFile={getDraftFile}
                         userDetails={userDetails}
                         checkFileStatus={checkFileStatus}
                         isReadOnly={isReadOnly}
@@ -254,11 +276,13 @@ const NgosDocs = ({ setCompanyFiles, setCompanyFileNames, checkFileStatus, isRea
             </div>
             <div>
                 <FormGroup>
-                    <Label>{t("Proof of Address ")}<Info className={styles.info_icon} size={16} onClick={() => setModalSix(!modalSix)} /></Label>
+                    <Label>{t("Proof of address of the company")}<Info className={styles.info_icon} size={16} onClick={() => setModalSix(!modalSix)} /></Label>
                     <FileUploadWithPreview
                         docName={t(`Proof of Address`)}
                         setCompanyFiles={setCompanyFiles}
                         setCompanyFileNames={setCompanyFileNames}
+                        onFileSelected={onFileSelected}
+                        getDraftFile={getDraftFile}
                         userDetails={userDetails}
                         checkFileStatus={checkFileStatus}
                         isReadOnly={isReadOnly}

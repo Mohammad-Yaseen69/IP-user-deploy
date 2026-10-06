@@ -15,6 +15,7 @@ const DOC_TITLE_MAP = {
     domiciliation_certificate: "Certificate of Domiciliation",
     lease_agreement: "Professional Lease Agreement",
     utility_bill: "Utility Bill",
+    tax_authority_letter: "Official Letter from an Administration / Tax Authority",
     bank_statement: "Recent Business Bank Statement",
     shareholders_register: "Register of Shareholders / Members",
     ownership_chart: "Group Ownership Structure Chart",

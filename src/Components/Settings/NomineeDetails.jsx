@@ -25,7 +25,6 @@ const NomineeDetails = ({ nominee, setNominee }) => {
         return `${year}-${month}-${day}`;
     };
 
-    const [image, setImage] = useState(null)
     const [userImage, setUserImage] = useState(nominee?.picture?.url)
     const [file, setFile] = useState(null)
     const [fullName, setFullName] = useState(nominee?.full_name)
@@ -44,7 +43,6 @@ const NomineeDetails = ({ nominee, setNominee }) => {
     const handleImageSelect = (e) => {
         const file = e.target.files[0]
         setFile(file)
-        setImage(file)
         const reader = new FileReader();
         reader.onload = () => {
             setUserImage(reader.result);
@@ -122,17 +120,14 @@ const NomineeDetails = ({ nominee, setNominee }) => {
     return (
         <div>
             <div className={styles.top}>
-                <div className={styles.img_container}>
-                    {
-                        userImage && !isEditMode
-                            ?
-                            <img src={userImage} alt="nominee photo" />
-                            :
-                            <label htmlFor='file' className={styles.upload}>
-                                <Camera size={30} />
-                                <span>{t("Upload Photo")}</span>
-                                <input type="file" name="file" id="file" value={image} disabled={!isEditMode} readOnly={!isEditMode} onChange={handleImageSelect} hidden />
-                            </label>
+                <div className={`${styles.img_container} ${isEditMode && styles.imageBox}`}>
+                    {userImage && <img src={userImage} alt="nominee photo" />}
+                    {isEditMode &&
+                    <label htmlFor='file' className={styles.upload}>
+                        <Camera size={30} />
+                        <span>{t("Upload Photo")}</span>
+                        <input type="file" name="file" id="file" disabled={!isEditMode} accept="image/*" readOnly={!isEditMode} onChange={handleImageSelect} hidden />
+                    </label>
                     }
                 </div>
                 <div className={styles.top_right}>
