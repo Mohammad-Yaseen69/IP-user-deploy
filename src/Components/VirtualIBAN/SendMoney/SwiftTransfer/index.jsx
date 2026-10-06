@@ -251,14 +251,14 @@ const MissingSwiftCodeBanner = ({ beneficiary, authHeader, onSwiftCodeSaved }) =
         try {
             const { encryptData } = await import("../../../../Helper/EssentilaMethods/Encryption")
             const bankDetails = Array.isArray(beneficiary?.bank_details) && beneficiary.bank_details.length > 0
-                ? beneficiary.bank_details.map((bd, i) => i === 0 ? { ...bd, swift_code: bicClean, bic: bicClean } : bd)
+                ? {...beneficiary.bank_details[0], swift_code: bicClean, bic: bicClean }
                 : [{ swift_code: bicClean, bic: bicClean }]
 
-            const payload = { ...beneficiary, swift_code: bicClean, bic: bicClean, bank_details: bankDetails }
+            const payload = { bank_details: bankDetails, channel_type: "bank", removeOld: true }
             const encrypted = encryptData(payload)
 
-            await axios.put(
-                `${import.meta.env.VITE_IP_DEV_API}/api/beneficiary/update-beneficiary/${beneficiary._id}`,
+            await axios.post(
+                `${import.meta.env.VITE_IP_DEV_API}/api/beneficiary/v2/${beneficiary._id}/channel`,
                 { data: encrypted },
                 { headers: authHeader }
             )
@@ -821,7 +821,6 @@ const SwiftTransfer = forwardRef(({ isOpen = true, toggle, selectedIban, availab
     const currencyCode = selectedIban?.currency || "EUR"
     const sourceAvailableBalance = getSourceBalance(liveBalance, selectedIban)
     const getDefaultAuthType = () => (userDetails?.tfa ? "authenticator" : userDetails?.email_verification ? "email" : userDetails?.whatsapp_verification ? "whatsapp" : "sms")
-
     const [currentStep, setCurrentStep] = useState(STEPS.AMOUNT)
     const [amount, setAmount] = useState("")
     const [selectedBeneficiary, setSelectedBeneficiary] = useState(null)
@@ -905,6 +904,7 @@ const SwiftTransfer = forwardRef(({ isOpen = true, toggle, selectedIban, availab
         else if (userDetails?.email_verification) setAuthType("email")
         else if (userDetails?.whatsapp_verification) setAuthType("whatsapp")
     }, [userDetails?.tfa, userDetails?.email_verification, userDetails?.whatsapp_verification])
+
 
     useEffect(() => {
         if (userDetails?._id) getUserBeneficiaries()
@@ -1036,6 +1036,7 @@ const SwiftTransfer = forwardRef(({ isOpen = true, toggle, selectedIban, availab
         await sendOtp(buildPayoutPayload(), nextChannel)
 
     }
+
 
     const verifyOtp = async (setVerified, type, otp, setOtpError) => {
         try {
@@ -1213,6 +1214,7 @@ const SwiftTransfer = forwardRef(({ isOpen = true, toggle, selectedIban, availab
                         authType={authType}
                         setAuthType={setAuthType}
                         methods={otpMethods}
+
                     />
                 )
             case STEPS.DONE:

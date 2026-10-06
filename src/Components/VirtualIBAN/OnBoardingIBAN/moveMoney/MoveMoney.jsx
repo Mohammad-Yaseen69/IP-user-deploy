@@ -12,8 +12,7 @@ import {
     RefreshCw,
     CreditCard,
     ArrowLeft,
-    Search,
-    ChevronLeft
+    Search
 } from 'react-feather';
 import SepaTransfer from '../../SendMoney/SepaTransfer';
 import SwiftTransfer from '../../SendMoney/SwiftTransfer';
@@ -23,6 +22,8 @@ import { asVirtualIbanArray, isVirtualIbanOutboundBlocked } from '../../utils/vi
 import { UserContext } from '../../../../Context/UserContext';
 import { useNavigate } from 'react-router';
 import MobileHeader from '../../../../Common/Component/MobileHeader';
+import ConvertFundsModal from '../../ConvertFundsModal';
+import InstaPayLoader from '../../../Loader';
 
 const MoveMoney = () => {
     const { t } = useTranslation();
@@ -30,7 +31,9 @@ const MoveMoney = () => {
     const [showSepaPage, setShowSepaPage] = useState(false);
     const [showSwiftPage, setShowSwiftPage] = useState(false);
     const [showCryptoTopupModal, setShowCryptoTopupModal] = useState(false);
+    const [moveSendModal, setMoveSendModal] = useState(false);
     const btnRef = useRef(null);
+    const navigate = useNavigate();
 
     const {
         userDetails,
@@ -42,7 +45,7 @@ const MoveMoney = () => {
     const ibans = useMemo(
         () => asVirtualIbanArray(rawIbans),
         [rawIbans]
-    );
+    )
     const selectedIban = useMemo(
         () =>
             ibans.find(
@@ -55,6 +58,10 @@ const MoveMoney = () => {
 
     const { data: syncedBalance } = useSyncVirtualIbanBalance(ibanId);
 
+    if(ibansLoading) return <InstaPayLoader/>;
+
+    if(ibans?.length === 0) navigate('/onboarding-IBAN');
+
     const currentBalance = syncedBalance?.balance ?? selectedIban?.balance ?? 0
 
     // Outgoing transfers are switched off for this IBAN, so SEPA and SWIFT
@@ -63,7 +70,7 @@ const MoveMoney = () => {
         isVirtualIbanOutboundBlocked(syncedBalance) || isVirtualIbanOutboundBlocked(selectedIban)
     const outboundBlockedTooltip = t("Outgoing transfers are disabled for this virtual IBAN.")
     const handleClose = () => setShowSwiftPage(false);
-
+    
     return (
         <>
             {(showSwiftPage && width <= 600) &&
@@ -90,11 +97,13 @@ const MoveMoney = () => {
                 {
                     showSepaPage ?
                         <>
+                        {width > 600 &&
                             <IbanBreadcrumb items={[
                                 { label: "My virtual bank", path: "/virtual-IBAN" },
-                                { label: "Move money", onClick: () => setShowSepaPage(false) },
+                                { label: "Move money", onClick: handleClose },
                                 { label: "SEPA Transfer" }
                             ]} />
+                        }
                             <SepaTransfer
                                 isPage={true}
                                 selectedIban={selectedIban}
@@ -104,23 +113,20 @@ const MoveMoney = () => {
                         </>
                     : showSwiftPage ?
                         <>
-                        {width > 600 &&
                             <IbanBreadcrumb items={[
                                 { label: "My virtual bank", path: "/virtual-IBAN" },
-                                { label: "Move money", onClick: handleClose },
+                                { label: "Move money", onClick: () => setShowSwiftPage(false) },
                                 { label: "SWIFT Transfer" }
                             ]} />
-                        }
                             <SwiftTransfer
                                 isPage={true}
                                 selectedIban={selectedIban}
                                 availableBalance={currentBalance}
-                                toggle={handleClose}
-                                ref={btnRef}
+                                toggle={() => setShowSwiftPage(false)}
                             />
                         </>
 
-                        : <>                            
+                        : <>
                             <div className={styles.headerTitle}>
                                 <IbanBreadcrumb items={[
                                     { label: "My virtual bank", path: "/virtual-IBAN" },
@@ -204,27 +210,23 @@ const MoveMoney = () => {
                             <div className={styles.sectionBlock}>
                                 <div className={styles.sectionLabel}>{t("WITHIN INSTAPAY")} <span>{t("Instant, free transfers between InstaPay accounts")}</span></div>
 
-                                <div className={styles.cardsGrid2}>
-                                    <Tooltip title={t("Coming Soon")} arrow>
-
-                                        <div className={styles.card}>
-                                            <div className={`${styles.iconBox} ${styles.bgRed}`}>
-                                                <RefreshCw size={20} />
-                                            </div>
-                                            <div className={styles.cardBody}>
-                                                <h3 className={styles.cardTitle}>{t("Move & Send")}</h3>
-                                                <p className={styles.cardDesc}>
-                                                    {t("Move between your own accounts, or send to any InstaPay user by phone, username, email or IBAN.")}
-                                                </p>
-                                                <div className={styles.badgeRow}>
-                                                    <span className={`${styles.tag} ${styles.tagGreen}`}>{t("Instant")}</span>
-                                                    <span className={`${styles.tag} ${styles.tagGray}`}>{t("Free")}</span>
-                                                    <span className={`${styles.tag} ${styles.tagGray}`}>{t("Internal Send")}</span>
-                                                </div>
+                                <div className={styles.cardsGrid2} onClick={()=> setMoveSendModal(true)}>
+                                    <div className={styles.card}>
+                                        <div className={`${styles.iconBox} ${styles.bgRed}`}>
+                                            <RefreshCw size={20} />
+                                        </div>
+                                        <div className={styles.cardBody}>
+                                            <h3 className={styles.cardTitle}>{t("Move & Send")}</h3>
+                                            <p className={styles.cardDesc}>
+                                                {t("Move between your own accounts, or send to any InstaPay user by phone, username, email or IBAN.")}
+                                            </p>
+                                            <div className={styles.badgeRow}>
+                                                <span className={`${styles.tag} ${styles.tagGreen}`}>{t("Instant")}</span>
+                                                <span className={`${styles.tag} ${styles.tagGray}`}>{t("Free")}</span>
+                                                <span className={`${styles.tag} ${styles.tagGray}`}>{t("Internal Send")}</span>
                                             </div>
                                         </div>
-
-                                    </Tooltip>
+                                    </div>
                                 </div>
                             </div>
 
@@ -266,6 +268,14 @@ const MoveMoney = () => {
             />
 
         </div>
+        {moveSendModal &&
+            <ConvertFundsModal
+                isOpen={moveSendModal}
+                toggle={() => setMoveSendModal(false)}
+                selectedIban={selectedIban}
+                availableBalance={currentBalance}
+            />
+        }
         </>
     );
 };

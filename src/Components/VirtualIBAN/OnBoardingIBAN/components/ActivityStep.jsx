@@ -8,6 +8,7 @@ import styles from '../style/onboardingSteps.module.css'
 import SidebarProgress from './SidebarProgress'
 import StepProgress from './StepProgress'
 import AlertBox from './AlertBox'
+import useStepValidation, { required } from '../../../../hooks/useStepValidation'
 
 const getIndustryPayload = (industry) => ({
     name: industry?.name,
@@ -30,10 +31,22 @@ const MAIN_COUNTRY_OPTIONS = [
     'Germany',
 ]
 
-const COUNTRY_LIST = ['Switzerland', 'France', 'Germany', 'United Kingdom', 'Netherlands', 'Luxembourg', 'Ireland', 'Malta', 'United Arab Emirates', 'United States', 'Senegal', 'Pakistan', 'India', 'China', 'Brazil', 'Canada', 'Japan', 'Australia', 'Saudi Arabia', 'South Africa']
-
 const countrySelectStyle = {
     borderRadius: '12px', padding: '13px 15px', border: '1px solid #1412201F'
+}
+
+const ACTIVITY_RULES = {
+    industry: (f) => !(f.industryReference || f.industry),
+    monthlyVolume: required.text('monthlyVolume'),
+    purpose: required.text('purpose'),
+    paymentNature: required.text('paymentNature'),
+    originCountries: required.list('originCountries'),
+    destinationCountries: required.list('destinationCountries'),
+    averageTransaction: required.text('averageTransaction'),
+    maximumTransaction: required.text('maximumTransaction'),
+    averageBalance: required.text('averageBalance'),
+    incomingPayments: required.text('incomingPayments'),
+    outgoingPayments: required.text('outgoingPayments'),
 }
 
 const ActivityStep = ({ onNext, onBack, onChange, data = {}, currentStep}) => {
@@ -68,6 +81,7 @@ const ActivityStep = ({ onNext, onBack, onChange, data = {}, currentStep}) => {
         outgoingPayments: data.outgoingPayments || '',
     })
 
+    const { err, validate } = useStepValidation(form, ACTIVITY_RULES);
     useEffect(() => {
         onChange?.(form)
     }, [form])
@@ -120,7 +134,16 @@ const ActivityStep = ({ onNext, onBack, onChange, data = {}, currentStep}) => {
         form.outgoingPayments
     )
 
-    const set = (key) => (e) => setForm(prev => ({ ...prev, [key]: e.target.value }))
+    const set = (key) => (e) =>{
+        const numberFieldsKeys = ['averageTransaction', 'maximumTransaction', 'averageBalance', 'incomingPayments', 'outgoingPayments'];
+        if(numberFieldsKeys.includes(key)){
+            if(/^\d*$/.test(e.target.value)){
+                setForm(prev => ({ ...prev, [key]: e.target.value }));
+            }
+        } else {
+            setForm(prev => ({ ...prev, [key]: e.target.value }));
+        }
+    }
 
     const handleCountrySelect = (selectedCountry) => {
         const countryName = selectedCountry?.name?.trim()
@@ -153,7 +176,7 @@ const ActivityStep = ({ onNext, onBack, onChange, data = {}, currentStep}) => {
     }
 
     const handleContinue = () => {
-        onNext(form, 'activity')
+      if (validate()) onNext(form, 'activity')
     }
 
     const steps = [
@@ -218,7 +241,7 @@ const ActivityStep = ({ onNext, onBack, onChange, data = {}, currentStep}) => {
 
                                 <select
                                     className={styles.textInput}
-                                    style={{ height: "auto", padding: "12px" }}
+                                    style={{ height: "auto", padding: "12px", ...err('industry') }}
                                     value={selectedIndustryValue}
                                     onChange={handleIndustryChange}
                                 >
@@ -250,7 +273,7 @@ const ActivityStep = ({ onNext, onBack, onChange, data = {}, currentStep}) => {
                                         "Cross-border payment orchestration and multi-currency treasury..."
                                     )}
                                 />
-                                < span className={styles.charCount}>{form.businessDescription.length}/1000</span>
+                                <span className={styles.charCount}>{form.businessDescription.length}/1000</span>
                             </div>
 
                             <div className={styles.inputGroup}
@@ -329,8 +352,8 @@ const ActivityStep = ({ onNext, onBack, onChange, data = {}, currentStep}) => {
                             </div>
 
                             <div className={styles.inputGroup}>
-                                <label className={styles.inputLabel}>
-                                    {t("EXPECTED MONTHLY INFLOW")}
+                                <label className={styles.inputLabel} style={{ color: err('monthlyVolume', true) ? 'red' : '#6e7687' }}>
+                                    {t("EXPECTED MONTHLY INFLOW")} <RequiredFieldIndicator />
                                 </label>
 
                                 <div className={styles.chips}>
@@ -465,7 +488,7 @@ const ActivityStep = ({ onNext, onBack, onChange, data = {}, currentStep}) => {
                                     </label>
 
                                     <input
-                                        style={{ padding: "14.5px 14px 14.5px 12.5px" }}
+                                        style={{ padding: "14.5px 14px 14.5px 12.5px", ...err('purpose') }}
                                         className={styles.textInput}
                                         value={form.purpose}
                                         onChange={set("purpose")}
@@ -478,7 +501,7 @@ const ActivityStep = ({ onNext, onBack, onChange, data = {}, currentStep}) => {
                                     </label>
 
                                     <input
-                                        style={{ padding: "14.5px 14px 14.5px 12.5px" }}
+                                        style={{ padding: "14.5px 14px 14.5px 12.5px", ...err('paymentNature') }}
                                         type="text"
                                         placeholder={t("e.g. Invoices, consulting fees, supplier settlements")}
                                         className={styles.textInput}
@@ -500,7 +523,7 @@ const ActivityStep = ({ onNext, onBack, onChange, data = {}, currentStep}) => {
                                         }}
                                         country=""
                                         background="#fff"
-                                        containerStyle={countrySelectStyle}
+                                        containerStyle={{ ...countrySelectStyle, ...err('originCountries') }}
                                     />
 
                                     <div className={styles.chips}>
@@ -532,7 +555,7 @@ const ActivityStep = ({ onNext, onBack, onChange, data = {}, currentStep}) => {
                                         }}
                                         country=""
                                         background="#fff"
-                                        containerStyle={countrySelectStyle}
+                                        containerStyle={{ ...countrySelectStyle, ...err('destinationCountries') }}
                                     />
 
                                     <div className={styles.chips}>
@@ -560,8 +583,9 @@ const ActivityStep = ({ onNext, onBack, onChange, data = {}, currentStep}) => {
 
                                     <div className={styles.inputWrapper}>
                                         <input
-                                            style={{ padding: "14.5px 52px 14.5px 14px" }}
-                                            type="number"
+                                            style={{ padding: "14.5px 52px 14.5px 14px", ...err('averageTransaction') }}
+                                            type="text"
+                                            inputMode="numeric"
                                             min="0"
                                             placeholder="12000"
                                             className={styles.textInput}
@@ -579,10 +603,11 @@ const ActivityStep = ({ onNext, onBack, onChange, data = {}, currentStep}) => {
 
                                     <div className={styles.inputWrapper}>
                                         <input
-                                            type="number"
+                                            type="text"
+                                            inputMode="numeric"
                                             min="0"
                                             placeholder="25000"
-                                            style={{ padding: "14.5px 52px 14.5px 14px" }}
+                                            style={{ padding: "14.5px 52px 14.5px 14px", ...err('maximumTransaction') }}
                                             className={styles.textInput}
                                             value={form.maximumTransaction}
                                             onChange={set("maximumTransaction")}
@@ -600,8 +625,9 @@ const ActivityStep = ({ onNext, onBack, onChange, data = {}, currentStep}) => {
 
                                     <div className={styles.inputWrapper}>
                                         <input
-                                            style={{ padding: "14.5px 52px 14.5px 14px" }}
-                                            type="number"
+                                            style={{ padding: "14.5px 52px 14.5px 14px", ...err('averageBalance') }}
+                                            type="text"
+                                            inputMode="numeric"
                                             min="0"
                                             placeholder="24000"
                                             className={styles.textInput}
@@ -613,10 +639,10 @@ const ActivityStep = ({ onNext, onBack, onChange, data = {}, currentStep}) => {
                                 </div>
                                 {isMobile ?
                                     <div className={styles.twoInputRow}>
-                                        <PaymentsFields form={form} set={set} isMobile={true} />
+                                        <PaymentsFields form={form} set={set} err={err} isMobile={true} />
                                     </div>
                                 :
-                                    <PaymentsFields form={form} set={set} />
+                                    <PaymentsFields form={form} set={set} err={err} />
                                 }
                                
                             </div>
@@ -670,7 +696,7 @@ const ActivityStep = ({ onNext, onBack, onChange, data = {}, currentStep}) => {
                 <button
                     onClick={handleContinue}
                     className={styles.continueButton}
-                    disabled={!isFormValid}
+                    aria-disabled={!isFormValid}
                     style={{ opacity: !isFormValid ? 0.5 : 1, cursor: !isFormValid ? 'not-allowed' : 'pointer' }}
                 >
                     {t("Continue")}
@@ -683,7 +709,7 @@ const ActivityStep = ({ onNext, onBack, onChange, data = {}, currentStep}) => {
 
 export default ActivityStep
 
-const PaymentsFields = ({ form, set, isMobile }) => {
+const PaymentsFields = ({ form, set, isMobile, err }) => {
     const { t } = useTranslation();
     return(
     <>
@@ -694,8 +720,9 @@ const PaymentsFields = ({ form, set, isMobile }) => {
 
         <div className={styles.inputWrapper}>
             <input
-                style={{ padding: "14.5px 52px 14.5px 14px" }}
-                type="number"
+                style={{ padding: "14.5px 52px 14.5px 14px", ...err('incomingPayments')  }}
+                type="text"
+                inputMode="numeric"
                 min="0"
                 placeholder="50000"
                 className={styles.textInput}
@@ -713,8 +740,9 @@ const PaymentsFields = ({ form, set, isMobile }) => {
 
         <div className={styles.inputWrapper}>
             <input
-                style={{ padding: "14.5px 52px 14.5px 14px" }}
-                type="number"
+                style={{ padding: "14.5px 52px 14.5px 14px", ...err('outgoingPayments') }}
+                type="text"
+                inputMode="numeric"
                 min="0"
                 placeholder="40000"
                 className={styles.textInput}
@@ -727,3 +755,5 @@ const PaymentsFields = ({ form, set, isMobile }) => {
     </>
 )
 }
+
+const RequiredFieldIndicator = () => <span style={{ color: "red", fontWeight: 600 }}>*</span>;
