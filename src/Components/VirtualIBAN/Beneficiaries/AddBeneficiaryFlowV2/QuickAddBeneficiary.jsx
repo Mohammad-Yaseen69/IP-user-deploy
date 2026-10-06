@@ -1,6 +1,5 @@
 import { useContext, useMemo, useState } from 'react';
-import { toast } from 'react-toastify';
-import { useNavigate } from 'react-router';
+import { FormControlLabel, Switch } from '@mui/material';
 import styles from './AddBeneficiaryFlowV2.module.css';
 import { Alert, Section, SectionTitle } from './components';
 import FieldGrid from './components/FieldGrid';
@@ -10,8 +9,6 @@ import { useRequiredFields, useRequirements } from './useVendorRequirements';
 import { buildBeneficiaryPayload, buildChannelPayload } from './buildPayloads';
 import { METHOD_CONTEXT_LABEL } from './constants';
 import { getFieldDef, THUNES_ENTITY_FIELDS } from './vendorFields';
-import { apiWrapper } from '../../../../utils/Functions/apiWrapper';
-import { handlePaymentApiError } from '../../../../utils/Functions/handlePaymentApiError';
 import { collectIdentifierErrors } from '../../../../utils/Functions/bankIdentifiers';
 import { UserContext } from '../../../../Context/UserContext';
 
@@ -64,8 +61,7 @@ const QuickAddBeneficiary = ({
     onCancel,
     onSaved,
 }) => {
-    const { allowedCountries, setProfileLockTime } = useContext(UserContext);
-    const navigate = useNavigate();
+    const { allowedCountries } = useContext(UserContext);
 
     const method = getQuickAddMethod(service?.value);
     const countryIso3 = country?.alpha3 || '';
@@ -75,8 +71,7 @@ const QuickAddBeneficiary = ({
     ));
     const [channel, setChannel] = useState(() => prefillFromPayer(method, payer));
     const [errors, setErrors] = useState({ beneficiary: {}, channel: {} });
-    const [saving, setSaving] = useState(false);
-    const [providerError, setProviderError] = useState(null);
+    const [saveForFuture, setSaveForFuture] = useState(false);
 
     const { data: stateData = [] } = useCountryStates(countryIso3);
     const phoneCheck = usePhoneVerification(channel.msisdn, method === 'mobile_wallet');
@@ -119,13 +114,11 @@ const QuickAddBeneficiary = ({
     const setBeneficiaryField = (name, value, patch = {}) => {
         setBeneficiary((prev) => ({ ...prev, ...patch, [name]: value }));
         setErrors((prev) => ({ ...prev, beneficiary: { ...prev.beneficiary, [name]: undefined } }));
-        setProviderError(null);
     };
 
     const setChannelField = (name, value, patch = {}) => {
         setChannel((prev) => ({ ...prev, ...patch, [name]: value }));
         setErrors((prev) => ({ ...prev, channel: { ...prev.channel, [name]: undefined } }));
-        setProviderError(null);
     };
 
     const countryLabel = useMemo(
@@ -161,11 +154,10 @@ const QuickAddBeneficiary = ({
         return Object.keys(next.beneficiary).length === 0 && Object.keys(next.channel).length === 0;
     };
 
-    const save = async () => {
-        if (saving || !validate()) return;
-
-        setSaving(true);
-        setProviderError(null);
+    /* Nothing is stored here: the details travel with the transfer, which keeps the
+       recipient only when "Save for later" is on. */
+    const save = () => {
+        if (!validate()) return;
 
         const form = {
             recipient_type: recipientType,
@@ -177,47 +169,15 @@ const QuickAddBeneficiary = ({
             channel,
         };
 
-        try {
-            const created = await apiWrapper({
-                endpoint: '/api/beneficiary/v2/add',
-                method: 'POST',
-                payload: buildBeneficiaryPayload({ form, countries: allowedCountries }),
-                isEncrypted: true,
-                isDecrypted: true,
-            });
-
-            const record = created?.data || created?.beneficiaryData || created;
-            const beneficiaryId = record?._id;
-
-            if (!beneficiaryId) throw new Error(created?.message || 'Beneficiary was not created.');
-
-            await apiWrapper({
-                endpoint: `/api/beneficiary/v2/${beneficiaryId}/channel`,
-                method: 'POST',
-                payload: buildChannelPayload({ form, transactionType }),
-                isEncrypted: true,
-                isDecrypted: true,
-            });
-
-            toast.success('Beneficiary saved.');
-            onSaved?.(record);
-        } catch (error) {
-            handlePaymentApiError({
-                error,
-                navigate,
-                setProfileLockTime,
-                fallback: 'We could not save this beneficiary.',
-                setError: (message) => {
-                    setProviderError(message);
-                    toast.error(message);
-                },
-            });
-        } finally {
-            setSaving(false);
-        }
+        onSaved?.({
+            form,
+            beneficiaryPayload: buildBeneficiaryPayload({ form, countries: allowedCountries }),
+            channelPayload: buildChannelPayload({ form, transactionType }),
+        }, saveForFuture);
     };
 
     const methodLabel = METHOD_CONTEXT_LABEL[method] || service?.name || 'Payout channel';
+    const isInteractive = !fieldsLoading && !!method;
 
     return (
         <div className={`${styles.root} ${styles.quickAdd}`}>
@@ -230,16 +190,16 @@ const QuickAddBeneficiary = ({
                 </div>
 
                 <div className={styles.quickAddActions}>
-                    <button type="button" className={`${styles.btn} ${styles.btnGhost}`} onClick={onCancel} disabled={saving}>
+                    <button type="button" className={`${styles.btn} ${styles.btnGhost}`} onClick={onCancel}>
                         Cancel
                     </button>
                     <button
                         type="button"
                         className={`${styles.btn} ${styles.btnPrimary}`}
                         onClick={save}
-                        disabled={saving || fieldsLoading || !method || phoneCheck?.state === 'invalid'}
+                        disabled={!isInteractive || phoneCheck?.state === 'invalid'}
                     >
-                        {saving ? 'Adding...' : 'Add beneficiary'}
+                        Add beneficiary
                     </button>
                 </div>
             </div>
@@ -298,11 +258,16 @@ const QuickAddBeneficiary = ({
                 </>
             )}
 
-            {providerError && (
-                <Alert variant="error" title="Could not save the beneficiary">
-                    {providerError}
-                </Alert>
-            )}
+            <FormControlLabel
+                label="Save for later"
+                disabled={!isInteractive}
+                control={(
+                    <Switch
+                        checked={saveForFuture}
+                        onChange={(event) => setSaveForFuture(event.target.checked)}
+                    />
+                )}
+            />
         </div>
     );
 };
