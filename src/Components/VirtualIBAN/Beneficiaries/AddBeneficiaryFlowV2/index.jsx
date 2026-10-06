@@ -21,7 +21,7 @@ import {
     prefillEditBag,
 } from './buildPayloads';
 import { useAvailableMethods, useRequiredFields, useRequirements } from './useVendorRequirements';
-import { getEditRequirements, getFieldDef } from './vendorFields';
+import { BANK_COUNTRY_FIELD, getEditRequirements, getFieldDef } from './vendorFields';
 import { apiWrapper } from '../../../../utils/Functions/apiWrapper';
 import { UserContext } from '../../../../Context/UserContext';
 import { handlePaymentApiError } from '../../../../utils/Functions/handlePaymentApiError';
@@ -226,6 +226,18 @@ const AddBeneficiaryFlowV2 = ({
         }));
     }, [form.country, form.beneficiary, lockedFields]);
 
+
+    const asksBankCountry = (requirements?.channelFields || []).includes(BANK_COUNTRY_FIELD);
+
+    useEffect(() => {
+        if (!asksBankCountry || !form.country || form.channel[BANK_COUNTRY_FIELD]) return;
+
+        setForm((prev) => ({
+            ...prev,
+            channel: { ...prev.channel, [BANK_COUNTRY_FIELD]: prev.country },
+        }));
+    }, [asksBankCountry, form.country, form.channel]);
+
     const setField = useCallback((field, value) => {
         setForm((prev) => ({ ...prev, [field]: value }));
         setErrors((prev) => (prev[field] ? { ...prev, [field]: undefined } : prev));
@@ -306,8 +318,8 @@ const AddBeneficiaryFlowV2 = ({
             (requirements.requiredBeneficiary || []).forEach((name) => {
                 if (!String(form.beneficiary[name] || '').trim()) {
                     next.beneficiary[name] = 'Required.';
-                } else if (nameFields.includes(name.toLowerCase())  && !/^(?!\d+$)[A-Za-z0-9\s'-]+$/i.test(form.beneficiary[name])) {
-                    next.beneficiary[name] = 'Please enter at least one letter!';
+                } else if (nameFields.includes(name.toLowerCase())  && !/^[\p{L}\s'_-]+$/u.test(form.beneficiary[name])) {
+                    next.beneficiary[name] = 'Invalid.';
                 }
             });
             (requirements.requiredChannel || []).forEach((name) => {

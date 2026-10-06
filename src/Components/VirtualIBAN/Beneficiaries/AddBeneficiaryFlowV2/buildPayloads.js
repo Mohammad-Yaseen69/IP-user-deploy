@@ -1,4 +1,5 @@
 import { CHANNEL_PAYLOAD_KEY, CHANNEL_TYPE_BY_METHOD } from './constants';
+import { BANK_COUNTRY_FIELD } from './vendorFields';
 
 const BENEFICIARY_COLUMN_MAP = {
     firstname: 'first_name',
@@ -186,6 +187,12 @@ export const buildChannelPayload = ({ form, transactionType }) => {
         if (value === undefined || value === null || value === '') return;
         extras[key] = value;
     });
+
+  
+    if (channelType === 'bank' && clean(channel[BANK_COUNTRY_FIELD])) {
+        extras.country_iso_code = clean(channel[BANK_COUNTRY_FIELD]);
+    }
+    delete extras[BANK_COUNTRY_FIELD];
 
     const holderName =
         form.beneficiary?.bank_account_holder_name ||
