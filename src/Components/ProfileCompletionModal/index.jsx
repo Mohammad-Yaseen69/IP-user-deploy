@@ -6,6 +6,7 @@ import LanguagePicker from "../LanguagePicker";
 import { useTranslation } from "react-i18next";
 import { useContext, useEffect } from "react";
 import { UserContext } from "../../Context/UserContext";
+import { clearAuthStorage, getLoginPath } from "../../utils/Functions/loginPage";
 
 const ProfileCompletionModal = ({ setShowModal, profileIncompleteReason, kyc = false }) => {
     const navigate = useNavigate()
@@ -31,11 +32,9 @@ const ProfileCompletionModal = ({ setShowModal, profileIncompleteReason, kyc = f
                 }}>
                     <div
                         onClick={() => {
-                            const coun = localStorage.getItem("ip_country")
-                            localStorage.clear()
-                            localStorage.setItem("ip_country", coun)
+                            clearAuthStorage()
                             clearData()
-                            navigate("/login")
+                            navigate(getLoginPath())
                         }}
                         style={{
                             display: "flex",
