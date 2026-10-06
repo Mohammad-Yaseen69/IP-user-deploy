@@ -150,7 +150,6 @@ const FeeModelRequests = () => {
         if (savingEdit) return;
         setEditingRequest(null);
     };
-
     const handleEditFeeChange = (index, field, value) => {
         setEditFeeSchedule(prev => updateFeeItem(prev, index, field, value));
     };
@@ -257,7 +256,7 @@ const FeeModelRequests = () => {
                                             <Box sx={{ background: '#FFFFFF', borderBottom: '1px solid #F3F4F6', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 1, p: '16px 20px' }}>
                                                 <div>
                                                     <Typography component="h4" sx={{ fontSize: '17px', fontWeight: 700, color: '#111827' }}>
-                                                        {req.title}
+                                                        {req?.title}
                                                     </Typography>
                                                     <Typography component="span" sx={{ fontSize: '12px', color: '#6B7280' }}>
                                                         {t("Requested on")}: {new Date(req.createdAt).toLocaleDateString()}
