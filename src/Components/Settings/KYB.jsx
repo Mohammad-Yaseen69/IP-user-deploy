@@ -2,7 +2,7 @@ import { DatePicker } from '@material-ui/pickers'
 import { useMutation } from '@tanstack/react-query'
 import axios from 'axios'
 import { format } from 'date-fns'
-import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { CheckCircle, XCircle } from 'react-feather'
 import { useTranslation } from 'react-i18next'
 import { AiOutlineClockCircle } from 'react-icons/ai'
@@ -25,6 +25,15 @@ import SoleTradedDocs from './SoleTradedDocs'
 import VerificationPayment from './VerificationPayment'
 import { usePermission } from '../../hooks/GeneralUse/usePermission'
 import AdditionalFilesSection from './AdditionalFilesSection'
+import useDraft from '../../hooks/GeneralUse/useDraft'
+import {
+    BUSINESS_PROFILE_SCOPE,
+    draftPartnerToKyb,
+    getKybDocSlots,
+    isDraftFileRef,
+    kybPartnerToDraft,
+    toDraftFileRef,
+} from '../../utils/Data/businessDraft'
 
 function getFirstLargeFileName(files) {
     if (!files || files.length === 0) return false
@@ -99,8 +108,15 @@ const KYB = () => {
     const [compnanyFiles, setCompanyFiles] = useState([])
     const [compnanyFileNames, setCompanyFileNames] = useState([])
     const [isUploading, setIsUploading] = useState(false)
+    const [uploadingDocs, setUploadingDocs] = useState(0)
+    const [draftHydrated, setDraftHydrated] = useState(false)
+    const filesHydratedRef = useRef(false)
 
-
+    const draftEnabled = Boolean(userDetails?._id)
+        && userDetails?.account_type === 'business'
+        && !isKybActionBlocked(userDetails?.company?.kyb_status)
+    const profileDraft = useDraft(BUSINESS_PROFILE_SCOPE, { enabled: draftEnabled })
+    const isFirstSubmission = userDetails?.company?.kyb_files?.length === 0
 
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
@@ -145,7 +161,11 @@ const KYB = () => {
         try {
             const response = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/company/get-partners/${userDetails?._id}`)
             const data = await decryptData(response.data.data)
-            setPartners(data?.partners || [])
+            const serverPartners = data?.partners || []
+            setPartners(prev => [
+                ...serverPartners,
+                ...prev.filter(p => !p?._id && !serverPartners.some(s => s?.email?.toLowerCase() === p?.email?.toLowerCase())),
+            ])
         } catch (error) {
             console.error('Error fetching company partners:', decryptData(error.response?.data?.data) || error.message)
         } finally {
@@ -258,6 +278,112 @@ const KYB = () => {
         }
     }, [userDetails])
 
+    const kybDocSlots = useMemo(() => getKybDocSlots(companyType?.name, t), [companyType, t])
+
+    useEffect(() => {
+        if (!draftEnabled || draftHydrated || !profileDraft.isLoaded || !userDetails?.company) return
+
+        const company = userDetails.company
+        const draftCompany = profileDraft.data?.company || {}
+        if (!company.registration_number && draftCompany.registrationNumber) setRegistrationNum(draftCompany.registrationNumber)
+        if (!company.tax_id && draftCompany.taxNumber) setTaxId(draftCompany.taxNumber)
+        if (!company.date_of_incorporation && draftCompany.dateOfIncorporation) {
+            const restoredDate = new Date(`${draftCompany.dateOfIncorporation}T00:00:00`)
+            if (!isNaN(restoredDate.getTime())) setDateOfI(restoredDate)
+        }
+        if (!parseIndustryReference(company.industryReference || company.industry_reference)?.name && draftCompany.industryReference?.name) {
+            setIndustryReference(draftCompany.industryReference)
+        }
+
+        const draftPartners = Array.isArray(profileDraft.data?.partners) ? profileDraft.data.partners : []
+        if (company.kyb_files?.length === 0 && draftPartners.length) {
+            setPartners(prev => [
+                ...prev,
+                ...draftPartners
+                    .filter(p => p?.email && !prev.some(existing => existing?.email?.toLowerCase() === p.email.toLowerCase()))
+                    .map(draftPartnerToKyb),
+            ])
+        }
+        setDraftHydrated(true)
+    }, [draftEnabled, draftHydrated, profileDraft.isLoaded, userDetails?.company])
+
+    useEffect(() => {
+        if (!draftHydrated || filesHydratedRef.current || !kybDocSlots.length) return
+        filesHydratedRef.current = true
+
+        const kybFiles = userDetails?.company?.kyb_files || []
+        const restored = kybDocSlots
+            .map(({ docName, slot }) => {
+                const entry = profileDraft.files.find(f => f.slot === slot)
+                if (!entry) return null
+                const existing = kybFiles.find(f => f?.document_name === docName)
+                if (existing && ['approved', 'verified'].includes(existing.status)) return null
+                return { ...toDraftFileRef(entry), document_name: docName }
+            })
+            .filter(Boolean)
+        if (!restored.length) return
+
+        setCompanyFiles(prev => {
+            const next = [...prev]
+            restored.forEach(ref => {
+                const idx = next.findIndex(f => f?.document_name === ref.document_name)
+                if (idx !== -1) next[idx] = ref
+                else next.push(ref)
+            })
+            return next
+        })
+        setCompanyFileNames(prev => [...prev, ...restored.map(ref => ref.document_name).filter(name => !prev.includes(name))])
+    }, [draftHydrated, kybDocSlots])
+
+    useEffect(() => {
+        if (!draftHydrated || !draftEnabled) return
+
+        const draftCompany = profileDraft.data?.company || {}
+        const parsedDate = dateOfI ? new Date(dateOfI) : null
+        const patch = {
+            company: {
+                ...draftCompany,
+                registrationNumber: registrationNum || '',
+                taxNumber: taxId || '',
+                dateOfIncorporation: parsedDate && !isNaN(parsedDate.getTime()) ? format(parsedDate, 'yyyy-MM-dd') : '',
+                industryReference: industryReference || draftCompany.industryReference || null,
+            },
+        }
+        if (isFirstSubmission) {
+            const draftPartners = Array.isArray(profileDraft.data?.partners) ? profileDraft.data.partners : []
+            patch.partners = partners.filter(p => !p?._id).map(p => kybPartnerToDraft(p, draftPartners))
+        }
+        profileDraft.update(patch)
+    }, [draftHydrated, draftEnabled, registrationNum, taxId, dateOfI, industryReference, partners, isFirstSubmission])
+
+    const handleKybFileSelected = async (docName, file) => {
+        setCompanyFiles(prev => {
+            const idx = prev.findIndex(f => f?.document_name === docName)
+            if (idx === -1) return [...prev, { file, document_name: docName }]
+            const next = [...prev]
+            next[idx] = { file, document_name: docName }
+            return next
+        })
+        setCompanyFileNames(prev => (prev.includes(docName) ? prev : [...prev, docName]))
+
+        const slot = kybDocSlots.find(doc => doc.docName === docName)?.slot
+        if (!draftEnabled || !slot) return
+
+        setUploadingDocs(count => count + 1)
+        try {
+            const entry = await profileDraft.uploadFile(slot, file)
+            if (entry?.slot) {
+                setCompanyFiles(prev => prev.map(f => (f?.file === file ? { ...toDraftFileRef(entry), document_name: docName } : f)))
+            }
+        } catch (error) {
+            console.error(`Unable to save "${docName}" to the draft`, error)
+        } finally {
+            setUploadingDocs(count => count - 1)
+        }
+    }
+
+    const getDraftFile = (docName) => compnanyFiles.find(f => isDraftFileRef(f) && f.document_name === docName)
+
     const uploadKybFiles = async () => {
         if (isKybActionBlocked(userDetails?.company?.kyb_status)) {
             toast.error("No action is allowed for the current business verification status.");
@@ -270,8 +396,10 @@ const KYB = () => {
             .map((file, idx) => ({ file, name: compnanyFileNames[idx] })), compnanyFiles, compnanyFileNames)
 
         const editedEntries = compnanyFiles
-            .map((file, idx) => ({ file, name: compnanyFileNames[idx] }))
+            .map((file, idx) => ({ file, name: file?.document_name || compnanyFileNames[idx] }))
             .filter(({ file }) => file && (file instanceof File || !('status' in file)))?.filter(entry => entry.name !== undefined);
+        const draftEntries = editedEntries.filter(({ file }) => isDraftFileRef(file))
+        const fileEntries = editedEntries.filter(({ file }) => !isDraftFileRef(file))
 
         // if (editedEntries?.length === 0 && allowPayment) {
         //     const data = await mutateAsync({
@@ -286,7 +414,7 @@ const KYB = () => {
         //     return;
         // }
 
-        const bigFile = getFirstLargeFileName(editedEntries?.map(item => item?.file?.file || item?.file))
+        const bigFile = getFirstLargeFileName(fileEntries?.map(item => item?.file?.file || item?.file))
 
         if (bigFile) {
             toast.error(`${bigFile} is larger then 20MB please select smaller file.`)
@@ -301,8 +429,11 @@ const KYB = () => {
 
             formdata.append("account_id", userDetails?._id)
             formdata.append("business_type", companyType?._id)
-            editedEntries.forEach(({ file }) => formdata.append('files', file?.file || file));
-            editedEntries.forEach(({ name }, i) => formdata.append(`file_names[${i}]`, name));
+            fileEntries.forEach(({ file }) => formdata.append('files', file?.file || file));
+            fileEntries.forEach(({ name }, i) => formdata.append(`file_names[${i}]`, name));
+            if (draftEntries.length) {
+                formdata.append('draft_files', JSON.stringify(draftEntries.map(({ file, name }) => ({ slot: file.slot, document_name: name }))));
+            }
 
             formdata.append("registration_number", registrationNum);
             formdata.append("tax_id", taxId);
@@ -326,7 +457,15 @@ const KYB = () => {
             })
 
             const decrypted = decryptData(res.data.data)
-            setUserDetails(prev => ({ ...prev, company: decrypted?.results?.company }))
+
+            if (draftEnabled) {
+                const submittedSlots = fileEntries
+                    .map(({ name }) => kybDocSlots.find(doc => doc.docName === name)?.slot)
+                    .filter(Boolean)
+                Promise.allSettled(submittedSlots.map(slot => profileDraft.removeFile(slot)))
+                    .then(() => profileDraft.reload())
+                    .catch(err => console.error('Unable to refresh the KYB draft', err))
+            }
 
 
             if (allowPayment) {
@@ -339,6 +478,9 @@ const KYB = () => {
                 } else {
                     await processWithoutCharge()
                 }
+            } else {
+                 toast.success(decrypted?.message);
+                 verifyToken(true);
             }
 
             console.log(decrypted)
@@ -431,22 +573,22 @@ const KYB = () => {
                         {
                             companyType?.name?.toLowerCase()?.includes("private")
                             &&
-                            <PrivateCompanyDocs setCompanyFiles={setCompanyFiles} setCompanyFileNames={setCompanyFileNames} checkFileStatus={checkFileStatus} isReadOnly={isReadOnly} />
+                            <PrivateCompanyDocs setCompanyFiles={setCompanyFiles} setCompanyFileNames={setCompanyFileNames} checkFileStatus={checkFileStatus} isReadOnly={isReadOnly} onFileSelected={handleKybFileSelected} getDraftFile={getDraftFile} />
                         }
                         {
                             companyType?.name?.toLowerCase()?.includes("publicly")
                             &&
-                            <PubliclyTradedCompanyDocs setCompanyFiles={setCompanyFiles} setCompanyFileNames={setCompanyFileNames} checkFileStatus={checkFileStatus} isReadOnly={isReadOnly} />
+                            <PubliclyTradedCompanyDocs setCompanyFiles={setCompanyFiles} setCompanyFileNames={setCompanyFileNames} checkFileStatus={checkFileStatus} isReadOnly={isReadOnly} onFileSelected={handleKybFileSelected} getDraftFile={getDraftFile} />
                         }
                         {
                             companyType?.name?.toLowerCase()?.includes("ngos")
                             &&
-                            <NgosDocs setCompanyFiles={setCompanyFiles} setCompanyFileNames={setCompanyFileNames} checkFileStatus={checkFileStatus} isReadOnly={isReadOnly} />
+                            <NgosDocs setCompanyFiles={setCompanyFiles} setCompanyFileNames={setCompanyFileNames} checkFileStatus={checkFileStatus} isReadOnly={isReadOnly} onFileSelected={handleKybFileSelected} getDraftFile={getDraftFile} />
                         }
                         {
                             companyType?.name?.toLowerCase()?.includes("sole")
                             &&
-                            <SoleTradedDocs setCompanyFiles={setCompanyFiles} setCompanyFileNames={setCompanyFileNames} checkFileStatus={checkFileStatus} isReadOnly={isReadOnly} />
+                            <SoleTradedDocs setCompanyFiles={setCompanyFiles} setCompanyFileNames={setCompanyFileNames} checkFileStatus={checkFileStatus} isReadOnly={isReadOnly} onFileSelected={handleKybFileSelected} getDraftFile={getDraftFile} />
                         }
 
 
@@ -473,7 +615,7 @@ const KYB = () => {
                         </FormGroup>
                         <FormGroup>
                             <Label>
-                                {t("Taxation Id")} <span style={{ color: "red", fontWeight: 600 }}>*</span>
+                                {t("Taxation ID")} <span style={{ color: "red", fontWeight: 600 }}>*</span>
                             </Label>
                             <Input
                                 type='text'
@@ -631,7 +773,7 @@ const KYB = () => {
                                         <tbody>
                                             {
                                                 partners?.map((item, index) => (
-                                                    <KYBPartner setPartnerVerification={setPartnerVerification} setModalOpen={setShowPaymentModal} key={item?._id} partner={item} partners={partners} setPartners={setPartners} refreshPartners={refreshPartners} index={index} />
+                                                    <KYBPartner setPartnerVerification={setPartnerVerification} setModalOpen={setShowPaymentModal} key={item?._id || item?.email || index} partner={item} partners={partners} setPartners={setPartners} refreshPartners={refreshPartners} index={index} />
                                                 ))
                                             }
                                         </tbody>
@@ -649,7 +791,7 @@ const KYB = () => {
                             outline: "none",
                             alignSelf: "flex-end "
                         }}
-                        disabled={isReadOnly || isUploading || compnanyFiles?.length === 0 || partners?.length === 0 || !taxId || !industryReference || !dateOfI || !registrationNum || compnanyFileNames.length < requiredFilesLength || isPending}
+                        disabled={isReadOnly || isUploading || compnanyFiles?.length === 0 || partners?.length === 0 || !taxId || !industryReference || !dateOfI || !registrationNum || compnanyFileNames.length < requiredFilesLength || isPending || uploadingDocs > 0}
                         onClick={uploadKybFiles}
                     >{isPending ? "Submitting..." : t("Submit")}</Button>
                 }
@@ -715,13 +857,13 @@ const KYB = () => {
             {showProcessSuccessModal && (
                 <Modal isOpen={showProcessSuccessModal} toggle={() => setShowProcessSuccessModal(false)}>
                     <ModalHeader toggle={() => setShowProcessSuccessModal(false)}>
-                        {t("Payment Successful!")}
+                        {t("Files Submitted Successfully!")}
                     </ModalHeader>
                     <ModalBody>
                         <div className="text-center">
                             <CheckCircle size={64} className="text-success" style={{ marginBottom: "1rem" }} />
                             <h5 className='modal-title' style={{ marginBottom: "1rem" }}>
-                                {t("Payment Successful!")}
+                                {t("Files Submitted Successfully!")}
                             </h5>
                             <p>
                                 {t("Thank you for submitting the required documents for business verification. An email has been sent to the business directors to complete their KYC verification.")}

@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { forwardRef, useContext, useEffect, useImperativeHandle, useReducer, useState } from 'react';
+import { forwardRef, useContext, useEffect, useImperativeHandle, useReducer, useRef, useState } from 'react';
 import { Activity, ArrowRight, Cpu, CreditCard, Globe, Zap } from 'react-feather'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
@@ -23,10 +23,20 @@ import { encryptData } from '../../../Helper/EssentilaMethods/Encryption'
 import useSendOtp from '../../../hooks/GeneralUse/useSendOtp'
 import OTPConfirmation from '../../../Common/Component/OtpVerification'
 import { useMediaQuery } from '@mui/material'
+import useDraft from '../../../hooks/GeneralUse/useDraft'
+import {
+    BUSINESS_PROFILE_SCOPE,
+    IBAN_ONBOARDING_SCOPE,
+    draftFilesToIbanDocs,
+    isDraftFileRef,
+} from '../../../utils/Data/businessDraft'
 import { useIdempotency } from '../../../hooks/Payments/useIdempotency';
 
 const STEPS_BUSINESS = ['landing', 'selection', 'account', 'company', 'activity', 'ownership', 'documents', 'review']
 const STEPS_INDIVIDUAL = ['landing', 'selection', 'account', 'review']
+
+const DRAFT_STEPS = ['company', 'activity', 'ownership', 'documents', 'review', 'pricing', 'ActivateAccount']
+const DRAFT_COMPANY_KEYS = ['registrationNumber', 'taxNumber', 'dateOfIncorporation', 'tradingName', 'website', 'mainContact']
 
 const initialState = {
     step: 'landing',
@@ -75,6 +85,15 @@ function onboardingReducer(state, action) {
             return { ...state, feeDetails: action.payload ? { ...state.feeDetails, ...action.payload } : null }
         case 'SET_REQUEST_DATA':
             return { ...state, requestData: action.payload }
+        case 'HYDRATE_DRAFT':
+            return {
+                ...state,
+                step: action.payload.step || state.step,
+                company: { ...state.company, ...action.payload.company },
+                activity: { ...state.activity, ...action.payload.activity },
+                ownership: { ...state.ownership, owners: action.payload.owners || state.ownership.owners },
+                documents: { ...state.documents, files: { ...state.documents.files, ...action.payload.files } },
+            }
         case 'RESET_ALL':
             return initialState
         default:
@@ -97,12 +116,20 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
     const [codeType, setCodeType] = useState('sms')
     const [otpMethods, setOtpMethods] = useState(null)
     const [loadingStatus, setLoadingStatus] = useState(true)
+    const [statusCheckedFor, setStatusCheckedFor] = useState(null)
+    const [draftHydrated, setDraftHydrated] = useState(false)
+    const hydratedForRef = useRef(null)
+
+    const draftEnabled = Boolean(userDetails?._id) && userDetails?.account_type === 'business'
+    const profileDraft = useDraft(BUSINESS_PROFILE_SCOPE, { enabled: draftEnabled })
+    const ibanDraft = useDraft(IBAN_ONBOARDING_SCOPE, { enabled: draftEnabled })
 
     const checkRequestStatus = async () => {
         if (!userDetails?._id) {
             setLoadingStatus(false);
             return;
         }
+        const checkedId = userDetails._id;
         try {
             const res = await axios.get(
                 `${import.meta.env.VITE_IP_DEV_API}/api/iban-fees/request-status`,
@@ -130,12 +157,65 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
             console.error("Error fetching IBAN request status:", err);
         } finally {
             setLoadingStatus(false);
+            setStatusCheckedFor(checkedId);
         }
     };
 
     useEffect(() => {
         checkRequestStatus();
     }, [userDetails?._id]);
+
+    useEffect(() => {
+        if (!draftEnabled || hydratedForRef.current === userDetails._id) return
+        if (statusCheckedFor !== userDetails._id || !profileDraft.isLoaded || !ibanDraft.isLoaded) return
+        hydratedForRef.current = userDetails._id
+
+        if (state.step !== 'status') {
+            const profileCompany = profileDraft.data?.company || {}
+            const savedActivity = ibanDraft.data?.activity || {}
+            const industryReference = profileCompany.industryReference || savedActivity.industryReference
+            const company = DRAFT_COMPANY_KEYS.reduce((acc, key) => (
+                profileCompany[key] ? { ...acc, [key]: profileCompany[key] } : acc
+            ), {})
+            const restoredStep = DRAFT_STEPS.includes(ibanDraft.data?.step) ? ibanDraft.data.step : null
+
+            dispatch({
+                type: 'HYDRATE_DRAFT',
+                payload: {
+                    step: restoredStep,
+                    company,
+                    activity: {
+                        ...savedActivity,
+                        ...(industryReference ? { industryReference, industry: industryReference.name || savedActivity.industry } : {}),
+                    },
+                    owners: Array.isArray(profileDraft.data?.partners) && profileDraft.data.partners.length ? profileDraft.data.partners : null,
+                    files: draftFilesToIbanDocs(profileDraft.files),
+                },
+            })
+            if (restoredStep) {
+                toast.info(t("Welcome back! We've restored your IBAN application where you left off."))
+            }
+        }
+        setDraftHydrated(true)
+    }, [draftEnabled, userDetails?._id, statusCheckedFor, profileDraft.isLoaded, ibanDraft.isLoaded])
+
+    useEffect(() => {
+        if (!draftHydrated || !DRAFT_STEPS.includes(state.step)) return
+
+        const existingCompany = profileDraft.data?.company || {}
+        const companyPatch = DRAFT_COMPANY_KEYS.reduce((acc, key) => ({ ...acc, [key]: state.company?.[key] || '' }), {})
+        profileDraft.update({
+            company: {
+                ...existingCompany,
+                ...companyPatch,
+                ...(state.activity?.industryReference ? { industryReference: state.activity.industryReference } : {}),
+            },
+            partners: (state.ownership?.owners || [])
+                .filter(owner => !owner.isImportedPartner)
+                .map(({ id, type, fullName, email, role, ownershipPercent, isPep }) => ({ id, type, fullName, email, role, ownershipPercent, isPep })),
+        })
+        ibanDraft.update({ step: state.step, activity: state.activity })
+    }, [draftHydrated, state.step, state.company, state.activity, state.ownership])
 
     useEffect(() => {
         window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
@@ -259,24 +339,28 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
                 email: state.account.email,
             }
 
-            formData.append('data', encryptData(payloadData))
+            const draftFiles = []
+            const appendDoc = (field, f) => {
+                if (isDraftFileRef(f)) {
+                    draftFiles.push({ slot: f.slot, field })
+                } else if (f && (f instanceof File || f instanceof Blob)) {
+                    formData.append(field, f);
+                }
+            }
 
             const rawDocs = state.documents?.files || state.documents || {};
             Object.keys(rawDocs).forEach((key) => {
                 if (key === 'files' && rawDocs.files && typeof rawDocs.files === 'object') {
-                    Object.keys(rawDocs.files).forEach((nestedKey) => {
-                        const f = rawDocs.files[nestedKey];
-                        if (f && (f instanceof File || f instanceof Blob || f.name)) {
-                            formData.append(nestedKey, f);
-                        }
-                    });
+                    Object.keys(rawDocs.files).forEach((nestedKey) => appendDoc(nestedKey, rawDocs.files[nestedKey]));
                 } else {
-                    const f = rawDocs[key];
-                    if (f && (f instanceof File || f instanceof Blob || f.name)) {
-                        formData.append(key, f);
-                    }
+                    appendDoc(key, rawDocs[key]);
                 }
             });
+
+            formData.append('data', encryptData({ ...payloadData, draft_files: draftFiles }))
+
+            profileDraft.cancelPending()
+            ibanDraft.cancelPending()
 
             const response = await axios.post(
                 `${import.meta.env.VITE_IP_DEV_API}/api/iban-fees/confirm-activation`,
@@ -332,7 +416,7 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
         onStepChange?.(state.step)
     }, [state.step, onStepChange])
 
-    if (loadingStatus) {
+    if (loadingStatus || (draftEnabled && !draftHydrated)) {
         return (
             <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '350px', width: '100%' }}>
                 <Spinner style={{ width: '2.5rem', height: '2.5rem', color: '#5926F0' }} />
@@ -444,6 +528,7 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
                 <CompanyStep
                     onNext={(d) => goNext(d.company || d, 'company')}
                     onBack={goBack}
+                    onChange={(form) => dispatch({ type: 'UPDATE_COMPANY', payload: form })}
                     userType={state.userType}
                     data={state.company}
                     currentStep={state.step}
@@ -454,6 +539,7 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
                 <ActivityStep
                     onNext={(d) => goNext(d.activity || d, 'activity')}
                     onBack={goBack}
+                    onChange={(form) => dispatch({ type: 'UPDATE_ACTIVITY', payload: form })}
                     userType={state.userType}
                     data={state.activity}
                     currentStep={state.step}
@@ -464,6 +550,7 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
                 <OwnershipStep
                     onNext={(d) => goNext({ owners: d.owners || d }, 'ownership')}
                     onBack={goBack}
+                    onChange={(owners) => dispatch({ type: 'UPDATE_OWNERSHIP', payload: { owners } })}
                     userType={state.userType}
                     data={{ owners: state.ownership.owners }}
                     userDetails={userDetails}
@@ -473,8 +560,10 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
 
             {state.step === 'documents' && (
                 <DocumentsStep
-                    onNext={(d) => goNext({ files: d.documents || d }, 'documents')}
+                    onNext={(d) => goNext({ files: d.files || d.documents || d }, 'documents')}
                     onBack={goBack}
+                    onChange={(files) => dispatch({ type: 'UPDATE_DOCUMENTS', payload: { files } })}
+                    onUploadDraftFile={profileDraft.uploadFile}
                     userType={state.userType}
                     data={{ files: state.documents.files }}
                     userDetails={userDetails}
