@@ -99,6 +99,7 @@ const initialState = {
     services: [],
     payers: [],
     beneficiary: {},
+    isAddingBeneficiary: false,
     reason: "",
     comment: "",
     files: [],
@@ -313,6 +314,9 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                 return !internationalData.amount || Number(String(internationalData.amount)?.replaceAll(",", "")) < 1 || !internationalData.currency || !internationalData.currency_wallet?.currency?.code || !internationalData.country?.name || !internationalData?.payoutChannel?.name || !internationalData?.payer?.name || internationalData.error || internationalData.exchange_rate_error || !internationalData.exchange_rate?.receiver?.amount > 0
 
             case 2:
+                if (internationalData.isAddingBeneficiary) {
+                    return true
+                }
                 if (internationalData.showSenderSelection) {
                     if (internationalData.senderType !== 'account') {
                         return !internationalData.selectedSender?._id
