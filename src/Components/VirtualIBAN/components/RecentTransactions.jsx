@@ -194,6 +194,11 @@ const TransactionRow = ({ tx, selectedIban }) => {
                   <DetailItem label={t("Service Type")}
                     value={t(formatType(tx.type))} />
                 )}
+                
+                {tx?.metadata?.network_fee_eur && (
+                  <DetailItem label={t("Network Fee")} value={t(tx?.metadata?.network_fee_eur.toFixed(2))} />
+                )}
+
                 <DetailItem label={t("Reference")} value={tx?.remittance_information ?? tx?.reference_id} />
 
 
