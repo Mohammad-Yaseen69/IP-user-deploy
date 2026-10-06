@@ -58,10 +58,13 @@ const StepTwo = ({ data, dataHandler }) => {
         getUserBeneficiaries()
     }, [])
 
-    /* A new recipient is not saved yet: its details ride along with the transfer and are
-       sent as `beneficiaryDetails` when the transaction is created. The draft replaces the
-       whole beneficiary, and its display fields (first_name, company_name, bank_details...)
-       come from the same mapped details, so the later steps read it like a saved one. */
+    useEffect(() => {
+        if (!USE_NEW_BENEFICIARY_FLOW || !showBeneficiaryAddModal) return
+
+        dataHandler("isAddingBeneficiary", true)
+        return () => dataHandler("isAddingBeneficiary", false)
+    }, [showBeneficiaryAddModal])
+
     const handleBeneficiarySaved = (draft, saveForFuture) => {
         const draftDetails = buildTransactionBeneficiaryDetails({
             form: draft.form,
@@ -177,18 +180,12 @@ const StepTwo = ({ data, dataHandler }) => {
     const queryParams = new URLSearchParams(location.search)
     const recipient = queryParams.get("recipient")
 
-    /* The recipient from the link only preselects: StepTwo remounts every time the user comes
-       back to this step and the list refetches, so it must never replace a beneficiary the
-       user already picked or added. */
     useEffect(() => {
         if (!recipient || data.beneficiary?._id || data.beneficiary?.isNew) return
 
         const ben = filterd?.find(item => item?._id === recipient)
         if (ben) dataHandler("beneficiary", ben)
     }, [recipient, filterd])
-
-    /* Mid transfer we already know the country, the method and the payer, so adding a
-       recipient only asks for what the provider still needs. */
     if (USE_NEW_BENEFICIARY_FLOW && showBeneficiaryAddModal) {
         return (
             <div className={styles.container}>
