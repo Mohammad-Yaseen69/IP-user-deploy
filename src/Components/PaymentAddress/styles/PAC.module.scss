@@ -16,8 +16,6 @@
     }
 
     .sub_container {
-        margin-top: -15px !important;
-
         .sc_body {
             padding: 0 80px;
 
@@ -36,7 +34,7 @@
 
                     .dp_container {
                         position: relative;
-                        top: -60px;
+                        top: -70px;
                         min-width: 242px;
                         min-height: 242px;
                         max-width: 242px;
@@ -613,7 +611,7 @@
                 padding: 0 24px;
 
                 .top {
-                    padding: 30px 0;
+                    padding: 15px 0 30px;
 
                     .left {
                         gap: 1.3rem;
