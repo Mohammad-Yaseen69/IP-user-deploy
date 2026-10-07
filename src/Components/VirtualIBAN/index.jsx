@@ -71,7 +71,7 @@ const VirtualBank = () => {
 
     const skip = (page - 1) * limit;
 
-    const { data: transactions = [], isLoading: transactionsLoading } = useQuery({
+    const { data: transactions = [], isLoading: transactionsLoading, refetch } = useQuery({
         queryKey: [
             'virtual-iban-transactions',
             selectedIban?._id || selectedIban?.id,
@@ -152,6 +152,11 @@ const VirtualBank = () => {
             scrollToIbanDetails()
         }
     }, [activeTab, selectedAccount]);
+
+    useEffect(() => {
+      refetch()
+    }, [])
+
     console.log(rawIbans, 'rawIbans')
     return (
         <div className={styles.container}>
