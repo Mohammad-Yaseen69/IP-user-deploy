@@ -10,6 +10,9 @@ import InstaPayLoader from "../../Loader"
 import Fuse from "fuse.js"
 import PayerTransactionTypePills from "./PayerTransactionTypePills"
 
+// names not unique
+const keyOf = (item) => item?.channelKey ?? item?.name
+
 const ListModal = ({ isOpen, toggle, content, onSelectHandler, searchable = false, heading = "Send Money", isLoading = false }) => {
     const [current, setCurrent] = useState(null)
     const { t } = useTranslation()
@@ -119,7 +122,7 @@ const ListModal = ({ isOpen, toggle, content, onSelectHandler, searchable = fals
                                         content?.list?.length > 0
                                             ?
                                             content?.list?.map(item => (
-                                                <div onClick={() => setCurrent(item)} className={styles.list_item} key={item?.name}>
+                                                <div onClick={() => setCurrent(item)} className={styles.list_item} key={keyOf(item)}>
                                                     {
                                                         item?.icon
                                                         &&
@@ -129,7 +132,7 @@ const ListModal = ({ isOpen, toggle, content, onSelectHandler, searchable = fals
                                                     }
                                                     <span>{t(service_name_formatter(item?.name))}</span>
                                                     {
-                                                        current?.name === item?.name
+                                                        keyOf(current) === keyOf(item)
                                                             ?
                                                             <Check color="green" size={24} style={{ marginLeft: "auto" }} />
                                                             :
