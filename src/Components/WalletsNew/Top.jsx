@@ -201,6 +201,18 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
         }))
     }
 
+    const handleClose = () =>{
+        setShowWithdrawalModal(false);
+        queryParams.delete("action");
+        queryParams.delete("wallet_address");
+        navigate(
+        {
+            pathname: location.pathname,
+            search: queryParams.toString() ? `?${queryParams.toString()}` : "",
+        },
+        { replace: true }
+    );
+    } 
     return (
         <div className={styles.container}>
             {
@@ -580,7 +592,7 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
                     <Withdraw
                         wallet={currentWallet}
                         isOpen={showWithdrawalModal}
-                        toggle={() => setShowWithdrawalModal(!showWithdrawalModal)}
+                        toggle={handleClose}
                     />
                     :
                     <>
