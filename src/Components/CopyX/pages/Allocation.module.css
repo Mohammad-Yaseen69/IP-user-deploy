@@ -1,0 +1,27 @@
+/* WEB-04 configure allocation (Figma 14235:38447). */
+
+/* ------------------------------------ sections ------------------------------------ */
+
+.section { position: relative; display: flex; flex-direction: column; gap: 20px; padding-top: 40px; box-shadow: inset 0 1px 0 #E9E7EF; }
+/* The first section sits directly under the intro, its divider touching the heading. */
+.sectionFirst { gap: 19.5px; padding-top: 0; }
+
+/* ------------------------------------ amount ------------------------------------ */
+
+.field { display: flex; flex-direction: column; margin-bottom: 2px; }
+.label { font-size: 14px; line-height: 1.5; font-weight: 500; color: #17141F; }
+.input {
+    width: 100%; height: 48px; margin-top: 6.5px; padding: 8px 12px; border: 1px solid #EFF1F6; border-radius: 6px;
+    background: #FFFFFF; filter: drop-shadow(0 1px 0.75px rgba(27, 31, 42, 0.04));
+    font: inherit; font-size: 16px; line-height: normal; font-weight: 400; letter-spacing: inherit; color: #1B1F2A;
+}
+.input:focus { outline: none; border-color: #5926F0; box-shadow: 0 0 0 3px rgba(89, 38, 240, 0.12); }
+.inputError, .inputError:focus { border-color: #D54033; }
+.hint { margin-top: 7.5px; font-size: 12px; line-height: 1.5; color: #5E5A6B; }
+.hintError { color: #D54033; }
+
+/* ------------------------------------ copy settings ------------------------------------ */
+
+.stop { display: flex; flex-direction: column; gap: 7px; }
+.stopTitle { font-size: 14px; line-height: 1.5; font-weight: 500; color: #17141F; }
+.stopBody { font-size: 12px; line-height: 1.5; color: #5E5A6B; }

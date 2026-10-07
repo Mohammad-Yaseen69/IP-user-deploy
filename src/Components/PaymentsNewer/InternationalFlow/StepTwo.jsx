@@ -1,9 +1,8 @@
 import { useLocation, useNavigate } from "react-router"
 import styles from "./styles/steptwo.module.css"
-import React, { useContext, useEffect, useMemo, useState } from 'react'
+import { useContext, useEffect, useMemo, useState } from 'react'
 import search_icon from "./files/search.svg"
 import { UserContext } from "../../../Context/UserContext"
-import { Link } from "react-router-dom"
 import { service_name_formatter } from "../../TransactionsNewApi/TransactionItem"
 import { useTranslation } from "react-i18next"
 import i18next from "i18next"
@@ -11,6 +10,8 @@ import { Modal, ModalBody } from "reactstrap"
 import AddBeneficiary from "../../AddBeneficiary"
 import QuickAddBeneficiary from "../../VirtualIBAN/Beneficiaries/AddBeneficiaryFlowV2/QuickAddBeneficiary"
 import { USE_NEW_BENEFICIARY_FLOW } from "../../VirtualIBAN/Beneficiaries/AddBeneficiaryFlowV2/constants"
+import { buildTransactionBeneficiaryDetails } from "../../VirtualIBAN/Beneficiaries/AddBeneficiaryFlowV2/buildPayloads"
+import { getBeneficiaryDisplayName, getBeneficiaryInitial } from "./beneficiaryHelpers"
 
 function levenshteinDistance(a, b) {
     const dp = Array(a.length + 1)
@@ -52,27 +53,35 @@ const StepTwo = ({ data, dataHandler }) => {
     const [search, setSearch] = useState("")
     const [showOthers, setShowOthers] = useState(false)
     const [showBeneficiaryAddModal, setShowBeneficiaryAddModal] = useState(false)
-    const [savedBeneficiaryId, setSavedBeneficiaryId] = useState("")
 
     useEffect(() => {
         getUserBeneficiaries()
     }, [])
 
-    const handleBeneficiarySaved = async (savedBeneficiary) => {
-        setSavedBeneficiaryId(savedBeneficiary?._id || savedBeneficiary?.id || "")
+    useEffect(() => {
+        if (!USE_NEW_BENEFICIARY_FLOW || !showBeneficiaryAddModal) return
+
+        dataHandler("isAddingBeneficiary", true)
+        return () => dataHandler("isAddingBeneficiary", false)
+    }, [showBeneficiaryAddModal])
+
+    const handleBeneficiarySaved = (draft, saveForFuture) => {
+        const draftDetails = buildTransactionBeneficiaryDetails({
+            form: draft.form,
+            beneficiaryPayload: draft.beneficiaryPayload,
+            channelPayload: draft.channelPayload,
+            saveForFuture,
+        })
+
+        dataHandler("beneficiary", {
+            ...draftDetails,
+            isNew: true,
+            draftDetails,
+        })
         setShowBeneficiaryAddModal(false)
-        await getUserBeneficiaries()
     }
 
-    useEffect(() => {
-        if (!savedBeneficiaryId) return
-
-        const saved = beneficiaries.find(item => (item?._id || item?.id) === savedBeneficiaryId)
-        if (!saved) return
-
-        dataHandler("beneficiary", saved)
-        setSavedBeneficiaryId("")
-    }, [beneficiaries, savedBeneficiaryId])
+    const draftBeneficiary = data.beneficiary?.isNew ? data.beneficiary : null
 
     const bens = useMemo(() => {
         let fil = beneficiaries.filter(item => item.account_type.some(item => item.toLowerCase().includes(data.payoutChannel?.value?.toLowerCase())))
@@ -172,14 +181,11 @@ const StepTwo = ({ data, dataHandler }) => {
     const recipient = queryParams.get("recipient")
 
     useEffect(() => {
-        if (recipient && filterd.length > 0) {
-            const ben = filterd?.find(item => item?._id === recipient)
-            dataHandler("beneficiary", ben)
-        }
-    }, [recipient, filterd])
+        if (!recipient || data.beneficiary?._id || data.beneficiary?.isNew) return
 
-    /* Mid transfer we already know the country, the method and the payer, so adding a
-       recipient only asks for what the provider still needs. */
+        const ben = filterd?.find(item => item?._id === recipient)
+        if (ben) dataHandler("beneficiary", ben)
+    }, [recipient, filterd])
     if (USE_NEW_BENEFICIARY_FLOW && showBeneficiaryAddModal) {
         return (
             <div className={styles.container}>
@@ -203,8 +209,10 @@ const StepTwo = ({ data, dataHandler }) => {
                 &&
                 <div className={styles.top}>
                     <span>{t("Beneficiaries")}</span>
-                    <button onClick={() => navigate("/beneficiaries")}>
-                        <span>{t("Manage Beneficiaries")}</span>
+                    <button onClick={() => {
+                        setShowBeneficiaryAddModal(true)
+                    }}>
+                        <span>{t("Add Beneficiaries")}</span>
                     </button>
                 </div>
             }
@@ -231,6 +239,46 @@ const StepTwo = ({ data, dataHandler }) => {
                 </div>
             }
             <div className={styles.beneficiaries}>
+                {
+                    draftBeneficiary
+                    &&
+                    <div style={{ marginBottom: "8px" }} className={`${styles.ben_card} ${styles.active}`}>
+                        <div style={{ flexShrink: 0 }} className={styles.dp}>
+                            {getBeneficiaryInitial(draftBeneficiary)}
+                        </div>
+                        <div style={{ width: "100%" }} className={styles.ben_details}>
+                            <div className={styles.bd_top}>
+                                <h5>{getBeneficiaryDisplayName(draftBeneficiary)}</h5>
+                                <div className={styles.badge}>
+                                    <span>{t("New")}</span>
+                                </div>
+                            </div>
+                            <span>
+                                {data?.payoutChannel?.value === "mobile" ? t("Mobile Wallet") : data?.payoutChannel?.value === "cash" ? t("Cash Point") : t("Bank")}
+                                :
+                                {data?.payer?.name ?? ""}
+                            </span>
+                            {
+                                data.payoutChannel?.value === "bank" && (draftBeneficiary.bank_details?.[0]?.iban || draftBeneficiary.bank_details?.[0]?.account_number)
+                                &&
+                                <span>
+                                    {
+                                        draftBeneficiary.bank_details[0].iban
+                                            ?
+                                            `${t("IBAN")}: ${draftBeneficiary.bank_details[0].iban}`
+                                            :
+                                            `${t("Account Number")}: ${draftBeneficiary.bank_details[0].account_number}`
+                                    }
+                                </span>
+                            }
+                            {
+                                data.payoutChannel?.value === "mobile" && draftBeneficiary.mobile_wallet?.[0]?.wallet_account_number
+                                &&
+                                <span>{`${t("Number")}: ${draftBeneficiary.mobile_wallet[0].wallet_account_number}`}</span>
+                            }
+                        </div>
+                    </div>
+                }
                 {
                     filterd?.length > 0
                         ?

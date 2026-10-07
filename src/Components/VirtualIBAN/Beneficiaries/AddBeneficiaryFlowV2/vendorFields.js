@@ -95,7 +95,7 @@ export const BVNK_FIELD_DEFS = {
 
     iban: { label: 'IBAN', type: 'iban', alphanumeric: true, uppercase: true, required: true },
     account_number: { label: 'Account number', type: 'text', alphanumeric: true, required: true },
-    bic: { label: 'BIC / SWIFT', type: 'bic', alphanumeric: true, uppercase: true },
+    bic: { label: 'BIC / SWIFT', type: 'bic', alphanumeric: true, uppercase: true, required: false },
     swift_code: { label: 'SWIFT / BIC', type: 'bic', alphanumeric: true, uppercase: true, required: true },
 
     bankName: { label: 'Bank name', type: 'text' },
