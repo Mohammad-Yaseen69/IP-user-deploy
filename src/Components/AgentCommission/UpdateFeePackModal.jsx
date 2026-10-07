@@ -82,7 +82,10 @@ const UpdateFeePackModal = ({ isOpen, onClose, target }) => {
         e.preventDefault();
         updateMutation.mutate();
     };
-
+    const agentFeePacks = feePacks.filter(
+        (pack) => pack.status === "approved"
+    );
+    // console.log(agentFeePacks, "requests")
     if (!isOpen) return null;
 
     return (
@@ -175,7 +178,7 @@ const UpdateFeePackModal = ({ isOpen, onClose, target }) => {
                         </div>
                     ) : (
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', maxHeight: '240px', overflowY: 'auto' }}>
-                            {feePacks.map((pack) => {
+                            {agentFeePacks.length > 0 ? agentFeePacks.map((pack) => {
                                 const isSelected = pack._id === selectedPackId;
                                 const isCurrentlyAttached = pack._id === currentPackId;
 
@@ -240,7 +243,7 @@ const UpdateFeePackModal = ({ isOpen, onClose, target }) => {
                                         )}
                                     </div>
                                 );
-                            })}
+                            }) : <div style={{ textAlign: 'center', padding: '20px', color: '#6B7280' }}>{t("No agent fee packs available.")}</div>}
                         </div>
                     )}
                 </div>
