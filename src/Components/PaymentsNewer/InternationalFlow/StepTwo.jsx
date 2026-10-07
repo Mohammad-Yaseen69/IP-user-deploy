@@ -53,6 +53,12 @@ const StepTwo = ({ data, dataHandler }) => {
     const [search, setSearch] = useState("")
     const [showOthers, setShowOthers] = useState(false)
     const [showBeneficiaryAddModal, setShowBeneficiaryAddModal] = useState(false)
+    const [addFormInitialValues, setAddFormInitialValues] = useState(null)
+
+    const openAddForm = (initialValues = null) => {
+        setAddFormInitialValues(initialValues)
+        setShowBeneficiaryAddModal(true)
+    }
 
     useEffect(() => {
         getUserBeneficiaries()
@@ -62,10 +68,18 @@ const StepTwo = ({ data, dataHandler }) => {
         if (!USE_NEW_BENEFICIARY_FLOW || !showBeneficiaryAddModal) return
 
         dataHandler("isAddingBeneficiary", true)
-        return () => dataHandler("isAddingBeneficiary", false)
+        return () => {
+            dataHandler("isAddingBeneficiary", false)
+            dataHandler("pendingBeneficiary", null)
+        }
     }, [showBeneficiaryAddModal])
 
-    const handleBeneficiarySaved = (draft, saveForFuture) => {
+   const handleDraftChange = (draft, saveForFuture) => {
+        if (!draft) {
+            dataHandler("pendingBeneficiary", null)
+            return
+        }
+
         const draftDetails = buildTransactionBeneficiaryDetails({
             form: draft.form,
             beneficiaryPayload: draft.beneficiaryPayload,
@@ -73,12 +87,12 @@ const StepTwo = ({ data, dataHandler }) => {
             saveForFuture,
         })
 
-        dataHandler("beneficiary", {
+        dataHandler("pendingBeneficiary", {
             ...draftDetails,
             isNew: true,
             draftDetails,
+            draftForm: draft.form, 
         })
-        setShowBeneficiaryAddModal(false)
     }
 
     const draftBeneficiary = data.beneficiary?.isNew ? data.beneficiary : null
@@ -195,8 +209,9 @@ const StepTwo = ({ data, dataHandler }) => {
                     service={data.payoutChannel}
                     payer={data.payer}
                     payerRequiredFields={data.payerRequiredFields?.[0] || []}
+                    initialValues={addFormInitialValues}
                     onCancel={() => setShowBeneficiaryAddModal(false)}
-                    onSaved={handleBeneficiarySaved}
+                    onDraftChange={handleDraftChange}
                 />
             </div>
         )
@@ -210,7 +225,7 @@ const StepTwo = ({ data, dataHandler }) => {
                 <div className={styles.top}>
                     <span>{t("Beneficiaries")}</span>
                     <button onClick={() => {
-                        setShowBeneficiaryAddModal(true)
+                        openAddForm()
                     }}>
                         <span>{t("Add Beneficiaries")}</span>
                     </button>
@@ -252,6 +267,22 @@ const StepTwo = ({ data, dataHandler }) => {
                                 <div className={styles.badge}>
                                     <span>{t("New")}</span>
                                 </div>
+                                {
+                                    draftBeneficiary.draftForm
+                                    &&
+                                    <button
+                                        type="button"
+                                        className={styles.badge}
+                                        style={{ border: "none", cursor: "pointer", marginLeft: "auto" }}
+                                        onClick={() => openAddForm({
+                                            beneficiary: draftBeneficiary.draftForm.beneficiary,
+                                            channel: draftBeneficiary.draftForm.channel,
+                                            saveForFuture: draftBeneficiary.draftDetails?.saveForFuture,
+                                        })}
+                                    >
+                                        <span>{t("Edit")}</span>
+                                    </button>
+                                }
                             </div>
                             <span>
                                 {data?.payoutChannel?.value === "mobile" ? t("Mobile Wallet") : data?.payoutChannel?.value === "cash" ? t("Cash Point") : t("Bank")}
@@ -329,7 +360,7 @@ const StepTwo = ({ data, dataHandler }) => {
                         :
                         <div style={{ margin: "1rem auto", textAlign: "center", fontSize: ".8rem" }}>{message?.replace("No", data.transactionType === "C" ? "No individual" : "No business")}
                             <span onClick={() => {
-                                setShowBeneficiaryAddModal(true)
+                                openAddForm()
                             }} style={{ cursor: "pointer", color: "#3a04e2" }}>
                                 {t("Add Now")}
                             </span>

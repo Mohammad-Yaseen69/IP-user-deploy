@@ -1,9 +1,4 @@
-/*
- * Add beneficiary - DS 2.0
- * Tokens transcribed from Figma "InstaPay Product UI" ->
- * section "Add beneficiary - DS 2.0 polished" (node 13680:16490).
- * Self-contained: nothing here is shared with the legacy beneficiary modals.
- */
+
 
 .root {
     /* brand */
@@ -65,7 +60,6 @@
     box-sizing: border-box;
 }
 
-/* ---------------------------------- shell --------------------------------- */
 
 .modal {
     position: absolute;
@@ -155,11 +149,7 @@
     min-height: 0;
 }
 
-/*
- * Without this the body's flex children shrink to fit instead of overflowing,
- * and anything with `overflow: hidden` (the summary cards) loses its last rows
- * rather than making the body scroll.
- */
+
 .body > * {
     flex-shrink: 0;
 }
@@ -181,7 +171,6 @@
     align-items: center;
 }
 
-/* --------------------------------- stepper -------------------------------- */
 
 .stepper {
     display: flex;
@@ -228,7 +217,6 @@
     color: var(--abf-text-primary);
 }
 
-/* --------------------------------- buttons -------------------------------- */
 
 .btn {
     display: inline-flex;
@@ -276,7 +264,6 @@
     cursor: not-allowed;
 }
 
-/* small inline actions: "Change", "Edit", "Add email for payment receipts" */
 .btnSmall {
     display: inline-flex;
     align-items: center;
@@ -301,7 +288,6 @@
     background: var(--abf-blue-50);
 }
 
-/* --------------------------- option / method cards ------------------------- */
 
 .optionList {
     display: flex;
@@ -314,7 +300,6 @@
     gap: var(--abf-md);
 }
 
-/* A method card together with the provider picker it reveals when selected. */
 .methodBlock {
     display: flex;
     flex-direction: column;
@@ -326,7 +311,6 @@
     padding: 0 var(--abf-md) var(--abf-sm);
 }
 
-/* side-by-side cards, e.g. "What kind of wallet is this?" */
 .optionListRow {
     flex-direction: row;
 }
@@ -363,7 +347,6 @@
     background: var(--abf-bg-canvas);
 }
 
-/* step 1 cards sit on the heavier default border, step 2 on the subtle one */
 .optionStrongBorder {
     border-color: var(--abf-border-default);
 }
@@ -400,7 +383,6 @@
     gap: var(--abf-xs);
 }
 
-/* step 1 stacks title and subtitle with no gap */
 .optionTextTight {
     gap: 0;
 }
@@ -466,7 +448,6 @@
     background: transparent;
 }
 
-/* ------------------------------ groups (step 2) --------------------------- */
 
 .group {
     display: flex;
@@ -509,7 +490,6 @@
     color: var(--abf-text-secondary);
 }
 
-/* --------------------------- recipient context card ----------------------- */
 
 .contextCard {
     display: flex;
@@ -903,15 +883,7 @@
     color: var(--abf-text-primary);
 }
 
-/* ---------------------------------- icons --------------------------------- */
 
-/*
- * Figma exports each glyph pre-coloured for the state it happened to sit in.
- * This flow needs the same glyph in more than one colour (a method icon is
- * #5926F0 when selected and #1B1F2A when not), so monochrome glyphs are painted
- * through a CSS mask: the downloaded .svg is the mask, `color` supplies the
- * paint. The asset files themselves are used exactly as exported.
- */
 .icon {
     display: block;
     flex-shrink: 0;
@@ -928,7 +900,6 @@
     display: block;
     flex-shrink: 0;
 }
-/* -------------------------------- responsive ------------------------------ */
 
 @media (max-width: 680px) {
     .modal {
@@ -959,7 +930,6 @@
     }
 }
 
-/* Adding a recipient inside another flow: the same fields without the dialog around them. */
 .quickAdd {
     display: flex;
     flex-direction: column;
@@ -975,7 +945,7 @@
     flex-wrap: wrap;
     gap: var(--abf-sm);
     padding-bottom: var(--abf-sm);
-    border-bottom: 1px solid var(--abf-border-subtle);
+    /* border-bottom: 1px solid var(--abf-border-subtle); */
 }
 
 .quickAddHeading {

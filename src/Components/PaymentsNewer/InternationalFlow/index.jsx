@@ -104,6 +104,7 @@ const initialState = {
     payers: [],
     beneficiary: {},
     isAddingBeneficiary: false,
+    pendingBeneficiary: null,
     reason: "",
     comment: "",
     files: [],
@@ -319,7 +320,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
 
             case 2:
                 if (internationalData.isAddingBeneficiary) {
-                    return true
+                    return !internationalData.pendingBeneficiary
                 }
                 if (internationalData.showSenderSelection) {
                     if (internationalData.senderType !== 'account') {
@@ -1088,8 +1089,12 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                     return
                 }
 
-                // A new recipient's details were all collected in the add form, so there is nothing missing to ask for.
-                if (internationalData.beneficiary?.isNew) {
+                if (internationalData.isAddingBeneficiary) {
+                    if (!internationalData.pendingBeneficiary) return
+                    updateInternationalData("beneficiary", internationalData.pendingBeneficiary)
+                }
+
+                if (internationalData.isAddingBeneficiary || internationalData.beneficiary?.isNew) {
                     if (internationalData.isThirdPartyAllowed && internationalData.senderType === "third-party") {
                         updateInternationalData("showSenderSelection", true)
                     } else {
@@ -1249,7 +1254,6 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
     const verifyOtp = async (otp) => {
         setLoading(true)
         try {
-            // Check vendor balance before confirming the transaction
             const balanceOk = checkVendorBalance()
             if (!balanceOk) {
                 setShowBalanceModal(true)
