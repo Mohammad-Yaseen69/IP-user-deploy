@@ -202,14 +202,18 @@
 }
 
 .rightSection {
-    width: 10%;
+    width: 40%;
     display: flex;
     justify-content: end;
     align-items: center;
 
     img {
-        width: 500px;
-        height: 300px;
+        min-width: 350px;
+        max-width: 500px;
+        max-height: 300px;
+        min-height: 225px;
+        width: 100%;
+        height: 100%;
         border-radius: var(--lg, 14px);
         border: 1px solid #E4DBFF;
         background: radial-gradient(246.34% 159.6% at 111.66% 167.38%, blue/blue-50 0%, #FAFAFA 100%), radial-gradient(202.79% 112.89% at -25.75% -67.15%, blue/blue-50 0%, #FAFAFA 100%);
@@ -550,6 +554,8 @@
     .rightSection img {
         width: 100%;
         height: auto;
+        min-width: auto;
+        min-height: auto;
         border-radius: 12px;
     }
 

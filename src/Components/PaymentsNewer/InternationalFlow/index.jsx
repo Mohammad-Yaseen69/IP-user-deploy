@@ -12,6 +12,8 @@ import { decryptData } from "../../../Helper/EssentilaMethods/Decryption"
 import { encryptData } from "../../../Helper/EssentilaMethods/Encryption"
 import useVendorBalance from "../../../hooks/Payments/useVendorBalance"
 import { apiWrapper } from "../../../utils/Functions/apiWrapper"
+import { initiatePaytentlyPayment, usePaytently } from "../../../utils/Functions/paytently"
+import PaytentlyHostedModal from "../../AddFunds/PaytentlyHostedModal"
 import AddBeneficiaryAddressModal from "../../AddBeneficiaryAddressModal"
 import AddBeneficiaryRequiredFields from "../../AddBeneficiaryRequiredFields"
 import errors from "../../AddFunds/TrustPaymentErrors.json"
@@ -43,6 +45,7 @@ import VendorBalanceModal from "./VendorBalanceModal"
 import WalletsComponent from "./WalletsComponent"
 import { useIdempotency } from "../../../hooks/Payments/useIdempotency"
 import SelectSender from "./SelectSender"
+import { getBeneficiaryDisplayName } from "./beneficiaryHelpers"
 import { usePermission } from "../../../hooks/GeneralUse/usePermission"
 import { isOnafriq, onafriqConfirmError, onafriqQuoteError, onafriqServiceId, onafriqServiceName } from "./onafriq"
 
@@ -62,6 +65,8 @@ const apiErrors = {
     "incorrect_card": "This card does not belong to your account. Please use a valid card.",
     "transaction_failed": "The transaction couldn't be completed. Please try again or use a different method.",
     "feature_not_allowed": "This feature is currently disabled for your account. Contact support for assistance.",
+    "currency_not_supported": "Card top-up isn't available for this wallet's currency. Please use a different payment method.",
+    "amount_too_large": "This amount is too large for card payment. Please enter a smaller amount or use a different method.",
     "beneficiary_details_missing": "It appears that some required beneficiary details are either missing or incorrect. Please review and update the beneficiary information, ensuring all fields are properly filled, and try again.",
     "insufficient_funds": "You don't have enough funds for this transaction.",
     "invoice_not_found_or_inactive": "The invoice you're trying to pay is either inactive or the invoice id is not correct!",
@@ -111,6 +116,8 @@ const initialState = {
     services: [],
     payers: [],
     beneficiary: {},
+    isAddingBeneficiary: false,
+    pendingBeneficiary: null,
     reason: "",
     comment: "",
     files: [],
@@ -265,7 +272,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
         retry: 3
     })
 
-    const { vendorBalance, vendorBalanceInUSD, vendorBalanceLoading } = useVendorBalance(
+    const { vendorBalance, vendorBalanceInUSD } = useVendorBalance(
         internationalData.currency,
         isOnafriq(internationalData.payoutChannel?.vendor) ? "" : internationalData.payoutChannel?.vendor?.toLowerCase(),
         (err) => updateInternationalData("error", err)
@@ -333,12 +340,15 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                 return !internationalData.amount || Number(String(internationalData.amount)?.replaceAll(",", "")) < 1 || !internationalData.currency || !internationalData.currency_wallet?.currency?.code || !internationalData.country?.name || !internationalData?.payoutChannel?.name || !internationalData?.payer?.name || internationalData.error || internationalData.exchange_rate_error || !internationalData.exchange_rate?.receiver?.amount > 0
 
             case 2:
+                if (internationalData.isAddingBeneficiary) {
+                    return !internationalData.pendingBeneficiary
+                }
                 if (internationalData.showSenderSelection) {
                     if (internationalData.senderType !== 'account') {
                         return !internationalData.selectedSender?._id
                     }
                 }
-                return !internationalData.beneficiary?._id
+                return !internationalData.beneficiary?._id && !internationalData.beneficiary?.isNew
 
             case 3:
                 return internationalData.reason.length < 1 || !internationalData.reason
@@ -347,7 +357,8 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                 return !internationalData.payment_type?.value || (internationalData.payment_type.value !== "wallet" ? false : !internationalData?.wallet?._id) || internationalData.ex_extra_error
 
             case 5:
-                if (internationalData.payment_type?.value === "card") {
+                // Paytently collects the card on its own page, so there is nothing to validate here.
+                if (internationalData.payment_type?.value === "card" && !usePaytently) {
                     const [contentMonth, contentYear] = internationalData.expiry.split("/").map(Number);
                     const currentDate = new Date();
                     const currentMonth = currentDate.getMonth() + 1;
@@ -401,6 +412,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                 const decrypted = decryptData(res.data.data)
                 const exchange_rate_details = {
                     exchange_rate: decrypted?.data?.exchangeRate,
+                    markupValue: decrypted?.data?.markupValue,
                     receiver: { currency: destinationCurrency, amount: decrypted?.data?.recipientAmount },
                     fee: { amount: decrypted?.data?.result?.fee?.value },
                     total: decrypted?.data?.result?.total?.value,
@@ -644,10 +656,10 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
         }
     }
 
-    const getPlainExchangeRate = async (from, to, amount) => {
+    const getPlainExchangeRate = async (from, to, amount, markup = false) => {
         setLoading(true)
         try {
-            const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/get-plain-exchange-rate?from=${from}&to=${to}&amount=${amount}`, {
+            const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/get-plain-exchange-rate?from=${from}&to=${to}&amount=${amount}&markupValue=${markup}`, {
                 headers: authHeader
             });
             const dec = decryptData(res?.data?.data);
@@ -700,6 +712,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
         }
     }, [internationalData.payment_type])
 
+    console.log(internationalData?.exchange_rate, "exchange rate for check", internationalData.amount)
     useEffect(() => {
         let timeout;
         if (internationalData.payment_type?.value && subStep === 4) {
@@ -712,8 +725,15 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
             const getAmount = async () => {
                 try {
                     let amount;
-                    if (internationalData.payment_type?.value === "wallet" && internationalData?.wallet?.currency && internationalData?.currency_wallet?.currency?.code /*&& internationalData?.wallet?.currency?.code !== internationalData?.currency_wallet?.currency?.code*/) {
-                        amount = await getPlainExchangeRate(internationalData?.currency_wallet?.currency?.code, internationalData?.wallet?.currency?.code, Number(String(internationalData.amount)?.replaceAll(",", "")))
+                    const receivingCurrency = internationalData?.recipient_currency || internationalData?.exchange_rate?.receiver?.currency
+                    const walletCurrency = internationalData?.wallet?.currency?.code
+
+                    if (internationalData.payment_type?.value === "wallet" && internationalData?.wallet?.currency && internationalData?.currency_wallet?.currency?.code) {
+                        if (receivingCurrency && walletCurrency && receivingCurrency === walletCurrency) {
+                            amount = Number(String(internationalData.receiving_amount)?.replaceAll(",", ""))
+                        } else {
+                            amount = await getPlainExchangeRate(internationalData?.currency_wallet?.currency?.code, walletCurrency, Number(String(internationalData.amount)?.replaceAll(",", "")), internationalData?.exchange_rate?.markupValue)
+                        }
                     } else {
                         amount = Number(String(internationalData.amount)?.replaceAll(",", ""))
                     }
@@ -725,7 +745,15 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
 
             timeout = setTimeout(() => {
                 const wallet_id = internationalData.payment_type?.value === "wallet" ? internationalData.wallet?._id ?? internationalData?.currency_wallet?._id : internationalData?.currency_wallet?._id
-                const currency_code = internationalData.payment_type?.value === "wallet" ? internationalData?.wallet?.currency?.code ?? internationalData?.currency : internationalData?.currency;
+
+                const receivingCurrency = internationalData?.recipient_currency || internationalData?.exchange_rate?.receiver?.currency
+                const walletCurrency = internationalData?.wallet?.currency?.code
+                const isSameCurrency = receivingCurrency && walletCurrency && receivingCurrency === walletCurrency
+
+                const currency_code = internationalData.payment_type?.value === "wallet"
+                    ? (isSameCurrency ? receivingCurrency : (walletCurrency ?? internationalData?.currency))
+                    : internationalData?.currency;
+
                 getAmount()
                     .then(res => {
                         if (wallet_id) {
@@ -778,11 +806,14 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
         setLoading(true)
         try {
             let payload = {}
+            const isNewBeneficiary = !!internationalData.beneficiary?.isNew
             const transaction_data = {
                 additional_information: internationalData.comment,
                 purpose_of_remittance: internationalData.reason,
                 user_id: userDetails?.account_type === "business" ? userDetails?.company?._id : userDetails?.user?._id,
-                beneficiary_id: internationalData.beneficiary?._id,
+                ...(isNewBeneficiary
+                    ? { beneficiaryDetails: internationalData.beneficiary.draftDetails }
+                    : { beneficiary_id: internationalData.beneficiary?._id }),
                 ...(internationalData.senderType === "third-party" && internationalData.selectedSender?._id ? {
                     sender_id: internationalData.selectedSender._id,
                 } : {}),
@@ -791,7 +822,6 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                 wallet_id: internationalData.wallet?._id ?? internationalData.currency_wallet?._id,
                 token: internationalData.quotation_details?.token,
                 vendor: internationalData.payoutChannel?.vendor,
-                sender_id: internationalData.senderType === "third-party" ? internationalData.selectedSender?._id : undefined,
             }
 
             if (isOnafriq(internationalData.payoutChannel?.vendor)) {
@@ -815,7 +845,9 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                     }
                 }
 
-                internationalData.payoutChannel?.value?.toLowerCase()?.includes("bank") ? payload.bank_id = internationalData.beneficiary?.bank_details?.[0]?._id : payload.mobile_wallet_id = internationalData.beneficiary?.mobile_wallet?.[0]?._id
+                if (!isNewBeneficiary) {
+                    internationalData.payoutChannel?.value?.toLowerCase()?.includes("bank") ? payload.bank_id = internationalData.beneficiary?.bank_details?.[0]?._id : payload.mobile_wallet_id = internationalData.beneficiary?.mobile_wallet?.[0]?._id
+                }
             } else {
                 payload = {
                     data: {
@@ -825,11 +857,13 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                 }
                 const channel = internationalData.payoutChannel?.value?.toLowerCase()
 
-                if (channel?.includes("bank")) {
-                    payload.data.bank_id = internationalData.beneficiary?.bank_details?.[0]?._id
-                } else if (!(isOnafriq(internationalData.payoutChannel?.vendor) && channel === "cash")) {
-                    // voucher, no account
-                    payload.data.mobile_wallet_id = internationalData.beneficiary?.mobile_wallet?.[0]?._id
+                if (!isNewBeneficiary) {
+                    if (channel?.includes("bank")) {
+                        payload.data.bank_id = internationalData.beneficiary?.bank_details?.[0]?._id
+                    } else if (!(isOnafriq(internationalData.payoutChannel?.vendor) && channel === "cash")) {
+                        // voucher, no account
+                        payload.data.mobile_wallet_id = internationalData.beneficiary?.mobile_wallet?.[0]?._id
+                    }
                 }
             }
             const enc = encryptData(payload)
@@ -874,6 +908,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
     }
 
     const [showCardModal, setShowCardModal] = useState(false)
+    const [paytentlyHosted, setPaytentlyHosted] = useState(null)
 
     const initiateCardPayment = async (otp) => {
         setLoading(true)
@@ -887,10 +922,34 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                 return
             }
 
-            const data = {
+            const otpFields = {
                 token: internationalData.created_transaction?.token,
                 otp: otp,
                 type: internationalData.codeType,
+            }
+
+            // Paytently collects the card itself, so no card data is built here. The intl
+            // payload rides inside the OTP token, so only the wallet is sent.
+            if (usePaytently) {
+                const dec = await initiatePaytentlyPayment({
+                    walletId: internationalData.currency_wallet?._id,
+                    flow: "international",
+                    otp: otpFields,
+                    idempotencyKey: getKey(),
+                })
+
+                if (!dec?.hosted_forms_url) {
+                    updateInternationalData("otpError", apiErrorMessage(dec?.message) ? t(apiErrorMessage(dec?.message)) : (dec?.message ?? "We cannot process your request at the moment, please try again later."))
+                    return
+                }
+
+                setPaytentlyHosted({ hostedUrl: dec.hosted_forms_url, authorizeUrl: dec.authorize_url })
+                updateInternationalData("showOtpModal", false)
+                return
+            }
+
+            const data = {
+                ...otpFields,
                 panData: {
                     wallet_id: internationalData.currency_wallet?._id,
                     amount: internationalData.exchange_rate?.total * 100,
@@ -1099,6 +1158,20 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                     return
                 }
 
+                if (internationalData.isAddingBeneficiary) {
+                    if (!internationalData.pendingBeneficiary) return
+                    updateInternationalData("beneficiary", internationalData.pendingBeneficiary)
+                }
+
+                if (internationalData.isAddingBeneficiary || internationalData.beneficiary?.isNew) {
+                    if (internationalData.isThirdPartyAllowed && internationalData.senderType === "third-party") {
+                        updateInternationalData("showSenderSelection", true)
+                    } else {
+                        setSubStep(prev => prev + 1)
+                    }
+                    return
+                }
+
                 // if (!internationalData.beneficiary?.address) {
                 //     return setShowAddressModal(true)
                 // }
@@ -1168,7 +1241,8 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                 break;
             case 4:
                 if (internationalData.payment_type?.value === "card") {
-                    updateInternationalData("showCard", true)
+                    // Paytently collects the card on its own hosted form, so our card step is skipped.
+                    if (!usePaytently) updateInternationalData("showCard", true)
 
                     if (internationalData.payoutChannel?.vendor === "thunes") {
                         createQuotation(Number(String(internationalData.amount)?.replaceAll(",", "")))
@@ -1194,7 +1268,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                 }
                 // })
                 else {
-                    if (internationalData.payment_type?.value !== "wallet" || internationalData?.wallet?._id) {
+                    if (internationalData.payment_type?.value !== "wallet" || internationalData?.wallet?._id ) {
                         if (internationalData.payoutChannel?.vendor === "thunes") {
                             createQuotation(Number(String(internationalData.amount)?.replaceAll(",", "")))
                         } else {
@@ -1249,7 +1323,6 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
     const verifyOtp = async (otp) => {
         setLoading(true)
         try {
-            // Check vendor balance before confirming the transaction
             const balanceOk = checkVendorBalance()
             if (!balanceOk) {
                 setShowBalanceModal(true)
@@ -1398,6 +1471,12 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
     // console.log("international.otpError",internationalData)
     return (
         <>
+            <PaytentlyHostedModal
+                isOpen={!!paytentlyHosted?.hostedUrl}
+                hostedUrl={paytentlyHosted?.hostedUrl}
+                authorizeUrl={paytentlyHosted?.authorizeUrl}
+                onClose={() => setPaytentlyHosted(null)}
+            />
             {
                 showCardModal
                 &&
@@ -1592,7 +1671,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                                                                             ?
                                                                             <SelectedCard
                                                                                 title="Name"
-                                                                                list={[{ text: `${internationalData.beneficiary?.first_name ?? internationalData?.beneficiary?.company_name} ${internationalData.beneficiary?.last_name ?? ""}` }]}
+                                                                                list={[{ text: getBeneficiaryDisplayName(internationalData.beneficiary) }]}
                                                                                 changeHandler={() => setSubStep(2)}
                                                                             />
                                                                             :
@@ -1814,6 +1893,8 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                                                     loading={loading}
                                                     data={internationalData}
                                                     dataHandler={updateInternationalData}
+                                                    markupValue={internationalData?.exchange_rate?.markupValue}
+                                                    skipSameCurrencyConversion
                                                 />
                                                 : ""
                                         }
@@ -1881,6 +1962,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                                                                         loading={loading}
                                                                         data={internationalData}
                                                                         dataHandler={updateInternationalData}
+                                                                        skipSameCurrencyConversion
                                                                     />
                                                                     :
                                                                     internationalData.payment_type?.sub_name

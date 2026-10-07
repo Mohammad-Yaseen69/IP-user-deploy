@@ -35,16 +35,16 @@ export const validateSwiftBeneficiary = (beneficiary) => {
         }
     }
 
-    if (!beneficiary.address || !beneficiary.address.trim()) {
-        errors.push("Address is required");
-    }
-    if (!beneficiary.city || !beneficiary.city.trim()) {
-        errors.push("City is required");
-    }
-    const zip = beneficiary.zip_code || beneficiary.postal_code;
-    if (!zip || !String(zip).trim()) {
-        errors.push("Postal code is required");
-    }
+    // if (!beneficiary.address || !beneficiary.address.trim()) {
+    //     errors.push("Address is required");
+    // }
+    // if (!beneficiary.city || !beneficiary.city.trim()) {
+    //     errors.push("City is required");
+    // }
+    // const zip = beneficiary.zip_code || beneficiary.postal_code;
+    // if (!zip || !String(zip).trim()) {
+    //     errors.push("Postal code is required");
+    // }
 
     const bank = beneficiary.bank_details?.[0] || beneficiary.bank || {};
     const accountOrIban = bank.iban || bank.extras?.iban || bank.account_number;
@@ -55,23 +55,23 @@ export const validateSwiftBeneficiary = (beneficiary) => {
     if (!isValidBic(swift)) {
         errors.push("Valid 8 or 11 character BIC / SWIFT code is required");
     }
-    if (!bank.name && !bank.bank_name) {
-        errors.push("Bank name is required");
-    }
-    if (!bank.branch_street && !bank.bank_branch_street) {
-        errors.push("Branch street address is required");
-    }
-    if (!bank.city && !bank.bank_city) {
-        errors.push("Bank city is required");
-    }
-    if (!bank.postal_code && !bank.bank_postal_code) {
-        errors.push("Bank postal code is required");
-    }
-    const bankCountry = bank.extras?.country_iso_code || bank.country_iso_code;
-    if (!bankCountry || !ISO3_REGEX.test(String(bankCountry).trim())) {
-        errors.push("Bank country (3-letter ISO code) is required");
-    }
-
+    // if (!bank.name && !bank.bank_name) {
+    //     errors.push("Bank name is required");
+    // }
+    // if (!bank.branch_street && !bank.bank_branch_street) {
+    //     errors.push("Branch street address is required");
+    // }
+    // if (!bank.city && !bank.bank_city) {
+    //     errors.push("Bank city is required");
+    // }
+    // if (!bank.postal_code && !bank.bank_postal_code) {
+    //     errors.push("Bank postal code is required");
+    // }
+    // const bankCountry = bank.extras?.country_iso_code || bank.country_iso_code;
+    // if (!bankCountry || !ISO3_REGEX.test(String(bankCountry).trim())) {
+    //     errors.push("Bank country (3-letter ISO code) is required");
+    // }
+console.log('errors',errors)
     return {
         isValid: errors.length === 0,
         errors

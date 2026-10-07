@@ -283,7 +283,7 @@ const Layout = ({ children, classNames, ...rest }) => {
 
   useEffect(() => {
     const path = location.pathname.toLowerCase();
-    if (path === "/" || path === "/dashboard/default" || path === "/my-mastercard" || path === "/payments") {
+    if (path === "/" || path === "/dashboard/default" || path === "/my-mastercard" || path === "/payments" || path.startsWith("/copy-trading")) {
       setTogglSidebar(true)
     } else {
       setTogglSidebar(false)

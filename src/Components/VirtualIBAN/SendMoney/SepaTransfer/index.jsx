@@ -267,7 +267,7 @@ const PurposeStep = ({ amount, currencyCode, purpose, setPurpose, description, s
             {/* <div className={styles.customInputWrapper}> */}
             <TextField label={t("Additional information (optional)")} value={additionalInfo} onChange={setAdditionalInfo} />
             <div className={styles.infoStrip}>
-                <Info size={16} className={styles.infoIcon} />
+                <Info size={18} className={styles.infoIcon} />
                 <span>{t("SEPA transfers deliver the full amount and carry no correspondent fees, so there is no OUR/SHA/BEN choice to make.")}</span>
             </div>
         </div>
@@ -397,26 +397,33 @@ const downloadSepaReceipt = ({
     doc.setTextColor(130, 130, 138)
     doc.text(
         `Generated: ${new Date().toLocaleString()}`,
-        14,
-        28
+        margin,
+        56
     )
 
     autoTable(doc, {
-        startY: 36,
+        startY: 64,
         head: [["Details", "Information"]],
         body: rows,
-        theme: "grid",
+        theme: "plain",
         styles: {
             fontSize: 9,
             cellPadding: 4,
+            textColor: [35, 35, 40],
         },
         headStyles: {
             fontStyle: "bold",
+            fillColor: [89, 38, 240],
+            textColor: [255, 255, 255],
+        },
+        alternateRowStyles: {
+            fillColor: [246, 245, 252],
         },
         columnStyles: {
             0: {
                 cellWidth: 55,
                 fontStyle: "bold",
+                textColor: [130, 130, 138],
             },
             1: {
                 cellWidth: 125,
@@ -428,17 +435,19 @@ const downloadSepaReceipt = ({
 
     doc.setFontSize(9)
     doc.setFont("helvetica", "normal")
+    doc.setTextColor(90, 90, 95)
 
     doc.text(
         "The recipient receives the full amount - no correspondent-bank deductions in SEPA.",
-        14,
+        margin,
         finalY
     )
 
     doc.setFontSize(8)
+    doc.setTextColor(130, 130, 138)
     doc.text(
         "This receipt is generated electronically.",
-        14,
+        margin,
         finalY + 8
     )
     const safeTrackingReference = String(trackingReference || "receipt")
@@ -480,7 +489,9 @@ const DoneStep = ({
             </div>
             <div className={styles.doneActions}>
                 <button type="button" className={styles.backBtn} onClick={onSendAgain}><Send size={15} />{t("Send again")}</button>
-                <div><button type="button" className={styles.backBtn} onClick={() => downloadSepaReceipt({ amount, currencyCode, transferSpeed, selectedBeneficiary, purpose, additionalInfo, feeDetails, payoutResult, t })}><Download size={15} />{t("Download receipt")}</button><button type="button" className={styles.nextBtn} onClick={() => navigate('/virtual-IBAN')}><Home size={15} />{t("Back to dashboard")}</button></div>
+                <div>
+                    <button type="button" className={styles.backBtn} onClick={() => downloadSepaReceipt({ amount, currencyCode, transferSpeed, selectedBeneficiary, purpose, additionalInfo, feeDetails, payoutResult, t })}><Download size={15} />{t("Download receipt")}</button>
+                    <button type="button" className={styles.nextBtn} onClick={() => navigate('/virtual-IBAN')}><Home size={15} />{t("Back to dashboard")}</button></div>
             </div>
         </div>
     )
