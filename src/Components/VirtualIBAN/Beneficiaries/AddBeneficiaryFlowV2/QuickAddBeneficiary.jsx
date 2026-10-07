@@ -1,4 +1,4 @@
-import { useContext, useMemo, useState } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 import { FormControlLabel, Switch } from '@mui/material';
 import styles from './AddBeneficiaryFlowV2.module.css';
 import { Alert, Section, SectionTitle } from './components';
@@ -11,8 +11,8 @@ import { METHOD_CONTEXT_LABEL } from './constants';
 import { getFieldDef, THUNES_ENTITY_FIELDS } from './vendorFields';
 import { collectIdentifierErrors } from '../../../../utils/Functions/bankIdentifiers';
 import { UserContext } from '../../../../Context/UserContext';
+import { useTranslation } from 'react-i18next';
 
-/* The payout channel is named by its own value inside the transfer. */
 const METHOD_BY_CHANNEL = {
     bank: 'bank_account',
     mobile: 'mobile_wallet',
@@ -20,10 +20,8 @@ const METHOD_BY_CHANNEL = {
     card: 'card_payment',
 };
 
-/* Chosen alongside the payer, so never asked for again here. */
 const PREFILLED_CHANNEL_FIELDS = ['mobile_wallet_provider'];
 
-/* Answered by the transfer itself, so it is filled in but never shown. */
 const PREFILLED_BENEFICIARY_FIELDS = ['country_iso_code'];
 
 const CHANNEL_CHECK_COLORS = {
@@ -34,8 +32,6 @@ const CHANNEL_CHECK_COLORS = {
 
 const getQuickAddMethod = (channelValue) => METHOD_BY_CHANNEL[String(channelValue || '').toLowerCase()] || null;
 
-/* The payer is already chosen, and each method records it in its own way: a wallet keeps
-   the provider, a bank keeps the bank's name, which is what the list matches on. */
 const prefillFromPayer = (method, payer) => {
     if (!payer) return {};
 
@@ -50,28 +46,26 @@ const prefillFromPayer = (method, payer) => {
     return {};
 };
 
-/* Adding a recipient in the middle of a transfer already knows the country, who is being
-   paid and how, so it only asks for what the provider still needs. */
 const QuickAddBeneficiary = ({
     country,
     recipientType = 'individual',
     service,
     payer = null,
     payerRequiredFields = [],
+    initialValues = null,  // { beneficiary, channel, saveForFuture } when editing a recipient added earlier
     onCancel,
-    onSaved,
+    onDraftChange,
 }) => {
     const { allowedCountries } = useContext(UserContext);
-
+    const { t } = useTranslation()
     const method = getQuickAddMethod(service?.value);
     const countryIso3 = country?.alpha3 || '';
 
-    const [beneficiary, setBeneficiary] = useState(() => (
+    const [beneficiary, setBeneficiary] = useState(() => initialValues?.beneficiary || (
         PREFILLED_BENEFICIARY_FIELDS.reduce((bag, name) => ({ ...bag, [name]: countryIso3 }), {})
     ));
-    const [channel, setChannel] = useState(() => prefillFromPayer(method, payer));
-    const [errors, setErrors] = useState({ beneficiary: {}, channel: {} });
-    const [saveForFuture, setSaveForFuture] = useState(false);
+    const [channel, setChannel] = useState(() => initialValues?.channel || prefillFromPayer(method, payer));
+    const [saveForFuture, setSaveForFuture] = useState(() => !!initialValues?.saveForFuture);
 
     const { data: stateData = [] } = useCountryStates(countryIso3);
     const phoneCheck = usePhoneVerification(channel.msisdn, method === 'mobile_wallet');
@@ -92,7 +86,6 @@ const QuickAddBeneficiary = ({
         channel,
     });
 
-    /* The payer can ask for more about the recipient than the service alone does. */
     const requirements = useMemo(() => {
         if (!baseRequirements) return null;
 
@@ -113,12 +106,10 @@ const QuickAddBeneficiary = ({
 
     const setBeneficiaryField = (name, value, patch = {}) => {
         setBeneficiary((prev) => ({ ...prev, ...patch, [name]: value }));
-        setErrors((prev) => ({ ...prev, beneficiary: { ...prev.beneficiary, [name]: undefined } }));
     };
 
     const setChannelField = (name, value, patch = {}) => {
         setChannel((prev) => ({ ...prev, ...patch, [name]: value }));
-        setErrors((prev) => ({ ...prev, channel: { ...prev.channel, [name]: undefined } }));
     };
 
     const countryLabel = useMemo(
@@ -128,7 +119,7 @@ const QuickAddBeneficiary = ({
         [allowedCountries, countryIso3, country],
     );
 
-    const validate = () => {
+   const errors = (() => {
         const next = { beneficiary: {}, channel: {} };
 
         (requirements?.requiredBeneficiary || []).forEach((name) => {
@@ -150,14 +141,29 @@ const QuickAddBeneficiary = ({
             };
         }
 
-        setErrors(next);
-        return Object.keys(next.beneficiary).length === 0 && Object.keys(next.channel).length === 0;
+        return next;
+    })();
+
+    const filledOnly = (fieldErrors, values) => Object.fromEntries(
+        Object.entries(fieldErrors).filter(([name]) => String(values[name] || '').trim()),
+    );
+    const visibleErrors = {
+        beneficiary: filledOnly(errors.beneficiary, beneficiary),
+        channel: filledOnly(errors.channel, channel),
     };
 
-    /* Nothing is stored here: the details travel with the transfer, which keeps the
-       recipient only when "Save for later" is on. */
-    const save = () => {
-        if (!validate()) return;
+    const isComplete = !!requirements
+        && !fieldsLoading
+        && !!method
+        && phoneCheck?.state !== 'checking'
+        && Object.keys(errors.beneficiary).length === 0
+        && Object.keys(errors.channel).length === 0;
+
+    useEffect(() => {
+        if (!isComplete) {
+            onDraftChange?.(null);
+            return;
+        }
 
         const form = {
             recipient_type: recipientType,
@@ -169,12 +175,12 @@ const QuickAddBeneficiary = ({
             channel,
         };
 
-        onSaved?.({
+        onDraftChange?.({
             form,
             beneficiaryPayload: buildBeneficiaryPayload({ form, countries: allowedCountries }),
             channelPayload: buildChannelPayload({ form, transactionType }),
         }, saveForFuture);
-    };
+    }, [isComplete, beneficiary, channel, saveForFuture, transactionType]);
 
     const methodLabel = METHOD_CONTEXT_LABEL[method] || service?.name || 'Payout channel';
     const isInteractive = !fieldsLoading && !!method;
@@ -183,7 +189,7 @@ const QuickAddBeneficiary = ({
         <div className={`${styles.root} ${styles.quickAdd}`}>
             <div className={styles.quickAddBar}>
                 <div className={styles.quickAddHeading}>
-                    <h3 className={styles.quickAddTitle}>Add recipient</h3>
+                    <h3 className={styles.quickAddTitle}>{t("Add recipient")}</h3>
                     <p className={styles.quickAddMeta}>
                         {[methodLabel, payer?.name, countryLabel].filter(Boolean).join(' · ')}
                     </p>
@@ -191,22 +197,14 @@ const QuickAddBeneficiary = ({
 
                 <div className={styles.quickAddActions}>
                     <button type="button" className={`${styles.btn} ${styles.btnGhost}`} onClick={onCancel}>
-                        Cancel
-                    </button>
-                    <button
-                        type="button"
-                        className={`${styles.btn} ${styles.btnPrimary}`}
-                        onClick={save}
-                        disabled={!isInteractive || phoneCheck?.state === 'invalid'}
-                    >
-                        Add beneficiary
+                        {t("Cancel")}
                     </button>
                 </div>
             </div>
 
             {!method && (
-                <Alert variant="error" title="This payout method cannot be added here">
-                    Go back and choose a different receiving method.
+                <Alert variant="error" title={t("This payout method cannot be added here")}>
+                    {t("Go back and choose a different receiving method.")}
                 </Alert>
             )}
 
@@ -222,7 +220,7 @@ const QuickAddBeneficiary = ({
                                 defs={requirements.defs}
                                 values={beneficiary}
                                 onChange={setBeneficiaryField}
-                                errors={errors.beneficiary}
+                                errors={visibleErrors.beneficiary}
                                 countryIso3={countryIso3}
                                 stateData={stateData}
                             />
@@ -237,7 +235,7 @@ const QuickAddBeneficiary = ({
                                 defs={requirements.defs}
                                 values={channel}
                                 onChange={setChannelField}
-                                errors={errors.channel}
+                                errors={visibleErrors.channel}
                                 countryIso3={countryIso3}
                                 stateData={stateData}
                             />
