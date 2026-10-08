@@ -375,16 +375,6 @@ const StatusScreen = ({ status = 'submitted', ibanNumber, companyName, onAction,
                 <div style={{ background: '#F9FAFB', padding: isMobile ? '16px' : '24px', borderRadius: '12px', border: '1px solid #F3F4F6' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
                         <h3 style={{ fontSize: '18px', fontWeight: 600, margin: 0, color: '#111827' }}>{t("Directors")}</h3>
-                        <Button 
-                            style={{
-                                background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
-                                border: "none",
-                                outline: "none"
-                            }}
-                            onClick={() => setShowAddModal(!showAddModal)}
-                        >
-                            {t("Add New Director")}
-                        </Button>
                     </div>
 
                     <Modal style={{maxWidth: isMobile ? '90%' : 'auto'}} isOpen={showAddModal} toggle={() => setShowAddModal(!showAddModal)}>
