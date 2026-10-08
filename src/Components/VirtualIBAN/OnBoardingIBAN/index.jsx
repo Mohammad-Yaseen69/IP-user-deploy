@@ -310,6 +310,7 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
         }
 
         const selectedType = userDetails?.tfa ? 'authenticator' : userDetails?.email_verification ? 'email' : userDetails?.whatsapp_verification ? 'whatsapp' : 'sms'
+        reset()
         setCodeType(selectedType)
 
         const payload = {
@@ -385,6 +386,16 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
         }
     }
 
+
+    const closeOtpModal = () => {
+        reset()
+        setShowOtpModal(false)
+    }
+
+    const handleOtpMethodChange = (method) => {
+        reset()
+        setCodeType(method)
+    }
 
     const handleStatusAction = () => {
         if (state.status === 'approved' && onCreated) {
@@ -626,18 +637,20 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
                 />
             )}
 
-            <Modal style={{ maxWidth: isMobile ? '90%' : 'auto' }} isOpen={showOtpModal} toggle={() => { reset(); setShowOtpModal(false) }} centered>
+            <Modal style={{ maxWidth: isMobile ? '90%' : 'auto' }} isOpen={showOtpModal} toggle={closeOtpModal} onClosed={reset} centered>
                 <ModalBody>
                     <OTPConfirmation
                         variant="card"
                         authType={codeType}
-                        setAuthType={setCodeType}
+                        setAuthType={handleOtpMethodChange}
                         methods={otpMethods}
                         callback={handleVerifyOtpSubmit}
-                        hideOtp={() => { reset(); setShowOtpModal(false) }}
+                        hideOtp={closeOtpModal}
+                        resetIdempotency={reset}
                         setter={() => { }}
                         resendHandler={(method) => {
                             const nextCodeType = method || codeType
+                            reset()
                             if (method) setCodeType(method)
                             return sendOtp({ wallet_id: state.selectedWallet?._id }, nextCodeType)
                         }}
