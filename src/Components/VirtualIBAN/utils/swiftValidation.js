@@ -46,7 +46,7 @@ export const validateSwiftBeneficiary = (beneficiary) => {
     //     errors.push("Postal code is required");
     // }
 
-    const bank = beneficiary.bank_details?.[0] || beneficiary.bank || {};
+    const bank = beneficiary.bank_details?.[0] || beneficiary.bank || beneficiary?.bank_details || {};
     const accountOrIban = bank.iban || bank.extras?.iban || bank.account_number;
     if (!accountOrIban || !String(accountOrIban).trim()) {
         errors.push("Bank account number / IBAN is required");
@@ -71,7 +71,7 @@ export const validateSwiftBeneficiary = (beneficiary) => {
     // if (!bankCountry || !ISO3_REGEX.test(String(bankCountry).trim())) {
     //     errors.push("Bank country (3-letter ISO code) is required");
     // }
-console.log('errors',errors)
+
     return {
         isValid: errors.length === 0,
         errors
