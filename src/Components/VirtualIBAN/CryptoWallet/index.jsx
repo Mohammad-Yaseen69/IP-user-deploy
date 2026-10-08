@@ -16,17 +16,7 @@ const INITIAL_STATE = {
     accountType: "crypto",
 }
 
-/**
- * "Add crypto wallet" flow: account type -> asset -> activation -> initiated.
- * Every supported network for the asset is provisioned automatically,
- * so there is no network choice to make.
- *
- * While the initiate request is in flight the modal is locked: no close
- * button, no back, no backdrop or Esc dismissal.
- *
- * `startAtAsset` skips the fiat/crypto choice, which is how the
- * Crypto & Stablecoins page opens it.
- */
+
 const AddCryptoWalletFlow = ({ isOpen, toggle, onFiatSelected, onCreated, startAtAsset = false }) => {
     const { t } = useTranslation()
     const width = useWindowWidth()
@@ -38,9 +28,6 @@ const AddCryptoWalletFlow = ({ isOpen, toggle, onFiatSelected, onCreated, startA
     const [accountType, setAccountType] = useState(INITIAL_STATE.accountType)
     const [assetId, setAssetId] = useState(null)
     const [createdAsset, setCreatedAsset] = useState(null)
-
-    // Real availability: hide region-restricted assets, mark owned ones read-only.
-    // `comingSoon` assets stay listed but are not selectable.
     const assets = useMemo(
         () => ASSETS
             .filter((asset) => !(asset.restrictedInEurope && isEuropean))
@@ -50,8 +37,6 @@ const AddCryptoWalletFlow = ({ isOpen, toggle, onFiatSelected, onCreated, startA
 
     const asset = useMemo(() => assets.find((a) => a.id === assetId), [assets, assetId])
 
-    // Reset only on open. Creating a wallet refreshes the wallet list, which
-    // rebuilds `assets` — resetting on that would throw away the final step.
     const wasOpen = useRef(false)
     useEffect(() => {
         if (isOpen && !wasOpen.current) {
@@ -63,7 +48,6 @@ const AddCryptoWalletFlow = ({ isOpen, toggle, onFiatSelected, onCreated, startA
         wasOpen.current = isOpen
     }, [isOpen, firstStep, assets])
 
-    // Guard against a tab close / reload while the request is in flight.
     useEffect(() => {
         if (!creating) return undefined
         const warn = (e) => {
@@ -74,8 +58,7 @@ const AddCryptoWalletFlow = ({ isOpen, toggle, onFiatSelected, onCreated, startA
         return () => window.removeEventListener("beforeunload", warn)
     }, [creating])
 
-    // Never dismissable while the request is running.
-    const close = () => {
+   const close = () => {
         if (creating) return
         toggle?.()
     }
