@@ -267,7 +267,7 @@ const PurposeStep = ({ amount, currencyCode, purpose, setPurpose, description, s
             {/* <div className={styles.customInputWrapper}> */}
             <TextField label={t("Additional information (optional)")} value={additionalInfo} onChange={setAdditionalInfo} />
             <div className={styles.infoStrip}>
-                <Info size={16} className={styles.infoIcon} />
+                <Info size={18} className={styles.infoIcon} />
                 <span>{t("SEPA transfers deliver the full amount and carry no correspondent fees, so there is no OUR/SHA/BEN choice to make.")}</span>
             </div>
         </div>
