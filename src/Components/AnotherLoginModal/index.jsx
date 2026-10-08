@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router'
 import { Modal, ModalBody } from 'reactstrap'
 import { X } from 'react-feather'
 import { useTranslation } from 'react-i18next'
+import { clearAuthStorage, getLoginPath } from "../../utils/Functions/loginPage"
 
 const AnotherLoginModal = ({ isOpen, toggle }) => {
     const [timer, setTimer] = useState(5)
@@ -14,13 +15,11 @@ const AnotherLoginModal = ({ isOpen, toggle }) => {
 
 
     const logoutHandler = () => {
-        const coun = localStorage.getItem("ip_country")
-        localStorage.clear()
-        localStorage.setItem("ip_country", coun)
+        clearAuthStorage()
         clearData()
         toggle()
         setIsOpenState(false)
-        navigate("/login")
+        navigate(getLoginPath())
     }
 
     useEffect(() => {

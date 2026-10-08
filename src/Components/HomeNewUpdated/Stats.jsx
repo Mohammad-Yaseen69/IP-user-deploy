@@ -99,6 +99,7 @@ const Stats = ({ currentWallet }) => {
             };
 
             const encrypted = encryptData(data);
+            
 
             try {
                 const res = await axios.post(
@@ -145,10 +146,10 @@ const Stats = ({ currentWallet }) => {
         setIsLoading(false)
     };
     useEffect(() => {
-        if (currentWallet) {
+        if (currentWallet?.wallet_id) {
             fetchData();
         }
-    }, [currentWallet]);
+    }, [currentWallet?.wallet_id]);
 
 
     useEffect(() => {

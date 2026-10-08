@@ -49,7 +49,7 @@ const ACTIVITY_RULES = {
     outgoingPayments: required.text('outgoingPayments'),
 }
 
-const ActivityStep = ({ onNext, onBack, data = {}, currentStep}) => {
+const ActivityStep = ({ onNext, onBack, onChange, data = {}, currentStep}) => {
     const { t } = useTranslation()
     const [showCountryDropdown, setShowCountryDropdown] = useState(false)
     const isMobile = useMediaQuery('(max-width:600px)');
@@ -82,6 +82,10 @@ const ActivityStep = ({ onNext, onBack, data = {}, currentStep}) => {
     })
 
     const { err, validate } = useStepValidation(form, ACTIVITY_RULES);
+    
+    useEffect(() => {
+        onChange?.(form)
+    }, [form])
 
     const industryOptions = useMemo(() => {
         return bvnkIndustryReference.map(group => ({

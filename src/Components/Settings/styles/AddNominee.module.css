@@ -29,6 +29,18 @@
     object-fit: cover;
 }
 
+.imageBox{
+    position: relative;   
+    img { 
+        position: absolute;
+    }
+    label{
+        z-index: 2;
+        position: relative;
+        background-color: #ffffff7a;
+    }
+}
+
 .top_right {
     display: flex;
     flex-direction: column;

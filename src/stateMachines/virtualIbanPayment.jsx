@@ -6,6 +6,7 @@ export const STEPS = {
     VERIFICATION: "VERIFICATION",
     PAYMENT_METHOD: "PAYMENT_METHOD",
     PAYMENT_DETAILS: "PAYMENT_DETAILS",
+    PRICING: "PRICING",
     SUMMARY: "SUMMARY",
     PENDING: "PENDING",
     DONE: "DONE",
@@ -65,9 +66,15 @@ export const SIDEBAR_STEPS = [
         stepName: STEPS.PAYMENT_METHOD,
         stepLabel: "STEP 04",
         label: "Payment",
-        alsoActiveFor: [STEPS.PAYMENT_DETAILS, STEPS.SUMMARY],
+        alsoActiveFor: [STEPS.PAYMENT_DETAILS],
     },
-    { stepName: STEPS.DONE, stepLabel: "STEP 05", label: "Done" },
+    {
+        stepName: STEPS.PRICING,
+        stepLabel: "STEP 05",
+        label: "Pricing",
+        alsoActiveFor: [STEPS.SUMMARY],
+    },
+    { stepName: STEPS.DONE, stepLabel: "STEP 06", label: "Done" },
 ]
 
 export const getSidebarSteps = (data = {}) => {
@@ -90,24 +97,28 @@ export const transitions = {
         back: () => null,
     },
     [STEPS.FEES]: {
-        next: (data) => data?.kycApproved ? (data?.skipPaymentStep ? STEPS.SUMMARY : STEPS.PAYMENT_METHOD) : STEPS.VERIFICATION,
+        next: (data) => data?.kycApproved ? (data?.skipPaymentStep ? STEPS.PRICING : STEPS.PAYMENT_METHOD) : STEPS.VERIFICATION,
         back: () => STEPS.JURISDICTION,
     },
     [STEPS.VERIFICATION]: {
-        next: (data) => data?.skipPaymentStep ? STEPS.SUMMARY : STEPS.PAYMENT_METHOD,
+        next: (data) => data?.skipPaymentStep ? STEPS.PRICING : STEPS.PAYMENT_METHOD,
         back: () => STEPS.FEES,
     },
     [STEPS.PAYMENT_METHOD]: {
-        next: (data) => data?.paymentType === "paypal" ? STEPS.SUMMARY : STEPS.PAYMENT_DETAILS,
+        next: (data) => data?.paymentType === "paypal" ? STEPS.PRICING : STEPS.PAYMENT_DETAILS,
         back: (data) => data?.kycApproved ? STEPS.FEES : STEPS.VERIFICATION,
     },
     [STEPS.PAYMENT_DETAILS]: {
-        next: () => STEPS.SUMMARY,
+        next: () => STEPS.PRICING,
         back: () => STEPS.PAYMENT_METHOD,
+    },
+    [STEPS.PRICING]: {
+        next: () => STEPS.SUMMARY,
+        back: (data) => data?.skipPaymentStep ? (data?.kycApproved ? STEPS.FEES : STEPS.VERIFICATION) : data?.paymentType === "paypal" ? STEPS.PAYMENT_METHOD : STEPS.PAYMENT_DETAILS,
     },
     [STEPS.SUMMARY]: {
         next: () => STEPS.PENDING,
-        back: (data) => data?.skipPaymentStep ? (data?.kycApproved ? STEPS.FEES : STEPS.VERIFICATION) : data?.paymentType === "paypal" ? STEPS.PAYMENT_METHOD : STEPS.PAYMENT_DETAILS,
+        back: () => STEPS.PRICING,
     },
     [STEPS.PENDING]: {
         next: () => STEPS.DONE,
@@ -125,6 +136,8 @@ export const getDisabledState = (stepName, data) => {
             return !data.jurisdiction
         case STEPS.FEES:
             return !data.feesAccepted
+        case STEPS.PRICING:
+            return !data.pricingAccepted
         case STEPS.PAYMENT_METHOD:
             return !data.paymentType
         case STEPS.PAYMENT_DETAILS:
@@ -183,9 +196,9 @@ export const isSidebarStepActive = (sidebarItem, currentStep) => {
 export const isSidebarStepCompleted = (sidebarItem, currentStep, data = {}) => {
     const order = getSidebarSteps(data).map((item) => item.stepName)
     const currentRank =
-        currentStep === STEPS.SUMMARY && data?.skipPaymentStep
-            ? order.indexOf(STEPS.DONE)
-            : currentStep === STEPS.SUMMARY || currentStep === STEPS.PAYMENT_DETAILS
+        currentStep === STEPS.SUMMARY
+            ? order.indexOf(STEPS.PRICING)
+            : currentStep === STEPS.PAYMENT_DETAILS
                 ? order.indexOf(STEPS.PAYMENT_METHOD)
                 : currentStep === STEPS.PENDING
                     ? order.indexOf(STEPS.DONE)

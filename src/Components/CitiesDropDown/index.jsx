@@ -6,6 +6,7 @@ import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { decryptData } from '../../Helper/EssentilaMethods/Decryption';
 import { useMediaQuery } from '@mui/material';
+import { ChevronDown, ChevronUp } from 'react-feather';
 
 const getCities = async (iso2, stateCode) => {
     const stateQuery = iso2 === 'US' && stateCode
@@ -110,7 +111,7 @@ const CitiesDropDown = ({ userCity, setUserCity, disabled = false, iso_3 = "", i
                         </>
                 }
 
-                {!disabled && !isWaitingForState && <span>{ }</span>}
+                {isOpen? <ChevronUp size={16}/> : <ChevronDown size={16}/>}
 
             </DropdownToggle>
             <DropdownMenu style={{ maxHeight: "350px", overflowY: "auto", overflowX: "auto", width: "100%" }}>
