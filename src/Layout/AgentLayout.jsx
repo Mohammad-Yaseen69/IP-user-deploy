@@ -1,14 +1,19 @@
 import React, { useContext, useEffect } from "react";
 import { Outlet, Navigate, useLocation } from "react-router-dom";
 import styles from "./AgentLayout.module.css";
-import { AgentSidebar } from "../Common/Component/agentSidebar/AgentSidebar";
 import NewMenu from "../Common/NewMenu";
 import { UserContext } from "../Context/UserContext";
 import AssistantWidget from "../Components/AssistantWidget";
 import InstaPayLoader from "../Components/Loader";
+import SidebarIndex from "../Common/Component/agentSidebar";
+import useWindowWidth from "../utils/useWindowWidth";
+import MobileSidebar from "../Common/Component/agentSidebar/MobileSidebar";
+import { getLoginPath } from "../utils/Functions/loginPage";
 
 const AgentLayout = () => {
-    const { userDetails, verifyToken } = useContext(UserContext) || {};
+    const width = useWindowWidth();
+    const isMobile = width <= 780;
+    const { userDetails, verifyToken, isSidebarOpen } = useContext(UserContext) || {};
     const token = localStorage.getItem("token");
     const location = useLocation();
 
@@ -19,7 +24,7 @@ const AgentLayout = () => {
     }, [location]);
 
     if (!token) {
-        return <Navigate to="/login" replace />;
+        return <Navigate to={getLoginPath()} replace />;
     }
 
     if (userDetails === null) {
@@ -32,12 +37,18 @@ const AgentLayout = () => {
 
     return (
         <div className={styles.layout}>
-            <aside className={styles.sidebar}>
-                <NewMenu />
-                <div className={styles.agentSidebarContainer}>
-                    <AgentSidebar />
+            {isMobile ? (
+                <div className={styles.mobileHeaderWrapper}>
+                    <MobileSidebar />
                 </div>
-            </aside>
+            ) : (
+                <aside className={`${styles.sidebar} ${!isSidebarOpen ? styles.sidebarCollpased : ""}`}>
+                    <NewMenu />
+                    <div className={styles.agentSidebarContainer}>
+                            <SidebarIndex />
+                    </div>
+                </aside>
+            )}
 
             <main className={styles.main}>
                 <div className={styles.container}>

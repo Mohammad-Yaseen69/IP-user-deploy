@@ -99,6 +99,7 @@ const Stats = ({ currentWallet }) => {
             };
 
             const encrypted = encryptData(data);
+            
 
             try {
                 const res = await axios.post(

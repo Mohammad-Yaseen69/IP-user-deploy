@@ -21,7 +21,7 @@ import {
     prefillEditBag,
 } from './buildPayloads';
 import { useAvailableMethods, useRequiredFields, useRequirements } from './useVendorRequirements';
-import { getEditRequirements, getFieldDef } from './vendorFields';
+import { BANK_COUNTRY_FIELD, getEditRequirements, getFieldDef } from './vendorFields';
 import { apiWrapper } from '../../../../utils/Functions/apiWrapper';
 import { UserContext } from '../../../../Context/UserContext';
 import { handlePaymentApiError } from '../../../../utils/Functions/handlePaymentApiError';
@@ -41,7 +41,7 @@ const STAGE_LABELS = {
 const MODE_STAGES = {
     create: ['recipient', 'method', 'details', 'confirm'],
     channel: ['method', 'details', 'confirm'],
-    edit: ['recipient', 'details', 'confirm'],
+    edit: ['details', 'confirm'],
     view: ['details'],
 };
 
@@ -153,11 +153,16 @@ const AddBeneficiaryFlowV2 = ({
             return;
         }
 
+        const channelDetails = existingBeneficiary?.bank_details?.[0]?.extras ?? existingBeneficiary?.mobile_wallet?.[0]?.extras ?? existingBeneficiary?.crypto?.[0]?.extras;
+
         setForm({
             ...INITIAL_FORM,
             ...fixed,
             recipient_type: existingBeneficiary.beneficiary_type || 'individual',
             country: existingBeneficiary.country_iso_code || initialCountry || '',
+            service_id: channelDetails?.service_id,
+            method: channelDetails?.method,
+            channel: channelDetails,
             beneficiary: isBeneficiaryMode
                 ? prefillEditBag(existingBeneficiary)
                 : prefillBeneficiaryBag(existingBeneficiary),
@@ -200,7 +205,7 @@ const AddBeneficiaryFlowV2 = ({
     });
 
     const requirements = useMemo(
-        () => (isBeneficiaryMode ? getEditRequirements(form.recipient_type) : vendorRequirements),
+        () => vendorRequirements,
         [isBeneficiaryMode, form.recipient_type, vendorRequirements],
     );
 
@@ -220,6 +225,18 @@ const AddBeneficiaryFlowV2 = ({
             beneficiary: stale.reduce((bag, name) => ({ ...bag, [name]: prev.country }), prev.beneficiary),
         }));
     }, [form.country, form.beneficiary, lockedFields]);
+
+
+    const asksBankCountry = (requirements?.channelFields || []).includes(BANK_COUNTRY_FIELD);
+
+    useEffect(() => {
+        if (!asksBankCountry || !form.country || form.channel[BANK_COUNTRY_FIELD]) return;
+
+        setForm((prev) => ({
+            ...prev,
+            channel: { ...prev.channel, [BANK_COUNTRY_FIELD]: prev.country },
+        }));
+    }, [asksBankCountry, form.country, form.channel]);
 
     const setField = useCallback((field, value) => {
         setForm((prev) => ({ ...prev, [field]: value }));
@@ -296,11 +313,13 @@ const AddBeneficiaryFlowV2 = ({
 
     const validateDetails = () => {
         const next = { beneficiary: {}, channel: {} };
-
+        const nameFields = ['firstname', 'lastname', 'legalname', 'company_name']
         if (requirements) {
             (requirements.requiredBeneficiary || []).forEach((name) => {
                 if (!String(form.beneficiary[name] || '').trim()) {
                     next.beneficiary[name] = 'Required.';
+                } else if (nameFields.includes(name.toLowerCase())  && !/^[\p{L}\s'_-]+$/u.test(form.beneficiary[name])) {
+                    next.beneficiary[name] = 'Invalid.';
                 }
             });
             (requirements.requiredChannel || []).forEach((name) => {
@@ -355,16 +374,32 @@ const AddBeneficiaryFlowV2 = ({
         else if (handleClose) handleClose();
     };
 
+    const saveChannel = async (beneficiaryId) => {
+        const channelPayload = buildChannelPayload({
+            form,
+            transactionType,
+        });
+
+        await apiWrapper({
+            endpoint: `/api/beneficiary/v2/${beneficiaryId}/channel`,
+            method: 'POST',
+            payload: { ...channelPayload, removeOld: isEditMode },
+            isEncrypted: true,
+            isDecrypted: true,
+        });
+    }
+
     const submit = async () => {
         if (isViewMode) return;
 
         setSaving(true);
         setProviderError(null);
+        let beneficiaryId = existingBeneficiary?._id;
 
         try {
             if (isEditMode) {
                 const updated = await apiWrapper({
-                    endpoint: `/api/beneficiary/v2/${existingBeneficiary._id}`,
+                    endpoint: `/api/beneficiary/v2/${beneficiaryId}`,
                     method: 'PUT',
                     payload: buildBeneficiaryUpdatePayload({
                         form,
@@ -374,7 +409,7 @@ const AddBeneficiaryFlowV2 = ({
                     isEncrypted: true,
                     isDecrypted: true,
                 });
-
+                saveChannel(beneficiaryId);
                 toast.success('Beneficiary updated.');
                 if (onSaveSuccess) {
                     onSaveSuccess(updated?.data || updated?.beneficiaryData || existingBeneficiary, false);
@@ -388,7 +423,6 @@ const AddBeneficiaryFlowV2 = ({
                 countries: allowedCountries,
             });
 
-            let beneficiaryId = existingBeneficiary?._id;
             let beneficiaryRecord = existingBeneficiary;
 
             if (isChannelMode) {
@@ -417,18 +451,7 @@ const AddBeneficiaryFlowV2 = ({
                 }
             }
 
-            const channelPayload = buildChannelPayload({
-                form,
-                transactionType,
-            });
-
-            await apiWrapper({
-                endpoint: `/api/beneficiary/v2/${beneficiaryId}/channel`,
-                method: 'POST',
-                payload: channelPayload,
-                isEncrypted: true,
-                isDecrypted: true,
-            });
+            saveChannel(beneficiaryId);
 
             toast.success(isChannelMode ? 'Payout channel added.' : 'Beneficiary saved.');
             if (onSaveSuccess) onSaveSuccess(beneficiaryRecord, !isChannelMode);

@@ -1,6 +1,7 @@
 import { toast } from 'react-toastify';
 import { io } from 'socket.io-client';
 import notification_sound from "./audio/notification.wav"
+import { clearAuthStorage, getLoginPath } from "../utils/Functions/loginPage"
 
 class SocketsService {
     constructor(config, checkAuth) {
@@ -77,10 +78,8 @@ class SocketsService {
             if (onAnotherLogin) {
                 onAnotherLogin();
             } else {
-                const coun = localStorage.getItem("ip_country")
-                localStorage.clear()
-                localStorage.setItem("ip_country", coun)
-                window.location.pathname = "/login";
+                clearAuthStorage()
+                window.location.pathname = getLoginPath();
             }
 
         })

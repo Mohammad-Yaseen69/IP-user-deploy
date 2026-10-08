@@ -1,6 +1,7 @@
 import { apiErrorMessage } from "../../Components/PaymentsNewer/InternationalFlow"
 import { LimitsErrorMessage } from "./paymentLimits"
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption"
+import { clearAuthStorage, getLoginPath } from "./loginPage"
 
 export const handlePaymentApiError = ({
     error,
@@ -31,11 +32,9 @@ export const handlePaymentApiError = ({
 
             setProfileLockTime?.(timeInSec)
 
-            const coun = localStorage.getItem("ip_country")
-            localStorage.clear()
-            localStorage.setItem("ip_country", coun)
+            clearAuthStorage()
 
-            navigate?.("/login")
+            navigate?.(getLoginPath())
             return
         }
 

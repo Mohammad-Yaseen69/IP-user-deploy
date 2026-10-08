@@ -25,6 +25,7 @@ import { startAuthentication } from '@simplewebauthn/browser'
 import VpnModal from '../VpnModal'
 import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap'
 import LocationDeniedModal from '../LocationDeniedModal'
+import { LOGIN_PAGE_TYPES, setLastLoginUsedPage } from '../../../utils/Functions/loginPage'
 
 const Index = () => {
   const { sendLoginOtp, verifyLoginOtp, getAuthDetails, biometricChallenge, biometricVerify, createLoginHistory } = useAgentAuth();
@@ -582,6 +583,7 @@ const Index = () => {
     localStorage.setItem("login", true)
     localStorage.setItem("token", token)
     localStorage.setItem("isAgentLogin", true)
+    setLastLoginUsedPage(LOGIN_PAGE_TYPES.AGENT)
     setUserDetails(userAccount)
     setIsAgentLogin(true)
     setAgentDetails(userAccount?.agentDetails)

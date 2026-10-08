@@ -1,28 +1,25 @@
+import { Box, Button, Card, Chip, CircularProgress, Dialog, DialogContent, DialogTitle, Grid, IconButton, Typography } from '@mui/material';
 import axios from 'axios';
 import { useCallback, useContext, useEffect, useState } from 'react';
-import { CheckCircle, Clock, Copy, Plus, Shield, XCircle } from 'react-feather';
+import { CheckCircle, Clock, Copy, Edit2, Plus, Shield, Trash, X, XCircle } from 'react-feather';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
-import { Badge, Button, Card, CardBody, CardHeader, Col, FormGroup, Input, Label, Row, Spinner, Table } from 'reactstrap';
 import { UserContext } from '../../../Context/UserContext';
 import { decryptData } from '../../../Helper/EssentilaMethods/Decryption';
 import { encryptData } from '../../../Helper/EssentilaMethods/Encryption';
 import useWindowWidth from '../../../utils/useWindowWidth';
 import TopRight from '../../topRight';
 import styles from '../styles/index.module.css';
+import FeeModelEditHistory from './FeeModelEditHistory';
+import FeeModelForm from './FeeModelForm';
+import { useEditFeeRequest, useFeeRequestEditHistory } from './hooks/useFeeRequestEdit';
+import { useIdempotency } from '../../../hooks/Payments/useIdempotency';
+import { useMutation } from '@tanstack/react-query';
+import { apiWrapper } from '../../../utils/Functions/apiWrapper';
+import { DEFAULT_FEE_ITEMS, NO_PERCENT_FEE_IDS, sanitizeFeeSchedule, scheduleFromRequest, updateFeeItem } from './feeSchedule';
 
-const DEFAULT_FEE_ITEMS = [
-    { id: "iban_activation", name: "IBAN Activation Fee (One-Time)", flatEuro: 500, percentAmount: 0 },
-    { id: "monthly_iban_fee", name: "Monthly IBAN Fee", flatEuro: 50, percentAmount: 0 },
-    { id: "sepa_inward", name: "SEPA Inward Transfer", flatEuro: 1, percentAmount: 0 },
-    { id: "sepa_outward", name: "SEPA Outward Transfer", flatEuro: 2, percentAmount: 0 },
-    { id: "swift_inward", name: "SWIFT Inward Transfer", flatEuro: 10, percentAmount: 0.1 },
-    { id: "swift_outward", name: "SWIFT Outward Transfer", flatEuro: 15, percentAmount: 0.2 },
-    { id: "crypto_ramp", name: "Crypto On/Off Ramp", flatEuro: 0, percentAmount: 1.0 },
-    { id: "fx_margin", name: "FX Margin", flatEuro: 0, percentAmount: 0.5 },
-];
-
-const NO_PERCENT_FEE_IDS = ['iban_activation', 'monthly_iban_fee'];
+const primaryButtonSx = { textTransform: 'none', background: '#5926F0', '&:hover': { background: '#4A1FD0' } };
+const chipSx = { fontWeight: 600, fontSize: '12px', px: 0.5 };
 
 const FeeModelRequests = () => {
     const { t } = useTranslation();
@@ -37,6 +34,13 @@ const FeeModelRequests = () => {
 
     const [requests, setRequests] = useState([]);
     const [loadingRequests, setLoadingRequests] = useState(false);
+
+    const [editingRequest, setEditingRequest] = useState(null);
+    const [editTitle, setEditTitle] = useState('');
+    const [editFeeSchedule, setEditFeeSchedule] = useState(DEFAULT_FEE_ITEMS);
+    const { getKey: getEditKey, reset: resetEditKey } = useIdempotency();
+
+    const { data: editHistory = [], isLoading: loadingEditHistory } = useFeeRequestEditHistory();
 
     const fetchRequests = useCallback(async () => {
         setLoadingRequests(true);
@@ -62,15 +66,38 @@ const FeeModelRequests = () => {
         fetchRequests();
     }, [fetchRequests]);
 
+    const { mutate: editFeeRequest, isPending: savingEdit } = useEditFeeRequest({
+        onSuccess: (dec) => {
+            toast.success(dec?.message || t("Fee model request updated successfully!"));
+            resetEditKey();
+            setEditingRequest(null);
+            fetchRequests();
+        },
+        onError: (decErr) => {
+            toast.error(decErr?.message || t("Failed to update fee model request."));
+        },
+    });
+
+    const { mutate: deleteRequest, isPending: deleting } = useMutation({
+        mutationFn: (requestId) =>
+            apiWrapper({
+                endpoint: `/api/iban-fees/delete-request-pack/${requestId}`,
+                method: "DELETE",
+                isEncrypted: true,
+                isDecrypted: true,
+            }),
+        onSuccess: (res) => {
+            fetchRequests();
+            toast.success(res?.message ?? t("Request deleted successfully."));
+        },
+        onError: (error) => {
+            const message = error?.message || error?.data?.message;
+            toast.error(message ?? t("Failed to delete request."));
+        },
+    });
+
     const handleFeeChange = (index, field, value) => {
-        const updated = [...feeSchedule];
-        const targetItem = updated[index];
-        if (field === 'percentAmount' && NO_PERCENT_FEE_IDS.includes(targetItem.id)) {
-            updated[index] = { ...targetItem, percentAmount: 0 };
-        } else {
-            updated[index] = { ...targetItem, [field]: parseFloat(value) || 0 };
-        }
-        setFeeSchedule(updated);
+        setFeeSchedule(prev => updateFeeItem(prev, index, field, value));
     };
 
     const handleSubmit = async (e) => {
@@ -82,12 +109,7 @@ const FeeModelRequests = () => {
 
         setSubmitting(true);
         try {
-            const sanitizedSchedule = feeSchedule.map(item => {
-                if (NO_PERCENT_FEE_IDS.includes(item.id)) {
-                    return { ...item, percentAmount: 0 };
-                }
-                return item;
-            });
+            const sanitizedSchedule = sanitizeFeeSchedule(feeSchedule);
 
             const payload = {
                 account_id: userDetails?._id,
@@ -117,6 +139,40 @@ const FeeModelRequests = () => {
         }
     };
 
+    const openEditModal = (req) => {
+        resetEditKey();
+        setEditingRequest(req);
+        setEditTitle(req.title || '');
+        setEditFeeSchedule(scheduleFromRequest(req.fee_schedule));
+    };
+
+    const closeEditModal = () => {
+        if (savingEdit) return;
+        setEditingRequest(null);
+    };
+    const handleEditFeeChange = (index, field, value) => {
+        setEditFeeSchedule(prev => updateFeeItem(prev, index, field, value));
+    };
+
+    const handleEditSubmit = async (e) => {
+        e.preventDefault();
+        if (!editTitle.trim()) {
+            toast.error(t("Please enter a title for the fee model request."));
+            return;
+        }
+
+        editFeeRequest({
+            requestId: editingRequest._id,
+            idempotencyKey: getEditKey(),
+            payload: {
+                account_id: userDetails?._id,
+                title: editTitle.trim(),
+                fee_schedule: sanitizeFeeSchedule(editFeeSchedule),
+                agent_revenue_model: editingRequest.agent_revenue_model || revenueModel,
+            },
+        });
+    };
+
     const copyToClipboard = (text, type = "code") => {
         navigator.clipboard.writeText(text);
         if (type === "link") {
@@ -125,6 +181,20 @@ const FeeModelRequests = () => {
             toast.info(t("Copied referral code: ") + text);
         }
     };
+
+    const tabButtonStyle = (tab) => ({
+        padding: '12px 20px',
+        background: 'none',
+        border: 'none',
+        fontSize: '15px',
+        fontWeight: 600,
+        color: activeTab === tab ? '#5926F0' : '#6B7280',
+        borderBottom: activeTab === tab ? '2px solid #5926F0' : '2px solid transparent',
+        cursor: 'pointer',
+        display: 'flex',
+        alignItems: 'center',
+        gap: '6px'
+    });
 
     return (
         <div className={styles.container}>
@@ -139,115 +209,89 @@ const FeeModelRequests = () => {
             </div>
 
             <div className={styles.main}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
-                    <div style={{ display: 'flex', gap: '16px', borderBottom: '1px solid #E5E7EB' }}>
-                        <button
-                            onClick={() => setActiveTab('list')}
-                            style={{
-                                padding: '12px 20px',
-                                background: 'none',
-                                border: 'none',
-                                fontSize: '15px',
-                                fontWeight: 600,
-                                color: activeTab === 'list' ? '#5926F0' : '#6B7280',
-                                borderBottom: activeTab === 'list' ? '2px solid #5926F0' : '2px solid transparent',
-                                cursor: 'pointer'
-                            }}
-                        >
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+                    <Box sx={{ display: 'flex', gap: '16px', borderBottom: '1px solid #E5E7EB' }}>
+                        <button onClick={() => setActiveTab('list')} style={tabButtonStyle('list')}>
                             {t("Requested Models")} ({requests.length})
                         </button>
-                        <button
-                            onClick={() => setActiveTab('create')}
-                            style={{
-                                padding: '12px 20px',
-                                background: 'none',
-                                border: 'none',
-                                fontSize: '15px',
-                                fontWeight: 600,
-                                color: activeTab === 'create' ? '#5926F0' : '#6B7280',
-                                borderBottom: activeTab === 'create' ? '2px solid #5926F0' : '2px solid transparent',
-                                cursor: 'pointer',
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: '6px'
-                            }}
-                        >
+                        <button onClick={() => setActiveTab('create')} style={tabButtonStyle('create')}>
                             <Plus size={16} /> {t("New Model Request")}
                         </button>
-                    </div>
+                    </Box>
 
                     {activeTab === 'list' && (
-                        <Button
-                            style={{ background: '#5926F0', border: 'none' }}
-                            onClick={() => setActiveTab('create')}
-                        >
-                            <Plus size={16} style={{ marginRight: '6px' }} />
+                        <Button variant="contained" startIcon={<Plus size={16} />} sx={primaryButtonSx} onClick={() => setActiveTab('create')}>
                             {t("Request New Fee Model")}
                         </Button>
                     )}
-                </div>
+                </Box>
 
                 {activeTab === 'list' ? (
                     <div>
                         {loadingRequests ? (
-                            <div style={{ padding: '60px', textAlign: 'center' }}>
-                                <Spinner style={{ color: '#5926F0', width: '2.5rem', height: '2.5rem' }} />
-                                <div style={{ marginTop: '12px', fontSize: '14px', color: '#6B7280' }}>
+                            <Box sx={{ p: '60px', textAlign: 'center' }}>
+                                <CircularProgress sx={{ color: '#5926F0' }} />
+                                <Typography sx={{ mt: 1.5, fontSize: '14px', color: '#6B7280' }}>
                                     {t("Loading fee model requests...")}
-                                </div>
-                            </div>
+                                </Typography>
+                            </Box>
                         ) : requests.length === 0 ? (
-                            <Card style={{ borderRadius: '12px', border: '1px solid #E5E7EB', padding: '40px', textAlign: 'center' }}>
+                            <Card variant="outlined" sx={{ borderRadius: '12px', borderColor: '#E5E7EB', p: '40px', textAlign: 'center' }}>
                                 <Shield size={42} color="#9CA3AF" style={{ marginBottom: '12px' }} />
-                                <h3 style={{ fontSize: '18px', fontWeight: 700, color: '#111827', margin: 0 }}>
+                                <Typography component="h3" sx={{ fontSize: '18px', fontWeight: 700, color: '#111827' }}>
                                     {t("No Fee Model Requests Submitted")}
-                                </h3>
-                                <p style={{ fontSize: '14px', color: '#6B7280', marginTop: '6px', marginBottom: '20px' }}>
+                                </Typography>
+                                <Typography sx={{ fontSize: '14px', color: '#6B7280', mt: 0.75, mb: 2.5 }}>
                                     {t("Request custom fee schedules for your clients. Once approved by admin, you will receive a unique referral code.")}
-                                </p>
-                                <div>
-                                    <Button
-                                        style={{ background: '#5926F0', border: 'none' }}
-                                        onClick={() => setActiveTab('create')}
-                                    >
-                                        <Plus size={16} style={{ marginRight: '6px' }} />
-                                        {t("Create Your First Request")}
-                                    </Button>
-                                </div>
+                                </Typography>
+                                <Button variant="contained" startIcon={<Plus size={16} />} sx={primaryButtonSx} onClick={() => setActiveTab('create')}>
+                                    {t("Create Your First Request")}
+                                </Button>
                             </Card>
                         ) : (
-                            <Row>
+                            <Grid container spacing={2.5} sx={{ mb: 2.5 }}>
                                 {requests.map((req) => (
-                                    <Col md={12} lg={6} key={req._id} style={{ marginBottom: '20px' }}>
-                                        <Card style={{ borderRadius: '12px', border: '1px solid #E5E7EB', height: '100%', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
-                                            <CardHeader style={{ background: '#FFFFFF', borderBottom: '1px solid #F3F4F6', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 20px' }}>
+                                    <Grid item xs={12} lg={6} key={req._id}>
+                                        <Card variant="outlined" sx={{ borderRadius: '12px', borderColor: '#E5E7EB', height: '100%', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
+                                            <Box sx={{ background: '#FFFFFF', borderBottom: '1px solid #F3F4F6', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 1, p: '16px 20px' }}>
                                                 <div>
-                                                    <h4 style={{ fontSize: '17px', fontWeight: 700, margin: 0, color: '#111827' }}>
-                                                        {req.title}
-                                                    </h4>
-                                                    <span style={{ fontSize: '12px', color: '#6B7280' }}>
+                                                    <Typography component="h4" sx={{ fontSize: '17px', fontWeight: 700, color: '#111827' }}>
+                                                        {req?.title}
+                                                    </Typography>
+                                                    <Typography component="span" sx={{ fontSize: '12px', color: '#6B7280' }}>
                                                         {t("Requested on")}: {new Date(req.createdAt).toLocaleDateString()}
-                                                    </span>
+                                                    </Typography>
                                                 </div>
-                                                <div>
+                                                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                                    <Button
+                                                        size="small"
+                                                        variant="outlined"
+                                                        startIcon={<Edit2 size={12} />}
+                                                        sx={{ textTransform: 'none', color: '#5926F0', borderColor: '#5926F0', p: '2px 10px', minWidth: 0 }}
+                                                        onClick={() => openEditModal(req)}
+                                                    >
+                                                        {t("Edit")}
+                                                    </Button>
+                                                    <IconButton
+                                                        size="small"
+                                                        sx={{ bgcolor: '#e64067', color: 'white', '&:hover': { bgcolor: '#c9365a' } }}
+                                                        onClick={() => deleteRequest(req._id)}
+                                                        disabled={deleting}
+                                                    >
+                                                        <Trash size={14} />
+                                                    </IconButton>
                                                     {req.status === 'pending' && (
-                                                        <Badge color="warning" pill style={{ padding: '6px 12px', fontSize: '12px' }}>
-                                                            <Clock size={12} style={{ marginRight: '4px' }} /> {t("PENDING REVIEW")}
-                                                        </Badge>
+                                                        <Chip size="small" color="warning" icon={<Clock size={12} />} label={t("PENDING REVIEW")} sx={chipSx} />
                                                     )}
                                                     {req.status === 'approved' && (
-                                                        <Badge color="success" pill style={{ padding: '6px 12px', fontSize: '12px' }}>
-                                                            <CheckCircle size={12} style={{ marginRight: '4px' }} /> {t("APPROVED")}
-                                                        </Badge>
+                                                        <Chip size="small" color="success" icon={<CheckCircle size={12} />} label={t("APPROVED")} sx={chipSx} />
                                                     )}
                                                     {req.status === 'rejected' && (
-                                                        <Badge color="danger" pill style={{ padding: '6px 12px', fontSize: '12px' }}>
-                                                            <XCircle size={12} style={{ marginRight: '4px' }} /> {t("REJECTED")}
-                                                        </Badge>
+                                                        <Chip size="small" color="error" icon={<XCircle size={12} />} label={t("REJECTED")} sx={chipSx} />
                                                     )}
-                                                </div>
-                                            </CardHeader>
-                                            <CardBody style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '14px' }}>
+                                                </Box>
+                                            </Box>
+                                            <Box sx={{ p: '20px', display: 'flex', flexDirection: 'column', gap: '14px' }}>
                                                 <div style={{ background: '#F9FAFB', padding: '12px 16px', borderRadius: '8px', border: '1px solid #F3F4F6' }}>
                                                     <div style={{ fontSize: '12px', color: '#6B7280', fontWeight: 600, marginBottom: '2px' }}>
                                                         {t("PRICING SUMMARY")}
@@ -258,33 +302,50 @@ const FeeModelRequests = () => {
                                                 </div>
 
                                                 {req.status === 'approved' && (
-                                                    <div style={{ background: '#ECFDF5', padding: '14px 16px', borderRadius: '8px', border: '1px solid #A7F3D0', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                                            <div>
-                                                                <div style={{ fontSize: '11px', color: '#065F46', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-                                                                    {t("APPROVED COMMISSION")}
+                                                    (() => {
+                                                        const cType = req.comissionType || req.created_pack_id?.comissionType || 'percentage';
+                                                        const cVal = req.feesCommisionValue ?? req.created_pack_id?.feesCommisionValue ?? 0;
+                                                        const cFix = req.feesCommisionFixed ?? req.created_pack_id?.feesCommisionFixed ?? 0;
+
+                                                        const hasCommission = cVal > 0 || cFix > 0;
+
+                                                        return (
+                                                            <div style={{
+                                                                background: hasCommission ? '#ECFDF5' : '#F3F4F6',
+                                                                padding: '14px 16px',
+                                                                borderRadius: '8px',
+                                                                border: `1px solid ${hasCommission ? '#A7F3D0' : '#E5E7EB'}`,
+                                                                display: 'flex',
+                                                                flexDirection: 'column',
+                                                                gap: '8px'
+                                                            }}>
+                                                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                                                    <div>
+                                                                        <div style={{ fontSize: '11px', color: hasCommission ? '#065F46' : '#4B5563', fontWeight: 700, textTransform: 'uppercase' }}>
+                                                                            {t("APPROVED COMMISSION")}
+                                                                        </div>
+                                                                        <div style={{ fontSize: '18px', fontWeight: 800, color: hasCommission ? '#047857' : '#374151', marginTop: '2px' }}>
+                                                                            {cType === 'both' ? `${cVal}% + €${cFix}` : cType === 'fixed' ? `€${cFix > 0 ? cFix : cVal}` : `${cVal}%`}
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <Chip
+                                                                        size="small"
+                                                                        color={hasCommission ? "success" : "default"}
+                                                                        label={hasCommission ? t("Commission Active") : t("No Commission")}
+                                                                        sx={{ ...chipSx, fontSize: '11px' }}
+                                                                    />
                                                                 </div>
-                                                                <div style={{ fontSize: '18px', fontWeight: 800, color: '#047857', marginTop: '2px' }}>
-                                                                    {(() => {
-                                                                        const cType = req.comissionType || req.created_pack_id?.comissionType || 'percentage';
-                                                                        const cVal = req.feesCommisionValue ?? req.created_pack_id?.feesCommisionValue ?? 0;
-                                                                        const cFix = req.feesCommisionFixed ?? req.created_pack_id?.feesCommisionFixed ?? 0;
-                                                                        if (cType === 'both') return `${cVal}% + €${cFix}`;
-                                                                        if (cType === 'fixed') return `€${cFix > 0 ? cFix : cVal}`;
-                                                                        return `${cVal}%`;
-                                                                    })()}
+
+                                                                <div style={{ fontSize: '12px', color: hasCommission ? '#047857' : '#6B7280' }}>
+                                                                    {hasCommission
+                                                                        ? t("You earn this commission payout on all fees collected from clients under this referral model.")
+                                                                        : t("This model is active with standard zero-commission payout.")}
                                                                 </div>
                                                             </div>
-                                                            <Badge color="success" pill style={{ padding: '6px 12px', fontSize: '11px' }}>
-                                                                {t("Commission Active")}
-                                                            </Badge>
-                                                        </div>
-                                                        <div style={{ fontSize: '12px', color: '#047857' }}>
-                                                            {t("You earn this commission payout on all fees collected from clients under this referral model.")}
-                                                        </div>
-                                                    </div>
+                                                        );
+                                                    })()
                                                 )}
-
                                                 {req.status === 'approved' && req.model_code && (
                                                     <div style={{ background: '#EEF2FF', padding: '14px 16px', borderRadius: '8px', border: '1px solid #C7D2FE', display: 'flex', flexDirection: 'column', gap: '10px' }}>
                                                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -297,11 +358,13 @@ const FeeModelRequests = () => {
                                                                 </div>
                                                             </div>
                                                             <Button
-                                                                size="sm"
-                                                                style={{ background: '#4F46E5', border: 'none', display: 'flex', alignItems: 'center', gap: '6px' }}
+                                                                size="small"
+                                                                variant="contained"
+                                                                startIcon={<Copy size={14} />}
+                                                                sx={{ textTransform: 'none', background: '#4F46E5', '&:hover': { background: '#4338CA' } }}
                                                                 onClick={() => copyToClipboard(req.model_code, "code")}
                                                             >
-                                                                <Copy size={14} /> {t("Copy Code")}
+                                                                {t("Copy Code")}
                                                             </Button>
                                                         </div>
 
@@ -315,12 +378,13 @@ const FeeModelRequests = () => {
                                                                 </div>
                                                             </div>
                                                             <Button
-                                                                size="sm"
-                                                                outline
-                                                                style={{ color: '#4F46E5', borderColor: '#4F46E5', display: 'flex', alignItems: 'center', gap: '6px', whiteSpace: 'nowrap' }}
+                                                                size="small"
+                                                                variant="outlined"
+                                                                startIcon={<Copy size={14} />}
+                                                                sx={{ textTransform: 'none', color: '#4F46E5', borderColor: '#4F46E5', whiteSpace: 'nowrap' }}
                                                                 onClick={() => copyToClipboard(`${window.location.origin}/signup/${req.model_code}`, "link")}
                                                             >
-                                                                <Copy size={14} /> {t("Copy Link")}
+                                                                {t("Copy Link")}
                                                             </Button>
                                                         </div>
                                                     </div>
@@ -361,94 +425,56 @@ const FeeModelRequests = () => {
                                                         ))}
                                                     </div>
                                                 </div>
-                                            </CardBody>
+                                            </Box>
                                         </Card>
-                                    </Col>
+                                    </Grid>
                                 ))}
-                            </Row>
+                            </Grid>
                         )}
+
+                        <FeeModelEditHistory history={editHistory} loading={loadingEditHistory} />
                     </div>
                 ) : (
-                    <Card style={{ borderRadius: '12px', border: '1px solid #E5E7EB', padding: '24px' }}>
-                        <form onSubmit={handleSubmit}>
-                            <h3 style={{ fontSize: '18px', fontWeight: 700, margin: '0 0 16px 0', color: '#111827' }}>
-                                {t("Request New Fee Model")}
-                            </h3>
-                            <FormGroup>
-                                <Label style={{ fontWeight: 600, fontSize: '14px', color: '#374151' }}>
-                                    {t("Fee Model Title / Name")} <span style={{ color: 'red' }}>*</span>
-                                </Label>
-                                <Input
-                                    type="text"
-                                    placeholder={t("e.g. VIP Corporate Pricing Plan")}
-                                    value={title}
-                                    onChange={(e) => setTitle(e.target.value)}
-                                    required
-                                    style={{ maxWidth: '500px' }}
-                                />
-                                <small style={{ color: '#6B7280' }}>
-                                    {t("Give this fee model a descriptive title for your reference.")}
-                                </small>
-                            </FormGroup>
-
-                            <div style={{ marginTop: '24px', marginBottom: '16px', fontWeight: 700, fontSize: '16px', color: '#111827' }}>
-                                {t("Fee Schedule Configuration")}
-                            </div>
-
-                            <Table responsive bordered hover>
-                                <thead>
-                                    <tr style={{ background: '#F9FAFB' }}>
-                                        <th>{t("Fee Line Item")}</th>
-                                        <th>{t("Flat Amount (€ EUR)")}</th>
-                                        <th>{t("Percentage (%)")}</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {feeSchedule.map((item, idx) => {
-                                        const isNoPercent = NO_PERCENT_FEE_IDS.includes(item.id);
-                                        return (
-                                            <tr key={item.id}>
-                                                <td style={{ verticalAlign: 'middle', fontWeight: 600, fontSize: '13px', color: '#374151' }}>{item.name}</td>
-                                                <td>
-                                                    <Input
-                                                        type="number"
-                                                        step="any"
-                                                        value={item.flatEuro}
-                                                        onChange={(e) => handleFeeChange(idx, 'flatEuro', e.target.value)}
-                                                        style={{ width: '130px' }}
-                                                    />
-                                                </td>
-                                                <td style={{ verticalAlign: 'middle' }}>
-                                                    {isNoPercent ? (
-                           <></>
-                                                    ) : (
-                                                        <Input
-                                                            type="number"
-                                                            step="any"
-                                                            value={item.percentAmount}
-                                                            onChange={(e) => handleFeeChange(idx, 'percentAmount', e.target.value)}
-                                                            style={{ width: '130px' }}
-                                                        />
-                                                    )}
-                                                </td>
-                                            </tr>
-                                        );
-                                    })}
-                                </tbody>
-                            </Table>
-
-                            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px', marginTop: '24px' }}>
-                                <Button type="button" outline onClick={() => setActiveTab('list')}>
-                                    {t("Cancel")}
-                                </Button>
-                                <Button type="submit" disabled={submitting} style={{ background: '#5926F0', border: 'none', padding: '10px 24px' }}>
-                                    {submitting ? t("Submitting Request...") : t("Submit Request to Admin")}
-                                </Button>
-                            </div>
-                        </form>
+                    <Card variant="outlined" sx={{ borderRadius: '12px', borderColor: '#E5E7EB', p: '24px' }}>
+                        <FeeModelForm
+                            heading={t("Request New Fee Model")}
+                            title={title}
+                            onTitleChange={setTitle}
+                            feeSchedule={feeSchedule}
+                            onFeeChange={handleFeeChange}
+                            onSubmit={handleSubmit}
+                            onCancel={() => setActiveTab('list')}
+                            submitting={submitting}
+                            submitLabel={t("Submit Request to Admin")}
+                            submittingLabel={t("Submitting Request...")}
+                        />
                     </Card>
                 )}
             </div>
+
+            <Dialog open={!!editingRequest} onClose={closeEditModal} maxWidth="md" fullWidth>
+                <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontWeight: 700 }}>
+                    {t("Edit Fee Model Request")}
+                    <IconButton onClick={closeEditModal} disabled={savingEdit} size="small">
+                        <X size={18} />
+                    </IconButton>
+                </DialogTitle>
+                <DialogContent dividers sx={{ p: '24px' }}>
+                    {editingRequest && (
+                        <FeeModelForm
+                            title={editTitle}
+                            onTitleChange={setEditTitle}
+                            feeSchedule={editFeeSchedule}
+                            onFeeChange={handleEditFeeChange}
+                            onSubmit={handleEditSubmit}
+                            onCancel={closeEditModal}
+                            submitting={savingEdit}
+                            submitLabel={t("Save Changes")}
+                            submittingLabel={t("Saving...")}
+                        />
+                    )}
+                </DialogContent>
+            </Dialog>
         </div>
     );
 };

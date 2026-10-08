@@ -57,9 +57,9 @@ const leftSideContent = [
 
 const apiErrors = {
     "internal_server_error": "We are unable to process your request at the moment please try again later.",
-    "invalid_token": "You waited too long to complete this transaction. Please try again",
-    "token_expired": "You waited too long to complete this transaction. Please try again",
-    "invalid_card_details": "The card details you entered don’t match your selected country.",
+    "invalid_token": "You took too long to initiate the payment and for security reasons we have terminated the process. Please start again",
+    "token_expired": "You took too long to initiate the payment and for security reasons we have terminated the process. Please start again",
+    "invalid_card_details": "The card details you entered don't match your selected country.",
     "incorrect_card": "This card does not belong to your account. Please use a valid card.",
     "transaction_failed": "The transaction couldn't be completed. Please try again or use a different method.",
     "feature_not_allowed": "This feature is currently disabled for your account. Contact support for assistance.",
