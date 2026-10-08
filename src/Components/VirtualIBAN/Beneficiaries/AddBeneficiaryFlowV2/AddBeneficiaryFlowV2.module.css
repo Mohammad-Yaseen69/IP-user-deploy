@@ -905,7 +905,8 @@
     .modal {
         max-width: 100%;
         width: calc(100% - 24px);
-        max-height: 94vh;
+        height: 90%;
+        max-height: none;
     }
 
     .header,
