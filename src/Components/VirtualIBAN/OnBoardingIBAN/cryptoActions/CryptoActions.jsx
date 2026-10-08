@@ -15,7 +15,7 @@ import { UserContext } from '../../../../Context/UserContext';
 import { usePermission } from '../../../../hooks/GeneralUse/usePermission';
 import MobileHeader from '../../../../Common/Component/MobileHeader';
 
-const TEMP_ALLOWED_USERS=['yaseen123', 'ahmed', 'jackeb777', 'hunain','ali_tov']
+// const TEMP_ALLOWED_USERS=['yaseen123', 'ahmed', 'jackeb777', 'hunain','ali_tov']
 
 const CryptoActions = () => {
     const { t } = useTranslation();
@@ -61,7 +61,7 @@ const CryptoActions = () => {
     const showPayoutPage = showPayout && isMobile;
     const closePayout = () => setShowPayout(false);
 
-    const isExternalCryptosAllowed = TEMP_ALLOWED_USERS.includes(userDetails?.username);
+    // const isExternalCryptosAllowed = TEMP_ALLOWED_USERS.includes(userDetails?.username);
 
     return (
         <>
@@ -159,10 +159,10 @@ const CryptoActions = () => {
                                             </div>
                                         </div>
                                     </Tooltip>
-                                    <Tooltip title={isExternalCryptosAllowed?payoutTooltip:'Coming Soon'} arrow>
+                                    <Tooltip title={payoutTooltip} arrow>
                                         <div
                                             className={`${styles.card} ${canPayout ? "" : styles.cardDisabled}`}
-                                            onClick={(canPayout && isExternalCryptosAllowed)  ? () => setShowPayout(true) : undefined}
+                                            onClick={canPayout  ? () => setShowPayout(true) : undefined}
                                             style={{ cursor: canPayout ? "pointer" : "not-allowed" }}
                                         >
                                             <div className={`${styles.iconBox} ${styles.bgYellow}`}>
