@@ -53,6 +53,32 @@ export const getExtractedPhone = (formData, countryIsoCode, phoneNumber) => {
     return extractWalletNum
 }
 
+/* A business's phone can belong to a different country than the account, so the
+   country is read off the number's dial code. Active countries are matched first, since the
+   phone dropdown only lists those; then the longest code wins (+1-268 over +1), and countries
+   sharing it prefer the fallback, then the one whose local length fits. An inactive match is
+   still returned rather than the fallback: the phone input would otherwise prefix the
+   fallback's dial code onto a number that already has one. */
+export const getPhoneCountry = (phone, fallbackIsoCode, activeIsoCodes = []) => {
+    const digits = String(phone || "").replace(/\D/g, "")
+    if (!digits) return fallbackIsoCode
+
+    const candidates = Object.entries(CountryBasedPhone)
+        .map(([iso, details]) => ({ iso, dial: String(details?.dial_code ?? "").replace(/\D/g, ""), maxLength: details?.maxLength }))
+        .filter(item => item.dial && digits.startsWith(item.dial))
+
+    if (!candidates.length) return fallbackIsoCode
+
+    const active = candidates.filter(item => activeIsoCodes.includes(item.iso))
+    const scoped = active.length ? active : candidates
+    const longest = Math.max(...scoped.map(item => item.dial.length))
+    const pool = scoped.filter(item => item.dial.length === longest)
+
+    return pool.find(item => item.iso === fallbackIsoCode)?.iso
+        ?? pool.find(item => digits.length - item.dial.length === item.maxLength)?.iso
+        ?? pool[0].iso
+}
+
 export const openInNewTab = (url) => {
     const newWindow = window.open(url, "_blank", "noopener,noreferrer");
     if (!newWindow || newWindow.closed || typeof newWindow.closed === "undefined") {
