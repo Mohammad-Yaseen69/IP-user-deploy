@@ -84,7 +84,7 @@ const RecentTrans = ({ currentWallet }) => {
         };
 
         fetchData();
-    }, [currentWallet?.wallet_id]);
+    }, [currentWallet]);
     return (
         <Card style={{ marginBottom: 0, flex: 1, scrollbarWidth: "none", borderRadius: "30px", minWidth: "265px" }}>
             <CardHeader className="d-flex justify-content-between align-items-center c_h_pb">
