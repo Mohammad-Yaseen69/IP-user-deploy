@@ -1352,3 +1352,9 @@
         }
     }
 }
+
+@media screen and (max-width: 500px) {
+    .rightPanel {
+        padding: 24px 0px;
+    }
+}

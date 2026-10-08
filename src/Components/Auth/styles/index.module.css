@@ -784,6 +784,10 @@
     }
 }
 
+.inputAdornment {
+    cursor: pointer;
+}
+
 .fieldsContainer {
     display: flex;
     flex-direction: column;

@@ -21,7 +21,7 @@ import {
     prefillEditBag,
 } from './buildPayloads';
 import { useAvailableMethods, useRequiredFields, useRequirements } from './useVendorRequirements';
-import { getEditRequirements, getFieldDef } from './vendorFields';
+import { BANK_COUNTRY_FIELD, getEditRequirements, getFieldDef } from './vendorFields';
 import { apiWrapper } from '../../../../utils/Functions/apiWrapper';
 import { UserContext } from '../../../../Context/UserContext';
 import { handlePaymentApiError } from '../../../../utils/Functions/handlePaymentApiError';
@@ -226,6 +226,18 @@ const AddBeneficiaryFlowV2 = ({
         }));
     }, [form.country, form.beneficiary, lockedFields]);
 
+
+    const asksBankCountry = (requirements?.channelFields || []).includes(BANK_COUNTRY_FIELD);
+
+    useEffect(() => {
+        if (!asksBankCountry || !form.country || form.channel[BANK_COUNTRY_FIELD]) return;
+
+        setForm((prev) => ({
+            ...prev,
+            channel: { ...prev.channel, [BANK_COUNTRY_FIELD]: prev.country },
+        }));
+    }, [asksBankCountry, form.country, form.channel]);
+
     const setField = useCallback((field, value) => {
         setForm((prev) => ({ ...prev, [field]: value }));
         setErrors((prev) => (prev[field] ? { ...prev, [field]: undefined } : prev));
@@ -306,8 +318,8 @@ const AddBeneficiaryFlowV2 = ({
             (requirements.requiredBeneficiary || []).forEach((name) => {
                 if (!String(form.beneficiary[name] || '').trim()) {
                     next.beneficiary[name] = 'Required.';
-                } else if (nameFields.includes(name.toLowerCase())  && !/^(?!\d+$)[A-Za-z0-9\s'-]+$/i.test(form.beneficiary[name])) {
-                    next.beneficiary[name] = 'Please enter at least one letter!';
+                } else if (nameFields.includes(name.toLowerCase())  && !/^[\p{L}\s'_-]+$/u.test(form.beneficiary[name])) {
+                    next.beneficiary[name] = 'Invalid.';
                 }
             });
             (requirements.requiredChannel || []).forEach((name) => {
@@ -362,7 +374,7 @@ const AddBeneficiaryFlowV2 = ({
         else if (handleClose) handleClose();
     };
 
-    const saveChannel = async (beneficiaryId) => {
+    const saveChannel = async (beneficiaryId, savedBeneficiary, isNew) => {
         const channelPayload = buildChannelPayload({
             form,
             transactionType,
@@ -375,6 +387,9 @@ const AddBeneficiaryFlowV2 = ({
             isEncrypted: true,
             isDecrypted: true,
         });
+        if (onSaveSuccess) { 
+            onSaveSuccess(savedBeneficiary, isNew);
+        }
     }
 
     const submit = async () => {
@@ -397,12 +412,13 @@ const AddBeneficiaryFlowV2 = ({
                     isEncrypted: true,
                     isDecrypted: true,
                 });
-                saveChannel(beneficiaryId);
-                toast.success('Beneficiary updated.');
-                if (onSaveSuccess) {
-                    onSaveSuccess(updated?.data || updated?.beneficiaryData || existingBeneficiary, false);
+                try{
+                    await saveChannel(beneficiaryId, updated?.data || updated?.beneficiaryData || existingBeneficiary, false);
+                    toast.success('Beneficiary updated.');               
+                    if (handleClose) handleClose();
+                }catch(e){
+                    toast.error(e?.message ?? 'Beneficiary update Failed!');               
                 }
-                if (handleClose) handleClose();
                 return;
             }
 
@@ -438,12 +454,14 @@ const AddBeneficiaryFlowV2 = ({
                     throw new Error(created?.message || 'Beneficiary was not created.');
                 }
             }
+            try{
+                await saveChannel(beneficiaryId, beneficiaryRecord, !isChannelMode);
+                toast.success(isChannelMode ? 'Payout channel added.' : 'Beneficiary saved.');
+                if (handleClose) handleClose();
+            }catch(e){
+                toast.error(e?.message ?? "Failed to add beneficiary!");               
+            }
 
-            saveChannel(beneficiaryId);
-
-            toast.success(isChannelMode ? 'Payout channel added.' : 'Beneficiary saved.');
-            if (onSaveSuccess) onSaveSuccess(beneficiaryRecord, !isChannelMode);
-            if (handleClose) handleClose();
         } catch (error) {
             handlePaymentApiError({
                 error,

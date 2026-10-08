@@ -457,7 +457,6 @@ const KYB = () => {
             })
 
             const decrypted = decryptData(res.data.data)
-            setUserDetails(prev => ({ ...prev, company: decrypted?.results?.company }))
 
             if (draftEnabled) {
                 const submittedSlots = fileEntries

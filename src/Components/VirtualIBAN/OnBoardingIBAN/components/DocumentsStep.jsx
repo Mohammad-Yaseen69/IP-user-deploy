@@ -10,6 +10,22 @@ import AlertBox from './AlertBox'
 import useStepValidation from '../../../../hooks/useStepValidation'
 import { IBAN_DOC_KEY_TO_SLOT, IBAN_POA_DOC_KEYS, IBAN_POA_SLOT, toDraftFileRef } from '../../../../utils/Data/businessDraft'
 
+const ALLOWED_FILE_TYPES = {
+  "application/pdf": [".pdf"],
+  "application/msword": [".doc"],
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document": [
+    ".docx",
+  ],
+  "application/vnd.ms-excel": [".xls"],
+  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": [
+    ".xlsx",
+  ],
+  "image/jpeg": [".jpg", ".jpeg"],
+    "image/png": [".png"],
+    "image/webp": [".webp"],
+};
+
+
 const DocumentsStep = ({ onNext, onBack, onChange, onUploadDraftFile, userType, data = {}, userDetails, companyDetails, currentStep }) => {
     const { t } = useTranslation()
     const [files, setFiles] = useState(data.files || {})
@@ -61,6 +77,15 @@ const DocumentsStep = ({ onNext, onBack, onChange, onUploadDraftFile, userType, 
             e.target.value = ''
             return
         }
+        
+        const allowedExtensions = ALLOWED_FILE_TYPES[file.type];
+
+        if (!allowedExtensions) {
+            toast.error(t("Invalid file type. Please upload a PDF, DOC, DOCX, XLS, XLSX, JPG, JPEG, PNG, or WEBP file."));
+            e.target.value = "";
+            return;
+        }
+
         e.target.value = ''
         setDocFile(key, file)
 
@@ -216,6 +241,7 @@ const DocumentsStep = ({ onNext, onBack, onChange, onUploadDraftFile, userType, 
                     type="file"
                     style={{ display: 'none' }}
                     onChange={(e) => handleFileChange(key, e)}
+                    accept=".pdf, .doc, .docx, .xls, .xlsx, .jpg, .jpeg, .png, .webp, application/pdf, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, image/jpeg, image/png, image/webp"
                 />
             </div>
         )
