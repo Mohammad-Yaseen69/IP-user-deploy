@@ -10,6 +10,7 @@ import StatementModal from "../StatementModal";
 import styles from "../styles/RecentTransactions.module.css";
 import Empty from './Empty';
 import InstaPayLoader from '../../Loader';
+import { formatCurrency } from '../../../Helper/AmountFormat';
 
 const statusColors = {
   COMPLETED: { bg: "rgba(34,197,94,0.1)", color: "#16a34a" },
@@ -196,7 +197,7 @@ const TransactionRow = ({ tx, selectedIban }) => {
                 )}
                 
                 {tx?.metadata?.network_fee_eur && (
-                  <DetailItem label={t("Network Fee")} value={t(tx?.metadata?.network_fee_eur.toFixed(2))} />
+                  <DetailItem label={t("Network Fee")} value={formatCurrency(tx?.metadata?.network_fee_eur)} />
                 )}
 
                 <DetailItem label={t("Reference")} value={tx?.remittance_information ?? tx?.reference_id} />

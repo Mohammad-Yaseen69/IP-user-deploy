@@ -412,9 +412,13 @@ const AddBeneficiaryFlowV2 = ({
                     isEncrypted: true,
                     isDecrypted: true,
                 });
-                saveChannel(beneficiaryId, updated?.data || updated?.beneficiaryData || existingBeneficiary, false);
-                toast.success('Beneficiary updated.');               
-                if (handleClose) handleClose();
+                try{
+                    await saveChannel(beneficiaryId, updated?.data || updated?.beneficiaryData || existingBeneficiary, false);
+                    toast.success('Beneficiary updated.');               
+                    if (handleClose) handleClose();
+                }catch(e){
+                    toast.error(e?.message ?? 'Beneficiary update Failed!');               
+                }
                 return;
             }
 
@@ -450,11 +454,14 @@ const AddBeneficiaryFlowV2 = ({
                     throw new Error(created?.message || 'Beneficiary was not created.');
                 }
             }
+            try{
+                await saveChannel(beneficiaryId, beneficiaryRecord, !isChannelMode);
+                toast.success(isChannelMode ? 'Payout channel added.' : 'Beneficiary saved.');
+                if (handleClose) handleClose();
+            }catch(e){
+                toast.error(e?.message ?? "Failed to add beneficiary!");               
+            }
 
-            saveChannel(beneficiaryId, beneficiaryRecord, !isChannelMode);
-
-            toast.success(isChannelMode ? 'Payout channel added.' : 'Beneficiary saved.');
-            if (handleClose) handleClose();
         } catch (error) {
             handlePaymentApiError({
                 error,
