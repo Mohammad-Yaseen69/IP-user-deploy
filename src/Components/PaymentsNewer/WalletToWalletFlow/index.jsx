@@ -193,7 +193,7 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, show
                     :
                     userWallets?.find(item => item?.default)
                 const wallet = { ...def, ...currencies.find(item => item.currency_code === def?.currency?.code) }
-
+                console.log('wallet',wallet)
                 dataHandler("currency", wallet)
                 dataHandler("currency_wallet", wallet)
             }

@@ -12,8 +12,7 @@ import {
     RefreshCw,
     CreditCard,
     ArrowLeft,
-    Search,
-    ChevronLeft
+    Search
 } from 'react-feather';
 import SepaTransfer from '../../SendMoney/SepaTransfer';
 import SwiftTransfer from '../../SendMoney/SwiftTransfer';
@@ -46,7 +45,7 @@ const MoveMoney = () => {
     const ibans = useMemo(
         () => asVirtualIbanArray(rawIbans),
         [rawIbans]
-    );
+    )
     const selectedIban = useMemo(
         () =>
             ibans.find(
@@ -71,7 +70,7 @@ const MoveMoney = () => {
         isVirtualIbanOutboundBlocked(syncedBalance) || isVirtualIbanOutboundBlocked(selectedIban)
     const outboundBlockedTooltip = t("Outgoing transfers are disabled for this virtual IBAN.")
     const handleClose = () => setShowSwiftPage(false);
-
+    
     return (
         <>
             {(showSwiftPage && width <= 600) &&
@@ -98,11 +97,13 @@ const MoveMoney = () => {
                 {
                     showSepaPage ?
                         <>
+                        {width > 600 &&
                             <IbanBreadcrumb items={[
                                 { label: "My virtual bank", path: "/virtual-IBAN" },
-                                { label: "Move money", onClick: () => setShowSepaPage(false) },
+                                { label: "Move money", onClick: handleClose },
                                 { label: "SEPA Transfer" }
                             ]} />
+                        }
                             <SepaTransfer
                                 isPage={true}
                                 selectedIban={selectedIban}
@@ -112,23 +113,20 @@ const MoveMoney = () => {
                         </>
                     : showSwiftPage ?
                         <>
-                        {width > 600 &&
                             <IbanBreadcrumb items={[
                                 { label: "My virtual bank", path: "/virtual-IBAN" },
-                                { label: "Move money", onClick: handleClose },
+                                { label: "Move money", onClick: () => setShowSwiftPage(false) },
                                 { label: "SWIFT Transfer" }
                             ]} />
-                        }
                             <SwiftTransfer
                                 isPage={true}
                                 selectedIban={selectedIban}
                                 availableBalance={currentBalance}
-                                toggle={handleClose}
-                                ref={btnRef}
+                                toggle={() => setShowSwiftPage(false)}
                             />
                         </>
 
-                        : <>                            
+                        : <>
                             <div className={styles.headerTitle}>
                                 <IbanBreadcrumb items={[
                                     { label: "My virtual bank", path: "/virtual-IBAN" },
