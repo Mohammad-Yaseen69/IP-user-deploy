@@ -35,7 +35,7 @@ const base_url = window.location.origin || 'https://my.insta-pay.ch';
 // Paytently is the card provider (hosted-forms iframe).
 const usePaytently = true;
 
-const ConfirmWalletFund = ({ setSubStep, wallet = {}, amount, payoutChannel, card_number, card_expiry, card_cvc, saveCard, type = "add_fund", paymentWithSavedCard = false, currentCard, merchant = "", payer = {}, setExternalLink = () => { }, paypalAmount, token, rate, reEnterCallback = () => { }, sendKybWalletOTP, kybFeeDets, partnerId, exchangeRate, }) => {
+const ConfirmWalletFund = ({ setSubStep, wallet = {}, amount, payoutChannel, card_number, card_expiry, card_cvc, saveCard, type = "add_fund", paymentWithSavedCard = false, currentCard, merchant = "", payer = {}, setExternalLink = () => { }, paypalAmount, token, rate, reEnterCallback = () => { }, sendKybWalletOTP, kybFeeDets, partnerId, exchangeRate, cardQuote = null, }) => {
     const navigate = useNavigate()
     const { t } = useTranslation()
     const [complete, setComplete] = useState(false);
@@ -77,9 +77,14 @@ const ConfirmWalletFund = ({ setSubStep, wallet = {}, amount, payoutChannel, car
             if (payoutChannel?.value === "card") {
                 try {
                     if (usePaytently && isVerificationFee) {
+                        if (!wallet?._id) {
+                            setError(t("An active wallet is required to pay this fee by card."))
+                            return
+                        }
                         const dec = await initiatePaytentlyVerificationPayment({
                             kind: partnerId ? "partner_kyc" : type === "kyc_fee" ? "kyc" : "kyb",
                             partnerId,
+                            walletId: wallet._id,
                             idempotencyKey: getKey(),
                         })
                         if (dec?.hosted_forms_url) {
@@ -424,7 +429,24 @@ const ConfirmWalletFund = ({ setSubStep, wallet = {}, amount, payoutChannel, car
                                     type === "add_fund" &&
                                     <SelectedWallet setSubStep={setSubStep} wallet={wallet} />
                                 }
-                                <SelectedAmountAndCurrency amount={payoutChannel?.value === "crypto" ? exchangeRate?.sending?.amount : amount} currency={kybFeeDets || isVerificationFee ? "USD" : payoutChannel?.value === "crypto" ? exchangeRate?.sending?.currency : wallet?.currency?.code} setSubStep={setSubStep} step={2} />
+                                {/* The card is charged the fee plus the topup fee, so the headline is the total. */}
+                                <SelectedAmountAndCurrency amount={cardQuote?.total > 0 ? cardQuote.total : payoutChannel?.value === "crypto" ? exchangeRate?.sending?.amount : amount} currency={cardQuote?.currency?.code ?? (kybFeeDets || isVerificationFee ? "USD" : payoutChannel?.value === "crypto" ? exchangeRate?.sending?.currency : wallet?.currency?.code)} setSubStep={setSubStep} step={2} />
+                                {isVerificationFee && cardQuote?.total > 0 && (
+                                    <div style={{ background: "rgba(89, 38, 240, 0.08)", borderRadius: "16px", padding: "14px", display: "flex", flexDirection: "column", gap: ".4rem" }}>
+                                        <div style={{ display: "flex", justifyContent: "space-between", fontSize: ".75rem", color: "black" }}>
+                                            <span>{t("Verification fee")}</span>
+                                            <span>{Number(cardQuote.amount).toFixed(2)} {cardQuote.currency?.code}</span>
+                                        </div>
+                                        <div style={{ display: "flex", justifyContent: "space-between", fontSize: ".75rem", color: "black" }}>
+                                            <span>{t("Card top-up fee")}</span>
+                                            <span>{Number(cardQuote.fee).toFixed(2)} {cardQuote.currency?.code}</span>
+                                        </div>
+                                        <div style={{ display: "flex", justifyContent: "space-between", fontSize: ".85rem", fontWeight: 700, borderTop: "1px solid rgba(89, 38, 240, 0.2)", paddingTop: ".4rem" }}>
+                                            <span>{t("Total charged to card")}</span>
+                                            <span>{Number(cardQuote.total).toFixed(2)} {cardQuote.currency?.code}</span>
+                                        </div>
+                                    </div>
+                                )}
                                 {
                                     payoutChannel?.icon
                                     &&

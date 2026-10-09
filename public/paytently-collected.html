@@ -8,26 +8,27 @@
     <p>Card details received. Continuing to verification…</p>
     <script>
       (function () {
-        try {
-          var url = localStorage.getItem("paytently_authorize_url");
-          if (url) {
-            localStorage.removeItem("paytently_authorize_url");
-            (window.top || window).location.href = url;
-            return;
-          }
-        } catch (e) {}
-
-       
-        var topLevel = true;
-        try { topLevel = window.top === window; } catch (e) { topLevel = false; }
-        if (topLevel) {
-          var guestPayment = null;
-          try { guestPayment = localStorage.getItem("paytently_guest_payment_id"); } catch (e) {}
-          if (guestPayment) {
-            window.location.replace("/paytently/card-collected");
-            return;
-          }
+        function go(url, replace) {
+          var w = window.top || window;
+          try { replace ? w.location.replace(url) : (w.location.href = url); return true; }
+          catch (e) { return false; }
         }
+
+        var url = null;
+        try { url = localStorage.getItem("paytently_authorize_url"); } catch (e) {}
+        if (url) {
+          try { localStorage.removeItem("paytently_authorize_url"); } catch (e) {}
+          if (go(url, false)) return;
+        }
+
+        // Hosted forms only mint the authorize link once the card is collected, so
+        // hand off to the app, which can call the precheck API for it.
+        var pending = null;
+        try {
+          pending = localStorage.getItem("paytently_guest_payment_id")
+            || localStorage.getItem("paytently_payment_id");
+        } catch (e) {}
+        if (pending && go("/paytently/card-collected", true)) return;
 
         try { window.parent.postMessage({ type: "paytently_card_collected" }, window.location.origin); } catch (e) {}
       })();

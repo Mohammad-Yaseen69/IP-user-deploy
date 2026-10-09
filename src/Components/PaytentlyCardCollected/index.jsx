@@ -1,21 +1,35 @@
 import { useEffect } from "react"
 import { useTranslation } from "react-i18next"
 import InstaPayLoader from "../Loader"
-import { getPaytentlyGuestReturn, precheckPaytentlyGuestPayment } from "../../utils/Functions/paytently"
+import {
+    getPaytentlyGuestReturn,
+    getPaytentlyReturn,
+    precheckPaytentlyGuestPayment,
+    precheckPaytentlyPayment,
+} from "../../utils/Functions/paytently"
 
 const PaytentlyCardCollected = () => {
     const { t } = useTranslation()
 
     useEffect(() => {
-        const { paymentId, username } = getPaytentlyGuestReturn()
-        const failed = `/pay/${username || "NA"}/failed?code=null`
+        const guest = getPaytentlyGuestReturn()
+        if (guest.paymentId) {
+            const failed = `/pay/${guest.username || "NA"}/failed?code=null`
+            precheckPaytentlyGuestPayment(guest.paymentId)
+                .then((authorizeUrl) => window.location.replace(authorizeUrl))
+                .catch(() => window.location.replace(failed))
+            return
+        }
+
+        const { paymentId, failureUrl } = getPaytentlyReturn()
+        const failed = failureUrl || "/"
 
         if (!paymentId) {
             window.location.replace(failed)
             return
         }
 
-        precheckPaytentlyGuestPayment(paymentId)
+        precheckPaytentlyPayment(paymentId)
             .then((authorizeUrl) => window.location.replace(authorizeUrl))
             .catch(() => window.location.replace(failed))
     }, [])

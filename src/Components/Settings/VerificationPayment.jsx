@@ -21,7 +21,7 @@ import MobileWalletStatus from '../PaymentAddressPublic/PayAsGuest/MobileWalletS
 import PlaidBankTransfer from '../AddFunds/WalletFundsFlow/PlaidBankTransfer'
 import ErrorModal from '../PaymentsNewer/InternationalFlow/ErrorModal'
 import { useIdempotency } from '../../hooks/Payments/useIdempotency'
-import { usePaytently } from '../../utils/Functions/paytently'
+import { quotePaytentlyVerification, usePaytently } from '../../utils/Functions/paytently'
 
 const paymentChannels = [
     {
@@ -138,6 +138,35 @@ const VerificationPayment = ({ isOpen, toggle, verify, desc, occupation, loading
 
     const wallets = useMemo(() => filteredWallets, [filteredWallets]);
 
+    // Card pays by topping a wallet up first, so this one is picked to receive the
+    // credit regardless of balance. USD avoids converting the USD fee twice.
+    // The card is charged the fee plus a topup fee, so the confirm screen has to
+    // show what Paytently will actually take.
+    const [cardQuote, setCardQuote] = useState(null);
+
+    const loadCardQuote = async () => {
+        if (!topupWallet?._id) return null;
+        try {
+            return await quotePaytentlyVerification({
+                kind: partnerId ? "partner_kyc" : isKYB ? "kyb" : "kyc",
+                partnerId,
+                walletId: topupWallet._id,
+            });
+        } catch {
+            return null;
+        }
+    };
+
+    const topupWallet = useMemo(() => {
+        const active = userWallets?.filter(item =>
+            item?.wallet_type === "insta" &&
+            !item?.blocked &&
+            !item?.admin_blocked &&
+            item?.status === "active"
+        ) ?? [];
+        return active.find(item => item?.currency?.code === "USD") ?? active[0] ?? null;
+    }, [userWallets]);
+
     const sendOtp = async (method) => {
         setSaving(true)
         try {
@@ -251,6 +280,7 @@ const VerificationPayment = ({ isOpen, toggle, verify, desc, occupation, loading
                 if (isKYB && !partnerId) {
                     setFeeDetails(await getFeeDetails({ payment_type: "card" }))
                 }
+                setCardQuote(await loadCardQuote())
                 setStep(3)
             } else if (skipStepMethods?.includes(payoutChannel?.value)) {
                 if (payoutChannel?.value === "paypal") {
@@ -498,7 +528,8 @@ const VerificationPayment = ({ isOpen, toggle, verify, desc, occupation, loading
                                 sendKybWalletOTP={sendOtp}
                                 kybFeeDets={feeDetails}
                                 partnerId={partnerId}
-                            // wallet={userWallets?.find(item => item?.currency?.code === "USD")}
+                                wallet={topupWallet}
+                                cardQuote={cardQuote}
                             />
                         }
                         {(step === 2 && payoutChannel?.value === "bank") &&
