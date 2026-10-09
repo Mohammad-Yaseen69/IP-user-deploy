@@ -202,7 +202,7 @@ const DocumentsStep = ({ onNext, onBack, onChange, onUploadDraftFile, userType, 
     const renderUploadControl = (key) => {
         const selectedFile = files[key]
         const isVerified = isKeyVerifiedFromKyb(key)
-
+        const isPOF = IBAN_POA_DOC_KEYS.includes(key);
         return (
             <div className={styles.right}>
                 {selectedFile ? (
@@ -223,7 +223,7 @@ const DocumentsStep = ({ onNext, onBack, onChange, onUploadDraftFile, userType, 
                     </span>
                 ) : (
                     <>
-                        <span className={styles.required}>{t('REQUIRED')}</span>
+                        <span className={`${styles.required} ${isPOF ? styles.pof : ''}`}>{t(isPOF ? 'ANY ONE' : 'REQUIRED')}</span>
                         <button type="button" className={styles.uploadBtn} onClick={() => openFilePicker(key)}>
                             <Upload size={10} /> {t('Upload')}
                         </button>
