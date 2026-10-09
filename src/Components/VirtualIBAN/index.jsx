@@ -71,7 +71,7 @@ const VirtualBank = () => {
 
     const skip = (page - 1) * limit;
 
-    const { data: transactions = [], isLoading: transactionsLoading } = useQuery({
+    const { data: transactions = [], isLoading: transactionsLoading, refetch } = useQuery({
         queryKey: [
             'virtual-iban-transactions',
             selectedIban?._id || selectedIban?.id,
@@ -84,7 +84,7 @@ const VirtualBank = () => {
         ],
         queryFn: async () => {
             const id = selectedIban?._id || selectedIban?.id;
-            if (!id) return { items: [], total: 0 };
+            if (!id) return { items: [], pagination: undefined };
 
             const params = new URLSearchParams();
             params.append('iban_id', id);
@@ -101,9 +101,9 @@ const VirtualBank = () => {
                 method: 'GET'
             });
 
-            if (Array.isArray(res)) return { items: res, total: res.length };
-            if (res && res.data && Array.isArray(res.data)) return { items: res.data, total: res.total ?? res.data.length };
-            return { items: [], total: 0 };
+            if (Array.isArray(res)) return { items: res, pagination: res.pagination };
+            if (res && res.data && Array.isArray(res.data)) return { items: res.data, pagination: res.pagination };
+            return { items: [], pagination: undefined };
         },
         enabled: !!(selectedIban && canViewTransactions),
         keepPreviousData: true,
@@ -152,6 +152,11 @@ const VirtualBank = () => {
             scrollToIbanDetails()
         }
     }, [activeTab, selectedAccount]);
+
+    useEffect(() => {
+      refetch()
+    }, [])
+
     console.log(rawIbans, 'rawIbans')
     return (
         <div className={styles.container}>
@@ -233,57 +238,49 @@ const VirtualBank = () => {
 
                                 {activeTab === "overview" && (
                                     <div className={styles.tabContent}>
-                                        {canViewTransactions ? (
-                                            transactionsLoading ? (
-                                                <InstaPayLoader />
-                                            ) : (
-                                                <>
-                                                    <MonthlyExpenses />
-                                                    <div className={styles.section}>
-                                                        <RecentTransactions
-                                                            transactions={transactions.items ?? []}
-                                                            setActiveTab={setActiveTab}
-                                                            loading={transactionsLoading}
-                                                            page={page}
-                                                            setPage={setPage}
-                                                            limit={limit}
-                                                            setLimit={setLimit}
-                                                            totalPages={transactions?.totalPages ?? 1}
-                                                            setStatusFilter={setStatusFilter}
-                                                            setTypeFilter={setTypeFilter}
-                                                            setQ={setQ}
-                                                            selectedIban={selectedIban}
-                                                            setOrder={setOrder}
-                                                        />
-                                                    </div>
-                                                </>
-                                            )
-                                        ) : null}
+                                        {canViewTransactions &&
+                                            <>
+                                                <MonthlyExpenses />
+                                                <div className={styles.section}>
+                                                    <RecentTransactions
+                                                        transactions={transactions.items ?? []}
+                                                        setActiveTab={setActiveTab}
+                                                        loading={transactionsLoading}
+                                                        page={transactions?.pagination?.page}
+                                                        setPage={setPage}
+                                                        limit={limit}
+                                                        setLimit={setLimit}
+                                                        totalPages={transactions?.pagination?.totalPages ?? 1}
+                                                        setStatusFilter={setStatusFilter}
+                                                        setTypeFilter={setTypeFilter}
+                                                        setQ={setQ}
+                                                        selectedIban={selectedIban}
+                                                        setOrder={setOrder}
+                                                    />
+                                                </div>
+                                            </>
+                                        }
                                     </div>
                                 )}
 
                                 {activeTab === "transaction-history" && canViewTransactions && (
                                     <div className={styles.tabContent}>
                                         <div className={styles.section}>
-                                            {transactionsLoading ? (
-                                                <InstaPayLoader />
-                                            ) : (
-                                                <RecentTransactions
-                                                    transactions={transactions.items ?? []}
-                                                    setActiveTab={setActiveTab}
-                                                    loading={transactionsLoading}
-                                                    page={page}
-                                                    setPage={setPage}
-                                                    limit={limit}
-                                                    setLimit={setLimit}
-                                                    totalPages={transactions?.totalPages ?? 1}
-                                                    setStatusFilter={setStatusFilter}
-                                                    setTypeFilter={setTypeFilter}
-                                                    setQ={setQ}
-                                                    setOrder={setOrder}
-                                                    selectedIban={selectedIban}
-                                                />
-                                            )}
+                                            <RecentTransactions
+                                                transactions={transactions.items ?? []}
+                                                setActiveTab={setActiveTab}
+                                                loading={transactionsLoading}
+                                                page={transactions?.pagination?.page}
+                                                setPage={setPage}
+                                                limit={limit}
+                                                setLimit={setLimit}
+                                                totalPages={transactions?.pagination?.totalPages ?? 1}
+                                                setStatusFilter={setStatusFilter}
+                                                setTypeFilter={setTypeFilter}
+                                                setQ={setQ}
+                                                setOrder={setOrder}
+                                                selectedIban={selectedIban}
+                                            />
                                         </div>
                                     </div>
                                 )}

@@ -374,7 +374,7 @@ const AddBeneficiaryFlowV2 = ({
         else if (handleClose) handleClose();
     };
 
-    const saveChannel = async (beneficiaryId) => {
+    const saveChannel = async (beneficiaryId, savedBeneficiary, isNew) => {
         const channelPayload = buildChannelPayload({
             form,
             transactionType,
@@ -387,6 +387,9 @@ const AddBeneficiaryFlowV2 = ({
             isEncrypted: true,
             isDecrypted: true,
         });
+        if (onSaveSuccess) { 
+            onSaveSuccess(savedBeneficiary, isNew);
+        }
     }
 
     const submit = async () => {
@@ -409,12 +412,13 @@ const AddBeneficiaryFlowV2 = ({
                     isEncrypted: true,
                     isDecrypted: true,
                 });
-                saveChannel(beneficiaryId);
-                toast.success('Beneficiary updated.');
-                if (onSaveSuccess) {
-                    onSaveSuccess(updated?.data || updated?.beneficiaryData || existingBeneficiary, false);
+                try{
+                    await saveChannel(beneficiaryId, updated?.data || updated?.beneficiaryData || existingBeneficiary, false);
+                    toast.success('Beneficiary updated.');               
+                    if (handleClose) handleClose();
+                }catch(e){
+                    toast.error(e?.message ?? 'Beneficiary update Failed!');               
                 }
-                if (handleClose) handleClose();
                 return;
             }
 
@@ -450,12 +454,14 @@ const AddBeneficiaryFlowV2 = ({
                     throw new Error(created?.message || 'Beneficiary was not created.');
                 }
             }
+            try{
+                await saveChannel(beneficiaryId, beneficiaryRecord, !isChannelMode);
+                toast.success(isChannelMode ? 'Payout channel added.' : 'Beneficiary saved.');
+                if (handleClose) handleClose();
+            }catch(e){
+                toast.error(e?.message ?? "Failed to add beneficiary!");               
+            }
 
-            saveChannel(beneficiaryId);
-
-            toast.success(isChannelMode ? 'Payout channel added.' : 'Beneficiary saved.');
-            if (onSaveSuccess) onSaveSuccess(beneficiaryRecord, !isChannelMode);
-            if (handleClose) handleClose();
         } catch (error) {
             handlePaymentApiError({
                 error,

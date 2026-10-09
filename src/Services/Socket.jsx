@@ -53,7 +53,7 @@ class SocketsService {
                 sound.play().catch(() => {});
             } catch (e) {}
 
-            if (data?.title || data?.desc) {
+            if ((data?.title || data?.desc) && data?.type !== "virtual_iban") {
                 toast.info(data.title || data.desc);
             }
 

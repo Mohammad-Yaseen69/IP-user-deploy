@@ -251,14 +251,14 @@ const MissingSwiftCodeBanner = ({ beneficiary, authHeader, onSwiftCodeSaved }) =
         try {
             const { encryptData } = await import("../../../../Helper/EssentilaMethods/Encryption")
             const bankDetails = Array.isArray(beneficiary?.bank_details) && beneficiary.bank_details.length > 0
-                ? beneficiary.bank_details.map((bd, i) => i === 0 ? { ...bd, swift_code: bicClean, bic: bicClean } : bd)
+                ? {...beneficiary.bank_details[0], swift_code: bicClean, bic: bicClean }
                 : [{ swift_code: bicClean, bic: bicClean }]
 
-            const payload = { ...beneficiary, swift_code: bicClean, bic: bicClean, bank_details: bankDetails }
+            const payload = { bank_details: bankDetails, channel_type: "bank", removeOld: true }
             const encrypted = encryptData(payload)
 
-            await axios.put(
-                `${import.meta.env.VITE_IP_DEV_API}/api/beneficiary/update-beneficiary/${beneficiary._id}`,
+            await axios.post(
+                `${import.meta.env.VITE_IP_DEV_API}/api/beneficiary/v2/${beneficiary._id}/channel`,
                 { data: encrypted },
                 { headers: authHeader }
             )

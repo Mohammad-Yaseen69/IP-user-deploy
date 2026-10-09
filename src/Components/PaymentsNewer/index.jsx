@@ -369,7 +369,7 @@ const PaymentsNewer = () => {
                                                 <img src={a_m_i} alt="" loading="lazy" style={{ width: "30px", objectFit: "contain", height: "30px" }} />
                                                 <span style={{ fontSize: "1rem", color: "white", fontWeight: "600", textAlign: "left", maxWidth: "8ch" }}>{t("Mobile Airtime")}</span>
                                             </button>
-                                            {
+                                            {/* {
                                                 (
                                                     userDetails?.account_type === "individual"
                                                         ?
@@ -382,9 +382,9 @@ const PaymentsNewer = () => {
                                                     // setActionType("send_crypto")
                                                     // setCurrentFlow("send_crypto")
                                                 }}>
-                                                    {/* <img src={sc} alt="payment types" /> */}
+                                                    <img src={sc} alt="payment types" />
                                                 </button>
-                                            }
+                                            } */}
                                             <button className={styles.disabled} style={{padding: "0px"}} disabled data-action="placeholder">
                                                 <img src={rq} alt="payment types" loading="lazy" />
                                             </button>
