@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import styles from '../style/onboardingSteps.module.css'
 import StepProgress from './StepProgress'
 import AlertBox from './AlertBox'
+import RiskProfileCard from './RiskProfileCard'
 import { useMediaQuery } from '@mui/material'
 
 const DOC_TITLE_MAP = {
@@ -437,6 +438,7 @@ const ReviewStep = ({ onSubmit, onBack, allData = {}, onNext, userType, currentS
                                 </p>
                             </div>
                     }
+                    <RiskProfileCard variant="inline" />
                     <div className={styles.confirmRow} onClick={() => setAgreed(!agreed)}>
                         <input
                             type="checkbox"
