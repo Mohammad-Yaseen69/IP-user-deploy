@@ -44,6 +44,8 @@ import useTopupLimitCheck from "../../../hooks/Payments/useTopupLimitCheck";
 import GeneralNoticeModal from "../GeneralNoticeModal";
 import PlaidBankTransfer from "../../AddFunds/WalletFundsFlow/PlaidBankTransfer";
 import { useIdempotency } from "../../../hooks/Payments/useIdempotency";
+import PaytentlyHostedModal from "../../AddFunds/PaytentlyHostedModal";
+import { initiatePaytentlyPayment, usePaytently } from "../../../utils/Functions/paytently";
 
 const leftSideContent = [
     "Choose the beneficiary!",
@@ -171,7 +173,8 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
             case 4:
                 return !data.payment_type?.name || data.payment_type?.value === "wallet" ? !data.wallet?._id : data?.payment_duration?.value == "subscription" ? !data.payment_duration?.recStartDate || (!data.payment_duration?.cycles && !data.payment_duration?.unlimited) : data?.payment_duration?.value == "schedule" ? !data.payment_duration?.scheduleDate || !data.payment_duration?.scheduleTime : false
             case 5:
-                if (data.payment_type?.value === "card") {
+                // Paytently collects the card on its own page.
+                if (data.payment_type?.value === "card" && !usePaytently) {
                     const [contentMonth, contentYear] = data.expiry.split("/").map(Number);
                     const currentDate = new Date();
                     const currentMonth = currentDate.getMonth() + 1;
@@ -338,9 +341,34 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
         }
     }
     const [showCardModal, setShowCardModal] = useState(false)
+    const [paytentlyHosted, setPaytentlyHosted] = useState(null)
     const initiateCardPayment = async (otp, token) => {
         dataHandler("loading", true)
         try {
+            if (usePaytently) {
+                const dec = await initiatePaytentlyPayment({
+                    walletId: data.currency?._id,
+                    flow: "wallet_to_wallet",
+                    fields: {
+                        type: data.codeType,
+                        rates_token: data.exchange_rate?.token,
+                        w2w_data: { type: "instant", body: { otp, token: token || data.otp_token } },
+                    },
+                    idempotencyKey: getKey(),
+                })
+
+                if (!dec?.hosted_forms_url) {
+                    const message = apiErrorMessage(dec?.message) ? t(apiErrorMessage(dec?.message)) : (dec?.message ?? "We cannot process your request at the moment, please try again later.")
+                    dataHandler("otpError", message)
+                    // No OTP modal is open on the skipped path.
+                    if (otp === "otp_skipped") dataHandler("error", message)
+                    return
+                }
+
+                setPaytentlyHosted({ hostedUrl: dec.hosted_forms_url, authorizeUrl: dec.authorize_url })
+                return
+            }
+
             let payload;
             if (data.selectedSavedCard?._id) {
                 payload = {
@@ -681,7 +709,7 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
                     dataHandler("step", 5)
                 }
                 else {
-                    dataHandler("showCard", true)
+                    if (!(usePaytently && data.payment_type?.value === "card")) dataHandler("showCard", true)
                     dataHandler("step", 5)
                 }
                 break;
@@ -727,6 +755,12 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
     // console.log(data.payment_type)
     return (
         <>
+            <PaytentlyHostedModal
+                isOpen={!!paytentlyHosted?.hostedUrl}
+                hostedUrl={paytentlyHosted?.hostedUrl}
+                authorizeUrl={paytentlyHosted?.authorizeUrl}
+                onClose={() => setPaytentlyHosted(null)}
+            />
             {
                 showCardModal
                 &&

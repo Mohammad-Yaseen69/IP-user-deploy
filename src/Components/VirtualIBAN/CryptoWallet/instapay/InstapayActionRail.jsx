@@ -5,13 +5,8 @@ import SendCryptoPanel from "./SendCryptoPanel"
 import WithdrawCryptoPanel from "./WithdrawCryptoPanel"
 import ConvertCryptoPanel from "./ConvertCryptoPanel"
 
-const TABS = ["Send", "Withdraw", "Convert"]
+const TABS = ["Send", "Convert"]
 
-/**
- * Send / Withdraw / Convert for InstaPay crypto wallets. Send is the crypto payout
- * to a beneficiary, Withdraw the payout to the user's own saved crypto withdrawal
- * account, Convert the wallet conversion held to crypto <-> fiat.
- */
 const InstapayActionRail = ({ wallets = [], wallet, onSelectWallet }) => {
     const { t } = useTranslation()
     const [tab, setTab] = useState("Send")

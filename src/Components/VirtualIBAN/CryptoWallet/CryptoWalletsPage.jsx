@@ -5,11 +5,9 @@ import CryptoStablecoins from "./CryptoStablecoins"
 import InstapayCryptoWallets from "./instapay/InstapayCryptoWallets"
 import styles from "./cryptoPage.module.scss"
 
-/* The page runs on InstaPay crypto balances. The BVNK custodial version it replaced is
-   kept whole in CryptoStablecoins and comes back by flipping this. */
+
 const USE_INSTAPAY_CRYPTO_WALLETS = true
 
-/** Route page for /crypto-wallets. */
 const CryptoWalletsPage = () => {
     const { t } = useTranslation()
     const width = useWindowWidth()
