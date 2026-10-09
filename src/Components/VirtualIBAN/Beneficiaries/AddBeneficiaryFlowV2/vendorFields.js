@@ -39,6 +39,9 @@ export const THUNES_ENTITY_FIELDS = {
 
 export const BANK_COUNTRY_FIELD = 'bank_country_iso_code';
 
+/* Bank rails send the recipient address as fixed-width lines. */
+const ADDRESS_LINE_MAX = 35;
+
 const BANK_COUNTRY_DEF = {
     [BANK_COUNTRY_FIELD]: {
         label: 'Bank country',
@@ -103,6 +106,23 @@ export const BVNK_FIELD_DEFS = {
     bankCity: { label: 'Bank city', type: 'text' },
     bankPostal: { label: 'Bank postal code', type: 'text' },
 
+    /* The rails carry the recipient address in fixed-width lines, so each is capped at 35
+       characters and the city, postal code and country travel in their own fields rather
+       than inside the street line. */
+    address: {
+        label: 'Street address',
+        type: 'text',
+        maxLength: ADDRESS_LINE_MAX,
+        placeholder: '3 Norfolk Road',
+        hint: 'Street and building only. City, postal code and country go in their own fields.',
+    },
+    address_line_2: {
+        label: 'Address line 2',
+        type: 'text',
+        maxLength: ADDRESS_LINE_MAX,
+        placeholder: 'Apartment, suite or floor',
+    },
+
     crypto_asset: {
         label: 'Asset',
         type: 'select',
@@ -125,15 +145,12 @@ export const BVNK_FIELD_DEFS = {
     },
 };
 
-/* The recipient address the payout carries. The country is never asked for: the payout
-   reads it from the beneficiary's own country, and the bank's country with it. */
-const BVNK_ADDRESS_FIELDS = ['address', 'city', 'province_state', 'postal_code'];
+const BVNK_ADDRESS_FIELDS = ['address', 'address_line_2', 'city', 'province_state', 'postal_code'];
 
-/* SEPA reaches the account by IBAN alone - the only detail the payout refuses to go
-   without - so everything else it sends is offered but never demanded. */
+
 const BVNK_SEPA = {
     beneficiary: BVNK_ADDRESS_FIELDS,
-    requiredBeneficiary: [],
+    requiredBeneficiary: ['address', 'city'],
     channel: ['iban', 'bic', 'bankName', BANK_COUNTRY_FIELD],
     requiredChannel: ['iban', BANK_COUNTRY_FIELD],
 };
@@ -196,7 +213,12 @@ export const getBvnkRequirements = (method, recipientType, channel = {}) => {
 
     const entity = BVNK_ENTITY_FIELDS[recipientType === 'business' ? 'business' : 'individual'];
 
-    const defs = method === 'crypto_wallet'
+    const beneficiaryFields = [...entity, ...rail.beneficiary];
+    const channelFields = rail.channel;
+    const requiredBeneficiary = [...entity, ...(rail.requiredBeneficiary || [])];
+    const requiredChannel = rail.requiredChannel || [];
+
+    const baseDefs = method === 'crypto_wallet'
         ? {
             ...BVNK_FIELD_DEFS,
             crypto_network: {
@@ -206,12 +228,26 @@ export const getBvnkRequirements = (method, recipientType, channel = {}) => {
         }
         : BVNK_FIELD_DEFS;
 
+    const required = new Set([...requiredBeneficiary, ...requiredChannel]);
+
+    const defs = [...beneficiaryFields, ...channelFields].reduce((acc, name) => {
+        const def = { ...getFieldDef(name, baseDefs), required: required.has(name) };
+
+      
+        if (name === 'postal_code' && !def.required) {
+            def.hint = 'Recommended. Some banks reject payouts that arrive without it.';
+        }
+
+        acc[name] = def;
+        return acc;
+    }, {});
+
     return {
         vendor: 'bvnk',
-        beneficiaryFields: [...entity, ...rail.beneficiary],
-        channelFields: rail.channel,
-        requiredBeneficiary: [...entity, ...(rail.requiredBeneficiary || [])],
-        requiredChannel: rail.requiredChannel,
+        beneficiaryFields,
+        channelFields,
+        requiredBeneficiary,
+        requiredChannel,
         defs,
     };
 };

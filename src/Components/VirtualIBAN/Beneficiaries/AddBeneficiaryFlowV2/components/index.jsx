@@ -247,6 +247,7 @@ export const TextField = ({
     flex = false,
     inputMode,
     type = 'text',
+    maxLength,
 }) => (
     <div className={`${styles.field} ${flex ? styles.fieldFlex : ''}`}>
         {label && <FieldLabel htmlFor={id}>{label}</FieldLabel>}
@@ -259,6 +260,7 @@ export const TextField = ({
                 placeholder={placeholder}
                 disabled={disabled}
                 inputMode={inputMode}
+                maxLength={maxLength}
                 onChange={(event) => onChange && onChange(event.target.value)}
             />
             {trailingIcon && (
