@@ -15,8 +15,6 @@ const CDD_TEXT = {
     enhanced: 'Enhanced due diligence',
 }
 
-// Live risk feedback while the user fills the IBAN onboarding. Informational only:
-// it never blocks continuing or submitting.
 const RiskProfileCard = ({ variant = 'sidebar' }) => {
     const { t } = useTranslation()
     const { data, isFetching } = useRiskPreviewContext()
