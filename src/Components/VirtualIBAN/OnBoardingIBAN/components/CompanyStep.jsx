@@ -8,6 +8,9 @@ import SidebarProgress from './SidebarProgress'
 import { BsDot } from 'react-icons/bs'
 import AiIcon from "../../../../assets/icons/ai-icon.svg";
 import StepProgress from './StepProgress'
+import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers'
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
+import dayjs from 'dayjs'
 import useStepValidation, { required } from '../../../../hooks/useStepValidation'
 
 const formatDateForInput = (val) => {
@@ -90,7 +93,7 @@ const CompanyStep = ({ onNext, onBack, onChange, userType, data = {}, currentSte
 
     useEffect(() => {
         const rawDate = userDetails?.company?.date_of_incorporation || data.dateOfIncorporation || '';
-        if (rawDate) {
+        if (rawDate && !form?.dateOfIncorporation) {
             const formatted = formatDateForInput(rawDate);
             if (formatted) {
                 setForm(prev => ({ ...prev, dateOfIncorporation: formatted }));
@@ -137,6 +140,27 @@ const CompanyStep = ({ onNext, onBack, onChange, userType, data = {}, currentSte
         { num: '06', label: t('Review'), active: false, key:'review' }
     ]
 
+    const DateField = ({ isMobile }) => (
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DatePicker
+                value={dayjs(form?.dateOfIncorporation) || ""}
+                sx={{ 
+                    background: isMobile? '#fff' : '#FAFBFF',
+                    '& input':{ p: '14.5px 14px 14.5px 12.5px', fontSize: isMobile ? 14 : '13.5px', color: '#1B1F2A', fontWeight: isMobile ? 500 : 400 },
+                    '& .MuiInputBase-root': { height: isMobile ? '51px' :'44px' },
+                    '& fieldset': { borderRadius: isMobile ? '12px' :'6px', border: '1.5px solid #E2E8F0', },
+                    '& .Mui-focused fieldset':{ borderColor: '#4A32E3 !important', borderWidth: '1.5px !important' },
+                    '& .Mui-focused' : {boxShadow: '0 0 0 3px rgba(74, 50, 227, 0.1)', background: '#fff'},
+                    '& svg': { width: 18, height: 18}
+                }}
+                disableFuture={true}
+                onChange={(value)=>set("dateOfIncorporation")({ target: { value:dayjs(value).format("YYYY-MM-DD") } })}
+                renderInput={(params) => <input {...params} />}
+                disabled={Boolean(userDetails?.company?.date_of_incorporation)}
+                readOnly={Boolean(userDetails?.company?.date_of_incorporation)}
+            />
+        </LocalizationProvider>
+    )
     return (
         <div className={styles.onboardingLayout}>
             <div>
@@ -319,17 +343,7 @@ const CompanyStep = ({ onNext, onBack, onChange, userType, data = {}, currentSte
                                 <label className={styles.inputLabel}>
                                    {t("DATE OF INCORPORATION")}
                                 </label>
-
-                                <input
-                                    style={{ padding: "14.5px 14px 14.5px 12.5px", ...err('dateOfIncorporation') }}
-                                    type="date"
-                                    className={styles.textInput}
-                                    value={form.dateOfIncorporation || ""}
-                                    onChange={set("dateOfIncorporation")}
-                                    max={new Date().toISOString().split("T")[0]}
-                                    disabled={Boolean(userDetails?.company?.date_of_incorporation)}
-                                    readOnly={Boolean(userDetails?.company?.date_of_incorporation)}
-                                />
+                                <DateField />
                             </div>
 
                             <div className={styles.twoInputRow}>
@@ -353,17 +367,7 @@ const CompanyStep = ({ onNext, onBack, onChange, userType, data = {}, currentSte
                                     <label className={styles.inputLabel}>
                                         {t('Incorporated')}
                                     </label>
-
-                                    <input
-                                        style={{ padding: "14.5px 14px 14.5px 12.5px", ...err('dateOfIncorporation') }}
-                                        type="date"
-                                        className={styles.textInput}
-                                        value={form.dateOfIncorporation || ""}
-                                        onChange={set("dateOfIncorporation")}
-                                        max={new Date().toISOString().split("T")[0]}
-                                        disabled={Boolean(userDetails?.company?.date_of_incorporation)}
-                                        readOnly={Boolean(userDetails?.company?.date_of_incorporation)}
-                                    />
+                                    <DateField isMobile={true} />
                                 </div>
                             </div>
                             <div className={styles.inputGroup}>

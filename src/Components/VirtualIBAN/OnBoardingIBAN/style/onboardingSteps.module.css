@@ -993,6 +993,11 @@
     font-weight: 700;
 }
 
+.pof {
+    background: #E0F2FE;
+    color: #0369A1;
+}
+
 .uploadBtn {
     height: auto;
     padding: 5px 12px;

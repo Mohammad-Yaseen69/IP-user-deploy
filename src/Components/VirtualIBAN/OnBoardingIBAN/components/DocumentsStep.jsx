@@ -204,6 +204,7 @@ const DocumentsStep = ({ onNext, onBack, onChange, onUploadDraftFile, userType, 
     const renderUploadControl = (key) => {
         const selectedFile = files[key]
         const isVerified = isKeyVerifiedFromKyb(key)
+        const isPOF = IBAN_POA_DOC_KEYS.includes(key);
         const isRequired = requiredDocKeys.includes(key)
 
         return (
@@ -226,10 +227,10 @@ const DocumentsStep = ({ onNext, onBack, onChange, onUploadDraftFile, userType, 
                     </span>
                 ) : (
                     <>
-                        <span className={isRequired ? styles.required : styles.optional}
+                        <span className={`${isRequired ? styles.required : styles.optional} ${isPOF ? styles.pof : ''}`}
                         style={isRequired && err(key,true) ? { backgroundColor:  '#ff000021', color: 'red' } : {}}
                         >
-                            {isRequired ? t('REQUIRED') : t('OPTIONAL')}
+                            {isPOF ? t('ANY ONE') : (isRequired ? t('REQUIRED') : t('OPTIONAL'))}
                         </span>
                         <button type="button" className={styles.uploadBtn} onClick={() => openFilePicker(key)}>
                             <Upload size={10} /> {t('Upload')}

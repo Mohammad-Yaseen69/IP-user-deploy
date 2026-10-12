@@ -64,6 +64,7 @@ import autoTable from "jspdf-autotable"
 import AddBeneficiary from "../../../AddBeneficiary"
 import { validateSwiftBeneficiary, isValidDescription, isValidBic } from "../../utils/swiftValidation"
 import BeneficiaryStep from "../Common/BeneficiaryStep"
+import AddressTooLongBanner from "../Common/AddressTooLongBanner"
 import {
     getBeneficiaryName,
     getBeneficiaryTypeLabel,
@@ -77,6 +78,7 @@ import {
     getBeneficiarySubtitle,
     getRawSwiftCode,
     hasBeneficiarySwiftCode,
+    isBeneficiaryAddressTooLong,
     maskIban
 } from "../Common/beneficiaryHelpers"
 import MobileStepProgress from "../../VirtualIbanModal/MobileStepProgress"
@@ -892,9 +894,12 @@ const SwiftTransfer = forwardRef(({ isOpen = true, toggle, selectedIban, availab
     const isProcessing = payoutFee.isPending || isSendingOtp || isRefreshingQuote
     const isQuoteExpired = quoteExpiresAt ? new Date(quoteExpiresAt).getTime() <= Date.now() : false
 
+    const isAddressBlocked = currentStep === STEPS.BENEFICIARY && isBeneficiaryAddressTooLong(selectedBeneficiary)
+
     const disabled =
         getDisabledState(currentStep, machineData) ||
         isProcessing ||
+        isAddressBlocked ||
         (currentStep === STEPS.REVIEW && isQuoteExpired)
 
     const showFooter = currentStep !== STEPS.OTP && currentStep !== STEPS.DONE
@@ -1068,6 +1073,8 @@ const SwiftTransfer = forwardRef(({ isOpen = true, toggle, selectedIban, availab
     }
 
     const handleContinue = async () => {
+        if (isAddressBlocked) return
+
         if (currentStep === STEPS.ADD_BENEFICIARY) {
             const nextBeneficiary = buildBeneficiaryFromForm(beneficiaryForm)
             setSelectedBeneficiary(nextBeneficiary)
@@ -1158,6 +1165,15 @@ const SwiftTransfer = forwardRef(({ isOpen = true, toggle, selectedIban, availab
                                 }}
                             />
                         )}
+                        {isAddressBlocked && (
+                            <AddressTooLongBanner
+                                beneficiary={selectedBeneficiary}
+                                onAddressSaved={async (updatedBeneficiary) => {
+                                    setSelectedBeneficiary(updatedBeneficiary)
+                                    await getUserBeneficiaries()
+                                }}
+                            />
+                        )}
                     </BeneficiaryStep>
                 )
             case STEPS.ADD_BENEFICIARY:
@@ -1213,6 +1229,8 @@ const SwiftTransfer = forwardRef(({ isOpen = true, toggle, selectedIban, availab
                         resendHandler={handleSendOtp}
                         authType={authType}
                         setAuthType={setAuthType}
+                        onBack={handleBack}
+                        showBackButton={true}
                         methods={otpMethods}
 
                     />
