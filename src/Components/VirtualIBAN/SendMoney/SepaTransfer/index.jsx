@@ -46,6 +46,7 @@ import jsPDF from "jspdf"
 import autoTable from "jspdf-autotable"
 import { isValidDescription } from "../../utils/swiftValidation"
 import BeneficiaryStep from "../Common/BeneficiaryStep"
+import AddressTooLongBanner from "../Common/AddressTooLongBanner"
 import {
     getBeneficiaryName,
     getBeneficiaryTypeLabel,
@@ -58,6 +59,7 @@ import {
     getBeneficiaryId,
     getBeneficiaryAccountCount,
     getBeneficiarySubtitle,
+    isBeneficiaryAddressTooLong,
     maskIban
 } from "../Common/beneficiaryHelpers"
 import { formatCurrency } from "../../../../Helper/AmountFormat"
@@ -658,7 +660,8 @@ const SepaTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, i
     const sourceIban = useMemo(() => ({ title: getVirtualIbanTitle(selectedIban, currencyCode), iban: getVirtualIbanNumber(selectedIban) }), [selectedIban, currencyCode])
     const machineData = useMemo(() => ({ amount, availableBalance: sourceAvailableBalance, transferSpeed, selectedBeneficiary, beneficiaryForm, isAddingBeneficiary, purpose, description, confirmedDetails }), [amount, sourceAvailableBalance, transferSpeed, selectedBeneficiary, beneficiaryForm, isAddingBeneficiary, purpose, description, confirmedDetails])
     const isProcessing = payoutFee.isPending || isSendingOtp
-    const disabled = getDisabledState(currentStep, machineData) || isProcessing
+    const isAddressBlocked = currentStep === STEPS.BENEFICIARY && isBeneficiaryAddressTooLong(selectedBeneficiary)
+    const disabled = getDisabledState(currentStep, machineData) || isProcessing || isAddressBlocked
     const showFooter = !showInstantFallback && currentStep !== STEPS.OTP && currentStep !== STEPS.DONE
 
     const [savedBeneficiaryId, setSavedBeneficiaryId] = useState("")
@@ -829,6 +832,8 @@ const SepaTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, i
     }
 
     const handleContinue = async () => {
+        if (isAddressBlocked) return
+
         if (currentStep === STEPS.ADD_BENEFICIARY) {
             const nextBeneficiary = buildBeneficiaryFromForm(beneficiaryForm)
             setSelectedBeneficiary(nextBeneficiary)
@@ -916,7 +921,17 @@ const SepaTransfer = ({ isOpen = true, toggle, selectedIban, availableBalance, i
                         setSelectedBeneficiary={setSelectedBeneficiary}
                         onAddBeneficiary={() => setIsAddModalOpen(true)}
                         emptyMessage={t("No beneficiaries found with European bank accounts.")}
-                    />
+                    >
+                        {isAddressBlocked && (
+                            <AddressTooLongBanner
+                                beneficiary={selectedBeneficiary}
+                                onAddressSaved={async (updatedBeneficiary) => {
+                                    setSelectedBeneficiary(updatedBeneficiary)
+                                    await getUserBeneficiaries()
+                                }}
+                            />
+                        )}
+                    </BeneficiaryStep>
                 )
             case STEPS.ADD_BENEFICIARY:
                 return <AddBeneficiaryStep amount={amount} currencyCode={currencyCode} form={beneficiaryForm} setForm={setBeneficiaryForm} />
