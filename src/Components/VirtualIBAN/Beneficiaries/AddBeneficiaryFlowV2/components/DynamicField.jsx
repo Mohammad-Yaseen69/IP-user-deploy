@@ -262,6 +262,7 @@ const DynamicField = ({
             placeholder={def.placeholder}
             disabled={disabled}
             inputMode={def.type === 'tel' ? 'tel' : undefined}
+            maxLength={def.maxLength}
             error={error}
             hint={def.hint}
         />

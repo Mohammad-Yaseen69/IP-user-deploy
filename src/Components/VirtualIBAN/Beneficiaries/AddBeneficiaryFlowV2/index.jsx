@@ -346,6 +346,25 @@ const AddBeneficiaryFlowV2 = ({
                 ...collectIdentifierErrors(requirements.channelFields, form.channel, fieldType),
                 ...next.channel,
             };
+
+            /* The input caps what can be typed, but a beneficiary saved before the cap
+               existed can still arrive too long, and the rail would reject it. */
+            const tooLong = (names, values) => names.reduce((errors, name) => {
+                const max = getFieldDef(name, requirements.defs).maxLength;
+                const value = String(values[name] || '').trim();
+
+                if (!max || value.length <= max) return errors;
+                return { ...errors, [name]: `Keep this to ${max} characters or fewer.` };
+            }, {});
+
+            next.beneficiary = {
+                ...tooLong(requirements.beneficiaryFields, form.beneficiary),
+                ...next.beneficiary,
+            };
+            next.channel = {
+                ...tooLong(requirements.channelFields, form.channel),
+                ...next.channel,
+            };
         }
 
         setErrors(next);
