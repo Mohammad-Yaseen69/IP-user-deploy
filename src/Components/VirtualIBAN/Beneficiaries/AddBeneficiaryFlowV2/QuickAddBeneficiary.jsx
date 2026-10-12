@@ -1,5 +1,4 @@
 import { useContext, useEffect, useMemo, useState } from 'react';
-import { FormControlLabel, Switch } from '@mui/material';
 import styles from './AddBeneficiaryFlowV2.module.css';
 import { Alert, Section, SectionTitle } from './components';
 import FieldGrid from './components/FieldGrid';
@@ -12,6 +11,7 @@ import { getFieldDef, THUNES_ENTITY_FIELDS } from './vendorFields';
 import { collectIdentifierErrors } from '../../../../utils/Functions/bankIdentifiers';
 import { UserContext } from '../../../../Context/UserContext';
 import { useTranslation } from 'react-i18next';
+import Switch from '../../../Settings/Switch';
 
 const METHOD_BY_CHANNEL = {
     bank: 'bank_account',
@@ -65,7 +65,7 @@ const QuickAddBeneficiary = ({
         PREFILLED_BENEFICIARY_FIELDS.reduce((bag, name) => ({ ...bag, [name]: countryIso3 }), {})
     ));
     const [channel, setChannel] = useState(() => initialValues?.channel || prefillFromPayer(method, payer));
-    const [saveForFuture, setSaveForFuture] = useState(() => !!initialValues?.saveForFuture);
+    const [saveForFuture, setSaveForFuture] = useState(() => initialValues?.saveForFuture ?? true);
 
     const { data: stateData = [] } = useCountryStates(countryIso3);
     const phoneCheck = usePhoneVerification(channel.msisdn, method === 'mobile_wallet');
@@ -119,7 +119,7 @@ const QuickAddBeneficiary = ({
         [allowedCountries, countryIso3, country],
     );
 
-   const errors = (() => {
+    const errors = (() => {
         const next = { beneficiary: {}, channel: {} };
 
         (requirements?.requiredBeneficiary || []).forEach((name) => {
@@ -256,16 +256,16 @@ const QuickAddBeneficiary = ({
                 </>
             )}
 
-            <FormControlLabel
-                label="Save for later"
-                disabled={!isInteractive}
-                control={(
-                    <Switch
-                        checked={saveForFuture}
-                        onChange={(event) => setSaveForFuture(event.target.checked)}
-                    />
-                )}
-            />
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                <Switch
+                    checked={saveForFuture}
+                    callback={(event) => setSaveForFuture(event.target.checked)}
+                    disabled={!isInteractive}
+                />
+                <span style={{
+                    fontWeight: 600
+                }}>{t("Save this beneficiary for next time")}</span>
+            </div>
         </div>
     );
 };
