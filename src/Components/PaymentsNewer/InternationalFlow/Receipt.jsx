@@ -11,6 +11,7 @@ import fail from "./files/fail.json"
 import help from "./files/help.svg"
 import logo from "./files/ins_logo.svg"
 import styles from "./styles/receipt.module.css"
+import { getBeneficiaryDisplayName } from "./beneficiaryHelpers"
 
 const Receipt = ({ data, showTrxBtn = true, transactionStatus, isFullWidth = false, isGuest, success }) => {
     const { t } = useTranslation()
@@ -182,7 +183,7 @@ const Receipt = ({ data, showTrxBtn = true, transactionStatus, isFullWidth = fal
                                         values={{
                                             name: title
                                                 ? title
-                                                : `${data.beneficiary?.firstname ?? data.beneficiary?.first_name ?? data.beneficiary?.company_name ?? "Recipient's"} ${data.beneficiary?.lastname ?? data.beneficiary?.last_name ?? ""}`,
+                                                : getBeneficiaryDisplayName(data.beneficiary, "Recipient's"),
                                         }}
                                         components={{
                                             user: <strong />,

@@ -522,17 +522,17 @@
 }
 
 .avatar {
-    width: 34px;
-    height: 34px;
-    border-radius: 50%;
-    background: #ece8ff;
-    color: #6f56d9;
-    font-size: 11px;
-    font-weight: 600;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-right: 12px;
+    width: 34px !important;
+    height: 34px !important;
+    border-radius: 50% !important;
+    background: #ece8ff !important;
+    color: #6f56d9 !important;
+    font-size: 11px !important;
+    font-weight: 600 !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    margin-right: 0px !important;
 }
 
 .companyIcon {
@@ -556,7 +556,7 @@
 
 .info p {
     margin: 3px 0 10px;
-    font-size: 11px;
+    font-size: 11px !important;
     color: #8a8a8a;
 }
 
@@ -991,6 +991,11 @@
     border-radius: 20px;
     font-size: 10px;
     font-weight: 700;
+}
+
+.pof {
+    background: #E0F2FE;
+    color: #0369A1;
 }
 
 .uploadBtn {

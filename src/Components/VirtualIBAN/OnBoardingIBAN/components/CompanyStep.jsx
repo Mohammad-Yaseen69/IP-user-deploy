@@ -1,7 +1,6 @@
 import { useContext, useEffect, useState } from 'react'
 import { Briefcase, ChevronUp, Globe, Hash, MapPin, Plus, Search } from 'react-feather'
 import { useTranslation } from 'react-i18next'
-import { FaHand } from 'react-icons/fa6'
 import { UserContext } from '../../../../Context/UserContext'
 import Magicsvg from '../magicsvg'
 import styles from '../style/onboardingSteps.module.css'
@@ -9,6 +8,10 @@ import SidebarProgress from './SidebarProgress'
 import { BsDot } from 'react-icons/bs'
 import AiIcon from "../../../../assets/icons/ai-icon.svg";
 import StepProgress from './StepProgress'
+import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers'
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
+import dayjs from 'dayjs'
+import useStepValidation, { required } from '../../../../hooks/useStepValidation'
 
 const formatDateForInput = (val) => {
     if (!val) return '';
@@ -49,6 +52,14 @@ const formatDateForInput = (val) => {
     return '';
 };
 
+const COMPANY_RULES = {
+    countryOfIncorporation: required.text('countryOfIncorporation'),
+    registrationNumber: required.text('registrationNumber'),
+    legalName: required.text('legalName'),
+    registeredAddress: required.list('registeredAddress'),
+    dateOfIncorporation: required.list('dateOfIncorporation'),
+}
+
 const CompanyStep = ({ onNext, onBack, onChange, userType, data = {}, currentStep }) => {
     const { t } = useTranslation()
     const { userDetails } = useContext(UserContext)
@@ -71,6 +82,7 @@ const CompanyStep = ({ onNext, onBack, onChange, userType, data = {}, currentSte
         mainContact: data.mainContact || '',
         agent: agentDefault,
     })
+    const { err, validate } = useStepValidation(form, COMPANY_RULES);
 
 
     useEffect(() => {
@@ -81,7 +93,7 @@ const CompanyStep = ({ onNext, onBack, onChange, userType, data = {}, currentSte
 
     useEffect(() => {
         const rawDate = userDetails?.company?.date_of_incorporation || data.dateOfIncorporation || '';
-        if (rawDate) {
+        if (rawDate && !form?.dateOfIncorporation) {
             const formatted = formatDateForInput(rawDate);
             if (formatted) {
                 setForm(prev => ({ ...prev, dateOfIncorporation: formatted }));
@@ -116,7 +128,7 @@ const CompanyStep = ({ onNext, onBack, onChange, userType, data = {}, currentSte
         }));
     };
     const handleContinue = () => {
-        onNext(form, 'company')
+      if(validate())  onNext(form, 'company')
     }
 
     const steps = [
@@ -128,6 +140,27 @@ const CompanyStep = ({ onNext, onBack, onChange, userType, data = {}, currentSte
         { num: '06', label: t('Review'), active: false, key:'review' }
     ]
 
+    const DateField = ({ isMobile }) => (
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DatePicker
+                value={dayjs(form?.dateOfIncorporation) || ""}
+                sx={{ 
+                    background: isMobile? '#fff' : '#FAFBFF',
+                    '& input':{ p: '14.5px 14px 14.5px 12.5px', fontSize: isMobile ? 14 : '13.5px', color: '#1B1F2A', fontWeight: isMobile ? 500 : 400 },
+                    '& .MuiInputBase-root': { height: isMobile ? '51px' :'44px' },
+                    '& fieldset': { borderRadius: isMobile ? '12px' :'6px', border: '1.5px solid #E2E8F0', },
+                    '& .Mui-focused fieldset':{ borderColor: '#4A32E3 !important', borderWidth: '1.5px !important' },
+                    '& .Mui-focused' : {boxShadow: '0 0 0 3px rgba(74, 50, 227, 0.1)', background: '#fff'},
+                    '& svg': { width: 18, height: 18}
+                }}
+                disableFuture={true}
+                onChange={(value)=>set("dateOfIncorporation")({ target: { value:dayjs(value).format("YYYY-MM-DD") } })}
+                renderInput={(params) => <input {...params} />}
+                disabled={Boolean(userDetails?.company?.date_of_incorporation)}
+                readOnly={Boolean(userDetails?.company?.date_of_incorporation)}
+            />
+        </LocalizationProvider>
+    )
     return (
         <div className={styles.onboardingLayout}>
             <div>
@@ -214,10 +247,11 @@ const CompanyStep = ({ onNext, onBack, onChange, userType, data = {}, currentSte
 
                                     <input
                                         type="text"
-                                        onChange={set("registrationNumber")}
+                                        onChange={set("countryOfIncorporation")}
                                         placeholder="CHE-105.837.234"
                                         disabled
                                         className={styles.textInput}
+                                        style={err('countryOfIncorporation')}
                                         readOnly
                                         value={form.countryOfIncorporation}
                                     />
@@ -236,6 +270,7 @@ const CompanyStep = ({ onNext, onBack, onChange, userType, data = {}, currentSte
                                         type="text"
                                         className={styles.textInput}
                                         value={form.registrationNumber}
+                                        style={err('registrationNumber')}
                                         onChange={set("registrationNumber")}
                                         placeholder="CHE-105.837.234"
                                         pattern="^[a-zA-Z0-9\u00C0-\u024F\s-]+$"
@@ -245,11 +280,6 @@ const CompanyStep = ({ onNext, onBack, onChange, userType, data = {}, currentSte
                                     />
                                 </div>
                             </div>
-
-                            <button className={styles.lookupBtn}>
-                                <Search size={12}/> 
-                                <span>{t('Look up on registry')}</span>
-                            </button>
                         
                             <div className={styles.inputGroup}>
                                 <label className={styles.inputLabel}>
@@ -262,6 +292,7 @@ const CompanyStep = ({ onNext, onBack, onChange, userType, data = {}, currentSte
                                     <input
                                         className={styles.textInput}
                                         value={form.legalName}
+                                        style={err('legalName')}
                                         onChange={set("legalName")}
                                         readOnly
                                         disabled
@@ -312,17 +343,7 @@ const CompanyStep = ({ onNext, onBack, onChange, userType, data = {}, currentSte
                                 <label className={styles.inputLabel}>
                                    {t("DATE OF INCORPORATION")}
                                 </label>
-
-                                <input
-                                    style={{ padding: "14.5px 14px 14.5px 12.5px" }}
-                                    type="date"
-                                    className={styles.textInput}
-                                    value={form.dateOfIncorporation || ""}
-                                    onChange={set("dateOfIncorporation")}
-                                    max={new Date().toISOString().split("T")[0]}
-                                    disabled={Boolean(userDetails?.company?.date_of_incorporation)}
-                                    readOnly={Boolean(userDetails?.company?.date_of_incorporation)}
-                                />
+                                <DateField />
                             </div>
 
                             <div className={styles.twoInputRow}>
@@ -346,17 +367,7 @@ const CompanyStep = ({ onNext, onBack, onChange, userType, data = {}, currentSte
                                     <label className={styles.inputLabel}>
                                         {t('Incorporated')}
                                     </label>
-
-                                    <input
-                                        style={{ padding: "14.5px 14px 14.5px 12.5px" }}
-                                        type="date"
-                                        className={styles.textInput}
-                                        value={form.dateOfIncorporation || ""}
-                                        onChange={set("dateOfIncorporation")}
-                                        max={new Date().toISOString().split("T")[0]}
-                                        disabled={Boolean(userDetails?.company?.date_of_incorporation)}
-                                        readOnly={Boolean(userDetails?.company?.date_of_incorporation)}
-                                    />
+                                    <DateField isMobile={true} />
                                 </div>
                             </div>
                             <div className={styles.inputGroup}>
@@ -409,6 +420,7 @@ const CompanyStep = ({ onNext, onBack, onChange, userType, data = {}, currentSte
                                 <input
                                     className={styles.textInput}
                                     value={form.registeredAddress}
+                                    style={err('registeredAddress')}
                                     onChange={set("registeredAddress")}
                                     placeholder={t("Street, City, Country")}
                                     disabled
@@ -462,7 +474,7 @@ const CompanyStep = ({ onNext, onBack, onChange, userType, data = {}, currentSte
                 <button
                     onClick={handleContinue}
                     className={styles.continueButton}
-                    disabled={!isFormValid}
+                    aria-disabled={!isFormValid}
                     style={{ opacity: !isFormValid ? 0.5 : 1, cursor: !isFormValid ? 'not-allowed' : 'pointer' }}
                 >
                     {t("Continue")}
