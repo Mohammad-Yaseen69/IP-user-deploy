@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { forwardRef, useContext, useEffect, useImperativeHandle, useReducer, useRef, useState } from 'react';
+import { forwardRef, useContext, useEffect, useImperativeHandle, useMemo, useReducer, useRef, useState } from 'react';
 import { Activity, ArrowRight, Cpu, CreditCard, Globe, Zap } from 'react-feather'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
@@ -31,12 +31,18 @@ import {
     isDraftFileRef,
 } from '../../../utils/Data/businessDraft'
 import { useIdempotency } from '../../../hooks/Payments/useIdempotency';
+import { useRiskPreview } from '../../../hooks/useRiskPreview'
+import { RiskPreviewContext } from './riskPreviewContext'
 
 const STEPS_BUSINESS = ['landing', 'selection', 'account', 'company', 'activity', 'ownership', 'documents', 'review']
 const STEPS_INDIVIDUAL = ['landing', 'selection', 'account', 'review']
 
 const DRAFT_STEPS = ['company', 'activity', 'ownership', 'documents', 'review', 'pricing', 'ActivateAccount']
 const DRAFT_COMPANY_KEYS = ['registrationNumber', 'taxNumber', 'dateOfIncorporation', 'tradingName', 'website', 'mainContact']
+
+// Live risk feedback runs on the steps that collect scoring data.
+const RISK_PREVIEW_STEPS = ['company', 'activity', 'ownership', 'documents', 'review']
+const RISK_ACTIVITY_KEYS = ['industry', 'industryReference', 'countries', 'originCountries', 'destinationCountries', 'services', 'paymentRails', 'currencies', 'monthlyVolume', 'maximumTransaction']
 
 const initialState = {
     step: 'landing',
@@ -427,6 +433,17 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
         onStepChange?.(state.step)
     }, [state.step, onStepChange])
 
+    const riskPayload = useMemo(() => ({
+        company: { countryOfIncorporation: state.company.countryOfIncorporation },
+        activity: RISK_ACTIVITY_KEYS.reduce((acc, key) => ({ ...acc, [key]: state.activity[key] }), {}),
+        owners: (state.ownership.owners || []).map(({ type, fullName, email, ownershipPercent, isPep }) => ({ type, fullName, email, ownershipPercent, isPep })),
+    }), [state.company.countryOfIncorporation, state.activity, state.ownership.owners])
+    const riskPreview = useRiskPreview(riskPayload, draftEnabled && RISK_PREVIEW_STEPS.includes(state.step))
+    const riskPreviewValue = useMemo(
+        () => ({ data: riskPreview.data, isFetching: riskPreview.isFetching }),
+        [riskPreview.data, riskPreview.isFetching]
+    )
+
     if (loadingStatus || (draftEnabled && !draftHydrated)) {
         return (
             <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '350px', width: '100%' }}>
@@ -436,7 +453,7 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
     }
 
     return (
-        <div>
+        <RiskPreviewContext.Provider value={riskPreviewValue}>
             {state.step === 'landing' && (
                 <div className={styles.mainContent}>
                     <div className={styles.leftSection}>
@@ -657,7 +674,7 @@ const OnboardingIBAN = forwardRef(({ onCreated, onStepChange }, ref) => {
                     />
                 </ModalBody>
             </Modal>
-        </div>
+        </RiskPreviewContext.Provider>
     )
 });
 

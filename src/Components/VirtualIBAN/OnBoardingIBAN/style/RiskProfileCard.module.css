@@ -1,0 +1,144 @@
+.card {
+    background: #ffffff;
+    border: 1px solid #E6E3FF;
+    border-radius: 14px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.inline {
+    margin: 16px 0;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #4A32E3;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+}
+
+.level {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 999px;
+    white-space: nowrap;
+}
+
+.level.low {
+    background: #E8F7EE;
+    color: #1E8E4E;
+}
+
+.level.medium {
+    background: #FFF4E0;
+    color: #B26A00;
+}
+
+.level.high {
+    background: #FDECEC;
+    color: #C62828;
+}
+
+.cdd {
+    margin: 0;
+    font-size: 12px;
+    color: #475569;
+}
+
+.updating {
+    color: #9AA3B2;
+}
+
+.feedback {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.feedback li {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding-left: 10px;
+    border-left: 3px solid #E6E3FF;
+    font-size: 12px;
+    line-height: 1.5;
+    color: #475569;
+}
+
+.feedback li.medium {
+    border-left-color: #F5B547;
+}
+
+.feedback li.high {
+    border-left-color: #E5534B;
+}
+
+.feedback strong {
+    color: #141220;
+    font-weight: 600;
+}
+
+.note {
+    margin: 0;
+    font-size: 12px;
+    color: #475569;
+}
+
+.documents {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.documentsTitle {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #6E7687;
+}
+
+.document {
+    font-size: 11px;
+    padding: 3px 8px;
+    border-radius: 6px;
+    background: #F3F5FF;
+    color: #4A32E3;
+}
+
+.highNote {
+    margin: 0;
+    display: flex;
+    gap: 6px;
+    align-items: flex-start;
+    font-size: 12px;
+    line-height: 1.5;
+    color: #8A1C1C;
+    background: #FDF3F3;
+    border-radius: 8px;
+    padding: 8px 10px;
+}
+
+.highNote svg {
+    flex-shrink: 0;
+    margin-top: 2px;
+}

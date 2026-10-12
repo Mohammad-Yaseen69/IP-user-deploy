@@ -10,6 +10,7 @@ import rm from "./files/ReceiveMoney.png"
 // import cf from "./files/CryptoToFiat.png"
 import cf from "./files/CryptoToFiat.svg"
 import pa from "./files/pa.svg"
+import copyTrading from "../CopyX/assets/copy-trading.svg"
 import qr from "./files/qr_s.svg"
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -20,6 +21,7 @@ const QuickLinksNew = () => {
     const items = [
         { icon: funds, text: t('Add Funds'), width: "26px", link: "/add-funds" },
         { icon: sm, text: t('Send Money'), width: "27px", link: "/payments?payment_action=send_money" },
+        { icon: copyTrading, text: t('Copy Trading'), width: "22px", link: "/copy-trading" },
         { icon: rm, text: t('Request Money'), width: "26px", link: "/payments?payment_action=req_money" },
         { icon: sq, text: t('Send A Quote'), width: "21px", link: "/payments?payment_action=send_quote" },
         // { icon: cf, text: t('Pay With Crypto'), width: "23px", link: "/payments?payment_action=send_crypto" },
