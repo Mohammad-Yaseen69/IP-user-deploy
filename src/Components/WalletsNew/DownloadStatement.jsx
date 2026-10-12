@@ -239,7 +239,7 @@ const DownloadStatement = ({ showModal, setShowModal, wallet, isTransection }) =
                     ],
                 ],
                 body: arr.map((item) => {
-                    const internationalReceiver = beneficiaries.filter(benef => benef?._id === item?.beneficiary)?.[0]
+                    const internationalReceiver = beneficiaries.filter(benef => benef?._id === item?.beneficiary)?.[0] || item?.beneficiaryDetails
 
                     return [
                         new Date(item?.createdAt)?.toLocaleString(),

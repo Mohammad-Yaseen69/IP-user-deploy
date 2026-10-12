@@ -60,7 +60,7 @@ const RecentTransItem = ({ transaction, transactions, i, windowWidth }) => {
     }, [transaction])
     const internationalReceiver = useMemo(() => {
         if (!transaction?.beneficiary) return null;
-        return beneficiaries.filter(benef => benef?._id === transaction?.beneficiary)?.[0]
+        return beneficiaries.filter(benef => benef?._id === transaction?.beneficiary)?.[0] || transaction?.beneficiaryDetails
     }, [transaction, beneficiaries])
     return (
         <>
