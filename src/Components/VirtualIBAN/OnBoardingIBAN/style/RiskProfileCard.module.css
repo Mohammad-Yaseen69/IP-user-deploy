@@ -101,30 +101,6 @@
     color: #475569;
 }
 
-.documents {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-}
-
-.documentsTitle {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 11px;
-    font-weight: 600;
-    color: #6E7687;
-}
-
-.document {
-    font-size: 11px;
-    padding: 3px 8px;
-    border-radius: 6px;
-    background: #F3F5FF;
-    color: #4A32E3;
-}
-
 .highNote {
     margin: 0;
     display: flex;

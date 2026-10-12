@@ -1,4 +1,4 @@
-import { AlertCircle, FileText, Shield } from 'react-feather'
+import { AlertCircle, Shield } from 'react-feather'
 import { useTranslation } from 'react-i18next'
 import styles from '../style/RiskProfileCard.module.css'
 import { useRiskPreviewContext } from '../riskPreviewContext'
@@ -15,8 +15,6 @@ const CDD_TEXT = {
     enhanced: 'Enhanced due diligence',
 }
 
-// Live risk feedback while the user fills the IBAN onboarding. Informational only:
-// it never blocks continuing or submitting.
 const RiskProfileCard = ({ variant = 'sidebar' }) => {
     const { t } = useTranslation()
     const { data, isFetching } = useRiskPreviewContext()
@@ -25,7 +23,6 @@ const RiskProfileCard = ({ variant = 'sidebar' }) => {
 
     const level = data.level || 'low'
     const feedback = (data.feedback || []).filter((item) => item.level !== 'low')
-    const documents = data.expectedDocuments || []
 
     return (
         <div className={`${styles.card} ${variant === 'inline' ? styles.inline : ''}`} aria-live="polite">
@@ -55,17 +52,6 @@ const RiskProfileCard = ({ variant = 'sidebar' }) => {
                 </ul>
             ) : (
                 <p className={styles.note}>{t('Your profile looks straightforward so far.')}</p>
-            )}
-
-            {documents.length > 0 && (
-                <div className={styles.documents}>
-                    <span className={styles.documentsTitle}>
-                        <FileText size={11} /> {t('You may be asked for')}
-                    </span>
-                    {documents.map((doc) => (
-                        <span key={doc.key} className={styles.document}>{t(doc.label)}</span>
-                    ))}
-                </div>
             )}
 
             {level === 'high' && (

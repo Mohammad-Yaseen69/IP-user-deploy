@@ -40,7 +40,6 @@ const STEPS_INDIVIDUAL = ['landing', 'selection', 'account', 'review']
 const DRAFT_STEPS = ['company', 'activity', 'ownership', 'documents', 'review', 'pricing', 'ActivateAccount']
 const DRAFT_COMPANY_KEYS = ['registrationNumber', 'taxNumber', 'dateOfIncorporation', 'tradingName', 'website', 'mainContact']
 
-// Live risk feedback runs on the steps that collect scoring data.
 const RISK_PREVIEW_STEPS = ['company', 'activity', 'ownership', 'documents', 'review']
 const RISK_ACTIVITY_KEYS = ['industry', 'industryReference', 'countries', 'originCountries', 'destinationCountries', 'services', 'paymentRails', 'currencies', 'monthlyVolume', 'maximumTransaction']
 
