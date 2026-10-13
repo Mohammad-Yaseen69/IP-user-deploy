@@ -143,7 +143,7 @@ const CompanyStep = ({ onNext, onBack, onChange, userType, data = {}, currentSte
   const DateField = ({ isMobile }) => (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DatePicker
-        value={dayjs(form?.dateOfIncorporation) || ""}
+        value={form?.dateOfIncorporation ? dayjs(form?.dateOfIncorporation) : null}
         sx={{
           background: isMobile ? "#fff" : "#FAFBFF",
           "& input": {
@@ -152,7 +152,10 @@ const CompanyStep = ({ onNext, onBack, onChange, userType, data = {}, currentSte
             color: "#1B1F2A",
             fontWeight: isMobile ? 500 : 400,
           },
-          "& .MuiInputBase-root": { height: isMobile ? "51px" : "44px" },
+          "& .MuiInputBase-root": {
+            height: isMobile ? "51px" : "44px",
+            boxShadow: "none !important",
+          },
           "& fieldset": {
             borderRadius: isMobile ? "12px" : "6px",
             border: "1.5px solid #E2E8F0",
