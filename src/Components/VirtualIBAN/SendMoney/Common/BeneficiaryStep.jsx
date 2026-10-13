@@ -39,7 +39,6 @@ const BeneficiaryStep = ({
     const [typeFilter, setTypeFilter] = useState("all")
     const [sortBy, setSortBy] = useState("name_asc")
     const [openMenu, setOpenMenu] = useState(null) 
-    const activeFilterCount = typeFilter !== "all" ? 1 : 0
     const filtered = useMemo(() => {
         const q = query.trim().toLowerCase()
 
@@ -89,7 +88,6 @@ const BeneficiaryStep = ({
                 <div className={styles.dropdown}>
                     <button type="button" className={styles.toolbarBtn} onClick={() => toggleMenu("filter")}>
                         <Filter size={14} /> {t("Filter")}
-                        {activeFilterCount > 0 && <span className={styles.badge}>{activeFilterCount}</span>}
                     </button>
                     {openMenu === "filter" && (
                         <div className={styles.menu}>
