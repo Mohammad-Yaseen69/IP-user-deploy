@@ -4,6 +4,7 @@ import pluginReact from "eslint-plugin-react";
 import reactHooks from "eslint-plugin-react-hooks";
 import reactRefresh from "eslint-plugin-react-refresh";
 import i18nextPlugin from "eslint-plugin-i18next";
+import eslintConfigPrettier from "eslint-config-prettier/flat";
 import { defineConfig } from "eslint/config";
 
 export default defineConfig([
@@ -64,4 +65,5 @@ export default defineConfig([
       globals: globals.node,
     },
   },
+  eslintConfigPrettier, // keep last: turns off rules that conflict with Prettier
 ]);
