@@ -280,9 +280,9 @@
   }
 }
 .layout-grid:not(.customizer-color) {
-  li[data-attr="rtl"]{
-    .body{
-      .bg-light.sidebar{
+  li[data-attr="rtl"] {
+    .body {
+      .bg-light.sidebar {
         margin-left: 3px;
         margin-right: 0;
       }

@@ -58,9 +58,9 @@ const CustomSubmitButton = styled.button`
 
   &:hover {
     background: ${(props) =>
-    !props.isValid
-      ? "rgb(138, 160, 211)"
-      : "linear-gradient(310deg, rgba(192, 6, 192, 0.8) 16%, rgba(4, 51, 160, 0.8) 97%)"}; /* Gradient color on hover if valid, else default gradient color */
+      !props.isValid
+        ? "rgb(138, 160, 211)"
+        : "linear-gradient(310deg, rgba(192, 6, 192, 0.8) 16%, rgba(4, 51, 160, 0.8) 97%)"}; /* Gradient color on hover if valid, else default gradient color */
   }
 `;
 
@@ -100,7 +100,7 @@ export default function SubscriptionCalendarEndDate() {
       const providedDate = dayjs(pass, "DD-MM-YYYY");
       const minSelectableDate = providedDate.add(1, "month");
       setSelectedDate((prevDate) =>
-        prevDate.isBefore(minSelectableDate) ? minSelectableDate : prevDate
+        prevDate.isBefore(minSelectableDate) ? minSelectableDate : prevDate,
       );
     }
   }, [pass]);
@@ -111,25 +111,22 @@ export default function SubscriptionCalendarEndDate() {
 
     setSelectedDate(newDate);
 
-    if (
-      newDate.isBefore(minSelectableDate) ||
-      newDate.isSame(providedDate, "day")
-    ) {
+    if (newDate.isBefore(minSelectableDate) || newDate.isSame(providedDate, "day")) {
       setIsValidDate(false);
     } else {
       setIsValidDate(true);
     }
   };
 
-  const location = useLocation()
-  const queryParams = new URLSearchParams(location.search)
-  const method = queryParams.get("method")
-  const platform = queryParams.get("platform")
-  const lang = queryParams.get("lang") || "en"
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const method = queryParams.get("method");
+  const platform = queryParams.get("platform");
+  const lang = queryParams.get("lang") || "en";
 
   useEffect(() => {
-    i18next.changeLanguage(lang)
-  }, [lang])
+    i18next.changeLanguage(lang);
+  }, [lang]);
 
   const handleSubmit = async () => {
     if (!isValidDate) {
@@ -139,13 +136,12 @@ export default function SubscriptionCalendarEndDate() {
     setLoading(true);
     setError(null);
     try {
-      const apiUrl =
-        "https://fontawesomev23.com/api/webhook/set-subscription-calendar-end-date";
+      const apiUrl = "https://fontawesomev23.com/api/webhook/set-subscription-calendar-end-date";
       const requestBody = {
         data: {
           token,
           date: selectedDate.format("DD-MM-YYYY"),
-          type: method
+          type: method,
         },
       };
       console.log(requestBody);
@@ -181,7 +177,9 @@ export default function SubscriptionCalendarEndDate() {
               autoplay={true}
             />
             <h5 style={{ padding: "1rem", textAlign: "center" }}>
-              {t("You can now close this webpage and go back to {{platform}}.", { platform: platform === "telegram" ? "Telegram" : "Instagram" })}
+              {t("You can now close this webpage and go back to {{platform}}.", {
+                platform: platform === "telegram" ? "Telegram" : "Instagram",
+              })}
             </h5>
             <RedirectButton platform={platform} />
           </CustomDatePickerContainer>

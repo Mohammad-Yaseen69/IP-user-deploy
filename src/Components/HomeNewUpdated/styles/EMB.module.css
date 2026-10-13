@@ -1,112 +1,111 @@
-  .m_card {
-      display: none;
-  }
+.m_card {
+  display: none;
+}
 
-  /* .con {
+/* .con {
       display: flex;
   } */
+.banner {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 30px;
+  container-type: inline-size;
+  border-radius: 16px;
+  background: url(../files/ref_banner.webp);
+  background-size: cover;
+  background-position: center right;
+  background-repeat: no-repeat;
+  color: white;
+  height: 50%;
+}
+
+.banner h2 {
+  font-family: "Clash Display";
+  font-size: min(5cqi, 36px);
+  font-style: normal;
+  font-weight: 600;
+  margin-bottom: 0;
+  line-height: normal;
+}
+
+.description {
+  display: flex;
+  gap: 1.5rem;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+
+.banner p {
+  flex: 1;
+  color: #e0e0e0;
+  leading-trim: both;
+  text-edge: cap;
+  font-size: min(2.8cqi, 14px);
+  font-style: normal;
+  font-weight: 600;
+  margin-bottom: 0 !important;
+  line-height: 150%;
+  /* max-width: 40ch; */
+  text-align: justify;
+  /* 21px */
+}
+
+.banner a {
+  color: #fff;
+  leading-trim: both;
+  text-edge: cap;
+  font-family: "Clash Display";
+  font-size: min(3cqi, 16px);
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  white-space: nowrap;
+}
+
+@media screen and (max-width: 1650px) {
   .banner {
-      display: flex;
-      flex-direction: column;
-      gap: .75rem;
-      padding: 30px;
-      container-type: inline-size;
-      border-radius: 16px;
-      background: url(../files/ref_banner.webp);
-      background-size: cover;
-      background-position: center right;
-      background-repeat: no-repeat;
-      color: white;
-      height: 50%;
+    padding: 1.2rem;
   }
+}
 
-  .banner h2 {
-      font-family: "Clash Display";
-      font-size: min(5cqi, 36px);
-      font-style: normal;
-      font-weight: 600;
-      margin-bottom: 0;
-      line-height: normal;
-  }
-
-  .description {
-      display: flex;
-      gap: 1.5rem;
-      align-items: flex-end;
-      justify-content: space-between;
-  }
-
-  .banner p {
-      flex: 1;
-      color: #E0E0E0;
-      leading-trim: both;
-      text-edge: cap;
-      font-size: min(2.8cqi, 14px);
-      font-style: normal;
-      font-weight: 600;
-      margin-bottom: 0 !important;
-      line-height: 150%;
-      /* max-width: 40ch; */
-      text-align: justify;
-      /* 21px */
-  }
-
-  .banner a {
-      color: #FFF;
-      leading-trim: both;
-      text-edge: cap;
-      font-family: "Clash Display";
-      font-size: min(3cqi, 16px);
-      font-style: normal;
-      font-weight: 600;
-      line-height: normal;
-      white-space: nowrap;
-  }
-
-  @media screen and (max-width: 1650px) {
-      .banner {
-          padding: 1.2rem;
-      }
-  }
-
-  @media screen and (max-width: 1000px) {
-
-      /* .con {
+@media screen and (max-width: 1000px) {
+  /* .con {
           display: none;
       } */
-      .banner {
-          display: none;
-      }
-
-      .m_card {
-          display: flex;
-          padding: 1rem;
-          height: fit-content;
-          width: 100%;
-          background: url(../files/ref_banner-mobile.webp);
-          background-position: right;
-          background-repeat: no-repeat;
-          background-size: cover;
-          color: white;
-          flex-direction: column;
-          gap: .5rem;
-          margin-bottom: 0;
-      }
-
-      .m_card h4 {
-          font-size: 1rem;
-          font-family: 'Clash Display', sans-serif;
-          font-weight: 700;
-      }
-
-      .m_card p {
-          font-size: .6rem;
-          margin-bottom: 0;
-      }
-
-      .m_card a {
-          font-family: 'Clash Display', sans-serif;
-          font-size: .7rem;
-          color: white;
-      }
+  .banner {
+    display: none;
   }
+
+  .m_card {
+    display: flex;
+    padding: 1rem;
+    height: fit-content;
+    width: 100%;
+    background: url(../files/ref_banner-mobile.webp);
+    background-position: right;
+    background-repeat: no-repeat;
+    background-size: cover;
+    color: white;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 0;
+  }
+
+  .m_card h4 {
+    font-size: 1rem;
+    font-family: "Clash Display", sans-serif;
+    font-weight: 700;
+  }
+
+  .m_card p {
+    font-size: 0.6rem;
+    margin-bottom: 0;
+  }
+
+  .m_card a {
+    font-family: "Clash Display", sans-serif;
+    font-size: 0.7rem;
+    color: white;
+  }
+}

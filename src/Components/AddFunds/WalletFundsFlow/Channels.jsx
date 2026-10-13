@@ -14,12 +14,7 @@ import mw from "../../PaymentsNewer/files/mw.png";
 import pc from "../../PaymentsNewer/files/pc.png";
 import TypingSpan from "../../TypingSpan";
 
-const Channels = ({
-  setChannel,
-  channel,
-  thunesServices,
-  thunesProviders = [],
-}) => {
+const Channels = ({ setChannel, channel, thunesServices, thunesProviders = [] }) => {
   const { t } = useTranslation();
   const { userDetails } = useContext(UserContext);
   const [showCardMaintenanceModal, setShowCardMaintenanceModal] = useState(false);
@@ -38,73 +33,67 @@ const Channels = ({
   const payoutChannelData = [
     userDetails?.level?.topup_channel?.card_payment
       ? {
-        name: "Payment Card",
-        id: 5,
-        icon: pc,
-        value: "card",
-        coming_soon:
-          userDetails?.level?.topup_channel?.card_payment === "coming_soon",
-      }
+          name: "Payment Card",
+          id: 5,
+          icon: pc,
+          value: "card",
+          coming_soon: userDetails?.level?.topup_channel?.card_payment === "coming_soon",
+        }
       : {},
     userDetails?.level?.topup_channel?.paypal
       ? {
-        name: "Paypal",
-        id: 5,
-        icon: pc,
-        value: "paypal",
-        coming_soon:
-          userDetails?.level?.topup_channel?.paypal === "coming_soon",
-      }
+          name: "Paypal",
+          id: 5,
+          icon: pc,
+          value: "paypal",
+          coming_soon: userDetails?.level?.topup_channel?.paypal === "coming_soon",
+        }
       : {},
     userDetails?.level?.topup_channel?.bank_deposit
       ? {
-        name: "Bank Deposit",
-        id: 2,
-        icon: bd,
-        value: "bank",
-        coming_soon:
-          userDetails?.level?.topup_channel?.bank_deposit === "coming_soon",
-      }
+          name: "Bank Deposit",
+          id: 2,
+          icon: bd,
+          value: "bank",
+          coming_soon: userDetails?.level?.topup_channel?.bank_deposit === "coming_soon",
+        }
       : {},
     userDetails?.level?.topup_channel?.bank
       ? {
-        name: "Bank Transfer (Europe)",
-        id: 6,
-        icon: bd,
-        value: "bank_transfer",
-        api_val: "bank",
-        coming_soon: false,
-      }
+          name: "Bank Transfer (Europe)",
+          id: 6,
+          icon: bd,
+          value: "bank_transfer",
+          api_val: "bank",
+          coming_soon: false,
+        }
       : {},
     userDetails?.level?.topup_channel?.crypto
       ? {
-        name: "Crypto Transfer",
-        id: 2,
-        icon: bd,
-        value: "crypto",
-        coming_soon:
-          userDetails?.level?.topup_channel?.crypto === "coming_soon",
-      }
+          name: "Crypto Transfer",
+          id: 2,
+          icon: bd,
+          value: "crypto",
+          coming_soon: userDetails?.level?.topup_channel?.crypto === "coming_soon",
+        }
       : {},
   ];
 
   const thunesAllowed = [
     userDetails?.level?.topup_channel?.mobile_money
       ? {
-        name: "Mobile Wallet",
-        id: 1,
-        icon: mw,
-        value: "mobile_wallet",
-        // coming_soon: userDetails?.level?.topup_channel?.mobile_money === "coming_soon",
-        sub_name: "wallet",
-      }
+          name: "Mobile Wallet",
+          id: 1,
+          icon: mw,
+          value: "mobile_wallet",
+          // coming_soon: userDetails?.level?.topup_channel?.mobile_money === "coming_soon",
+          sub_name: "wallet",
+        }
       : {},
   ];
 
   const filteredChannels = useMemo(() => {
-    const allChannels = [...thunesAllowed, ...payoutChannelData].filter(
-      (item) => item?.name,
-    );
+    const allChannels = [...thunesAllowed, ...payoutChannelData].filter((item) => item?.name);
 
     if (!methods || isLoading) return allChannels;
 
@@ -127,7 +116,7 @@ const Channels = ({
           overflowY: "auto",
         }}
       >
-        {!isLoading ?
+        {!isLoading ? (
           filteredChannels.map((item) => (
             <Card
               key={item?.name}
@@ -135,8 +124,9 @@ const Channels = ({
               onClick={() => {
                 if (item?.coming_soon) return;
                 if (item?.value === "crypto") {
-                  const isApproved = userDetails?.company?.kyb_status || userDetails?.company?.kyc_status === "approved";
-
+                  const isApproved =
+                    userDetails?.company?.kyb_status ||
+                    userDetails?.company?.kyc_status === "approved";
 
                   if (!isApproved) {
                     setShowVerificationModal(true);
@@ -198,10 +188,7 @@ const Channels = ({
                     {thunesProviders?.length > 0 && item?.sub_name === "wallet" ? (
                       <>
                         (
-                        <TypingSpan
-                          words={thunesProviders.map((item) => item?.name ?? "")}
-                        />
-                        )
+                        <TypingSpan words={thunesProviders.map((item) => item?.name ?? "")} />)
                       </>
                     ) : (
                       ""
@@ -211,11 +198,7 @@ const Channels = ({
                 {item?.coming_soon ? (
                   <Badge color="primary">{t("Coming Soon")}</Badge>
                 ) : channel?.name === item?.name ? (
-                  <Check
-                    color="green"
-                    size={24}
-                    style={{ position: "absolute", right: "20px" }}
-                  />
+                  <Check color="green" size={24} style={{ position: "absolute", right: "20px" }} />
                 ) : (
                   <img
                     src={i}
@@ -230,11 +213,12 @@ const Channels = ({
                 )}
               </CardBody>
             </Card>
-          )) :
+          ))
+        ) : (
           <>
             <InstaPayLoader />
           </>
-        }
+        )}
         <Dialog
           open={showVerificationModal}
           onClose={() => setShowVerificationModal(false)}
@@ -266,7 +250,7 @@ const Channels = ({
             </button>
           </DialogActions>
         </Dialog>
-      </div >
+      </div>
     </>
   );
 };

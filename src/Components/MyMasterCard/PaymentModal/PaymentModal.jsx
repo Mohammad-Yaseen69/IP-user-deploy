@@ -1,66 +1,65 @@
-import axios from 'axios'
-import { useContext, useEffect, useMemo, useState } from 'react'
-import { useTranslation } from 'react-i18next'
-import { useNavigate } from 'react-router'
-import { toast } from 'react-toastify'
-import { Modal, ModalBody, ModalHeader } from 'reactstrap'
-import { UserContext } from '../../../Context/UserContext'
-import { createShambeToken } from '../../../Helper/CreateToken'
-import { decryptData } from '../../../Helper/EssentilaMethods/Decryption'
-import { encryptData } from '../../../Helper/EssentilaMethods/Encryption'
-import TrustpaymentPage from '../../AddFunds/WalletFund/CreditTransaction'
-import { CARD_TYPES } from '../../CreditInput/CreditCardTypes'
-import { apiErrorMessage } from '../../PaymentsNewer/InternationalFlow'
-import OTPConfirmation from '../../../Common/Component/OtpVerification'
-import styles from "../styles/onboard.module.scss"
-import ConfirmationStep from './ConfirmationStep'
-import PaymentSelect from './PaymentSelectStep'
-import PaymentStep from './PaymentStep'
-import SuccessStep from './SuccessStep'
-import PaytentlyHostedModal from '../../AddFunds/PaytentlyHostedModal'
-import { initiatePaytentlyPayment, usePaytently } from '../../../utils/Functions/paytently'
-import { useIdempotency } from '../../../hooks/Payments/useIdempotency'
-
+import axios from "axios";
+import { useContext, useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router";
+import { toast } from "react-toastify";
+import { Modal, ModalBody, ModalHeader } from "reactstrap";
+import { UserContext } from "../../../Context/UserContext";
+import { createShambeToken } from "../../../Helper/CreateToken";
+import { decryptData } from "../../../Helper/EssentilaMethods/Decryption";
+import { encryptData } from "../../../Helper/EssentilaMethods/Encryption";
+import TrustpaymentPage from "../../AddFunds/WalletFund/CreditTransaction";
+import { CARD_TYPES } from "../../CreditInput/CreditCardTypes";
+import { apiErrorMessage } from "../../PaymentsNewer/InternationalFlow";
+import OTPConfirmation from "../../../Common/Component/OtpVerification";
+import styles from "../styles/onboard.module.scss";
+import ConfirmationStep from "./ConfirmationStep";
+import PaymentSelect from "./PaymentSelectStep";
+import PaymentStep from "./PaymentStep";
+import SuccessStep from "./SuccessStep";
+import PaytentlyHostedModal from "../../AddFunds/PaytentlyHostedModal";
+import { initiatePaytentlyPayment, usePaytently } from "../../../utils/Functions/paytently";
+import { useIdempotency } from "../../../hooks/Payments/useIdempotency";
 
 const PLACEHOLDER_CARD_TYPE = {
-  type: 'placeholder',
+  type: "placeholder",
   format: "",
   startPattern: "",
   maxCardNumberLength: 16,
-  cvcLength: 3
-}
-
+  cvcLength: 3,
+};
 
 const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay, googlePay }) => {
-  const [step, setStep] = useState(1)
-  const { userWallets, getUserWallets, userDetails, authHeader, setProfileLockTime, checkAuth } = useContext(UserContext)
-  const [walletState, setWalletState] = useState({})
-  const [paymentType, setPaymentType] = useState("")
-  const [loading, setLoading] = useState(false)
-  const [token, setToken] = useState(null)
-  const [showOtpModal, setshowOtpModal] = useState(false)
-  const [codeType, setCodeType] = useState("sms")
-  const [otpMethods, setOtpMethods] = useState(null)
-  const [saveCard, setSaveCard] = useState(false)
-  const [cards, setCards] = useState([])
-  const [selectedSaveCard, setSelectedSaveCard] = useState({})
-  const [cardTransactionDetails, setCardTransactionDetails] = useState({})
-  const [paytentlyHosted, setPaytentlyHosted] = useState(null)
-  const { getKey } = useIdempotency()
-  const navigate = useNavigate()
+  const [step, setStep] = useState(1);
+  const { userWallets, getUserWallets, userDetails, authHeader, setProfileLockTime, checkAuth } =
+    useContext(UserContext);
+  const [walletState, setWalletState] = useState({});
+  const [paymentType, setPaymentType] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [token, setToken] = useState(null);
+  const [showOtpModal, setshowOtpModal] = useState(false);
+  const [codeType, setCodeType] = useState("sms");
+  const [otpMethods, setOtpMethods] = useState(null);
+  const [saveCard, setSaveCard] = useState(false);
+  const [cards, setCards] = useState([]);
+  const [selectedSaveCard, setSelectedSaveCard] = useState({});
+  const [cardTransactionDetails, setCardTransactionDetails] = useState({});
+  const [paytentlyHosted, setPaytentlyHosted] = useState(null);
+  const { getKey } = useIdempotency();
+  const navigate = useNavigate();
   const [cardDetail, setCardDetails] = useState({
     cardNumber: "",
     cardExpiry: "",
     cardCVC: "",
     cardHolderName: "",
-  })
-  const [defaultWallet, setDefaultWallet] = useState({})
-  const [feeDetails, setFeeDetails] = useState({})
-  const [cardNumberError, setCardNumberError] = useState(null)
-  const [disabledBtnS, setDisabledBtn] = useState(false)
-  const [cardType, setCardType] = useState(PLACEHOLDER_CARD_TYPE)
-  const [sideText, setSideText] = useState("Select the payment Type")
-  const { t } = useTranslation()
+  });
+  const [defaultWallet, setDefaultWallet] = useState({});
+  const [feeDetails, setFeeDetails] = useState({});
+  const [cardNumberError, setCardNumberError] = useState(null);
+  const [disabledBtnS, setDisabledBtn] = useState(false);
+  const [cardType, setCardType] = useState(PLACEHOLDER_CARD_TYPE);
+  const [sideText, setSideText] = useState("Select the payment Type");
+  const { t } = useTranslation();
 
   const handleClose = () => {
     setIsOpen(false);
@@ -83,28 +82,29 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay,
     });
   };
 
-
   useEffect(() => {
     switch (step) {
       case 1:
-        setSideText(t("Select the payment Type"))
+        setSideText(t("Select the payment Type"));
         break;
       case 2:
-        paymentType === "card" ? setSideText(window.innerWidth > 1000 ? t("Enter card Details") : t("Payment Details")) : paymentType === "wallet" && setSideText(t("Choose The Wallet"))
+        paymentType === "card"
+          ? setSideText(window.innerWidth > 1000 ? t("Enter card Details") : t("Payment Details"))
+          : paymentType === "wallet" && setSideText(t("Choose The Wallet"));
         break;
       case 3:
-        setSideText(t("Review the Payment"))
+        setSideText(t("Review the Payment"));
         break;
       case 4:
-        setSideText(t("Your Payment is now Completed"))
+        setSideText(t("Your Payment is now Completed"));
         break;
       default:
     }
-  }, [step])
+  }, [step]);
 
   useEffect(() => {
-    getUserWallets()
-  }, [])
+    getUserWallets();
+  }, []);
 
   useEffect(() => {
     const getCardTypeByValue = function getCardTypeByValue(value) {
@@ -112,53 +112,55 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay,
         return cardType.startPattern.test(value);
       })[0];
     };
-    const type = getCardTypeByValue(cardDetail.cardNumber)
+    const type = getCardTypeByValue(cardDetail.cardNumber);
     if (!type || cardDetail.cardNumber.length < type?.maxCardNumberLength) {
-      setCardNumberError(t("Invalid Card Number"))
+      setCardNumberError(t("Invalid Card Number"));
     } else {
-      setCardNumberError("")
+      setCardNumberError("");
     }
-    setCardType(type ?? PLACEHOLDER_CARD_TYPE)
-  }, [cardDetail.cardNumber])
-
+    setCardType(type ?? PLACEHOLDER_CARD_TYPE);
+  }, [cardDetail.cardNumber]);
 
   const filteredWallets = useMemo(() => {
     return userWallets
-      ?.filter(item => item?.wallet_type === "insta" && !item?.blocked && !item?.admin_blocked && item?.status === "active")
+      ?.filter(
+        (item) =>
+          item?.wallet_type === "insta" &&
+          !item?.blocked &&
+          !item?.admin_blocked &&
+          item?.status === "active",
+      )
       ?.sort((a, b) => (b?.default === true ? 1 : -1))
-      ?.map(item => ({ name: item?.currency?.code, ...item }))
-  }, [userWallets])
+      ?.map((item) => ({ name: item?.currency?.code, ...item }));
+  }, [userWallets]);
 
   useEffect(() => {
-
     if (filteredWallets?.length) {
-      setDefaultWallet(filteredWallets[0])
+      setDefaultWallet(filteredWallets[0]);
     }
 
-    console.log(filteredWallets)
+    console.log(filteredWallets);
+  }, [filteredWallets]);
 
-  }, [filteredWallets])
-
-
-  console.log(googlePay, applePay)
+  console.log(googlePay, applePay);
 
   const sendOtp = async (methodId) => {
-    if (methodId && typeof methodId.preventDefault === 'function') {
-      methodId.preventDefault()
+    if (methodId && typeof methodId.preventDefault === "function") {
+      methodId.preventDefault();
     }
-    const otpMethod = typeof methodId === 'string' ? methodId : codeType
+    const otpMethod = typeof methodId === "string" ? methodId : codeType;
 
     if (paymentType !== "wallet") {
-      if (!feeDetails.token) return false
+      if (!feeDetails.token) return false;
     }
 
-    setLoading(true)
+    setLoading(true);
     try {
       const twoYearsAhead = new Date();
       twoYearsAhead.setFullYear(twoYearsAhead.getFullYear() + 2);
       twoYearsAhead.setDate(twoYearsAhead.getDate() - 1);
 
-      const formattedDate = `${twoYearsAhead.getFullYear()}-${String(twoYearsAhead.getMonth() + 1).padStart(2, '0')}-${String(twoYearsAhead.getDate()).padStart(2, '0')}`;
+      const formattedDate = `${twoYearsAhead.getFullYear()}-${String(twoYearsAhead.getMonth() + 1).padStart(2, "0")}-${String(twoYearsAhead.getDate()).padStart(2, "0")}`;
 
       const cardData = {
         data: {
@@ -167,31 +169,30 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay,
           token: feeDetails?.token,
           cardType: vvcCardType === "premium" ? "vcc_premium_virtual" : "vcc_standard_virtual",
           apple_pay: false,
-          google_pay: false
+          google_pay: false,
         },
-        type: otpMethod
-      }
+        type: otpMethod,
+      };
 
       if (applePay === true || googlePay === true) {
-        cardData.data.cardType = "vcc_premium_plus_virtual"
+        cardData.data.cardType = "vcc_premium_plus_virtual";
 
         if (applePay) {
-          cardData.data.apple_pay = true
+          cardData.data.apple_pay = true;
         }
         if (googlePay) {
-          cardData.data.google_pay = true
+          cardData.data.google_pay = true;
         }
       }
 
       if (paymentType === "card") {
         if (selectedSaveCard?._id) {
-          cardData.data.pan = selectedSaveCard._id
+          cardData.data.pan = selectedSaveCard._id;
         } else {
-          cardData.data.is_card_save = saveCard
-          cardData.data.se_shambey = createShambeToken(cardDetail)
+          cardData.data.is_card_save = saveCard;
+          cardData.data.se_shambey = createShambeToken(cardDetail);
         }
       }
-
 
       const data = {
         data: {
@@ -201,103 +202,108 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay,
           currency: "USD",
           expdate: formattedDate,
           apple_pay: false,
-          google_pay: false
-
+          google_pay: false,
         },
-        type: otpMethod
-      }
+        type: otpMethod,
+      };
 
       if (paymentType === "paypal") {
-        data.data.token = feeDetails?.token
+        data.data.token = feeDetails?.token;
       }
 
       if (applePay === true || googlePay === true) {
-        data.data.cardType = "vcc_premium_plus_virtual"
+        data.data.cardType = "vcc_premium_plus_virtual";
 
         if (applePay) {
-          data.data.apple_pay = true
+          data.data.apple_pay = true;
         }
         if (googlePay) {
-          data.data.google_pay = true
+          data.data.google_pay = true;
         }
       }
 
-      const encrypted = encryptData(paymentType === "card" ? cardData : data)
-      console.log(encrypted, data)
-      const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/send-otp`, {
-        data: encrypted
-      }, {
-        headers: authHeader
-      })
+      const encrypted = encryptData(paymentType === "card" ? cardData : data);
+      console.log(encrypted, data);
+      const res = await axios.post(
+        `${import.meta.env.VITE_IP_DEV_API}/api/wallet/send-otp`,
+        {
+          data: encrypted,
+        },
+        {
+          headers: authHeader,
+        },
+      );
 
-      const dec = decryptData(res.data.data)
-      setOtpMethods(dec)
+      const dec = decryptData(res.data.data);
+      setOtpMethods(dec);
       if (!showOtpModal) {
-        setCodeType(dec?.otp_sent_on || "sms")
+        setCodeType(dec?.otp_sent_on || "sms");
       }
-      setToken(dec?.token)
-      setshowOtpModal(true)
+      setToken(dec?.token);
+      setshowOtpModal(true);
     } catch (error) {
-      const dec = decryptData(error?.response?.data?.data)
-      console.log(dec)
-      toast.error("Something went wrong while creating your virtual card! please try again.")
+      const dec = decryptData(error?.response?.data?.data);
+      console.log(dec);
+      toast.error("Something went wrong while creating your virtual card! please try again.");
+    } finally {
+      setLoading(false);
     }
-    finally {
-      setLoading(false)
-    }
-  }
+  };
 
   useEffect(() => {
     if (window.innerWidth > 1000) {
       if (paymentType === "paypal") {
         if (feeDetails.token) {
-          sendOtp()
+          sendOtp();
         }
       }
     }
-  }, [feeDetails, paymentType])
+  }, [feeDetails, paymentType]);
 
   function errorHandler(err, setError) {
     const decrypted = decryptData(err.response.data.data);
-    console.log(decrypted)
-    setError(decrypted?.message ?? "Invalid Verification Code")
+    console.log(decrypted);
+    setError(decrypted?.message ?? "Invalid Verification Code");
     if (decrypted.message?.toLowerCase()?.includes("account is locked")) {
-      const time = decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00"
-      const timeInSec = (+time?.split(":")?.[0] * 60) + (+time?.split(":")?.[1])
-      setProfileLockTime(timeInSec)
-      const coun = localStorage.getItem("ip_country")
-      localStorage.clear()
-      localStorage.setItem("ip_country", coun)
-      navigate("/login")
+      const time = decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00";
+      const timeInSec = +time?.split(":")?.[0] * 60 + +time?.split(":")?.[1];
+      setProfileLockTime(timeInSec);
+      const coun = localStorage.getItem("ip_country");
+      localStorage.clear();
+      localStorage.setItem("ip_country", coun);
+      navigate("/login");
     }
   }
 
   const createWallet = async (setter, type, otp, setError) => {
-    setLoading(true)
+    setLoading(true);
     const data = {
       token: token,
       type: codeType,
-      otp
-    }
+      otp,
+    };
     try {
-      const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/mastercard/create-vvc`, { data: encryptData(data) }, {
-        headers: authHeader
-      })
+      const res = await axios.post(
+        `${import.meta.env.VITE_IP_DEV_API}/api/mastercard/create-vvc`,
+        { data: encryptData(data) },
+        {
+          headers: authHeader,
+        },
+      );
 
-      const dec = decryptData(res.data?.data)
-      const vcc_request_will_be_pending = dec?.vcc_request_will_be_pending
+      const dec = decryptData(res.data?.data);
+      const vcc_request_will_be_pending = dec?.vcc_request_will_be_pending;
 
       if (!vcc_request_will_be_pending) {
-        setToken(null)
-        setStep(4)
-        setshowOtpModal(false)
+        setToken(null);
+        setStep(4);
+        setshowOtpModal(false);
       } else {
-        checkAuth()
-        setToken(null)
-        setshowOtpModal(false)
-        setIsOpen(false)
+        checkAuth();
+        setToken(null);
+        setshowOtpModal(false);
+        setIsOpen(false);
       }
-
     } catch (err) {
       const decrypted = decryptData(err.response.data.data);
       const error2 = apiErrorMessage(decrypted?.message);
@@ -307,75 +313,75 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay,
         errorHandler(err, setError);
       }
     }
-  }
+  };
 
   useEffect(() => {
     const getSavedCards = async () => {
       try {
-
-        const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/get-user-pan-list/${userDetails?._id}`, {
-          headers: authHeader
-        })
-        const dec = decryptData(res.data.data)
-        setCards(dec?.panList)
-
+        const res = await axios.get(
+          `${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/get-user-pan-list/${userDetails?._id}`,
+          {
+            headers: authHeader,
+          },
+        );
+        const dec = decryptData(res.data.data);
+        setCards(dec?.panList);
       } catch {
-        setCards([])
+        setCards([]);
       }
-    }
+    };
 
     if (userDetails?.tfa) {
-      setCodeType("authenticator")
+      setCodeType("authenticator");
     } else if (userDetails?.email_verification) {
-      setCodeType("email")
+      setCodeType("email");
     } else if (userDetails?.whatsapp_verification) {
-      setCodeType("whatsapp")
+      setCodeType("whatsapp");
     } else {
-      setCodeType("sms")
+      setCodeType("sms");
     }
 
     if (userDetails?._id) {
-      getSavedCards()
+      getSavedCards();
     }
-  }, [userDetails])
-
+  }, [userDetails]);
 
   useEffect(() => {
     const getFee = async (method) => {
       try {
-        const walletId = walletState?.wallet_id || defaultWallet?.wallet_id
+        const walletId = walletState?.wallet_id || defaultWallet?.wallet_id;
 
         if (!walletId) {
-          console.log("No wallet ID available")
-          return
+          console.log("No wallet ID available");
+          return;
         }
 
         const res = await axios.get(
-          `${import.meta.env.VITE_IP_DEV_API}/api/mastercard/get-vvc-fee/${walletId}/${(applePay || googlePay)
-            ? "vcc_premium_plus_virtual"
-            : vvcCardType === "premium"
-              ? "vcc_premium_virtual"
-              : "vcc_standard_virtual"
+          `${import.meta.env.VITE_IP_DEV_API}/api/mastercard/get-vvc-fee/${walletId}/${
+            applePay || googlePay
+              ? "vcc_premium_plus_virtual"
+              : vvcCardType === "premium"
+                ? "vcc_premium_virtual"
+                : "vcc_standard_virtual"
           }/${method}`,
-          { headers: authHeader }
-        )
+          { headers: authHeader },
+        );
 
-        const dec = decryptData(res.data.data)
-        setFeeDetails(dec.data)
+        const dec = decryptData(res.data.data);
+        setFeeDetails(dec.data);
       } catch (error) {
-        console.log(error)
+        console.log(error);
       }
-    }
+    };
 
-    const walletId = walletState?.wallet_id || defaultWallet?.wallet_id
+    const walletId = walletState?.wallet_id || defaultWallet?.wallet_id;
 
     if (walletId && paymentType) {
-      if (paymentType === "card") getFee("card")
-      else if (paymentType === "wallet") getFee("wallet")
-      else if (paymentType === "paypal") getFee("paypal")
+      if (paymentType === "card") getFee("card");
+      else if (paymentType === "wallet") getFee("wallet");
+      else if (paymentType === "paypal") getFee("paypal");
     }
-
-  }, [paymentType, walletState?.wallet_id, defaultWallet?.wallet_id])
+  }, [paymentType, walletState?.wallet_id, defaultWallet?.wallet_id]);
   useEffect(() => {
     const disabledBtn = () => {
       switch (paymentType) {
@@ -385,7 +391,13 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay,
           if (selectedSaveCard._id) {
             return false;
           }
-          return !cardDetail.cardNumber || !cardDetail.cardExpiry || !cardDetail.cardCVC || !cardDetail.cardHolderName || cardNumberError;
+          return (
+            !cardDetail.cardNumber ||
+            !cardDetail.cardExpiry ||
+            !cardDetail.cardCVC ||
+            !cardDetail.cardHolderName ||
+            cardNumberError
+          );
         default:
           return false;
       }
@@ -399,8 +411,8 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay,
     twoYearsAhead.setFullYear(twoYearsAhead.getFullYear() + 2);
     twoYearsAhead.setDate(twoYearsAhead.getDate() - 1); // Subtract one day
 
-    const formattedDate = `${twoYearsAhead.getFullYear()}-${String(twoYearsAhead.getMonth() + 1).padStart(2, '0')}-${String(twoYearsAhead.getDate()).padStart(2, '0')}`;
-    setLoading(true)
+    const formattedDate = `${twoYearsAhead.getFullYear()}-${String(twoYearsAhead.getMonth() + 1).padStart(2, "0")}-${String(twoYearsAhead.getDate()).padStart(2, "0")}`;
+    setLoading(true);
     const data = {
       token: token,
       type: codeType,
@@ -411,61 +423,66 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay,
         token: feeDetails?.token,
         cardType: vvcCardType === "premium" ? "vcc_premium_virtual" : "vcc_standard_virtual",
         apple_pay: false,
-        google_pay: false
-      }
-    }
+        google_pay: false,
+      },
+    };
 
     if (applePay === true || googlePay === true) {
-      data.panData.cardType = "vcc_premium_plus_virtual"
+      data.panData.cardType = "vcc_premium_plus_virtual";
 
       if (applePay) {
-        data.panData.apple_pay = true
+        data.panData.apple_pay = true;
       }
       if (googlePay) {
-        data.panData.google_pay = true
+        data.panData.google_pay = true;
       }
     }
 
-
-
     if (selectedSaveCard?._id) {
-      data.panData.pan = selectedSaveCard._id
+      data.panData.pan = selectedSaveCard._id;
     } else {
-      data.panData.is_card_save = saveCard
-      data.panData.se_shambey = createShambeToken(cardDetail)
+      data.panData.is_card_save = saveCard;
+      data.panData.se_shambey = createShambeToken(cardDetail);
     }
 
     try {
       // Paytently collects the card on its own hosted form.
       if (usePaytently) {
-        const feeWallet = walletState?._id ? walletState : defaultWallet
+        const feeWallet = walletState?._id ? walletState : defaultWallet;
         if (!feeWallet?._id) {
-          setError(t("Please choose a wallet before paying by card."))
-          return
+          setError(t("Please choose a wallet before paying by card."));
+          return;
         }
         const dec = await initiatePaytentlyPayment({
           walletId: feeWallet._id,
           flow: "vcc_purchase",
           otp: { token, otp, type: codeType },
           idempotencyKey: getKey(),
-        })
+        });
         if (!dec?.hosted_forms_url) {
-          setError(dec?.message ?? t("We couldn't process your request at the moment! please try again later."))
-          return
+          setError(
+            dec?.message ??
+              t("We couldn't process your request at the moment! please try again later."),
+          );
+          return;
         }
-        setToken(null)
-        setshowOtpModal(false)
-        setPaytentlyHosted({ hostedUrl: dec.hosted_forms_url, authorizeUrl: dec.authorize_url })
-        return
+        setToken(null);
+        setshowOtpModal(false);
+        setPaytentlyHosted({ hostedUrl: dec.hosted_forms_url, authorizeUrl: dec.authorize_url });
+        return;
       }
 
-      const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/mastercard/initiate-vcc${selectedSaveCard._id ? "-pan" : ""}-card`, { data: encryptData(data) }, {
-        headers: authHeader
-      })
-      setToken(null)
-      setshowOtpModal(false)
-      const dec = decryptData(res.data.data)
-      setCardTransactionDetails(dec)
+      const res = await axios.post(
+        `${import.meta.env.VITE_IP_DEV_API}/api/mastercard/initiate-vcc${selectedSaveCard._id ? "-pan" : ""}-card`,
+        { data: encryptData(data) },
+        {
+          headers: authHeader,
+        },
+      );
+      setToken(null);
+      setshowOtpModal(false);
+      const dec = decryptData(res.data.data);
+      setCardTransactionDetails(dec);
     } catch (err) {
       // A Paytently timeout has no response body.
       const decrypted = err?.response?.data?.data ? decryptData(err.response.data.data) : {};
@@ -476,7 +493,7 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay,
         errorHandler(err, setError);
       }
     }
-  }
+  };
 
   const initiatePaypalPayment = async (setter, type, otp, setError) => {
     try {
@@ -484,18 +501,19 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay,
         token: token,
         type: codeType,
         otp,
-      }
+      };
 
+      const res = await axios.post(
+        `${import.meta.env.VITE_IP_DEV_API}/api/mastercard/initiate-vcc-paypal`,
+        { data: encryptData(data) },
+        {
+          headers: authHeader,
+        },
+      );
 
-      const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/mastercard/initiate-vcc-paypal`, { data: encryptData(data) }, {
-        headers: authHeader
-      })
-
-
-      const dec = decryptData(res.data.data)
-      setToken(null)
-      window.location.href = dec?.url
-
+      const dec = decryptData(res.data.data);
+      setToken(null);
+      window.location.href = dec?.url;
     } catch (err) {
       const decrypted = decryptData(err.response.data.data);
       const error2 = apiErrorMessage(decrypted?.message);
@@ -505,37 +523,70 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay,
         errorHandler(err, setError);
       }
     }
-  }
+  };
 
   const renderData = () => (
-    <div className={styles.paymentContent} style={{ display: 'flex', alignItems: 'center' }}>
-      <div style={{ flex: (step === 4 && 0.8) || (step === 2 && 1.2), padding: window.innerWidth < 1000 && "1rem 1rem 0 1rem" }} className={styles.left}>
+    <div className={styles.paymentContent} style={{ display: "flex", alignItems: "center" }}>
+      <div
+        style={{
+          flex: (step === 4 && 0.8) || (step === 2 && 1.2),
+          padding: window.innerWidth < 1000 && "1rem 1rem 0 1rem",
+        }}
+        className={styles.left}
+      >
         <div>
           <h1>{t(sideText)}</h1>
-          {step === 4 && <p style={{ marginBottom: window.innerWidth < 1000 && "2rem " }}>{t("Thanks for using InstaPay")}!</p>}
+          {step === 4 && (
+            <p style={{ marginBottom: window.innerWidth < 1000 && "2rem " }}>
+              {t("Thanks for using InstaPay")}!
+            </p>
+          )}
         </div>
 
-        {(step !== 1 && window.innerWidth > 1000) &&
+        {step !== 1 && window.innerWidth > 1000 && (
           <div className={styles.contact}>
             <div className={styles.circle}>
-              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="19" viewBox="0 0 18 19" fill="none">
-                <path d="M7.39898 7.36508C7.56628 6.88948 7.89651 6.48843 8.33118 6.23297C8.76585 5.97751 9.2769 5.88413 9.77381 5.96937C10.2707 6.0546 10.7214 6.31295 11.0461 6.69866C11.3708 7.08437 11.5485 7.57254 11.5478 8.07671C11.5478 9.49997 9.41289 10.2116 9.41289 10.2116M9.46982 13.0581H9.47694M16.5861 9.49997C16.5861 13.4302 13.4 16.6163 9.46982 16.6163C5.53959 16.6163 2.35352 13.4302 2.35352 9.49997C2.35352 5.56975 5.53959 2.38367 9.46982 2.38367C13.4 2.38367 16.5861 5.56975 16.5861 9.49997Z" stroke="#5926F0" strokeWidth="1.42326" strokeLinecap="round" strokeLinejoin="round" />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="18"
+                height="19"
+                viewBox="0 0 18 19"
+                fill="none"
+              >
+                <path
+                  d="M7.39898 7.36508C7.56628 6.88948 7.89651 6.48843 8.33118 6.23297C8.76585 5.97751 9.2769 5.88413 9.77381 5.96937C10.2707 6.0546 10.7214 6.31295 11.0461 6.69866C11.3708 7.08437 11.5485 7.57254 11.5478 8.07671C11.5478 9.49997 9.41289 10.2116 9.41289 10.2116M9.46982 13.0581H9.47694M16.5861 9.49997C16.5861 13.4302 13.4 16.6163 9.46982 16.6163C5.53959 16.6163 2.35352 13.4302 2.35352 9.49997C2.35352 5.56975 5.53959 2.38367 9.46982 2.38367C13.4 2.38367 16.5861 5.56975 16.5861 9.49997Z"
+                  stroke="#5926F0"
+                  strokeWidth="1.42326"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
               </svg>
             </div>
             <div style={{ display: "flex", flexDirection: "column" }}>
-              <span style={{ fontSize: "10px", fontWeight: 600, color: "#6F6F6F" }}>{t("Having Troubles?")}</span>
-              <span style={{ fontSize: "12px", fontWeight: 600, color: "black" }}>{t("Contact Us")}</span>
+              <span style={{ fontSize: "10px", fontWeight: 600, color: "#6F6F6F" }}>
+                {t("Having Troubles?")}
+              </span>
+              <span style={{ fontSize: "12px", fontWeight: 600, color: "black" }}>
+                {t("Contact Us")}
+              </span>
             </div>
           </div>
-        }
+        )}
       </div>
 
-      <div style={{ padding: window.innerWidth < 1000 && "0rem 1rem 1rem 1rem" }} className={styles.right}>
-        {step === 1 &&
-          <PaymentSelect paymentType={paymentType} setPaymentType={setPaymentType} setStep={setStep} />
-        }
+      <div
+        style={{ padding: window.innerWidth < 1000 && "0rem 1rem 1rem 1rem" }}
+        className={styles.right}
+      >
+        {step === 1 && (
+          <PaymentSelect
+            paymentType={paymentType}
+            setPaymentType={setPaymentType}
+            setStep={setStep}
+          />
+        )}
 
-        {step === 2 &&
+        {step === 2 && (
           <PaymentStep
             cardDetail={cardDetail}
             cardNumberError={cardNumberError}
@@ -558,9 +609,9 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay,
             applePay={applePay}
             googlePay={googlePay}
           />
-        }
+        )}
 
-        {step === 3 &&
+        {step === 3 && (
           <ConfirmationStep
             feeDetails={feeDetails}
             sendOtp={sendOtp}
@@ -568,9 +619,9 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay,
             paymentType={paymentType}
             walletState={walletState}
           />
-        }
+        )}
 
-        {step === 4 &&
+        {step === 4 && (
           <SuccessStep
             feeDetails={feeDetails}
             setStep={setStep}
@@ -579,42 +630,82 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay,
             setStepParent={setStepParent}
             walletState={walletState}
           />
-        }
+        )}
       </div>
     </div>
-  )
+  );
 
   return (
-    <div className='vvc-modal'>
-      {window.innerWidth > 1000 &&
-        <Modal isOpen={isOpen && !showOtpModal} style={{ borderRadius: "16px", overflow: "hidden", minWidth: step === 4 ? "1000px" : '800px' }}>
-          <div style={{ position: 'absolute', right: '10px', top: '10px', zIndex: 10, cursor: 'pointer' }} onClick={handleClose}>
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M18 6L6 18M6 6L18 18" stroke="#1F2937" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    <div className="vvc-modal">
+      {window.innerWidth > 1000 && (
+        <Modal
+          isOpen={isOpen && !showOtpModal}
+          style={{
+            borderRadius: "16px",
+            overflow: "hidden",
+            minWidth: step === 4 ? "1000px" : "800px",
+          }}
+        >
+          <div
+            style={{
+              position: "absolute",
+              right: "10px",
+              top: "10px",
+              zIndex: 10,
+              cursor: "pointer",
+            }}
+            onClick={handleClose}
+          >
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M18 6L6 18M6 6L18 18"
+                stroke="#1F2937"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
             </svg>
           </div>
-          <ModalBody style={{ padding: "0" }}>
-            {renderData()}
-          </ModalBody>
-        </Modal >
-      }
+          <ModalBody style={{ padding: "0" }}>{renderData()}</ModalBody>
+        </Modal>
+      )}
 
       <div className={styles.mobileView}>
         {renderData()}
         <div className={styles.bottom} style={{ marginTop: "30px" }}>
           <div className={styles.contact}>
             <div className={styles.circle}>
-              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="19" viewBox="0 0 18 19" fill="none">
-                <path d="M7.39898 7.36508C7.56628 6.88948 7.89651 6.48843 8.33118 6.23297C8.76585 5.97751 9.2769 5.88413 9.77381 5.96937C10.2707 6.0546 10.7214 6.31295 11.0461 6.69866C11.3708 7.08437 11.5485 7.57254 11.5478 8.07671C11.5478 9.49997 9.41289 10.2116 9.41289 10.2116M9.46982 13.0581H9.47694M16.5861 9.49997C16.5861 13.4302 13.4 16.6163 9.46982 16.6163C5.53959 16.6163 2.35352 13.4302 2.35352 9.49997C2.35352 5.56975 5.53959 2.38367 9.46982 2.38367C13.4 2.38367 16.5861 5.56975 16.5861 9.49997Z" stroke="#5926F0" strokeWidth="1.42326" strokeLinecap="round" strokeLinejoin="round" />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="18"
+                height="19"
+                viewBox="0 0 18 19"
+                fill="none"
+              >
+                <path
+                  d="M7.39898 7.36508C7.56628 6.88948 7.89651 6.48843 8.33118 6.23297C8.76585 5.97751 9.2769 5.88413 9.77381 5.96937C10.2707 6.0546 10.7214 6.31295 11.0461 6.69866C11.3708 7.08437 11.5485 7.57254 11.5478 8.07671C11.5478 9.49997 9.41289 10.2116 9.41289 10.2116M9.46982 13.0581H9.47694M16.5861 9.49997C16.5861 13.4302 13.4 16.6163 9.46982 16.6163C5.53959 16.6163 2.35352 13.4302 2.35352 9.49997C2.35352 5.56975 5.53959 2.38367 9.46982 2.38367C13.4 2.38367 16.5861 5.56975 16.5861 9.49997Z"
+                  stroke="#5926F0"
+                  strokeWidth="1.42326"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
               </svg>
             </div>
             <div style={{ display: "flex", flexDirection: "column" }}>
-              <span style={{ fontSize: "10px", fontWeight: 600, color: "#6F6F6F" }}>{t("Having Troubles?")}</span>
-              <span style={{ fontSize: "12px", fontWeight: 600, color: "black" }}>{t("Contact Us")}</span>
+              <span style={{ fontSize: "10px", fontWeight: 600, color: "#6F6F6F" }}>
+                {t("Having Troubles?")}
+              </span>
+              <span style={{ fontSize: "12px", fontWeight: 600, color: "black" }}>
+                {t("Contact Us")}
+              </span>
             </div>
           </div>
-
-
 
           <div className={styles.btns}>
             {step !== 4 && (
@@ -625,7 +716,7 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay,
                   } else if (step === 3 && usePaytently && paymentType === "card") {
                     setStep(1);
                   } else {
-                    setStep(prev => prev - 1);
+                    setStep((prev) => prev - 1);
                     if (step === 2) {
                       setWalletState({});
                       setSelectedSaveCard({});
@@ -640,7 +731,7 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay,
               style={{
                 color: "white",
                 backgroundColor: "#5926F0",
-                opacity: step === 2 && disabledBtnS ? 0.4 : 1
+                opacity: step === 2 && disabledBtnS ? 0.4 : 1,
               }}
               disabled={step === 2 && disabledBtnS}
               onClick={() => {
@@ -653,7 +744,7 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay,
                   setStep(3);
                 } else if (step === 1) {
                   if (paymentType === "paypal") {
-                    sendOtp()
+                    sendOtp();
                   } else if (usePaytently && paymentType === "card") {
                     // Paytently collects the card, so the card form is skipped.
                     setStep(3);
@@ -667,24 +758,39 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay,
                 ? t("Continue")
                 : step === 3
                   ? t("Proceed To Payment")
-                  : t("Verify & Continue")
-              }
-              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="15" viewBox="0 0 14 15" fill="none">
-                <path d="M5.25 11L8.75 7.5L5.25 4" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                  : t("Verify & Continue")}
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="14"
+                height="15"
+                viewBox="0 0 14 15"
+                fill="none"
+              >
+                <path
+                  d="M5.25 11L8.75 7.5L5.25 4"
+                  stroke="white"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
               </svg>
             </button>
           </div>
         </div>
-
       </div>
-
 
       <Modal isOpen={showOtpModal}>
         <ModalHeader toggle={() => setshowOtpModal(false)}> {t("Confirm")} </ModalHeader>
         <ModalBody>
           <OTPConfirmation
             variant="card"
-            callback={paymentType === "wallet" ? createWallet : paymentType === "paypal" ? initiatePaypalPayment : initiateCardVVC}
+            callback={
+              paymentType === "wallet"
+                ? createWallet
+                : paymentType === "paypal"
+                  ? initiatePaypalPayment
+                  : initiateCardVVC
+            }
             setterValue={true}
             hideOtp={() => setshowOtpModal(false)}
             processing={loading}
@@ -704,8 +810,7 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay,
         onClose={() => setPaytentlyHosted(null)}
       />
 
-      {cardTransactionDetails?.transaction_id
-        ?
+      {cardTransactionDetails?.transaction_id ? (
         <TrustpaymentPage
           paymentWithSavedCard={selectedSaveCard?._id ? true : false}
           card_cvc={cardDetail.cardCVC}
@@ -715,17 +820,15 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay,
           transaction={cardTransactionDetails}
           amount={feeDetails?.totalFee}
           url={`${import.meta.env.VITE_IP_DEV_API}/api/mastercard/confirm-vcc${selectedSaveCard._id ? "-pan" : ""}-card/${cardTransactionDetails?.transaction_id}/${cardTransactionDetails?.token}`}
-          tokenUrl={() => `${import.meta.env.VITE_IP_DEV_API}/api/mastercard/confirm-vcc${selectedSaveCard._id ? "-pan" : ""}-card/${cardTransactionDetails?.transaction_id}/${cardTransactionDetails?.token}`}
+          tokenUrl={() =>
+            `${import.meta.env.VITE_IP_DEV_API}/api/mastercard/confirm-vcc${selectedSaveCard._id ? "-pan" : ""}-card/${cardTransactionDetails?.transaction_id}/${cardTransactionDetails?.token}`
+          }
         />
-        :
+      ) : (
         <></>
-      }
-
-
-
-
+      )}
     </div>
-  )
-}
+  );
+};
 
-export default PaymentModal
+export default PaymentModal;

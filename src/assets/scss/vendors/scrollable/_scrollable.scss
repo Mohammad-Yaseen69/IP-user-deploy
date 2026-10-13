@@ -1,6 +1,5 @@
 /*=============Scrollable css start=============*/
 
-
 %scroll-xy {
   background-color: $transparent-color;
   display: block;
@@ -41,7 +40,9 @@
       position: absolute;
       border-radius: 4px;
       opacity: 0;
-      transition: background-color 0.2s linear, opacity 0.2s linear;
+      transition:
+        background-color 0.2s linear,
+        opacity 0.2s linear;
       bottom: 3px;
       height: 8px;
       > .ps-scrollbar-x {
@@ -60,7 +61,9 @@
       position: absolute;
       border-radius: 4px;
       opacity: 0;
-      transition: background-color 0.2s linear, opacity 0.2s linear;
+      transition:
+        background-color 0.2s linear,
+        opacity 0.2s linear;
       > .ps-scrollbar-y {
         width: 10px;
         position: absolute;
@@ -79,14 +82,14 @@
         opacity: 0.9;
         > .ps-scrollbar-x {
           width: 128px;
-          background-color: lighten($black , 60%); ;
+          background-color: lighten($black, 60%);
         }
       }
       &.ps-y > .ps-scrollbar-y-rail {
         background-color: $semi-dark;
         opacity: 0.9;
         > .ps-scrollbar-y {
-          background-color: lighten($black , 60%); ;
+          background-color: lighten($black, 60%);
         }
       }
     }
@@ -97,7 +100,7 @@
           background-color: $light-color;
           opacity: 0.9;
           > .ps-scrollbar-x {
-            background-color: lighten($black , 60%); ;
+            background-color: lighten($black, 60%);
           }
         }
       }

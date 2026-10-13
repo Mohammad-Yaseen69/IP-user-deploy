@@ -1,116 +1,122 @@
-import React, { useRef, useEffect } from 'react';
-import styles from "./styles/card_cvc.module.css"
+import React, { useRef, useEffect } from "react";
+import styles from "./styles/card_cvc.module.css";
 
 const CardCVC = ({ content, setContent, maxLength = 5, isinVVC = false, guest }) => {
-    const divRef = useRef(null);
-    const caretPositionRef = useRef(0);
+  const divRef = useRef(null);
+  const caretPositionRef = useRef(0);
 
-    const saveCaretPosition = () => {
-        const selection = window.getSelection();
-        if (selection.rangeCount > 0) {
-            const range = selection.getRangeAt(0);
-            const preCaretRange = range.cloneRange();
-            preCaretRange.selectNodeContents(divRef.current);
-            preCaretRange.setEnd(range.endContainer, range.endOffset);
-            caretPositionRef.current = preCaretRange.toString().replace(/\D/g, '').length;
-        }
-    };
+  const saveCaretPosition = () => {
+    const selection = window.getSelection();
+    if (selection.rangeCount > 0) {
+      const range = selection.getRangeAt(0);
+      const preCaretRange = range.cloneRange();
+      preCaretRange.selectNodeContents(divRef.current);
+      preCaretRange.setEnd(range.endContainer, range.endOffset);
+      caretPositionRef.current = preCaretRange.toString().replace(/\D/g, "").length;
+    }
+  };
 
-    const restoreCaretPosition = () => {
-        const selection = window.getSelection();
-        const div = divRef.current;
-        let charIndex = caretPositionRef.current;
-        let node, offset = 0;
+  const restoreCaretPosition = () => {
+    const selection = window.getSelection();
+    const div = divRef.current;
+    let charIndex = caretPositionRef.current;
+    let node,
+      offset = 0;
 
-        const findNodeAndOffset = (root, index) => {
-            for (node of root.childNodes) {
-                if (node.nodeType === 3) { // Text node
-                    const cleanTextLength = node.textContent.replace(/\D/g, '').length;
-                    if (cleanTextLength >= index) {
-                        const chars = node.textContent.split('');
-                        for (let i = 0; i < chars.length; i++) {
-                            if (/\d/.test(chars[i])) {
-                                if (--index === 0) {
-                                    offset = i + 1;
-                                    return node;
-                                }
-                            }
-                        }
-                    } else {
-                        index -= cleanTextLength;
-                    }
-                } else {
-                    node = findNodeAndOffset(node, index);
-                    if (node) return node;
+    const findNodeAndOffset = (root, index) => {
+      for (node of root.childNodes) {
+        if (node.nodeType === 3) {
+          // Text node
+          const cleanTextLength = node.textContent.replace(/\D/g, "").length;
+          if (cleanTextLength >= index) {
+            const chars = node.textContent.split("");
+            for (let i = 0; i < chars.length; i++) {
+              if (/\d/.test(chars[i])) {
+                if (--index === 0) {
+                  offset = i + 1;
+                  return node;
                 }
+              }
             }
-            return null;
-        };
-
-        node = findNodeAndOffset(div, charIndex);
-        if (node) {
-            const range = document.createRange();
-            range.setStart(node, offset);
-            range.collapse(true);
-            selection.removeAllRanges();
-            selection.addRange(range);
+          } else {
+            index -= cleanTextLength;
+          }
+        } else {
+          node = findNodeAndOffset(node, index);
+          if (node) return node;
         }
+      }
+      return null;
     };
 
-    // Function to sanitize input
-    const sanitizeInput = (input) => {
-        return input.replace(/\D/g, '');
-    };
+    node = findNodeAndOffset(div, charIndex);
+    if (node) {
+      const range = document.createRange();
+      range.setStart(node, offset);
+      range.collapse(true);
+      selection.removeAllRanges();
+      selection.addRange(range);
+    }
+  };
 
-    // Handle input event
-    const handleInput = (event) => {
-        saveCaretPosition();
-        let sanitizedContent = sanitizeInput(event.target.innerText);
+  // Function to sanitize input
+  const sanitizeInput = (input) => {
+    return input.replace(/\D/g, "");
+  };
 
-        // Check if content exceeds maxLength
-        if (sanitizedContent.length > maxLength) {
-            // Truncate the content
-            sanitizedContent = sanitizedContent.slice(0, maxLength);
-        }
+  // Handle input event
+  const handleInput = (event) => {
+    saveCaretPosition();
+    let sanitizedContent = sanitizeInput(event.target.innerText);
 
-        setContent(sanitizedContent);
-        event.target.innerText = sanitizedContent;
+    // Check if content exceeds maxLength
+    if (sanitizedContent.length > maxLength) {
+      // Truncate the content
+      sanitizedContent = sanitizedContent.slice(0, maxLength);
+    }
 
-        requestAnimationFrame(restoreCaretPosition);
-    };
+    setContent(sanitizedContent);
+    event.target.innerText = sanitizedContent;
 
-    useEffect(() => {
-        const div = divRef.current;
-        if (div) {
-            div.addEventListener('input', handleInput);
-            return () => {
-                div.removeEventListener('input', handleInput);
-            };
-        }
-    }, [maxLength]);
+    requestAnimationFrame(restoreCaretPosition);
+  };
 
-    return (
-        <div style={{display: 'flex', flexDirection: 'column', width: '100%'}}>
-        {guest && <label style={{fontWeight: 600, marginBottom: '10px'}}>CVC:</label>}     
-        <div className={styles.main}>
-            <div
-                ref={divRef}
-                className={styles.input_container}
-                contentEditable="true"
-                style={{ padding: isinVVC && "8px 14px", borderRadius: isinVVC && "6px" }}
-                role="textbox"
-                aria-label="Secure Input Field"
-                suppressContentEditableWarning={true}
-            >
-                {content}
-            </div>
-            {
-                content.length < 1 &&
-                <span style={{display: isinVVC && "none"}} className={styles.placeholder}>CVC</span>
-            }
+  useEffect(() => {
+    const div = divRef.current;
+    if (div) {
+      div.addEventListener("input", handleInput);
+      return () => {
+        div.removeEventListener("input", handleInput);
+      };
+    }
+  }, [maxLength]);
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", width: "100%" }}>
+      {guest && <label style={{ fontWeight: 600, marginBottom: "10px" }}>CVC:</label>}
+      <div className={styles.main}>
+        <div
+          ref={divRef}
+          className={styles.input_container}
+          contentEditable="true"
+          style={{
+            padding: isinVVC && "8px 14px",
+            borderRadius: isinVVC && "6px",
+          }}
+          role="textbox"
+          aria-label="Secure Input Field"
+          suppressContentEditableWarning={true}
+        >
+          {content}
         </div>
-        </div>
-    );
+        {content.length < 1 && (
+          <span style={{ display: isinVVC && "none" }} className={styles.placeholder}>
+            CVC
+          </span>
+        )}
+      </div>
+    </div>
+  );
 };
 
 export default CardCVC;

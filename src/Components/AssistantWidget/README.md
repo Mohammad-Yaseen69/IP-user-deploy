@@ -85,17 +85,17 @@ false the button simply is not rendered.
 
 ## Files
 
-| File | Role |
-| --- | --- |
-| `index.jsx` | Launcher, panel, composer, signed-in gate |
-| `useAssistantSession.js` | Token handshake, refresh-and-retry on 401 |
-| `useAssistant.js` | Conversation state, the call to ip-bot, history |
-| `MessageList.jsx` | Message rendering and starter prompts |
-| `useNavigationTool.js` | Allowlist + permission check, then navigate |
-| `useVoiceInput.js` | Recording, container negotiation, transcription |
-| `knowledge/pages.js` | Page registry — the allowlist and the agent's page list |
-| `Icons.jsx` | Inline icons |
-| `styles.module.css` | Styles |
+| File                     | Role                                                    |
+| ------------------------ | ------------------------------------------------------- |
+| `index.jsx`              | Launcher, panel, composer, signed-in gate               |
+| `useAssistantSession.js` | Token handshake, refresh-and-retry on 401               |
+| `useAssistant.js`        | Conversation state, the call to ip-bot, history         |
+| `MessageList.jsx`        | Message rendering and starter prompts                   |
+| `useNavigationTool.js`   | Allowlist + permission check, then navigate             |
+| `useVoiceInput.js`       | Recording, container negotiation, transcription         |
+| `knowledge/pages.js`     | Page registry — the allowlist and the agent's page list |
+| `Icons.jsx`              | Inline icons                                            |
+| `styles.module.css`      | Styles                                                  |
 
 Tests: `src/test/Components/` — registry integrity, navigation guards, voice
 input, and the chat flow.

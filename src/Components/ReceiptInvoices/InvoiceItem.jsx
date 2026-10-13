@@ -71,8 +71,7 @@ const InvoiceItem = ({ sn, inv, badgeClass, setEditModal, setMenuOpenFor, menuOp
     }
   };
 
-
-  console.log(inv, "inv")
+  console.log(inv, "inv");
   return (
     <React.Fragment key={inv.invoiceId}>
       <div
@@ -93,10 +92,7 @@ const InvoiceItem = ({ sn, inv, badgeClass, setEditModal, setMenuOpenFor, menuOp
         <div style={{ flex: isPhone ? 0.25 : 0.18 }} className={styles.td}>
           {formatDateTime(inv.createdAt)}
         </div>
-        <div
-          style={{ flex: isPhone ? 0.40 : 0.24, ...ellipsisStyle }}
-          className={styles.td}
-        >
+        <div style={{ flex: isPhone ? 0.4 : 0.24, ...ellipsisStyle }} className={styles.td}>
           {truncate(inv.title, 20)}
         </div>
         {width > 700 && (
@@ -104,7 +100,7 @@ const InvoiceItem = ({ sn, inv, badgeClass, setEditModal, setMenuOpenFor, menuOp
             {truncate(inv.description, 30)}
           </div>
         )}
-        <div style={{ flex: isPhone ? 0.20 : 0.12 }} className={`${styles.td}`}>
+        <div style={{ flex: isPhone ? 0.2 : 0.12 }} className={`${styles.td}`}>
           {inv.currency} {Number(inv.amount).toFixed(2)}
         </div>
 
@@ -115,13 +111,15 @@ const InvoiceItem = ({ sn, inv, badgeClass, setEditModal, setMenuOpenFor, menuOp
         )}
         {width > 700 && (
           <div style={{ flex: 0.13 }} className={styles.td}>
-            <span className={`${styles.badge} ${badgeClass}`}>
-              {t(inv.status)}
-            </span>
+            <span className={`${styles.badge} ${badgeClass}`}>{t(inv.status)}</span>
           </div>
         )}
         <div
-          style={{ flex: isPhone ? 0.15 : 0.1, display: "flex", justifyContent: "flex-end" }}
+          style={{
+            flex: isPhone ? 0.15 : 0.1,
+            display: "flex",
+            justifyContent: "flex-end",
+          }}
           className={`${styles.td} ${styles.actions}`}
           onClick={(e) => e.stopPropagation()}
         >
@@ -135,18 +133,14 @@ const InvoiceItem = ({ sn, inv, badgeClass, setEditModal, setMenuOpenFor, menuOp
             }}
             onClick={(e) => {
               e.stopPropagation();
-              setMenuOpenFor((prev) =>
-                prev === inv.invoiceId ? null : inv.invoiceId
-              );
+              setMenuOpenFor((prev) => (prev === inv.invoiceId ? null : inv.invoiceId));
             }}
           >
             <MoreHorizontal size={18} />
           </button>
 
           {menuOpenFor === inv.invoiceId && (
-            <div className={styles.actionsMenu}
-              onClick={(e) => e.stopPropagation()}
-            >
+            <div className={styles.actionsMenu} onClick={(e) => e.stopPropagation()}>
               <div
                 className={styles.menuItem}
                 onClick={() => {
@@ -179,31 +173,29 @@ const InvoiceItem = ({ sn, inv, badgeClass, setEditModal, setMenuOpenFor, menuOp
               )}
 
               {/* Permission: invoices.delete */}
-              {can("invoices.delete") &&
-                inv.status?.toLowerCase() !== "accepted" && (
-                  <div
-                    className={`${styles.menuItem} ${styles.danger}`}
-                    onClick={() => {
-                      setMenuOpenFor(null);
-                      setExpanded((prev) => ({ ...prev, [inv.invoiceId]: false }));
-                      setShowConfirm(true);
-                    }}
-                  >
-                    {t("Delete")}
-                  </div>
-                )}
+              {can("invoices.delete") && inv.status?.toLowerCase() !== "accepted" && (
+                <div
+                  className={`${styles.menuItem} ${styles.danger}`}
+                  onClick={() => {
+                    setMenuOpenFor(null);
+                    setExpanded((prev) => ({
+                      ...prev,
+                      [inv.invoiceId]: false,
+                    }));
+                    setShowConfirm(true);
+                  }}
+                >
+                  {t("Delete")}
+                </div>
+              )}
             </div>
           )}
         </div>
       </div>
 
       <Modal isOpen={showConfirm} toggle={() => setShowConfirm(false)}>
-        <ModalHeader toggle={() => setShowConfirm(false)}>
-          {t("Confirm Deletion")}
-        </ModalHeader>
-        <ModalBody>
-          {t("Are you sure you want to delete this invoice?")}
-        </ModalBody>
+        <ModalHeader toggle={() => setShowConfirm(false)}>{t("Confirm Deletion")}</ModalHeader>
+        <ModalBody>{t("Are you sure you want to delete this invoice?")}</ModalBody>
         <ModalFooter>
           <button
             onClick={() => setShowConfirm(false)}
@@ -218,21 +210,20 @@ const InvoiceItem = ({ sn, inv, badgeClass, setEditModal, setMenuOpenFor, menuOp
             {t("Cancel")}
           </button>
           {/* Permission: invoices.delete */}
-          {can("invoices.delete") &&
-            inv.status?.toLowerCase() !== "accepted" && (
-              <ButtonForRequests
-                onClick={() => {
-                  if (!isPending) {
-                    mutateAsync(inv.invoiceId).finally(() => {
-                      setShowConfirm(false);
-                    });
-                  }
-                }}
-                isLoading={isPending}
-              >
-                {t("Delete")}
-              </ButtonForRequests>
-            )}
+          {can("invoices.delete") && inv.status?.toLowerCase() !== "accepted" && (
+            <ButtonForRequests
+              onClick={() => {
+                if (!isPending) {
+                  mutateAsync(inv.invoiceId).finally(() => {
+                    setShowConfirm(false);
+                  });
+                }
+              }}
+              isLoading={isPending}
+            >
+              {t("Delete")}
+            </ButtonForRequests>
+          )}
         </ModalFooter>
       </Modal>
 
@@ -272,13 +263,8 @@ const InvoiceItem = ({ sn, inv, badgeClass, setEditModal, setMenuOpenFor, menuOp
                   zIndex: 100,
                 }}
               >
-                <h4 style={{ width: "90%", wordWrap: "break-word" }}>
-                  {inv.title}
-                </h4>
-                <X
-                  onClick={() => toggleExpand(inv.invoiceId)}
-                  cursor={"pointer"}
-                />
+                <h4 style={{ width: "90%", wordWrap: "break-word" }}>{inv.title}</h4>
+                <X onClick={() => toggleExpand(inv.invoiceId)} cursor={"pointer"} />
               </div>
               <InvoiceItemDetails inv={inv} />
             </div>

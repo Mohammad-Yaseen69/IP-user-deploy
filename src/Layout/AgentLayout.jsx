@@ -11,54 +11,54 @@ import MobileSidebar from "../Common/Component/agentSidebar/MobileSidebar";
 import { getLoginPath } from "../utils/Functions/loginPage";
 
 const AgentLayout = () => {
-    const width = useWindowWidth();
-    const isMobile = width <= 780;
-    const { userDetails, verifyToken, isSidebarOpen } = useContext(UserContext) || {};
-    const token = localStorage.getItem("token");
-    const location = useLocation();
+  const width = useWindowWidth();
+  const isMobile = width <= 780;
+  const { userDetails, verifyToken, isSidebarOpen } = useContext(UserContext) || {};
+  const token = localStorage.getItem("token");
+  const location = useLocation();
 
-    useEffect(() => {
-        if (verifyToken && token) {
-            verifyToken();
-        }
-    }, [location]);
-
-    if (!token) {
-        return <Navigate to={getLoginPath()} replace />;
+  useEffect(() => {
+    if (verifyToken && token) {
+      verifyToken();
     }
+  }, [location]);
 
-    if (userDetails === null) {
-        return <InstaPayLoader fallback={true} />;
-    }
+  if (!token) {
+    return <Navigate to={getLoginPath()} replace />;
+  }
 
-    if (!userDetails?.isInstapayAgent) {
-        return <Navigate to="/" replace />;
-    }
+  if (userDetails === null) {
+    return <InstaPayLoader fallback={true} />;
+  }
 
-    return (
-        <div className={styles.layout}>
-            {isMobile ? (
-                <div className={styles.mobileHeaderWrapper}>
-                    <MobileSidebar />
-                </div>
-            ) : (
-                <aside className={`${styles.sidebar} ${!isSidebarOpen ? styles.sidebarCollpased : ""}`}>
-                    <NewMenu />
-                    <div className={styles.agentSidebarContainer}>
-                            <SidebarIndex />
-                    </div>
-                </aside>
-            )}
+  if (!userDetails?.isInstapayAgent) {
+    return <Navigate to="/" replace />;
+  }
 
-            <main className={styles.main}>
-                <div className={styles.container}>
-                    <Outlet />
-                </div>
-            </main>
-
-            <AssistantWidget />
+  return (
+    <div className={styles.layout}>
+      {isMobile ? (
+        <div className={styles.mobileHeaderWrapper}>
+          <MobileSidebar />
         </div>
-    );
+      ) : (
+        <aside className={`${styles.sidebar} ${!isSidebarOpen ? styles.sidebarCollpased : ""}`}>
+          <NewMenu />
+          <div className={styles.agentSidebarContainer}>
+            <SidebarIndex />
+          </div>
+        </aside>
+      )}
+
+      <main className={styles.main}>
+        <div className={styles.container}>
+          <Outlet />
+        </div>
+      </main>
+
+      <AssistantWidget />
+    </div>
+  );
 };
 
 export default AgentLayout;

@@ -46,330 +46,376 @@ import int_m_i from "./files/int.svg";
 import ni_m_i from "./files/non_ip.svg";
 import { usePermission } from "../../hooks/GeneralUse/usePermission";
 
-
 const PaymentsNewer = () => {
-    const { checkRegisteredBenficiaries, getAllActiveCountries, getUserWallets, userDetails, getUserBeneficiaries, beneficiaries } = useContext(UserContext)
-    const navigate = useNavigate()
-    const location = useLocation()
-    const queryParams = new URLSearchParams(location.search)
-    const payment_action = queryParams.get("payment_action")
-    const send_type = queryParams.get("send_type")
+  const {
+    checkRegisteredBenficiaries,
+    getAllActiveCountries,
+    getUserWallets,
+    userDetails,
+    getUserBeneficiaries,
+    beneficiaries,
+  } = useContext(UserContext);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const payment_action = queryParams.get("payment_action");
+  const send_type = queryParams.get("send_type");
 
-    const { t } = useTranslation()
-    const can = usePermission();
+  const { t } = useTranslation();
+  const can = usePermission();
 
-    // Permission: payments.international.send
-    const canSendInternational = can("payments.international.send");
-    // Permission: payments.wallet.send
-    const canSendWallet = can("payments.wallet.send");
-    // Permission: payments.qr.send
-    const canSendQr = can("payments.qr.send");
-    // Permission: payments.non-instapay.send
-    const canSendNonInstapay = can("payments.non-instapay.send");
-    const canSendMoney = canSendInternational || canSendWallet || canSendQr || canSendNonInstapay;
+  // Permission: payments.international.send
+  const canSendInternational = can("payments.international.send");
+  // Permission: payments.wallet.send
+  const canSendWallet = can("payments.wallet.send");
+  // Permission: payments.qr.send
+  const canSendQr = can("payments.qr.send");
+  // Permission: payments.non-instapay.send
+  const canSendNonInstapay = can("payments.non-instapay.send");
+  const canSendMoney = canSendInternational || canSendWallet || canSendQr || canSendNonInstapay;
 
-    // Permission: payments.money.request
-    const canMoneyRequest = can("payments.money.request");
-    // Permission: payments.quote.send
-    const canQuoteSend = can("payments.quote.send");
+  // Permission: payments.money.request
+  const canMoneyRequest = can("payments.money.request");
+  // Permission: payments.quote.send
+  const canQuoteSend = can("payments.quote.send");
 
-    // Permission: payments.crypto.send
-    const canSendCrypto = can("payments.crypto.send");
+  // Permission: payments.crypto.send
+  const canSendCrypto = can("payments.crypto.send");
 
-    // Permission: payments.airtime.topup
-    const canAirtimeTopup = can("payments.airtime.topup");
-    // Permission: payments.esim.buy
-    const canEsimBuy = can("payments.esim.buy");
-    // Permission: payments.esim.manage
-    const canEsimManage = can("payments.esim.manage");
-    const canAirtimeOrEsim = canAirtimeTopup || canEsimBuy || canEsimManage;
-    // step info
-    const [step, setStep] = useState(1)
+  // Permission: payments.airtime.topup
+  const canAirtimeTopup = can("payments.airtime.topup");
+  // Permission: payments.esim.buy
+  const canEsimBuy = can("payments.esim.buy");
+  // Permission: payments.esim.manage
+  const canEsimManage = can("payments.esim.manage");
+  const canAirtimeOrEsim = canAirtimeTopup || canEsimBuy || canEsimManage;
+  // step info
+  const [step, setStep] = useState(1);
 
-    // payment states
-    const [action, setAction] = useState("")
-    // send payment
-    const [sendPaymentType, setSendPaymentType] = useState("")
+  // payment states
+  const [action, setAction] = useState("");
+  // send payment
+  const [sendPaymentType, setSendPaymentType] = useState("");
 
-    useEffect(() => {
-        if (payment_action) {
-            if (window.innerWidth > 1000) {
-                setStep(2)
-                setAction(payment_action)
-            } else {
-                setActionType(payment_action)
-                if (payment_action !== "send_money") {
-                    setCurrentFlow(payment_action)
-                }
-            }
+  useEffect(() => {
+    if (payment_action) {
+      if (window.innerWidth > 1000) {
+        setStep(2);
+        setAction(payment_action);
+      } else {
+        setActionType(payment_action);
+        if (payment_action !== "send_money") {
+          setCurrentFlow(payment_action);
         }
-    }, [payment_action])
-
-    useEffect(() => {
-        if (send_type) {
-            if (window.innerWidth > 1000) {
-                setStep(2)
-                setSendPaymentType(send_type)
-            } else {
-                if (send_type === "wallet") {
-                    setCurrentFlow("wallet_to_wallet")
-                    setSendPaymentType("wallet_to_wallet")
-                    setStep(3)
-                }
-                if (send_type === "international") {
-                    setCurrentFlow("international")
-                    setSendPaymentType("international")
-                    setStep(3)
-                }
-                if (send_type === "qr_pay") {
-                    setCurrentFlow("qr_pay")
-                    setSendPaymentType("qr_pay")
-                    setStep(3)
-                }
-            }
-        }
-    }, [send_type])
-
-    useEffect(() => {
-        if (userDetails) {
-            getUserWallets()
-            getAllActiveCountries()
-            checkRegisteredBenficiaries()
-            getUserBeneficiaries()
-        }
-    }, [userDetails])
-
-    useEffect(() => {
-        if (beneficiaries) {
-            checkRegisteredBenficiaries()
-        }
-    }, [beneficiaries])
-
-
-    // mobile
-    const setActionType = (actionType) => {
-        setAction(actionType)
-        setStep(2)
+      }
     }
+  }, [payment_action]);
 
-    const [currentFlow, setCurrentFlow] = useState("")
-
-    useEffect(() => {
-        const hasParams = Boolean(payment_action || send_type)
-        if (!hasParams) {
-            setStep(1)
-            setAction("")
-            setSendPaymentType("")
-            setCurrentFlow("")
+  useEffect(() => {
+    if (send_type) {
+      if (window.innerWidth > 1000) {
+        setStep(2);
+        setSendPaymentType(send_type);
+      } else {
+        if (send_type === "wallet") {
+          setCurrentFlow("wallet_to_wallet");
+          setSendPaymentType("wallet_to_wallet");
+          setStep(3);
         }
-    }, [payment_action, send_type])
-
-    const resetToMain = () => {
-        setStep(1)
-        setAction("")
-        setSendPaymentType("")
-        setCurrentFlow("")
-        window.history.replaceState(null, "", "/payments")
+        if (send_type === "international") {
+          setCurrentFlow("international");
+          setSendPaymentType("international");
+          setStep(3);
+        }
+        if (send_type === "qr_pay") {
+          setCurrentFlow("qr_pay");
+          setSendPaymentType("qr_pay");
+          setStep(3);
+        }
+      }
     }
+  }, [send_type]);
 
-    useEffect(() => {
-        if (action && !payment_action) {
-            window.history.replaceState(null, null, `?payment_action=${action}`)
-        }
-    }, [action])
-    useEffect(() => {
-        if (sendPaymentType && !send_type) {
-            window.history.replaceState(null, null, `?payment_action=${action}&send_type=${sendPaymentType}`)
-        }
-    }, [sendPaymentType])
+  useEffect(() => {
+    if (userDetails) {
+      getUserWallets();
+      getAllActiveCountries();
+      checkRegisteredBenficiaries();
+      getUserBeneficiaries();
+    }
+  }, [userDetails]);
 
+  useEffect(() => {
+    if (beneficiaries) {
+      checkRegisteredBenficiaries();
+    }
+  }, [beneficiaries]);
 
+  // mobile
+  const setActionType = (actionType) => {
+    setAction(actionType);
+    setStep(2);
+  };
 
-    return (
-        <>
-            <div className={styles.container}>
-                <div className={styles.top}>
-                    <h4 style={{ marginBottom: ".2rem" }}>{t("Payments")}</h4>
-                    {
-                        step > 1 && (
-                            <button
-                                onClick={resetToMain}
-                                style={{
-                                    fontSize: ".75rem",
-                                    padding: "4px 8px",
-                                    display: "inline-flex",
-                                    alignItems: "center",
-                                    gap: "6px",
-                                    borderRadius: "6px",
-                                    border: "1px solid #e5e5e5",
-                                    background: "#fff",
-                                    color: "#444",
-                                    cursor: "pointer",
-                                    marginLeft: "auto"
-                                }}
-                                aria-label={t("Go back to main menu")}
-                            >
-                                <ChevronLeft color="#5826e9" size={14} />
-                                <span style={{ fontWeight: 600 }}>{t("Go back to main menu")}</span>
-                            </button>
-                        )
-                    }
-                    {
-                        step === 1
-                        &&
-                        <p style={{ marginBottom: 0 }}>{t("Select the option that matches your needs from the list below:")}</p>
-                    }
-                    <TopRight />
-                </div>
+  const [currentFlow, setCurrentFlow] = useState("");
 
-                {
-                    step === 1
-                    &&
-                    <PaymentAction setAction={setAction} setStep={setStep} />
-                }
+  useEffect(() => {
+    const hasParams = Boolean(payment_action || send_type);
+    if (!hasParams) {
+      setStep(1);
+      setAction("");
+      setSendPaymentType("");
+      setCurrentFlow("");
+    }
+  }, [payment_action, send_type]);
 
-                {
-                    (step === 2 && action === "send_money" && canSendMoney)
-                    &&
-                    <SendPaymentType setSendPaymentType={setSendPaymentType} sendPaymentType={sendPaymentType} setStep={setStep} />
-                }
+  const resetToMain = () => {
+    setStep(1);
+    setAction("");
+    setSendPaymentType("");
+    setCurrentFlow("");
+    window.history.replaceState(null, "", "/payments");
+  };
 
-                {
-                    step === 2
-                    &&
-                    action === "airtime"
-                    &&
-                    canAirtimeOrEsim
-                    &&
-                    <Airtime setCurrentFlow={setCurrentFlow} setAction={setAction} setStep={setStep} />
-                }
+  useEffect(() => {
+    if (action && !payment_action) {
+      window.history.replaceState(null, null, `?payment_action=${action}`);
+    }
+  }, [action]);
+  useEffect(() => {
+    if (sendPaymentType && !send_type) {
+      window.history.replaceState(
+        null,
+        null,
+        `?payment_action=${action}&send_type=${sendPaymentType}`,
+      );
+    }
+  }, [sendPaymentType]);
 
-                {
-                    (step === 2 && action === "req_money" && canMoneyRequest)
-                    &&
-                    <RequestMoney setAction={setAction} setStep={setStep} />
-                }
-                {
-                    (step === 2 && action === "send_quote" && canQuoteSend)
-                    &&
-                    <SendQuotation setAction={setAction} setStep={setStep} />
-                }
-                {
-                    (step === 2 && action === "send_crypto" && canSendCrypto)
-                    &&
-                    <SendCrypto />
-                }
-                {
-                    (step === 2 && action === "crypto_fiat" && canSendCrypto)
-                    &&
-                    <CryptoFiat />
-                }
+  return (
+    <>
+      <div className={styles.container}>
+        <div className={styles.top}>
+          <h4 style={{ marginBottom: ".2rem" }}>{t("Payments")}</h4>
+          {step > 1 && (
+            <button
+              onClick={resetToMain}
+              style={{
+                fontSize: ".75rem",
+                padding: "4px 8px",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "6px",
+                borderRadius: "6px",
+                border: "1px solid #e5e5e5",
+                background: "#fff",
+                color: "#444",
+                cursor: "pointer",
+                marginLeft: "auto",
+              }}
+              aria-label={t("Go back to main menu")}
+            >
+              <ChevronLeft color="#5826e9" size={14} />
+              <span style={{ fontWeight: 600 }}>{t("Go back to main menu")}</span>
+            </button>
+          )}
+          {step === 1 && (
+            <p style={{ marginBottom: 0 }}>
+              {t("Select the option that matches your needs from the list below:")}
+            </p>
+          )}
+          <TopRight />
+        </div>
 
+        {step === 1 && <PaymentAction setAction={setAction} setStep={setStep} />}
+
+        {step === 2 && action === "send_money" && canSendMoney && (
+          <SendPaymentType
+            setSendPaymentType={setSendPaymentType}
+            sendPaymentType={sendPaymentType}
+            setStep={setStep}
+          />
+        )}
+
+        {step === 2 && action === "airtime" && canAirtimeOrEsim && (
+          <Airtime setCurrentFlow={setCurrentFlow} setAction={setAction} setStep={setStep} />
+        )}
+
+        {step === 2 && action === "req_money" && canMoneyRequest && (
+          <RequestMoney setAction={setAction} setStep={setStep} />
+        )}
+        {step === 2 && action === "send_quote" && canQuoteSend && (
+          <SendQuotation setAction={setAction} setStep={setStep} />
+        )}
+        {step === 2 && action === "send_crypto" && canSendCrypto && <SendCrypto />}
+        {step === 2 && action === "crypto_fiat" && canSendCrypto && <CryptoFiat />}
+      </div>
+      <div className={styles.mobile}>
+        {currentFlow === "" ? (
+          <>
+            <div className={styles.top}>
+              <button
+                className={styles.back_btn}
+                onClick={() => {
+                  if (step === 1) {
+                    navigate(-1);
+                  } else {
+                    resetToMain();
+                  }
+                }}
+              >
+                <ChevronLeft />
+              </button>
+              <div className={styles.title}>
+                <h4 className={styles.heading}>{t("Payments")}</h4>
+                {step === 1 && (
+                  <p style={{ marginBottom: 0 }}>
+                    {t("Select the option that matches your needs from the list below:")}
+                  </p>
+                )}
+              </div>
             </div>
-            <div className={styles.mobile}>
-                {
-                    currentFlow === ""
-                        ?
-                        <>
-                            <div className={styles.top}>
-                                <button className={styles.back_btn} onClick={() => {
-                                    if (step === 1) {
-                                        navigate(-1)
-                                    } else {
-                                        resetToMain()
-                                    }
-                                }}>
-                                    <ChevronLeft />
-                                </button>
-                                <div className={styles.title}>
-                                    <h4 className={styles.heading}>{t("Payments")}</h4>
-                                    {
-                                        step === 1
-                                        &&
-                                        <p style={{ marginBottom: 0 }}>{t("Select the option that matches your needs from the list below:")}</p>
-                                    }
-                                </div>
-                            </div>
-                            <div className={styles.bottom}>
-                                <div className={styles.cards}>
-                                    {
-                                        step === 1
-                                        &&
-                                        <>
-                                            {
-                                                (
-                                                    userDetails?.account_type === "individual"
-                                                        ?
-                                                        (
-                                                            userDetails?.level?.international_transfer?.bank
-                                                            ||
-                                                            userDetails?.level?.wallet_to_wallet?.send
-                                                            ||
-                                                            userDetails?.level?.international_transfer?.cash_pickup
-                                                            ||
-                                                            userDetails?.level?.international_transfer?.mobile_money
-                                                        )
-                                                        :
-                                                        (
-                                                            userDetails?.level?.international_transfer?.bank
-                                                            ||
-                                                            userDetails?.level?.wallet_to_wallet?.send
-                                                            ||
-                                                            userDetails?.level?.international_transfer?.cash_pickup
-                                                            ||
-                                                            userDetails?.level?.international_transfer?.mobile_money
-                                                        )
-
-                                                )
-                                                    ?
-                                                    <button data-action="send_money" style={{ background: `url(${sendmoney_m})` }} onClick={() => setActionType("send_money")}>
-                                                        <img src={sm_m_i} alt="" loading="lazy" style={{ width: "30px", objectFit: "contain", height: "30px" }} />
-                                                        <span style={{ fontSize: "1rem", color: "white", fontWeight: "600", textAlign: "left" }}>{t("Send Money")}</span>
-                                                    </button>
-                                                    : ""
-                                            }
-                                            {
-                                                (
-                                                    userDetails?.account_type === "individual"
-                                                        ?
-                                                        userDetails?.level?.payment_request?.send
-                                                        :
-                                                        userDetails?.level?.payment_request?.send
-                                                )
-                                                &&
-                                                <button data-action="req_money" style={{ background: `url(${reqmoney_m})` }} onClick={() => {
-                                                    setActionType("req_money")
-                                                    setCurrentFlow("req_money")
-                                                }}>
-                                                    <img src={rm_m_i} alt="" loading="lazy" style={{ width: "30px", objectFit: "contain", height: "30px" }} />
-                                                    <span style={{ fontSize: "1rem", color: "white", fontWeight: "600", textAlign: "left", }}>{t("Request Money")}</span>
-                                                </button>
-                                            }
-                                            {
-                                                (
-                                                    userDetails?.account_type === "individual"
-                                                        ?
-                                                        userDetails?.level?.quotation?.send
-                                                        :
-                                                        userDetails?.level?.quotation?.send
-                                                )
-                                                &&
-                                                <button data-action="send_quote" style={{ background: `url(${quote_m})` }} onClick={() => {
-                                                    setActionType("send_quote")
-                                                    setCurrentFlow("send_quote")
-                                                }}>
-                                                    <img src={q_m_i} alt="" loading="lazy" style={{ width: "30px", objectFit: "contain", height: "30px" }} />
-                                                    <span style={{ fontSize: "1rem", color: "white", fontWeight: "600", textAlign: "left" }}>{t("Send A Quote")}</span>
-                                                </button>
-                                            }
-                                            <button data-action="airtime" style={{ background: `url(${airtime_m})` }} onClick={() => {
-                                                setActionType("airtime")
-                                                setCurrentFlow("airtime")
-                                            }}>
-                                                <img src={a_m_i} alt="" loading="lazy" style={{ width: "30px", objectFit: "contain", height: "30px" }} />
-                                                <span style={{ fontSize: "1rem", color: "white", fontWeight: "600", textAlign: "left", maxWidth: "8ch" }}>{t("Mobile Airtime")}</span>
-                                            </button>
-                                            {/* {
+            <div className={styles.bottom}>
+              <div className={styles.cards}>
+                {step === 1 && (
+                  <>
+                    {(
+                      userDetails?.account_type === "individual"
+                        ? userDetails?.level?.international_transfer?.bank ||
+                          userDetails?.level?.wallet_to_wallet?.send ||
+                          userDetails?.level?.international_transfer?.cash_pickup ||
+                          userDetails?.level?.international_transfer?.mobile_money
+                        : userDetails?.level?.international_transfer?.bank ||
+                          userDetails?.level?.wallet_to_wallet?.send ||
+                          userDetails?.level?.international_transfer?.cash_pickup ||
+                          userDetails?.level?.international_transfer?.mobile_money
+                    ) ? (
+                      <button
+                        data-action="send_money"
+                        style={{ background: `url(${sendmoney_m})` }}
+                        onClick={() => setActionType("send_money")}
+                      >
+                        <img
+                          src={sm_m_i}
+                          alt=""
+                          loading="lazy"
+                          style={{
+                            width: "30px",
+                            objectFit: "contain",
+                            height: "30px",
+                          }}
+                        />
+                        <span
+                          style={{
+                            fontSize: "1rem",
+                            color: "white",
+                            fontWeight: "600",
+                            textAlign: "left",
+                          }}
+                        >
+                          {t("Send Money")}
+                        </span>
+                      </button>
+                    ) : (
+                      ""
+                    )}
+                    {(userDetails?.account_type === "individual"
+                      ? userDetails?.level?.payment_request?.send
+                      : userDetails?.level?.payment_request?.send) && (
+                      <button
+                        data-action="req_money"
+                        style={{ background: `url(${reqmoney_m})` }}
+                        onClick={() => {
+                          setActionType("req_money");
+                          setCurrentFlow("req_money");
+                        }}
+                      >
+                        <img
+                          src={rm_m_i}
+                          alt=""
+                          loading="lazy"
+                          style={{
+                            width: "30px",
+                            objectFit: "contain",
+                            height: "30px",
+                          }}
+                        />
+                        <span
+                          style={{
+                            fontSize: "1rem",
+                            color: "white",
+                            fontWeight: "600",
+                            textAlign: "left",
+                          }}
+                        >
+                          {t("Request Money")}
+                        </span>
+                      </button>
+                    )}
+                    {(userDetails?.account_type === "individual"
+                      ? userDetails?.level?.quotation?.send
+                      : userDetails?.level?.quotation?.send) && (
+                      <button
+                        data-action="send_quote"
+                        style={{ background: `url(${quote_m})` }}
+                        onClick={() => {
+                          setActionType("send_quote");
+                          setCurrentFlow("send_quote");
+                        }}
+                      >
+                        <img
+                          src={q_m_i}
+                          alt=""
+                          loading="lazy"
+                          style={{
+                            width: "30px",
+                            objectFit: "contain",
+                            height: "30px",
+                          }}
+                        />
+                        <span
+                          style={{
+                            fontSize: "1rem",
+                            color: "white",
+                            fontWeight: "600",
+                            textAlign: "left",
+                          }}
+                        >
+                          {t("Send A Quote")}
+                        </span>
+                      </button>
+                    )}
+                    <button
+                      data-action="airtime"
+                      style={{ background: `url(${airtime_m})` }}
+                      onClick={() => {
+                        setActionType("airtime");
+                        setCurrentFlow("airtime");
+                      }}
+                    >
+                      <img
+                        src={a_m_i}
+                        alt=""
+                        loading="lazy"
+                        style={{
+                          width: "30px",
+                          objectFit: "contain",
+                          height: "30px",
+                        }}
+                      />
+                      <span
+                        style={{
+                          fontSize: "1rem",
+                          color: "white",
+                          fontWeight: "600",
+                          textAlign: "left",
+                          maxWidth: "8ch",
+                        }}
+                      >
+                        {t("Mobile Airtime")}
+                      </span>
+                    </button>
+                    {/* {
                                                 (
                                                     userDetails?.account_type === "individual"
                                                         ?
@@ -385,155 +431,248 @@ const PaymentsNewer = () => {
                                                     <img src={sc} alt="payment types" />
                                                 </button>
                                             } */}
-                                            <button className={styles.disabled} style={{padding: "0px"}} disabled data-action="placeholder">
-                                                <img src={rq} alt="payment types" loading="lazy" />
-                                            </button>
-                                        </>
-                                    }
-                                    {
-                                        step === 2 && action === "send_money"
-                                            ?
-                                            <>
-                                                {
-                                                    (
-                                                        userDetails?.account_type === "individual"
-                                                            ?
-                                                            userDetails?.level?.international_transfer?.bank
-                                                            ||
-                                                            userDetails?.level?.international_transfer?.cash_pickup
-                                                            ||
-                                                            userDetails?.level?.international_transfer?.mobile_money
-                                                            :
-                                                            userDetails?.level?.international_transfer?.bank
-                                                            ||
-                                                            userDetails?.level?.international_transfer?.cash_pickup
-                                                            ||
-                                                            userDetails?.level?.international_transfer?.mobile_money
-                                                    )
-                                                        ?
-                                                        <button onClick={() => {
-                                                            setCurrentFlow("international")
-                                                            setSendPaymentType("international")
-                                                            setStep(3)
-                                                        }} style={{ background: `url(${internation_m})` }}>
-                                                            <img src={int_m_i} alt="" loading="lazy" style={{ width: "30px", objectFit: "contain", height: "30px" }} />
-                                                            <span style={{ fontSize: "1rem", color: "white", fontWeight: "600", textAlign: "left", maxWidth: "12ch" }}>{t("International Transfer")}</span>
-                                                        </button>
-                                                        :
-                                                        ""
-                                                }
-                                                {
-                                                    (
-                                                        userDetails?.account_type === "individual"
-                                                            ?
-                                                            userDetails?.level?.wallet_to_wallet?.send
-                                                            :
-                                                            userDetails?.level?.wallet_to_wallet?.send
-                                                    )
-                                                    &&
-                                                    <button onClick={() => {
-                                                        setCurrentFlow("wallet_to_wallet")
-                                                        setSendPaymentType("wallet_to_wallet")
-                                                        setStep(3)
-                                                    }} style={{ background: `url(${wallet_m})` }}>
-                                                        <img src={w2_ic} alt="" loading="lazy" style={{ width: "30px", objectFit: "contain", height: "30px" }} />
-                                                        <span style={{ fontSize: "1rem", color: "white", fontWeight: "600", textAlign: "left", maxWidth: "15ch" }}>{t("Wallet To Wallet Transfer")}</span>
-                                                    </button>
-                                                }
-                                                {
-                                                    (
-                                                        userDetails?.account_type === "individual"
-                                                            ?
-                                                            userDetails?.level?.qr_pay?.send
-                                                            :
-                                                            userDetails?.level?.qr_pay?.send
-                                                    )
-                                                    &&
-                                                    <button onClick={() => {
-                                                        setCurrentFlow("qr_pay")
-                                                        setSendPaymentType("qr_pay")
-                                                        setStep(3)
-                                                    }} style={{ background: `url(${qr})` }}>
-                                                        <img src={qr_ic} alt="" loading="lazy" style={{ width: "30px", objectFit: "contain", height: "30px" }} />
-                                                        <span style={{ fontSize: "1rem", color: "white", fontWeight: "600", textAlign: "left", maxWidth: "8ch" }}>{t("QR Code Payment")}</span>
-                                                    </button>
-                                                }
-                                                {
-                                                    (
-                                                        userDetails?.account_type === "individual"
-                                                            ?
-                                                            userDetails?.level?.wallet_to_wallet?.send
-                                                            :
-                                                            userDetails?.level?.wallet_to_wallet?.send
-                                                    )
-                                                    &&
-                                                    <button onClick={() => {
-                                                        setCurrentFlow("non-instapay")
-                                                        setSendPaymentType("non-instapay")
-                                                        setStep(3)
-                                                    }} style={{ background: `url(${noninstapay_m})` }}>
-                                                        <img src={ni_m_i} alt="" loading="lazy" style={{ width: "30px", objectFit: "contain", height: "30px" }} />
-                                                        <span style={{ fontSize: "1rem", color: "white", fontWeight: "600", textAlign: "left", maxWidth: "15ch" }}>{t("To Non-InstaPay User")}</span>
-                                                    </button>
-                                                }
-                                            </>
-                                            :
-                                            ""
-                                    }
-                                </div>
-                            </div>
-                        </>
-                        :
-                        <>
-                            {
-                                sendPaymentType === "international"
-                                && canSendInternational
-                                && <International setStep={setStep} step={step} setCurrentFlow={setCurrentFlow} setSendPaymentType={setSendPaymentType} sendPaymentType={sendPaymentType} setAction={setAction} />
-                            }
-                            {
-                                sendPaymentType === "wallet_to_wallet"
-                                && canSendWallet
-                                && <WalletTransferMobile setStep={setStep} step={step} setCurrentFlow={setCurrentFlow} setSendPaymentType={setSendPaymentType} sendPaymentType={sendPaymentType} setAction={setAction} />
-                            }
-                            {
-                                sendPaymentType === "qr_pay"
-                                && canSendQr
-                                && <QRPayment setStep={setStep} step={step} setCurrentFlow={setCurrentFlow} setSendPaymentType={setSendPaymentType} sendPaymentType={sendPaymentType} setAction={setAction} />
-                            }
-                            {
-                                sendPaymentType === "non-instapay"
-                                && canSendNonInstapay
-                                && <NonInstapayPayment setStep={setStep} step={step} setCurrentFlow={setCurrentFlow} setSendPaymentType={setSendPaymentType} sendPaymentType={sendPaymentType} setAction={setAction} />
-                            }
-                            {
-                                action === "req_money"
-                                &&
-                                canMoneyRequest &&
-                                <RequestMoneyMobile step={step} setStep={setStep} setCurrentFlow={setCurrentFlow} setAction={setAction} />
-                            }
-                            {
-                                action === "send_quote"
-                                &&
-                                canQuoteSend &&
-                                <SendQuote step={step} setStep={setStep} setCurrentFlow={setCurrentFlow} setAction={setAction} />
-                            }
-                            {
-                                action === "send_crypto"
-                                &&
-                                canSendCrypto &&
-                                <CryptoFiatMobile step={step} setStep={setStep} setCurrentFlow={setCurrentFlow} setAction={setAction} />
-                            }
-                            {
-                                action === "airtime"
-                                &&
-                                canAirtimeOrEsim &&
-                                <AirtimeMobile step={step} setStep={setStep} setCurrentFlow={setCurrentFlow} setAction={setAction} />
-                            }
-                        </>
-                }
+                    <button
+                      className={styles.disabled}
+                      style={{ padding: "0px" }}
+                      disabled
+                      data-action="placeholder"
+                    >
+                      <img src={rq} alt="payment types" loading="lazy" />
+                    </button>
+                  </>
+                )}
+                {step === 2 && action === "send_money" ? (
+                  <>
+                    {(
+                      userDetails?.account_type === "individual"
+                        ? userDetails?.level?.international_transfer?.bank ||
+                          userDetails?.level?.international_transfer?.cash_pickup ||
+                          userDetails?.level?.international_transfer?.mobile_money
+                        : userDetails?.level?.international_transfer?.bank ||
+                          userDetails?.level?.international_transfer?.cash_pickup ||
+                          userDetails?.level?.international_transfer?.mobile_money
+                    ) ? (
+                      <button
+                        onClick={() => {
+                          setCurrentFlow("international");
+                          setSendPaymentType("international");
+                          setStep(3);
+                        }}
+                        style={{ background: `url(${internation_m})` }}
+                      >
+                        <img
+                          src={int_m_i}
+                          alt=""
+                          loading="lazy"
+                          style={{
+                            width: "30px",
+                            objectFit: "contain",
+                            height: "30px",
+                          }}
+                        />
+                        <span
+                          style={{
+                            fontSize: "1rem",
+                            color: "white",
+                            fontWeight: "600",
+                            textAlign: "left",
+                            maxWidth: "12ch",
+                          }}
+                        >
+                          {t("International Transfer")}
+                        </span>
+                      </button>
+                    ) : (
+                      ""
+                    )}
+                    {(userDetails?.account_type === "individual"
+                      ? userDetails?.level?.wallet_to_wallet?.send
+                      : userDetails?.level?.wallet_to_wallet?.send) && (
+                      <button
+                        onClick={() => {
+                          setCurrentFlow("wallet_to_wallet");
+                          setSendPaymentType("wallet_to_wallet");
+                          setStep(3);
+                        }}
+                        style={{ background: `url(${wallet_m})` }}
+                      >
+                        <img
+                          src={w2_ic}
+                          alt=""
+                          loading="lazy"
+                          style={{
+                            width: "30px",
+                            objectFit: "contain",
+                            height: "30px",
+                          }}
+                        />
+                        <span
+                          style={{
+                            fontSize: "1rem",
+                            color: "white",
+                            fontWeight: "600",
+                            textAlign: "left",
+                            maxWidth: "15ch",
+                          }}
+                        >
+                          {t("Wallet To Wallet Transfer")}
+                        </span>
+                      </button>
+                    )}
+                    {(userDetails?.account_type === "individual"
+                      ? userDetails?.level?.qr_pay?.send
+                      : userDetails?.level?.qr_pay?.send) && (
+                      <button
+                        onClick={() => {
+                          setCurrentFlow("qr_pay");
+                          setSendPaymentType("qr_pay");
+                          setStep(3);
+                        }}
+                        style={{ background: `url(${qr})` }}
+                      >
+                        <img
+                          src={qr_ic}
+                          alt=""
+                          loading="lazy"
+                          style={{
+                            width: "30px",
+                            objectFit: "contain",
+                            height: "30px",
+                          }}
+                        />
+                        <span
+                          style={{
+                            fontSize: "1rem",
+                            color: "white",
+                            fontWeight: "600",
+                            textAlign: "left",
+                            maxWidth: "8ch",
+                          }}
+                        >
+                          {t("QR Code Payment")}
+                        </span>
+                      </button>
+                    )}
+                    {(userDetails?.account_type === "individual"
+                      ? userDetails?.level?.wallet_to_wallet?.send
+                      : userDetails?.level?.wallet_to_wallet?.send) && (
+                      <button
+                        onClick={() => {
+                          setCurrentFlow("non-instapay");
+                          setSendPaymentType("non-instapay");
+                          setStep(3);
+                        }}
+                        style={{ background: `url(${noninstapay_m})` }}
+                      >
+                        <img
+                          src={ni_m_i}
+                          alt=""
+                          loading="lazy"
+                          style={{
+                            width: "30px",
+                            objectFit: "contain",
+                            height: "30px",
+                          }}
+                        />
+                        <span
+                          style={{
+                            fontSize: "1rem",
+                            color: "white",
+                            fontWeight: "600",
+                            textAlign: "left",
+                            maxWidth: "15ch",
+                          }}
+                        >
+                          {t("To Non-InstaPay User")}
+                        </span>
+                      </button>
+                    )}
+                  </>
+                ) : (
+                  ""
+                )}
+              </div>
             </div>
-        </>
-    )
-}
+          </>
+        ) : (
+          <>
+            {sendPaymentType === "international" && canSendInternational && (
+              <International
+                setStep={setStep}
+                step={step}
+                setCurrentFlow={setCurrentFlow}
+                setSendPaymentType={setSendPaymentType}
+                sendPaymentType={sendPaymentType}
+                setAction={setAction}
+              />
+            )}
+            {sendPaymentType === "wallet_to_wallet" && canSendWallet && (
+              <WalletTransferMobile
+                setStep={setStep}
+                step={step}
+                setCurrentFlow={setCurrentFlow}
+                setSendPaymentType={setSendPaymentType}
+                sendPaymentType={sendPaymentType}
+                setAction={setAction}
+              />
+            )}
+            {sendPaymentType === "qr_pay" && canSendQr && (
+              <QRPayment
+                setStep={setStep}
+                step={step}
+                setCurrentFlow={setCurrentFlow}
+                setSendPaymentType={setSendPaymentType}
+                sendPaymentType={sendPaymentType}
+                setAction={setAction}
+              />
+            )}
+            {sendPaymentType === "non-instapay" && canSendNonInstapay && (
+              <NonInstapayPayment
+                setStep={setStep}
+                step={step}
+                setCurrentFlow={setCurrentFlow}
+                setSendPaymentType={setSendPaymentType}
+                sendPaymentType={sendPaymentType}
+                setAction={setAction}
+              />
+            )}
+            {action === "req_money" && canMoneyRequest && (
+              <RequestMoneyMobile
+                step={step}
+                setStep={setStep}
+                setCurrentFlow={setCurrentFlow}
+                setAction={setAction}
+              />
+            )}
+            {action === "send_quote" && canQuoteSend && (
+              <SendQuote
+                step={step}
+                setStep={setStep}
+                setCurrentFlow={setCurrentFlow}
+                setAction={setAction}
+              />
+            )}
+            {action === "send_crypto" && canSendCrypto && (
+              <CryptoFiatMobile
+                step={step}
+                setStep={setStep}
+                setCurrentFlow={setCurrentFlow}
+                setAction={setAction}
+              />
+            )}
+            {action === "airtime" && canAirtimeOrEsim && (
+              <AirtimeMobile
+                step={step}
+                setStep={setStep}
+                setCurrentFlow={setCurrentFlow}
+                setAction={setAction}
+              />
+            )}
+          </>
+        )}
+      </div>
+    </>
+  );
+};
 
 export default PaymentsNewer;

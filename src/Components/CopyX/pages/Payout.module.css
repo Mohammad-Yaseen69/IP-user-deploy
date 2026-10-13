@@ -1,7 +1,14 @@
 /* WEB-12 · Payout review. */
 
 /* The first section sits 40px below the intro block in the design (section top padding is 20px). */
-.intro { padding-bottom: 20px; }
+.intro {
+  padding-bottom: 20px;
+}
 
 /* The Details section runs on a 16px rhythm (heading and rows) instead of the 20px section gap. */
-.details { display: flex; flex-direction: column; gap: 16px; margin-top: -4px; }
+.details {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: -4px;
+}

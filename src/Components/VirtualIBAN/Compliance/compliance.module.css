@@ -1,298 +1,298 @@
 .complianceContainer {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
-    padding: 20px 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 20px 0;
 }
 .warningBanner {
-    background-color: #fef2f2;
-    border: 1px solid #fecaca;
-    border-radius: 8px;
-    padding: 14px 18px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 24px;
+  background-color: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
 }
 
 .redDot {
-    width: 8px;
-    height: 8px;
-    background-color: #dc2626;
-    border-radius: 50%;
-    flex-shrink: 0;
+  width: 8px;
+  height: 8px;
+  background-color: #dc2626;
+  border-radius: 50%;
+  flex-shrink: 0;
 }
 
 .bannerText {
-    margin: 0;
-    font-size: 13.5px;
-    color: #374151;
+  margin: 0;
+  font-size: 13.5px;
+  color: #374151;
 }
 
 .bannerHighlight {
-    color: #dc2626;
-    font-weight: 600;
+  color: #dc2626;
+  font-weight: 600;
 }
 
 .sectionHeading {
-    font-size: 14px;
-    font-weight: 600;
-    color: #6b7280;
-    margin-bottom: 14px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #6b7280;
+  margin-bottom: 14px;
 }
 
 .cardsGrid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-    gap: 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 20px;
 }
 
 .card {
-    background: #ffffff;
-    border: 1px solid #e5e7eb;
-    border-radius: 12px;
-    padding: 22px;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 22px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
 }
 
 .cardHeader {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 12px;
-    gap: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+  gap: 10px;
 }
 
 .cardTitle {
-    margin: 0;
-    font-size: 16px;
-    font-weight: 600;
-    color: #111827;
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #111827;
 }
 
 .badgeActionNeeded {
-    background-color: #fff1f2;
-    color: #e11d48;
-    font-size: 11.5px;
-    font-weight: 600;
-    padding: 4px 10px;
-    border-radius: 20px;
-    white-space: nowrap;
+  background-color: #fff1f2;
+  color: #e11d48;
+  font-size: 11.5px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 20px;
+  white-space: nowrap;
 }
 
 .cardDesc {
-    margin: 0 0 16px 0;
-    font-size: 13px;
-    color: #4b5563;
-    line-height: 1.5;
+  margin: 0 0 16px 0;
+  font-size: 13px;
+  color: #4b5563;
+  line-height: 1.5;
 }
 
 .deadline {
-    margin: 0 0 20px 0;
-    font-size: 13px;
-    color: #9ca3af;
+  margin: 0 0 20px 0;
+  font-size: 13px;
+  color: #9ca3af;
 }
 
 .dateVal {
-    color: #ea580c;
-    font-weight: 600;
+  color: #ea580c;
+  font-weight: 600;
 }
 
 .buttonGroup {
-    display: flex;
-    gap: 10px;
+  display: flex;
+  gap: 10px;
 }
 
 .primaryBtn {
-    background-color: #4f46e5;
-    color: #ffffff;
-    border: none;
-    padding: 9px 16px;
-    border-radius: 8px;
-    font-size: 13px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background 0.2s;
+  background-color: #4f46e5;
+  color: #ffffff;
+  border: none;
+  padding: 9px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
 }
 
 .primaryBtn:hover {
-    background-color: #4338ca;
+  background-color: #4338ca;
 }
 
 .secondaryBtn {
-    background-color: #f3f4f6;
-    color: #374151;
-    border: none;
-    padding: 9px 16px;
-    border-radius: 8px;
-    font-size: 13px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background 0.2s;
+  background-color: #f3f4f6;
+  color: #374151;
+  border: none;
+  padding: 9px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
 }
 
 .secondaryBtn:hover {
-    background-color: #e5e7eb;
+  background-color: #e5e7eb;
 }
 
 .badgeInProgress {
-    background-color: #fefce8;
-    color: #ca8a04;
-    font-size: 11.5px;
-    font-weight: 600;
-    padding: 4px 10px;
-    border-radius: 20px;
-    white-space: nowrap;
+  background-color: #fefce8;
+  color: #ca8a04;
+  font-size: 11.5px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 20px;
+  white-space: nowrap;
 }
 
 .dateValYellow {
-    color: #d97706;
-    font-weight: 600;
+  color: #d97706;
+  font-weight: 600;
 }
 
 .restrictedContainer {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: 50px 20px;
-    max-width: 600px;
-    margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 50px 20px;
+  max-width: 600px;
+  margin: 0 auto;
 }
 
 .warningIconBox {
-    background-color: #fef2f2;
-    border-radius: 16px;
-    width: 56px;
-    height: 56px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 20px;
+  background-color: #fef2f2;
+  border-radius: 16px;
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
 }
 
 .alertIcon {
-    font-size: 24px;
+  font-size: 24px;
 }
 
 .restrictedTitle {
-    font-size: 22px;
-    font-weight: 700;
-    color: #111827;
-    margin: 0 0 10px 0;
+  font-size: 22px;
+  font-weight: 700;
+  color: #111827;
+  margin: 0 0 10px 0;
 }
 
 .restrictedSubtitle {
-    font-size: 14px;
-    color: #6b7280;
-    line-height: 1.5;
-    margin: 0 0 28px 0;
-    max-width: 480px;
+  font-size: 14px;
+  color: #6b7280;
+  line-height: 1.5;
+  margin: 0 0 28px 0;
+  max-width: 480px;
 }
 
 .restrictedCardBox {
-    width: 100%;
-    background: #ffffff;
-    border: 1px solid #e5e7eb;
-    border-radius: 14px;
-    padding: 4px 20px;
-    margin-bottom: 24px;
-    text-align: left;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+  width: 100%;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  padding: 4px 20px;
+  margin-bottom: 24px;
+  text-align: left;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
 }
 
 .restrictedItemRow {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 16px 0;
-    border-bottom: 1px solid #f3f4f6;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 0;
+  border-bottom: 1px solid #f3f4f6;
 }
 
 .restrictedItemRow:last-child {
-    border-bottom: none;
+  border-bottom: none;
 }
 
 .itemTitle {
-    font-size: 14px;
-    font-weight: 500;
-    color: #1f2937;
+  font-size: 14px;
+  font-weight: 500;
+  color: #1f2937;
 }
 
 .badgeOverdue {
-    background-color: #fff1f2;
-    color: #e11d48;
-    font-size: 12px;
-    font-weight: 600;
-    padding: 4px 12px;
-    border-radius: 20px;
+  background-color: #fff1f2;
+  color: #e11d48;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: 20px;
 }
 
 .resolveBtn {
-    background-color: #6d28d9;
-    color: #ffffff;
-    border: none;
-    padding: 12px 28px;
-    border-radius: 10px;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.2s;
+  background-color: #6d28d9;
+  color: #ffffff;
+  border: none;
+  padding: 12px 28px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
 }
 
 .resolveBtn:hover {
-    background-color: #5b21b6;
+  background-color: #5b21b6;
 }
 
 .caughtUpContainer {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: 60px 20px;
-    max-width: 500px;
-    margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 60px 20px;
+  max-width: 500px;
+  margin: 0 auto;
 }
 
 .successIconBox {
-    background-color: #ecfdf5;
-    border-radius: 16px;
-    width: 56px;
-    height: 56px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 20px;
+  background-color: #ecfdf5;
+  border-radius: 16px;
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
 }
 
 .checkIcon {
-    color: #059669;
-    font-size: 24px;
-    font-weight: 700;
+  color: #059669;
+  font-size: 24px;
+  font-weight: 700;
 }
 
 .caughtUpTitle {
-    font-size: 20px;
-    font-weight: 700;
-    color: #111827;
-    margin: 0 0 10px 0;
+  font-size: 20px;
+  font-weight: 700;
+  color: #111827;
+  margin: 0 0 10px 0;
 }
 
 .caughtUpSubtitle {
-    font-size: 13.5px;
-    color: #6b7280;
-    line-height: 1.5;
-    margin: 0 0 24px 0;
+  font-size: 13.5px;
+  color: #6b7280;
+  line-height: 1.5;
+  margin: 0 0 24px 0;
 }
 
 .lastReviewedBadge {
-    background-color: #f3f4f6;
-    color: #4b5563;
-    font-size: 12px;
-    font-weight: 500;
-    padding: 6px 14px;
-    border-radius: 20px;
+  background-color: #f3f4f6;
+  color: #4b5563;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 6px 14px;
+  border-radius: 20px;
 }
