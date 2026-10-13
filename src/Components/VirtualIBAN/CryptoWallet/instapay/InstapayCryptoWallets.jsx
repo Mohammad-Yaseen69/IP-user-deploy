@@ -11,13 +11,6 @@ import InstapayWalletCard from "./InstapayWalletCard"
 import InstapayWalletDetail from "./InstapayWalletDetail"
 import { getWalletAvailable, isLiveCryptoWallet } from "./wallets"
 
-/**
- * Crypto Wallets page on InstaPay balances.
- *
- * The portfolio value sits on top, the wallets underneath, and the Send / Withdraw /
- * Convert rail on the right. Opening a wallet swaps the grid for that wallet's balance,
- * limits, transactions and management actions; the rail keeps working throughout.
- */
 const InstapayCryptoWallets = () => {
     const { t } = useTranslation()
     const can = usePermission()

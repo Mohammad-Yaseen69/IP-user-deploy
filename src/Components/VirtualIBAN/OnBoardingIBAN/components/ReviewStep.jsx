@@ -15,6 +15,7 @@ const DOC_TITLE_MAP = {
     domiciliation_certificate: "Certificate of Domiciliation",
     lease_agreement: "Professional Lease Agreement",
     utility_bill: "Utility Bill",
+    tax_authority_letter: "Official Letter from an Administration / Tax Authority",
     bank_statement: "Recent Business Bank Statement",
     shareholders_register: "Register of Shareholders / Members",
     ownership_chart: "Group Ownership Structure Chart",
@@ -430,7 +431,7 @@ const ReviewStep = ({ onSubmit, onBack, allData = {}, onNext, userType, currentS
                                 />
                                     :    
                             <div className={styles.infoBox}>
-                                <span className={styles.infoIcon}>ⓘ</span>
+                                <span className={styles.infoIcon}><AlertCircle color='white' size={15} /></span>
                                 <p>
                                     {t("You won't be charged now. There's no pricing to accept at this stage, our team confirms your eligibility and sends a personalized offer with the applicable terms and next steps.")}
                                 </p>

@@ -139,7 +139,7 @@ const Stepone = ({ cardType, setCardType, userDetails, applePay, setApplePay, go
                             <div>
                                 <img src={Gb} alt="" />
                                 <p style={{ color: "#282B35" }}>{t("British pound")}</p>
-                                <p>{t("Gb")}</p>
+                                <p>{t("GBP")}</p>
                             </div>
 
                             <p>{t("Coming Soon")}</p>

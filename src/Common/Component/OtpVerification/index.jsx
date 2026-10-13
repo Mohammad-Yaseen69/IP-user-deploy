@@ -187,7 +187,7 @@ const CardOtp = ({
     setter, callback, setterValue, hideOtp, type = '', processing = false,
     resendHandler = () => { }, authType, setAuthType, hideTfaSwitch = false,
     showAuthToggle = true, inBasic, fullHeight, showBackButton = false, onBack = () => { },
-    numberOfFields = 6, methods,
+    numberOfFields = 6, methods, resetIdempotency = () => { },
 }) => {
     const { t } = useTranslation()
     const navigate = useNavigate()
@@ -203,7 +203,6 @@ const CardOtp = ({
     const { available: availableMethods } = getAvailableOtpMethods(userDetails, methods)
     const hasAuthenticator = availableMethods.includes('authenticator')
     const canSwitchMethod = typeof setAuthType === 'function'
-    console.log(availableMethods)
     useEffect(() => { focusFirst() }, [])
     useEffect(() => { inactivityCtx?.setIsExtended?.(true) }, [])
     useEffect(() => {
@@ -216,6 +215,7 @@ const CardOtp = ({
 
     const handlePaste = (e) => {
         e.preventDefault()
+        resetIdempotency()
         const pasted = e.clipboardData?.getData('text')?.replace(/[^0-9]/g, '')?.slice(0, numberOfFields) || ''
         const next = [...otpValues]
         pasted.split('').forEach((char, i) => (next[i] = char))
@@ -261,8 +261,8 @@ const CardOtp = ({
                         <div style={{ display: 'flex', gap: '8px' }}>
                             {otpValues.map((value, index) => (
                                 <input key={index} maxLength={1} value={value} onPaste={handlePaste}
-                                    onChange={(e) => { setOtpError(''); handleChange(index, e.target.value) }}
-                                    onKeyDown={(e) => handleKeyDown(index, e)}
+                                    onChange={(e) => { setOtpError(''); resetIdempotency(); handleChange(index, e.target.value) }}
+                                    onKeyDown={(e) => { if (e.key === 'Backspace') resetIdempotency(); handleKeyDown(index, e) }}
                                     ref={(el) => (inputRefs.current[index] = el)}
                                     style={{ width: '36px', height: '36px', textAlign: 'center', fontSize: '16px', border: '1px solid #ccc', borderRadius: '6px', outline: 'none' }} />
                             ))}
@@ -285,6 +285,7 @@ const CardOtp = ({
                                             {"Didn't receive OTP? "}
                                             <span style={{ color: '#5926f0', fontWeight: 800, cursor: 'pointer' }} onClick={() => {
                                                 setOTPValues(Array(numberOfFields).fill(''))
+                                                resetIdempotency()
                                                 resendHandler(authType)
                                                 setResendTimer(OTP_RESEND_SECONDS)
                                             }}>{t('Resend Now')}</span>
@@ -312,6 +313,7 @@ const CardOtp = ({
                                                     focusFirst()
                                                     setOTPValues(Array(numberOfFields).fill(''))
                                                     setOtpError('')
+                                                    resetIdempotency()
 
                                                     if (methodId === 'authenticator') {
                                                         setAuthType('authenticator')
@@ -335,9 +337,9 @@ const CardOtp = ({
                             </div>
                         )}
 
-                        <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', marginTop: '1rem' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '1rem', gap: '20px' }}>
                             {showBackButton && (
-                                <button type="button" onClick={onBack} style={{ border: 'none', outline: 'none', background: '#fff', color: '#000', borderRadius: '6px', display: 'flex', alignItems: 'center', fontSize: '18px' }}>
+                                <button type="button" onClick={() => { resetIdempotency(); onBack() }} style={{ border: 'none', outline: 'none', background: '#fff', color: '#000', borderRadius: '6px', display: 'flex', alignItems: 'center', fontSize: '18px' }}>
                                     <ChevronLeft size={24} />{t('Back')}
                                 </button>
                             )}

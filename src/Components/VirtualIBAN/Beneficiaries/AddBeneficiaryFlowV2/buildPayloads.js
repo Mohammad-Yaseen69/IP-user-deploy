@@ -1,4 +1,5 @@
 import { CHANNEL_PAYLOAD_KEY, CHANNEL_TYPE_BY_METHOD } from './constants';
+import { BANK_COUNTRY_FIELD } from './vendorFields';
 
 const BENEFICIARY_COLUMN_MAP = {
     firstname: 'first_name',
@@ -64,8 +65,6 @@ const EXTRAS_ALIASES = {
 
 const firstValue = (...values) => values.find((value) => clean(value)) || '';
 
-/* Providers read the same detail under different keys: Thunes wants firstname, BVNK wants
-   firstName. Whichever form filled it, every alias carries the value. */
 const mirrorExtrasAliases = (extras) => {
     const mirrored = { ...extras };
 
@@ -189,6 +188,12 @@ export const buildChannelPayload = ({ form, transactionType }) => {
         extras[key] = value;
     });
 
+  
+    if (channelType === 'bank' && clean(channel[BANK_COUNTRY_FIELD])) {
+        extras.country_iso_code = clean(channel[BANK_COUNTRY_FIELD]);
+    }
+    delete extras[BANK_COUNTRY_FIELD];
+
     const holderName =
         form.beneficiary?.bank_account_holder_name ||
         form.beneficiary?.legalName ||
@@ -241,4 +246,28 @@ export const buildChannelPayload = ({ form, transactionType }) => {
     }
 
     return payload;
+};
+
+
+export const buildTransactionBeneficiaryDetails = ({ form, beneficiaryPayload, channelPayload, saveForFuture }) => {
+    const { country, extras, ...beneficiary } = beneficiaryPayload;
+    const { channel_type: channelType } = channelPayload;
+    const channelKey = CHANNEL_PAYLOAD_KEY[channelType] || CHANNEL_PAYLOAD_KEY.bank;
+
+    const aliasKeys = Object.values(EXTRAS_ALIASES).flat();
+    const filledKeys = Object.keys(form?.beneficiary || {});
+    const ownExtras = Object.fromEntries(
+        Object.entries(extras || {}).filter(([key]) => !aliasKeys.includes(key) || filledKeys.includes(key)),
+    );
+
+    return {
+        saveForFuture: !!saveForFuture,
+        ...beneficiary,
+        extras: {
+            ...ownExtras,
+            channel_type: channelType,
+            ...(country ? { country } : {}),
+        },
+        [channelKey]: [channelPayload[channelKey]],
+    };
 };

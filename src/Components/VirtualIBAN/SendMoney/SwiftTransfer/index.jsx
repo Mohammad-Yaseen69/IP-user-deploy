@@ -64,6 +64,7 @@ import autoTable from "jspdf-autotable"
 import AddBeneficiary from "../../../AddBeneficiary"
 import { validateSwiftBeneficiary, isValidDescription, isValidBic } from "../../utils/swiftValidation"
 import BeneficiaryStep from "../Common/BeneficiaryStep"
+import AddressTooLongBanner from "../Common/AddressTooLongBanner"
 import {
     getBeneficiaryName,
     getBeneficiaryTypeLabel,
@@ -77,6 +78,7 @@ import {
     getBeneficiarySubtitle,
     getRawSwiftCode,
     hasBeneficiarySwiftCode,
+    isBeneficiaryAddressTooLong,
     maskIban
 } from "../Common/beneficiaryHelpers"
 import MobileStepProgress from "../../VirtualIbanModal/MobileStepProgress"
@@ -251,14 +253,14 @@ const MissingSwiftCodeBanner = ({ beneficiary, authHeader, onSwiftCodeSaved }) =
         try {
             const { encryptData } = await import("../../../../Helper/EssentilaMethods/Encryption")
             const bankDetails = Array.isArray(beneficiary?.bank_details) && beneficiary.bank_details.length > 0
-                ? beneficiary.bank_details.map((bd, i) => i === 0 ? { ...bd, swift_code: bicClean, bic: bicClean } : bd)
+                ? {...beneficiary.bank_details[0], swift_code: bicClean, bic: bicClean }
                 : [{ swift_code: bicClean, bic: bicClean }]
 
-            const payload = { ...beneficiary, swift_code: bicClean, bic: bicClean, bank_details: bankDetails }
+            const payload = { bank_details: bankDetails, channel_type: "bank", removeOld: true }
             const encrypted = encryptData(payload)
 
-            await axios.put(
-                `${import.meta.env.VITE_IP_DEV_API}/api/beneficiary/update-beneficiary/${beneficiary._id}`,
+            await axios.post(
+                `${import.meta.env.VITE_IP_DEV_API}/api/beneficiary/v2/${beneficiary._id}/channel`,
                 { data: encrypted },
                 { headers: authHeader }
             )
@@ -893,9 +895,12 @@ const SwiftTransfer = forwardRef(({ isOpen = true, toggle, selectedIban, availab
     const isProcessing = payoutFee.isPending || isSendingOtp || isRefreshingQuote
     const isQuoteExpired = quoteExpiresAt ? new Date(quoteExpiresAt).getTime() <= Date.now() : false
 
+    const isAddressBlocked = currentStep === STEPS.BENEFICIARY && isBeneficiaryAddressTooLong(selectedBeneficiary)
+
     const disabled =
         getDisabledState(currentStep, machineData) ||
         isProcessing ||
+        isAddressBlocked ||
         (currentStep === STEPS.REVIEW && isQuoteExpired)
 
     const showFooter = currentStep !== STEPS.OTP && currentStep !== STEPS.DONE
@@ -1067,6 +1072,8 @@ const SwiftTransfer = forwardRef(({ isOpen = true, toggle, selectedIban, availab
     }
 
     const handleContinue = async () => {
+        if (isAddressBlocked) return
+
         if (currentStep === STEPS.ADD_BENEFICIARY) {
             const nextBeneficiary = buildBeneficiaryFromForm(beneficiaryForm)
             setSelectedBeneficiary(nextBeneficiary)
@@ -1157,6 +1164,15 @@ const SwiftTransfer = forwardRef(({ isOpen = true, toggle, selectedIban, availab
                                 }}
                             />
                         )}
+                        {isAddressBlocked && (
+                            <AddressTooLongBanner
+                                beneficiary={selectedBeneficiary}
+                                onAddressSaved={async (updatedBeneficiary) => {
+                                    setSelectedBeneficiary(updatedBeneficiary)
+                                    await getUserBeneficiaries()
+                                }}
+                            />
+                        )}
                     </BeneficiaryStep>
                 )
             case STEPS.ADD_BENEFICIARY:
@@ -1212,6 +1228,8 @@ const SwiftTransfer = forwardRef(({ isOpen = true, toggle, selectedIban, availab
                         resendHandler={handleSendOtp}
                         authType={authType}
                         setAuthType={setAuthType}
+                        onBack={handleBack}
+                        showBackButton={true}
                         methods={otpMethods}
                     />
                 )

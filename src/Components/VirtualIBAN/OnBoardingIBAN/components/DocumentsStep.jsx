@@ -7,12 +7,35 @@ import SidebarProgress from './SidebarProgress'
 import StepProgress from './StepProgress'
 import { useMediaQuery } from '@mui/material'
 import AlertBox from './AlertBox'
+import useStepValidation from '../../../../hooks/useStepValidation'
+import { IBAN_DOC_KEY_TO_SLOT, IBAN_POA_DOC_KEYS, IBAN_POA_SLOT, toDraftFileRef } from '../../../../utils/Data/businessDraft'
 
-const DocumentsStep = ({ onNext, onBack, userType, data = {}, userDetails, companyDetails, currentStep }) => {
+const ALLOWED_FILE_TYPES = {
+  "application/pdf": [".pdf"],
+  "application/msword": [".doc"],
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document": [
+    ".docx",
+  ],
+  "application/vnd.ms-excel": [".xls"],
+  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": [
+    ".xlsx",
+  ],
+  "image/jpeg": [".jpg", ".jpeg"],
+    "image/png": [".png"],
+    "image/webp": [".webp"],
+};
+
+
+const DocumentsStep = ({ onNext, onBack, onChange, onUploadDraftFile, userType, data = {}, userDetails, companyDetails, currentStep }) => {
     const { t } = useTranslation()
     const [files, setFiles] = useState(data.files || {})
+    const [uploadingKeys, setUploadingKeys] = useState({})
     const inputRefs = useRef({})
     const isMobile = useMediaQuery('(max-width:600px)');
+
+    useEffect(() => {
+        onChange?.(files)
+    }, [files])
 
     useEffect(() => {
         window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
@@ -24,10 +47,10 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {}, userDetails, compa
     const isKybDone = ['approved', 'verified'].includes(kybStatus)
     const companyType = (companyDetails?.businessType || userDetails?.company?.business_verification_type || '').toLowerCase()
 
-    let requiredDocKeys = ['commercial_register', 'articles_association', 'bank_statement', 'shareholders_register', 'ownership_chart', 'ubo_declaration', 'ubo_passport', 'ubo_address_proof']
+    let requiredDocKeys = ['commercial_register', 'articles_association', IBAN_POA_SLOT, 'shareholders_register', 'ownership_chart', 'ubo_declaration', 'ubo_passport', 'ubo_address_proof']
     if (!isKybDone) {
         if (companyType.includes('sole')) {
-            requiredDocKeys = ['commercial_register', 'bank_statement', 'ubo_passport', 'ubo_address_proof']
+            requiredDocKeys = ['commercial_register', IBAN_POA_SLOT, 'ubo_passport', 'ubo_address_proof']
         } else {
             if (!requiredDocKeys.includes('authority_letter')) {
                 requiredDocKeys.push('authority_letter')
@@ -35,7 +58,18 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {}, userDetails, compa
         }
     }
 
-    const handleFileChange = (key, e) => {
+    const setDocFile = (key, value) => {
+        setFiles(prev => {
+            const next = { ...prev }
+            if (IBAN_POA_DOC_KEYS.includes(key)) {
+                IBAN_POA_DOC_KEYS.forEach(poaKey => { delete next[poaKey] })
+            }
+            next[key] = value
+            return next
+        })
+    }
+
+    const handleFileChange = async (key, e) => {
         const file = e.target.files?.[0]
         if (!file) return
         if (file.size > 5 * 1024 * 1024) {
@@ -43,16 +77,36 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {}, userDetails, compa
             e.target.value = ''
             return
         }
-        setFiles(prev => ({ ...prev, [key]: file }))
+        
+        const allowedExtensions = ALLOWED_FILE_TYPES[file.type];
+
+        if (!allowedExtensions) {
+            toast.error(t("Invalid file type. Please upload a PDF, DOC, DOCX, XLS, XLSX, JPG, JPEG, PNG, or WEBP file."));
+            e.target.value = "";
+            return;
+        }
+
         e.target.value = ''
+        setDocFile(key, file)
+
+        const slot = IBAN_DOC_KEY_TO_SLOT[key]
+        if (!onUploadDraftFile || !slot) return
+
+        setUploadingKeys(prev => ({ ...prev, [key]: true }))
+        try {
+            const entry = await onUploadDraftFile(slot, file, slot === IBAN_POA_SLOT ? { variant: key } : undefined)
+            if (entry?.slot) {
+                setFiles(prev => (prev[key] === file ? { ...prev, [key]: toDraftFileRef(entry) } : prev))
+            }
+        } catch (err) {
+            console.error(`Unable to save ${key} to the draft`, err)
+        } finally {
+            setUploadingKeys(prev => ({ ...prev, [key]: false }))
+        }
     }
 
     const openFilePicker = (key) => {
         inputRefs.current[key]?.click()
-    }
-
-    const handleContinue = () => {
-        onNext({ files }, 'documents')
     }
 
     const steps = [
@@ -140,17 +194,25 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {}, userDetails, compa
             return keywords.some(kw => name.includes(kw))
         })
     }
+    const rules = Object.fromEntries(
+        requiredDocKeys.map((k) => [k, (f) => !f[k] && !isKeyVerifiedFromKyb(k)])
+    )
+    const { err, validate } = useStepValidation(files, rules)
+
     const uploadedCount = Object.keys(files).length
     const progressPercent = Math.min(100, Math.round((uploadedCount / requiredDocKeys.length) * 100))
     const renderUploadControl = (key) => {
         const selectedFile = files[key]
         const isVerified = isKeyVerifiedFromKyb(key)
-
+        const isRequired = requiredDocKeys.includes(key)
+        const isPOF = IBAN_POA_DOC_KEYS.includes(key);
         return (
             <div className={styles.right}>
                 {selectedFile ? (
                     <>
-                        <span className={styles.provided}>{isMobile ? t('PROVIDED') : selectedFile.name}</span>
+                        <span className={styles.provided}>
+                            {uploadingKeys[key] ? t('Uploading...') : isMobile ? t('PROVIDED') : selectedFile.name}
+                        </span>
                         <button type="button" className={styles.uploadBtn} onClick={() => openFilePicker(key)}>
                             <Upload size={10} /> {t('Replace')}
                         </button>
@@ -164,7 +226,10 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {}, userDetails, compa
                     </span>
                 ) : (
                     <>
-                        <span className={styles.required}>{t('REQUIRED')}</span>
+                        <span
+                  className={`${styles.required} ${isPOF ? styles.pof : ''}`}
+                                          style={isRequired && err(key,true) ? { backgroundColor:  '#ff000021', color: 'red' } : {}}
+                  >{t(isPOF ? 'ANY ONE' : 'REQUIRED')}</span>
                         <button type="button" className={styles.uploadBtn} onClick={() => openFilePicker(key)}>
                             <Upload size={10} /> {t('Upload')}
                         </button>
@@ -175,12 +240,20 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {}, userDetails, compa
                     type="file"
                     style={{ display: 'none' }}
                     onChange={(e) => handleFileChange(key, e)}
+                    accept=".pdf, .doc, .docx, .xls, .xlsx, .jpg, .jpeg, .png, .webp, application/pdf, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, image/jpeg, image/png, image/webp"
                 />
             </div>
         )
     }
 
-    const isDocsValid = requiredDocKeys.every(k => Boolean(files[k]) || isKeyVerifiedFromKyb(k))
+     const handleContinue = () => {
+       if (validate()) onNext({ files }, 'documents')
+    }
+
+    const isDocProvided = (key) => Boolean(files[key]) || isKeyVerifiedFromKyb(key)
+    const isDocsValid = requiredDocKeys.every(k => (
+        k === IBAN_POA_SLOT ? IBAN_POA_DOC_KEYS.some(isDocProvided) : isDocProvided(k)
+    )) && !Object.values(uploadingKeys).some(Boolean)
     return (
         <div className={styles.onboardingLayout}>
             <div>
@@ -353,7 +426,7 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {}, userDetails, compa
                                     </span>
                                 </div>
 
-                                {renderUploadControl('authority_letter')}
+                                {renderUploadControl('tax_authority_letter')}
                             </div>
                         </div>
                     </div>
@@ -456,7 +529,7 @@ const DocumentsStep = ({ onNext, onBack, userType, data = {}, userDetails, compa
                 </button>
                 <button
                     onClick={handleContinue}
-                    disabled={!isDocsValid}
+                    aria-disabled={!isDocsValid}
                     className={styles.continueButton}
                     style={{ opacity: !isDocsValid ? 0.5 : 1, cursor: !isDocsValid ? 'not-allowed' : 'pointer' }}
                 >

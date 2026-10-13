@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { Copy, Plus, ChevronLeft, Search, User, Trash2, Edit3, Shield, Phone, Mail, MapPin } from 'react-feather';
+import { Copy, Plus, ChevronLeft, Search, User, Trash2, Edit3, Shield, Phone, Mail, MapPin, Filter, Sliders } from 'react-feather';
 import styles from './BeneficiariesVirtual.module.css';
 import IbanBreadcrumb from '../components/IbanBreadcrumb';
 import { useTranslation } from 'react-i18next';
@@ -16,6 +16,26 @@ import { handlePaymentApiError } from '../../../utils/Functions/handlePaymentApi
 import { UserContext } from '../../../Context/UserContext';
 import { toast } from 'react-toastify';
 
+const TYPE_OPTIONS = [
+    { value: 'all', label: 'All' },
+    { value: 'individual', label: 'Individual' },
+    { value: 'business', label: 'Business' },
+];
+
+const SORT_OPTIONS = [
+    { value: 'name_asc', label: 'Name (A-Z)' },
+    { value: 'name_desc', label: 'Name (Z-A)' },
+    { value: 'date_desc', label: 'Date (Newest first)' },
+    { value: 'date_asc', label: 'Date (Oldest first)' },
+    { value: 'type', label: 'Type' },
+];
+
+const getDisplayName = (b) =>
+    b.beneficiary_type === 'business'
+        ? (b.company_name || '')
+        : `${b.first_name || ''} ${b.last_name || ''}`.trim();
+
+const getCreatedAt = (b) => new Date(b.createdAt || 0).getTime();
 
 const BeneficiariesVirtual = () => {
     const { t } = useTranslation();
@@ -26,6 +46,9 @@ const BeneficiariesVirtual = () => {
     const accountId = userDetails?._id || userDetails?.account_id;
 
     const [searchQuery, setSearchQuery] = useState('');
+    const [typeFilter, setTypeFilter] = useState('all');
+    const [sortBy, setSortBy] = useState('name_asc');
+    const [openMenu, setOpenMenu] = useState(null);
     const [selectedBeneficiaryId, setSelectedBeneficiaryId] = useState(null);
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
     const [isChannelModalOpen, setIsChannelModalOpen] = useState(false);
@@ -47,15 +70,36 @@ const BeneficiariesVirtual = () => {
     const allBeneficiaries = rawData?.beneficiaryList || rawData?.data?.beneficiaryList || (Array.isArray(rawData?.data) ? rawData.data : []);
     const beneficiaries = allBeneficiaries;
 
-    const filteredBeneficiaries = beneficiaries.filter(b => {
-        const query = searchQuery.toLowerCase();
-        const fullName = `${b.first_name || ''} ${b.last_name || ''}`.toLowerCase();
-        const company = (b.company_name || '').toLowerCase();
-        const email = (b.email || '').toLowerCase();
-        const phone = (b.phone || '').toLowerCase();
-        const country = (b.country_name || b.country_iso_code || '').toLowerCase();
-        return fullName.includes(query) || company.includes(query) || email.includes(query) || phone.includes(query) || country.includes(query);
-    });
+    const filteredBeneficiaries = beneficiaries
+        .filter(b => {
+            if (typeFilter === 'business' && b.beneficiary_type !== 'business') return false;
+            if (typeFilter === 'individual' && b.beneficiary_type === 'business') return false;
+
+            const query = searchQuery.trim().toLowerCase();
+            if (!query) return true;
+
+            const fullName = `${b.first_name || ''} ${b.last_name || ''}`.toLowerCase();
+            const company = (b.company_name || '').toLowerCase();
+            const email = (b.email || '').toLowerCase();
+            const phone = (b.phone || '').toLowerCase();
+            const country = (b.country_name || b.country_iso_code || '').toLowerCase();
+            return fullName.includes(query) || company.includes(query) || email.includes(query) || phone.includes(query) || country.includes(query);
+        })
+        .sort((a, b) => {
+            if (sortBy === 'date_desc' || sortBy === 'date_asc') {
+                const diff = getCreatedAt(a) - getCreatedAt(b);
+                return sortBy === 'date_desc' ? -diff : diff;
+            }
+            if (sortBy === 'type') {
+                return (a.beneficiary_type || '').localeCompare(b.beneficiary_type || '');
+            }
+            const cmp = getDisplayName(a).localeCompare(getDisplayName(b));
+            return sortBy === 'name_desc' ? -cmp : cmp;
+        });
+
+    const activeFilterCount = typeFilter !== 'all' ? 1 : 0;
+
+    const toggleMenu = (name) => setOpenMenu(prev => (prev === name ? null : name));
 
     const activeBeneficiary = beneficiaries.find(b => b._id === selectedBeneficiaryId) || filteredBeneficiaries[0] || beneficiaries[0];
 
@@ -113,28 +157,28 @@ const BeneficiariesVirtual = () => {
 
     return (
         <div className={styles.container}>
-            {!isMobile && 
-            <div className={styles.top}>
-                <div className={styles.headerTitleMain}>
-                    <div className={styles.titleWithBack}>
-                        <h1>{t("IBAN Beneficiaries")}</h1>
+            {!isMobile &&
+                <div className={styles.top}>
+                    <div className={styles.headerTitleMain}>
+                        <div className={styles.titleWithBack}>
+                            <h1>{t("IBAN Beneficiaries")}</h1>
+                        </div>
+                        <p>{t("Manage your virtual bank and payout channel beneficiaries.")}</p>
                     </div>
-                    <p>{t("Manage your virtual bank and payout channel beneficiaries.")}</p>
+                    <div className={styles.topright}>
+                        {width > 1000 && <TopRight />}
+                    </div>
                 </div>
-                <div className={styles.topright}>
-                    {width > 1000 && <TopRight />}
-                </div>
-            </div>
             }
             <div className={styles.mainContent}>
-            {!isMobile && 
-                <div className={styles.navigationHeader}>
-                    <IbanBreadcrumb items={[
-                        { label: "My virtual bank", path: "/virtual-IBAN" },
-                        { label: "Beneficiaries" }
-                    ]} />
-                </div>
-            }
+                {!isMobile &&
+                    <div className={styles.navigationHeader}>
+                        <IbanBreadcrumb items={[
+                            { label: "My virtual bank", path: "/virtual-IBAN" },
+                            { label: "Beneficiaries" }
+                        ]} />
+                    </div>
+                }
                 <div className={styles.contentLayout}>
                     <div className={styles.columnsFlexGrid}>
                         <div className={styles.leftColumn}>
@@ -161,6 +205,49 @@ const BeneficiariesVirtual = () => {
                                         onChange={(e) => setSearchQuery(e.target.value)}
                                     />
                                 </div>
+
+                                <div className={styles.toolbarRow}>
+                                    <div className={styles.dropdown}>
+                                        <button type="button" className={styles.toolbarBtn} onClick={() => toggleMenu('filter')}>
+                                            <Filter size={14} /> {t("Filter")}
+                                            {activeFilterCount > 0 && <span className={styles.badge}>{activeFilterCount}</span>}
+                                        </button>
+                                        {openMenu === 'filter' && (
+                                            <div className={styles.menu}>
+                                                {TYPE_OPTIONS.map(o => (
+                                                    <button
+                                                        key={o.value}
+                                                        type="button"
+                                                        className={`${styles.menuItem} ${typeFilter === o.value ? styles.menuItemActive : ''}`}
+                                                        onClick={() => { setTypeFilter(o.value); setOpenMenu(null); }}
+                                                    >
+                                                        {t(o.label)}
+                                                    </button>
+                                                ))}
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    <div className={styles.dropdown}>
+                                        <button type="button" className={styles.toolbarBtn} onClick={() => toggleMenu('sort')}>
+                                            <Sliders size={14} /> {t("Sort")}
+                                        </button>
+                                        {openMenu === 'sort' && (
+                                            <div className={styles.menu}>
+                                                {SORT_OPTIONS.map(o => (
+                                                    <button
+                                                        key={o.value}
+                                                        type="button"
+                                                        className={`${styles.menuItem} ${sortBy === o.value ? styles.menuItemActive : ''}`}
+                                                        onClick={() => { setSortBy(o.value); setOpenMenu(null); }}
+                                                    >
+                                                        {t(o.label)}
+                                                    </button>
+                                                ))}
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
                             </div>
 
                             <div className={styles.beneficiariesList}>
@@ -179,14 +266,35 @@ const BeneficiariesVirtual = () => {
                                         const totalChannels = (b.bank_details?.length || 0) + (b.mobile_wallet?.length || 0) + (b.crypto?.length || 0);
 
                                         return (
-                                            isMobile?
-                                             <div
+                                            isMobile ?
+                                                <div
                                                     key={b._id || idx}
                                                     className={`${styles.beneficiaryItem} ${isSelected ? styles.activeItem : ''}`}
                                                     onClick={() => setSelectedBeneficiaryId(b._id)}
                                                     style={{ cursor: 'pointer' }}
                                                 >
-                                            <div className={styles.beneficiaryItemWrapper}>
+                                                    <div className={styles.beneficiaryItemWrapper}>
+                                                        <div className={styles.avatarCircle} style={{ background: getAvatarBg(idx) }}>
+                                                            {getInitials(b)}
+                                                        </div>
+                                                        <div className={styles.itemMeta}>
+                                                            <h4>{name || t("Unnamed Beneficiary")}</h4>
+                                                            <p>
+                                                                {b.beneficiary_type === 'business' ? t("Company") : t("Individual")}
+                                                                {b.country_name ? ` • ${b.country_name}` : ''}
+                                                                {!isMobile && ` • ${totalChannels} ${t("channels")}`}
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                    <div className={styles.channelBadge}>{totalChannels}</div>
+                                                </div>
+                                                :
+                                                <div
+                                                    key={b._id || idx}
+                                                    className={`${styles.beneficiaryItem} ${isSelected ? styles.activeItem : ''}`}
+                                                    onClick={() => setSelectedBeneficiaryId(b._id)}
+                                                    style={{ cursor: 'pointer' }}
+                                                >
                                                     <div className={styles.avatarCircle} style={{ background: getAvatarBg(idx) }}>
                                                         {getInitials(b)}
                                                     </div>
@@ -195,32 +303,11 @@ const BeneficiariesVirtual = () => {
                                                         <p>
                                                             {b.beneficiary_type === 'business' ? t("Company") : t("Individual")}
                                                             {b.country_name ? ` • ${b.country_name}` : ''}
-                                                            {!isMobile && ` • ${totalChannels} ${t("channels")}`}
+                                                            {` • ${totalChannels} ${t("channels")}`}
                                                         </p>
                                                     </div>
                                                 </div>
-                                                <div className={styles.channelBadge}>{totalChannels}</div>
-                                            </div>
-                                            :
-                                            <div
-                                                key={b._id || idx}
-                                                className={`${styles.beneficiaryItem} ${isSelected ? styles.activeItem : ''}`}
-                                                onClick={() => setSelectedBeneficiaryId(b._id)}
-                                                style={{ cursor: 'pointer' }}
-                                            >
-                                                <div className={styles.avatarCircle} style={{ background: getAvatarBg(idx) }}>
-                                                    {getInitials(b)}
-                                                </div>
-                                                <div className={styles.itemMeta}>
-                                                    <h4>{name || t("Unnamed Beneficiary")}</h4>
-                                                    <p>
-                                                        {b.beneficiary_type === 'business' ? t("Company") : t("Individual")}
-                                                        {b.country_name ? ` • ${b.country_name}` : ''}
-                                                        {` • ${totalChannels} ${t("channels")}`}
-                                                    </p>
-                                                </div>
-                                            </div>
-                                    );
+                                        );
                                     })
                                 )}
                             </div>
@@ -244,7 +331,7 @@ const BeneficiariesVirtual = () => {
                                                             {activeBeneficiary.beneficiary_type === 'business' ? t("Business") : t("Individual")}
                                                         </span>
                                                     </div>
-                                                     {isMobile &&
+                                                    {isMobile &&
                                                         <div className={styles.profileActionGroup}>
                                                             <button
                                                                 className={styles.editIconButton}
@@ -300,8 +387,8 @@ const BeneficiariesVirtual = () => {
                                     {activeBeneficiary.bank_details && activeBeneficiary.bank_details.length > 0 && (
                                         activeBeneficiary.bank_details.map((bank, bIdx) => (
                                             isMobile ?
-                                            <div key={bank._id || bIdx} className={styles.cryptoWalletCard} style={{ marginTop: '12px' }}>
-                                                <div className={styles.walletHeader}>
+                                                <div key={bank._id || bIdx} className={styles.cryptoWalletCard} style={{ marginTop: '12px' }}>
+                                                    <div className={styles.walletHeader}>
                                                         <div className={styles.channelTypeLabel}>
                                                             <div className={styles.iconwrap} style={{ borderRadius: "12px", background: "#F5F2FF" }}>
                                                                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4F46E5" strokeWidth="2">
@@ -311,59 +398,59 @@ const BeneficiariesVirtual = () => {
                                                                     <line x1="3" y1="9" x2="21" y2="9"></line>
                                                                 </svg>
                                                             </div>
-                                                        <div>
-                                                            <span className={styles.networkTag}>{t("Bank Account")}</span>                                                 <span className={styles.networkActive}>{bank.name || t("Bank")}</span>
+                                                            <div>
+                                                                <span className={styles.networkTag}>{t("Bank Account")}</span>                                                 <span className={styles.networkActive}>{bank.name || t("Bank")}</span>
+                                                            </div>
                                                         </div>
-                                                        </div>
-                                                    <button
-                                                        onClick={() => handleDeleteChannel('bank', bank._id)}
-                                                        style={{ border: 'none', background: 'transparent', color: '#EF4444', cursor: 'pointer', padding: '4px' }}
-                                                        title={t("Delete channel")}
-                                                    >
-                                                        <Trash2 size={14} />
-                                                    </button>
-                                                </div>
-                                                <div className={styles.addressRow}>
-                                                    <span className={styles.cryptoAddress}>
-                                                        {bank.iban || bank.account_number || bank.bank_account_number || ''}
-                                                    </span>
-                                                    <button className={styles.copyBtn} onClick={() => handleCopy(bank.iban || bank.account_number)}>
-                                                        <Copy size={14} />
-                                                    </button>
-                                                </div>
-                                            </div>
-                                            :
-                                            <div key={bank._id || bIdx} className={styles.cryptoWalletCard} style={{ marginTop: '12px' }}>
-                                                <div className={styles.walletHeader}>
-                                                    <div className={styles.channelTypeLabel}>
-                                                        <div className={styles.iconwrap} style={{ borderRadius: "12px", background: "#F5F2FF" }}>
-                                                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4F46E5" strokeWidth="2">
-                                                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                                                                <line x1="9" y1="21" x2="9" y2="9"></line>
-                                                                <line x1="15" y1="21" x2="15" y2="9"></line>
-                                                                <line x1="3" y1="9" x2="21" y2="9"></line>
-                                                            </svg>
-                                                        </div>
-                                                        <span className={styles.networkTag}>{t("Bank Account")}</span>
-                                                        <span className={styles.networkActive}>{bank.name || t("Bank")}</span>
+                                                        <button
+                                                            onClick={() => handleDeleteChannel('bank', bank._id)}
+                                                            style={{ border: 'none', background: 'transparent', color: '#EF4444', cursor: 'pointer', padding: '4px' }}
+                                                            title={t("Delete channel")}
+                                                        >
+                                                            <Trash2 size={14} />
+                                                        </button>
                                                     </div>
-                                                    <button
-                                                        onClick={() => handleDeleteChannel('bank', bank._id)}
-                                                        style={{ border: 'none', background: 'transparent', color: '#EF4444', cursor: 'pointer', padding: '4px' }}
-                                                        title={t("Delete channel")}
-                                                    >
-                                                        <Trash2 size={14} />
-                                                    </button>
+                                                    <div className={styles.addressRow}>
+                                                        <span className={styles.cryptoAddress}>
+                                                            {bank.iban || bank.account_number || bank.bank_account_number || ''}
+                                                        </span>
+                                                        <button className={styles.copyBtn} onClick={() => handleCopy(bank.iban || bank.account_number)}>
+                                                            <Copy size={14} />
+                                                        </button>
+                                                    </div>
                                                 </div>
-                                                <div className={styles.addressRow}>
-                                                    <span className={styles.cryptoAddress}>
-                                                        {bank.iban || bank.account_number || bank.bank_account_number || ''}
-                                                    </span>
-                                                    <button className={styles.copyBtn} onClick={() => handleCopy(bank.iban || bank.account_number)}>
-                                                        <Copy size={14} />
-                                                    </button>
+                                                :
+                                                <div key={bank._id || bIdx} className={styles.cryptoWalletCard} style={{ marginTop: '12px' }}>
+                                                    <div className={styles.walletHeader}>
+                                                        <div className={styles.channelTypeLabel}>
+                                                            <div className={styles.iconwrap} style={{ borderRadius: "12px", background: "#F5F2FF" }}>
+                                                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4F46E5" strokeWidth="2">
+                                                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                                                    <line x1="9" y1="21" x2="9" y2="9"></line>
+                                                                    <line x1="15" y1="21" x2="15" y2="9"></line>
+                                                                    <line x1="3" y1="9" x2="21" y2="9"></line>
+                                                                </svg>
+                                                            </div>
+                                                            <span className={styles.networkTag}>{t("Bank Account")}</span>
+                                                            <span className={styles.networkActive}>{bank.name || t("Bank")}</span>
+                                                        </div>
+                                                        <button
+                                                            onClick={() => handleDeleteChannel('bank', bank._id)}
+                                                            style={{ border: 'none', background: 'transparent', color: '#EF4444', cursor: 'pointer', padding: '4px' }}
+                                                            title={t("Delete channel")}
+                                                        >
+                                                            <Trash2 size={14} />
+                                                        </button>
+                                                    </div>
+                                                    <div className={styles.addressRow}>
+                                                        <span className={styles.cryptoAddress}>
+                                                            {bank.iban || bank.account_number || bank.bank_account_number || ''}
+                                                        </span>
+                                                        <button className={styles.copyBtn} onClick={() => handleCopy(bank.iban || bank.account_number)}>
+                                                            <Copy size={14} />
+                                                        </button>
+                                                    </div>
                                                 </div>
-                                            </div>
                                         ))
                                     )}
 
@@ -439,7 +526,7 @@ const BeneficiariesVirtual = () => {
                                         (!activeBeneficiary.mobile_wallet || activeBeneficiary.mobile_wallet.length === 0) &&
                                         (!activeBeneficiary.crypto || activeBeneficiary.crypto.length === 0) && (
                                             <div style={{ padding: '32px 16px', textAlign: 'center', background: '#FAF9FD', borderRadius: '16px', border: '1px dashed #E5E7EB', marginTop: '16px' }}>
-                                                <p style={{ margin: '0 0 12px', fontSize: '14px', color: '#6B7280', fontWeight:isMobile && 400 }}>
+                                                <p style={{ margin: '0 0 12px', fontSize: '14px', color: '#6B7280', fontWeight: isMobile && 400 }}>
                                                     {t("No payout channels added for this beneficiary yet.")}
                                                 </p>
                                                 <button

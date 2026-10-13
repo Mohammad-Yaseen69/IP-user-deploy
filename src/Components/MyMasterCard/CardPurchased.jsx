@@ -46,6 +46,8 @@ import { apiWrapper } from '../../utils/Functions/apiWrapper';
 import { localCurrency } from '../../utils/Functions';
 import { formatCurrency } from '../../Helper/AmountFormat';
 import { usePermission } from '../../hooks/GeneralUse/usePermission';
+import { Check } from 'react-feather';
+
 export const Toggle = ({
     checked,
     onChange,
@@ -172,6 +174,9 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
     });
     const [cardStatus, setCardStatus] = useState("active")
     const [freezeLoading, setFreezeLoading] = useState(false);
+    const [isCopied, setIsCopied] = useState(false)
+    const timerRef = useRef();
+
     const { data: balanceInLocal } = useQuery({
         queryKey: ["MasterCardBalanceConversion", currentCardDetails?.balance],
         queryFn: () => apiWrapper({
@@ -195,14 +200,15 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
 
 
 
-    const handleCopy = (text) => {
-        navigator.clipboard.writeText(text)
-            .then(() => {
-                toast.success('Copied to clipboard!');
-            })
-            .catch(() => {
-                toast.error('Failed to copy!');
-            });
+    const handleCopy = async (text) => {
+        try {
+            await navigator.clipboard.writeText(text);
+            setIsCopied(true);
+            clearTimeout(timerRef.current);
+            timerRef.current = setTimeout(() => setIsCopied(false), 3000);
+        } catch {
+            toast.error("Failed to copy!");
+        }
     };
 
     useEffect(() => {
@@ -231,6 +237,7 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
         getCardDetail()
     }, [current])
 
+    useEffect(() => () => clearTimeout(timerRef.current), []);
 
     const freezeToggle = async () => {
         // Permission: mastercard.card.activate / mastercard.card.freeze
@@ -786,17 +793,19 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
                                                             >
                                                                 {formatCardNumber(currentCardDetails?.card_number)}
                                                             </h3>
-                                                            <img
-                                                                src={Copy}
-                                                                alt="copy"
-                                                                style={{ cursor: 'pointer' }}
-                                                                onClick={(e) => {
-                                                                    e.stopPropagation();
-                                                                    // Permission: mastercard.details.copy
-                                                                    if (!can("mastercard.details.copy")) return;
-                                                                    handleCopy(currentCardDetails?.card_number);
-                                                                }}
-                                                            />
+                                                            {isCopied ?                                         <Check size={14} color='white' style={{transform:'none'}} /> :
+                                                                <img
+                                                                    src={Copy}
+                                                                    alt="copy"
+                                                                    style={{ cursor: 'pointer' }}
+                                                                    onClick={(e) => {
+                                                                        e.stopPropagation();
+                                                                        // Permission: mastercard.details.copy
+                                                                        if (!can("mastercard.details.copy")) return;
+                                                                        handleCopy(currentCardDetails?.card_number);
+                                                                    }}
+                                                                />
+                                                            }
                                                         </div>
 
                                                         <div className={styles.row}>

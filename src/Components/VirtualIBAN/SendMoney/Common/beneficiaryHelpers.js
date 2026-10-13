@@ -41,6 +41,15 @@ export const getRawSwiftCode = (b) => {
 
 export const hasBeneficiarySwiftCode = (b) => isValidBic(getRawSwiftCode(b))
 
+export const ADDRESS_LINE_MAX = 35
+
+const getAddressCandidates = (b) => [b?.address].map((value) => String(value || "").trim())
+
+export const getBeneficiaryAddress = (b) => getAddressCandidates(b).find(Boolean) || ""
+
+export const isBeneficiaryAddressTooLong = (b) =>
+    getAddressCandidates(b).some((value) => value.length > ADDRESS_LINE_MAX)
+
 export const maskIban = (iban) => {
     if (!iban) return "-"
     const clean = String(iban).replace(/\s/g, "")
