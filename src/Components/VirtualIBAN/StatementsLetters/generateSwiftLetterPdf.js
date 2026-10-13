@@ -1,92 +1,108 @@
-import jsPDF from 'jspdf';
-import html2canvas from 'html2canvas';
-import QRCodeStyling from 'qr-code-styling';
-import logoImg from '../../../assets/images/logo/logo2.webp';
-import signatureImg from './signatur.png';
-import { getPaymentReference, INTL_DEPOSIT_ACCOUNTS } from '../utils/virtualIban';
+import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
+import QRCodeStyling from "qr-code-styling";
+import logoImg from "../../../assets/images/logo/logo2.webp";
+import signatureImg from "./signatur.png";
+import {
+  getPaymentReference,
+  INTL_DEPOSIT_ACCOUNTS,
+} from "../utils/virtualIban";
 
 export const INTL_SWIFT_DATA = INTL_DEPOSIT_ACCOUNTS;
 
 export const service_name_formatter = (itemName) => {
-    if (itemName) {
-        const nameArr = itemName.split("_")
-        const newName = nameArr.map(item => item = `${item[0].toUpperCase()}${item?.slice(1)}`).join(" ")
-        return newName;
-    }
-}
+  if (itemName) {
+    const nameArr = itemName.split("_");
+    const newName = nameArr
+      .map((item) => (item = `${item[0].toUpperCase()}${item?.slice(1)}`))
+      .join(" ");
+    return newName;
+  }
+};
 const formatDate = (value, options = {}) => {
-    if (!value) return new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric', ...options });
-    const date = new Date(value);
-    if (Number.isNaN(date.getTime())) return '-';
-    return date.toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric', ...options });
+  if (!value)
+    return new Date().toLocaleDateString("en-GB", {
+      day: "2-digit",
+      month: "long",
+      year: "numeric",
+      ...options,
+    });
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "-";
+  return date.toLocaleDateString("en-GB", {
+    day: "2-digit",
+    month: "long",
+    year: "numeric",
+    ...options,
+  });
 };
 
 const toBase64 = (src) =>
-    new Promise((resolve, reject) => {
-        const img = new Image();
-        img.crossOrigin = 'anonymous';
-        img.onload = () => {
-            const c = document.createElement('canvas');
-            c.width = img.naturalWidth;
-            c.height = img.naturalHeight;
-            c.getContext('2d').drawImage(img, 0, 0);
-            resolve(c.toDataURL('image/png'));
-        };
-        img.onerror = () => reject(new Error('Image load failed'));
-        img.src = src;
-    });
+  new Promise((resolve, reject) => {
+    const img = new Image();
+    img.crossOrigin = "anonymous";
+    img.onload = () => {
+      const c = document.createElement("canvas");
+      c.width = img.naturalWidth;
+      c.height = img.naturalHeight;
+      c.getContext("2d").drawImage(img, 0, 0);
+      resolve(c.toDataURL("image/png"));
+    };
+    img.onerror = () => reject(new Error("Image load failed"));
+    img.src = src;
+  });
 
 const generateQrBase64 = async (url) => {
-    try {
-        const qr = new QRCodeStyling({
-            width: 280,
-            height: 280,
-            data: url,
-            qrOptions: { typeNumber: '0', mode: 'Byte', errorCorrectionLevel: 'Q' },
-            image: logoImg,
-            imageOptions: { hideBackgroundDots: true, imageSize: 0.2, margin: 6 },
-            dotsOptions: {
-                type: 'extra-rounded',
-                color: '#45159C',
-                gradient: {
-                    type: 'linear',
-                    rotation: 0.314159,
-                    colorStops: [
-                        { offset: 0, color: '#5626E6' },
-                        { offset: 1, color: '#3A0B99' },
-                    ],
-                },
-            },
-            backgroundOptions: { color: '#ffffff' },
-        });
-        const blob = await qr.getRawData('png');
-        return new Promise((resolve) => {
-            const reader = new FileReader();
-            reader.onloadend = () => resolve(reader.result);
-            reader.readAsDataURL(blob);
-        });
-    } catch (e) {
-        console.warn('QR Code generation failed', e);
-        return null;
-    }
+  try {
+    const qr = new QRCodeStyling({
+      width: 280,
+      height: 280,
+      data: url,
+      qrOptions: { typeNumber: "0", mode: "Byte", errorCorrectionLevel: "Q" },
+      image: logoImg,
+      imageOptions: { hideBackgroundDots: true, imageSize: 0.2, margin: 6 },
+      dotsOptions: {
+        type: "extra-rounded",
+        color: "#45159C",
+        gradient: {
+          type: "linear",
+          rotation: 0.314159,
+          colorStops: [
+            { offset: 0, color: "#5626E6" },
+            { offset: 1, color: "#3A0B99" },
+          ],
+        },
+      },
+      backgroundOptions: { color: "#ffffff" },
+    });
+    const blob = await qr.getRawData("png");
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result);
+      reader.readAsDataURL(blob);
+    });
+  } catch (e) {
+    console.warn("QR Code generation failed", e);
+    return null;
+  }
 };
 
-const getSafeString = (val, fallback = '') => {
-    if (!val) return fallback;
-    if (typeof val === 'string' || typeof val === 'number') return String(val);
-    if (typeof val === 'object') {
-        return val.country_name || val.name || val.title || val.label || fallback;
-    }
-    return fallback;
+const getSafeString = (val, fallback = "") => {
+  if (!val) return fallback;
+  if (typeof val === "string" || typeof val === "number") return String(val);
+  if (typeof val === "object") {
+    return val.country_name || val.name || val.title || val.label || fallback;
+  }
+  return fallback;
 };
 
 const renderTableRow = (label, value, isLast = false, isMono = false) => `
-    <tr style="border-bottom: ${isLast ? 'none' : '1px solid #E6E2F5'};">
+    <tr style="border-bottom: ${isLast ? "none" : "1px solid #E6E2F5"};">
         <td style="padding: 10px 20px; color: #55506B; font-size: 13px; font-weight: 500; width: 44%; vertical-align: middle;">
             ${label}
         </td>
-        <td style="padding: 10px 20px; color: #1A1826; font-size: 13px; font-weight: 600; vertical-align: middle; line-height: 1.45; ${isMono ? "font-family: 'SF Mono', 'Consolas', monospace;" : ''}">
-            ${value || '-'}
+        <td style="padding: 10px 20px; color: #1A1826; font-size: 13px; font-weight: 600; vertical-align: middle; line-height: 1.45; ${isMono ? "font-family: 'SF Mono', 'Consolas', monospace;" : ""}">
+            ${value || "-"}
         </td>
     </tr>
 `;
@@ -117,10 +133,11 @@ const renderHeader = (logoBase64) => `
             CONFIDENTIAL
         </div>
         <div style="display: flex; align-items: center;">
-            ${logoBase64
-        ? `<img src="${logoBase64}" style="height: 30px; width: auto; object-fit: contain;" />`
-        : `<span style="font-size: 22px; font-weight: 800; color: #5626E6;">InstaPay</span>`
-    }
+            ${
+              logoBase64
+                ? `<img src="${logoBase64}" style="height: 30px; width: auto; object-fit: contain;" />`
+                : `<span style="font-size: 22px; font-weight: 800; color: #5626E6;">InstaPay</span>`
+            }
         </div>
     </div>
 `;
@@ -133,24 +150,64 @@ const renderFooter = () => `
     </div>
 `;
 
-const buildSwiftLetterPagesHtml = ({ logoBase64, qrBase64, signatureBase64, iban, userDetails, qrUrl, displayUrl, currency = 'usd' }) => {
-    const intl = INTL_SWIFT_DATA[currency.toLowerCase()] || INTL_SWIFT_DATA.usd;
+const buildSwiftLetterPagesHtml = ({
+  logoBase64,
+  qrBase64,
+  signatureBase64,
+  iban,
+  userDetails,
+  qrUrl,
+  displayUrl,
+  currency = "usd",
+}) => {
+  const intl = INTL_SWIFT_DATA[currency.toLowerCase()] || INTL_SWIFT_DATA.usd;
 
-    const holderName = getSafeString(iban?.account_holder_name || iban?.accountHolderName || userDetails?.fullName || userDetails?.companyName || userDetails?.name, 'HEAVYMORE LTD');
-    const holderType = getSafeString(userDetails?.account_type, (userDetails?.companyName ? 'Business / Company' : 'Individual / Personal'));
-    const companyType = getSafeString(userDetails?.category?.name, '---');
-    const jurisdiction = getSafeString(iban?.incorporationJurisdiction || userDetails?.country?.country_name || userDetails?.country || userDetails?.jurisdiction, 'Cyprus');
-    const incDate = userDetails?.company?.date_of_incorporation ? formatDate(userDetails?.company?.date_of_incorporation) : (userDetails?.dob ? formatDate(userDetails.dob) : '24 November 2020');
-    const regAddress = getSafeString(iban?.registeredAddress || userDetails?.address || userDetails?.formattedAddress, 'Solonos 7, Kolossi, 4632, Limassol, Cyprus');
-    const orgNumber = getSafeString(userDetails?.company?.registration_number || userDetails?.company?.tax_id, '---');
-    const virtualIbanId = getSafeString(iban?.virtualIbanId || iban?._id || iban?.id, '');
-    const customerId = virtualIbanId
-    const paymentReference = getPaymentReference(iban, userDetails, currency);
+  const holderName = getSafeString(
+    iban?.account_holder_name ||
+      iban?.accountHolderName ||
+      userDetails?.fullName ||
+      userDetails?.companyName ||
+      userDetails?.name,
+    "HEAVYMORE LTD",
+  );
+  const holderType = getSafeString(
+    userDetails?.account_type,
+    userDetails?.companyName ? "Business / Company" : "Individual / Personal",
+  );
+  const companyType = getSafeString(userDetails?.category?.name, "---");
+  const jurisdiction = getSafeString(
+    iban?.incorporationJurisdiction ||
+      userDetails?.country?.country_name ||
+      userDetails?.country ||
+      userDetails?.jurisdiction,
+    "Cyprus",
+  );
+  const incDate = userDetails?.company?.date_of_incorporation
+    ? formatDate(userDetails?.company?.date_of_incorporation)
+    : userDetails?.dob
+      ? formatDate(userDetails.dob)
+      : "24 November 2020";
+  const regAddress = getSafeString(
+    iban?.registeredAddress ||
+      userDetails?.address ||
+      userDetails?.formattedAddress,
+    "Solonos 7, Kolossi, 4632, Limassol, Cyprus",
+  );
+  const orgNumber = getSafeString(
+    userDetails?.company?.registration_number || userDetails?.company?.tax_id,
+    "---",
+  );
+  const virtualIbanId = getSafeString(
+    iban?.virtualIbanId || iban?._id || iban?.id,
+    "",
+  );
+  const customerId = virtualIbanId;
+  const paymentReference = getPaymentReference(iban, userDetails, currency);
 
-    const todayDate = formatDate(new Date());
-    const refCode = `ISCL-${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, '0')}${String(new Date().getDate()).padStart(2, '0')}-${customerId.slice(-4)}`;
+  const todayDate = formatDate(new Date());
+  const refCode = `ISCL-${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, "0")}${String(new Date().getDate()).padStart(2, "0")}-${customerId.slice(-4)}`;
 
-    const pageStyle = `
+  const pageStyle = `
         width: 794px;
         height: 1123px;
         background: #ffffff;
@@ -163,8 +220,8 @@ const buildSwiftLetterPagesHtml = ({ logoBase64, qrBase64, signatureBase64, iban
         margin-bottom: 20px;
     `;
 
-    // ════════════════ PAGE 1 ════════════════
-    const page1Html = `
+  // ════════════════ PAGE 1 ════════════════
+  const page1Html = `
     <div class="swift-pdf-page" style="${pageStyle}">
         ${renderHeader(logoBase64)}
 
@@ -205,14 +262,14 @@ const buildSwiftLetterPagesHtml = ({ logoBase64, qrBase64, signatureBase64, iban
             </div>
             <table style="width: 100%; border-collapse: collapse; background: #ffffff;">
                 <tbody>
-                    ${renderTableRow('Full legal name', holderName)}
-                    ${renderTableRow('Customer type', service_name_formatter(holderType))}
-                    ${holderType === 'business' ? renderTableRow('Company type', companyType) : ''}
-                    ${renderTableRow('Registration / Incorporation jurisdiction', jurisdiction)}
-                    ${holderType === 'business' ? renderTableRow('Incorporation date', incDate) : renderTableRow('Date of birth', incDate)}
-                    ${renderTableRow('Registered address', regAddress)}
-                    ${renderTableRow('Organisation / Registration number', orgNumber)}
-                    ${renderTableRow('Customer Id', customerId)}
+                    ${renderTableRow("Full legal name", holderName)}
+                    ${renderTableRow("Customer type", service_name_formatter(holderType))}
+                    ${holderType === "business" ? renderTableRow("Company type", companyType) : ""}
+                    ${renderTableRow("Registration / Incorporation jurisdiction", jurisdiction)}
+                    ${holderType === "business" ? renderTableRow("Incorporation date", incDate) : renderTableRow("Date of birth", incDate)}
+                    ${renderTableRow("Registered address", regAddress)}
+                    ${renderTableRow("Organisation / Registration number", orgNumber)}
+                    ${renderTableRow("Customer Id", customerId)}
                 </tbody>
             </table>
         </div>
@@ -220,8 +277,8 @@ const buildSwiftLetterPagesHtml = ({ logoBase64, qrBase64, signatureBase64, iban
         ${renderFooter()}
     </div>`;
 
-    // ════════════════ PAGE 2 ════════════════
-    const page2Html = `
+  // ════════════════ PAGE 2 ════════════════
+  const page2Html = `
     <div class="swift-pdf-page" style="${pageStyle}">
         ${renderHeader(logoBase64)}
 
@@ -234,14 +291,14 @@ const buildSwiftLetterPagesHtml = ({ logoBase64, qrBase64, signatureBase64, iban
             </div>
             <table style="width: 100%; border-collapse: collapse; background: #ffffff;">
                 <tbody>
-                    ${renderTableRow('Receiving currency', intl.currencyCode)}
-                    ${renderTableRow('Beneficiary name', intl.beneficiaryName)}
-                    ${renderTableRow('Beneficiary address', intl.beneficiaryAddress)}
-                    ${renderTableRow('Account number / IBAN', intl.accountNumber, false, true)}
-                    ${renderTableRow('BIC / SWIFT', intl.bankCode, false, true)}
-                    ${renderTableRow('Bank name', intl.bankName)}
-                    ${renderTableRow('Bank address', intl.bankAddress)}
-                    ${renderTableRow('Payment reference', paymentReference, true, true)}
+                    ${renderTableRow("Receiving currency", intl.currencyCode)}
+                    ${renderTableRow("Beneficiary name", intl.beneficiaryName)}
+                    ${renderTableRow("Beneficiary address", intl.beneficiaryAddress)}
+                    ${renderTableRow("Account number / IBAN", intl.accountNumber, false, true)}
+                    ${renderTableRow("BIC / SWIFT", intl.bankCode, false, true)}
+                    ${renderTableRow("Bank name", intl.bankName)}
+                    ${renderTableRow("Bank address", intl.bankAddress)}
+                    ${renderTableRow("Payment reference", paymentReference, true, true)}
                 </tbody>
             </table>
         </div>
@@ -296,8 +353,8 @@ const buildSwiftLetterPagesHtml = ({ logoBase64, qrBase64, signatureBase64, iban
         ${renderFooter()}
     </div>`;
 
-    // ════════════════ PAGE 3 ════════════════
-    const page3Html = `
+  // ════════════════ PAGE 3 ════════════════
+  const page3Html = `
     <div class="swift-pdf-page" style="${pageStyle}">
         ${renderHeader(logoBase64)}
 
@@ -331,7 +388,7 @@ const buildSwiftLetterPagesHtml = ({ logoBase64, qrBase64, signatureBase64, iban
             </div>
             <table style="width: 100%; border-collapse: collapse; background: #ffffff;">
                 <tbody>
-                    ${renderTableRow('Programme operator (brand)', 'Kemit Kingdom - K2 - SA, trading as InstaPay · Route des Falaises 7, 2000 Neuchâtel, Switzerland', true)}
+                    ${renderTableRow("Programme operator (brand)", "Kemit Kingdom - K2 - SA, trading as InstaPay · Route des Falaises 7, 2000 Neuchâtel, Switzerland", true)}
                 </tbody>
             </table>
         </div>
@@ -350,10 +407,11 @@ const buildSwiftLetterPagesHtml = ({ logoBase64, qrBase64, signatureBase64, iban
                 <div style="font-size: 15px; font-weight: 700; color: #1A1826; margin-bottom: 10px;">
                     InstaPay Operations
                 </div>
-                ${signatureBase64
-            ? `<div style="height: 44px; display: flex; align-items: center; margin-bottom: 6px;"><img src="${signatureBase64}" style="max-height: 42px; max-width: 150px; width: auto; object-fit: contain;" /></div>`
-            : ''
-        }
+                ${
+                  signatureBase64
+                    ? `<div style="height: 44px; display: flex; align-items: center; margin-bottom: 6px;"><img src="${signatureBase64}" style="max-height: 42px; max-width: 150px; width: auto; object-fit: contain;" /></div>`
+                    : ""
+                }
                 <div style="font-size: 12px; color: #55506B; line-height: 1.55; font-weight: 400;">
                     <span style="font-weight: 600; color: #1A1826;">Authorised signatory · Client Operations &amp; Compliance</span><br />
                     InstaPay, a brand of Kemit Kingdom - K2 - SA, Route des Falaises 7, 2000 Neuchâtel, Switzerland<br />
@@ -377,10 +435,11 @@ const buildSwiftLetterPagesHtml = ({ logoBase64, qrBase64, signatureBase64, iban
                     padding: 4px;
                     box-sizing: border-box;
                 ">
-                    ${qrBase64
-            ? `<img src="${qrBase64}" style="width: 106px; height: 106px; border-radius: 4px;" />`
-            : `<div style="font-size: 10px; color: #98A2B3;">QR Code</div>`
-        }
+                    ${
+                      qrBase64
+                        ? `<img src="${qrBase64}" style="width: 106px; height: 106px; border-radius: 4px;" />`
+                        : `<div style="font-size: 10px; color: #98A2B3;">QR Code</div>`
+                    }
                 </div>
                 <div style="font-size: 9.5px; color: #55506B; margin-top: 6px; font-weight: 600; letter-spacing: 0.4px;">
                     SCAN OR VISIT TO VERIFY
@@ -425,80 +484,95 @@ const buildSwiftLetterPagesHtml = ({ logoBase64, qrBase64, signatureBase64, iban
         ${renderFooter()}
     </div>`;
 
-    return [page1Html, page2Html, page3Html];
+  return [page1Html, page2Html, page3Html];
 };
 
 const generateSwiftLetterPdf = async (iban, userDetails = {}, options = {}) => {
-    const selectedCurrency = (options.currency || 'usd').toLowerCase();
-    const virtualIbanId = iban?.virtualIbanId || iban?._id || iban?.id || '';
-    const origin = window.location.origin || 'https://my.insta-pay.ch';
-    const cleanHost = origin.replace(/^https?:\/\//, '');
-    const qrUrl = `${origin}/v/${virtualIbanId}?type=swift&curr=${selectedCurrency}`;
-    const displayUrl = `${cleanHost}/v/${virtualIbanId}?type=swift&curr=${selectedCurrency}`;
+  const selectedCurrency = (options.currency || "usd").toLowerCase();
+  const virtualIbanId = iban?.virtualIbanId || iban?._id || iban?.id || "";
+  const origin = window.location.origin || "https://my.insta-pay.ch";
+  const cleanHost = origin.replace(/^https?:\/\//, "");
+  const qrUrl = `${origin}/v/${virtualIbanId}?type=swift&curr=${selectedCurrency}`;
+  const displayUrl = `${cleanHost}/v/${virtualIbanId}?type=swift&curr=${selectedCurrency}`;
 
-    const [logoBase64, qrBase64, signatureBase64] = await Promise.allSettled([
-        toBase64(logoImg),
-        generateQrBase64(qrUrl),
-        toBase64(signatureImg),
-    ]).then((results) =>
-        results.map((r) => (r.status === 'fulfilled' ? r.value : null))
-    );
+  const [logoBase64, qrBase64, signatureBase64] = await Promise.allSettled([
+    toBase64(logoImg),
+    generateQrBase64(qrUrl),
+    toBase64(signatureImg),
+  ]).then((results) =>
+    results.map((r) => (r.status === "fulfilled" ? r.value : null)),
+  );
 
-    const pagesHtml = buildSwiftLetterPagesHtml({
-        logoBase64,
-        qrBase64,
-        signatureBase64,
-        iban,
-        userDetails,
-        qrUrl,
-        displayUrl,
-        currency: selectedCurrency,
+  const pagesHtml = buildSwiftLetterPagesHtml({
+    logoBase64,
+    qrBase64,
+    signatureBase64,
+    iban,
+    userDetails,
+    qrUrl,
+    displayUrl,
+    currency: selectedCurrency,
+  });
+
+  const wrapper = document.createElement("div");
+  wrapper.style.cssText =
+    "position:absolute;left:-9999px;top:0;z-index:-1;width:794px;";
+  wrapper.innerHTML = pagesHtml.join("");
+  document.body.appendChild(wrapper);
+
+  const pageElements = wrapper.querySelectorAll(".swift-pdf-page");
+
+  try {
+    const doc = new jsPDF({
+      orientation: "portrait",
+      unit: "mm",
+      format: "a4",
+      compress: true,
     });
+    const pdfWidth = 210;
+    const pdfHeight = 297;
 
-    const wrapper = document.createElement('div');
-    wrapper.style.cssText = 'position:absolute;left:-9999px;top:0;z-index:-1;width:794px;';
-    wrapper.innerHTML = pagesHtml.join('');
-    document.body.appendChild(wrapper);
+    for (let i = 0; i < pageElements.length; i++) {
+      const pageEl = pageElements[i];
+      const canvas = await html2canvas(pageEl, {
+        scale: 2,
+        useCORS: true,
+        allowTaint: true,
+        logging: false,
+        backgroundColor: "#ffffff",
+        width: 794,
+        height: 1123,
+        windowWidth: 794,
+      });
 
-    const pageElements = wrapper.querySelectorAll('.swift-pdf-page');
-
-    try {
-        const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4', compress: true });
-        const pdfWidth = 210;
-        const pdfHeight = 297;
-
-        for (let i = 0; i < pageElements.length; i++) {
-            const pageEl = pageElements[i];
-            const canvas = await html2canvas(pageEl, {
-                scale: 2,
-                useCORS: true,
-                allowTaint: true,
-                logging: false,
-                backgroundColor: '#ffffff',
-                width: 794,
-                height: 1123,
-                windowWidth: 794,
-            });
-
-            const imgData = canvas.toDataURL('image/jpeg', 0.92);
-            if (i > 0) {
-                doc.addPage();
-            }
-            doc.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight, undefined, 'FAST');
-        }
-
-        if (options.isPreview) {
-            const blobUrl = doc.output('bloburl');
-            window.open(blobUrl, '_blank');
-        } else {
-            const fileName = `SWIFT_Payment_Instructions_${selectedCurrency.toUpperCase()}_${(iban?.iban || 'document').replace(/\s/g, '_')}.pdf`;
-            doc.save(fileName);
-        }
-    } finally {
-        if (document.body.contains(wrapper)) {
-            document.body.removeChild(wrapper);
-        }
+      const imgData = canvas.toDataURL("image/jpeg", 0.92);
+      if (i > 0) {
+        doc.addPage();
+      }
+      doc.addImage(
+        imgData,
+        "JPEG",
+        0,
+        0,
+        pdfWidth,
+        pdfHeight,
+        undefined,
+        "FAST",
+      );
     }
+
+    if (options.isPreview) {
+      const blobUrl = doc.output("bloburl");
+      window.open(blobUrl, "_blank");
+    } else {
+      const fileName = `SWIFT_Payment_Instructions_${selectedCurrency.toUpperCase()}_${(iban?.iban || "document").replace(/\s/g, "_")}.pdf`;
+      doc.save(fileName);
+    }
+  } finally {
+    if (document.body.contains(wrapper)) {
+      document.body.removeChild(wrapper);
+    }
+  }
 };
 
 export default generateSwiftLetterPdf;

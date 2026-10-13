@@ -1,4 +1,4 @@
-import React, {  useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { ChevronsUp } from "react-feather";
 
 const TapTop = () => {
@@ -24,9 +24,9 @@ const TapTop = () => {
     };
   }, []);
   return (
-      <div className="tap-top" style={{ display: taptopStyle }}>
-        <ChevronsUp onClick={() => executeScroll()} />
-      </div>
+    <div className="tap-top" style={{ display: taptopStyle }}>
+      <ChevronsUp onClick={() => executeScroll()} />
+    </div>
   );
 };
 export default TapTop;

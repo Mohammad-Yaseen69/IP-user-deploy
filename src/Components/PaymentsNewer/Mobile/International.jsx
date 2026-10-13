@@ -1,51 +1,66 @@
 import { useTranslation } from "react-i18next";
-import styles from "./styles/International.module.css"
+import styles from "./styles/International.module.css";
 import { useState } from "react";
 import { ChevronLeft, X } from "react-feather";
 import { useNavigate } from "react-router";
 import InternationFlow from "../InternationalFlow";
 // import ConfirmSend from "../ConfirmSend";
-import recent from "./files/recent.svg"
+import recent from "./files/recent.svg";
 
-const International = ({ step, setStep, setCurrentFlow, setSendPaymentType, sendPaymentType, setAction }) => {
-    const { t } = useTranslation()
-    const [confirmed, setConfirmed] = useState(false)
-    const navigate = useNavigate()
-    const [showRecent, setShowRecent] = useState(false)
+const International = ({
+  step,
+  setStep,
+  setCurrentFlow,
+  setSendPaymentType,
+  sendPaymentType,
+  setAction,
+}) => {
+  const { t } = useTranslation();
+  const [confirmed, setConfirmed] = useState(false);
+  const navigate = useNavigate();
+  const [showRecent, setShowRecent] = useState(false);
 
-    return (
-        <div className={styles.container}>
-            <div className={styles.top}>
-                <button className={styles.back_btn} disabled={step === 8 && confirmed} onClick={() => {
-                    if (step === 9) {
-                        setStep(1)
-                        setCurrentFlow("")
-                        setAction("")
-                        setSendPaymentType("")
-                        navigate("/payments")
-                    } else {
-                        if (step === 3) {
-                            setCurrentFlow("")
-                            setSendPaymentType("")
-                        }
-                        setStep(prev => prev - 1)
-                    }
-                }}>
-                    <ChevronLeft />
-                </button>
-                <h5>{t("International Transfer")}</h5>
-                <div onClick={() => setShowRecent(prev => !prev)}>
-                    {showRecent ? <X /> : <img style={{ width: "20px" }} src={recent} alt="" />}
-                </div>
-            </div>
-            {/* {
+  return (
+    <div className={styles.container}>
+      <div className={styles.top}>
+        <button
+          className={styles.back_btn}
+          disabled={step === 8 && confirmed}
+          onClick={() => {
+            if (step === 9) {
+              setStep(1);
+              setCurrentFlow("");
+              setAction("");
+              setSendPaymentType("");
+              navigate("/payments");
+            } else {
+              if (step === 3) {
+                setCurrentFlow("");
+                setSendPaymentType("");
+              }
+              setStep((prev) => prev - 1);
+            }
+          }}
+        >
+          <ChevronLeft />
+        </button>
+        <h5>{t("International Transfer")}</h5>
+        <div onClick={() => setShowRecent((prev) => !prev)}>
+          {showRecent ? (
+            <X />
+          ) : (
+            <img style={{ width: "20px" }} src={recent} alt="" />
+          )}
+        </div>
+      </div>
+      {/* {
                 step < 8
                 &&
                 <div style={{ marginTop: "1.5rem", display: "flex", justifyContent: "center" }}>
                     <PWizard subStep={step - 2} />
                 </div>
             } */}
-            {/* <div className={styles.bottom}>
+      {/* <div className={styles.bottom}>
                 {
                     step === 3
                     &&
@@ -158,16 +173,16 @@ const International = ({ step, setStep, setCurrentFlow, setSendPaymentType, send
                     <Receipt beneficiary={beneficiary} amount={amount} currency={currency} country={country} payoutChannel={payoutChannel} transactionDetails={transactionDetails} />
                 }
             </div> */}
-            <InternationFlow
-                sendPaymentType={sendPaymentType}
-                setIsInternational={() => { }}
-                setSendPaymentType={setSendPaymentType}
-                setStep={setStep}
-                showRecent={showRecent}
-                setShowRecent={setShowRecent}
-            />
-        </div>
-    )
-}
+      <InternationFlow
+        sendPaymentType={sendPaymentType}
+        setIsInternational={() => {}}
+        setSendPaymentType={setSendPaymentType}
+        setStep={setStep}
+        showRecent={showRecent}
+        setShowRecent={setShowRecent}
+      />
+    </div>
+  );
+};
 
-export default International
+export default International;

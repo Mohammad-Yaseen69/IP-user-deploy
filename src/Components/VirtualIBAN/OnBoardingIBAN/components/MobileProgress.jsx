@@ -75,7 +75,8 @@ const MobileProgress = ({
       <div className={styles.checklist}>
         {checklist.map((item) => {
           const status = getStatus(item.key);
-          const { label, statusBgColor, icon, textColor, iconBgColor } =  getIcon(status);
+          const { label, statusBgColor, icon, textColor, iconBgColor } =
+            getIcon(status);
           return (
             <div className={styles.checklistRow} key={item.key}>
               <div className={styles.checklistItem}>

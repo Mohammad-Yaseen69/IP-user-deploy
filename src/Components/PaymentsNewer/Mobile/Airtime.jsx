@@ -8,68 +8,77 @@ import TopIcon from "./files/Top";
 import styles from "./styles/International.module.css";
 
 const AirtimeMobile = ({ step, setStep, setCurrentFlow, setAction }) => {
-    const { t } = useTranslation();
-    const [subStep, setSubStep] = useState(1);
-    const [extra, setExtra] = useState(0)
-    const [completed, setCompleted] = useState(false)
-    const navigate = useNavigate()
+  const { t } = useTranslation();
+  const [subStep, setSubStep] = useState(1);
+  const [extra, setExtra] = useState(0);
+  const [completed, setCompleted] = useState(false);
+  const navigate = useNavigate();
 
-    // states
-    const [country, setCountry] = useState("")
-    const [services, setServices] = useState([])
-    const [service, setService] = useState(1)
-    const [phone, setPhone] = useState("")
-    const [providers, setProviders] = useState("")
-    const [serviceType, setServiceType] = useState("")
-    const [wallet, setWallet] = useState("")
-    const [packages, setPackages] = useState("")
-    const [amount, setAmount] = useState(10)
-    const [pkgDetails, setPkgDetails] = useState(null)
-    const [token, setToken] = useState("")
-    const [subServices, setSubServices] = useState([])
-    const [subServicesProvider, setSubServicesProvider] = useState([])
+  // states
+  const [country, setCountry] = useState("");
+  const [services, setServices] = useState([]);
+  const [service, setService] = useState(1);
+  const [phone, setPhone] = useState("");
+  const [providers, setProviders] = useState("");
+  const [serviceType, setServiceType] = useState("");
+  const [wallet, setWallet] = useState("");
+  const [packages, setPackages] = useState("");
+  const [amount, setAmount] = useState(10);
+  const [pkgDetails, setPkgDetails] = useState(null);
+  const [token, setToken] = useState("");
+  const [subServices, setSubServices] = useState([]);
+  const [subServicesProvider, setSubServicesProvider] = useState([]);
 
+  const { userWallets, userDetails } = useContext(UserContext);
+  useEffect(() => {
+    if (userWallets?.length > 0) {
+      const wall = userWallets?.filter(
+        (item) =>
+          item?.wallet_type === "insta" &&
+          !item?.blocked &&
+          !item?.admin_blocked &&
+          item?.status === "active",
+      );
+      setWallet(wall?.[0]?._id);
+    }
+  }, [userWallets]);
 
-    const { userWallets, userDetails } = useContext(UserContext)
-    useEffect(() => {
-        if (userWallets?.length > 0) {
-            const wall = userWallets?.filter(item => item?.wallet_type === "insta" && !item?.blocked && !item?.admin_blocked && item?.status === "active")
-            setWallet(wall?.[0]?._id)
-        }
-    }, [userWallets])
+  useEffect(() => {
+    setPhone("");
+  }, [country]);
+  const [codeType, setCodeType] = useState("sms");
 
-    useEffect(() => {
-        setPhone("")
-    }, [country])
-    const [codeType, setCodeType] = useState("sms")
-
-    useEffect(() => {
-        setCodeType(userDetails?.tfa ? "authenticator" : "sms")
-    }, [userDetails])
-    return (
-        <div className={styles.container}>
-            <div className={styles.top}>
-                <button className={styles.back_btn} disabled={step === 3 && completed} onClick={() => {
-                    if (step === 5) {
-                        setStep(1)
-                        setCurrentFlow("")
-                        setAction("")
-                        navigate("/payments")
-                    } else {
-                        if (step === 2) {
-                            setCurrentFlow("")
-                        }
-                        setStep(prev => prev - 1)
-                    }
-                }}>
-                    <ChevronLeft />
-                </button>
-                <h5>{t("SEND TOP-UP AND E-SIM").toUpperCase()}</h5>
-                <div>
-                    <TopIcon fill={step > 2 ? "#5926f0" : "black"} />
-                </div>
-            </div>
-            {/* {
+  useEffect(() => {
+    setCodeType(userDetails?.tfa ? "authenticator" : "sms");
+  }, [userDetails]);
+  return (
+    <div className={styles.container}>
+      <div className={styles.top}>
+        <button
+          className={styles.back_btn}
+          disabled={step === 3 && completed}
+          onClick={() => {
+            if (step === 5) {
+              setStep(1);
+              setCurrentFlow("");
+              setAction("");
+              navigate("/payments");
+            } else {
+              if (step === 2) {
+                setCurrentFlow("");
+              }
+              setStep((prev) => prev - 1);
+            }
+          }}
+        >
+          <ChevronLeft />
+        </button>
+        <h5>{t("SEND TOP-UP AND E-SIM").toUpperCase()}</h5>
+        <div>
+          <TopIcon fill={step > 2 ? "#5926f0" : "black"} />
+        </div>
+      </div>
+      {/* {
                 step < 4
                 &&
                 <div style={{ marginTop: "1.5rem", display: "flex", justifyContent: "center" }}>
@@ -140,9 +149,13 @@ const AirtimeMobile = ({ step, setStep, setCurrentFlow, setAction }) => {
                     />
                 }
             </div> */}
-            <Airtime setCurrentFlow={setCurrentFlow} setAction={setAction} setStep={setStep} />
-        </div>
-    )
-}
+      <Airtime
+        setCurrentFlow={setCurrentFlow}
+        setAction={setAction}
+        setStep={setStep}
+      />
+    </div>
+  );
+};
 
-export default AirtimeMobile
+export default AirtimeMobile;

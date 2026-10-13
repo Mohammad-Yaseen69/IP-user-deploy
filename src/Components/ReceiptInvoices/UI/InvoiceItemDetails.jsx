@@ -22,25 +22,36 @@ const InvoiceItemDetails = ({ inv }) => {
   const [openRecipientIds, setOpenRecipientIds] = useState(new Set());
   const queryClient = useQueryClient();
   const width = useWindowWidth();
-  const [active, setActive] = useState(inv.active)
+  const [active, setActive] = useState(inv.active);
   const can = usePermission();
 
-  const country = inv?.countryIsoCode ? countriesInDiffLangs[i18n.language]?.find(c => c.alpha3 === inv.countryIsoCode) : null
-  const guestCountry = inv?.guestDetails?.country_iso_code ? countriesInDiffLangs[i18n.language]?.find(c => c.alpha3 === inv.guestDetails.country_iso_code) : null
-  const guestDetails = inv?.guestDetails
+  const country = inv?.countryIsoCode
+    ? countriesInDiffLangs[i18n.language]?.find(
+        (c) => c.alpha3 === inv.countryIsoCode,
+      )
+    : null;
+  const guestCountry = inv?.guestDetails?.country_iso_code
+    ? countriesInDiffLangs[i18n.language]?.find(
+        (c) => c.alpha3 === inv.guestDetails.country_iso_code,
+      )
+    : null;
+  const guestDetails = inv?.guestDetails;
   const { mutateAsync, isPending } = useMutation({
-    mutationFn: () => apiWrapper({
-      endpoint: `/api/invoice/toggle-active/${inv._id}`,
-      method: "PUT"
-    }),
+    mutationFn: () =>
+      apiWrapper({
+        endpoint: `/api/invoice/toggle-active/${inv._id}`,
+        method: "PUT",
+      }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["GetInvoicesList"] });
     },
     onError: (res) => {
-      const dec = decryptData(res.response?.data?.data)
-      toast.error(dec.message || "We are unable to process your request at the moment.")
-    }
-  })
+      const dec = decryptData(res.response?.data?.data);
+      toast.error(
+        dec.message || "We are unable to process your request at the moment.",
+      );
+    },
+  });
 
   const toggleRecipient = (id) => {
     setOpenRecipientIds((prev) => {
@@ -53,16 +64,20 @@ const InvoiceItemDetails = ({ inv }) => {
 
   return (
     <div style={{ paddingTop: "0px" }} className={`${styles.expandRow}`}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
-        <span style={{ fontWeight: 600, fontSize: "20px" }}>
-          {t("Active")}
-        </span>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          width: "100%",
+        }}
+      >
+        <span style={{ fontWeight: 600, fontSize: "20px" }}>{t("Active")}</span>
         {can("invoices.edit") && (
           <Toggle
             checked={active}
             onChange={() =>
-              !isPending &&
-              mutateAsync().then(() => setActive(!active))
+              !isPending && mutateAsync().then(() => setActive(!active))
             }
           />
         )}
@@ -77,7 +92,9 @@ const InvoiceItemDetails = ({ inv }) => {
           }}
         >
           <span className={styles.label}> {t("Amount")}: </span>
-          <span className={styles.badge}>{t(!active ? "Inactive" : inv.status)}</span>
+          <span className={styles.badge}>
+            {t(!active ? "Inactive" : inv.status)}
+          </span>
         </div>
         <h2>
           {inv.currency} {Number(inv.amount).toFixed(2)}
@@ -167,7 +184,9 @@ const InvoiceItemDetails = ({ inv }) => {
                     {" "}
                     {t("Country")}:{" "}
                   </span>
-                  <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
+                  <div
+                    style={{ display: "flex", alignItems: "center", gap: 5 }}
+                  >
                     <img
                       src={country.file_url}
                       alt={country.alpha3}
@@ -254,11 +273,7 @@ const InvoiceItemDetails = ({ inv }) => {
           </InfoItem>
 
           <InfoItem label={"Is Payable"}>
-            <h5>
-              {t(inv.paid
-                ? "Paid"
-                : "This Invoice is payable.")}
-            </h5>
+            <h5>{t(inv.paid ? "Paid" : "This Invoice is payable.")}</h5>
           </InfoItem>
 
           {guestDetails && (
@@ -291,7 +306,9 @@ const InvoiceItemDetails = ({ inv }) => {
                   <span style={{ fontSize: "14px" }} className={styles.label}>
                     {t("Name")}:
                   </span>
-                  <h5 style={{ textAlign: "right" }}>{guestDetails.name || "-"}</h5>
+                  <h5 style={{ textAlign: "right" }}>
+                    {guestDetails.name || "-"}
+                  </h5>
                 </div>
                 <div
                   style={{
@@ -305,7 +322,9 @@ const InvoiceItemDetails = ({ inv }) => {
                   <span style={{ fontSize: "14px" }} className={styles.label}>
                     {t("Phone")}:
                   </span>
-                  <h5 style={{ textAlign: "right" }}>{guestDetails.phone || "-"}</h5>
+                  <h5 style={{ textAlign: "right" }}>
+                    {guestDetails.phone || "-"}
+                  </h5>
                 </div>
                 <div
                   style={{
@@ -319,7 +338,9 @@ const InvoiceItemDetails = ({ inv }) => {
                   <span style={{ fontSize: "14px" }} className={styles.label}>
                     {t("Email")}:
                   </span>
-                  <h5 style={{ textAlign: "right" }}>{guestDetails.email || "-"}</h5>
+                  <h5 style={{ textAlign: "right" }}>
+                    {guestDetails.email || "-"}
+                  </h5>
                 </div>
                 <div
                   style={{
@@ -333,7 +354,9 @@ const InvoiceItemDetails = ({ inv }) => {
                   <span style={{ fontSize: "14px" }} className={styles.label}>
                     {t("Date of Birth")}:
                   </span>
-                  <h5 style={{ textAlign: "right" }}>{guestDetails.dob || "-"}</h5>
+                  <h5 style={{ textAlign: "right" }}>
+                    {guestDetails.dob || "-"}
+                  </h5>
                 </div>
                 {guestCountry && (
                   <div
@@ -348,7 +371,9 @@ const InvoiceItemDetails = ({ inv }) => {
                     <span style={{ fontSize: "14px" }} className={styles.label}>
                       {t("Country")}:
                     </span>
-                    <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
+                    <div
+                      style={{ display: "flex", alignItems: "center", gap: 5 }}
+                    >
                       <img
                         src={guestCountry.file_url}
                         alt={guestCountry.alpha3}
@@ -356,7 +381,9 @@ const InvoiceItemDetails = ({ inv }) => {
                         height="14"
                         style={{ borderRadius: "2px" }}
                       />
-                      <h5 style={{ textAlign: "right" }}>{t(guestCountry.name)}</h5>
+                      <h5 style={{ textAlign: "right" }}>
+                        {t(guestCountry.name)}
+                      </h5>
                     </div>
                   </div>
                 )}
@@ -372,7 +399,9 @@ const InvoiceItemDetails = ({ inv }) => {
                   <span style={{ fontSize: "14px" }} className={styles.label}>
                     {t("Payment Reference")}:
                   </span>
-                  <h5 style={{ textAlign: "right" }}>{guestDetails.payment_reference || "-"}</h5>
+                  <h5 style={{ textAlign: "right" }}>
+                    {guestDetails.payment_reference || "-"}
+                  </h5>
                 </div>
                 <div
                   style={{
@@ -386,7 +415,9 @@ const InvoiceItemDetails = ({ inv }) => {
                   <span style={{ fontSize: "14px" }} className={styles.label}>
                     {t("Customer Street")}:
                   </span>
-                  <h5 style={{ textAlign: "right" }}>{guestDetails.customer_street || "-"}</h5>
+                  <h5 style={{ textAlign: "right" }}>
+                    {guestDetails.customer_street || "-"}
+                  </h5>
                 </div>
                 <div
                   style={{
@@ -400,7 +431,9 @@ const InvoiceItemDetails = ({ inv }) => {
                   <span style={{ fontSize: "14px" }} className={styles.label}>
                     {t("Customer Town")}:
                   </span>
-                  <h5 style={{ textAlign: "right" }}>{guestDetails.customer_town || "-"}</h5>
+                  <h5 style={{ textAlign: "right" }}>
+                    {guestDetails.customer_town || "-"}
+                  </h5>
                 </div>
                 <div
                   style={{
@@ -414,7 +447,9 @@ const InvoiceItemDetails = ({ inv }) => {
                   <span style={{ fontSize: "14px" }} className={styles.label}>
                     {t("Customer County")}:
                   </span>
-                  <h5 style={{ textAlign: "right" }}>{guestDetails.customer_county || "-"}</h5>
+                  <h5 style={{ textAlign: "right" }}>
+                    {guestDetails.customer_county || "-"}
+                  </h5>
                 </div>
               </div>
             </InfoItem>

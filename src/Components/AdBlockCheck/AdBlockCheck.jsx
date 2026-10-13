@@ -6,7 +6,7 @@ import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
 import style from "./AdBlockCheck.module.css";
 const detectBrave = async () => {
   try {
-    return !!(navigator.brave && await navigator.brave.isBrave());
+    return !!(navigator.brave && (await navigator.brave.isBrave()));
   } catch {
     return false;
   }
@@ -14,22 +14,25 @@ const detectBrave = async () => {
 
 const detectSentryBlocked = async () => {
   try {
-    const res = await fetch("https://o4509485673349120.ingest.us.sentry.io/api/4509485675118592/envelope/?sentry_version=7&sentry_key=448eafaae4776c67a2f5831cf64a23e5&sentry_client=sentry.javascript.react%2F9.41.0", {
-      method: "POST",
-      mode: "no-cors",
-      body: JSON.stringify({
-        event_id: "123",
-        message: "test",
-        level: "error",
-        release: "test",
-        environment: "test",
-        platform: "javascript",
-        sdk: {
-          name: "sentry.javascript.react",
-          version: "9.41.0"
-        }
-      })
-    });
+    const res = await fetch(
+      "https://o4509485673349120.ingest.us.sentry.io/api/4509485675118592/envelope/?sentry_version=7&sentry_key=448eafaae4776c67a2f5831cf64a23e5&sentry_client=sentry.javascript.react%2F9.41.0",
+      {
+        method: "POST",
+        mode: "no-cors",
+        body: JSON.stringify({
+          event_id: "123",
+          message: "test",
+          level: "error",
+          release: "test",
+          environment: "test",
+          platform: "javascript",
+          sdk: {
+            name: "sentry.javascript.react",
+            version: "9.41.0",
+          },
+        }),
+      },
+    );
     return false;
   } catch {
     return true;
@@ -63,7 +66,13 @@ const AdBlockCheck = () => {
   }, [adBlockDetected]);
 
   return (
-    <Modal isOpen={show} centered backdrop="static" keyboard={false} className={style.modalMain}>
+    <Modal
+      isOpen={show}
+      centered
+      backdrop="static"
+      keyboard={false}
+      className={style.modalMain}
+    >
       <ModalHeader className={style["modal-header"]}>
         <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
           <div className={style["alert-circle"]}>
@@ -77,12 +86,16 @@ const AdBlockCheck = () => {
       <ModalBody>
         <div className={style["modal-content"]}>
           <p className={style["modal-message"]}>
-            {t("It looks like you are using an ad blocker or privacy shield (e.g.Brave Shields).Please disable it to continue using our platform.")}
+            {t(
+              "It looks like you are using an ad blocker or privacy shield (e.g.Brave Shields).Please disable it to continue using our platform.",
+            )}
           </p>
           <p className={style["why-ask"]}>
             <strong>{t("Why do we ask this?")}</strong>
             <br />
-            {t("Ad blockers and browser shields interfere with our crash reporting tool(Sentry), preventing us from detecting, tracking, and fixing bugs effectively.")}
+            {t(
+              "Ad blockers and browser shields interfere with our crash reporting tool(Sentry), preventing us from detecting, tracking, and fixing bugs effectively.",
+            )}
           </p>
           <p className={style["no-ads"]}>
             {t("We value your experience and promise that")}

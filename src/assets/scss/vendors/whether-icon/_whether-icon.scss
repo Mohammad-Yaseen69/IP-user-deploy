@@ -29,8 +29,7 @@ $svgSize: 70px;
     @for $i from 1 through $exp {
       $value: $value * $number;
     }
-  }
-  @else if $exp < 0 {
+  } @else if $exp < 0 {
     @for $i from 1 through -$exp {
       $value: $value / $number;
     }
@@ -46,7 +45,6 @@ $svgSize: 70px;
   }
   @return $sin;
 }
-
 
 //vars specific for curves
 $animationStep: 2;
@@ -65,13 +63,13 @@ $fillStrokeColor: black;
 
 .climacon_component-stroke {
   fill: #dcdada;
-  stroke-Width: 1px;
+  stroke-width: 1px;
   stroke: #717171;
 }
 
 .climacon_component-fill {
   fill: #71717140;
-  stroke-Width: 0;
+  stroke-width: 0;
   stroke: #ddd;
 }
 
@@ -84,7 +82,10 @@ svg.climacon {
   shape-rendering: geometricPrecision;
 }
 
-g, path, circle, rect {
+g,
+path,
+circle,
+rect {
   animation-iteration-count: infinite;
   animation-timing-function: linear;
   transform-origin: 50% 50%;
@@ -104,7 +105,8 @@ g, path, circle, rect {
   animation-duration: $baseAnimationDuration / 4;
 }
 
-.climacon_componentWrap_sunSpoke .climacon_component-stroke_sunSpoke:nth-child(even) {
+.climacon_componentWrap_sunSpoke
+  .climacon_component-stroke_sunSpoke:nth-child(even) {
   animation-delay: $baseAnimationDuration / 4;
 }
 
@@ -139,19 +141,29 @@ g, path, circle, rect {
   animation-name: behindCloudMove, rotate;
   animation-iteration-count: 1, infinite;
   animation-timing-function: ease-out, linear;
-  animation-delay: 0, $baseAnimationDuration / 4;
-  animation-duration: $baseAnimationDuration / 4, $baseAnimationDuration;
+  animation-delay:
+    0,
+    $baseAnimationDuration / 4;
+  animation-duration:
+    $baseAnimationDuration / 4,
+    $baseAnimationDuration;
 }
 
-.climacon_componentWrap-sun_cloud .climacon_componentWrap_sunSpoke .climacon_component-stroke_sunSpoke {
+.climacon_componentWrap-sun_cloud
+  .climacon_componentWrap_sunSpoke
+  .climacon_component-stroke_sunSpoke {
   fill-opacity: 0;
   animation-name: fillOpacity, scale;
   animation-iteration-count: 1, infinite;
-  animation-delay: $baseAnimationDuration / 4, 0;
+  animation-delay:
+    $baseAnimationDuration / 4,
+    0;
   animation-fill-mode: both;
 }
 
-.climacon_componentWrap-sun_cloud .climacon_componentWrap_sunSpoke .climacon_component-stroke_sunSpoke:nth-child(even) {
+.climacon_componentWrap-sun_cloud
+  .climacon_componentWrap_sunSpoke
+  .climacon_component-stroke_sunSpoke:nth-child(even) {
   animation-delay: $baseAnimationDuration / 4;
 }
 
@@ -161,8 +173,12 @@ g, path, circle, rect {
   animation-name: behindCloudMove, partialRotate;
   animation-iteration-count: 1, infinite;
   animation-timing-function: ease-out, linear;
-  animation-delay: 0, $baseAnimationDuration / 4;
-  animation-duration: $baseAnimationDuration / 4, $baseAnimationDuration;
+  animation-delay:
+    0,
+    $baseAnimationDuration / 4;
+  animation-duration:
+    $baseAnimationDuration / 4,
+    $baseAnimationDuration;
 }
 
 /* DRIZZLE */
@@ -176,7 +192,11 @@ g, path, circle, rect {
 
 @for $i from 1 through 3 {
   .climacon_component-stroke_drizzle:nth-child(#{$i}) {
-    animation-delay: $baseAnimationDuration * 0.05 * $i - $baseAnimationDuration * 0.05;
+    animation-delay: $baseAnimationDuration *
+      0.05 *
+      $i -
+      $baseAnimationDuration *
+      0.05;
   }
 }
 
@@ -189,7 +209,7 @@ g, path, circle, rect {
   animation-duration: $baseAnimationDuration / 6;
 }
 
-.climacon_component-stroke_rain:nth-child(n+4) {
+.climacon_component-stroke_rain:nth-child(n + 4) {
   animation-delay: $baseAnimationDuration / 12;
 }
 
@@ -231,7 +251,13 @@ g, path, circle, rect {
 
 @for $i from 1 through 6 {
   .climacon_component-stroke_hailAlt:nth-child(#{$i}) {
-    animation-delay: $baseAnimationDuration / 18 / 6 * $i - $baseAnimationDuration / 18 / 6;
+    animation-delay: $baseAnimationDuration /
+      18 /
+      6 *
+      $i -
+      $baseAnimationDuration /
+      18 /
+      6;
   }
 }
 
@@ -250,7 +276,13 @@ g, path, circle, rect {
 
 @for $i from 1 through 3 {
   .climacon_component-stroke_snow:nth-child(#{$i}) {
-    animation-delay: $baseAnimationDuration / 2 / 3 * $i - $baseAnimationDuration / 2 / 3;
+    animation-delay: $baseAnimationDuration /
+      2 /
+      3 *
+      $i -
+      $baseAnimationDuration /
+      2 /
+      3;
   }
 }
 
@@ -335,7 +367,8 @@ g, path, circle, rect {
   animation-iteration-count: 1;
 }
 
-.climacon_iconWrap-sun .climacon_component-stroke_sunSpoke, .climacon_iconWrap-sunFill .climacon_component-stroke_sunSpoke {
+.climacon_iconWrap-sun .climacon_component-stroke_sunSpoke,
+.climacon_iconWrap-sunFill .climacon_component-stroke_sunSpoke {
   fill-opacity: 1;
   animation-name: scale;
   animation-duration: 3s;
@@ -345,7 +378,8 @@ g, path, circle, rect {
   animation-direction: alternate;
 }
 
-.climacon_iconWrap-sun .climacon_component-stroke_sunSpoke:nth-child(even), .climacon_iconWrap-sunFill .climacon_component-stroke_sunSpoke:nth-child(even) {
+.climacon_iconWrap-sun .climacon_component-stroke_sunSpoke:nth-child(even),
+.climacon_iconWrap-sunFill .climacon_component-stroke_sunSpoke:nth-child(even) {
   animation-delay: $baseAnimationDuration / 4;
 }
 
@@ -374,7 +408,8 @@ g, path, circle, rect {
   animation-duration: $baseAnimationDuration / 4;
 }
 
-.climacon_componentWrap-sunrise .climacon_component-stroke_sunSpoke, .climacon_componentWrap-sunset .climacon_component-stroke_sunSpoke {
+.climacon_componentWrap-sunrise .climacon_component-stroke_sunSpoke,
+.climacon_componentWrap-sunset .climacon_component-stroke_sunSpoke {
   animation-name: scale;
   animation-direction: alternate;
   animation-iteration-count: infinite;
@@ -383,13 +418,18 @@ g, path, circle, rect {
   animation-fill-mode: both;
 }
 
-.climacon_componentWrap-sunrise .climacon_component-stroke_sunSpoke:nth-child(even), .climacon_componentWrap-sunset .climacon_component-stroke_sunSpoke:nth-child(even) {
+.climacon_componentWrap-sunrise
+  .climacon_component-stroke_sunSpoke:nth-child(even),
+.climacon_componentWrap-sunset
+  .climacon_component-stroke_sunSpoke:nth-child(even) {
   animation-delay: $baseAnimationDuration / 4;
 }
 
 .climacon_componentWrap-sunriseAlt {
   animation-name: translateSunrise, fillOpacity;
-  animation-duration: $baseAnimationDuration, $baseAnimationDuration / 2;
+  animation-duration:
+    $baseAnimationDuration,
+    $baseAnimationDuration / 2;
   animation-direction: normal;
   animation-iteration-count: 1;
   animation-fill-mode: forwards;
@@ -401,12 +441,17 @@ g, path, circle, rect {
   animation-direction: normal, alternate;
   animation-iteration-count: 1, infinite;
   animation-duration: $baseAnimationDuration / 4;
-  animation-delay: $baseAnimationDuration / 4, 0;
+  animation-delay:
+    $baseAnimationDuration / 4,
+    0;
   animation-fill-mode: both;
 }
 
-.climacon_componentWrap-sunriseAlt .climacon_component-stroke_sunSpoke:nth-child(even) {
-  animation-delay: $baseAnimationDuration / 4, $baseAnimationDuration / 4;
+.climacon_componentWrap-sunriseAlt
+  .climacon_component-stroke_sunSpoke:nth-child(even) {
+  animation-delay:
+    $baseAnimationDuration / 4,
+    $baseAnimationDuration / 4;
 }
 
 .climacon_componentWrap-sunsetAlt {
@@ -429,7 +474,6 @@ g, path, circle, rect {
   }
 }
 
-
 @keyframes partialRotate {
   0% {
     transform: rotate(0deg);
@@ -448,7 +492,6 @@ g, path, circle, rect {
   }
 }
 
-
 @keyframes scale {
   0% {
     transform: scale(1, 1);
@@ -457,7 +500,6 @@ g, path, circle, rect {
     transform: scale(0.5, 0.5);
   }
 }
-
 
 @keyframes behindCloudMove {
   0% {
@@ -468,7 +510,6 @@ g, path, circle, rect {
   }
 }
 
-
 @keyframes drizzleFall {
   0% {
     transform: translateY(0);
@@ -478,7 +519,6 @@ g, path, circle, rect {
   }
 }
 
-
 @keyframes rainFall {
   0% {
     transform: translateY(0);
@@ -487,7 +527,6 @@ g, path, circle, rect {
     transform: translateY($svgSize * 0.2);
   }
 }
-
 
 @keyframes rainFall2 {
   0% {
@@ -501,19 +540,20 @@ g, path, circle, rect {
   }
 }
 
-
 $i: 51;
 $t: 0;
 
 @keyframes hailLeft {
-  0% {}
+  0% {
+  }
   50% {
     transform: translateY($svgSize * 0.25);
   }
   @while $i <= 100 {
     #{$i}% {
       $eq: sin($t) / 2;
-      transform: translateY($eq * -($svgSize * 0.25) + $svgSize * 0.25) translateX(-0.3px * ($i - 50));
+      transform: translateY($eq * -($svgSize * 0.25) + $svgSize * 0.25)
+        translateX(-0.3px * ($i - 50));
     }
     $t: $t + $increase * $animationStep * 2;
     $i: $i + $animationStep;
@@ -523,59 +563,62 @@ $t: 0;
 $i: 51;
 $t: 0;
 @keyframes hailMiddle {
-  0% {}
+  0% {
+  }
   50% {
     transform: translateY($svgSize * 0.25);
   }
   @while $i <= 100 {
     #{$i}% {
       $eq: sin($t) / 2;
-      transform: translateY($eq * -($svgSize * 0.25) + $svgSize * 0.25) translateX(-0.15px * ($i - 50));
+      transform: translateY($eq * -($svgSize * 0.25) + $svgSize * 0.25)
+        translateX(-0.15px * ($i - 50));
     }
     $t: $t + $increase * $animationStep * 2;
     $i: $i + $animationStep;
   }
 }
-
 
 $increase: pi() / 100;
 $i: 51;
 $t: 0;
 
 @keyframes hailMiddle2 {
-  0% {}
+  0% {
+  }
   50% {
     transform: translateY($svgSize * 0.25);
   }
   @while $i <= 100 {
     #{$i}% {
       $eq: sin($t) / 2;
-      transform: translateY($eq * -($svgSize * 0.25) + $svgSize * 0.25) translateX(0.15px * ($i - 50));
+      transform: translateY($eq * -($svgSize * 0.25) + $svgSize * 0.25)
+        translateX(0.15px * ($i - 50));
     }
     $t: $t + $increase * $animationStep * 2;
     $i: $i + $animationStep;
   }
 }
-
 
 $i: 51;
 $t: 0;
 
 @keyframes hailRight {
-  0% {}
+  0% {
+  }
   50% {
     transform: translateY($svgSize * 0.25);
   }
   @while $i <= 100 {
     #{$i}% {
       $eq: sin($t) / 2;
-      transform: translateY($eq * -($svgSize * 0.25) + $svgSize * 0.25) translateX(0.3px * ($i - 50));
+      transform: translateY($eq * -($svgSize * 0.25) + $svgSize * 0.25)
+        translateX(0.3px * ($i - 50));
     }
     $t: $t + $increase * $animationStep * 2;
     $i: $i + $animationStep;
   }
 }
-
 
 @keyframes fillOpacity {
   0% {
@@ -587,7 +630,6 @@ $t: 0;
     stroke-opacity: 1;
   }
 }
-
 
 @keyframes fillOpacity2 {
   0% {
@@ -603,7 +645,6 @@ $t: 0;
     stroke-opacity: 0;
   }
 }
-
 
 @keyframes lightningFlash {
   0% {
@@ -635,7 +676,6 @@ $t: 0;
   }
 }
 
-
 $i: 0;
 $t: 0;
 
@@ -643,13 +683,13 @@ $t: 0;
   @while $i <= 100 {
     #{$i}% {
       $eq: sin($t);
-      transform: translateY($svgSize * 0.25 * $i * 0.01) translateX(-$eq * ($i - 50) * 1px / 4);
+      transform: translateY($svgSize * 0.25 * $i * 0.01)
+        translateX(-$eq * ($i - 50) * 1px / 4);
     }
     $t: $t + $increase * $animationStep;
     $i: $i + $animationStep;
   }
 }
-
 
 $i: 0;
 $t: 0;
@@ -658,13 +698,13 @@ $t: 0;
   @while $i <= 100 {
     #{$i}% {
       $eq: sin($t);
-      transform: translateY($svgSize * 0.25 * $i * 0.01) translateX($eq * ($i - 50) * 1px / 4);
+      transform: translateY($svgSize * 0.25 * $i * 0.01)
+        translateX($eq * ($i - 50) * 1px / 4);
     }
     $t: $t + $increase * $animationStep;
     $i: $i + $animationStep;
   }
 }
-
 
 /* Tornado */
 @keyframes translateTornado1 {
@@ -682,7 +722,6 @@ $t: 0;
   }
 }
 
-
 @keyframes translateTornado2 {
   0% {
     transform: translateY(0);
@@ -697,7 +736,6 @@ $t: 0;
     transform: translateX(0);
   }
 }
-
 
 @keyframes translateTornado3 {
   0% {
@@ -714,7 +752,6 @@ $t: 0;
   }
 }
 
-
 @keyframes translateTornado4 {
   0% {
     transform: translateY(0);
@@ -729,7 +766,6 @@ $t: 0;
     transform: translateX(0);
   }
 }
-
 
 @keyframes translateTornado5 {
   0% {
@@ -746,7 +782,6 @@ $t: 0;
   }
 }
 
-
 @keyframes translateTornado6 {
   0% {
     transform: translateY(0);
@@ -761,7 +796,6 @@ $t: 0;
     transform: translateX(0);
   }
 }
-
 
 @keyframes fillOpacityLightning {
   0% {
@@ -802,7 +836,6 @@ $t: 0;
   }
 }
 
-
 @keyframes translateFog {
   0% {
     transform: translateY(0);
@@ -817,7 +850,6 @@ $t: 0;
     transform: translateX(0);
   }
 }
-
 
 @keyframes fillOpacityFog {
   0% {
@@ -834,7 +866,6 @@ $t: 0;
   }
 }
 
-
 @keyframes translateSunrise {
   0% {
     transform: translateY(0);
@@ -846,7 +877,6 @@ $t: 0;
     transform: translateY(-$svgSize * 0.2286);
   }
 }
-
 
 @keyframes translateSunset {
   0% {
@@ -860,7 +890,6 @@ $t: 0;
   }
 }
 
-
 @keyframes translateArrowDown {
   0% {
     transform: translateY($svgSize * 0.0286);
@@ -870,7 +899,6 @@ $t: 0;
   }
 }
 
-
 @keyframes translateArrowUp {
   0% {
     transform: translateY(-$svgSize * 0.0286);
@@ -879,7 +907,6 @@ $t: 0;
     transform: translateY(-$svgSize * 0.0714);
   }
 }
-
 
 @keyframes translateWind {
   0% {

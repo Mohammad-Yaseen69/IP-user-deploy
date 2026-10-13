@@ -1,130 +1,139 @@
 .sidebar {
-    position: fixed;
-    z-index: 1000;
-    background-color: white;
-    height: 100vh;
-    width: 100vw;
-    top: 0;
-    left: -130%;
-    transition: 350ms ease-in-out;
-    padding-bottom: 1rem;
+  position: fixed;
+  z-index: 1000;
+  background-color: white;
+  height: 100vh;
+  width: 100vw;
+  top: 0;
+  left: -130%;
+  transition: 350ms ease-in-out;
+  padding-bottom: 1rem;
 }
 
 .sidebar_in_view {
-    left: 0%;
-    transition: 350ms ease-in-out;
+  left: 0%;
+  transition: 350ms ease-in-out;
 }
 
 .content_wrapper {
-    height: 100%;
-    width: 100%;
-    overflow-y: auto;
-    padding: 1rem 1.5rem;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
+  height: 100%;
+  width: 100%;
+  overflow-y: auto;
+  padding: 1rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
 .top {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
 }
 
 .top button {
-    font-size: 1rem;
-    border: none;
-    outline: none;
-    background: transparent;
+  font-size: 1rem;
+  border: none;
+  outline: none;
+  background: transparent;
 }
 
 .profile {
-    padding: .75rem;
-    display: flex;
-    align-items: center;
-    gap: .75rem;
-    justify-content: space-between;
-    border-radius: 10px 50px 50px 10px;
-    background: #FFF;
-    box-shadow: 0px 4px 178.9px 0px rgba(0, 0, 0, 0.08);
+  padding: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  justify-content: space-between;
+  border-radius: 10px 50px 50px 10px;
+  background: #fff;
+  box-shadow: 0px 4px 178.9px 0px rgba(0, 0, 0, 0.08);
 }
 
 .dp {
-    height: 2.5rem;
-    width: 2.5rem;
-    border-radius: 2.5rem;
-    display: grid;
-    place-items: center;
-    background: linear-gradient(-24deg, rgb(210, 60, 122) 0%, rgb(164, 52, 167) 43.66%, rgb(88, 38, 239) 100%);
-    color: white;
-    font-size: 1rem;
-    font-weight: 800;
-    border: 2px solid #72C123;
-    padding: 2px;
+  height: 2.5rem;
+  width: 2.5rem;
+  border-radius: 2.5rem;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(
+    -24deg,
+    rgb(210, 60, 122) 0%,
+    rgb(164, 52, 167) 43.66%,
+    rgb(88, 38, 239) 100%
+  );
+  color: white;
+  font-size: 1rem;
+  font-weight: 800;
+  border: 2px solid #72c123;
+  padding: 2px;
 }
 
 .profile img {
-    background: transparent;
+  background: transparent;
 }
 
 .profile p {
-    margin-bottom: 0px;
-    font-size: .8rem;
-    font-weight: 700;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+  margin-bottom: 0px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .profile span {
-    font-size: .6rem;
-    color: #9b9b9b;
+  font-size: 0.6rem;
+  color: #9b9b9b;
 }
 
 .nav_items {
-    display: flex;
-    flex-direction: column;
-    gap: .5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
-.nav_item>span {
-    background: linear-gradient(277deg, #E64067 -9.52%, #5926F0 62.22%, #4828A0 119.38%), #FAFAFA;
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    font-weight: 700;
-    font-size: .7rem;
+.nav_item > span {
+  background:
+    linear-gradient(277deg, #e64067 -9.52%, #5926f0 62.22%, #4828a0 119.38%),
+    #fafafa;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 700;
+  font-size: 0.7rem;
 }
 
 .nav_item a {
-    display: flex;
-    gap: 1rem;
-    padding: 1rem;
-    align-items: center;
-    background: #FBFBFB;
-    color: #848484;
-    font-size: 1rem;
-    position: relative;
+  display: flex;
+  gap: 1rem;
+  padding: 1rem;
+  align-items: center;
+  background: #fbfbfb;
+  color: #848484;
+  font-size: 1rem;
+  position: relative;
 }
 
 .nav_item_active a {
-    background: linear-gradient(277deg, #E64067 -9.52%, #5926F0 62.22%, #4828A0 119.38%), #FAFAFA;
-    color: white;
+  background:
+    linear-gradient(277deg, #e64067 -9.52%, #5926f0 62.22%, #4828a0 119.38%),
+    #fafafa;
+  color: white;
 }
 
 .ni_logout a {
-    background: #FF3636;
-    color: white;
+  background: #ff3636;
+  color: white;
 }
 
 .dot {
-    position: absolute;
-    top: 50%;
-    right: 1rem;
-    height: 8px;
-    width: 8px;
-    background-color: white;
-    border-radius: 8px;
-    transform: translateY(-50%);
+  position: absolute;
+  top: 50%;
+  right: 1rem;
+  height: 8px;
+  width: 8px;
+  background-color: white;
+  border-radius: 8px;
+  transform: translateY(-50%);
 }

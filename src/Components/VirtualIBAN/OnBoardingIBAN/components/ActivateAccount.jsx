@@ -22,14 +22,14 @@ const paymentMethods = [
     title: "Wallet",
     subtitle: "Instapay Wallet",
     active: true,
-    Icon: OpenBanking
+    Icon: OpenBanking,
   },
   {
     id: "bank",
     title: "Bank transfer",
     subtitle: "SEPA | SWIFT",
     active: false,
-    Icon: BankIcon
+    Icon: BankIcon,
   },
   {
     id: "card",
@@ -42,7 +42,7 @@ const paymentMethods = [
     title: "Crypto",
     subtitle: "USDC / USDT",
     active: false,
-    Icon: CryptoIcon
+    Icon: CryptoIcon,
   },
 ];
 
@@ -58,10 +58,10 @@ const ActivateAccount = ({
 }) => {
   const { userWallets, getUserWallets, authHeader } = useContext(UserContext);
   const [loadingRates, setLoadingRates] = useState(false);
-  const isMobile = useMediaQuery('(max-width:600px)');
+  const isMobile = useMediaQuery("(max-width:600px)");
 
   useEffect(() => {
-    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
     document.body.scrollTop = 0;
     document.documentElement.scrollTop = 0;
     getUserWallets();
@@ -133,7 +133,9 @@ const ActivateAccount = ({
   }, [selectedWallet?._id]);
 
   const isFeeReady =
-    !loadingRates && feeDetails?.convertedAmount != null && !!feeDetails?.currency;
+    !loadingRates &&
+    feeDetails?.convertedAmount != null &&
+    !!feeDetails?.currency;
 
   const totalDueLabel = !isFeeReady
     ? ""
@@ -165,14 +167,14 @@ const ActivateAccount = ({
         <div className={styles.mainArea}>
           <div className={styles.header}>
             <div className={styles.headerTitle}>
-             {!isMobile &&
-             <>
-              <div className={styles.cont}>
-                <Magicsvg />
-              </div>
-             <h2>{t("Activate your account")}</h2>
-            </>
-            }
+              {!isMobile && (
+                <>
+                  <div className={styles.cont}>
+                    <Magicsvg />
+                  </div>
+                  <h2>{t("Activate your account")}</h2>
+                </>
+              )}
             </div>
             <p>
               {t(
@@ -182,7 +184,7 @@ const ActivateAccount = ({
           </div>
 
           <div>
-            {!isMobile &&
+            {!isMobile && (
               <label
                 style={{
                   fontWeight: 700,
@@ -196,7 +198,7 @@ const ActivateAccount = ({
               >
                 {t("Payment Method")}
               </label>
-            }
+            )}
             <div className={styles.paymentMethods}>
               {paymentMethods.map((item) => (
                 <button
@@ -210,7 +212,11 @@ const ActivateAccount = ({
                   }}
                 >
                   <div className={styles.paymentIcon}>
-                    {(item?.Icon&& isMobile) ? <item.Icon color={item.active?'#FFFFFF':'#6E7687'}/> : <CreditCard size={16} />}
+                    {item?.Icon && isMobile ? (
+                      <item.Icon color={item.active ? "#FFFFFF" : "#6E7687"} />
+                    ) : (
+                      <CreditCard size={16} />
+                    )}
                   </div>
                   <div style={{ textAlign: "start" }}>
                     <h5>
@@ -225,15 +231,17 @@ const ActivateAccount = ({
           </div>
 
           <div
-          style={{
-            display: "flex",
-            alignItems:"flex-start",
-            justifyContent: "space-between",
-            flexDirection: isMobile ? 'column' : 'row',
-            gap: isMobile && 20
-          }}
+            style={{
+              display: "flex",
+              alignItems: "flex-start",
+              justifyContent: "space-between",
+              flexDirection: isMobile ? "column" : "row",
+              gap: isMobile && 20,
+            }}
           >
-            <div style={{ marginTop: "10px", width: isMobile ? '100%' : 'auto' }}>
+            <div
+              style={{ marginTop: "10px", width: isMobile ? "100%" : "auto" }}
+            >
               <label
                 style={{
                   fontWeight: 700,
@@ -309,7 +317,9 @@ const ActivateAccount = ({
                               color: "#111827",
                             }}
                           >
-                            {wallet.currency?.code}{t("Wallet")}</h5>
+                            {wallet.currency?.code}
+                            {t("Wallet")}
+                          </h5>
                         </div>
                         <div
                           style={{
@@ -317,7 +327,9 @@ const ActivateAccount = ({
                             fontSize: "12px",
                             color: "#64748B",
                           }}
-                        >{t("ID:")}{wallet.wallet_id}
+                        >
+                          {t("ID:")}
+                          {wallet.wallet_id}
                         </div>
                         <div
                           style={{
@@ -383,16 +395,24 @@ const ActivateAccount = ({
                 <div className={styles.summaryRow}>
                   <span>{t("IBAN activation fee")}</span>
                   <strong>
-                    {isFeeReady && feeDetails?.activationFee != null
-                      ? `€${feeDetails.activationFee}.00`
-                      : <CircularProgress size={14} />}
+                    {isFeeReady && feeDetails?.activationFee != null ? (
+                      `€${feeDetails.activationFee}.00`
+                    ) : (
+                      <CircularProgress size={14} />
+                    )}
                   </strong>
                 </div>
 
                 {feeDetails?.isKybIncluded && (
-                  <div className={styles.summaryRow} style={{ marginTop: "8px" }}>
+                  <div
+                    className={styles.summaryRow}
+                    style={{ marginTop: "8px" }}
+                  >
                     <span>{t("KYB Verification Fee")}</span>
-                    <strong>${feeDetails?.kybFee || 0}{t(".00 USD")}</strong>
+                    <strong>
+                      ${feeDetails?.kybFee || 0}
+                      {t(".00 USD")}
+                    </strong>
                   </div>
                 )}
               </div>
@@ -424,9 +444,11 @@ const ActivateAccount = ({
                     fontWeight: 700,
                   }}
                 >
-                  {isFeeReady
-                    ? totalDueLabel
-                    : <CircularProgress size={24} sx={{ color: "#fff" }} />}
+                  {isFeeReady ? (
+                    totalDueLabel
+                  ) : (
+                    <CircularProgress size={24} sx={{ color: "#fff" }} />
+                  )}
                 </h3>
               </div>
 
@@ -484,7 +506,6 @@ const ActivateAccount = ({
             </div>
           </div>
         </div>
-
       </div>
 
       <div className={styles.navigationFooter}>
@@ -499,14 +520,15 @@ const ActivateAccount = ({
           className={styles.continueButton}
           style={{
             opacity: !selectedWallet?._id || !isFeeReady ? 0.5 : 1,
-            cursor: !selectedWallet?._id || !isFeeReady ? "not-allowed" : "pointer",
+            cursor:
+              !selectedWallet?._id || !isFeeReady ? "not-allowed" : "pointer",
           }}
         >
           {!isFeeReady
             ? t("Calculating...")
             : isInsufficient
-            ? t("Confirm & Activate IBAN")
-            : `${t("Pay")} ${totalDueLabel}`}
+              ? t("Confirm & Activate IBAN")
+              : `${t("Pay")} ${totalDueLabel}`}
         </button>
       </div>
     </div>

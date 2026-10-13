@@ -31,7 +31,7 @@ window.addEventListener("error", (e) => {
 
 // In index.js or App.js (dev only)
 if (import.meta.env.NODE_ENV === "development") {
-  window.__REACT_DEVTOOLS_GLOBAL_HOOK__.inject = () => { };
+  window.__REACT_DEVTOOLS_GLOBAL_HOOK__.inject = () => {};
 }
 
 Sentry.init({
@@ -53,8 +53,7 @@ Sentry.init({
   ],
   replaysSessionSampleRate: 0.1,
   replaysOnErrorSampleRate: 1.0,
-  environment:
-    import.meta.env.DEV ? "development" : "production",
+  environment: import.meta.env.DEV ? "development" : "production",
   beforeSend(event) {
     console.log(event, "Sentry Event");
     if (import.meta.env.DEV) {
@@ -67,16 +66,11 @@ Sentry.init({
   enableLogs: true,
 });
 
-
-
-
-
 if (!import.meta.env.DEV) {
-  window.console.log = () => { };
-  window.console.warn = () => { };
-  window.console.error = () => { };
+  window.console.log = () => {};
+  window.console.warn = () => {};
+  window.console.error = () => {};
 }
-
 
 const container = document.getElementById("root");
 const root = createRoot(container);
@@ -85,7 +79,7 @@ root.render(
   <BrowserRouter>
     <App />
   </BrowserRouter>,
-  document.getElementById("root")
+  document.getElementById("root"),
 );
 
 // If you want your app to work offline and load faster, you can change

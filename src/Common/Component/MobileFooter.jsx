@@ -2,16 +2,9 @@ import React from "react";
 import { ChevronLeft } from "react-feather";
 import styles from "./styles.module.css";
 
-const MobileFooter = ({
-  label,
-  disabled,
-  handleAction,
-  handleBack,
-}) => {
+const MobileFooter = ({ label, disabled, handleAction, handleBack }) => {
   return (
-    <div
-      className={styles.mobileFooter}
-    >
+    <div className={styles.mobileFooter}>
       <button type="button" className={styles.backBtn} onClick={handleBack}>
         <ChevronLeft size={24} />
       </button>

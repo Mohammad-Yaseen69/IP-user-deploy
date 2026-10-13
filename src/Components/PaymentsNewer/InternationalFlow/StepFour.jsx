@@ -63,7 +63,7 @@ export const typesData = [
 const StepFour = ({
   data,
   dataHandler,
-  callback = () => { },
+  callback = () => {},
   loading = false,
   error = "",
   filteringValue = "dummy",
@@ -72,7 +72,8 @@ const StepFour = ({
 }) => {
   const { t } = useTranslation();
   const { userDetails } = useContext(UserContext);
-  const [showCardMaintenanceModal, setShowCardMaintenanceModal] = useState(false);
+  const [showCardMaintenanceModal, setShowCardMaintenanceModal] =
+    useState(false);
   const { data: methods, isLoading } = useQuery({
     queryKey: ["AvailableMethods"],
     queryFn: () =>
@@ -82,7 +83,7 @@ const StepFour = ({
     retry: 3,
   });
 
-  console.log(data?.mobile_wallet_services)
+  console.log(data?.mobile_wallet_services);
   const types = useMemo(() => {
     if (data?.mobile_wallet_services?.length > 0) {
       console.log(typesData, data.mobile_wallet_services);
@@ -107,7 +108,8 @@ const StepFour = ({
   // console.log(types, 'dsafsadffsad')
   useEffect(() => {
     if (types.length > 0) {
-      const defaultPaymentType = types.find((item) => item.value !== "card") ?? types?.[0];
+      const defaultPaymentType =
+        types.find((item) => item.value !== "card") ?? types?.[0];
       // dataHandler("payment_type", defaultPaymentType);
       const timeout = setTimeout(() => {
         callback();
@@ -139,7 +141,7 @@ const StepFour = ({
           <>
             <FeesComponent error={error} data={data} />
             {data.payment_type?.value === "paypal" &&
-              !data?.exchange_rate?.paypal?.paypal_currency_supported ? (
+            !data?.exchange_rate?.paypal?.paypal_currency_supported ? (
               <>
                 <div
                   style={{
@@ -167,7 +169,8 @@ const StepFour = ({
                     <strong>
                       {data?.exchange_rate?.paypal?.fee?.currency}
                     </strong>{" "}
-                    {t("is not supported by Paypal,")} <strong>{t("USD")}</strong>
+                    {t("is not supported by Paypal,")}{" "}
+                    <strong>{t("USD")}</strong>
                     {t("will be used as the default currency.")}
                   </span>
                 </div>
@@ -219,7 +222,9 @@ const StepFour = ({
                       )?.toLocaleString("en-US", {
                         minimumFractionDigits: 2,
                         maximumFractionDigits: 4,
-                      })}{" "}{t("USD")}</strong>
+                      })}{" "}
+                      {t("USD")}
+                    </strong>
                   </div>
                   <div
                     style={{
@@ -258,7 +263,9 @@ const StepFour = ({
                       )?.toLocaleString("en-US", {
                         minimumFractionDigits: 2,
                         maximumFractionDigits: 2,
-                      })}{" "}{t("USD")}</strong>
+                      })}{" "}
+                      {t("USD")}
+                    </strong>
                   </div>
                 </div>
               </>
@@ -290,14 +297,19 @@ const StepFour = ({
             .filter(
               (i) =>
                 i.value !== filteringValue &&
-                (methods?.includes(i.value) || methods?.includes(i?.api_val) || i.value === "wallet"),
+                (methods?.includes(i.value) ||
+                  methods?.includes(i?.api_val) ||
+                  i.value === "wallet"),
             )
             .map((item) => (
               <div
                 className={`${styles.item} ${item.status !== "Active" ? styles.disabled : ""}`}
                 key={item.name}
                 onClick={() => {
-                  if (item.value === "card" && userDetails?.username !== "ahmed") {
+                  if (
+                    item.value === "card" &&
+                    userDetails?.username !== "ahmed"
+                  ) {
                     setShowCardMaintenanceModal(true);
                     return;
                   }
@@ -308,11 +320,16 @@ const StepFour = ({
                   console.log(data.payment_type);
                 }}
               >
-                <img src={item.icon} alt="" className={styles.icon} loading="lazy" />
+                <img
+                  src={item.icon}
+                  alt=""
+                  className={styles.icon}
+                  loading="lazy"
+                />
                 <span>
                   {t(item.name)}
                   {item.value === "mobile" &&
-                    data?.mobile_wallet_services?.length > 0 ? (
+                  data?.mobile_wallet_services?.length > 0 ? (
                     <>
                       <br />
                       (
@@ -348,7 +365,6 @@ const StepFour = ({
                       width={"35px"}
                       height={"35px"}
                       style={{
-
                         objectFit: "contain",
                         marginLeft: "auto",
                       }}

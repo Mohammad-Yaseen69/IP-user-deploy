@@ -19,7 +19,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  $loader-color: rgba($primary-color, 0.2), rgba($secondary-color, 0.4),
+  $loader-color:
+    rgba($primary-color, 0.2), rgba($secondary-color, 0.4),
     rgba($primary-color, 0.6), rgba($secondary-color, 0.8), $primary-color;
   .dot {
     position: relative;
@@ -63,7 +64,11 @@
   align-items: center;
   vertical-align: middle;
   justify-content: center;
-  transition: 0.3s color, 0.3s border, 0.3s transform, 0.3s opacity;
+  transition:
+    0.3s color,
+    0.3s border,
+    0.3s transform,
+    0.3s opacity;
   [class*="loader-"] {
     display: inline-block;
     width: 50px;
@@ -451,10 +456,14 @@
   @keyframes loader-15 {
     0%,
     100% {
-      box-shadow: 0 0 0 $success-color, 0 0 0 $success-color;
+      box-shadow:
+        0 0 0 $success-color,
+        0 0 0 $success-color;
     }
     50% {
-      box-shadow: 0 -0.25em 0 $success-color, 0 0.25em 0 $success-color;
+      box-shadow:
+        0 -0.25em 0 $success-color,
+        0 0.25em 0 $success-color;
     }
   }
   .loader-16 {
@@ -731,8 +740,10 @@
       background-color: $danger-color;
       top: -0.3em;
       left: 0.05em;
-      box-shadow: 0.2em 0px 0px 0px $danger-color,
-        0.2em -0.2em 0px 0px $danger-color, 0.4em 0px 0px 0px $danger-color;
+      box-shadow:
+        0.2em 0px 0px 0px $danger-color,
+        0.2em -0.2em 0px 0px $danger-color,
+        0.4em 0px 0px 0px $danger-color;
       animation: loader-24 1s linear infinite alternate;
     }
   }
@@ -805,11 +816,16 @@
   }
   .loader-27 {
     border-radius: 50%;
-    box-shadow: inset 0 0 0 0.1em $success-color,
-      -0.5em -0.5em 0 -0.4em $success-color, 0 -0.7em 0 -0.4em $success-color,
-      0.5em -0.5em 0 -0.4em $success-color, -0.5em 0.5em 0 -0.4em $success-color,
-      0 0.7em 0 -0.4em $success-color, 0.5em 0.5em 0 -0.4em $success-color,
-      -0.7em 0 0 -0.4em $success-color, 0.7em 0 0 -0.4em $success-color;
+    box-shadow:
+      inset 0 0 0 0.1em $success-color,
+      -0.5em -0.5em 0 -0.4em $success-color,
+      0 -0.7em 0 -0.4em $success-color,
+      0.5em -0.5em 0 -0.4em $success-color,
+      -0.5em 0.5em 0 -0.4em $success-color,
+      0 0.7em 0 -0.4em $success-color,
+      0.5em 0.5em 0 -0.4em $success-color,
+      -0.7em 0 0 -0.4em $success-color,
+      0.7em 0 0 -0.4em $success-color;
     animation: 5s loader-27 linear infinite;
   }
   @keyframes loader-27 {
@@ -882,25 +898,36 @@
     0% {
       opacity: 1;
       transform: rotate(0deg);
-      box-shadow: 0 0 0 -0.5em $info-color, 0 0 0 -0.5em $info-color,
-        0 0 0 -0.5em $info-color, 0 0 0 -0.5em $info-color,
-        0 0 0 -0.5em $info-color, 0 0 0 -0.5em $info-color,
-        0 0 0 -0.5em $info-color, 0 0 0 -0.5em $info-color;
+      box-shadow:
+        0 0 0 -0.5em $info-color,
+        0 0 0 -0.5em $info-color,
+        0 0 0 -0.5em $info-color,
+        0 0 0 -0.5em $info-color,
+        0 0 0 -0.5em $info-color,
+        0 0 0 -0.5em $info-color,
+        0 0 0 -0.5em $info-color,
+        0 0 0 -0.5em $info-color;
     }
     100% {
       opacity: 0;
       transform: rotate(180deg);
-      box-shadow: -1em -1em 0 -0.35em $info-color,
-        0 -1.5em 0 -0.35em $info-color, 1em -1em 0 -0.35em $info-color,
-        -1.5em 0 0 -0.35em $info-color, 1.5em -0 0 -0.35em $info-color,
-        -1em 1em 0 -0.35em $info-color, 0 1.5em 0 -0.35em $info-color,
+      box-shadow:
+        -1em -1em 0 -0.35em $info-color,
+        0 -1.5em 0 -0.35em $info-color,
+        1em -1em 0 -0.35em $info-color,
+        -1.5em 0 0 -0.35em $info-color,
+        1.5em -0 0 -0.35em $info-color,
+        -1em 1em 0 -0.35em $info-color,
+        0 1.5em 0 -0.35em $info-color,
         1em 1em 0 -0.35em $info-color;
     }
   }
   .loader-30 {
     position: relative;
     border-radius: 50%;
-    box-shadow: 0 0 1em 0 $danger-color, inset 0 0 1em 0 $danger-color;
+    box-shadow:
+      0 0 1em 0 $danger-color,
+      inset 0 0 1em 0 $danger-color;
     animation: 1s loader-30 linear infinite;
     &:before,
     &:after {
@@ -1055,75 +1082,101 @@
   .loader-34 {
     height: 0.1em;
     width: 0.1em;
-    box-shadow: -0.2em -0.2em 0 0.1em $primary-color,
-      -0.2em -0.2em 0 0.1em $primary-color, -0.2em -0.2em 0 0.1em $primary-color,
+    box-shadow:
+      -0.2em -0.2em 0 0.1em $primary-color,
+      -0.2em -0.2em 0 0.1em $primary-color,
+      -0.2em -0.2em 0 0.1em $primary-color,
       -0.2em -0.2em 0 0.1em $primary-color;
     animation: loader-34 6s infinite;
   }
   @keyframes loader-34 {
     0% {
-      box-shadow: -0.2em -0.2em 0 0.1em $primary-color,
+      box-shadow:
+        -0.2em -0.2em 0 0.1em $primary-color,
         -0.2em -0.2em 0 0.1em $primary-color,
         -0.2em -0.2em 0 0.1em $primary-color,
         -0.2em -0.2em 0 0.1em $primary-color;
     }
     8.33% {
-      box-shadow: -0.2em -0.2em 0 0.1em $primary-color,
-        0.2em -0.2em 0 0.1em $primary-color, 0.2em -0.2em 0 0.1em $primary-color,
+      box-shadow:
+        -0.2em -0.2em 0 0.1em $primary-color,
+        0.2em -0.2em 0 0.1em $primary-color,
+        0.2em -0.2em 0 0.1em $primary-color,
         0.2em -0.2em 0 0.1em $primary-color;
     }
     16.66% {
-      box-shadow: -0.2em -0.2em 0 0.1em $primary-color,
-        0.2em -0.2em 0 0.1em $primary-color, 0.2em 0.2em 0 0.1em $primary-color,
+      box-shadow:
+        -0.2em -0.2em 0 0.1em $primary-color,
+        0.2em -0.2em 0 0.1em $primary-color,
+        0.2em 0.2em 0 0.1em $primary-color,
         0.2em 0.2em 0 0.1em $primary-color;
     }
     24.99% {
-      box-shadow: -0.2em -0.2em 0 0.1em $primary-color,
-        0.2em -0.2em 0 0.1em $primary-color, 0.2em 0.2em 0 0.1em $primary-color,
+      box-shadow:
+        -0.2em -0.2em 0 0.1em $primary-color,
+        0.2em -0.2em 0 0.1em $primary-color,
+        0.2em 0.2em 0 0.1em $primary-color,
         -0.2em 0.2em 0 0.1em $primary-color;
     }
     33.32% {
-      box-shadow: -0.2em -0.2em 0 0.1em $primary-color,
-        0.2em -0.2em 0 0.1em $primary-color, 0.2em 0.2em 0 0.1em $primary-color,
+      box-shadow:
+        -0.2em -0.2em 0 0.1em $primary-color,
+        0.2em -0.2em 0 0.1em $primary-color,
+        0.2em 0.2em 0 0.1em $primary-color,
         -0.2em -0.2em 0 0.1em $primary-color;
     }
     41.65% {
-      box-shadow: 0.2em -0.2em 0 0.1em $primary-color,
-        0.2em -0.2em 0 0.1em $primary-color, 0.2em 0.2em 0 0.1em $primary-color,
+      box-shadow:
+        0.2em -0.2em 0 0.1em $primary-color,
+        0.2em -0.2em 0 0.1em $primary-color,
+        0.2em 0.2em 0 0.1em $primary-color,
         0.2em -0.2em 0 0.1em $primary-color;
     }
     49.98% {
-      box-shadow: 0.2em 0.2em 0 0.1em $primary-color,
-        0.2em 0.2em 0 0.1em $primary-color, 0.2em 0.2em 0 0.1em $primary-color,
+      box-shadow:
+        0.2em 0.2em 0 0.1em $primary-color,
+        0.2em 0.2em 0 0.1em $primary-color,
+        0.2em 0.2em 0 0.1em $primary-color,
         0.2em 0.2em 0 0.1em $primary-color;
     }
     58.31% {
-      box-shadow: -0.2em 0.2em 0 0.1em $primary-color,
-        -0.2em 0.2em 0 0.1em $primary-color, 0.2em 0.2em 0 0.1em $primary-color,
+      box-shadow:
+        -0.2em 0.2em 0 0.1em $primary-color,
+        -0.2em 0.2em 0 0.1em $primary-color,
+        0.2em 0.2em 0 0.1em $primary-color,
         -0.2em 0.2em 0 0.1em $primary-color;
     }
     66.64% {
-      box-shadow: -0.2em -0.2em 0 0.1em $primary-color,
-        -0.2em -0.2em 0 0.1em $primary-color, 0.2em 0.2em 0 0.1em $primary-color,
+      box-shadow:
+        -0.2em -0.2em 0 0.1em $primary-color,
+        -0.2em -0.2em 0 0.1em $primary-color,
+        0.2em 0.2em 0 0.1em $primary-color,
         -0.2em 0.2em 0 0.1em $primary-color;
     }
     74.97% {
-      box-shadow: -0.2em -0.2em 0 0.1em $primary-color,
-        0.2em -0.2em 0 0.1em $primary-color, 0.2em 0.2em 0 0.1em $primary-color,
+      box-shadow:
+        -0.2em -0.2em 0 0.1em $primary-color,
+        0.2em -0.2em 0 0.1em $primary-color,
+        0.2em 0.2em 0 0.1em $primary-color,
         -0.2em 0.2em 0 0.1em $primary-color;
     }
     83.3% {
-      box-shadow: -0.2em -0.2em 0 0.1em $primary-color,
-        0.2em 0.2em 0 0.1em $primary-color, 0.2em 0.2em 0 0.1em $primary-color,
+      box-shadow:
+        -0.2em -0.2em 0 0.1em $primary-color,
+        0.2em 0.2em 0 0.1em $primary-color,
+        0.2em 0.2em 0 0.1em $primary-color,
         -0.2em 0.2em 0 0.1em $primary-color;
     }
     91.63% {
-      box-shadow: -0.2em -0.2em 0 0.1em $primary-color,
-        -0.2em 0.2em 0 0.1em $primary-color, -0.2em 0.2em 0 0.1em $primary-color,
+      box-shadow:
+        -0.2em -0.2em 0 0.1em $primary-color,
+        -0.2em 0.2em 0 0.1em $primary-color,
+        -0.2em 0.2em 0 0.1em $primary-color,
         -0.2em 0.2em 0 0.1em $primary-color;
     }
     100% {
-      box-shadow: -0.2em -0.2em 0 0.1em $primary-color,
+      box-shadow:
+        -0.2em -0.2em 0 0.1em $primary-color,
         -0.2em -0.2em 0 0.1em $primary-color,
         -0.2em -0.2em 0 0.1em $primary-color,
         -0.2em -0.2em 0 0.1em $primary-color;

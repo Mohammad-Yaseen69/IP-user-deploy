@@ -1,81 +1,81 @@
 .container {
-    display: flex;
-    flex-direction: column;
-    gap: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
 }
 
 .inp {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .inp label {
-    margin: 0;
-    color: #0C0A20;
-    font-family: Inter;
-    font-size: 14px;
-    font-weight: 500;
-    line-height: 150%;
-    letter-spacing: -0.42px;
+  margin: 0;
+  color: #0c0a20;
+  font-family: Inter;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 150%;
+  letter-spacing: -0.42px;
 }
 
 .input {
-    position: relative;
-    width: 100%;
+  position: relative;
+  width: 100%;
 }
 
 .input input {
-    height: 48px;
-    padding: 8px 12px;
-    width: 100%;
-    border-radius: 6px;
-    border: 1px solid #E4E3E5;
-    background: #FFF;
-    box-shadow: 0 1px 1.5px 0 rgba(44, 54, 53, 0.03);
-    padding-right: 2.4rem;
-    outline: none;
+  height: 48px;
+  padding: 8px 12px;
+  width: 100%;
+  border-radius: 6px;
+  border: 1px solid #e4e3e5;
+  background: #fff;
+  box-shadow: 0 1px 1.5px 0 rgba(44, 54, 53, 0.03);
+  padding-right: 2.4rem;
+  outline: none;
 }
 
 .input input:focus {
-    border: 1px solid #4A32E3;
+  border: 1px solid #4a32e3;
 }
 
 .input div {
-    position: absolute;
-    top: 50%;
-    right: 1rem;
-    transform: translateY(-50%);
-    height: fit-content;
-    width: fit-content;
-    cursor: pointer;
-    z-index: 10;
+  position: absolute;
+  top: 50%;
+  right: 1rem;
+  transform: translateY(-50%);
+  height: fit-content;
+  width: fit-content;
+  cursor: pointer;
+  z-index: 10;
 }
 
 .pillsContainer {
-    display: flex;
-    gap: 6px;
-    flex-wrap: wrap;
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
 }
 
 .pill {
-    display: flex;
-    padding: 8px 10px;
-    align-items: center;
-    gap: 6px;
-    border-radius: 100px;
-    background: #F3F3F4;
-    color: #141414;
-    font-family: Inter;
-    font-size: 11px;
-    font-weight: 500;
-    line-height: 20px;
-    letter-spacing: -0.33px;
-    width: fit-content;
-    height: 24px;
+  display: flex;
+  padding: 8px 10px;
+  align-items: center;
+  gap: 6px;
+  border-radius: 100px;
+  background: #f3f3f4;
+  color: #141414;
+  font-family: Inter;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 20px;
+  letter-spacing: -0.33px;
+  width: fit-content;
+  height: 24px;
 }
 
 .activePill {
-    background: #EDFAF0;
-    color: #097224;
+  background: #edfaf0;
+  color: #097224;
 }

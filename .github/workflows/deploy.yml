@@ -16,7 +16,6 @@ jobs:
       - name: Git global config for private repo access
         run: git config --global url."https://oauth2:${{ secrets.YOUR_GITHUB_TOKEN }}@github.com/".insteadOf "https://github.com/"
 
-
       - name: Set Sentry release
         run: |
           echo "SENTRY_RELEASE=instapay@$(git rev-parse --short HEAD)" >> $GITHUB_ENV
@@ -27,21 +26,21 @@ jobs:
       - name: Mark repo as safe
         run: git config --global --add safe.directory /home/ubuntu/Projects/instapay
 
-      -  name: Fix permissions
-         run: |
+      - name: Fix permissions
+        run: |
           sudo chown -R $USER:$USER /home/ubuntu/Projects/instapay
           sudo chmod -R u+rw /home/ubuntu/Projects/instapay
 
       - name: Deploy
         run: |
-         sudo apt-get update && sudo apt-get install -y jq
-         cd /home/ubuntu/Projects/instapay
-         git reset --hard
-         git pull --no-rebase
-         jq 'del(.type)' package.json > temp.json && mv temp.json package.json
-         npm install --legacy-peer-deps
-         export CI=false
-         npm run build --verbose
+          sudo apt-get update && sudo apt-get install -y jq
+          cd /home/ubuntu/Projects/instapay
+          git reset --hard
+          git pull --no-rebase
+          jq 'del(.type)' package.json > temp.json && mv temp.json package.json
+          npm install --legacy-peer-deps
+          export CI=false
+          npm run build --verbose
 
       - name: Restarting Server
         run: |
@@ -57,19 +56,19 @@ jobs:
 
       - name: Fix permissions for blue
         run: |
-         sudo chown -R $USER:$USER /home/ubuntu/Projects/instapay-blue
-         sudo chmod -R u+rw /home/ubuntu/Projects/instapay-blue
+          sudo chown -R $USER:$USER /home/ubuntu/Projects/instapay-blue
+          sudo chmod -R u+rw /home/ubuntu/Projects/instapay-blue
 
       - name: Deploy to blue server
         run: |
-         sudo apt-get update && sudo apt-get install -y jq
-         cd /home/ubuntu/Projects/instapay-blue
-         git reset --hard
-         git pull --no-rebase
-         jq 'del(.type)' package.json > temp.json && mv temp.json package.json
-         npm install --legacy-peer-deps
-         export CI=false
-         npm run build --verbose  
+          sudo apt-get update && sudo apt-get install -y jq
+          cd /home/ubuntu/Projects/instapay-blue
+          git reset --hard
+          git pull --no-rebase
+          jq 'del(.type)' package.json > temp.json && mv temp.json package.json
+          npm install --legacy-peer-deps
+          export CI=false
+          npm run build --verbose
 
       - name: Restarting Blue Server
         run: |

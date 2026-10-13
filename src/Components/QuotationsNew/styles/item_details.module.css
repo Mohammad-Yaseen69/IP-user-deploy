@@ -1,145 +1,147 @@
 .item_description {
-    padding: 40px;
-    display: flex;
-    gap: 40px;
-    border-top: 1px solid rgba(0, 0, 0, 0.04);
-    border-bottom: 1px solid rgba(0, 0, 0, 0.04);
-    background: #FFF;
-    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.04);
-    cursor: pointer;
+  padding: 40px;
+  display: flex;
+  gap: 40px;
+  border-top: 1px solid rgba(0, 0, 0, 0.04);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+  background: #fff;
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.04);
+  cursor: pointer;
 }
 
 .item_description .details {
-    width: 100%;
-    display: flex;
-    gap: 30px;
+  width: 100%;
+  display: flex;
+  gap: 30px;
 }
 
 .item_description .details .colored_card {
-    border-radius: 16px;
-    background: linear-gradient(186deg, #E64067 0%, #5926F0 55.65%, #4828A0 100%), #FAFAFA;
-    box-shadow: 0px 41px 93px -29px rgba(0, 0, 0, 0.12);
-    padding: 30px 30px;
-    width: fit-content;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    max-width: 320px;
-    min-width: 300px;
+  border-radius: 16px;
+  background:
+    linear-gradient(186deg, #e64067 0%, #5926f0 55.65%, #4828a0 100%), #fafafa;
+  box-shadow: 0px 41px 93px -29px rgba(0, 0, 0, 0.12);
+  padding: 30px 30px;
+  width: fit-content;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 320px;
+  min-width: 300px;
 }
 
-.item_description .details .colored_card>span {
-    color: #d9d9d9;
-    font-size: 0.8rem;
-    font-weight: 500;
+.item_description .details .colored_card > span {
+  color: #d9d9d9;
+  font-size: 0.8rem;
+  font-weight: 500;
 }
 
 .item_description .details .colored_card h4 {
-    font-size: 1.6rem;
-    color: white;
-    margin-bottom: 0.5rem;
+  font-size: 1.6rem;
+  color: white;
+  margin-bottom: 0.5rem;
 }
 
 .item_description .details .colored_card button {
-    border-radius: 310px;
-    border: 1px solid #936FFF;
-    background: rgba(89, 38, 240, 0.55);
-    color: white;
-    outline: none;
-    padding: 0.25rem 1rem;
-    font-size: 0.5rem;
-    margin-bottom: 1rem;
+  border-radius: 310px;
+  border: 1px solid #936fff;
+  background: rgba(89, 38, 240, 0.55);
+  color: white;
+  outline: none;
+  padding: 0.25rem 1rem;
+  font-size: 0.5rem;
+  margin-bottom: 1rem;
 }
 
 .item_description .details .colored_card div {
-    background-color: rgba(255, 255, 255, 0.26);
-    width: 100%;
-    padding: 1rem;
-    border-radius: 9px;
-    color: #fff;
-    text-align: center;
+  background-color: rgba(255, 255, 255, 0.26);
+  width: 100%;
+  padding: 1rem;
+  border-radius: 9px;
+  color: #fff;
+  text-align: center;
 }
 
 .item_description .details .colored_card div span {
-    font-size: 0.7rem;
+  font-size: 0.7rem;
 }
 
 .item_description .details .colored_card div h5 {
-    margin-bottom: 0;
-    margin-top: 0.25rem;
-    font-weight: 700;
-    font-size: 1rem;
+  margin-bottom: 0;
+  margin-top: 0.25rem;
+  font-weight: 700;
+  font-size: 1rem;
 }
 
 .item_description .details .trans_dets {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  flex: 1;
 }
 
 .item_description .details .trans_dets .t_item {
-    display: flex;
-    align-items: center;
-    border-radius: 16px;
-    background: rgba(89, 38, 240, 0.06);
-    padding: 1rem;
-    width: 100%;
-    min-width: 360px;
+  display: flex;
+  align-items: center;
+  border-radius: 16px;
+  background: rgba(89, 38, 240, 0.06);
+  padding: 1rem;
+  width: 100%;
+  min-width: 360px;
 }
 
 .item_description .details .trans_dets .t_item span {
-    min-width: 90px;
-    font-size: 0.9rem;
-    font-weight: 700;
-    color: #848484;
+  min-width: 90px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #848484;
 }
 
-.item_description .details .trans_dets .t_item>div {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    justify-content: space-between;
-    flex: 1;
+.item_description .details .trans_dets .t_item > div {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  justify-content: space-between;
+  flex: 1;
 }
 
-.item_description .details .trans_dets .t_item>div>div:nth-child(1) {
-    display: flex;
-    align-items: center;
-    gap: 10px;
+.item_description .details .trans_dets .t_item > div > div:nth-child(1) {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
-.item_description .details .trans_dets .t_item>div>div:nth-child(1) div h5 {
-    margin-bottom: 6px;
-    font-size: 17px;
-    font-weight: 700;
-    white-space: nowrap;
+.item_description .details .trans_dets .t_item > div > div:nth-child(1) div h5 {
+  margin-bottom: 6px;
+  font-size: 17px;
+  font-weight: 700;
+  white-space: nowrap;
 }
 
-.item_description .details .trans_dets .t_item>div>div:nth-child(1) div p {
-    margin-bottom: 0;
-    font-size: 0.6rem;
-    color: #848484;
+.item_description .details .trans_dets .t_item > div > div:nth-child(1) div p {
+  margin-bottom: 0;
+  font-size: 0.6rem;
+  color: #848484;
 }
 
-.item_description .details .trans_dets .t_item>div>div:nth-child(2) {
-    display: flex;
-    align-items: center;
-    gap: 7px;
-    padding: 0.25rem 0.5rem;
-    border-radius: 986.464px;
-    background: #FFF;
-    box-shadow: 0px 2.6016643047332764px 7.80499267578125px 0px rgba(0, 0, 0, 0.08);
-    font-size: 0.6rem;
-    font-weight: 600;
+.item_description .details .trans_dets .t_item > div > div:nth-child(2) {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 0.25rem 0.5rem;
+  border-radius: 986.464px;
+  background: #fff;
+  box-shadow: 0px 2.6016643047332764px 7.80499267578125px 0px
+    rgba(0, 0, 0, 0.08);
+  font-size: 0.6rem;
+  font-weight: 600;
 }
 
-.item_description .details .trans_dets .t_item>div>div:nth-child(2)>div {
-    height: 5px;
-    width: 5px;
-    background-color: #72C123;
-    box-shadow: 0px 1.08402681350708px 2.16805362701416px #91BE65;
-    border-radius: 6px;
+.item_description .details .trans_dets .t_item > div > div:nth-child(2) > div {
+  height: 5px;
+  width: 5px;
+  background-color: #72c123;
+  box-shadow: 0px 1.08402681350708px 2.16805362701416px #91be65;
+  border-radius: 6px;
 }

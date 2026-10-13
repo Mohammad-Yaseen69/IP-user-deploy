@@ -1,383 +1,374 @@
 .centerText {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+
+  h1 {
+    color: var(--text-primary, #1b1f2a);
     text-align: center;
+    font-family: Inter;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 120%;
+    letter-spacing: -0.72px;
+  }
 
-    h1 {
-        color: var(--text-primary, #1B1F2A);
-        text-align: center;
-        font-family: Inter;
-        font-size: 24px;
-        font-style: normal;
-        font-weight: 600;
-        line-height: 120%;
-        letter-spacing: -0.72px;
-    }
-
-    p {
-        color: var(--text-secondary, #6E7687);
-        text-align: center;
-        font-family: Inter;
-        font-size: 14px;
-        font-style: normal;
-        font-weight: 500;
-        line-height: 150%;
-        letter-spacing: -0.42px;
-    }
+  p {
+    color: var(--text-secondary, #6e7687);
+    text-align: center;
+    font-family: Inter;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 150%;
+    letter-spacing: -0.42px;
+  }
 }
 
 .lockIcon {
-    font-size: 28px;
-    margin-bottom: 10px;
+  font-size: 28px;
+  margin-bottom: 10px;
 }
 
 .emailRow {
-    margin-top: 8px;
-    color: #111C2D;
-    text-align: center;
-    font-family: Inter;
-    font-size: 16px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: 150%;
-    letter-spacing: -0.48px;
+  margin-top: 8px;
+  color: #111c2d;
+  text-align: center;
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 150%;
+  letter-spacing: -0.48px;
 }
 
 .changeText {
-    margin-left: 5px;
-    color: var(--primary, #5926F0);
-    cursor: pointer;
+  margin-left: 5px;
+  color: var(--primary, #5926f0);
+  cursor: pointer;
 }
 
 .otpContainer {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin: 20px 0;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin: 20px 0;
 }
 
 .otpInput {
-    width: 45px;
-    height: 50px;
-    text-align: center;
-    font-size: 18px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    outline: none;
-    margin: 4px;
+  width: 45px;
+  height: 50px;
+  text-align: center;
+  font-size: 18px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  outline: none;
+  margin: 4px;
 }
 
 .otpInput:focus {
-    border-color: #6c63ff;
+  border-color: #6c63ff;
 }
 
 .resendText {
-    color: #434656;
-    text-align: center;
-    font-family: Inter;
-    font-size: 14px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 150%;
-    letter-spacing: -0.42px;
+  color: #434656;
+  text-align: center;
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 150%;
+  letter-spacing: -0.42px;
 }
 
 .resendText span {
-    color: var(--primary, #5926F0);
-    text-align: center;
-    font-family: Inter;
-    font-size: 14px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: 150%;
-    letter-spacing: -0.42px;
+  color: var(--primary, #5926f0);
+  text-align: center;
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 150%;
+  letter-spacing: -0.42px;
 }
 
 .logo {
-    margin-top: 30px;
+  margin-top: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 30px;
+
+  img {
     display: flex;
-    justify-content: center;
+    width: 140px;
+    height: 39.293px;
     align-items: center;
-    margin-bottom: 30px;
-
-    img {
-        display: flex;
-        width: 140px;
-        height: 39.293px;
-        align-items: center;
-        gap: 8.443px;
-        aspect-ratio: 140.00/39.29;
-
-    }
-
+    gap: 8.443px;
+    aspect-ratio: 140/39.29;
+  }
 }
 
 .verifyBtn {
-    width: 100%;
-    margin-top: 15px;
-    padding: 12px;
-    border-radius: var(--sm, 6px);
-    background: var(--Primary-600---Base, #4A32E3);
-    color: white;
-    border: none;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 5px;
-    cursor: pointer;
-    margin-top: 50px;
+  width: 100%;
+  margin-top: 15px;
+  padding: 12px;
+  border-radius: var(--sm, 6px);
+  background: var(--Primary-600---Base, #4a32e3);
+  color: white;
+  border: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+  margin-top: 50px;
 }
 
 .logoContainer {
+  display: flex;
+  width: 50px;
+  height: 50px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 20px;
+  border: 1px solid var(--border-subtle, #e1e5ee);
+
+  img {
+    border-radius: var(--lg, 14px);
+    background: blue/blue-50;
+  }
+
+  .input_error {
+    margin-top: 6px;
     display: flex;
-    width: 50px;
-    height: 50px;
-    justify-content: center;
     align-items: center;
-    border-radius: 20px;
-    border: 1px solid var(--border-subtle, #E1E5EE);
+    gap: 0.6rem;
+    justify-content: center;
+  }
 
-    img {
-        border-radius: var(--lg, 14px);
-        background: blue/blue-50;
+  .input_error span {
+    color: #f32d2d;
+    font-family: Manrope;
+    font-size: 12.232px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 150%;
+  }
+
+  .input_error a {
+    color: #f32d2d;
+  }
+
+  .location_status {
+    margin: 10px 0;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    justify-content: center;
+    background: rgba(89, 38, 240, 0.08);
+    padding: 10px 16px;
+    border-radius: 12px;
+    border: 1px solid rgba(89, 38, 240, 0.15);
+    animation: pulse 2s infinite ease-in-out;
+    width: fit-content;
+    align-self: center;
+  }
+
+  .location_status span {
+    color: #5926f0;
+    font-family: Manrope;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: -0.2px;
+  }
+
+  .loader_dots {
+    display: flex;
+    gap: 4px;
+  }
+
+  .loader_dots span {
+    font-size: 20px;
+    line-height: 1;
+    animation: dots 1.4s infinite ease-in-out both;
+  }
+
+  .loader_dots span:nth-child(1) {
+    animation-delay: -0.32s;
+  }
+
+  .loader_dots span:nth-child(2) {
+    animation-delay: -0.16s;
+  }
+
+  @keyframes pulse {
+    0%,
+    100% {
+      transform: scale(1);
+      opacity: 0.9;
     }
 
-    .input_error {
-        margin-top: 6px;
-        display: flex;
-        align-items: center;
-        gap: .6rem;
-        justify-content: center;
+    50% {
+      transform: scale(1.02);
+      opacity: 1;
+    }
+  }
+
+  @keyframes dots {
+    0%,
+    80%,
+    100% {
+      transform: scale(0);
     }
 
-    .input_error span {
-        color: #F32D2D;
-        font-family: Manrope;
-        font-size: 12.232px;
-        font-style: normal;
-        font-weight: 600;
-        line-height: 150%;
+    40% {
+      transform: scale(1);
     }
-
-
-    .input_error a {
-        color: #F32D2D;
-    }
-
-    .location_status {
-        margin: 10px 0;
-        display: flex;
-        align-items: center;
-        gap: .8rem;
-        justify-content: center;
-        background: rgba(89, 38, 240, 0.08);
-        padding: 10px 16px;
-        border-radius: 12px;
-        border: 1px solid rgba(89, 38, 240, 0.15);
-        animation: pulse 2s infinite ease-in-out;
-        width: fit-content;
-        align-self: center;
-    }
-
-    .location_status span {
-        color: #5926f0;
-        font-family: Manrope;
-        font-size: 14px;
-        font-weight: 700;
-        letter-spacing: -0.2px;
-    }
-
-    .loader_dots {
-        display: flex;
-        gap: 4px;
-    }
-
-    .loader_dots span {
-        font-size: 20px;
-        line-height: 1;
-        animation: dots 1.4s infinite ease-in-out both;
-    }
-
-    .loader_dots span:nth-child(1) {
-        animation-delay: -0.32s;
-    }
-
-    .loader_dots span:nth-child(2) {
-        animation-delay: -0.16s;
-    }
-
-    @keyframes pulse {
-
-        0%,
-        100% {
-            transform: scale(1);
-            opacity: 0.9;
-        }
-
-        50% {
-            transform: scale(1.02);
-            opacity: 1;
-        }
-    }
-
-    @keyframes dots {
-
-        0%,
-        80%,
-        100% {
-            transform: scale(0);
-        }
-
-        40% {
-            transform: scale(1.0);
-        }
-    }
-
+  }
 }
 
 .otp_methods {
-    display: grid;
-    align-items: flex-start;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 12px;
-    align-self: stretch;
+  display: grid;
+  align-items: flex-start;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  align-self: stretch;
 }
 
 .otpMethodButton {
-    display: flex !important;
-    padding: var(--Gaps-Gap-Medium, 10px) !important;
-    align-items: center !important;
-    gap: 6px !important;
-    flex: 1 0 0 !important;
-    border-radius: var(--RADIUS-radius-2, 8px) !important;
-    border: 1px solid var(--neutral-neutral-420, rgba(18, 18, 18, 0.20)) !important;
-    background: #FFF !important;
+  display: flex !important;
+  padding: var(--Gaps-Gap-Medium, 10px) !important;
+  align-items: center !important;
+  gap: 6px !important;
+  flex: 1 0 0 !important;
+  border-radius: var(--RADIUS-radius-2, 8px) !important;
+  border: 1px solid var(--neutral-neutral-420, rgba(18, 18, 18, 0.2)) !important;
+  background: #fff !important;
 }
 
-
 .otpMethodButton img {
-    width: 20px;
+  width: 20px;
 }
 
 .otpMethodButton span {
-    color: #000;
-    font-size: 12px;
-    margin-bottom: 0;
-    white-space: nowrap !important;
-    font-weight: 600;
-    text-decoration: underline !important;
-    text-decoration-color: white !important;
+  color: #000;
+  font-size: 12px;
+  margin-bottom: 0;
+  white-space: nowrap !important;
+  font-weight: 600;
+  text-decoration: underline !important;
+  text-decoration-color: white !important;
 }
 
-
-
 .otp_inputs button img {
-    width: 20px !important;
+  width: 20px !important;
 }
 
 @media (max-width: 700px) {
+  .logo {
+    display: none;
+  }
+
+  .authForm {
+    width: 100% !important;
+    gap: 55px !important;
+    height: auto !important;
+    border-radius: 20px;
+    padding: 10px 4px 0px !important;
+    margin-top: 0px;
+
     .logo {
-        display: none;
+      margin-top: 28px !important;
+      margin-bottom: 0px !important;
     }
 
-    .authForm {
-        width: 100% !important;
-        gap: 55px !important;
-        height: auto !important;
-        border-radius: 20px;
-        padding: 10px 4px 0px !important;
-        margin-top: 0px;
+    div {
+      h1 {
+        width: 100%;
+      }
 
-        .logo {
-            margin-top: 28px !important;
-            margin-bottom: 0px !important;
-        }
-
-        div {
-            h1 {
-                width: 100%;
-            }
-
-            p {
-                width: 100%;
-                padding: 0px !important;
-            }
-        }
-
-        .centerText {
-            gap: 15px;
-        }
-
-        .otp_inputs {
-            width: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-
-        form {
-            display: flex;
-            gap: 25px !important;
-            width: 100% !important;
-            flex-direction: column;
-
-            label {
-                margin-bottom: 4px;
-            }
-
-            .inputcon {
-                width: 100%;
-                display: flex;
-                flex-direction: column;
-                gap: 20px;
-            }
-
-
-
-            .footerBtn {
-                margin-top: 12px;
-                gap: 8px !important;
-
-                .loginWith {
-                    text-decoration: none !important;
-                }
-
-                .forgot_pass {
-                    text-decoration: none !important;
-                }
-            }
-        }
-    }
-
-    .otpContainer {
-        margin: 10px 0;
+      p {
+        width: 100%;
+        padding: 0px !important;
+      }
     }
 
     .centerText {
-        p {
-            margin: 0;
+      gap: 15px;
+    }
+
+    .otp_inputs {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    form {
+      display: flex;
+      gap: 25px !important;
+      width: 100% !important;
+      flex-direction: column;
+
+      label {
+        margin-bottom: 4px;
+      }
+
+      .inputcon {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+
+      .footerBtn {
+        margin-top: 12px;
+        gap: 8px !important;
+
+        .loginWith {
+          text-decoration: none !important;
         }
-    }
 
-    .verifyBtn {
-        border-radius: var(--sm, 6px);
-        background: linear-gradient(277deg, #E64067 -9.52%, #5926F0 62.22%, #4828A0 119.38%), #4A32E3;
-        margin-top: 16px;
-    }
-
-    .toggle_sms {
-        p {
-            text-align: center;
+        .forgot_pass {
+          text-decoration: none !important;
         }
+      }
     }
+  }
 
-    .otpInput {
-        width: 45px;
-        height: 46px;
-        font-size: 16px;
-        margin: 2px;
+  .otpContainer {
+    margin: 10px 0;
+  }
+
+  .centerText {
+    p {
+      margin: 0;
     }
+  }
+
+  .verifyBtn {
+    border-radius: var(--sm, 6px);
+    background:
+      linear-gradient(277deg, #e64067 -9.52%, #5926f0 62.22%, #4828a0 119.38%),
+      #4a32e3;
+    margin-top: 16px;
+  }
+
+  .toggle_sms {
+    p {
+      text-align: center;
+    }
+  }
+
+  .otpInput {
+    width: 45px;
+    height: 46px;
+    font-size: 16px;
+    margin: 2px;
+  }
 }

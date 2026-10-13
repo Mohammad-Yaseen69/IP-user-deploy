@@ -14,9 +14,9 @@ const AlertBox = ({ icon, description, title, variant = "info" }) => {
         containerStyle = {
           boxShadow: "0px 0px 0px 1px #F5A5242E inset",
           bgcolor: "#FEF7E9",
-          '& .MuiAlert-message':{
-            color: '#8A5A00'
-          }
+          "& .MuiAlert-message": {
+            color: "#8A5A00",
+          },
         };
         break;
 
@@ -24,9 +24,9 @@ const AlertBox = ({ icon, description, title, variant = "info" }) => {
         containerStyle = {
           boxShadow: "0px 8px 20px -14px #5926F099",
           bgcolor: "#F3EFFE",
-          '& .MuiAlert-message':{
-            color: '#3B2694'
-          }
+          "& .MuiAlert-message": {
+            color: "#3B2694",
+          },
         };
         break;
     }

@@ -1,27 +1,27 @@
 @media screen and (min-width: 1601px) {
-    .sub {
-        font-size: .9rem;
-    }
+  .sub {
+    font-size: 0.9rem;
+  }
 
-    .main {
-        font-size: 1.6rem;
-    }
+  .main {
+    font-size: 1.6rem;
+  }
 
-    .bot {
-        font-size: .6rem;
-    }
+  .bot {
+    font-size: 0.6rem;
+  }
 }
 
 @media screen and (max-width: 1600px) {
-    .sub {
-        font-size: .6rem;
-    }
+  .sub {
+    font-size: 0.6rem;
+  }
 
-    .main {
-        font-size: 1.1rem;
-    }
+  .main {
+    font-size: 1.1rem;
+  }
 
-    .bot {
-        font-size: .5rem;
-    }
+  .bot {
+    font-size: 0.5rem;
+  }
 }

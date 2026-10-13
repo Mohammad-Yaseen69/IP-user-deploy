@@ -13,7 +13,14 @@ import { Modal, ModalBody, ModalFooter, ModalHeader, Button } from "reactstrap";
 import { ButtonForRequests } from "./UI/FormElements";
 import { usePermission } from "../../hooks/GeneralUse/usePermission";
 
-const InvoiceItem = ({ sn, inv, badgeClass, setEditModal, setMenuOpenFor, menuOpenFor }) => {
+const InvoiceItem = ({
+  sn,
+  inv,
+  badgeClass,
+  setEditModal,
+  setMenuOpenFor,
+  menuOpenFor,
+}) => {
   const [expanded, setExpanded] = useState({});
   const [showConfirm, setShowConfirm] = useState(false);
   const { t } = useTranslation();
@@ -71,8 +78,7 @@ const InvoiceItem = ({ sn, inv, badgeClass, setEditModal, setMenuOpenFor, menuOp
     }
   };
 
-
-  console.log(inv, "inv")
+  console.log(inv, "inv");
   return (
     <React.Fragment key={inv.invoiceId}>
       <div
@@ -94,7 +100,7 @@ const InvoiceItem = ({ sn, inv, badgeClass, setEditModal, setMenuOpenFor, menuOp
           {formatDateTime(inv.createdAt)}
         </div>
         <div
-          style={{ flex: isPhone ? 0.40 : 0.24, ...ellipsisStyle }}
+          style={{ flex: isPhone ? 0.4 : 0.24, ...ellipsisStyle }}
           className={styles.td}
         >
           {truncate(inv.title, 20)}
@@ -104,7 +110,7 @@ const InvoiceItem = ({ sn, inv, badgeClass, setEditModal, setMenuOpenFor, menuOp
             {truncate(inv.description, 30)}
           </div>
         )}
-        <div style={{ flex: isPhone ? 0.20 : 0.12 }} className={`${styles.td}`}>
+        <div style={{ flex: isPhone ? 0.2 : 0.12 }} className={`${styles.td}`}>
           {inv.currency} {Number(inv.amount).toFixed(2)}
         </div>
 
@@ -121,7 +127,11 @@ const InvoiceItem = ({ sn, inv, badgeClass, setEditModal, setMenuOpenFor, menuOp
           </div>
         )}
         <div
-          style={{ flex: isPhone ? 0.15 : 0.1, display: "flex", justifyContent: "flex-end" }}
+          style={{
+            flex: isPhone ? 0.15 : 0.1,
+            display: "flex",
+            justifyContent: "flex-end",
+          }}
           className={`${styles.td} ${styles.actions}`}
           onClick={(e) => e.stopPropagation()}
         >
@@ -136,7 +146,7 @@ const InvoiceItem = ({ sn, inv, badgeClass, setEditModal, setMenuOpenFor, menuOp
             onClick={(e) => {
               e.stopPropagation();
               setMenuOpenFor((prev) =>
-                prev === inv.invoiceId ? null : inv.invoiceId
+                prev === inv.invoiceId ? null : inv.invoiceId,
               );
             }}
           >
@@ -144,7 +154,8 @@ const InvoiceItem = ({ sn, inv, badgeClass, setEditModal, setMenuOpenFor, menuOp
           </button>
 
           {menuOpenFor === inv.invoiceId && (
-            <div className={styles.actionsMenu}
+            <div
+              className={styles.actionsMenu}
               onClick={(e) => e.stopPropagation()}
             >
               <div
@@ -185,7 +196,10 @@ const InvoiceItem = ({ sn, inv, badgeClass, setEditModal, setMenuOpenFor, menuOp
                     className={`${styles.menuItem} ${styles.danger}`}
                     onClick={() => {
                       setMenuOpenFor(null);
-                      setExpanded((prev) => ({ ...prev, [inv.invoiceId]: false }));
+                      setExpanded((prev) => ({
+                        ...prev,
+                        [inv.invoiceId]: false,
+                      }));
                       setShowConfirm(true);
                     }}
                   >

@@ -1,10 +1,10 @@
 /**=====================
     52. General-widget CSS Start
 ==========================**/
-.chart-widget{
-  .bar-chart-widget{
-    .card-body{
-      h4{
+.chart-widget {
+  .bar-chart-widget {
+    .card-body {
+      h4 {
         font-size: 22px;
       }
     }
@@ -109,7 +109,7 @@
       }
     }
   }
-  .user-widget{
+  .user-widget {
     .card-header {
       .d-flex {
         .flex-grow-1 {
@@ -178,10 +178,10 @@
     }
   }
 }
-.cal-datepicker{
-  .datepicker{
-    .datepicker--nav-action[data-action="prev"]{
-      svg{
+.cal-datepicker {
+  .datepicker {
+    .datepicker--nav-action[data-action="prev"] {
+      svg {
         width: 28px;
       }
     }
@@ -358,28 +358,28 @@
           width: 100%;
         }
       }
-      .react-datepicker__navigation{
+      .react-datepicker__navigation {
         background-color: $secondary-color;
       }
-      .react-datepicker__current-month{
+      .react-datepicker__current-month {
         color: $secondary-color;
         font-size: 18px;
       }
-      .react-datepicker__day--keyboard-selected{
+      .react-datepicker__day--keyboard-selected {
         background-color: $secondary-color;
       }
-      .react-datepicker__day--selected{
+      .react-datepicker__day--selected {
         background-color: $secondary-color;
       }
-      .react-datepicker__day{
-        &:hover{
+      .react-datepicker__day {
+        &:hover {
           background-color: $secondary-color;
           color: $white;
         }
       }
-      .react-datepicker__header{
-        .react-datepicker__day-names{
-          .react-datepicker__day-name{
+      .react-datepicker__header {
+        .react-datepicker__day-names {
+          .react-datepicker__day-name {
             color: $secondary-color;
           }
         }
@@ -479,9 +479,9 @@
   padding: 25px;
   z-index: 1;
   text-align: center;
-  >div{
-    >div{
-      &:first-child{
+  > div {
+    > div {
+      &:first-child {
         margin: 0 auto;
       }
     }
@@ -516,7 +516,8 @@
     height: 175px;
     width: 175px;
     display: block;
-    background: url(../../images/other-images/clock-face.png) 5% center no-repeat;
+    background: url(../../images/other-images/clock-face.png) 5% center
+      no-repeat;
   }
   .sec {
     @extend %clock-widget;
@@ -624,7 +625,7 @@
     }
     input,
     textarea {
-      &::placeholder{
+      &::placeholder {
         color: rgba($theme-body-font-color, 0.4);
         font-weight: 400;
       }
@@ -678,7 +679,7 @@
         &:first-child {
           padding-left: 0;
           font-weight: 600;
-          a{
+          a {
             color: $theme-body-font-color;
           }
         }
@@ -703,7 +704,7 @@
         &:hover {
           td {
             color: $primary-color !important;
-            a{
+            a {
               color: $primary-color !important;
             }
           }
@@ -716,8 +717,8 @@
         td {
           padding-top: 16px;
           padding-bottom: 16px;
-          &:last-child{
-            span.badge{
+          &:last-child {
+            span.badge {
               padding: 5px 8px;
             }
           }
@@ -740,7 +741,7 @@
       h5 {
         font-size: 14px;
         margin-bottom: 0;
-        a{
+        a {
           color: $theme-body-font-color;
         }
       }
@@ -758,7 +759,7 @@
       &:hover {
         td {
           color: $primary-color !important;
-          a{
+          a {
             color: $primary-color !important;
           }
         }
@@ -907,7 +908,7 @@
     margin-top: 20px;
     h4 {
       font-size: 20px;
-      a{
+      a {
         color: $theme-body-font-color;
       }
     }
@@ -980,7 +981,7 @@
     }
     > div {
       text-align: center;
-      &.row{
+      &.row {
         margin: 0;
       }
       h6 {
@@ -1002,7 +1003,7 @@
 .browser-table {
   table {
     tr {
-      th{
+      th {
         font-weight: 600 !important;
       }
       &:hover {
@@ -1174,9 +1175,9 @@
   }
 }
 @media screen and (max-width: 1660px) and (min-width: 1366px) {
-  .widget-joins{
-    .widget-card{
-      h5{
+  .widget-joins {
+    .widget-card {
+      h5 {
         display: block;
       }
     }
@@ -1199,176 +1200,176 @@
   }
 }
 @media screen and (max-width: 1550px) and (min-width: 1401px) {
-  .social-widget-card{
-    .d-flex{
-      .flex-grow-1{
+  .social-widget-card {
+    .d-flex {
+      .flex-grow-1 {
         margin-left: 12px;
-        h4{
+        h4 {
           font-size: 20px;
         }
       }
     }
-  }  
-  .general-widget{
-    .custom-profile{
-      .card-profile{
-        img{
+  }
+  .general-widget {
+    .custom-profile {
+      .card-profile {
+        img {
           height: 220px;
         }
       }
     }
   }
-  .activity-widget{
-    .activity-media{
-      .d-flex{
+  .activity-widget {
+    .activity-media {
+      .d-flex {
         padding: 15px 0;
       }
-    } 
+    }
   }
 }
 @media screen and (max-width: 1410px) and (min-width: 1200px) {
-  .general-widget{
-    .browser-table{
-      .card-header{
+  .general-widget {
+    .browser-table {
+      .card-header {
         padding-bottom: 0;
       }
     }
-  } 
-  .static-widget{
-    svg{
+  }
+  .static-widget {
+    svg {
       width: 38px;
       height: 38px;
     }
   }
-  .order-widget{
-    .card-body{
+  .order-widget {
+    .card-body {
       padding: 20px;
     }
   }
-  .social-widget-card{
-    .card-body{
+  .social-widget-card {
+    .card-body {
       padding: 25px;
     }
   }
-  .activity-media{
-    .d-flex{
-      .flex-grow-1{
+  .activity-media {
+    .d-flex {
+      .flex-grow-1 {
         margin-left: 9px;
       }
     }
   }
-  .order-widget{
-    .header-widget{
-      ul{
-        li{
+  .order-widget {
+    .header-widget {
+      ul {
+        li {
           font-size: 13px;
         }
       }
     }
   }
-  .browser-table{
-    table{
-      tr{
-        td{
+  .browser-table {
+    table {
+      tr {
+        td {
           padding-top: 12px;
           padding-bottom: 12px;
         }
       }
     }
   }
-  .social-widget-card{
-    .d-flex{
-      .flex-grow-1{
+  .social-widget-card {
+    .d-flex {
+      .flex-grow-1 {
         margin-left: 12px;
       }
-      h4{
+      h4 {
         font-size: 18px;
       }
-      .social-font{
+      .social-font {
         width: 42px;
         height: 42px;
       }
     }
   }
-  .static-widget{
+  .static-widget {
     margin-bottom: 38px;
-    h2{
+    h2 {
       font-size: 20px;
     }
   }
-  .general-widget{
-    .custom-profile{
-      .card-profile{
-        img{
+  .general-widget {
+    .custom-profile {
+      .card-profile {
+        img {
           height: 172px;
         }
       }
     }
   }
-  .custom-profile{
-    .card-footer{
-      > div{
+  .custom-profile {
+    .card-footer {
+      > div {
         margin: 0;
-        div{
+        div {
           padding: 26px 7px;
         }
       }
-      h6{
+      h6 {
         font-size: 13px;
       }
     }
   }
-  .order-widget{
-    .header-widget{
-      h3{
+  .order-widget {
+    .header-widget {
+      h3 {
         font-size: 20px;
       }
     }
-    .new-order{
-      .progress{
+    .new-order {
+      .progress {
         margin-top: 14px;
       }
     }
-  }  
-  .testimonial{
-    p{
+  }
+  .testimonial {
+    p {
       margin-top: 4px;
     }
   }
-  .activity-media{
-    .d-flex{
+  .activity-media {
+    .d-flex {
       padding: 12px 0;
     }
   }
-  .widget-joins{
-    .widget-card{
+  .widget-joins {
+    .widget-card {
       padding: 18px 14px;
-      .widget-icon{
+      .widget-icon {
         width: 32px;
         height: 32px;
-        svg{
+        svg {
           width: 18px;
           height: 18px;
         }
-        i{
+        i {
           font-size: 24px;
         }
       }
-      h5{
+      h5 {
         font-size: 13px;
         display: block;
       }
-      h6{
+      h6 {
         font-size: 15px;
       }
     }
   }
 }
 @media screen and (max-width: 1364px) and (min-width: 1200px) {
-  .general-widget{
-    .custom-profile{
-      .card-profile{
-        img{
+  .general-widget {
+    .custom-profile {
+      .card-profile {
+        img {
           height: 216px;
         }
       }
@@ -1376,19 +1377,19 @@
   }
 }
 @media screen and (max-width: 1470px) {
-  .chart-widget{
-    .order-chart{
-      .card-body{
-        .chart-container{
-          .apexcharts-subtitle-text{
+  .chart-widget {
+    .order-chart {
+      .card-body {
+        .chart-container {
+          .apexcharts-subtitle-text {
             font-size: 16px;
           }
         }
       }
     }
-    .bar-chart-widget{
-      .card-body{
-        h4{
+    .bar-chart-widget {
+      .card-body {
+        h4 {
           font-size: 20px;
         }
       }
@@ -1396,36 +1397,37 @@
   }
 }
 @media screen and (max-width: 1470px) and (min-width: 1200px) {
-  .employee-status{
-    table{
-      tr{
-        td{
+  .employee-status {
+    table {
+      tr {
+        td {
           padding: 8px 8px;
-          h5{
-            span{
+          h5 {
+            span {
               display: none;
             }
           }
         }
-        th{
+        th {
           font-size: 14px;
         }
-        td,th{
-          &:last-child{
+        td,
+        th {
+          &:last-child {
             display: none;
           }
-          &:nth-child(n+2){
+          &:nth-child(n + 2) {
             min-width: 105px;
           }
         }
       }
     }
   }
-  .user-status{
-    table{
-      tbody{
-        tr{
-          td{
+  .user-status {
+    table {
+      tbody {
+        tr {
+          td {
             padding-top: 10px;
             padding-bottom: 10px;
           }
@@ -1433,21 +1435,22 @@
       }
     }
   }
-  .browser-table{
-    .card-header, .card-body{
+  .browser-table {
+    .card-header,
+    .card-body {
       padding: 30px 24px;
     }
-    table{
-      thead{
-        th{
+    table {
+      thead {
+        th {
           font-size: 14px;
         }
       }
-      tr{
-        td{
+      tr {
+        td {
           padding-left: 8px;
           padding-right: 8px;
-          img{
+          img {
             height: 36px;
           }
         }
@@ -1469,22 +1472,22 @@
       }
     }
   }
-  .user-status{
-    table{
-      tr{
-        td{
-          &:first-child{
+  .user-status {
+    table {
+      tr {
+        td {
+          &:first-child {
             min-width: 224px;
           }
         }
       }
     }
   }
-  .browser-table{
-    table{
-      tr{
-        td{
-          &:nth-child(2){
+  .browser-table {
+    table {
+      tr {
+        td {
+          &:nth-child(2) {
             min-width: 182px;
           }
         }
@@ -1493,19 +1496,19 @@
   }
 }
 @media screen and (max-width: 991px) {
-  .activity-widget{
-    .activity-media{
-      .d-flex{
+  .activity-widget {
+    .activity-media {
+      .d-flex {
         padding: 15px 0;
       }
     }
   }
-  .contact-form{
+  .contact-form {
     margin-top: 20px;
-    .theme-form{
+    .theme-form {
       padding: 20px;
     }
-  } 
+  }
   .widget-joins {
     .widget-card {
       padding: 20px;
@@ -1513,7 +1516,7 @@
   }
   .social-widget-card {
     .d-flex {
-      h4{
+      h4 {
         font-size: 20px;
       }
       .social-font {
@@ -1524,15 +1527,15 @@
   }
 }
 @media screen and (max-width: 767px) {
-  .browser-table{
-    .card-body{
-      table{
-        tr{
-          td{
-            &:nth-child(2){
+  .browser-table {
+    .card-body {
+      table {
+        tr {
+          td {
+            &:nth-child(2) {
               min-width: 200px;
             }
-            &:nth-child(n+3){
+            &:nth-child(n + 3) {
               min-width: 80px;
             }
           }
@@ -1542,48 +1545,48 @@
   }
 }
 @media screen and (max-width: 480px) {
-  .activity-media{
+  .activity-media {
     margin: -14px 0;
   }
-  .calender-widget{
-    .cal-img{
+  .calender-widget {
+    .cal-img {
       height: 218px;
     }
   }
-  .activity-media{
-    .d-flex{
+  .activity-media {
+    .d-flex {
       padding: 12px 0;
     }
-  } 
-  .custom-profile{
-    .card-footer{
-      > div{
-        div{
-          + div{
+  }
+  .custom-profile {
+    .card-footer {
+      > div {
+        div {
+          + div {
             padding: 12px 8px;
           }
         }
       }
     }
   }
-  .testimonial{
-    p{
+  .testimonial {
+    p {
       font-size: 13px;
       margin-top: 14px;
     }
   }
-  .chart-widget{
-    .bar-chart-widget{
-      .card-body{
-        h4{
+  .chart-widget {
+    .bar-chart-widget {
+      .card-body {
+        h4 {
           font-size: 18px;
         }
       }
     }
   }
-  .contact-form{
-    .theme-form{
-      .form-control{
+  .contact-form {
+    .theme-form {
+      .form-control {
         padding: 10px 12px;
       }
     }
@@ -1595,15 +1598,15 @@
       }
     }
   }
-  .user-status{
-    .card-body{
-      table{
-        tr{
-          td{
-            &:nth-child(1){
+  .user-status {
+    .card-body {
+      table {
+        tr {
+          td {
+            &:nth-child(1) {
               min-width: 200px;
             }
-            &:nth-child(n+2){
+            &:nth-child(n + 2) {
               min-width: 80px;
             }
           }
@@ -1684,46 +1687,46 @@
   }
 }
 @media screen and (max-width: 360px) {
-  .weather-widget-two{
-    .widget-list{
-      .d-flex{
-        span{
+  .weather-widget-two {
+    .widget-list {
+      .d-flex {
+        span {
           font-size: 16px;
         }
       }
     }
   }
-  .chart-widget{
-    .bar-chart-widget{
-      .card-body{
-        span{
+  .chart-widget {
+    .bar-chart-widget {
+      .card-body {
+        span {
           font-size: 14px;
         }
-        h4{
+        h4 {
           font-size: 14px;
         }
       }
     }
   }
-  .custom-profile{
-    .card-footer{
-      h6{
+  .custom-profile {
+    .card-footer {
+      h6 {
         font-size: 13px;
       }
-    } 
-    .card-footer{
-      >div{
-        div{
+    }
+    .card-footer {
+      > div {
+        div {
           padding-top: 12px;
           padding-bottom: 12px;
         }
       }
     }
   }
-  .weather-widget-two{
-    .widget-list{
-      .d-flex{
-        span{
+  .weather-widget-two {
+    .widget-list {
+      .d-flex {
+        span {
           text-align: right;
         }
       }

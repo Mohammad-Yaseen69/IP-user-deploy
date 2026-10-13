@@ -1,248 +1,250 @@
 .card {
-    padding: 24px 24px 16px 24px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: flex-start;
-    flex: 1 0 0;
-    align-self: stretch;
-    border-radius: var(--md, 10px);
-    border: 1px solid var(--gray-gray-100, #EFF1F6);
-    background: #FFF;
+  padding: 24px 24px 16px 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex: 1 0 0;
+  align-self: stretch;
+  border-radius: var(--md, 10px);
+  border: 1px solid var(--gray-gray-100, #eff1f6);
+  background: #fff;
 }
 
 .topBar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
 }
 
 .leftInfo {
-    display: flex;
-    align-items: center;
-    gap: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .accountTag {
-    color: var(--gray-gray-900, #1B1F2A);
-    font-size: 16px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: 150%;
-    letter-spacing: -0.48px;
+  color: var(--gray-gray-900, #1b1f2a);
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 150%;
+  letter-spacing: -0.48px;
 }
 
 .activeBadge {
-    display: flex;
-    height: 20px;
-    padding: 8px;
-    align-items: center;
-    gap: 6px;
-    border-radius: 100px;
-    background: var(--Primary-50, #EBF0FE);
-    color: var(--Primary-700, #3427AC);
-    font-size: 11px;
-    font-style: normal;
-    font-weight: var(--font-weight-medium, 600);
-    line-height: var(--line-height-body-sm, 20px);
-    letter-spacing: -0.33px;
+  display: flex;
+  height: 20px;
+  padding: 8px;
+  align-items: center;
+  gap: 6px;
+  border-radius: 100px;
+  background: var(--Primary-50, #ebf0fe);
+  color: var(--Primary-700, #3427ac);
+  font-size: 11px;
+  font-style: normal;
+  font-weight: var(--font-weight-medium, 600);
+  line-height: var(--line-height-body-sm, 20px);
+  letter-spacing: -0.33px;
 }
 
 .rightActions {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 }
 
 .iconBtn {
-    display: flex;
-    padding: 8px 12px;
-    align-items: center;
-    gap: 6px;
-    border-radius: var(--sm, 6px);
-    background: var(--bg-surface, #EFF1F6);
-    border: none;
-    color: var(--gray-gray-900, #1B1F2A);
-    text-align: center;
-    font-size: 12px;
-    font-style: normal;
-    font-weight: 500;
-    line-height: normal;
-    letter-spacing: -0.36px;
-    transition: background 0.2s ease;
+  display: flex;
+  padding: 8px 12px;
+  align-items: center;
+  gap: 6px;
+  border-radius: var(--sm, 6px);
+  background: var(--bg-surface, #eff1f6);
+  border: none;
+  color: var(--gray-gray-900, #1b1f2a);
+  text-align: center;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  letter-spacing: -0.36px;
+  transition: background 0.2s ease;
 }
 
 .iconBtn:hover {
-    background: #F1F2F4;
+  background: #f1f2f4;
 }
 
 .disabledBtn,
 .disabledBtn:hover {
-    opacity: 0.55;
-    cursor: not-allowed;
-    background: #F3F4F6;
+  opacity: 0.55;
+  cursor: not-allowed;
+  background: #f3f4f6;
 }
 
 .balanceSection {
-    display: flex;
-    align-items: baseline;
-    gap: 8px;
-    margin: 16px 0;
-    flex-direction: column;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin: 16px 0;
+  flex-direction: column;
 
-    div {
-        display: flex;
-        padding-right: var(--sm, 8px);
-        justify-content: center;
-        align-items: center;
-        gap: 10px;
-    }
+  div {
+    display: flex;
+    padding-right: var(--sm, 8px);
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+  }
 }
 
 .balance {
-    font-size: 36px;
-    font-weight: 700;
-    color: #101828;
-    margin: 0;
-    letter-spacing: -0.02em;
+  font-size: 36px;
+  font-weight: 700;
+  color: #101828;
+  margin: 0;
+  letter-spacing: -0.02em;
 
-    span {
-        color: var(--gray-gray-500, #9AA3B2);
-        font-family: Inter;
-        font-size: 18px;
-        font-style: normal;
-        font-weight: 600;
-        line-height: 120%;
-    }
+  span {
+    color: var(--gray-gray-500, #9aa3b2);
+    font-family: Inter;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 120%;
+  }
 }
 
 .growth {
-    color: #12B76A;
-    /* green-500 */
-    font-weight: 500;
-    font-size: 14px;
+  color: #12b76a;
+  /* green-500 */
+  font-weight: 500;
+  font-size: 14px;
 }
 
 .infoBox {
-    display: flex;
-    padding: 8px 20px;
-    justify-content: space-between;
-    align-items: center;
-    align-self: stretch;
-    width: 100%;
-    box-sizing: border-box;
-    border-radius: var(--sm, 6px);
-    border: 1px solid #F2EEFF;
-    background: radial-gradient(174.69% 292.21% at 68.74% -77.63%, #F2EEFF 0%, #FFF 100%);
-    gap: 16px;
+  display: flex;
+  padding: 8px 20px;
+  justify-content: space-between;
+  align-items: center;
+  align-self: stretch;
+  width: 100%;
+  box-sizing: border-box;
+  border-radius: var(--sm, 6px);
+  border: 1px solid #f2eeff;
+  background: radial-gradient(
+    174.69% 292.21% at 68.74% -77.63%,
+    #f2eeff 0%,
+    #fff 100%
+  );
+  gap: 16px;
 }
 
 .item {
-    display: flex;
-    align-items: start;
-    gap: 8px;
-    flex-direction: column;
+  display: flex;
+  align-items: start;
+  gap: 8px;
+  flex-direction: column;
 
-    div {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
+  div {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
 }
 
 .label {
-    color: #6E7687;
-    font-size: 13px;
-    font-weight: 500;
-    text-transform: none;
+  color: #6e7687;
+  font-size: 13px;
+  font-weight: 500;
+  text-transform: none;
 }
 
 .value {
-    color: #101828;
-    font-size: 13px;
-    font-weight: 600;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    color: var(--text-primary, #1B1F2A);
-    font-family: Inter;
-    font-size: 14px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: 150%;
-    letter-spacing: -0.48px;
+  color: #101828;
+  font-size: 13px;
+  font-weight: 600;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  color: var(--text-primary, #1b1f2a);
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 150%;
+  letter-spacing: -0.48px;
 }
 
 .copyIcon {
-    cursor: pointer;
-    color: #5926F0;
-    display: flex;
-    align-items: center;
-    transition: color 0.15s ease;
+  cursor: pointer;
+  color: #5926f0;
+  display: flex;
+  align-items: center;
+  transition: color 0.15s ease;
 }
 
 .copyIcon:hover {
-    color: #475467;
+  color: #475467;
 }
 
 .currencyIcon {
-    display: flex;
-    width: 24px;
-    height: 24px;
-    justify-content: center;
-    align-items: center;
-    aspect-ratio: 1/1;
-    border-radius: var(--fulll, 999px);
-    background: #0047FF;
-    ;
-    color: white;
+  display: flex;
+  width: 24px;
+  height: 24px;
+  justify-content: center;
+  align-items: center;
+  aspect-ratio: 1/1;
+  border-radius: var(--fulll, 999px);
+  background: #0047ff;
+  color: white;
 }
 
 .currency {
-    display: flex;
-    padding: 4px 10px;
-    align-items: center;
-    gap: 6px;
-    border-radius: 6px;
-    background: #F2F4F7;
+  display: flex;
+  padding: 4px 10px;
+  align-items: center;
+  gap: 6px;
+  border-radius: 6px;
+  background: #f2f4f7;
 }
 
 .flagIcon {
-    font-size: 16px;
-    display: flex;
-    align-items: center;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
 }
 
 .currencyText {
-    color: #344054;
-    /* gray-700 */
-    font-size: 13px;
-    font-weight: 500;
+  color: #344054;
+  /* gray-700 */
+  font-size: 13px;
+  font-weight: 500;
 }
 
 @media (max-width: 600px) {
-    .rightActions {
-        width: 100%;
+  .rightActions {
+    width: 100%;
+  }
 
+  .leftInfo {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .iconBtn {
+    width: 100%;
+    justify-content: space-between;
+    padding: 16px;
+  }
+
+  .infoBox {
+    flex-direction: column;
+    width: 100%;
+    align-items: start;
+
+    .items {
+      width: 100%;
     }
-
-    .leftInfo {
-        width: 100%;
-        justify-content: space-between;
-    }
-
-    .iconBtn {
-        width: 100%;
-        justify-content: space-between;
-        padding: 16px;
-    }
-
-    .infoBox {
-        flex-direction: column;
-        width: 100%;
-        align-items: start;
-
-        .items {
-            width: 100%
-        }
-    }
-
+  }
 }

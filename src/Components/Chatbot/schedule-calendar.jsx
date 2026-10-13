@@ -101,33 +101,37 @@ const SubscriptionCalendar = () => {
   const tomorrow = dayjs().add(1, "day"); // Get tomorrow's date
 
   const [selectedDate, setSelectedDate] = React.useState(tomorrow);
-  const [selectedTime, setSelectedTime] = React.useState(dayjs().add(5, "minute"));
+  const [selectedTime, setSelectedTime] = React.useState(
+    dayjs().add(5, "minute"),
+  );
   const [selectedTimezone, setSelectedTimezone] = React.useState(
-    timezones?.length > 0 ? timezones[0]?.timezone : ""
+    timezones?.length > 0 ? timezones[0]?.timezone : "",
   );
 
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState(null);
   const [success, setSuccess] = React.useState(false);
 
-  const location = useLocation()
-  const queryParams = new URLSearchParams(location.search)
-  const method = queryParams.get("method")
-  const { t } = useTranslation()
-  const platform = queryParams.get("platform")
-  const lang = queryParams.get("lang") || "en"
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const method = queryParams.get("method");
+  const { t } = useTranslation();
+  const platform = queryParams.get("platform");
+  const lang = queryParams.get("lang") || "en";
 
   React.useEffect(() => {
-    i18next.changeLanguage(lang)
-  }, [lang])
+    i18next.changeLanguage(lang);
+  }, [lang]);
 
   React.useEffect(() => {
-    timezones.sort((a, b) => a.name.localeCompare(b.name))
-  }, [])
+    timezones.sort((a, b) => a.name.localeCompare(b.name));
+  }, []);
   const handleSubmit = async () => {
     setLoading(true);
     setError(null);
-    const formattedTimezone = String(selectedTimezone ?? "").split(" - ")?.[1]?.split(" GMT")[0]
+    const formattedTimezone = String(selectedTimezone ?? "")
+      .split(" - ")?.[1]
+      ?.split(" GMT")[0];
 
     try {
       const apiUrl =
@@ -138,7 +142,7 @@ const SubscriptionCalendar = () => {
           date: selectedDate.format("DD-MM-YYYY"),
           time: selectedTime.format("h:mm A"),
           timezone: formattedTimezone,
-          type: method
+          type: method,
         },
       };
       console.log(requestBody);
@@ -158,22 +162,25 @@ const SubscriptionCalendar = () => {
     }
   };
 
-  const defaul = queryParams.get("default")
+  const defaul = queryParams.get("default");
 
   React.useEffect(() => {
     if (defaul) {
       let urlObj = new URL(window.location.href);
-      let defaultParam = urlObj.searchParams.get('default');
+      let defaultParam = urlObj.searchParams.get("default");
       let cleanString = decodeURIComponent(defaultParam);
 
-      const timezone = timezones?.find(item => item?.timezone?.toLowerCase()?.startsWith(cleanString?.toLowerCase()))
-      setSelectedTimezone(timezone?.name + "-" + timezone?.timezone)
+      const timezone = timezones?.find((item) =>
+        item?.timezone?.toLowerCase()?.startsWith(cleanString?.toLowerCase()),
+      );
+      setSelectedTimezone(timezone?.name + "-" + timezone?.timezone);
     }
-  }, [defaul, timezones])
+  }, [defaul, timezones]);
 
-  console.log(selectedTimezone)
+  console.log(selectedTimezone);
 
-  const isDateValid = selectedDate.isAfter(dayjs(), "day") || selectedDate.isSame(dayjs(), "day");
+  const isDateValid =
+    selectedDate.isAfter(dayjs(), "day") || selectedDate.isSame(dayjs(), "day");
   const isTimeValid = selectedDate.isSame(dayjs(), "day")
     ? selectedTime.isAfter(dayjs().add(5, "minute"))
     : true;
@@ -185,9 +192,9 @@ const SubscriptionCalendar = () => {
   // <div>{platform === "telegram" ? "Telegram flow" : "Instagram flow"}</div>
 
   const handleTimezoneFilter = (options, { inputValue }) => {
-    const normalizedInput = inputValue.replace(/^(\+)([1-9])$/, '$10$2') // Remove leading zeros
-    return options.filter(option =>
-      option.toLowerCase().includes(normalizedInput.toLowerCase())
+    const normalizedInput = inputValue.replace(/^(\+)([1-9])$/, "$10$2"); // Remove leading zeros
+    return options.filter((option) =>
+      option.toLowerCase().includes(normalizedInput.toLowerCase()),
     );
   };
 
@@ -213,7 +220,12 @@ const SubscriptionCalendar = () => {
               autoplay={true}
             />
             <h5 style={{ padding: "1rem", textAlign: "center" }}>
-              {t("You can now close this webpage and go back to {{platform}}.", { platform: platform === "telegram" ? "Telegram" : "Instagram" })}
+              {t(
+                "You can now close this webpage and go back to {{platform}}.",
+                {
+                  platform: platform === "telegram" ? "Telegram" : "Instagram",
+                },
+              )}
             </h5>
             <RedirectButton platform={platform} />
           </CustomDatePickerContainer>
@@ -231,7 +243,9 @@ const SubscriptionCalendar = () => {
                   flexDirection: "column",
                 }}
               >
-                <CustomLabel htmlFor="datepicker">{t("Select a Date:")}</CustomLabel>
+                <CustomLabel htmlFor="datepicker">
+                  {t("Select a Date:")}
+                </CustomLabel>
                 <MobileDatePicker
                   minDate={dayjs()}
                   id="datepicker"
@@ -246,9 +260,15 @@ const SubscriptionCalendar = () => {
                   flexDirection: "column",
                 }}
               >
-                <CustomLabel htmlFor="timepicker">{t('Select a Time:')}</CustomLabel>
+                <CustomLabel htmlFor="timepicker">
+                  {t("Select a Time:")}
+                </CustomLabel>
                 <MobileTimePicker
-                  minTime={selectedDate.isSame(dayjs(), "day") ? dayjs().add(5, "minute") : null}
+                  minTime={
+                    selectedDate.isSame(dayjs(), "day")
+                      ? dayjs().add(5, "minute")
+                      : null
+                  }
                   id="timepicker"
                   value={selectedTime}
                   onChange={setSelectedTime}
@@ -261,13 +281,24 @@ const SubscriptionCalendar = () => {
                   flexDirection: "column",
                 }}
               >
-                <CustomLabel htmlFor="timezone">{t("Select a Timezone:")}</CustomLabel>
+                <CustomLabel htmlFor="timezone">
+                  {t("Select a Timezone:")}
+                </CustomLabel>
                 <Autocomplete
                   fullWidth={true}
                   disablePortal
-                  options={["System Default", ...timezones?.map(option => `${option.name} - ${option.timezone}`)]}
+                  options={[
+                    "System Default",
+                    ...timezones?.map(
+                      (option) => `${option.name} - ${option.timezone}`,
+                    ),
+                  ]}
                   getOptionLabel={(option) => option}
-                  value={selectedTimezone?.includes("undefined") ? "" : selectedTimezone}
+                  value={
+                    selectedTimezone?.includes("undefined")
+                      ? ""
+                      : selectedTimezone
+                  }
                   onChange={(e, newValue) => {
                     setSelectedTimezone(newValue);
                   }}
@@ -277,13 +308,19 @@ const SubscriptionCalendar = () => {
                     <TextField
                       {...params}
                       variant="outlined"
-                      value={selectedTimezone?.includes("undefined") ? "" : selectedTimezone}
+                      value={
+                        selectedTimezone?.includes("undefined")
+                          ? ""
+                          : selectedTimezone
+                      }
                     />
                   )}
                 />
               </div>
               {!isTimeValid && (
-                <p style={{ color: "red", margin: ".7rem 0" }}>{t("Please select a time at least 5 minutes from now.")}</p>
+                <p style={{ color: "red", margin: ".7rem 0" }}>
+                  {t("Please select a time at least 5 minutes from now.")}
+                </p>
               )}
               <CustomSubmitButton
                 onClick={handleSubmit}

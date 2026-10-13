@@ -15,10 +15,11 @@
   position: relative;
   margin: 0 1rem 0 0;
   vertical-align: -2px;
-  &:checked, &:not(:checked){
+  &:checked,
+  &:not(:checked) {
     box-shadow: none;
-    }
-  &:focus{
+  }
+  &:focus {
     border: none;
     box-shadow: none;
   }
@@ -56,9 +57,10 @@
   margin: 0 1rem 0 0;
   cursor: pointer;
   vertical-align: -2px;
-  &:checked, &:not(:checked){
+  &:checked,
+  &:not(:checked) {
     box-shadow: none;
-    }
+  }
   &:before {
     transition: transform 0.4s cubic-bezier(0.45, 1.8, 0.5, 0.75);
     transform: scale(0, 0);
@@ -106,7 +108,9 @@
       border: 1px solid $light-semi-gray;
       border-radius: 3px;
       background-color: $white;
-      transition: border 0.15s ease-in-out, color 0.15s ease-in-out;
+      transition:
+        border 0.15s ease-in-out,
+        color 0.15s ease-in-out;
     }
     &::after {
       display: inline-block;

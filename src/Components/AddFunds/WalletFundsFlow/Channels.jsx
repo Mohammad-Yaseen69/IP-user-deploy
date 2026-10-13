@@ -1,4 +1,9 @@
-import { Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+} from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import { useContext, useMemo, useState } from "react";
 import { Check } from "react-feather";
@@ -22,7 +27,8 @@ const Channels = ({
 }) => {
   const { t } = useTranslation();
   const { userDetails } = useContext(UserContext);
-  const [showCardMaintenanceModal, setShowCardMaintenanceModal] = useState(false);
+  const [showCardMaintenanceModal, setShowCardMaintenanceModal] =
+    useState(false);
   const [showVerificationModal, setShowVerificationModal] = useState(false);
   const { data: methods, isLoading } = useQuery({
     queryKey: ["AvailableMethods"],
@@ -35,66 +41,66 @@ const Channels = ({
   const payoutChannelData = [
     userDetails?.level?.topup_channel?.card_payment
       ? {
-        name: "Payment Card",
-        id: 5,
-        icon: pc,
-        value: "card",
-        coming_soon:
-          userDetails?.level?.topup_channel?.card_payment === "coming_soon",
-      }
+          name: "Payment Card",
+          id: 5,
+          icon: pc,
+          value: "card",
+          coming_soon:
+            userDetails?.level?.topup_channel?.card_payment === "coming_soon",
+        }
       : {},
     userDetails?.level?.topup_channel?.paypal
       ? {
-        name: "Paypal",
-        id: 5,
-        icon: pc,
-        value: "paypal",
-        coming_soon:
-          userDetails?.level?.topup_channel?.paypal === "coming_soon",
-      }
+          name: "Paypal",
+          id: 5,
+          icon: pc,
+          value: "paypal",
+          coming_soon:
+            userDetails?.level?.topup_channel?.paypal === "coming_soon",
+        }
       : {},
     userDetails?.level?.topup_channel?.bank_deposit
       ? {
-        name: "Bank Deposit",
-        id: 2,
-        icon: bd,
-        value: "bank",
-        coming_soon:
-          userDetails?.level?.topup_channel?.bank_deposit === "coming_soon",
-      }
+          name: "Bank Deposit",
+          id: 2,
+          icon: bd,
+          value: "bank",
+          coming_soon:
+            userDetails?.level?.topup_channel?.bank_deposit === "coming_soon",
+        }
       : {},
     userDetails?.level?.topup_channel?.bank
       ? {
-        name: "Bank Transfer (Europe)",
-        id: 6,
-        icon: bd,
-        value: "bank_transfer",
-        api_val: "bank",
-        coming_soon: false,
-      }
+          name: "Bank Transfer (Europe)",
+          id: 6,
+          icon: bd,
+          value: "bank_transfer",
+          api_val: "bank",
+          coming_soon: false,
+        }
       : {},
     userDetails?.level?.topup_channel?.crypto
       ? {
-        name: "Crypto Transfer",
-        id: 2,
-        icon: bd,
-        value: "crypto",
-        coming_soon:
-          userDetails?.level?.topup_channel?.crypto === "coming_soon",
-      }
+          name: "Crypto Transfer",
+          id: 2,
+          icon: bd,
+          value: "crypto",
+          coming_soon:
+            userDetails?.level?.topup_channel?.crypto === "coming_soon",
+        }
       : {},
   ];
 
   const thunesAllowed = [
     userDetails?.level?.topup_channel?.mobile_money
       ? {
-        name: "Mobile Wallet",
-        id: 1,
-        icon: mw,
-        value: "mobile_wallet",
-        // coming_soon: userDetails?.level?.topup_channel?.mobile_money === "coming_soon",
-        sub_name: "wallet",
-      }
+          name: "Mobile Wallet",
+          id: 1,
+          icon: mw,
+          value: "mobile_wallet",
+          // coming_soon: userDetails?.level?.topup_channel?.mobile_money === "coming_soon",
+          sub_name: "wallet",
+        }
       : {},
   ];
 
@@ -106,7 +112,8 @@ const Channels = ({
     if (!methods || isLoading) return allChannels;
 
     return allChannels.filter(
-      (item) => methods?.includes(item.value) || methods?.includes(item.api_val),
+      (item) =>
+        methods?.includes(item.value) || methods?.includes(item.api_val),
     );
   }, [payoutChannelData, thunesAllowed, methods, isLoading]);
   return (
@@ -124,7 +131,7 @@ const Channels = ({
           overflowY: "auto",
         }}
       >
-        {!isLoading ?
+        {!isLoading ? (
           filteredChannels.map((item) => (
             <Card
               key={item?.name}
@@ -132,8 +139,9 @@ const Channels = ({
               onClick={() => {
                 if (item?.coming_soon) return;
                 if (item?.value === "crypto") {
-                  const isApproved = userDetails?.company?.kyb_status || userDetails?.company?.kyc_status === "approved";
-
+                  const isApproved =
+                    userDetails?.company?.kyb_status ||
+                    userDetails?.company?.kyc_status === "approved";
 
                   if (!isApproved) {
                     setShowVerificationModal(true);
@@ -192,11 +200,14 @@ const Channels = ({
                   <h5 style={{ marginBottom: 0, fontSize: "1.2rem" }}>
                     {t(item?.name) + " "}
                     {window.innerWidth < 1000 && <br />}
-                    {thunesProviders?.length > 0 && item?.sub_name === "wallet" ? (
+                    {thunesProviders?.length > 0 &&
+                    item?.sub_name === "wallet" ? (
                       <>
                         (
                         <TypingSpan
-                          words={thunesProviders.map((item) => item?.name ?? "")}
+                          words={thunesProviders.map(
+                            (item) => item?.name ?? "",
+                          )}
                         />
                         )
                       </>
@@ -227,11 +238,12 @@ const Channels = ({
                 )}
               </CardBody>
             </Card>
-          )) :
+          ))
+        ) : (
           <>
             <InstaPayLoader />
           </>
-        }
+        )}
         <Dialog
           open={showVerificationModal}
           onClose={() => setShowVerificationModal(false)}
@@ -241,7 +253,9 @@ const Channels = ({
           <DialogTitle>{t("Verification Required")}</DialogTitle>
 
           <DialogContent>
-            {t("Please complete and get your KYC and KYB approved before using Crypto Transfer.")}
+            {t(
+              "Please complete and get your KYC and KYB approved before using Crypto Transfer.",
+            )}
           </DialogContent>
 
           <DialogActions>
@@ -263,7 +277,7 @@ const Channels = ({
             </button>
           </DialogActions>
         </Dialog>
-      </div >
+      </div>
     </>
   );
 };

@@ -372,19 +372,19 @@
     }
   }
 }
-.btn-group-wrapper{
-  .btn-group-vertical{
-    .dropdown{
-      &:last-child{
-        button{
+.btn-group-wrapper {
+  .btn-group-vertical {
+    .dropdown {
+      &:last-child {
+        button {
           border-radius: 0 0 30px 30px;
         }
       }
     }
   }
-  .btn-group{
-    .dropdown{
-      button{
+  .btn-group {
+    .dropdown {
+      button {
         border-radius: 0 30px 30px 0;
       }
     }

@@ -65,8 +65,8 @@ const StepsDrawer = ({
           borderTopRightRadius: "25px",
         },
       }}
-      onClose={()=>toggleDrawer(false)}
-      onOpen={()=>toggleDrawer(true)}
+      onClose={() => toggleDrawer(false)}
+      onOpen={() => toggleDrawer(true)}
     >
       <div className={styles.container}>
         <div className={styles.slideBtn} />

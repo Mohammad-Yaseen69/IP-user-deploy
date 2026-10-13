@@ -5,64 +5,96 @@ import useWindowWidth from "../../../utils/useWindowWidth";
 import TableItem from "./TableItem";
 import InstaPayLoader from "../../Loader";
 
-const DelegateTable = ({ filteredInvoices, setEditData, setShowModal, isRole, roleLoading }) => {
+const DelegateTable = ({
+  filteredInvoices,
+  setEditData,
+  setShowModal,
+  isRole,
+  roleLoading,
+}) => {
   const { t } = useTranslation();
   const width = useWindowWidth();
   const [menuOpenFor, setMenuOpenFor] = useState(null);
   return (
     <div className={styles.tableWrapper}>
       <div className={styles.table}>
-
-        {width > 700 && (isRole ? (
-          <div className={`${styles.tr} ${styles.thead}`}>
-            {width > 700 && (
-              <div style={{ flex: 0.09 }} className={`${styles.th} ${styles.serial}`}>
-                {t("S.No")}
+        {width > 700 &&
+          (isRole ? (
+            <div className={`${styles.tr} ${styles.thead}`}>
+              {width > 700 && (
+                <div
+                  style={{ flex: 0.09 }}
+                  className={`${styles.th} ${styles.serial}`}
+                >
+                  {t("S.No")}
+                </div>
+              )}
+              <div
+                style={{ flex: width <= 700 ? 0.4 : 0.3 }}
+                className={styles.th}
+              >
+                {t("Title")}
               </div>
-            )}
-            <div style={{ flex: width <= 700 ? 0.40 : 0.30 }} className={styles.th}>
-              {t("Title")}
-            </div>
-            {width > 700 && (
-              <div style={{ flex: 0.35 }} className={styles.th}>
-                {t("Description")}
+              {width > 700 && (
+                <div style={{ flex: 0.35 }} className={styles.th}>
+                  {t("Description")}
+                </div>
+              )}
+              <div
+                style={{ flex: width <= 700 ? 0.35 : 0.25 }}
+                className={styles.th}
+              >
+                {t("Permissions")}
               </div>
-            )}
-            <div style={{ flex: width <= 700 ? 0.35 : 0.25 }} className={styles.th}>
-              {t("Permissions")}
+              <div
+                style={{ flex: width <= 700 ? 0.15 : 0.1 }}
+                className={`${styles.th} ${styles.actions}`}
+              ></div>
             </div>
-            <div style={{ flex: width <= 700 ? 0.15 : 0.1 }} className={`${styles.th} ${styles.actions}`}>
-            </div>
-          </div>) : (
-          <div className={`${styles.tr} ${styles.thead}`}>
-            {width > 700 && (
-              <div style={{ flex: 0.05 }} className={`${styles.th} ${styles.serial}`}>
-                {t("S.No")}
+          ) : (
+            <div className={`${styles.tr} ${styles.thead}`}>
+              {width > 700 && (
+                <div
+                  style={{ flex: 0.05 }}
+                  className={`${styles.th} ${styles.serial}`}
+                >
+                  {t("S.No")}
+                </div>
+              )}
+              <div
+                style={{ flex: width <= 700 ? 0.25 : 0.18 }}
+                className={styles.th}
+              >
+                {t("Name")}
               </div>
-            )}
-            <div style={{ flex: width <= 700 ? 0.25 : 0.18 }} className={styles.th}>
-              {t("Name")}
-            </div>
-            <div style={{ flex: width <= 700 ? 0.40 : 0.18 }} className={styles.th}>
-              {t("Phone")}
-            </div>
-            {width > 700 && (
-              <div style={{ flex: 0.26 }} className={styles.th}>
-                {t("Email")}
+              <div
+                style={{ flex: width <= 700 ? 0.4 : 0.18 }}
+                className={styles.th}
+              >
+                {t("Phone")}
               </div>
-            )}
-            <div style={{ flex: width <= 700 ? 0.20 : 0.12 }} className={`${styles.th} ${styles.amount}`}>
-              {t("Role")}
-            </div>
-            {width > 700 && (
-              <div style={{ flex: 0.17 }} className={styles.th}>
-                {t("Status")}
+              {width > 700 && (
+                <div style={{ flex: 0.26 }} className={styles.th}>
+                  {t("Email")}
+                </div>
+              )}
+              <div
+                style={{ flex: width <= 700 ? 0.2 : 0.12 }}
+                className={`${styles.th} ${styles.amount}`}
+              >
+                {t("Role")}
               </div>
-            )}
-            <div style={{ flex: width <= 700 ? 0.15 : 0.1 }} className={`${styles.th} ${styles.actions}`}>
+              {width > 700 && (
+                <div style={{ flex: 0.17 }} className={styles.th}>
+                  {t("Status")}
+                </div>
+              )}
+              <div
+                style={{ flex: width <= 700 ? 0.15 : 0.1 }}
+                className={`${styles.th} ${styles.actions}`}
+              ></div>
             </div>
-          </div>
-        ))}
+          ))}
 
         {roleLoading ? (
           <div style={{ padding: "40px", textAlign: "center" }}>
@@ -83,11 +115,17 @@ const DelegateTable = ({ filteredInvoices, setEditData, setShowModal, isRole, ro
             />
           ))
         ) : (
-          <div style={{ textAlign: "center", padding: "40px", color: "#aaa", fontSize: "14px" }}>
+          <div
+            style={{
+              textAlign: "center",
+              padding: "40px",
+              color: "#aaa",
+              fontSize: "14px",
+            }}
+          >
             {t(isRole ? "No roles found" : "No agents found")}
           </div>
         )}
-
       </div>
     </div>
   );

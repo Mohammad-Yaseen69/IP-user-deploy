@@ -88,7 +88,7 @@ export default function SubscriptionRequest() {
   const tomorrow = dayjs().add(1, "day"); // Get tomorrow's date
 
   const [selectedTimezone, setSelectedTimezone] = React.useState(
-    timezones?.length > 0 ? timezones[0]?.timezone : ""
+    timezones?.length > 0 ? timezones[0]?.timezone : "",
   );
 
   const [selectedDate, setSelectedDate] = useState(tomorrow);
@@ -105,7 +105,9 @@ export default function SubscriptionRequest() {
     setSuccess(false);
     setLoading(true);
     setError(null);
-    const formattedTimezone = String(selectedTimezone ?? "").split(" - ")?.[1]?.split(" GMT")[0]
+    const formattedTimezone = String(selectedTimezone ?? "")
+      .split(" - ")?.[1]
+      ?.split(" GMT")[0];
     try {
       const apiUrl =
         "https://fontawesomev23.com/api/webhook/set-subscription-payment-request";
@@ -128,35 +130,38 @@ export default function SubscriptionRequest() {
     }
   };
 
-  const location = useLocation()
-  const queryParams = new URLSearchParams(location.search)
-  const defaul = queryParams.get("default")
-  const platform = queryParams.get("platform")
-  const lang = queryParams.get("lang") || "en"
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const defaul = queryParams.get("default");
+  const platform = queryParams.get("platform");
+  const lang = queryParams.get("lang") || "en";
 
   React.useEffect(() => {
-    i18next.changeLanguage(lang)
-  }, [lang])
+    i18next.changeLanguage(lang);
+  }, [lang]);
 
   React.useEffect(() => {
     if (defaul) {
       let urlObj = new URL(window.location.href);
-      let defaultParam = urlObj.searchParams.get('default');
+      let defaultParam = urlObj.searchParams.get("default");
       let cleanString = decodeURIComponent(defaultParam);
 
-      const timezone = timezones?.find(item => item?.timezone?.toLowerCase()?.startsWith(cleanString?.toLowerCase()))
-      setSelectedTimezone(`${timezone?.name}-${timezone?.timezone}`)
+      const timezone = timezones?.find((item) =>
+        item?.timezone?.toLowerCase()?.startsWith(cleanString?.toLowerCase()),
+      );
+      setSelectedTimezone(`${timezone?.name}-${timezone?.timezone}`);
     }
-  }, [defaul, timezones])
-  const isDateValid = selectedDate.isAfter(dayjs(), "day") || selectedDate.isSame(dayjs(), "day");
+  }, [defaul, timezones]);
+  const isDateValid =
+    selectedDate.isAfter(dayjs(), "day") || selectedDate.isSame(dayjs(), "day");
 
   // Example usage of platform for conditional UI (add where needed)
   // <div>{platform === "telegram" ? "Telegram flow" : "Instagram flow"}</div>
 
   const handleTimezoneFilter = (options, { inputValue }) => {
-    const normalizedInput = inputValue.replace(/^(\+)([1-9])$/, '$10$2') // Remove leading zeros
-    return options.filter(option =>
-      option.toLowerCase().includes(normalizedInput.toLowerCase())
+    const normalizedInput = inputValue.replace(/^(\+)([1-9])$/, "$10$2"); // Remove leading zeros
+    return options.filter((option) =>
+      option.toLowerCase().includes(normalizedInput.toLowerCase()),
     );
   };
   return (
@@ -181,7 +186,12 @@ export default function SubscriptionRequest() {
               autoplay={true}
             />
             <h5 style={{ padding: "1rem", textAlign: "center" }}>
-              {t("You can now close this webpage and go back to {{platform}}.", { platform: platform === "telegram" ? "Telegram" : "Instagram" })}
+              {t(
+                "You can now close this webpage and go back to {{platform}}.",
+                {
+                  platform: platform === "telegram" ? "Telegram" : "Instagram",
+                },
+              )}
             </h5>
             <RedirectButton platform={platform} />
           </CustomDatePickerContainer>
@@ -199,7 +209,9 @@ export default function SubscriptionRequest() {
                   flexDirection: "column",
                 }}
               >
-                <CustomLabel htmlFor="datepicker">{t("Select a Date:")}</CustomLabel>
+                <CustomLabel htmlFor="datepicker">
+                  {t("Select a Date:")}
+                </CustomLabel>
                 <MobileDatePicker
                   id="datepicker"
                   value={selectedDate}
@@ -215,13 +227,24 @@ export default function SubscriptionRequest() {
                   flexDirection: "column",
                 }}
               >
-                <CustomLabel htmlFor="timezone">{t("Select a Timezone:")}</CustomLabel>
+                <CustomLabel htmlFor="timezone">
+                  {t("Select a Timezone:")}
+                </CustomLabel>
                 <Autocomplete
                   fullWidth={true}
                   disablePortal
-                  options={["System Default", ...timezones?.map(option => `${option.name} - ${option.timezone}`)]}
+                  options={[
+                    "System Default",
+                    ...timezones?.map(
+                      (option) => `${option.name} - ${option.timezone}`,
+                    ),
+                  ]}
                   getOptionLabel={(option) => option}
-                  value={selectedTimezone?.includes("undefined") ? "" : selectedTimezone}
+                  value={
+                    selectedTimezone?.includes("undefined")
+                      ? ""
+                      : selectedTimezone
+                  }
                   onChange={(e, newValue) => {
                     setSelectedTimezone(newValue);
                   }}
@@ -231,7 +254,11 @@ export default function SubscriptionRequest() {
                     <TextField
                       {...params}
                       variant="outlined"
-                      value={selectedTimezone?.includes("undefined") ? "" : selectedTimezone}
+                      value={
+                        selectedTimezone?.includes("undefined")
+                          ? ""
+                          : selectedTimezone
+                      }
                     />
                   )}
                 />

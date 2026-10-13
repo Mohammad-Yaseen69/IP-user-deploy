@@ -62,9 +62,9 @@ const CustomSubmitButton = styled.button`
 
   &:hover {
     background: ${(props) =>
-    !props.isValid
-      ? "rgb(138, 160, 211)"
-      : "linear-gradient(310deg, rgba(192, 6, 192, 0.8) 16%, rgba(4, 51, 160, 0.8) 97%)"}; /* Gradient color on hover if valid, else default gradient color */
+      !props.isValid
+        ? "rgb(138, 160, 211)"
+        : "linear-gradient(310deg, rgba(192, 6, 192, 0.8) 16%, rgba(4, 51, 160, 0.8) 97%)"}; /* Gradient color on hover if valid, else default gradient color */
   }
 `;
 
@@ -81,7 +81,7 @@ const SuccessImage = styled.img`
 
 export default function SubscriptionRequestEndDate() {
   const tomorrow = dayjs().add(1, "day"); // Get tomorrow's date
-  const { t } = useTranslation()
+  const { t } = useTranslation();
   const [selectedDate, setSelectedDate] = useState(tomorrow);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -109,7 +109,7 @@ export default function SubscriptionRequestEndDate() {
       const providedDate = dayjs(pass, "DD-MM-YYYY");
       const minSelectableDate = providedDate.add(1, "month");
       setSelectedDate((prevDate) =>
-        prevDate.isBefore(minSelectableDate) ? minSelectableDate : prevDate
+        prevDate.isBefore(minSelectableDate) ? minSelectableDate : prevDate,
       );
     }
   }, [pass]);
@@ -229,9 +229,10 @@ export default function SubscriptionRequestEndDate() {
               </div>
               {!isValidDate && (
                 <p style={{ color: "red" }}>
-                  {
-                    t("Please select a date after one month from {{pass}}", { pass })
-                  }                </p>
+                  {t("Please select a date after one month from {{pass}}", {
+                    pass,
+                  })}{" "}
+                </p>
               )}
               {error && <p style={{ color: "red" }}>{error}</p>}
               <CustomSubmitButton

@@ -1,307 +1,302 @@
 .container {
-    flex: 1.8;
-    display: flex;
-    flex-direction: column;
-    border-radius: 8px;
-    margin-left: -36px;
-    padding: 36px 36px 36px 18px;
+  flex: 1.8;
+  display: flex;
+  flex-direction: column;
+  border-radius: 8px;
+  margin-left: -36px;
+  padding: 36px 36px 36px 18px;
 }
 
 .wrapper {
-    border-radius: 8px;
-    background: #FAFAFA;
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    padding: 1rem;
+  border-radius: 8px;
+  background: #fafafa;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 1rem;
 }
 
 .wrapper h5 {
-    color: #000;
-    leading-trim: both;
-    text-edge: cap;
-    font-family: Manrope;
-    font-size: 16px;
-    font-style: normal;
-    font-weight: 700;
-    line-height: 170%;
-    /* 27.2px */
+  color: #000;
+  leading-trim: both;
+  text-edge: cap;
+  font-family: Manrope;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 170%;
+  /* 27.2px */
 }
 
 .wallets {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-    max-height: 350px;
-    overflow-y: auto;
-    margin-bottom: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  max-height: 350px;
+  overflow-y: auto;
+  margin-bottom: auto;
 }
 
 .card {
-    cursor: pointer;
-    border-radius: 8px;
-    box-shadow: 0px 10.397px 31.191px 0px rgba(89, 38, 240, 0.13);
-    padding: 1rem;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    border-radius: 1rem;
-    flex: 1;
-    overflow: hidden;
-    min-height: 130px;
-    transition: 250ms;
+  cursor: pointer;
+  border-radius: 8px;
+  box-shadow: 0px 10.397px 31.191px 0px rgba(89, 38, 240, 0.13);
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  border-radius: 1rem;
+  flex: 1;
+  overflow: hidden;
+  min-height: 130px;
+  transition: 250ms;
 }
 
 .card.disabled_card {
-    pointer-events: none;
-    position: relative;
-    z-index: 10;
+  pointer-events: none;
+  position: relative;
+  z-index: 10;
 }
 
 .card.disabled_card::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    border-radius: 1rem;
-    background-color: rgba(255, 255, 255, 0.192);
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 1rem;
+  background-color: rgba(255, 255, 255, 0.192);
 }
 
 .card.disabled_card::after {
-    content: attr(data-content);
-    position: absolute;
-    border-radius: .25rem;
-    background-color: rgb(255, 255, 255);
-    font-size: .7rem;
-    font-weight: 500;
-    color: black;
-    padding: .4rem 1.5rem;
-    text-align: center;
-    width: 70%;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
+  content: attr(data-content);
+  position: absolute;
+  border-radius: 0.25rem;
+  background-color: rgb(255, 255, 255);
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: black;
+  padding: 0.4rem 1.5rem;
+  text-align: center;
+  width: 70%;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .card.blocked_card::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    border-radius: 1rem;
-    background-color: rgba(255, 255, 255, 0.192);
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 1rem;
+  background-color: rgba(255, 255, 255, 0.192);
 }
 
 .card.blocked_card::after {
-    content: attr(data-block-content);
-    position: absolute;
-    border-radius: .25rem;
-    background-color: rgb(255, 255, 255);
-    font-size: .7rem;
-    font-weight: 500;
-    color: black;
-    padding: .4rem 1.5rem;
-    text-align: center;
-    width: 70%;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
+  content: attr(data-block-content);
+  position: absolute;
+  border-radius: 0.25rem;
+  background-color: rgb(255, 255, 255);
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: black;
+  padding: 0.4rem 1.5rem;
+  text-align: center;
+  width: 70%;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
 }
 
-.card:nth-child(5n+1) {
-
-    background-position: center;
-    background-size: cover;
-    background-repeat: no-repeat;
-    background: url(../files/cbg3.png);
+.card:nth-child(5n + 1) {
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background: url(../files/cbg3.png);
 }
 
-.card:nth-child(5n+2) {
-
-    background-position: center;
-    background-size: cover;
-    background-repeat: no-repeat;
-    background: url(../files/cbg5.png);
+.card:nth-child(5n + 2) {
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background: url(../files/cbg5.png);
 }
 
-.card:nth-child(5n+3) {
-
-    background-position: center;
-    background-size: cover;
-    background-repeat: no-repeat;
-    background: url(../files/cbg4.png);
+.card:nth-child(5n + 3) {
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background: url(../files/cbg4.png);
 }
 
-.card:nth-child(5n+4) {
-
-    background-position: center;
-    background-size: cover;
-    background-repeat: no-repeat;
-    background: url(../files/cbg2.png);
+.card:nth-child(5n + 4) {
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background: url(../files/cbg2.png);
 }
 
-.card:nth-child(5n+5) {
-
-    background-position: center;
-    background-size: cover;
-    background-repeat: no-repeat;
-    background: url(../files/cbg1.png);
+.card:nth-child(5n + 5) {
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background: url(../files/cbg1.png);
 }
 
 .top {
-    display: flex;
-    justify-content: space-between;
-    gap: 1rem;
-    align-items: flex-start;
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: flex-start;
 }
 
 .left {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 
 .left span {
-    color: rgba(255, 255, 255, 0.80);
-    font-family: "Red Hat Display";
-    font-size: 7.339px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: normal;
+  color: rgba(255, 255, 255, 0.8);
+  font-family: "Red Hat Display";
+  font-size: 7.339px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
 }
 
 .left h4 {
-    color: #FFF;
-    font-family: "Clash Display";
-    font-size: 20.056px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: normal;
-    letter-spacing: -0.201px;
-    margin-bottom: 0;
+  color: #fff;
+  font-family: "Clash Display";
+  font-size: 20.056px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  letter-spacing: -0.201px;
+  margin-bottom: 0;
 }
 
 .top img {
-    width: 13.161px;
-    height: 19.741px;
-    object-fit: contain;
+  width: 13.161px;
+  height: 19.741px;
+  object-fit: contain;
 }
 
 .bottom {
-    display: flex;
-    flex-direction: column;
-    gap: .5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
 .bottom p {
-    margin-bottom: 0;
-    color: rgba(255, 255, 255, 0.80);
-    font-family: "Red Hat Display";
-    font-size: 7.339px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: normal;
+  margin-bottom: 0;
+  color: rgba(255, 255, 255, 0.8);
+  font-family: "Red Hat Display";
+  font-size: 7.339px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
 }
 
 .bottom h3 {
-    color: #FFF;
-    font-family: "Clash Display";
-    font-size: 12px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: normal;
-    margin-bottom: 0;
+  color: #fff;
+  font-family: "Clash Display";
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  margin-bottom: 0;
 }
 
 .bb {
-    position: relative;
+  position: relative;
 }
 
 .bb span {
-    color: #FFF;
-    text-align: right;
-    leading-trim: both;
-    text-edge: cap;
-    font-family: "Clash Display";
-    font-size: 7.339px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: normal;
-    position: absolute;
-    top: 50%;
-    right: 10px;
-    transform: translateY(-50%);
+  color: #fff;
+  text-align: right;
+  leading-trim: both;
+  text-edge: cap;
+  font-family: "Clash Display";
+  font-size: 7.339px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
 }
 
 .card.active {
-    border-radius: 8px;
-    border: 4px solid #11C526;
-    box-shadow: 0px 10.397px 31.191px 0px rgba(89, 38, 240, 0.13);
-    background-position: center;
+  border-radius: 8px;
+  border: 4px solid #11c526;
+  box-shadow: 0px 10.397px 31.191px 0px rgba(89, 38, 240, 0.13);
+  background-position: center;
 }
 
 .top_badge {
-    display: flex;
-    align-items: center;
-    gap: .25rem;
-    padding: .35rem;
-    border-radius: var(--RADIUS-radius-1, .45rem);
-    background: var(--COLORS-Neutral-100, #FFF);
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.35rem;
+  border-radius: var(--RADIUS-radius-1, 0.45rem);
+  background: var(--COLORS-Neutral-100, #fff);
 }
 
 .top_badge span {
-    color: var(--COLORS-Neutral-1000, #333);
-    leading-trim: both;
-    text-edge: cap;
-    font-family: Manrope;
-    font-size: .7rem;
-    font-style: normal;
-    font-weight: 600;
-    line-height: 14px;
-    /* 140% */
+  color: var(--COLORS-Neutral-1000, #333);
+  leading-trim: both;
+  text-edge: cap;
+  font-family: Manrope;
+  font-size: 0.7rem;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 14px;
+  /* 140% */
 }
 
 @media screen and (max-width: 1680px) {
-    .container {
-        padding: 1.5rem;
-        margin-left: 0rem;
-    }
+  .container {
+    padding: 1.5rem;
+    margin-left: 0rem;
+  }
 }
 
 @media screen and (max-width: 1500px) {
-    .container {
-        padding: 0rem;
-    }
+  .container {
+    padding: 0rem;
+  }
 }
 
 @media screen and (max-width: 1000px) {
-    .container {
-        margin-left: 0;
-        padding: 0;
-    }
+  .container {
+    margin-left: 0;
+    padding: 0;
+  }
 
-    .wrapper h5 {
-        display: none;
-    }
+  .wrapper h5 {
+    display: none;
+  }
 
-    .wallets {
-        margin-bottom: 2rem;
-        max-height: 50vh;
-    }
+  .wallets {
+    margin-bottom: 2rem;
+    max-height: 50vh;
+  }
 
-    .card {
-        gap: 2rem;
-        justify-content: space-between;
-        min-height: 175px;
-        background-repeat: no-repeat;
-    }
+  .card {
+    gap: 2rem;
+    justify-content: space-between;
+    min-height: 175px;
+    background-repeat: no-repeat;
+  }
 
-    .card.disabled_card::after {
-        /* top: unset;
+  .card.disabled_card::after {
+    /* top: unset;
         bottom: 15%;
         transform: translate(-50%, 50%); */
-    }
+  }
 }

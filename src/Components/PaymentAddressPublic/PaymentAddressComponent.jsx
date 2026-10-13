@@ -17,8 +17,8 @@ import { FreeMode, Mousewheel, Pagination } from "swiper";
 import { useQuery } from "@tanstack/react-query";
 import useWindowWidth from "../../utils/useWindowWidth";
 import ip from "./instapay_black.svg";
-import PayWithCrypto from "./PayWithCrypto"
-import UserDets from "./UserDets"
+import PayWithCrypto from "./PayWithCrypto";
+import UserDets from "./UserDets";
 import { flagCheck } from "../../utils/Functions";
 import useCountryLocation from "../../hooks/GeneralUse/useCountryLocation";
 import VpnModal from "../Auth/VpnModal";
@@ -30,7 +30,6 @@ const PortfolioCard = lazy(() => import("../Portfolio/PortfolioCard"));
 const AmountContainer = lazy(() => import("./AmountContainer"));
 const LanguagePicker = lazy(() => import("../LanguagePicker"));
 const AnimatedHeader = lazy(() => import("./AnimatedHeader"));
-
 
 const initialState = {
   userCountry: {},
@@ -90,8 +89,6 @@ function reducer(state, action) {
 `}
 </style>;
 
-
-
 export const LeftJsx = ({
   width,
   userDetails,
@@ -107,76 +104,111 @@ export const LeftJsx = ({
   user_name,
   invoiceId,
 }) => {
-  const queryParams = new URLSearchParams(location.search)
-  const isFromQr = queryParams.get('fromQr')
-  const { t } = useTranslation()
+  const queryParams = new URLSearchParams(location.search);
+  const isFromQr = queryParams.get("fromQr");
+  const { t } = useTranslation();
   return (
     <div
       style={{
         flex: width > 1350 ? 1.7 : 1.4,
         alignSelf: userVideos.length >= 1 && "stretch",
-        position: "relative"
+        position: "relative",
       }}
       className={styles.left}
     >
-      {width > 1000 &&
+      {width > 1000 && (
         <div style={{ position: "absolute", bottom: "10px", right: "10px" }}>
-          {flagCheck("allowMultiLanguage", userDetails, "paymentAddress") && <LanguagePicker shouldOpenUpRequired={true} defaultLanguage={userDetails.langauge} newUI={true} />}
+          {flagCheck("allowMultiLanguage", userDetails, "paymentAddress") && (
+            <LanguagePicker
+              shouldOpenUpRequired={true}
+              defaultLanguage={userDetails.langauge}
+              newUI={true}
+            />
+          )}
         </div>
-      }
+      )}
       {width > 1000 && (
         <div className={styles.left_top}>
           <AnimatedHeader />
-          <img src={ip} alt="" onClick={() => window.location.href = "https://insta-pay.ch"} />
+          <img
+            src={ip}
+            alt=""
+            onClick={() => (window.location.href = "https://insta-pay.ch")}
+          />
         </div>
       )}
-      {!isFromQr &&
+      {!isFromQr && (
         <div className={styles.left_bottom}>
           <div>
-            {(flagCheck("allowTitle", userDetails, "paymentAddress") ? title : "") || (flagCheck("allowDescription", userDetails, "paymentAddress") ? description : "") ? (
+            {(flagCheck("allowTitle", userDetails, "paymentAddress")
+              ? title
+              : "") ||
+            (flagCheck("allowDescription", userDetails, "paymentAddress")
+              ? description
+              : "") ? (
               <div className={styles.about}>
-                {flagCheck("allowTitle", userDetails, "paymentAddress") && <h4 style={{ marginBottom: "0px" }}>{t(title)}</h4>}
-                {flagCheck("allowDescription", userDetails, "paymentAddress") && (
-                  <p style={{ fontSize: "14px", fontWeight: 600, color: "#7E7E7E" }}>
+                {flagCheck("allowTitle", userDetails, "paymentAddress") && (
+                  <h4 style={{ marginBottom: "0px" }}>{t(title)}</h4>
+                )}
+                {flagCheck(
+                  "allowDescription",
+                  userDetails,
+                  "paymentAddress",
+                ) && (
+                  <p
+                    style={{
+                      fontSize: "14px",
+                      fontWeight: 600,
+                      color: "#7E7E7E",
+                    }}
+                  >
                     {t(description)}
                   </p>
                 )}
               </div>
             ) : null}
-            {userVideos && userVideos.length > 0 && flagCheck("allowVideos", userDetails, "paymentAddress") && (
-              <div className="p-swiper-videos-123">
-                <Swiper
-                  modules={[FreeMode, Mousewheel, Pagination]}
-                  spaceBetween={10}
-                  pagination={{ clickable: true, el: '.portfolio-swiper-pagination' }}
-                  slidesPerView={
-                    userVideos.length === 1 || window.innerWidth < 700
-                      ? 1
-                      : userVideos.length === 2
-                        ? 2
-                        : 2.3
-                  }
-                  grabCursor={true}
-                  freeMode={true}
-                  mousewheel={{ forceToAxis: true }}
-                >
-                  {userVideos.map((video, index) => (
-                    <SwiperSlide key={video._id || index}>
-                      <PortfolioCard
-                        item={video}
-                        pAddress={true}
-                        publicP={true}
-                        playingMediaId={playingMediaId}
-                        setPlayingMediaId={setPlayingMediaId}
-                        playerRefs={playerRefs}
-                      />
-                    </SwiperSlide>
-                  ))}
-                </Swiper>
+            {userVideos &&
+              userVideos.length > 0 &&
+              flagCheck("allowVideos", userDetails, "paymentAddress") && (
+                <div className="p-swiper-videos-123">
+                  <Swiper
+                    modules={[FreeMode, Mousewheel, Pagination]}
+                    spaceBetween={10}
+                    pagination={{
+                      clickable: true,
+                      el: ".portfolio-swiper-pagination",
+                    }}
+                    slidesPerView={
+                      userVideos.length === 1 || window.innerWidth < 700
+                        ? 1
+                        : userVideos.length === 2
+                          ? 2
+                          : 2.3
+                    }
+                    grabCursor={true}
+                    freeMode={true}
+                    mousewheel={{ forceToAxis: true }}
+                  >
+                    {userVideos.map((video, index) => (
+                      <SwiperSlide key={video._id || index}>
+                        <PortfolioCard
+                          item={video}
+                          pAddress={true}
+                          publicP={true}
+                          playingMediaId={playingMediaId}
+                          setPlayingMediaId={setPlayingMediaId}
+                          playerRefs={playerRefs}
+                        />
+                      </SwiperSlide>
+                    ))}
+                  </Swiper>
 
-                <div className="portfolio-swiper-pagination" style={{ marginTop: 0, textAlign: 'center' }} />
-              </div>
-            )}
+                  <div
+                    className="portfolio-swiper-pagination"
+                    style={{ marginTop: 0, textAlign: "center" }}
+                  />
+                </div>
+              )}
           </div>
 
           <div>
@@ -192,31 +224,32 @@ export const LeftJsx = ({
             />
           </div>
         </div>
-      }
+      )}
     </div>
   );
 };
 
 const getLimits = async (userName, wallet_id) => {
-  const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/payment-address/get-address-limits/${userName}/${wallet_id}`)
-  return decryptData(res.data.data)?.limits
-}
+  const res = await axios.get(
+    `${import.meta.env.VITE_IP_DEV_API}/api/payment-address/get-address-limits/${userName}/${wallet_id}`,
+  );
+  return decryptData(res.data.data)?.limits;
+};
 
 const PaymentAddressComponent = ({ userDetails, userVideos }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const width = useWindowWidth();
-  const { country, showNoticeModal } = useCountryLocation()
+  const { country, showNoticeModal } = useCountryLocation();
   const playerRefs = useRef({});
-  const queryParams = new URLSearchParams(location.search)
-  const amount = queryParams.get('amount')
-
+  const queryParams = new URLSearchParams(location.search);
+  const amount = queryParams.get("amount");
 
   const { data: limits } = useQuery({
-    queryKey: ['getLimits', state?.currentWallet?.wallet_id],
+    queryKey: ["getLimits", state?.currentWallet?.wallet_id],
     queryFn: () => getLimits(user_name, state?.currentWallet?.wallet_id),
-    enabled: !!state?.currentWallet?.wallet_id
-  })
-  const { t } = useTranslation()
+    enabled: !!state?.currentWallet?.wallet_id,
+  });
+  const { t } = useTranslation();
 
   const dataHandler = (field, value) => {
     dispatch({ type: "UPDATE_FIELD", field, value });
@@ -224,13 +257,13 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
 
   const handleKeyUp = (e) => {
     formatCurrency(e.target.value, false, (value) =>
-      dataHandler("formattedAmount", value)
+      dataHandler("formattedAmount", value),
     );
   };
 
   const handleBlur = (e) => {
     formatCurrency(e.target.value, true, (value) =>
-      dataHandler("formattedAmount", value)
+      dataHandler("formattedAmount", value),
     );
   };
 
@@ -239,7 +272,7 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
       dataHandler("amount", amount);
       dataHandler("formattedAmount", formatCurrency(amount, true));
     }
-  }, [amount])
+  }, [amount]);
 
   useEffect(() => {
     dataHandler("amount", state.formattedAmount?.replaceAll(",", ""));
@@ -251,7 +284,7 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
     return text.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
   };
 
-  console.log(country, "country")
+  console.log(country, "country");
 
   const getImage = async (img, c) => {
     try {
@@ -263,11 +296,10 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
     }
   };
   useEffect(() => {
-
     if (userDetails?.country_iso_code) {
       const code = userDetails?.country_iso_code;
-      const filteredCountry = countries.find((item) =>
-        item.alpha3?.toLowerCase() === code?.toLowerCase()
+      const filteredCountry = countries.find(
+        (item) => item.alpha3?.toLowerCase() === code?.toLowerCase(),
       );
 
       dataHandler("userCountry", filteredCountry);
@@ -275,58 +307,60 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
     if (user_name) {
       axios
         .get(
-          `${import.meta.env.VITE_IP_DEV_API}/api/payment-address/get-payment-address-public/${user_name}`,)
+          `${import.meta.env.VITE_IP_DEV_API}/api/payment-address/get-payment-address-public/${user_name}`,
+        )
         .then((res) => {
           const decrypted = decryptData(res.data.data);
 
           dataHandler(
             "paymentAddressDetails",
-            decrypted?.paymentAddressDetails
+            decrypted?.paymentAddressDetails,
           );
           dataHandler("title", decrypted?.paymentAddressDetails?.title);
           dataHandler("currency", decrypted?.paymentAddressDetails?.currency);
           dataHandler(
             "description",
-            decrypted?.paymentAddressDetails?.description
+            decrypted?.paymentAddressDetails?.description,
           );
           dataHandler(
             "dp",
-            decrypted?.paymentAddressDetails?.profileImage?.url
+            decrypted?.paymentAddressDetails?.profileImage?.url,
           );
           dataHandler(
             "cover",
-            decrypted?.paymentAddressDetails?.coverImage?.url
+            decrypted?.paymentAddressDetails?.coverImage?.url,
           );
           dataHandler("currentWallet", decrypted?.wallet);
 
           const coverPromise = decrypted?.paymentAddressDetails?.coverImage?.url
             ? getImage(
-              decrypted?.paymentAddressDetails?.coverImage?.url,
-              decrypted?.paymentAddressDetails?.coverImage?.coordinates
-            ).then((img) => {
-              if (img) dataHandler("croppedCover", img);
-            })
+                decrypted?.paymentAddressDetails?.coverImage?.url,
+                decrypted?.paymentAddressDetails?.coverImage?.coordinates,
+              ).then((img) => {
+                if (img) dataHandler("croppedCover", img);
+              })
             : Promise.resolve();
 
           const dpPromise = decrypted?.paymentAddressDetails?.profileImage?.url
             ? getImage(
-              decrypted?.paymentAddressDetails?.profileImage?.url,
-              decrypted?.paymentAddressDetails?.profileImage?.coordinates
-            ).then((img) => {
-              if (img) dataHandler("croppedDp", img);
-            })
+                decrypted?.paymentAddressDetails?.profileImage?.url,
+                decrypted?.paymentAddressDetails?.profileImage?.coordinates,
+              ).then((img) => {
+                if (img) dataHandler("croppedDp", img);
+              })
             : Promise.resolve();
 
-          Promise.allSettled([coverPromise, dpPromise]).catch(() => { });
+          Promise.allSettled([coverPromise, dpPromise]).catch(() => {});
         })
         .catch((err) => {
           let errorMsg = "";
-          if (err.code === 'ECONNABORTED') {
+          if (err.code === "ECONNABORTED") {
             errorMsg = "Request timed out. Please try again later.";
           } else if (err?.response?.status === 404) {
             errorMsg = "This user hasn't set their payment address yet.";
           } else {
-            errorMsg = "Failed to load payment address details. Please try again.";
+            errorMsg =
+              "Failed to load payment address details. Please try again.";
           }
           dataHandler("error", errorMsg);
           try {
@@ -350,19 +384,20 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
   // }
   const toggleCreditModal = () => {
     if (state.amount < limits?.topup_min_amount) {
-
       toast.error(
-        t("Minimum amount for guest pay is") + " " +
-        formatCurrency(limits?.topup_min_amount, true) +
-        " " +
-        state.currentWallet?.currency?.code
+        t("Minimum amount for guest pay is") +
+          " " +
+          formatCurrency(limits?.topup_min_amount, true) +
+          " " +
+          state.currentWallet?.currency?.code,
       );
       dataHandler(
         "guestPayError",
-        t("Minimum amount for guest pay is") + " " +
-        formatCurrency(limits?.topup_min_amount, true) +
-        " " +
-        state.currentWallet?.currency?.code
+        t("Minimum amount for guest pay is") +
+          " " +
+          formatCurrency(limits?.topup_min_amount, true) +
+          " " +
+          state.currentWallet?.currency?.code,
       );
       setTimeout(() => {
         dataHandler("guestPayError", "");
@@ -370,16 +405,16 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
     } else if (state.amount > limits?.topup_max_amount) {
       toast.error(
         t("Maximum amount for guest pay is ") +
-        formatCurrency(limits?.topup_max_amount, true) +
-        " " +
-        state.currentWallet?.currency?.code
+          formatCurrency(limits?.topup_max_amount, true) +
+          " " +
+          state.currentWallet?.currency?.code,
       );
       dataHandler(
         "guestPayError",
         t("Maximum amount for guest pay is ") +
-        formatCurrency(limits?.topup_max_amount, true) +
-        " " +
-        state.currentWallet?.currency?.code
+          formatCurrency(limits?.topup_max_amount, true) +
+          " " +
+          state.currentWallet?.currency?.code,
       );
       setTimeout(() => {
         dataHandler("guestPayError", "");
@@ -391,7 +426,7 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
 
   const url = `/payments?payment_action=send_money&payment_type=payment_address&send_type=wallet&wallet_id=${state.currentWallet?.wallet_id}&currency=${state.currency}&amount=${state.amount}`;
 
-  console.log(state)
+  console.log(state);
   return (
     <>
       {state.loading ? (
@@ -399,15 +434,16 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
           style={{
             height: "100%",
             width: "100%",
-            zIndex: 999
+            zIndex: 999,
           }}
         >
           <InstaPayLoader fallback />
         </div>
-      ) : <div className={styles.container}>
-
-        {showNoticeModal ? <VpnModal showNoticeModal={showNoticeModal} /> :
-          state.paymentAddressDetails ? (
+      ) : (
+        <div className={styles.container}>
+          {showNoticeModal ? (
+            <VpnModal showNoticeModal={showNoticeModal} />
+          ) : state.paymentAddressDetails ? (
             <>
               {state.showCreditModal && (
                 <PayAsGuest
@@ -462,7 +498,6 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
                       paymentAddress={true}
                       data={state}
                       dataHandler={dataHandler}
-
                     />
 
                     <AmountContainer
@@ -474,10 +509,9 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
                       toggleCreditModal={toggleCreditModal}
                       url={url}
                       toggleCryptoModal={() => {
-                        dataHandler("showCryptoModal", true)
-                        dataHandler("cryptoStatus", "Not Completed")
-                      }
-                      }
+                        dataHandler("showCryptoModal", true);
+                        dataHandler("cryptoStatus", "Not Completed");
+                      }}
                       userDetails={userDetails}
                     />
 
@@ -501,19 +535,26 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
                         />
                       </div>
                     )}
-                    {width < 1000 &&
+                    {width < 1000 && (
                       <div
                         style={{
                           display: "flex",
                           justifyContent: "center",
                           flexDirection: "column",
-                          marginTop: "3rem"
+                          marginTop: "3rem",
                         }}
                       >
                         <AnimatedHeader mobileUI />
-                        <img src={ip} alt="" style={{ margin: "20px auto", width: "200px" }} onClick={() => window.location.href = "https://insta-pay.ch"} />
+                        <img
+                          src={ip}
+                          alt=""
+                          style={{ margin: "20px auto", width: "200px" }}
+                          onClick={() =>
+                            (window.location.href = "https://insta-pay.ch")
+                          }
+                        />
                       </div>
-                    }
+                    )}
                   </div>
                   {width > 1000 && (
                     <LeftJsx
@@ -550,10 +591,9 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
                 </CardText>
               </CardBody>
             </Card>
-          )
-        }
-      </div>
-      }
+          )}
+        </div>
+      )}
     </>
   );
 };

@@ -37,7 +37,11 @@ const Card = ({ cardType, isActive, handleSelect }) => {
         <div
           className={`${styles.iconContainer} ${isActive && styles.activeIconContainer}`}
         >
-          {isIndividual ? <User color={isActive ? '#fff' : "#5926F0"} /> : <Buildings color={isActive ? '#fff' : "#5926F0"} />}
+          {isIndividual ? (
+            <User color={isActive ? "#fff" : "#5926F0"} />
+          ) : (
+            <Buildings color={isActive ? "#fff" : "#5926F0"} />
+          )}
         </div>
         <div className={styles.headingContainer}>
           <p>{t(isIndividual ? "Personal" : "Business")}</p>

@@ -1,46 +1,84 @@
-import { Button, Modal, ModalBody } from 'reactstrap'
-import page from "./card.svg"
-import { useTranslation } from 'react-i18next'
+import { Button, Modal, ModalBody } from "reactstrap";
+import page from "./card.svg";
+import { useTranslation } from "react-i18next";
 
-const NotFoundModal = ({ title = "", messages = [], isOpen, toggle, buttonText = "Close", reEnter }) => {
-  const {t} = useTranslation()
-    return (
-        <Modal isOpen={isOpen}>
-            <ModalBody
-                style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center"
-                }}
+const NotFoundModal = ({
+  title = "",
+  messages = [],
+  isOpen,
+  toggle,
+  buttonText = "Close",
+  reEnter,
+}) => {
+  const { t } = useTranslation();
+  return (
+    <Modal isOpen={isOpen}>
+      <ModalBody
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        <img
+          src={page}
+          alt=""
+          style={{
+            width: "150px",
+            height: "150px",
+            objectFit: "contain",
+            marginBottom: ".5rem",
+          }}
+        />
+        <h5
+          style={{
+            marginBottom: "1rem",
+            fontSize: "1.5rem",
+            fontWeight: "700",
+          }}
+        >
+          {t("Invalid Credit/Debit Card")}
+        </h5>
+        {messages.map((item) => (
+          <>
+            <p
+              style={{
+                marginBottom: ".2rem",
+                fontSize: ".9rem",
+                color: "#6a6a6a",
+                fontWeight: 500,
+                maxWidth: "70ch",
+                textAlign: "center",
+                whiteSpace: "balance",
+              }}
+              key={item}
             >
-                <img
-                    src={page}
-                    alt=""
-                    style={{
-                        width: "150px",
-                        height: "150px",
-                        objectFit: "contain",
-                        marginBottom: ".5rem"
-                    }}
-                />
-                <h5 style={{ marginBottom: "1rem", fontSize: "1.5rem", fontWeight: "700" }}>{t("Invalid Credit/Debit Card")}</h5>
-                {
-                    messages.map(item => (
-                        <>
-                            <p style={{ marginBottom: ".2rem", fontSize: ".9rem", color: "#6a6a6a", fontWeight: 500, maxWidth: "70ch", textAlign: "center", whiteSpace: "balance" }} key={item}>{t(item)}</p>
-                        </>
-                    ))
-                }
-                <div style={{ marginTop: "1.5rem", display: "flex", gap: "1rem" }}>
-                    <Button style={{ borderRadius: "9px" }} color='danger' onClick={toggle}>{t(buttonText)}</Button>
-                    <Button style={{ borderRadius: "9px" }} color='primary' onClick={() => {
-                        reEnter()
-                        toggle()
-                    }}>{t("Re-Enter Card Details")}</Button>
-                </div>
-            </ModalBody>
-        </Modal>
-    )
-}
+              {t(item)}
+            </p>
+          </>
+        ))}
+        <div style={{ marginTop: "1.5rem", display: "flex", gap: "1rem" }}>
+          <Button
+            style={{ borderRadius: "9px" }}
+            color="danger"
+            onClick={toggle}
+          >
+            {t(buttonText)}
+          </Button>
+          <Button
+            style={{ borderRadius: "9px" }}
+            color="primary"
+            onClick={() => {
+              reEnter();
+              toggle();
+            }}
+          >
+            {t("Re-Enter Card Details")}
+          </Button>
+        </div>
+      </ModalBody>
+    </Modal>
+  );
+};
 
-export default NotFoundModal
+export default NotFoundModal;

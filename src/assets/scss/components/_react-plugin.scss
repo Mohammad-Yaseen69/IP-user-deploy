@@ -1,23 +1,24 @@
 /**=====================
     20. React-Plugin CSS Start
 ==========================**/
-.simple-list, .list-group {
+.simple-list,
+.list-group {
   .list-group-item {
     padding: 0;
     border: none;
     background-color: transparent;
   }
-  >ul{
-    &.list-group{
+  > ul {
+    &.list-group {
       display: flex;
       flex-direction: row;
     }
   }
 }
-button:focus:not(:focus-visible){
+button:focus:not(:focus-visible) {
   border: 1px solid transparent;
 }
-i.undefined{
+i.undefined {
   display: none;
 }
 li.list-group-item.active {
@@ -29,12 +30,12 @@ img.media {
   margin-bottom: 0 !important;
   display: initial;
 }
-.CodeMirror{
+.CodeMirror {
   padding: 10px 18px !important;
 }
-.slick-slide{
-  img{
-    &.media{
+.slick-slide {
+  img {
+    &.media {
       display: block;
     }
   }
@@ -54,68 +55,76 @@ ul.list-group {
   }
 }
 // tree css
-.deni-react-treeview-container{
+.deni-react-treeview-container {
   width: 100% !important;
   background-color: $white !important;
-  .icon-and-text{
-    .text{
-      .text-inner{
+  .icon-and-text {
+    .text {
+      .text-inner {
         color: $primary-color;
         font-size: 14px;
-        .treeview-item-example-text{
+        .treeview-item-example-text {
           vertical-align: middle;
         }
       }
     }
   }
 }
-.deni-react-treeview-container.classic{
+.deni-react-treeview-container.classic {
   border-color: $body-color !important;
-  .deni-react-treeview-item-container.classic{
-    &.selected.select-row{
-      background: linear-gradient(to bottom, rgba($primary-color, 0.1) 0%, rgba($primary-color, 0.5) 100%) !important;
+  .deni-react-treeview-item-container.classic {
+    &.selected.select-row {
+      background: linear-gradient(
+        to bottom,
+        rgba($primary-color, 0.1) 0%,
+        rgba($primary-color, 0.5) 100%
+      ) !important;
     }
-    &:hover.select-row{
+    &:hover.select-row {
       background-color: rgba($primary-color, 0.1) !important;
-      border:unset;
+      border: unset;
     }
-    .checkbox{
+    .checkbox {
       border-color: $primary-color !important;
     }
-    .expand-button.hasChild{
+    .expand-button.hasChild {
       color: $primary-color !important;
     }
-    .actionButton{
+    .actionButton {
       margin-left: 6px;
     }
-    .icon-and-text{
-      &.selected{
-        background: linear-gradient(to bottom, rgba($primary-color, 0.1) 0%, rgba($primary-color, 0.6) 100%) !important;
+    .icon-and-text {
+      &.selected {
+        background: linear-gradient(
+          to bottom,
+          rgba($primary-color, 0.1) 0%,
+          rgba($primary-color, 0.6) 100%
+        ) !important;
         border: unset;
       }
-      &:hover:not(.select-row){
+      &:hover:not(.select-row) {
         background-color: rgba($primary-color, 0.1) !important;
-        border:unset;
+        border: unset;
         padding-left: calc(5px - 0px);
       }
-      .icon{
+      .icon {
         opacity: 0.5;
       }
     }
   }
 }
-.deni-react-treeview-item-container{
-  .expand-button.colapsed{
-    &::before{
+.deni-react-treeview-item-container {
+  .expand-button.colapsed {
+    &::before {
       height: 29px;
     }
   }
 }
 // list page
-.ui-list{
-  ul.list-group{
-    .list-group-flush{
-      > .list-group-item{
+.ui-list {
+  ul.list-group {
+    .list-group-flush {
+      > .list-group-item {
         border-width: 0 0 var(--bs-list-group-border-width);
       }
     }
@@ -123,18 +132,18 @@ ul.list-group {
       background-color: $white;
       padding: 0.5rem 1rem;
       border: 1px solid $light-gray;
-      + .list-group-item{
+      + .list-group-item {
         border-top: 0;
       }
       $colors: (
         primary: #084298,
         secondary: #41464b,
-        info: #055160, 
+        info: #055160,
         success: #0f5132,
-        warning: #664d03, 
+        warning: #664d03,
         danger: #842029,
         light: #636464,
-        dark: #141619
+        dark: #141619,
       );
       @each $key, $val in $colors {
         &.list-group-item-#{$key} {
@@ -143,24 +152,24 @@ ul.list-group {
         }
       }
     }
-    .list-group-item-action{
+    .list-group-item-action {
       color: #495057;
-      img.media-body{
+      img.media-body {
         width: 36px;
         height: 36px;
       }
-      i{
+      i {
         margin-right: 10px;
       }
-      &.active{
+      &.active {
         background-color: $primary-color;
         border-color: $primary-color;
         color: $white;
       }
     }
-    .list-group-item.d-flex{
+    .list-group-item.d-flex {
       color: $dark;
-      .badge{
+      .badge {
         padding: 4px 6px 3px;
       }
     }
@@ -321,19 +330,21 @@ ol.simple-list {
     }
   }
 }
-.react-datepicker__day--keyboard-selected, 
-.react-datepicker__month-text--keyboard-selected, 
-.react-datepicker__quarter-text--keyboard-selected, 
-.react-datepicker__year-text--keyboard-selected{
+.react-datepicker__day--keyboard-selected,
+.react-datepicker__month-text--keyboard-selected,
+.react-datepicker__quarter-text--keyboard-selected,
+.react-datepicker__year-text--keyboard-selected {
   background-color: $primary-color;
 }
-.react-datepicker__day--today{
+.react-datepicker__day--today {
   color: $white;
 }
-.react-datepicker__close-icon::after{
-    background-color: $primary-color;
+.react-datepicker__close-icon::after {
+  background-color: $primary-color;
 }
-.react-datepicker__navigation--next--with-time:not(.react-datepicker__navigation--next--with-today-button){
+.react-datepicker__navigation--next--with-time:not(
+  .react-datepicker__navigation--next--with-today-button
+) {
   right: 85px !important;
 }
 .react-datepicker {
@@ -470,16 +481,17 @@ ol.simple-list {
   margin-bottom: 34px;
 }
 // ecommerce rating
-.pro-review{
-  .widget-ratings{
-    .widget-svg{
+.pro-review {
+  .widget-ratings {
+    .widget-svg {
       width: 16px !important;
       height: 16px !important;
     }
-    .widget-container{
+    .widget-container {
       vertical-align: -2px !important;
-      .widget-selected, .hovered{
-        path{
+      .widget-selected,
+      .hovered {
+        path {
           fill: $warning-color !important;
         }
       }
@@ -494,7 +506,6 @@ ol.simple-list {
   overflow: auto !important;
   .dzu-inputLabel {
     padding: 0 14px;
-  
   }
   .dzu-previewImage {
     max-height: 54px;
@@ -543,15 +554,15 @@ ol.simple-list {
 .rbc-show-more {
   background-color: $primary-color !important;
 }
-// data tables 
-.data-tables{
-  .rdt_Table{
-    .rdt_TableHead{
-      .rdt_TableCol{
-        .rdt_TableCol_Sortable{
-          div{
+// data tables
+.data-tables {
+  .rdt_Table {
+    .rdt_TableHead {
+      .rdt_TableCol {
+        .rdt_TableCol_Sortable {
+          div {
             font-size: 14px;
-            ~ span{
+            ~ span {
               display: none;
             }
           }
@@ -561,19 +572,20 @@ ol.simple-list {
   }
 }
 // typeahead css
-.typeahead{
-  .theme-form{
-    .rbt.has-aux , .rbt-token{
-      .rbt-aux{
-        .rbt-close.btn-close{
-          .rbt-close-content{
+.typeahead {
+  .theme-form {
+    .rbt.has-aux,
+    .rbt-token {
+      .rbt-aux {
+        .rbt-close.btn-close {
+          .rbt-close-content {
             top: 18px !important;
           }
         }
       }
-      .rbt-close.btn-close{
+      .rbt-close.btn-close {
         background: none;
-        .rbt-close-content{
+        .rbt-close-content {
           top: 6px !important;
         }
       }
@@ -581,22 +593,23 @@ ol.simple-list {
   }
 }
 // calendar
-.fc-daygrid-event-dot{
+.fc-daygrid-event-dot {
   border-color: $primary-color !important;
 }
-.fc-daygrid-dot-event, .fc-daygrid-dot-event.fc-event-mirror{
-  &:hover{
+.fc-daygrid-dot-event,
+.fc-daygrid-dot-event.fc-event-mirror {
+  &:hover {
     background-color: $primary-color;
   }
 }
-.fc{
-  .fc-daygrid-event.fc-h-event{
+.fc {
+  .fc-daygrid-event.fc-h-event {
     background-color: $primary-color;
   }
 }
-.fc .fc-button-primary{
-    background-color: $dark-color;
-    border-color: $dark-color;
+.fc .fc-button-primary {
+  background-color: $dark-color;
+  border-color: $dark-color;
 }
 .fc-event,
 .fc-event-dot {
@@ -713,7 +726,9 @@ ol.simple-list {
   &.swal2-confirm {
     background-color: $primary-color !important;
     &:focus {
-      box-shadow: 0 0 0 1px $white, 0 0 0 3px rgba($primary-color, 0.4);
+      box-shadow:
+        0 0 0 1px $white,
+        0 0 0 3px rgba($primary-color, 0.4);
     }
   }
 }
@@ -979,26 +994,27 @@ ol {
   position: relative;
   width: fit-content;
   padding: 5px;
-  + .rbt-token{
+  + .rbt-token {
     margin-left: 8px;
   }
   .rbt-token-remove-button {
     top: -5px !important;
   }
-  .rbt-close-content{
+  .rbt-close-content {
     position: absolute;
     top: -2px !important;
   }
 }
-.rbt-aux{
-  .rbt-close-content{
+.rbt-aux {
+  .rbt-close-content {
     position: absolute;
     top: 5px;
     right: 36px;
   }
 }
-.rbt.has-aux,.rbt-input-multi,
-.rbt-input-wrapper{
+.rbt.has-aux,
+.rbt-input-multi,
+.rbt-input-wrapper {
   display: flex;
 }
 .btn-toolbar {
@@ -1025,9 +1041,9 @@ ol {
   }
 }
 // upload
-.files-dropzone{
-  .files-gallery{
-    img.media{
+.files-dropzone {
+  .files-gallery {
+    img.media {
       display: flex;
     }
   }
@@ -1102,12 +1118,11 @@ ol {
     }
   }
 }
-.ui-sortable{
-  .react-kanban-board{
-    .react-kanban-column{
+.ui-sortable {
+  .react-kanban-board {
+    .react-kanban-column {
       width: 100%;
     }
-
   }
 }
 .jkanban-container {
@@ -1376,7 +1391,7 @@ ol {
     }
   }
 }
-.vertical-timeline-element-subtitle{
+.vertical-timeline-element-subtitle {
   font-size: 22px;
 }
 .vertical-timeline-element-content {
@@ -1502,29 +1517,29 @@ ol {
   box-sizing: content-box;
 }
 // tour page
-.reactour__helper{
-  .reactour__close{
+.reactour__helper {
+  .reactour__close {
     top: 16px;
     right: 16px;
   }
-  span[data-tour-elem="badge"]{
+  span[data-tour-elem="badge"] {
     background-color: $primary-color;
     height: 30px;
   }
-  .reactour__dot{
-    &.reactour__dot--is-active{
+  .reactour__dot {
+    &.reactour__dot--is-active {
       background-color: $primary-color;
     }
   }
 }
-.reactour__close-button{
+.reactour__close-button {
   top: 14px !important;
   right: 14px !important;
 }
 // rating
 .rating {
   align-items: center;
-  h6{
+  h6 {
     font-weight: 500;
     font-size: 14px;
   }

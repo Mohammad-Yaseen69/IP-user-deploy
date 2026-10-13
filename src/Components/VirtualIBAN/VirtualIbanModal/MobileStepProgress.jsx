@@ -9,7 +9,7 @@ const MobileStepProgress = ({
   isSidebarStepActive,
   isSidebarStepCompleted,
   SIDEBAR_STEPS,
-  handleClick
+  handleClick,
 }) => {
   const { t } = useTranslation();
 
@@ -36,10 +36,16 @@ const MobileStepProgress = ({
       </div>
       <div className={styles.mobileStepContainer}>
         <p className={styles.stepCount}>
-          {t('Step')} {order.indexOf(currentSidebarStep) + 1} {t('of')} {SIDEBAR_STEPS.length}
+          {t("Step")} {order.indexOf(currentSidebarStep) + 1} {t("of")}{" "}
+          {SIDEBAR_STEPS.length}
           <span> · {currentSidebarStep?.toLowerCase()}</span>
         </p>
-        <div className={styles.dropdownPill} onClick={handleClick} role="button" tabIndex={0}>
+        <div
+          className={styles.dropdownPill}
+          onClick={handleClick}
+          role="button"
+          tabIndex={0}
+        >
           <div className={styles.addIconContainer}>
             <FaQuestion size={8} />
           </div>

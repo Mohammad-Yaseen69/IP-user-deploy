@@ -7,7 +7,6 @@ import { useEffect, useRef, useState } from "react";
 import QRCodeStyling from "qr-code-styling";
 import logo from "../../assets/images/logo/logo.webp";
 
-
 const QrDetails = ({
   wallet,
   amount,
@@ -23,36 +22,38 @@ const QrDetails = ({
   const ref = useRef(null);
   const [qrLink, setQrLink] = useState("");
   const [logoReady, setLogoReady] = useState(false);
-  const base_url = window.location.origin || 'https://my.insta-pay.ch';
+  const base_url = window.location.origin || "https://my.insta-pay.ch";
 
-  const [qrCode] = useState(new QRCodeStyling({
-    width: 300,
-    height: 300,
-    qrOptions: {
-      typeNumber: "0",
-      mode: "Byte",
-      errorCorrectionLevel: "Q",
-    },
-    image: undefined, // set later when preloaded
-    imageOptions: {
-      hideBackgroundDots: true,
-      imageSize: 0.2,
-      margin: 10,
-    },
-    dotsOptions: {
-      type: "extra-rounded",
-      color: "#6a1a4c",
-      gradient: {
-        type: "linear",
-        rotation: 0.3141592653589793,
-        colorStops: [
-          { offset: 0, color: "#4b1135" },
-          { offset: 1, color: "#3c087d" },
-        ],
+  const [qrCode] = useState(
+    new QRCodeStyling({
+      width: 300,
+      height: 300,
+      qrOptions: {
+        typeNumber: "0",
+        mode: "Byte",
+        errorCorrectionLevel: "Q",
       },
-    },
-    backgroundOptions: { color: "#ffffff" },
-  }))
+      image: undefined, // set later when preloaded
+      imageOptions: {
+        hideBackgroundDots: true,
+        imageSize: 0.2,
+        margin: 10,
+      },
+      dotsOptions: {
+        type: "extra-rounded",
+        color: "#6a1a4c",
+        gradient: {
+          type: "linear",
+          rotation: 0.3141592653589793,
+          colorStops: [
+            { offset: 0, color: "#4b1135" },
+            { offset: 1, color: "#3c087d" },
+          ],
+        },
+      },
+      backgroundOptions: { color: "#ffffff" },
+    }),
+  );
   useEffect(() => {
     qrCode.append(ref.current);
   }, []);
@@ -77,7 +78,7 @@ const QrDetails = ({
     try {
       qrCode.update({ data: `${base_url}${url}` });
     } catch (_) {
-      // 
+      //
     }
 
     // If logo is ready, set it now
@@ -86,7 +87,9 @@ const QrDetails = ({
         qrCode.update({ image: logo });
       } catch (_) {
         // fallback: remove logo if it still fails
-        try { qrCode.update({ image: undefined }); } catch (_) { }
+        try {
+          qrCode.update({ image: undefined });
+        } catch (_) {}
       }
     }
 
@@ -103,8 +106,10 @@ const QrDetails = ({
       })
       .catch(() => {
         // retry once without logo
-        try { qrCode.update({ image: undefined }); } catch (_) {
-          // 
+        try {
+          qrCode.update({ image: undefined });
+        } catch (_) {
+          //
         }
         qrCode.getRawData("png").then((dataUrl) => {
           const file = new File([dataUrl], "qr.png", { type: "image/png" });
@@ -167,7 +172,7 @@ const QrDetails = ({
             <li>
               <span>
                 {t(
-                  "1. Choose your preferred social media app or InstaPay App."
+                  "1. Choose your preferred social media app or InstaPay App.",
                 )}
               </span>
               <div className={styles.btns}>
@@ -176,7 +181,7 @@ const QrDetails = ({
                   onClick={() =>
                     window.open(
                       "https://www.instagram.com/instapay_swiss",
-                      "_blank"
+                      "_blank",
                     )
                   }
                 >

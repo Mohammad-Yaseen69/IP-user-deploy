@@ -1,206 +1,201 @@
 .container {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    gap: 20px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 20px;
 
-    h4 {
-        margin-bottom: 25px;
-        color: var(--COLORS-Neutral-700, #777);
-        font-size: 15px;
-        font-style: normal;
-        font-weight: 600;
+  h4 {
+    margin-bottom: 25px;
+    color: var(--COLORS-Neutral-700, #777);
+    font-size: 15px;
+    font-style: normal;
+    font-weight: 600;
+
+    span {
+      color: var(--COLORS-Primary-300, #5926f0);
+      font-size: 14px;
+      font-style: normal;
+      font-weight: 600;
+    }
+  }
+
+  .bankList {
+    .list {
+      display: flex;
+      width: 100%;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: var(--Gaps-Gap-Medium, 12px);
+
+      .item {
+        display: flex;
+        padding: var(--Gaps-Gap-Medium, 12px) var(--Gaps-Gap-Large, 16px);
+        justify-content: space-between;
+        align-items: center;
+        gap: var(--Gaps-Gap-XLarge, 20px);
+        align-self: stretch;
+        border-radius: var(--Corner-Radius-XSmall-Roundness, 4px);
+        background: #fafafa;
+        cursor: pointer;
 
         span {
-            color: var(--COLORS-Primary-300, #5926F0);
+          color: var(--COLORS-Neutral-1000, #333);
+          font-size: 12px;
+          font-style: normal;
+          font-weight: 600;
+        }
+      }
+
+      .item.selected {
+        background-color: #eee9fd;
+      }
+    }
+  }
+
+  .bankDets {
+    .bankData {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: var(--Gaps-Gap-Large, 16px);
+      align-self: stretch;
+
+      .data {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--Gaps-Gap-Large, 6px);
+        align-self: stretch;
+
+        p {
+          color: var(--COLORS-Neutral-1000, #333);
+          font-size: 12px;
+          font-style: normal;
+          font-weight: 600;
+          margin-bottom: 0;
+        }
+
+        div {
+          display: flex;
+          padding: var(--Gaps-Gap-Medium, 12px)
+            var(--Corner-Radius-Medium-Roundness, 12px);
+          justify-content: space-between;
+          align-items: center;
+          gap: 10px;
+          align-self: stretch;
+          border-radius: 4px;
+          background: #fafafa;
+
+          span {
+            color: var(--COLORS-Primary-300, #5926f0);
             font-size: 14px;
             font-style: normal;
             font-weight: 600;
+          }
         }
+      }
     }
+  }
 
-    .bankList {
+  .success {
+    display: flex;
+    width: 100%;
+    border-radius: var(--RADIUS-radius-2, 8px);
+    background: rgba(89, 38, 240, 0.1);
+    padding: var(--SPACING-spacing-3, 24px) var(--Gaps-Gap-XLarge, 20px);
+    flex-direction: column;
+    align-items: center;
+    gap: 25px;
 
-
-        .list {
-            display: flex;
-            width: 100%;
-            flex-direction: column;
-            align-items: flex-start;
-            gap: var(--Gaps-Gap-Medium, 12px);
-
-            .item {
-                display: flex;
-                padding: var(--Gaps-Gap-Medium, 12px) var(--Gaps-Gap-Large, 16px);
-                justify-content: space-between;
-                align-items: center;
-                gap: var(--Gaps-Gap-XLarge, 20px);
-                align-self: stretch;
-                border-radius: var(--Corner-Radius-XSmall-Roundness, 4px);
-                background: #fafafa;
-                cursor: pointer;
-
-
-                span {
-                    color: var(--COLORS-Neutral-1000, #333);
-                    font-size: 12px;
-                    font-style: normal;
-                    font-weight: 600;
-                }
-            }
-
-            .item.selected {
-                background-color: #eee9fd;
-            }
-        }
+    div {
+      display: inline-flex;
+      padding: var(--SPACING-spacing-0, 8px);
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      border-radius: var(--RADIUS-radius-2, 8px);
+      background: var(--COLORS-Primary-300, #5926f0);
     }
-
-    .bankDets {
-
-
-        .bankData {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            gap: var(--Gaps-Gap-Large, 16px);
-            align-self: stretch;
-
-            .data {
-                display: flex;
-                flex-direction: column;
-                align-items: flex-start;
-                gap: var(--Gaps-Gap-Large, 6px);
-                align-self: stretch;
-
-                p {
-                    color: var(--COLORS-Neutral-1000, #333);
-                    font-size: 12px;
-                    font-style: normal;
-                    font-weight: 600;
-                    margin-bottom: 0;
-                }
-
-                div {
-                    display: flex;
-                    padding: var(--Gaps-Gap-Medium, 12px) var(--Corner-Radius-Medium-Roundness, 12px);
-                    justify-content: space-between;
-                    align-items: center;
-                    gap: 10px;
-                    align-self: stretch;
-                    border-radius: 4px;
-                    background: #FAFAFA;
-
-
-                    span {
-                        color: var(--COLORS-Primary-300, #5926F0);
-                        font-size: 14px;
-                        font-style: normal;
-                        font-weight: 600;
-                    }
-                }
-            }
-        }
-
-    }
-
-    .success {
-        display: flex;
-        width: 100%;
-        border-radius: var(--RADIUS-radius-2, 8px);
-        background: rgba(89, 38, 240, 0.10);
-        padding: var(--SPACING-spacing-3, 24px) var(--Gaps-Gap-XLarge, 20px);
-        flex-direction: column;
-        align-items: center;
-        gap: 25px;
-
-        div {
-            display: inline-flex;
-            padding: var(--SPACING-spacing-0, 8px);
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
-            border-radius: var(--RADIUS-radius-2, 8px);
-            background: var(--COLORS-Primary-300, #5926F0);
-        }
-    }
+  }
 }
 
 .bottom {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .bottom a {
-    color: #A6A6A6;
-    leading-trim: both;
-    text-edge: cap;
-    font-family: Manrope;
-    font-size: 12px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: 150%;
-    /* 18px */
+  color: #a6a6a6;
+  leading-trim: both;
+  text-edge: cap;
+  font-family: Manrope;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 150%;
+  /* 18px */
 }
 
 .buttons {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
 }
 
-.buttons.mobileButtons{
-    flex-direction: column-reverse;
-    width: 100%;
-    align-items: stretch;
+.buttons.mobileButtons {
+  flex-direction: column-reverse;
+  width: 100%;
+  align-items: stretch;
 }
 
-
-.buttons.mobileButtons button{
-    background: rgb(89, 38, 240);
-    padding: 1rem;
-    border-radius: 11px;
-    justify-content: center;
-    text-align: center;
+.buttons.mobileButtons button {
+  background: rgb(89, 38, 240);
+  padding: 1rem;
+  border-radius: 11px;
+  justify-content: center;
+  text-align: center;
 }
 
-.buttons.mobileButtons .transparent{
-    background: rgb(238, 238, 238);
-    box-shadow: rgba(0, 0, 0, 0.09) 0px 3.643px 30.052px 0px;
-    color: black;
+.buttons.mobileButtons .transparent {
+  background: rgb(238, 238, 238);
+  box-shadow: rgba(0, 0, 0, 0.09) 0px 3.643px 30.052px 0px;
+  color: black;
 }
 
 .buttons button {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    border-radius: 6px;
-    background: linear-gradient(0deg, rgba(0, 0, 0, 0.40) 0%, rgba(0, 0, 0, 0.40) 100%), linear-gradient(277deg, #E64067 -9.52%, #5926F0 62.22%, #4828A0 119.38%);
-    background-blend-mode: overlay, normal;
-    box-shadow: 0px 11.901px 8.655px -5.409px rgba(89, 38, 240, 0.17);
-    display: flex;
-    padding: .4rem 1rem;
-    align-items: center;
-    color: #FFF;
-    font-size: 16px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: normal;
-    letter-spacing: -0.16px;
-    gap: 16px;
-    outline: none;
-    border: none;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  border-radius: 6px;
+  background:
+    linear-gradient(0deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.4) 100%),
+    linear-gradient(277deg, #e64067 -9.52%, #5926f0 62.22%, #4828a0 119.38%);
+  background-blend-mode: overlay, normal;
+  box-shadow: 0px 11.901px 8.655px -5.409px rgba(89, 38, 240, 0.17);
+  display: flex;
+  padding: 0.4rem 1rem;
+  align-items: center;
+  color: #fff;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  letter-spacing: -0.16px;
+  gap: 16px;
+  outline: none;
+  border: none;
 }
 
 .buttons .transparent {
-    all: unset;
-    cursor: pointer;
-    color: #808080;
-    font-size: 14px;
-    font-weight: 600;
+  all: unset;
+  cursor: pointer;
+  color: #808080;
+  font-size: 14px;
+  font-weight: 600;
 }
 
 .bottom button:disabled {
-    opacity: .7;
+  opacity: 0.7;
 }

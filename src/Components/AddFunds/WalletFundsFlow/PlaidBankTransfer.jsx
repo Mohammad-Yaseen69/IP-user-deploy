@@ -31,9 +31,10 @@ const PlaidBankTransfer = ({
   endpoint = "",
   handleBackClick,
   successMessage,
-  closeBtnText
+  closeBtnText,
 }) => {
-  const { userDetails, authHeader, setProfileLockTime } = useContext(UserContext);
+  const { userDetails, authHeader, setProfileLockTime } =
+    useContext(UserContext);
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [plaidStep, setPlaidStep] = useState(1);
@@ -49,22 +50,26 @@ const PlaidBankTransfer = ({
   const [otpToken, setOtpToken] = useState(null);
   const [otpMethods, setOtpMethods] = useState(null);
   const [showOtp, setShowOtp] = useState(false);
-  const [codeType, setCodeType] = useState("sms")
+  const [codeType, setCodeType] = useState("sms");
   const [redirectTimer, setRedirectTimer] = useState(10);
   const { sendOtp, isSendingOtp } = useSendOtp({
     onSuccess: (token, data) => {
-      console.log(token, data)
-      setShowOtp(true)
-      setOtpToken(token)
-      setOtpMethods(data)
+      console.log(token, data);
+      setShowOtp(true);
+      setOtpToken(token);
+      setOtpMethods(data);
       if (!showOtp) {
-        setCodeType(data?.otp_sent_on || 'sms')
+        setCodeType(data?.otp_sent_on || "sms");
       }
     },
     onError: (err) => {
-      dataHandler("error", err?.message || "We are unable to process your request at the moment, please try again later!")
-    }
-  })
+      dataHandler(
+        "error",
+        err?.message ||
+          "We are unable to process your request at the moment, please try again later!",
+      );
+    },
+  });
 
   useEffect(() => {
     if (userDetails?._id) {
@@ -72,11 +77,14 @@ const PlaidBankTransfer = ({
         fetchSavedBanks();
       }
       setCodeType(
-        userDetails?.tfa ? "authenticator"
-          : userDetails?.email_verification ? "email"
-            : userDetails?.whatsapp_verification ? "whatsapp"
-              : "sms"
-      )
+        userDetails?.tfa
+          ? "authenticator"
+          : userDetails?.email_verification
+            ? "email"
+            : userDetails?.whatsapp_verification
+              ? "whatsapp"
+              : "sms",
+      );
     }
   }, [userDetails?._id, type]);
   useEffect(() => {
@@ -125,82 +133,94 @@ const PlaidBankTransfer = ({
       setSelectedBankId(null);
     }
   };
-  const { mutateAsync: initiatePlaidPayment, isPending: isInitiatingPlaid } = useMutation({
-    mutationFn: async ({ otp }) => {
-      const initiatePayloadResponse = {
-        ...initiatePayload(true),
-        recipient_iban: recipientData.iban,
-        saveForFutureUse: recipientData.saveForFutureUse,
-      }
+  const { mutateAsync: initiatePlaidPayment, isPending: isInitiatingPlaid } =
+    useMutation({
+      mutationFn: async ({ otp }) => {
+        const initiatePayloadResponse = {
+          ...initiatePayload(true),
+          recipient_iban: recipientData.iban,
+          saveForFutureUse: recipientData.saveForFutureUse,
+        };
 
-      if (type === "add_funds") {
-        initiatePayloadResponse.recipientIban = recipientData.iban
-      }
+        if (type === "add_funds") {
+          initiatePayloadResponse.recipientIban = recipientData.iban;
+        }
 
-      console.log(otp, otpToken)
-      if (otp && otpToken) {
-        initiatePayloadResponse.otp = otp
-        initiatePayloadResponse.token = otpToken
-        initiatePayloadResponse.type = codeType
-      }
+        console.log(otp, otpToken);
+        if (otp && otpToken) {
+          initiatePayloadResponse.otp = otp;
+          initiatePayloadResponse.token = otpToken;
+          initiatePayloadResponse.type = codeType;
+        }
 
-      console.log("Initiating Plaid Payment with payload:", initiatePayloadResponse);
+        console.log(
+          "Initiating Plaid Payment with payload:",
+          initiatePayloadResponse,
+        );
 
-      const response = await apiWrapper({
-        endpoint: type === "payment_address" ? "/api/guest-pay/initiate-bank-payment" : endpoint || "/api/plaid/initiate-payment",
-        method: "POST",
-        payload: initiatePayloadResponse,
-        isEncrypted: type === "add_funds" || type === "wallet_to_wallet" ? false : true,
-        isDecrypted: type === "add_funds" ? false : true,
-      })
+        const response = await apiWrapper({
+          endpoint:
+            type === "payment_address"
+              ? "/api/guest-pay/initiate-bank-payment"
+              : endpoint || "/api/plaid/initiate-payment",
+          method: "POST",
+          payload: initiatePayloadResponse,
+          isEncrypted:
+            type === "add_funds" || type === "wallet_to_wallet" ? false : true,
+          isDecrypted: type === "add_funds" ? false : true,
+        });
 
-      console.log("Plaid initiation response:", response);
+        console.log("Plaid initiation response:", response);
 
-
-
-      return response;
-    },
-    onSuccess: (res) => {
-      console.log(res)
-      setLinkToken(res?.linkToken || res?.data?.linkToken);
-      setShowOtp(false)
-      setOtpToken(null)
-      setPendingTransactionId(res?.transaction_id || res?.data?.transactionId || res?.data?.data?.transactionId || null);
-      if (type === "verification_payment") {
-        setAutoOpen(true);
-      } else {
-        setPlaidStep(2);
-      }
-    },
-    onError: (error) => {
-      console.error("Failed to initiate Plaid payment:", error);
-      handlePaymentApiError({
-        error,
-        setError: (m) => dataHandler("error", m),
-        setProfileLockTime,
-        navigate,
-        fallback: "We are unable to process your request at the moment, please try again later.",
-      });
-    },
-  });
+        return response;
+      },
+      onSuccess: (res) => {
+        console.log(res);
+        setLinkToken(res?.linkToken || res?.data?.linkToken);
+        setShowOtp(false);
+        setOtpToken(null);
+        setPendingTransactionId(
+          res?.transaction_id ||
+            res?.data?.transactionId ||
+            res?.data?.data?.transactionId ||
+            null,
+        );
+        if (type === "verification_payment") {
+          setAutoOpen(true);
+        } else {
+          setPlaidStep(2);
+        }
+      },
+      onError: (error) => {
+        console.error("Failed to initiate Plaid payment:", error);
+        handlePaymentApiError({
+          error,
+          setError: (m) => dataHandler("error", m),
+          setProfileLockTime,
+          navigate,
+          fallback:
+            "We are unable to process your request at the moment, please try again later.",
+        });
+      },
+    });
 
   const sendOtpHandler = async (otpCodeType) => {
     const initiatePayloadResponse = {
       ...initiatePayload(true),
       recipient_iban: recipientData.iban,
       saveForFutureUse: recipientData.saveForFutureUse,
-    }
+    };
 
     if (otpCodeType === "add_funds") {
-      initiatePayloadResponse.recipientIban = recipientData.iban
+      initiatePayloadResponse.recipientIban = recipientData.iban;
     }
 
-    await sendOtp(initiatePayloadResponse, otpCodeType || codeType)
-  }
+    await sendOtp(initiatePayloadResponse, otpCodeType || codeType);
+  };
 
   const initiateCallback = (setter, _, otp) => {
-    initiatePlaidPayment({ otp })
-  }
+    initiatePlaidPayment({ otp });
+  };
 
   const { mutateAsync: exchangePlaidToken, isPending: isExchangingToken } =
     useMutation({
@@ -211,23 +231,28 @@ const PlaidBankTransfer = ({
           userId: userDetails?._id,
           amount: data.exchange_rate?.sending?.amount,
           walletId: data.wallet?._id,
-          walletCurrency: data?.exchange_rate?.sending?.currency || data.wallet?.currency?.code,
+          walletCurrency:
+            data?.exchange_rate?.sending?.currency ||
+            data.wallet?.currency?.code,
           recipientIban: recipientData.iban,
           saveForFutureUse: recipientData.saveForFutureUse,
           transactionId: pendingTransactionId || null,
           bankName,
           fee: data.exchange_rate?.fee?.amount ?? 0,
-          transaction_id: pendingTransactionId || null
+          transaction_id: pendingTransactionId || null,
         };
         console.log("Exchanging Plaid token with payload:", payload);
-        // 
+        //
         const response = await apiWrapper({
-          endpoint: type === "payment_address" ? "/api/guest-pay/exchange-bank-token" : "/api/plaid/exchange-token",
+          endpoint:
+            type === "payment_address"
+              ? "/api/guest-pay/exchange-bank-token"
+              : "/api/plaid/exchange-token",
           method: "POST",
           payload: payload,
           isEncrypted: type === "payment_address" ? true : false,
           isDecrypted: type === "payment_address" ? true : false,
-        })
+        });
         console.log("Token exchange response:", response.data);
         return response.data;
       },
@@ -238,7 +263,8 @@ const PlaidBankTransfer = ({
       onError: (error) => {
         console.error("Failed to exchange Plaid token:", error);
         toast.error(
-          "we are unable to process your request at the moment, please try again later!" | error?.response?.data?.message || error.message
+          "we are unable to process your request at the moment, please try again later!" |
+            error?.response?.data?.message || error.message,
         );
         setPlaidStep(1);
       },
@@ -261,17 +287,18 @@ const PlaidBankTransfer = ({
           ...initiatePayload(true),
           recipient_iban: recipientData.iban,
           saveForFutureUse: recipientData.saveForFutureUse,
-        }
+        };
 
         console.log("Using saved bank with payload:", payload);
 
         const response = await apiWrapper({
           endpoint: endpoint || "/api/plaid/use-saved-bank",
           payload: type === "add_funds" ? topupPayload : payload,
-          isEncrypted: type === "add_funds" || type === "wallet_to_wallet" ? false : true,
+          isEncrypted:
+            type === "add_funds" || type === "wallet_to_wallet" ? false : true,
           isDecrypted: type === "add_funds" ? false : true,
           method: "POST",
-        })
+        });
 
         console.log("Saved bank payment response:", response);
         return response;
@@ -283,7 +310,10 @@ const PlaidBankTransfer = ({
       onError: (error) => {
         console.error("Failed to use saved bank:", error);
         if (error.response?.data?.action === "RECONNECT_REQUIRED") {
-          dataHandler("error ", "This bank needs to be reconnected. Please add it again.",);
+          dataHandler(
+            "error ",
+            "This bank needs to be reconnected. Please add it again.",
+          );
           if (userDetails?._id) {
             fetchSavedBanks();
           }
@@ -293,7 +323,8 @@ const PlaidBankTransfer = ({
             setError: (m) => dataHandler("error", m),
             setProfileLockTime,
             navigate,
-            fallback: "We are unable to process your request at the moment, please try again later.",
+            fallback:
+              "We are unable to process your request at the moment, please try again later.",
           });
         }
       },
@@ -360,18 +391,29 @@ const PlaidBankTransfer = ({
     }
   }, [autoOpen, ready, linkToken, open]);
 
-
   const getExitPayload = (err) => {
     if (err) {
-      const errCode = (err?.error_code || err?.errorCode || err?.code || "").toString();
+      const errCode = (
+        err?.error_code ||
+        err?.errorCode ||
+        err?.code ||
+        ""
+      ).toString();
 
       if (errCode && PLAID_EXIT_MAP[errCode]) return PLAID_EXIT_MAP[errCode];
 
-      const rawMsg = (err?.display_message || err?.error_message || err?.message || "").toLowerCase();
+      const rawMsg = (
+        err?.display_message ||
+        err?.error_message ||
+        err?.message ||
+        ""
+      ).toLowerCase();
 
-      if (rawMsg.includes("insufficient")) return PLAID_EXIT_MAP.PAYMENT_INSUFFICIENT_FUNDS;
+      if (rawMsg.includes("insufficient"))
+        return PLAID_EXIT_MAP.PAYMENT_INSUFFICIENT_FUNDS;
       if (rawMsg.includes("expired")) return PLAID_EXIT_MAP.PAYMENT_EXPIRED;
-      if (rawMsg.includes("limit")) return PLAID_EXIT_MAP.PAYMENT_LIMIT_EXCEEDED;
+      if (rawMsg.includes("limit"))
+        return PLAID_EXIT_MAP.PAYMENT_LIMIT_EXCEEDED;
 
       return {
         code: errCode || PLAID_EXIT_MAP.UNKNOWN.code,
@@ -392,13 +434,13 @@ const PlaidBankTransfer = ({
     if (plaidStep === 1) {
       if (type === "wallet_to_wallet") {
         if (handleBackClick) {
-          handleBackClick()
+          handleBackClick();
         } else {
           dataHandler("step", 4);
         }
       } else {
         if (handleBackClick) {
-          handleBackClick()
+          handleBackClick();
         } else {
           dataHandler("step", 3);
           dataHandler("exchange_rate", data.exchange_rate_backup);
@@ -424,11 +466,14 @@ const PlaidBankTransfer = ({
     }
   };
 
-  console.log(ready)
+  console.log(ready);
   return (
     <div
       style={{
-        minHeight: type === "verification_payment" ? "300px" : window.innerWidth < 1000 && type === "payment_address" && "80vh",
+        minHeight:
+          type === "verification_payment"
+            ? "300px"
+            : window.innerWidth < 1000 && type === "payment_address" && "80vh",
       }}
       className={styles.container}
     >
@@ -496,15 +541,20 @@ const PlaidBankTransfer = ({
             style={{ color: "black", textAlign: "center", marginBottom: "0px" }}
           >
             {t(
-              successMessage ? successMessage : type !== "add_funds" ? "Payment authorized successfully, the recipient will receive the amount once the transfer is complete, you can now close this window" : "Payment authorized successfully! Your wallet will be credited once the transfer is complete.",
+              successMessage
+                ? successMessage
+                : type !== "add_funds"
+                  ? "Payment authorized successfully, the recipient will receive the amount once the transfer is complete, you can now close this window"
+                  : "Payment authorized successfully! Your wallet will be credited once the transfer is complete.",
             )}
           </h4>
         </div>
       )}
 
-
       <Modal isOpen={showOtp} toggle={() => setShowOtp(!showOtp)}>
-        <ModalHeader toggle={() => setShowOtp(!showOtp)}>{t("Confirm")}</ModalHeader>
+        <ModalHeader toggle={() => setShowOtp(!showOtp)}>
+          {t("Confirm")}
+        </ModalHeader>
 
         <ModalBody>
           <OTPConfirmation
@@ -520,7 +570,6 @@ const PlaidBankTransfer = ({
           />
         </ModalBody>
       </Modal>
-
 
       <div className={styles.bottom}>
         <div></div>
@@ -541,10 +590,11 @@ const PlaidBankTransfer = ({
               disabled={
                 isInitiatingPlaid ||
                 isUsingSavedBank ||
-                (!selectedBankId && !recipientData.iban?.trim()) || isSendingOtp
+                (!selectedBankId && !recipientData.iban?.trim()) ||
+                isSendingOtp
               }
               onClick={async () => {
-                console.log("clicked")
+                console.log("clicked");
                 try {
                   if (selectedBankId) {
                     console.log("Using saved bank:", selectedBankId);
@@ -553,7 +603,7 @@ const PlaidBankTransfer = ({
                   } else {
                     console.log("Adding new bank");
                     if (type === "verification_payment") {
-                      await sendOtpHandler()
+                      await sendOtpHandler();
                     } else {
                       await initiatePlaidPayment({});
                     }
@@ -582,14 +632,14 @@ const PlaidBankTransfer = ({
           )}
           {plaidStep === 4 && (
             <button onClick={onBackClickHandler}>
-              {
-                closeBtnText
-                  ? t(closeBtnText)
-                  : type === "payment_address"
-                    ? t("Close")
-                    :
-                    t("Redirecting to transactions in {{timer}} seconds", { timer: redirectTimer })
-              }          {window.innerWidth > 1000 && <ChevronRight size={18} />}
+              {closeBtnText
+                ? t(closeBtnText)
+                : type === "payment_address"
+                  ? t("Close")
+                  : t("Redirecting to transactions in {{timer}} seconds", {
+                      timer: redirectTimer,
+                    })}{" "}
+              {window.innerWidth > 1000 && <ChevronRight size={18} />}
             </button>
           )}
         </div>

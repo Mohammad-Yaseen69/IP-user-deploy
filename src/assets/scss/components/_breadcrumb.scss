@@ -42,27 +42,27 @@
   (secondary, $secondary-color), (success, $success-color),
   (danger, $danger-color), (info, $info-color), (light, $light-color),
   (dark, $dark-color), (warning, $warning-color)
-  {
-    .bg-outline-#{$bg-name} {
-      border: 1px solid $bg-color;
-      color: $bg-color;
-      background-color: transparent;
-      li.breadcrumb-item{
-        &.active{
+{
+  .bg-outline-#{$bg-name} {
+    border: 1px solid $bg-color;
+    color: $bg-color;
+    background-color: transparent;
+    li.breadcrumb-item {
+      &.active {
+        color: $bg-color;
+      }
+      &:before {
+        color: $bg-color;
+      }
+      a {
+        color: $bg-color;
+        &.active {
           color: $bg-color;
-        }
-        &:before{
-          color: $bg-color;
-        }
-        a{
-          color: $bg-color;
-          &.active{
-            color: $bg-color;
-          }
         }
       }
     }
   }
+}
 /**=====================
     08. breadcrumb CSS ends
 ==========================**/

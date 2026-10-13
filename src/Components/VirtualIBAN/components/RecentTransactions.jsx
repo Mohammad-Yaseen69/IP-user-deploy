@@ -1,16 +1,19 @@
-import { Button, Divider, ListItemText, Menu, MenuItem } from '@mui/material';
+import { Button, Divider, ListItemText, Menu, MenuItem } from "@mui/material";
 import { useContext, useEffect, useRef, useState } from "react";
 import { ChevronDown, Download, Filter, Search } from "react-feather";
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
-import Paginations from '../../../Common/Component/Paginations';
+import Paginations from "../../../Common/Component/Paginations";
 import { UserContext } from "../../../Context/UserContext";
-import { generateProofOfPaymentPDF, isOutgoingTransaction } from "../../../utils/Functions/proofOfPayment";
+import {
+  generateProofOfPaymentPDF,
+  isOutgoingTransaction,
+} from "../../../utils/Functions/proofOfPayment";
 import StatementModal from "../StatementModal";
 import styles from "../styles/RecentTransactions.module.css";
-import Empty from './Empty';
-import InstaPayLoader from '../../Loader';
-import { formatCurrency } from '../../../Helper/AmountFormat';
+import Empty from "./Empty";
+import InstaPayLoader from "../../Loader";
+import { formatCurrency } from "../../../Helper/AmountFormat";
 
 const statusColors = {
   COMPLETED: { bg: "rgba(34,197,94,0.1)", color: "#16a34a" },
@@ -43,8 +46,14 @@ const formatSignedAmount = (tx) => {
 const formatPaymentRail = (method) => {
   if (!method) return null;
   const upper = String(method).toUpperCase();
-  if (upper === "SEPA_INST" || upper === "SEPA_INSTANT" || upper === "INSTANT") return "SEPA Instant (SEPA_INST)";
-  if (upper === "SEPA_CT" || upper === "SEPA_CREDIT_TRANSFER" || upper === "STANDARD") return "SEPA Credit Transfer (SEPA_CT)";
+  if (upper === "SEPA_INST" || upper === "SEPA_INSTANT" || upper === "INSTANT")
+    return "SEPA Instant (SEPA_INST)";
+  if (
+    upper === "SEPA_CT" ||
+    upper === "SEPA_CREDIT_TRANSFER" ||
+    upper === "STANDARD"
+  )
+    return "SEPA Credit Transfer (SEPA_CT)";
   return String(method).replace(/_/g, " ");
 };
 
@@ -79,8 +88,11 @@ const TransactionRow = ({ tx, selectedIban }) => {
   const statusColor = statusColors[status] || statusColors.PENDING;
 
   const dateStr = new Date(tx.createdAt).toLocaleDateString("en-US", {
-    year: "numeric", month: "short", day: "2-digit",
-    hour: "2-digit", minute: "2-digit",
+    year: "numeric",
+    month: "short",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
   });
 
   const beneficiaryEntityType =
@@ -102,7 +114,7 @@ const TransactionRow = ({ tx, selectedIban }) => {
     tx.beneficiary?.bankCountry;
 
   const paymentRail = formatPaymentRail(
-    tx.bvnk_method || tx.payment_method || tx.rail || tx.network || tx.method
+    tx.bvnk_method || tx.payment_method || tx.rail || tx.network || tx.method,
   );
 
   return (
@@ -116,17 +128,26 @@ const TransactionRow = ({ tx, selectedIban }) => {
           </span>
         </td>
 
-        <td className={styles.txId}>{tx.reference_id || tx.external_reference || "N/A"}</td>
+        <td className={styles.txId}>
+          {tx.reference_id || tx.external_reference || "N/A"}
+        </td>
 
-        <td>{tx?.type === "iban_payin" ? tx?.originator?.name : tx?.beneficiary?.name || tx.virtual_iban?.account_holder_name || "N/A"}</td>
+        <td>
+          {tx?.type === "iban_payin"
+            ? tx?.originator?.name
+            : tx?.beneficiary?.name ||
+              tx.virtual_iban?.account_holder_name ||
+              "N/A"}
+        </td>
 
         <td
-          className={`${styles.amount} ${String(tx.transaction_type || "").toLowerCase() === "credit"
-            ? styles.amountCredit
-            : String(tx.transaction_type || "").toLowerCase() === "debit"
-              ? styles.amountDebit
-              : ""
-            }`}
+          className={`${styles.amount} ${
+            String(tx.transaction_type || "").toLowerCase() === "credit"
+              ? styles.amountCredit
+              : String(tx.transaction_type || "").toLowerCase() === "debit"
+                ? styles.amountDebit
+                : ""
+          }`}
         >
           {formatSignedAmount(tx)}
         </td>
@@ -139,10 +160,7 @@ const TransactionRow = ({ tx, selectedIban }) => {
             >
               {t(status)}
             </span>
-
-
           </div>
-
         </td>
         <td>
           <button
@@ -160,13 +178,18 @@ const TransactionRow = ({ tx, selectedIban }) => {
         <tr className={styles.accordionRow}>
           <td colSpan={6}>
             <div className={styles.accordionInner}>
-
               <div className={styles.detailGrid}>
                 {paymentRail && (
-                  <DetailItem label={t("Payment Rail")} value={t(paymentRail)} />
+                  <DetailItem
+                    label={t("Payment Rail")}
+                    value={t(paymentRail)}
+                  />
                 )}
                 {formattedEntityType && (
-                  <DetailItem label={t("Entity Type")} value={t(formattedEntityType)} />
+                  <DetailItem
+                    label={t("Entity Type")}
+                    value={t(formattedEntityType)}
+                  />
                 )}
                 {beneficiaryBank && (
                   <DetailItem label={t("Bank Name")} value={beneficiaryBank} />
@@ -174,11 +197,15 @@ const TransactionRow = ({ tx, selectedIban }) => {
                 {beneficiaryCountry && (
                   <DetailItem label={t("Country")} value={beneficiaryCountry} />
                 )}
-                <DetailItem label={t("Amount")}
-                  value={formatSignedAmount(tx)} />
+                <DetailItem
+                  label={t("Amount")}
+                  value={formatSignedAmount(tx)}
+                />
                 {tx.fee != null && (
-                  <DetailItem label={t("Fee")}
-                    value={`${tx.currency} ${tx.fee?.toFixed(2)}`} />
+                  <DetailItem
+                    label={t("Fee")}
+                    value={`${tx.currency} ${tx.fee?.toFixed(2)}`}
+                  />
                 )}
                 {tx.total != null && (
                   <DetailItem
@@ -188,21 +215,29 @@ const TransactionRow = ({ tx, selectedIban }) => {
                 )}
 
                 {tx.transaction_type && (
-                  <DetailItem label={t("Transaction Type")}
-                    value={t(tx.transaction_type)} />
+                  <DetailItem
+                    label={t("Transaction Type")}
+                    value={t(tx.transaction_type)}
+                  />
                 )}
                 {tx.type && (
-                  <DetailItem label={t("Service Type")}
-                    value={t(formatType(tx.type))} />
+                  <DetailItem
+                    label={t("Service Type")}
+                    value={t(formatType(tx.type))}
+                  />
                 )}
-                
+
                 {tx?.metadata?.network_fee_eur && (
-                  <DetailItem label={t("Network Fee")} value={formatCurrency(tx?.metadata?.network_fee_eur)} />
+                  <DetailItem
+                    label={t("Network Fee")}
+                    value={formatCurrency(tx?.metadata?.network_fee_eur)}
+                  />
                 )}
 
-                <DetailItem label={t("Reference")} value={tx?.remittance_information ?? tx?.reference_id} />
-
-
+                <DetailItem
+                  label={t("Reference")}
+                  value={tx?.remittance_information ?? tx?.reference_id}
+                />
               </div>
 
               {isOutgoing && (
@@ -212,10 +247,11 @@ const TransactionRow = ({ tx, selectedIban }) => {
                   disabled={downloadingProof}
                 >
                   <Download size={13} />
-                  {downloadingProof ? t("Preparing...") : t("Download Proof of Payment")}
+                  {downloadingProof
+                    ? t("Preparing...")
+                    : t("Download Proof of Payment")}
                 </button>
               )}
-
             </div>
           </td>
         </tr>
@@ -232,9 +268,18 @@ const DetailItem = ({ label, value }) => (
 );
 
 const RecentTransactions = ({
-  setActiveTab, transactions, page, setPage,
-  limit, setLimit, totalPages,
-  setStatusFilter, setQ, setOrder, selectedIban, loading
+  setActiveTab,
+  transactions,
+  page,
+  setPage,
+  limit,
+  setLimit,
+  totalPages,
+  setStatusFilter,
+  setQ,
+  setOrder,
+  selectedIban,
+  loading,
 }) => {
   const { t } = useTranslation();
   const [search, setSearch] = useState("");
@@ -256,12 +301,15 @@ const RecentTransactions = ({
     return () => clearTimeout(searchDebounce.current);
   }, [search, setQ, setPage]);
 
-  if(loading) return <InstaPayLoader />;
+  if (loading) return <InstaPayLoader />;
   return (
     <>
       <div className={styles.header}>
         <h3 className={styles.title}>{t("Recent Transactions ")}</h3>
-        <button className={styles.viewAll} onClick={() => setActiveTab("transaction-history")}>
+        <button
+          className={styles.viewAll}
+          onClick={() => setActiveTab("transaction-history")}
+        >
           {t("View All")}
         </button>
       </div>
@@ -297,17 +345,31 @@ const RecentTransactions = ({
                 <span>{t("Filter")}</span>
               </Button>
               <Menu
-                anchorEl={anchorFilter} open={openFilter}
+                anchorEl={anchorFilter}
+                open={openFilter}
                 onClose={() => setAnchorFilter(null)}
                 anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
                 transformOrigin={{ vertical: "top", horizontal: "right" }}
               >
-                <MenuItem onClick={() => { setStatusFilter(""); setPage(1); setAnchorFilter(null); }}>
+                <MenuItem
+                  onClick={() => {
+                    setStatusFilter("");
+                    setPage(1);
+                    setAnchorFilter(null);
+                  }}
+                >
                   <ListItemText primary={t("All statuses")} />
                 </MenuItem>
                 <Divider />
                 {["INITIATED", "PROCESSING", "COMPLETED", "FAILED"].map((s) => (
-                  <MenuItem key={s} onClick={() => { setStatusFilter(s); setPage(1); setAnchorFilter(null); }}>
+                  <MenuItem
+                    key={s}
+                    onClick={() => {
+                      setStatusFilter(s);
+                      setPage(1);
+                      setAnchorFilter(null);
+                    }}
+                  >
                     {t(s)}
                   </MenuItem>
                 ))}
@@ -319,27 +381,71 @@ const RecentTransactions = ({
                 className={styles.toolBtn}
                 onClick={(e) => setAnchorSort(e.currentTarget)}
                 startIcon={
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
-                    <path d="M3 8H7.5" stroke="#1B1F2A" strokeLinecap="round" strokeLinejoin="round" />
-                    <path d="M3 4H6.5" stroke="#1B1F2A" strokeLinecap="round" strokeLinejoin="round" />
-                    <path d="M3 12H11.5" stroke="#1B1F2A" strokeLinecap="round" strokeLinejoin="round" />
-                    <path d="M9 5.5L11.5 3L14 5.5" stroke="#1B1F2A" strokeLinecap="round" strokeLinejoin="round" />
-                    <path d="M11.5 3V9" stroke="#1B1F2A" strokeLinecap="round" strokeLinejoin="round" />
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 16 16"
+                    fill="none"
+                  >
+                    <path
+                      d="M3 8H7.5"
+                      stroke="#1B1F2A"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                    <path
+                      d="M3 4H6.5"
+                      stroke="#1B1F2A"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                    <path
+                      d="M3 12H11.5"
+                      stroke="#1B1F2A"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                    <path
+                      d="M9 5.5L11.5 3L14 5.5"
+                      stroke="#1B1F2A"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                    <path
+                      d="M11.5 3V9"
+                      stroke="#1B1F2A"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
                   </svg>
                 }
               >
                 <span>{t("Sort By")}</span>
               </Button>
               <Menu
-                anchorEl={anchorSort} open={openSort}
+                anchorEl={anchorSort}
+                open={openSort}
                 onClose={() => setAnchorSort(null)}
                 anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
                 transformOrigin={{ vertical: "top", horizontal: "right" }}
               >
-                <MenuItem onClick={() => { setOrder("desc"); setPage(1); setAnchorSort(null); }}>
+                <MenuItem
+                  onClick={() => {
+                    setOrder("desc");
+                    setPage(1);
+                    setAnchorSort(null);
+                  }}
+                >
                   {t("Date (newest)")}
                 </MenuItem>
-                <MenuItem onClick={() => { setOrder("asc"); setPage(1); setAnchorSort(null); }}>
+                <MenuItem
+                  onClick={() => {
+                    setOrder("asc");
+                    setPage(1);
+                    setAnchorSort(null);
+                  }}
+                >
                   {t("Date (oldest)")}
                 </MenuItem>
               </Menu>

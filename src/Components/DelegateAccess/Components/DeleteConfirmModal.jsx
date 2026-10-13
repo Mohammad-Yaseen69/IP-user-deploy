@@ -3,7 +3,15 @@ import { Modal, ModalBody, Button, Spinner } from "reactstrap";
 import { useTranslation } from "react-i18next";
 import { AlertTriangle, CheckCircle, XCircle, X } from "react-feather";
 
-const DeleteConfirmModal = ({ isOpen, toggle, onConfirm, itemName, isLoading, isSuccess, isError }) => {
+const DeleteConfirmModal = ({
+  isOpen,
+  toggle,
+  onConfirm,
+  itemName,
+  isLoading,
+  isSuccess,
+  isError,
+}) => {
   const { t } = useTranslation();
 
   const renderContent = () => {
@@ -12,7 +20,9 @@ const DeleteConfirmModal = ({ isOpen, toggle, onConfirm, itemName, isLoading, is
         <div className="status-wrap">
           <Spinner color="primary" className="spinner" />
           <h5 className="mt-3">{t("Deleting...")}</h5>
-          <p className="text-muted">{t("Please wait while we process your request.")}</p>
+          <p className="text-muted">
+            {t("Please wait while we process your request.")}
+          </p>
         </div>
       );
     }
@@ -41,7 +51,9 @@ const DeleteConfirmModal = ({ isOpen, toggle, onConfirm, itemName, isLoading, is
             <XCircle size={40} color="#e74c3c" />
           </div>
           <h5 className="mt-3 text-danger">{t("Error!")}</h5>
-          <p className="text-muted">{t("Something went wrong. Please try again.")}</p>
+          <p className="text-muted">
+            {t("Something went wrong. Please try again.")}
+          </p>
           <Button color="danger" className="mt-3 px-4" onClick={toggle}>
             {t("Close")}
           </Button>
@@ -63,10 +75,20 @@ const DeleteConfirmModal = ({ isOpen, toggle, onConfirm, itemName, isLoading, is
         </p>
 
         <div className="delete-actions">
-          <Button color="light" className="px-4 py-2 fw-bold" onClick={toggle} disabled={isLoading}>
+          <Button
+            color="light"
+            className="px-4 py-2 fw-bold"
+            onClick={toggle}
+            disabled={isLoading}
+          >
             {t("Cancel")}
           </Button>
-          <Button color="danger" className="px-4 py-2 fw-bold ms-2" onClick={onConfirm} disabled={isLoading}>
+          <Button
+            color="danger"
+            className="px-4 py-2 fw-bold ms-2"
+            onClick={onConfirm}
+            disabled={isLoading}
+          >
             {t("Delete")}
           </Button>
         </div>
@@ -75,13 +97,17 @@ const DeleteConfirmModal = ({ isOpen, toggle, onConfirm, itemName, isLoading, is
   };
 
   return (
-    <Modal isOpen={isOpen} toggle={toggle} centered size="sm" className="delete-confirm-modal">
+    <Modal
+      isOpen={isOpen}
+      toggle={toggle}
+      centered
+      size="sm"
+      className="delete-confirm-modal"
+    >
       <button className="close-btn" onClick={toggle}>
         <X size={18} />
       </button>
-      <ModalBody className="text-center p-4">
-        {renderContent()}
-      </ModalBody>
+      <ModalBody className="text-center p-4">{renderContent()}</ModalBody>
 
       <style>{`
         .delete-confirm-modal .modal-content {

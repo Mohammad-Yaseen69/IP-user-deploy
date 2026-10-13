@@ -27,7 +27,11 @@ import RecipientDetails from "./RecipientDetails";
 import PaypalDetails from "./PaypalDetails";
 import MobileWalletStatus from "./MobileWalletStatus";
 import PlaidBankTransfer from "../../AddFunds/WalletFundsFlow/PlaidBankTransfer";
-import { isCardValid, isPersonalInfoValid, isShippingValid } from "../../../utils/Functions/validations";
+import {
+  isCardValid,
+  isPersonalInfoValid,
+  isShippingValid,
+} from "../../../utils/Functions/validations";
 import allCountries from "../../PaymentsNewer/CountriesData.json";
 import { useIdempotency } from "../../../hooks/Payments/useIdempotency";
 import { UserContext } from "../../../Context/UserContext";
@@ -83,7 +87,8 @@ function reducer(state, action) {
   }
 }
 
-const getCardPaymentRequiredFields = (countryData) => countryData?.card_payment_required_fields || {};
+const getCardPaymentRequiredFields = (countryData) =>
+  countryData?.card_payment_required_fields || {};
 
 const isCardPaymentAddressValid = (data) => {
   const requiredFields = getCardPaymentRequiredFields(data.countryData);
@@ -107,23 +112,23 @@ const PayAsGuest = ({
   type = "payment_address",
   planId,
   subscriptionId,
-  countryIsoCode
+  countryIsoCode,
 }) => {
   const { t } = useTranslation();
   const [data, dispatch] = useReducer(reducer, initialState);
-  const { allowedCountries, getAllActiveCountries } = useContext(UserContext)
+  const { allowedCountries, getAllActiveCountries } = useContext(UserContext);
   const dataHandler = (field, value) => {
     dispatch({ type: "UPDATE_FIELD", field, value });
   };
   const { getKey, reset } = useIdempotency();
   const isReferenceRequired = useMemo(() => {
-    const usernamesList = ["spmfrance", "usharellc"]
+    const usernamesList = ["spmfrance", "usharellc"];
     if (usernamesList.includes(username)) {
-      return true
+      return true;
     } else {
-      return false
+      return false;
     }
-  }, [username])
+  }, [username]);
 
   // useEffect(() => {
   //   if (subscriptionId) {
@@ -132,31 +137,38 @@ const PayAsGuest = ({
   // }, [subscriptionId])
 
   useEffect(() => {
-    getAllActiveCountries()
-  }, [])
+    getAllActiveCountries();
+  }, []);
 
   useEffect(() => {
     if (isOpen && countryIsoCode) {
-      const selected = allCountries.find(c => c.alpha3 === countryIsoCode);
+      const selected = allCountries.find((c) => c.alpha3 === countryIsoCode);
       if (selected) {
-        dataHandler("countryData", allowedCountries.find(c => c.country_iso_code?.toUpperCase() === countryIsoCode))
+        dataHandler(
+          "countryData",
+          allowedCountries.find(
+            (c) => c.country_iso_code?.toUpperCase() === countryIsoCode,
+          ),
+        );
         dataHandler("country", selected);
         dataHandler("step", 2);
       }
     }
-  }, [isOpen, countryIsoCode])
+  }, [isOpen, countryIsoCode]);
 
   useEffect(() => {
     if (data.country?.alpha3) {
-      const selected = allowedCountries.find(c => c.country_iso_code?.toUpperCase() === data.country.alpha3);
+      const selected = allowedCountries.find(
+        (c) => c.country_iso_code?.toUpperCase() === data.country.alpha3,
+      );
       if (selected) {
-        console.log(selected, "selected")
+        console.log(selected, "selected");
         dataHandler("countryData", selected);
       }
     }
-  }, [data.country?.alpha3, allowedCountries])
+  }, [data.country?.alpha3, allowedCountries]);
 
-  console.log(data.countryData, "country", allowedCountries)
+  console.log(data.countryData, "country", allowedCountries);
 
   const initiatePaypalPayment = async () => {
     dataHandler("loading", true);
@@ -174,11 +186,11 @@ const PayAsGuest = ({
         dob: formattedDob,
         client_reference: data.paymentRef,
         iso_code: data.country?.alpha3,
-        payment_type: type
+        payment_type: type,
       };
 
       if (planId) {
-        payload.plan_id = planId
+        payload.plan_id = planId;
       }
       if (invoiceId) {
         payload.invoice_id = invoiceId;
@@ -204,9 +216,9 @@ const PayAsGuest = ({
         },
         {
           headers: {
-            "idempotency-key": getKey()
-          }
-        }
+            "idempotency-key": getKey(),
+          },
+        },
       );
 
       const dec = decryptData(res.data.data);
@@ -224,7 +236,7 @@ const PayAsGuest = ({
         dataHandler(
           "error",
           dec?.message ??
-          "We cannot process your request at the moment, please try again later."
+            "We cannot process your request at the moment, please try again later.",
         );
       }
       dataHandler("loading", false);
@@ -247,15 +259,15 @@ const PayAsGuest = ({
       iso_code: data.country?.alpha3,
       dob: formattedDob,
       client_reference: data.paymentRef,
-      payment_type: type
+      payment_type: type,
     };
 
     if (isBankTransfer) {
-      payload.wallet_id = wallet?.wallet_id
+      payload.wallet_id = wallet?.wallet_id;
     }
 
     if (planId) {
-      payload.plan_id = planId
+      payload.plan_id = planId;
     }
 
     if (invoiceId) {
@@ -273,8 +285,8 @@ const PayAsGuest = ({
       payload.subscription_id = subscriptionId;
     }
 
-    return payload
-  }
+    return payload;
+  };
   const initiateCardPayment = async () => {
     dataHandler("loading", true);
     let formattedDob = data.dob;
@@ -296,11 +308,11 @@ const PayAsGuest = ({
         payment_type: type,
         customer_town: data.customerTown,
         customer_street: data.customerStreet,
-        customer_county: data.customer_county
+        customer_county: data.customer_county,
       };
 
       if (planId) {
-        payload.plan_id = planId
+        payload.plan_id = planId;
       }
 
       if (invoiceId) {
@@ -321,14 +333,15 @@ const PayAsGuest = ({
       const enc = encryptData(payload);
 
       const res = await axios.post(
-        `${import.meta.env.VITE_IP_DEV_API
+        `${
+          import.meta.env.VITE_IP_DEV_API
         }/api/guest-pay${subscriptionId ? "/subscription/initiate-card-payment" : "/initiate-card-payment"}`,
         {
           data: enc,
         },
         {
-          headers: { "idempotency-key": getKey() }
-        }
+          headers: { "idempotency-key": getKey() },
+        },
       );
 
       const dec = decryptData(res.data.data);
@@ -349,7 +362,7 @@ const PayAsGuest = ({
         dataHandler(
           "error",
           dec?.message ??
-          "We cannot process your request at the moment, please try again later."
+            "We cannot process your request at the moment, please try again later.",
         );
       }
       dataHandler("loading", false);
@@ -359,23 +372,23 @@ const PayAsGuest = ({
   const initiateMobileWalletPayment = async () => {
     dataHandler("loading", true);
 
-
     try {
-      const payload = generateInitiatePayload()
+      const payload = generateInitiatePayload();
       const enc = encryptData(payload);
 
       const res = await axios.post(
-        `${import.meta.env.VITE_IP_DEV_API
+        `${
+          import.meta.env.VITE_IP_DEV_API
         }/api/guest-pay/initiate-wallet-payment`,
         {
           data: enc,
-        }
+        },
       );
 
       const dec = decryptData(res.data.data);
 
-      const subscriptionToken = dec?.data?.subscriptionToken
-      const transactionId = dec?.data?.transactionId
+      const subscriptionToken = dec?.data?.subscriptionToken;
+      const transactionId = dec?.data?.transactionId;
       // use these 2 to connect to server
 
       console.log(dec);
@@ -398,7 +411,7 @@ const PayAsGuest = ({
         dataHandler(
           "error",
           dec?.message ??
-          "We cannot process your request at the moment, please try again later."
+            "We cannot process your request at the moment, please try again later.",
         );
       }
       dataHandler("loading", false);
@@ -416,11 +429,14 @@ const PayAsGuest = ({
       } else {
         dataHandler(
           "phone_error",
-          "Incorrect phone number, please enter a valid number."
+          "Incorrect phone number, please enter a valid number.",
         );
       }
     } catch {
-      dataHandler("phone_error", "Incorrect phone number, please enter a valid number.");
+      dataHandler(
+        "phone_error",
+        "Incorrect phone number, please enter a valid number.",
+      );
     } finally {
       dataHandler("loading", false);
     }
@@ -436,13 +452,11 @@ const PayAsGuest = ({
         break;
       case 3:
         if (data.payment_type?.value === "card") {
-
           dataHandler("step", 4);
-
         } else {
           checkIfPhoneIsValid(() => {
-            dataHandler("step", 4)
-            dataHandler("exchange_rate_backup", data.exchange_rate)
+            dataHandler("step", 4);
+            dataHandler("exchange_rate_backup", data.exchange_rate);
           });
         }
         break;
@@ -450,7 +464,7 @@ const PayAsGuest = ({
         if (data.payment_type?.value === "paypal") {
           initiatePaypalPayment();
         } else if (data.payment_type?.value === "mobile_wallet") {
-          initiateMobileWalletPayment()
+          initiateMobileWalletPayment();
         } else {
           checkIfPhoneIsValid(() => dataHandler("step", 5));
         }
@@ -468,7 +482,7 @@ const PayAsGuest = ({
     }
   };
   const onBackClickHandler = () => {
-    reset()
+    reset();
     switch (data.step) {
       case 1:
         toggle();
@@ -533,7 +547,7 @@ const PayAsGuest = ({
           data.phone_error ||
           data.phone_verifying ||
           (isShipping ? !isShippingValid(data.shippingDetails) : false) ||
-          !isCardPaymentAddressValid(data)
+          !isCardPaymentAddressValid(data);
       }
     }
 
@@ -544,8 +558,9 @@ const PayAsGuest = ({
     dataHandler("loading", true);
     try {
       const res = await axios.get(
-        `${import.meta.env.VITE_IP_DEV_API}/api/guest-pay/paypal-fee/${wallet?.wallet_id
-        }/${amount}?payment_type=${subscriptionId ? "plan" : type}`
+        `${import.meta.env.VITE_IP_DEV_API}/api/guest-pay/paypal-fee/${
+          wallet?.wallet_id
+        }/${amount}?payment_type=${subscriptionId ? "plan" : type}`,
       );
       const dec = decryptData(res.data.data);
       console.log(dec);
@@ -573,7 +588,7 @@ const PayAsGuest = ({
       dataHandler(
         "exchange_rate_error",
         dec?.message ??
-        "We cannot process your request at the moment, please try again later."
+          "We cannot process your request at the moment, please try again later.",
       );
       console.log(dec);
     } finally {
@@ -582,14 +597,16 @@ const PayAsGuest = ({
   };
 
   const getFeesMobileWallet = async () => {
-
     dataHandler("loading", true);
-    dataHandler("exchange_rate_error", "")
+    dataHandler("exchange_rate_error", "");
     try {
-      const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/guest-pay/${data.payment_type?.value === "bank_transfer" ? "bank" : "mobile-wallet"}-fee/${wallet?.wallet_id}/${amount}${data.payment_type?.value === "bank_transfer" ? "" : `/${data.country?.alpha3}`}?payment_type=${subscriptionId ? "plan" : type}&iso_code=${data.country?.alpha3}`);
+      const res = await axios.get(
+        `${import.meta.env.VITE_IP_DEV_API}/api/guest-pay/${data.payment_type?.value === "bank_transfer" ? "bank" : "mobile-wallet"}-fee/${wallet?.wallet_id}/${amount}${data.payment_type?.value === "bank_transfer" ? "" : `/${data.country?.alpha3}`}?payment_type=${subscriptionId ? "plan" : type}&iso_code=${data.country?.alpha3}`,
+      );
       const dec = decryptData(res.data.data);
 
-      const apiData = data.payment_type?.value === "bank_transfer" ? dec?.data : dec
+      const apiData =
+        data.payment_type?.value === "bank_transfer" ? dec?.data : dec;
 
       const exchange_rate_details = {
         fee: {
@@ -606,26 +623,29 @@ const PayAsGuest = ({
         token: apiData?.token,
         plaid_amount: apiData?.converted_amount,
         plaid_currency: apiData?.converted_currency,
-        plaid_fx: apiData?.rate
-      }
+        plaid_fx: apiData?.rate,
+      };
 
-      console.log(exchange_rate_details, "data")
+      console.log(exchange_rate_details, "data");
       dataHandler("exchange_rate", exchange_rate_details);
     } catch (error) {
-      console.log(error)
+      console.log(error);
       const dec = decryptData(error?.response?.data?.data);
-      dataHandler("exchange_rate_error", dec?.message ?? "We cannot process your request at the moment, please try again later.");
+      dataHandler(
+        "exchange_rate_error",
+        dec?.message ??
+          "We cannot process your request at the moment, please try again later.",
+      );
       console.log(dec);
     } finally {
       dataHandler("loading", false);
     }
   };
   const getFeesCard = async () => {
-
     dataHandler("loading", true);
     try {
       const res = await axios.get(
-        `${import.meta.env.VITE_IP_DEV_API}/api/guest-pay/card-fee/${wallet?.wallet_id}/${amount}?payment_type=${subscriptionId ? "plan" : type}&isBank=${data.payment_type?.value === "bank" ? true : false} `
+        `${import.meta.env.VITE_IP_DEV_API}/api/guest-pay/card-fee/${wallet?.wallet_id}/${amount}?payment_type=${subscriptionId ? "plan" : type}&isBank=${data.payment_type?.value === "bank" ? true : false} `,
       );
       const dec = decryptData(res.data.data);
       console.log(dec);
@@ -647,7 +667,7 @@ const PayAsGuest = ({
       dataHandler(
         "exchange_rate_error",
         dec?.message ??
-        "We cannot process your request at the moment, please try again later."
+          "We cannot process your request at the moment, please try again later.",
       );
       console.log(dec);
     } finally {
@@ -659,11 +679,17 @@ const PayAsGuest = ({
     if (data.payment_type?.value === "paypal") {
       getFeesPaypal();
     }
-    if (data.payment_type?.value === "card" || data.payment_type?.value === "bank") {
+    if (
+      data.payment_type?.value === "card" ||
+      data.payment_type?.value === "bank"
+    ) {
       getFeesCard();
     }
-    if (data.payment_type?.value === "mobile_wallet" || data.payment_type?.value === "bank_transfer") {
-      getFeesMobileWallet()
+    if (
+      data.payment_type?.value === "mobile_wallet" ||
+      data.payment_type?.value === "bank_transfer"
+    ) {
+      getFeesMobileWallet();
     }
   }, [data.payment_type]);
 
@@ -672,11 +698,10 @@ const PayAsGuest = ({
     const getPayouts = async () => {
       dataHandler("loading", true);
       try {
-        const levelId = typeof user?.level === "string"
-          ? user?.level
-          : user?.level?._id;
+        const levelId =
+          typeof user?.level === "string" ? user?.level : user?.level?._id;
         const res = await axios.get(
-          `${import.meta.env.VITE_IP_DEV_API}/api/guest-pay/payment-methods/${levelId}?accountId=${user?._id}&country_iso_code=${data?.country?.alpha3}${type === "invoice" ? "&isInvoice=true" : ""}`
+          `${import.meta.env.VITE_IP_DEV_API}/api/guest-pay/payment-methods/${levelId}?accountId=${user?._id}&country_iso_code=${data?.country?.alpha3}${type === "invoice" ? "&isInvoice=true" : ""}`,
         );
         const dec = decryptData(res.data.data);
         setAllowed(dec?.data ?? []);
@@ -687,7 +712,8 @@ const PayAsGuest = ({
         dataHandler("loading", false);
       }
     };
-    const levelId = typeof user?.level === "string" ? user?.level : user?.level?._id;
+    const levelId =
+      typeof user?.level === "string" ? user?.level : user?.level?._id;
 
     if (levelId && data?.country?.alpha3) {
       getPayouts();
@@ -719,9 +745,11 @@ const PayAsGuest = ({
           card_number={data.cardNumber}
           currency={wallet?.currency?.code}
           transaction={data.cardTransactionDetails}
-          url={`${import.meta.env.VITE_IP_DEV_API
-            }/api/guest-pay${subscriptionId ? "/subscription" : ""}/confirm-card-payment/${data.cardTransactionDetails?.transaction_ref
-            }`}
+          url={`${
+            import.meta.env.VITE_IP_DEV_API
+          }/api/guest-pay${subscriptionId ? "/subscription" : ""}/confirm-card-payment/${
+            data.cardTransactionDetails?.transaction_ref
+          }`}
           guestUserName={username}
           guestWallet={wallet}
           guestUser={user}
@@ -773,7 +801,8 @@ const PayAsGuest = ({
                 <div className={styles.left}>
                   <div className={styles.l_top}>
                     <h1>{t("PAY AS A GUEST")}</h1>
-                    {data.payment_type?.value !== "bank_transfer" || data.step < 4 ?
+                    {data.payment_type?.value !== "bank_transfer" ||
+                    data.step < 4 ? (
                       <h2>
                         {data.step === 1 && t("Select Your Country")}
                         {data.step === 2 && t("Select Payment Type")}
@@ -789,9 +818,10 @@ const PayAsGuest = ({
                           (data.payment_type?.value === "card"
                             ? t("Review Payment")
                             : "")}
-                      </h2> :
+                      </h2>
+                    ) : (
                       <h2>{t("Bank Transfer")}</h2>
-                    }
+                    )}
                   </div>
                   {data.step > 1 && (
                     <div className={styles.l_bottom}>
@@ -805,7 +835,11 @@ const PayAsGuest = ({
                 </div>
                 <div className={styles.right}>
                   {data.step === 1 && (
-                    <Country username={username} data={data} dataHandler={dataHandler} />
+                    <Country
+                      username={username}
+                      data={data}
+                      dataHandler={dataHandler}
+                    />
                   )}
 
                   {data.step === 2 && (
@@ -817,83 +851,80 @@ const PayAsGuest = ({
                     />
                   )}
                   {data.step === 3 &&
-                    (data.payment_type?.value === "card" ?
-                      (
-                        <div style={{ height: "100%" }}>
-                          <div className={styles.bot_top}>
-                            <h5>{t("Payment Details")}</h5>
-                            <span>
-                              {t(
-                                "Complete your payment by providing your payment details"
-                              )}
-                            </span>
-                          </div>
-                          <CreditCard
-                            showSave={false}
-                            data={data}
-                            dataHandler={dataHandler}
-                            tokenUrl={() => ""}
-                            url={""}
-                            inGuest={true}
-                            showCards={false}
-                          />
+                    (data.payment_type?.value === "card" ? (
+                      <div style={{ height: "100%" }}>
+                        <div className={styles.bot_top}>
+                          <h5>{t("Payment Details")}</h5>
+                          <span>
+                            {t(
+                              "Complete your payment by providing your payment details",
+                            )}
+                          </span>
                         </div>
-                      ) :
+                        <CreditCard
+                          showSave={false}
+                          data={data}
+                          dataHandler={dataHandler}
+                          tokenUrl={() => ""}
+                          url={""}
+                          inGuest={true}
+                          showCards={false}
+                        />
+                      </div>
+                    ) : (
                       <RecipientDetails
                         data={data}
                         dataHandler={dataHandler}
                         isShipping={isShipping}
                         isReferenceRequired={isReferenceRequired}
                       />
-                    )
-                  }
+                    ))}
                   {data.step === 4 &&
-                    (
-                      data.payment_type?.value === "paypal" || data.payment_type?.value === "mobile_wallet" ?
-                        <>
-                          <PaymentDetails
-                            dataHandler={dataHandler}
-                            data={data}
-                            amount={amount}
-                          />
+                    (data.payment_type?.value === "paypal" ||
+                    data.payment_type?.value === "mobile_wallet" ? (
+                      <>
+                        <PaymentDetails
+                          dataHandler={dataHandler}
+                          data={data}
+                          amount={amount}
+                        />
 
-                          {data.payment_type?.value === "mobile_wallet" && <MobileWalletExternalAmount data={data} />}
-                        </>
-                        :
-                        data.payment_type?.value === "card" ?
-                          <RecipientDetails
-                            data={data}
-                            dataHandler={dataHandler}
-                            isReferenceRequired={isReferenceRequired}
-                            isShipping={isShipping}
-                          />
-                          :
-                          data?.payment_type?.value === "bank_transfer" ?
-                            <PlaidBankTransfer
-                              type={'payment_address'}
-                              data={data}
-                              dataHandler={dataHandler}
-                              toggle={toggle}
-                              initiatePayload={() => {
-                                return generateInitiatePayload(true)
-                              }}
-                            />
-                            :
-                            <BankDeposit
-                              type={'payment_address'}
-                              data={{ ...data, wallet }}
-                              dataHandler={dataHandler}
-                              guestDetails={{
-                                name: data.fullName,
-                                phone: data.phone,
-                                email: data.email,
-                                iso_code: data.country?.alpha3
-                              }}
-                              client_reference={data.paymentRef}
-                              toggle={toggle}
-                            />
-                    )
-                  }
+                        {data.payment_type?.value === "mobile_wallet" && (
+                          <MobileWalletExternalAmount data={data} />
+                        )}
+                      </>
+                    ) : data.payment_type?.value === "card" ? (
+                      <RecipientDetails
+                        data={data}
+                        dataHandler={dataHandler}
+                        isReferenceRequired={isReferenceRequired}
+                        isShipping={isShipping}
+                      />
+                    ) : data?.payment_type?.value === "bank_transfer" ? (
+                      <PlaidBankTransfer
+                        type={"payment_address"}
+                        data={data}
+                        dataHandler={dataHandler}
+                        toggle={toggle}
+                        initiatePayload={() => {
+                          return generateInitiatePayload(true);
+                        }}
+                      />
+                    ) : (
+                      <BankDeposit
+                        type={"payment_address"}
+                        data={{ ...data, wallet }}
+                        dataHandler={dataHandler}
+                        guestDetails={{
+                          name: data.fullName,
+                          phone: data.phone,
+                          email: data.email,
+                          iso_code: data.country?.alpha3,
+                        }}
+                        client_reference={data.paymentRef}
+                        toggle={toggle}
+                      />
+                    ))}
                   {data.step === 5 &&
                     (data.payment_type?.value === "card" ? (
                       // <StepFive
@@ -906,8 +937,13 @@ const PayAsGuest = ({
                       ""
                     ))}
 
-                  {((data.payment_type?.value !== "bank" && data?.payment_type?.value !== "bank_transfer") || data.step < 4) &&
-                    <div className={styles.bottom} style={{ marginTop: "auto" }}>
+                  {((data.payment_type?.value !== "bank" &&
+                    data?.payment_type?.value !== "bank_transfer") ||
+                    data.step < 4) && (
+                    <div
+                      className={styles.bottom}
+                      style={{ marginTop: "auto" }}
+                    >
                       <Link
                         to={"https://insta-pay.ch/faqs"}
                         target="_blank"
@@ -928,7 +964,12 @@ const PayAsGuest = ({
                         >
                           {t("Back")}
                         </button>
-                        {data.loading ? <div style={{ width: "100px" }}> <InstaPayLoader /> </div> :
+                        {data.loading ? (
+                          <div style={{ width: "100px" }}>
+                            {" "}
+                            <InstaPayLoader />{" "}
+                          </div>
+                        ) : (
                           <button
                             disabled={data.loading || disabled}
                             onClick={onClickHandler}
@@ -936,10 +977,10 @@ const PayAsGuest = ({
                             {t("Next")}
                             <ChevronRight size={18} />
                           </button>
-                        }
+                        )}
                       </div>
                     </div>
-                  }
+                  )}
                 </div>
               </>
             )}
@@ -983,7 +1024,8 @@ const PayAsGuest = ({
                     <h1 style={{ color: "#906EF5", letterSpacing: "1.5px" }}>
                       {t("PAY AS A GUEST")}
                     </h1>
-                    {data.payment_type?.value !== "bank_transfer" || data.step < 4 ?
+                    {data.payment_type?.value !== "bank_transfer" ||
+                    data.step < 4 ? (
                       <h2>
                         {data.step === 1 && t("Select Your Country")}
                         {data.step === 2 && t("Select Payment Type")}
@@ -999,19 +1041,23 @@ const PayAsGuest = ({
                           (data.payment_type?.value === "card"
                             ? t("Review Payment")
                             : "")}
-                      </h2> :
+                      </h2>
+                    ) : (
                       <h2>{t("Bank Transfer")}</h2>
-                    }
+                    )}
                   </div>
                 </div>
                 <div className={paym_styles.flow}>
-
                   <div
                     className={paym_styles.flow_com}
                     style={{ minHeight: "41vh" }}
                   >
                     {data.step === 1 && (
-                      <Country username={username} data={data} dataHandler={dataHandler} />
+                      <Country
+                        username={username}
+                        data={data}
+                        dataHandler={dataHandler}
+                      />
                     )}
                     {data.step === 2 && (
                       <StepOne
@@ -1022,99 +1068,93 @@ const PayAsGuest = ({
                       />
                     )}
                     {data.step === 3 &&
-                      (data.payment_type?.value === "card" ?
-                        (
-                          <div
-                            style={{
-                              height: "100%",
-                              background:
-                                "linear-gradient(180deg, #FFF 0%, rgba(255, 255, 255, 0.00) 100%)",
-                              borderRadius: "8px",
-                              padding: "15px",
-                            }}
-                          >
-                            <div className={styles.bot_top}>
-                              <h5>{t("Payment Details")}</h5>
-                              <span>
-                                {t(
-                                  "Complete your payment by providing your payment details"
-                                )}
-                              </span>
-                            </div>
-                            <CreditCard
-                              showSave={false}
-                              data={data}
-                              dataHandler={dataHandler}
-                              tokenUrl={() => ""}
-                              url={""}
-                              showCards={false}
-                              guest={true}
-                              inGuest={true}
-                            />
+                      (data.payment_type?.value === "card" ? (
+                        <div
+                          style={{
+                            height: "100%",
+                            background:
+                              "linear-gradient(180deg, #FFF 0%, rgba(255, 255, 255, 0.00) 100%)",
+                            borderRadius: "8px",
+                            padding: "15px",
+                          }}
+                        >
+                          <div className={styles.bot_top}>
+                            <h5>{t("Payment Details")}</h5>
+                            <span>
+                              {t(
+                                "Complete your payment by providing your payment details",
+                              )}
+                            </span>
                           </div>
-                        ) :
-                        (
-                          <RecipientDetails
+                          <CreditCard
+                            showSave={false}
                             data={data}
                             dataHandler={dataHandler}
-                            isShipping={isShipping}
-                            isReferenceRequired={isReferenceRequired}
-
+                            tokenUrl={() => ""}
+                            url={""}
+                            showCards={false}
+                            guest={true}
+                            inGuest={true}
                           />
-                        ))
-                    }
+                        </div>
+                      ) : (
+                        <RecipientDetails
+                          data={data}
+                          dataHandler={dataHandler}
+                          isShipping={isShipping}
+                          isReferenceRequired={isReferenceRequired}
+                        />
+                      ))}
 
                     {data.step === 4 &&
-                      (data.payment_type?.value === "paypal" || data?.payment_type?.value === "mobile_wallet" ?
-                        (
-                          <>
-                            <PaymentDetails
-                              dataHandler={dataHandler}
-                              data={data}
-                              amount={amount}
-                            />
-
-                            {data.payment_type?.value === "paypal" && <PaypalDetails data={data} wallet={wallet} />}
-                            {data.payment_type?.value === "mobile_wallet" && <MobileWalletExternalAmount data={data} />}
-                          </>
-                        ) :
-
-                        data.payment_type?.value === "card" ?
-                          <RecipientDetails
-                            data={data}
+                      (data.payment_type?.value === "paypal" ||
+                      data?.payment_type?.value === "mobile_wallet" ? (
+                        <>
+                          <PaymentDetails
                             dataHandler={dataHandler}
-                            isShipping={isShipping}
-                            isReferenceRequired={isReferenceRequired}
+                            data={data}
+                            amount={amount}
                           />
-                          :
-                          data?.payment_type?.value === "bank_transfer" ?
-                            <PlaidBankTransfer
-                              type={'payment_address'}
-                              data={data}
-                              dataHandler={dataHandler}
-                              toggle={toggle}
-                              initiatePayload={() => {
-                                return generateInitiatePayload(true)
-                              }}
-                            />
-                            :
-                            <BankDeposit
-                              type={'payment_address'}
-                              data={{ ...data, wallet }}
-                              dataHandler={dataHandler}
-                              guestDetails={{
-                                name: data.fullName,
-                                phone: data.phone,
-                                email: data.email,
-                                iso_code: data.country?.alpha3
-                              }}
-                              client_reference={data.paymentRef}
-                              toggle={toggle}
-                            />
-                      )
-                    }
 
-
+                          {data.payment_type?.value === "paypal" && (
+                            <PaypalDetails data={data} wallet={wallet} />
+                          )}
+                          {data.payment_type?.value === "mobile_wallet" && (
+                            <MobileWalletExternalAmount data={data} />
+                          )}
+                        </>
+                      ) : data.payment_type?.value === "card" ? (
+                        <RecipientDetails
+                          data={data}
+                          dataHandler={dataHandler}
+                          isShipping={isShipping}
+                          isReferenceRequired={isReferenceRequired}
+                        />
+                      ) : data?.payment_type?.value === "bank_transfer" ? (
+                        <PlaidBankTransfer
+                          type={"payment_address"}
+                          data={data}
+                          dataHandler={dataHandler}
+                          toggle={toggle}
+                          initiatePayload={() => {
+                            return generateInitiatePayload(true);
+                          }}
+                        />
+                      ) : (
+                        <BankDeposit
+                          type={"payment_address"}
+                          data={{ ...data, wallet }}
+                          dataHandler={dataHandler}
+                          guestDetails={{
+                            name: data.fullName,
+                            phone: data.phone,
+                            email: data.email,
+                            iso_code: data.country?.alpha3,
+                          }}
+                          client_reference={data.paymentRef}
+                          toggle={toggle}
+                        />
+                      ))}
 
                     {data.step === 5 &&
                       (data.payment_type?.value === "card" ? (
@@ -1129,7 +1169,9 @@ const PayAsGuest = ({
                       ))}
                   </div>
 
-                  {(data.payment_type?.value !== "bank" && data.payment_type?.value !== "bank_transfer" || data.step < 4) &&
+                  {((data.payment_type?.value !== "bank" &&
+                    data.payment_type?.value !== "bank_transfer") ||
+                    data.step < 4) && (
                     <div
                       className={paym_styles.bottom}
                       style={{
@@ -1154,20 +1196,27 @@ const PayAsGuest = ({
                         className={paym_styles?.buttons}
                         style={{ flexDirection: "column" }}
                       >
-                        {data.loading ? <div style={{ width: "120px" }}><InstaPayLoader /> </div> : <button
-                          disabled={data.loading || disabled}
-                          onClick={onClickHandler}
-                          style={{ width: "100%", background: "#5926F0" }}
-                        >
-                          {t("Next")}
-                        </button>}
+                        {data.loading ? (
+                          <div style={{ width: "120px" }}>
+                            <InstaPayLoader />{" "}
+                          </div>
+                        ) : (
+                          <button
+                            disabled={data.loading || disabled}
+                            onClick={onClickHandler}
+                            style={{ width: "100%", background: "#5926F0" }}
+                          >
+                            {t("Next")}
+                          </button>
+                        )}
                         <button
                           className={styles.transparent}
                           disabled={data.loading}
                           style={{
                             width: "100%",
                             background: "#EEEEEE",
-                            boxShadow: "0px 3.643px 30.052px 0px rgba(0, 0, 0, 0.09)",
+                            boxShadow:
+                              "0px 3.643px 30.052px 0px rgba(0, 0, 0, 0.09)",
                             color: "black",
                           }}
                           onClick={onBackClickHandler}
@@ -1176,7 +1225,7 @@ const PayAsGuest = ({
                         </button>
                       </div>
                     </div>
-                  }
+                  )}
                 </div>
               </>
             )}

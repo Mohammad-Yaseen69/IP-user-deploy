@@ -3,12 +3,10 @@
   "editor.formatOnSave": true,
   "files.eol": "\n",
   "files.insertFinalNewline": true,
-  "i18n-ally.localesPaths": [
-    "src/translations"
-  ],
+  "i18n-ally.localesPaths": ["src/translations"],
   "i18n-ally.sourceLanguage": "en",
   "i18n-ally.keystyle": "flat",
-  "i18n-ally.extract.autoDetect": false,
+  "i18n-ally.extract.autoDetect": false
   // "eslint.rules.customizations": [
   //   {
   //     "rule": "i18next/no-literal-string",

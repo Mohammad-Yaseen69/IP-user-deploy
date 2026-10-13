@@ -1,20 +1,20 @@
 /**=====================
     46.  Ecommerce  CSS Start
 ==========================**/
-.add-product{
-  .dropzone{
+.add-product {
+  .dropzone {
     padding: 40px;
   }
-  .product-info{
-    h5{
+  .product-info {
+    h5 {
       font-size: 16px;
       margin-bottom: 14px;
     }
-    .dzu-dropzone{
+    .dzu-dropzone {
       height: 240px;
       justify-content: center;
     }
-    .product-group{
+    .product-group {
       border: 1px solid $light-gray;
       padding: 16px 18px;
       border-radius: 6px;
@@ -105,8 +105,8 @@
     }
   }
 }
-.rdt_Table{
-  button{
+.rdt_Table {
+  button {
     font-weight: 400;
     font-size: 14px;
   }
@@ -146,20 +146,20 @@
     font-weight: 600;
     color: $dark-color;
   }
-  .rdt_Table{
+  .rdt_Table {
     border: 1px solid $light-semi-gray;
   }
-  .rdt_TableHead{
-    .rdt_TableCol{
-      > div{
+  .rdt_TableHead {
+    .rdt_TableCol {
+      > div {
         font-size: 15px;
         font-weight: bold !important;
         color: $dark;
-        span{
+        span {
           display: none;
         }
       }
-      &:nth-child(2){
+      &:nth-child(2) {
         justify-content: flex-start;
       }
     }
@@ -167,13 +167,13 @@
   .rdt_TableBody {
     .rdt_TableRow {
       .rdt_TableCell {
-        > div{
+        > div {
           font-size: 14px;
         }
         &:first-child {
           background-color: $auth-bg-color;
         }
-        &:nth-child(n+2){
+        &:nth-child(n + 2) {
           background-color: $auth-bg-color;
         }
       }
@@ -186,7 +186,7 @@
       }
       &:nth-child(even) {
         .rdt_TableCell {
-          &:nth-child(n+2) {
+          &:nth-child(n + 2) {
             background-color: $white;
           }
         }
@@ -403,10 +403,10 @@
   }
 }
 .product-filter {
-  .slick-slider{
+  .slick-slider {
     margin: 0;
-    .product-box{
-      + .product-box{
+    .product-box {
+      + .product-box {
         margin-top: 15px;
       }
       .product-details {
@@ -414,7 +414,7 @@
       }
       .product-img {
         width: 40%;
-        img{
+        img {
           border-radius: 10px;
         }
       }
@@ -468,16 +468,17 @@
     }
   }
 }
-.modal.product-box{
+.modal.product-box {
   background-color: transparent;
   overflow-y: auto;
   overflow-x: hidden;
 }
 .modal.product-box {
-  .modal-content{
-    button{
+  .modal-content {
+    button {
       padding: 3px;
-      &:active, &:focus{
+      &:active,
+      &:focus {
         border: 0;
       }
     }
@@ -531,7 +532,7 @@
           margin-bottom: 20px;
           .input-group {
             width: 35%;
-            input{
+            input {
               padding: 0 12px;
             }
             .btn {
@@ -613,9 +614,10 @@
           align-items: center;
           justify-content: center;
           cursor: pointer;
-          button{
+          button {
             height: 22px;
-            &:active, &:focus{
+            &:active,
+            &:focus {
               border: 0;
             }
           }
@@ -643,7 +645,7 @@
       border-radius: 0%;
       transform: scale(1);
       transition: all 0.3s ease;
-      i{
+      i {
         color: $primary-color;
       }
     }
@@ -663,7 +665,7 @@
 }
 .product-page-main {
   padding: 30px;
-  .nav-tabs{
+  .nav-tabs {
     border-bottom: none;
   }
   .owl-item {
@@ -746,11 +748,12 @@
     }
   }
 }
-.payment-details{
-  .card-body{
-    .theme-form{
-      input, textarea{
-        &::placeholder{
+.payment-details {
+  .card-body {
+    .theme-form {
+      input,
+      textarea {
+        &::placeholder {
           color: #898989 !important;
           font-weight: 400 !important;
         }
@@ -859,9 +862,9 @@ ul.pro-services {
     }
   }
 }
-.pro-group{
-  .color-selector{
-    ul{
+.pro-group {
+  .color-selector {
+    ul {
       margin-bottom: 0;
     }
   }
@@ -879,7 +882,7 @@ ul.pro-services {
       color: $light-font;
     }
     ul {
-      li {        
+      li {
         span {
           i {
             margin-left: 10px;
@@ -924,9 +927,9 @@ ul.pro-services {
 }
 @media (max-width: 1470px) {
   .product-filter {
-    .slick-slider{
-      .product-box{
-        .product-details{
+    .slick-slider {
+      .product-box {
+        .product-details {
           padding: 16px 0;
         }
         .product-img {
@@ -961,9 +964,9 @@ ul.pro-services {
   }
 }
 @media (max-width: 1366px) {
-  .product-box{
-    .product-details{
-      h4{
+  .product-box {
+    .product-details {
+      h4 {
         font-size: 18px;
       }
     }
@@ -1172,16 +1175,16 @@ ul.pro-services {
   }
 }
 @media (max-width: 480px) {
-  .product-page-main{
-    p{
+  .product-page-main {
+    p {
       font-size: 13px;
     }
   }
-  .d-none-productlist{
-    svg{
+  .d-none-productlist {
+    svg {
       height: 18px;
     }
-  } 
+  }
   .learning-box {
     .details-main {
       margin: 15px;
