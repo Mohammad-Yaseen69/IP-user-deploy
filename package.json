@@ -107,6 +107,9 @@
     "xlsx": "^0.18.5",
     "zod": "^4.4.3"
   },
+  "lint-staged": {
+    "*.{js,jsx,mjs,cjs,css,scss,json,md,html,yml,yaml}": "prettier --write"
+  },
   "devDependencies": {
     "@eslint/js": "^9.25.0",
     "@sentry/vite-plugin": "^4.7.0",
@@ -148,8 +151,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "lint-staged": {
-    "*.{js,jsx,mjs,cjs,css,scss,json,md,html,yml,yaml}": "prettier --write"
   }
 }
