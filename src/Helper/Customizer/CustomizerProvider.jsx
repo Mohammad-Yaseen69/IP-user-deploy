@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import ConfigDB from "../../Config/ThemeConfig";
 import Context from "./index";
 
@@ -22,16 +22,14 @@ const CustomizerProvider = (props) => {
     setMixBackgroundLayout(ConfigDB.data.color.mix_background_layout);
   }, [sidebar_types, settings, layout, mix_background_layout, toggleIcon]);
 
-  const sideBarToogle = ()=> {
-    setTogglSidebar(!togglSidebar)
-  }
+  const sideBarToogle = () => {
+    setTogglSidebar(!togglSidebar);
+  };
   const addSidebarTypes = (type) => {
     ConfigDB.data.settings.sidebar.type = type;
     localStorage.setItem("sidebar_types", type);
     setSidebarTypes(type);
   };
-
-
 
   const addSidebarSettings = (sidebar_Settings) => {
     if (sidebar_Settings === undefined) {
@@ -47,7 +45,6 @@ const CustomizerProvider = (props) => {
     localStorage.setItem("layout_type", layout);
     setLayout(layout);
   };
-
 
   const addMixBackgroundLayout = (mix_background_layout) => {
     ConfigDB.data.color.mix_background_layout = mix_background_layout;

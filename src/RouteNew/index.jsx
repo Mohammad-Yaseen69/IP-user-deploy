@@ -9,11 +9,9 @@ const Routers = () => {
   return (
     // <Suspense fallback={<Loader />}>
     <Routes>
-      {
-        publicRoutes.map((item, i) => (
-          <Route key={item.path} path={item.path} element={item.component} />
-        ))
-      }
+      {publicRoutes.map((item, i) => (
+        <Route key={item.path} path={item.path} element={item.component} />
+      ))}
       {routes.map((item, i) => (
         <Route element={<Layout />} key={i}>
           <Route path={item.path} element={item.component} />
@@ -24,16 +22,12 @@ const Routers = () => {
           <Route path={item.path} element={item.component} />
         </Route>
       ))}
-      {
-        authRoutes.map(item => (
-          <Route key={item.path} path={item.path} element={item.component} />
-        ))
-      }
-      {
-        guestRoutes.map(item => (
-          <Route key={item.path} path={item.path} element={item.component} />
-        ))
-      }
+      {authRoutes.map((item) => (
+        <Route key={item.path} path={item.path} element={item.component} />
+      ))}
+      {guestRoutes.map((item) => (
+        <Route key={item.path} path={item.path} element={item.component} />
+      ))}
     </Routes>
     // </Suspense>
   );

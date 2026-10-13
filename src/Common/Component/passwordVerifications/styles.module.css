@@ -1,51 +1,51 @@
 .paper {
-    border-radius: 12px !important;
+  border-radius: 12px !important;
 }
 
 .container {
-    padding: 1.5rem !important;
+  padding: 1.5rem !important;
 }
 
 .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 0.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
 }
 
 .header h2 {
-    font-size: 1.1rem;
-    font-weight: 700;
-    margin: 0;
-    color: #252525;
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin: 0;
+  color: #252525;
 }
 
 .description {
-    font-size: 0.85rem;
-    color: #6b6b6b;
-    margin-bottom: 1.2rem;
+  font-size: 0.85rem;
+  color: #6b6b6b;
+  margin-bottom: 1.2rem;
 }
 
 .form {
-    display: flex;
-    flex-direction: column;
-    gap: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
 }
 
 .actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 0.75rem;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
 }
 
 .cancelBtn {
-    text-transform: none !important;
-    color: #252525 !important;
+  text-transform: none !important;
+  color: #252525 !important;
 }
 
 .confirmBtn {
-    text-transform: none !important;
-    background: #5527dc !important;
-    color: #fff !important;
-    padding: 0.4rem 1.5rem !important;
+  text-transform: none !important;
+  background: #5527dc !important;
+  color: #fff !important;
+  padding: 0.4rem 1.5rem !important;
 }

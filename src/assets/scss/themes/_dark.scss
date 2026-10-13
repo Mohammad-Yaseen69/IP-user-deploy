@@ -29,18 +29,18 @@ body {
         }
       }
     }
-    .todo-wrap{
-      .card-header{
-        &.b-bottom{
+    .todo-wrap {
+      .card-header {
+        &.b-bottom {
           border-bottom: 1px solid $dark-card-border;
         }
       }
     }
-    .right-header{
-      .input-group{
-        .Typeahead-menu{
-          .ProfileCard{
-            &:hover{
+    .right-header {
+      .input-group {
+        .Typeahead-menu {
+          .ProfileCard {
+            &:hover {
               background-color: $dark-card-background;
             }
           }
@@ -52,8 +52,8 @@ body {
       color: $dark-small-font-color;
       border: 1px solid $dark-card-border;
     }
-    .dzu-previewButton{
-      filter: brightness(0) invert(.7);
+    .dzu-previewButton {
+      filter: brightness(0) invert(0.7);
     }
     .custom-profile .profile-details h4 a {
       color: $dark-all-font-color;
@@ -64,20 +64,20 @@ body {
         color: $white;
       }
     }
-    .basic-dropdown{
-      ul{
-        li{
-          span.f-w-600{
+    .basic-dropdown {
+      ul {
+        li {
+          span.f-w-600 {
             color: $dark-all-font-color;
-            &::before{
+            &::before {
               background-color: rgba($white, 0.1);
             }
           }
         }
       }
-      .left-dropdown{
+      .left-dropdown {
         background-color: $dark-body-background;
-        a{
+        a {
           color: $dark-all-font-color;
         }
       }
@@ -109,75 +109,75 @@ body {
         color: $dark-all-font-color;
       }
     }
-    .login-card{
-      .login-main1.login-tab1{
-        .nav-tabs{
-          .nav-item{
-            .nav-link{
+    .login-card {
+      .login-main1.login-tab1 {
+        .nav-tabs {
+          .nav-item {
+            .nav-link {
               background-color: $dark-body-background;
             }
           }
         }
       }
-    }    
+    }
     // tree view
-    .deni-react-treeview-item-container{
-      .checkbox.selected{
+    .deni-react-treeview-item-container {
+      .checkbox.selected {
         background-color: $dark-body-background;
       }
     }
-    .deni-react-treeview-container.classic{
-      .deni-react-treeview-item-container.classic{
-        &.selected{
+    .deni-react-treeview-container.classic {
+      .deni-react-treeview-item-container.classic {
+        &.selected {
           outline-color: $dark-card-border !important;
         }
       }
     }
-    .deni-react-treeview-container.classic{
+    .deni-react-treeview-container.classic {
       border-color: $dark-card-border !important;
-      .deni-react-treeview-item-container.classic{
+      .deni-react-treeview-item-container.classic {
         color: $dark-all-font-color !important;
-        &:hover.select-row{
+        &:hover.select-row {
           background-color: $dark-body-background;
           border-color: $dark-card-border;
         }
-        .checkbox{
+        .checkbox {
           border-color: $dark-card-border !important;
         }
       }
-    } 
-    .deni-react-treeview-container{
+    }
+    .deni-react-treeview-container {
       background-color: $dark-card-background !important;
     }
-    .ui-list{
-      .list-group-item{
+    .ui-list {
+      .list-group-item {
         border: 1px solid $dark-card-border;
       }
-      .tab-javascript{
-        ul.list-group{
-          + ul.list-group{
-            li{
+      .tab-javascript {
+        ul.list-group {
+          + ul.list-group {
+            li {
               border-top: 0;
             }
           }
         }
       }
-      ul.list-group-flush.list-group{
-        .list-group-item{
+      ul.list-group-flush.list-group {
+        .list-group-item {
           border: 0;
-          + .list-group-item{
+          + .list-group-item {
             border-top: 1px solid $dark-card-border;
           }
         }
       }
-      ul.list-group{
-        .list-group-item.d-flex{
+      ul.list-group {
+        .list-group-item.d-flex {
           color: $dark-all-font-color;
         }
-        .list-group-item{
+        .list-group-item {
           background-color: $dark-card-background;
           border: 1px solid $dark-card-border;
-          + .list-group-item{
+          + .list-group-item {
             border-top: 0;
           }
           &.list-group-item-primary {
@@ -217,11 +217,11 @@ body {
     }
     blockquote {
       border-left: 4px solid $dark-card-border;
-      &.text-end{
+      &.text-end {
         border-right: 4px solid $dark-card-border;
         border-left: unset;
       }
-      &.text-center{
+      &.text-center {
         border: 0;
       }
     }
@@ -269,35 +269,35 @@ body {
       background-color: $dark-body-background;
       border: 1px solid $dark-card-border;
     }
-    .fc-theme-standard{
-      .fc-scrollgrid{
+    .fc-theme-standard {
+      .fc-scrollgrid {
         border: 1px solid $dark-card-border;
       }
-    } 
-    .btn-group{
-      .checkbox-light{
-        label{
-          &::before{
+    }
+    .btn-group {
+      .checkbox-light {
+        label {
+          &::before {
             border-color: $dark-card-border !important;
           }
         }
       }
     }
-    .chat-box{
-      .chat-right-aside{
-        .chat-history{
-          ul{
-            li{
-              &:hover{
+    .chat-box {
+      .chat-right-aside {
+        .chat-history {
+          ul {
+            li {
+              &:hover {
                 z-index: 0;
               }
             }
           }
         }
       }
-      .people-list{
-        ul.list{
-          li{
+      .people-list {
+        ul.list {
+          li {
             background-color: $transparent-color !important;
           }
         }
@@ -312,12 +312,12 @@ body {
         }
       }
     }
-    .order-history{
-      table{
-        .qty-box{
+    .order-history {
+      table {
+        .qty-box {
           border: 1px solid $dark-card-border;
-          input{
-            &.input-number.form-control{
+          input {
+            &.input-number.form-control {
               background-color: $dark-card-background;
               border: 0;
             }
@@ -325,12 +325,12 @@ body {
         }
       }
     }
-    .user-card{
-      .custom-card{
-        .card-social{
+    .user-card {
+      .custom-card {
+        .card-social {
           border: 0;
         }
-      } 
+      }
     }
     .left-header {
       .left-menu-header {
@@ -416,27 +416,27 @@ body {
         }
       }
     }
-    ol{
-      &.progtrckr{
-        li{
+    ol {
+      &.progtrckr {
+        li {
           color: $dark-all-font-color;
-          &.progtrckr-doing{
+          &.progtrckr-doing {
             border-bottom: 4px solid $dark-card-border;
-            &::before{
+            &::before {
               background-color: $dark-body-background;
               color: $dark-card-background;
             }
           }
-          &.progtrckr-todo{
-            &::before{
+          &.progtrckr-todo {
+            &::before {
               color: $dark-card-border;
             }
           }
         }
       }
     }
-    //select 2 
-    .css-13cymwt-control{
+    //select 2
+    .css-13cymwt-control {
       background-color: $dark-body-background !important;
       border: 1px solid $dark-card-border !important;
     }
@@ -579,28 +579,30 @@ body {
         }
       }
     }
-    .react-datepicker{
+    .react-datepicker {
       background-color: $dark-body-background;
       border: 1px solid $dark-card-border;
-      .react-datepicker__day-name, .react-datepicker__day, .react-datepicker__time-name{
+      .react-datepicker__day-name,
+      .react-datepicker__day,
+      .react-datepicker__time-name {
         color: $dark-all-font-color;
       }
-      .react-datepicker__day--outside-month{
+      .react-datepicker__day--outside-month {
         color: $dark-small-font-color;
       }
     }
-    .react-datepicker__time-container{
+    .react-datepicker__time-container {
       border-left: 1px solid $dark-card-border;
     }
-    .react-datepicker-popper[data-placement^=bottom] .react-datepicker__triangle::before, 
-    .react-datepicker-popper[data-placement^=bottom] .react-datepicker__triangle::after{
+    .react-datepicker-popper[data-placement^="bottom"] .react-datepicker__triangle::before,
+    .react-datepicker-popper[data-placement^="bottom"] .react-datepicker__triangle::after {
       border-bottom-color: $dark-body-background;
     }
-    .react-datepicker-popper[data-placement^=top] .react-datepicker__triangle::before, 
-    .react-datepicker-popper[data-placement^=top] .react-datepicker__triangle::after{
+    .react-datepicker-popper[data-placement^="top"] .react-datepicker__triangle::before,
+    .react-datepicker-popper[data-placement^="top"] .react-datepicker__triangle::after {
       border-top-color: $dark-body-background;
     }
-    .react-datepicker__header{
+    .react-datepicker__header {
       background-color: $dark-body-background;
     }
     .react-datepicker__day,
@@ -646,8 +648,10 @@ body {
       }
     }
     .vertical-timeline-element-icon {
-      box-shadow: 0 0 0 4px $dark-body-background,
-        inset 0 2px 0 rgba($black, 0.08), 0 3px 0 4px rgba($black, 0.05);
+      box-shadow:
+        0 0 0 4px $dark-body-background,
+        inset 0 2px 0 rgba($black, 0.08),
+        0 3px 0 4px rgba($black, 0.05);
     }
     .project-list {
       .border-tab {
@@ -743,23 +747,23 @@ body {
     .onhover-show-div {
       background-color: $transparent-color;
     }
-    .modal{
-      &.product-box{
+    .modal {
+      &.product-box {
         background-color: transparent;
-        .modal-header{
+        .modal-header {
           background-color: $dark-card-background;
-          .product-details{
-            .product-qnty{
-              input{
+          .product-details {
+            .product-qnty {
+              input {
                 background-color: $dark-body-background;
                 color: $dark-all-font-color;
                 border: 1px solid $dark-card-border;
               }
             }
-            .product-size{
-              ul{
-                li{
-                  button{
+            .product-size {
+              ul {
+                li {
+                  button {
                     border: 1px solid $dark-card-border;
                   }
                 }
@@ -783,9 +787,9 @@ body {
       }
     }
     .product-wrapper {
-      .product-sidebar{
-        .filter-section{
-          .card{
+      .product-sidebar {
+        .filter-section {
+          .card {
             border-radius: 5px;
           }
         }
@@ -835,8 +839,8 @@ body {
         .rdt_TableHeadRow {
           background-color: $dark-body-background;
           border-bottom: 1px solid $dark-card-border;
-          .rdt_TableCol{
-            > div{
+          .rdt_TableCol {
+            > div {
               color: $dark-all-font-color;
             }
           }
@@ -862,13 +866,13 @@ body {
           }
         }
       }
-      .rdt_Pagination{
+      .rdt_Pagination {
         background-color: $dark-body-background;
         color: $dark-small-font-color;
-        > div{
-          button{
+        > div {
+          button {
             fill: $dark-small-font-color;
-            svg{
+            svg {
               fill: $dark-small-font-color;
             }
           }
@@ -1278,11 +1282,11 @@ body {
         }
       }
     }
-    .react-kanban-column{
+    .react-kanban-column {
       background-color: $dark-body-background;
-      .react-kanban-card{
+      .react-kanban-card {
         background-color: $dark-card-background;
-        .react-kanban-card__title{
+        .react-kanban-card__title {
           border-bottom: 1px solid $dark-card-border;
         }
       }
@@ -1322,10 +1326,10 @@ body {
         }
       }
     }
-    .react-kanban-card-adder-button{
+    .react-kanban-card-adder-button {
       border: 1px solid $dark-card-border;
       color: $dark-all-font-color;
-      &:hover{
+      &:hover {
         background-color: $dark-card-background;
       }
     }
@@ -2066,19 +2070,19 @@ body {
       .folder {
         .folder-box {
           border-color: $dark-card-border;
-          &.list-group-item{
+          &.list-group-item {
             border: 1px solid $dark-card-border;
           }
         }
       }
     }
-    .custom-card{
-      .card-social{
+    .custom-card {
+      .card-social {
         border-top: 0;
       }
     }
-    .my-gallery.gallery-with-description{
-      img{
+    .my-gallery.gallery-with-description {
+      img {
         background-color: $dark-card-background !important;
       }
     }
@@ -2191,18 +2195,18 @@ body {
       }
     }
     // typeahead
-    .typeahead{
-      .theme-form{
-        .rbt.has-aux{
-          .rbt-aux{
-            .rbt-close.btn-close{
-              .rbt-close-content{
+    .typeahead {
+      .theme-form {
+        .rbt.has-aux {
+          .rbt-aux {
+            .rbt-close.btn-close {
+              .rbt-close-content {
                 top: 14px !important;
               }
             }
           }
-          .rbt-close.btn-close{
-            .rbt-close-content{
+          .rbt-close.btn-close {
+            .rbt-close-content {
               top: 2px !important;
             }
           }
@@ -2376,11 +2380,11 @@ body {
         }
       }
     }
-    .order-history{
+    .order-history {
       .title-orders {
         background-color: $dark-body-background;
       }
-      table{
+      table {
         tr {
           td,
           th {
@@ -2388,10 +2392,10 @@ body {
           }
         }
       }
-      .rdt_Table{
-        .rdt_TableBody{
-          .rdt_TableRow{
-            &:hover{
+      .rdt_Table {
+        .rdt_TableBody {
+          .rdt_TableRow {
+            &:hover {
               background-color: $dark-body-background;
               border-bottom: 1px solid $dark-body-background;
               &:nth-child(even) {
@@ -2408,22 +2412,22 @@ body {
                 background-color: $dark-body-background;
               }
             }
-            &:nth-child(odd){
-              .rdt_TableCell{
-                &:first-child{
+            &:nth-child(odd) {
+              .rdt_TableCell {
+                &:first-child {
                   background-color: rgba($dark-card-background, 0.5);
                 }
-                &:nth-child(n+2){
+                &:nth-child(n + 2) {
                   background-color: $dark-card-background;
                 }
               }
             }
-            &:nth-child(even){
-              .rdt_TableCell{
-                &:first-child{
+            &:nth-child(even) {
+              .rdt_TableCell {
+                &:first-child {
                   background-color: $dark-card-background;
                 }
-                &:nth-child(n+2){
+                &:nth-child(n + 2) {
                   background-color: rgba($dark-card-background, 0.5);
                 }
               }
@@ -2431,12 +2435,16 @@ body {
           }
         }
       }
-      .rdt_Table, .rdt_TableHeadRow, .rdt_TableRow, .rdt_Pagination{
+      .rdt_Table,
+      .rdt_TableHeadRow,
+      .rdt_TableRow,
+      .rdt_Pagination {
         background-color: $dark-body-background;
-        div, span {
+        div,
+        span {
           color: $dark-all-font-color;
         }
-        button{
+        button {
           fill: $dark-all-font-color;
         }
       }
@@ -3043,8 +3051,9 @@ body {
       }
     }
     $alert-name: primary, secondary, success, danger, warning, info, light, dark;
-    $alert-color: $primary-color, $secondary-color, $success-color,
-      $danger-color, $warning-color, $info-color, $light-color, $dark-color;
+    $alert-color:
+      $primary-color, $secondary-color, $success-color, $danger-color, $warning-color, $info-color,
+      $light-color, $dark-color;
     @each $var in $alert-name {
       $i: index($alert-name, $var);
       .alert-#{$var} {
@@ -5863,18 +5872,10 @@ body {
       }
       &.fullscreen {
         &::before {
-          background: linear-gradient(
-            to right,
-            $dark-body-background 0,
-            rgba(0, 0, 0, 0) 100%
-          );
+          background: linear-gradient(to right, $dark-body-background 0, rgba(0, 0, 0, 0) 100%);
         }
         &::after {
-          background: linear-gradient(
-            to right,
-            rgba(0, 0, 0, 0) 0,
-            $dark-body-background 100%
-          );
+          background: linear-gradient(to right, rgba(0, 0, 0, 0) 0, $dark-body-background 100%);
         }
       }
     }
@@ -5961,8 +5962,7 @@ body {
         &.active {
           background-color: $dark-card-background;
           color: $dark-all-font-color;
-          border-color: $dark-card-border $dark-card-border
-            $dark-card-background;
+          border-color: $dark-card-border $dark-card-border $dark-card-background;
         }
         &:hover,
         &:focus {
@@ -5973,8 +5973,7 @@ body {
         .nav-link {
           background-color: $dark-card-background;
           color: $dark-all-font-color;
-          border-color: $dark-border-color $dark-border-color
-            $dark-card-background;
+          border-color: $dark-border-color $dark-border-color $dark-card-background;
         }
       }
     }
@@ -5999,8 +5998,7 @@ body {
           &.active,
           &.focus,
           &.hover {
-            border-color: $dark-card-background $dark-border-color
-              $dark-border-color;
+            border-color: $dark-card-background $dark-border-color $dark-border-color;
           }
         }
       }
@@ -6547,10 +6545,9 @@ body {
         }
       }
     }
-    @each $btn-name, $btn-color in (primary, var(--theme-default)),
-      (secondary, $secondary-color), (success, $success-color),
-      (danger, $danger-color), (info, $info-color), (light, $light-color),
-      (dark, $dark-color), (warning, $warning-color)
+    @each $btn-name, $btn-color in (primary, var(--theme-default)), (secondary, $secondary-color),
+      (success, $success-color), (danger, $danger-color), (info, $info-color),
+      (light, $light-color), (dark, $dark-color), (warning, $warning-color)
     {
       .radio-#{$btn-name} {
         input[type="radio"] {
@@ -6575,10 +6572,9 @@ body {
         }
       }
     }
-    @each $btn-name, $btn-color in (primary, var(--theme-default)),
-      (secondary, $secondary-color), (success, $success-color),
-      (danger, $danger-color), (info, $info-color), (light, $light-color),
-      (dark, $dark-color), (warning, $warning-color)
+    @each $btn-name, $btn-color in (primary, var(--theme-default)), (secondary, $secondary-color),
+      (success, $success-color), (danger, $danger-color), (info, $info-color),
+      (light, $light-color), (dark, $dark-color), (warning, $warning-color)
     {
       .checkbox-#{$btn-name} {
         label {
@@ -6588,10 +6584,9 @@ body {
         }
       }
     }
-    @each $btn-name, $btn-color in (primary, var(--theme-default)),
-      (secondary, $secondary-color), (success, $success-color),
-      (danger, $danger-color), (info, $info-color), (light, $light-color),
-      (dark, $dark-color), (warning, $warning-color)
+    @each $btn-name, $btn-color in (primary, var(--theme-default)), (secondary, $secondary-color),
+      (success, $success-color), (danger, $danger-color), (info, $info-color),
+      (light, $light-color), (dark, $dark-color), (warning, $warning-color)
     {
       .checkbox-solid-#{$btn-name} {
         label {

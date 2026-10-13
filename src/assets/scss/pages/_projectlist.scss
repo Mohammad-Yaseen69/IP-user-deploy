@@ -96,13 +96,13 @@
     top: 15px;
     padding: 4px 6px 4px;
   }
-  .customers{
-    ul{
-      li{
-        + li{
+  .customers {
+    ul {
+      li {
+        + li {
           margin-left: -3%;
         }
-        img.media{
+        img.media {
           margin-right: 0;
         }
       }

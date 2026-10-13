@@ -1,8 +1,23 @@
 export const FlagSvg = (props) => {
   return (
-    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="9" viewBox="0 0 12 9" fill="none" {...props}>
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="12"
+      height="9"
+      viewBox="0 0 12 9"
+      fill="none"
+      {...props}
+    >
       <rect width="12" height="8.57143" rx="2" fill="white" />
-      <mask id="mask0" style={{ maskType: "luminance" }} maskUnits="userSpaceOnUse" x="0" y="0" width="12" height="9">
+      <mask
+        id="mask0"
+        style={{ maskType: "luminance" }}
+        maskUnits="userSpaceOnUse"
+        x="0"
+        y="0"
+        width="12"
+        height="9"
+      >
         <rect width="12" height="8.57143" rx="2" fill="white" />
       </mask>
       <g mask="url(#mask0)">

@@ -1,12 +1,11 @@
 @import "variables";
-@import '../../../utils/variables.scss';
+@import "../../../utils/variables.scss";
 
 .br-theme-fontawesome-stars {
-
   .br-widget {
     height: 28px;
     white-space: nowrap;
-  
+
     a {
       text-rendering: auto;
       -webkit-font-smoothing: antialiased;
@@ -15,7 +14,7 @@
     }
 
     a:after {
-      content: '\f005';
+      content: "\f005";
       color: $star-default;
     }
 
@@ -37,24 +36,21 @@
       cursor: default;
     }
   }
-
 }
 
 @media print {
   .br-theme-fontawesome-stars {
-
     .br-widget {
       a:after {
-        content: '\f006';
+        content: "\f006";
         color: black;
       }
 
       a.br-active:after,
       a.br-selected:after {
-        content: '\f005';
+        content: "\f005";
         color: black;
       }
     }
-
   }
 }

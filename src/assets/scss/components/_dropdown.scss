@@ -1,12 +1,12 @@
 /**=====================
     11. Dropdown CSS Start
 ==========================**/
-.basic-tab{
-  .card-body{
-    .nav-tabs{
-      .nav-item.dropdown{
-        a{
-          &:after{
+.basic-tab {
+  .card-body {
+    .nav-tabs {
+      .nav-item.dropdown {
+        a {
+          &:after {
             right: 3px;
           }
         }
@@ -14,42 +14,42 @@
     }
   }
 }
-.basic-dropdown{
-  .card-body{
+.basic-dropdown {
+  .card-body {
     padding-left: 38px;
     padding-right: 38px;
   }
-  ul{
-    &.d-flex{
+  ul {
+    &.d-flex {
       gap: 18px 34px;
     }
-    li{
-      span{
-        svg{
+    li {
+      span {
+        svg {
           width: 14px;
           height: 14px;
         }
       }
-      .left-dropdown{
+      .left-dropdown {
         padding: 10px 0;
         top: 34px;
-        li{
+        li {
           width: 130px;
           padding: 5px 14px;
-          &:hover{
-            a{
+          &:hover {
+            a {
               color: $secondary-color;
             }
           }
-          a{
+          a {
             color: $theme-body-font-color;
             font-weight: 500;
           }
         }
       }
-      &:hover{
-        span.f-w-600{
-          &::before{
+      &:hover {
+        span.f-w-600 {
+          &::before {
             width: 124px;
             transition: all 0.5s ease-in;
           }
@@ -65,7 +65,7 @@
           left: -9px;
           width: 50px;
           height: 24px;
-          background-color: rgba($primary-color , 0.2);
+          background-color: rgba($primary-color, 0.2);
           border-radius: 4px;
           z-index: 0;
           transition: all 0.5s ease-in-out;
@@ -103,7 +103,7 @@
       border: none;
       cursor: pointer;
       font-weight: 600;
-      &.btn-pill{
+      &.btn-pill {
         border-radius: 30px !important;
       }
     }

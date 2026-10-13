@@ -202,7 +202,6 @@
         .rdt_TableHead {
           .rdt_TableHeadRow {
             .rdt_TableCol {
-
               &:nth-child(2),
               &:nth-child(5) {
                 min-width: 210px;
@@ -213,7 +212,6 @@
 
         .rdt_TableBody {
           .rdt_TableCell {
-
             &:nth-child(2),
             &:nth-child(5) {
               min-width: 210px;
@@ -227,7 +225,7 @@
       .blog-details {
         .blog-social {
           li {
-            &:nth-child(n+2) {
+            &:nth-child(n + 2) {
               margin-left: 14px;
               padding-left: 14px;
             }
@@ -247,8 +245,8 @@
                     .simplebar-content-wrapper {
                       .simplebar-content {
                         .menu-box {
-                          >ul {
-                            >li {
+                          > ul {
+                            > li {
                               .sidebar-submenu {
                                 li {
                                   a {
@@ -276,7 +274,6 @@
           .sidebar-links {
             .menu-box {
               .sidebar-link {
-
                 &.active,
                 &:hover {
                   .sidebar-submenu {
@@ -429,7 +426,7 @@
 
     .custom-profile {
       .card-footer {
-        >div {
+        > div {
           margin: 0;
 
           div {
@@ -445,7 +442,7 @@
 
     .faq-section {
       .browse {
-        >div[class*="col-"] {
+        > div[class*="col-"] {
           &:last-child {
             max-width: 100%;
             flex: 0 0 100%;
@@ -547,7 +544,7 @@
 
     .starter-kit-fix {
       .starter-main {
-        >div {
+        > div {
           &:last-child {
             .card {
               margin-bottom: 30px;
@@ -579,8 +576,8 @@
                     .simplebar-content-wrapper {
                       .simplebar-content {
                         .menu-box {
-                          >ul {
-                            >li {
+                          > ul {
+                            > li {
                               .sidebar-link {
                                 &:before {
                                   left: 6px;
@@ -605,7 +602,7 @@
             height: calc(100% - 80px);
 
             &.close_icon {
-              ~footer {
+              ~ footer {
                 width: 1280px;
                 left: 50%;
                 padding-left: 120px;
@@ -613,7 +610,7 @@
                 z-index: 8;
               }
 
-              ~.footer-fix {
+              ~ .footer-fix {
                 padding-left: 0;
               }
 
@@ -628,8 +625,8 @@
                       .simplebar-content-wrapper {
                         .simplebar-content {
                           .menu-box {
-                            >ul {
-                              >li {
+                            > ul {
+                              > li {
                                 .sidebar-link {
                                   &::before {
                                     left: 11px;
@@ -661,8 +658,8 @@
                         .simplebar-content-wrapper {
                           .simplebar-content {
                             .menu-box {
-                              >ul {
-                                >li {
+                              > ul {
+                                > li {
                                   a {
                                     svg {
                                       margin-right: 15px;
@@ -691,8 +688,8 @@
                     .simplebar-content-wrapper {
                       .simplebar-content {
                         .menu-box {
-                          >ul {
-                            >li {
+                          > ul {
+                            > li {
                               a {
                                 padding: 12px 15px;
                               }
@@ -856,7 +853,7 @@
               justify-content: center;
               min-width: 300px;
 
-              >div {
+              > div {
                 z-index: 8;
                 background-color: rgba(255, 255, 255, 0.75);
                 background-blend-mode: overlay;
@@ -955,7 +952,7 @@
 
       ul {
         &.close_icon {
-          >li {
+          > li {
             label {
               padding: 0;
 
@@ -1117,7 +1114,7 @@
           }
 
           .col-xl-3 {
-            +.col-xl-3 {
+            + .col-xl-3 {
               padding-right: 12px;
             }
           }
@@ -1179,8 +1176,8 @@
                       .simplebar-content-wrapper {
                         .simplebar-content {
                           .menu-box {
-                            >ul {
-                              >li {
+                            > ul {
+                              > li {
                                 .sidebar-link {
                                   padding: 12px 22px;
 
@@ -1218,8 +1215,8 @@
                     .simplebar-content-wrapper {
                       .simplebar-content {
                         .menu-box {
-                          >ul {
-                            >li {
+                          > ul {
+                            > li {
                               .sidebar-link {
                                 padding: 12px 0;
 
@@ -1248,8 +1245,8 @@
                         .simplebar-content-wrapper {
                           .simplebar-content {
                             .menu-box {
-                              >ul {
-                                >li {
+                              > ul {
+                                > li {
                                   ul.sidebar-submenu {
                                     li {
                                       a {
@@ -1285,8 +1282,8 @@
               display: block !important;
             }
 
-            >ul {
-              >li {
+            > ul {
+              > li {
                 &:first-child {
                   display: none !important;
                 }
@@ -1304,7 +1301,7 @@
     }
 
     .row.theme-form.mt-3 {
-      >.d-flex[class*="col-"] {
+      > .d-flex[class*="col-"] {
         width: 100%;
       }
     }
@@ -1355,7 +1352,7 @@
 
     .search-page {
       .search-vid-block {
-        >div {
+        > div {
           margin-top: 30px;
         }
       }
@@ -1380,7 +1377,7 @@
         display: block;
         text-align: right;
 
-        >div {
+        > div {
           padding: 12px 0;
         }
       }
@@ -1463,7 +1460,7 @@
       padding: 15px;
 
       .card-footer {
-        >div {
+        > div {
           padding: 10px 0;
 
           h3 {
@@ -1539,7 +1536,7 @@
     .pricing-col {
       margin-bottom: -30px;
 
-      >div {
+      > div {
         width: 50%;
         margin-bottom: 30px;
       }
@@ -1547,7 +1544,7 @@
 
     ul.pro-services {
       li {
-        &:nth-child(n+2) {
+        &:nth-child(n + 2) {
           margin-top: 10px;
         }
       }
@@ -1556,7 +1553,7 @@
     .filter-block {
       ul {
         li {
-          &:nth-child(n+2) {
+          &:nth-child(n + 2) {
             margin-top: 10px;
           }
         }
@@ -1654,11 +1651,11 @@
               padding-left: 10px;
             }
 
-            +li {
+            + li {
               padding-left: 20px;
             }
 
-            &:nth-child(n+2) {
+            &:nth-child(n + 2) {
               &::before {
                 display: none;
               }
@@ -1736,7 +1733,7 @@
             margin-bottom: 35px;
 
             .dots-images {
-              ~img {
+              ~ img {
                 height: 208px;
               }
             }
@@ -1870,7 +1867,7 @@
 
           ul {
             li {
-              +li {
+              + li {
                 &::before {
                   display: none;
                 }
@@ -1883,7 +1880,7 @@
       .our-todolist {
         .activity-timeline {
           .d-flex {
-            &:nth-child(n+2) {
+            &:nth-child(n + 2) {
               margin-top: 20px;
             }
           }
@@ -1900,7 +1897,7 @@
 
       .activity-timeline {
         .d-flex {
-          +.d-flex {
+          + .d-flex {
             margin-top: 24px;
           }
 
@@ -1994,7 +1991,7 @@
 
           ul {
             li {
-              +li {
+              + li {
                 &::before {
                   top: 14px;
                   left: 0;
@@ -2079,7 +2076,7 @@
             height: 65%;
           }
 
-          +.d-flex {
+          + .d-flex {
             margin-top: 20px;
           }
         }
@@ -2087,10 +2084,9 @@
 
       .order-card {
         table {
-
           th,
           td {
-            &:nth-child(n+2) {
+            &:nth-child(n + 2) {
               min-width: 150px;
             }
 
@@ -2117,7 +2113,7 @@
             display: block !important;
 
             li {
-              &:nth-child(n+2) {
+              &:nth-child(n + 2) {
                 margin-left: 0;
                 margin-top: 15px;
               }
@@ -2143,7 +2139,6 @@
     .order-card {
       table {
         tr {
-
           th,
           td {
             &:first-child {
@@ -2156,7 +2151,6 @@
 
     // file content
     .file-content {
-
       .files,
       .folder {
         .file-box {
@@ -2233,7 +2227,7 @@
           .chat-header {
             .chat-menu-icons {
               li {
-                &:nth-child(n+2) {
+                &:nth-child(n + 2) {
                   margin-left: 10px;
                 }
 

@@ -9,7 +9,6 @@
   table {
     tr {
       &:first-child {
-
         td,
         th {
           padding-top: 0 !important;
@@ -503,15 +502,10 @@
     }
   }
 
-  @each $text-light-name,
-  $text-light-color in (primary, $primary-color),
-  (secondary, $secondary-color),
-  (success, $success-color),
-  (danger, $danger-color),
-  (info, $info-color),
-  (light, $light-color),
-  (dark, $dark-color),
-  (warning, $warning-color) {
+  @each $text-light-name, $text-light-color in (primary, $primary-color),
+    (secondary, $secondary-color), (success, $success-color), (danger, $danger-color),
+    (info, $info-color), (light, $light-color), (dark, $dark-color), (warning, $warning-color)
+  {
     .header-text-#{$text-light-name} {
       color: $text-light-color;
     }
@@ -852,7 +846,7 @@
             }
           }
 
-          +li {
+          + li {
             position: relative;
 
             &::before {
@@ -893,15 +887,10 @@
         z-index: 0;
       }
 
-      @each $circle-name,
-      $circle-color in (primary, $primary-color),
-      (secondary, $secondary-color),
-      (success, $success-color),
-      (danger, $danger-color),
-      (info, $info-color),
-      (light, $light-color),
-      (dark, $dark-color),
-      (warning, $warning-color) {
+      @each $circle-name, $circle-color in (primary, $primary-color), (secondary, $secondary-color),
+        (success, $success-color), (danger, $danger-color), (info, $info-color),
+        (light, $light-color), (dark, $dark-color), (warning, $warning-color)
+      {
         .circle-dot-#{$circle-name} {
           background-color: rgba($circle-color, 0.25);
           border-radius: 100%;
@@ -911,7 +900,7 @@
         }
       }
 
-      +.d-flex {
+      + .d-flex {
         margin-top: 40px;
       }
 
@@ -942,7 +931,7 @@
               }
             }
 
-            +li {
+            + li {
               margin-left: 20px;
             }
 
@@ -978,15 +967,10 @@
     }
   }
 
-  @each $activity-dot-name,
-  $activity-dot-color in (primary, $primary-color),
-  (secondary, $secondary-color),
-  (success, $success-color),
-  (danger, $danger-color),
-  (info, $info-color),
-  (light, $light-color),
-  (dark, $dark-color),
-  (warning, $warning-color) {
+  @each $activity-dot-name, $activity-dot-color in (primary, $primary-color),
+    (secondary, $secondary-color), (success, $success-color), (danger, $danger-color),
+    (info, $info-color), (light, $light-color), (dark, $dark-color), (warning, $warning-color)
+  {
     .activity-dot-#{$activity-dot-name} {
       width: 16px;
       height: 16px;
@@ -1006,7 +990,7 @@
   .dashboard-2 {
     .activity-timeline {
       .d-flex {
-        +.d-flex {
+        + .d-flex {
           margin-top: 26px;
         }
       }
@@ -1020,7 +1004,7 @@
               font-size: 20px !important;
             }
 
-            &:nth-child(n+2) {
+            &:nth-child(n + 2) {
               font-size: 15px;
             }
           }
@@ -1028,7 +1012,6 @@
 
         tr {
           td {
-
             &:first-child,
             &:nth-child(4) {
               min-width: 140px;
@@ -1090,7 +1073,7 @@
 
         th,
         td {
-          &:nth-child(n+2) {
+          &:nth-child(n + 2) {
             min-width: 90px;
           }
 
@@ -1249,7 +1232,7 @@
 
     .activity-timeline {
       .d-flex {
-        +.d-flex {
+        + .d-flex {
           margin-top: 14px;
         }
       }
@@ -1316,7 +1299,7 @@
       .card-footer {
         ul {
           li {
-            +li {
+            + li {
               &::before {
                 top: 14px;
                 left: 0;
@@ -1390,7 +1373,7 @@
           height: 65%;
         }
 
-        +.d-flex {
+        + .d-flex {
           margin-top: 28px;
         }
       }
@@ -1441,7 +1424,6 @@
   .dashboard-2 {
     .order-card {
       table {
-
         th,
         td {
           &:nth-child(4) {
@@ -1628,7 +1610,6 @@
     .visitor-card,
     .profit-card,
     .sell-card {
-
       .card-header,
       .card-body {
         padding: 22px 22px 25px;
@@ -1641,7 +1622,7 @@
           height: 64%;
         }
 
-        +.d-flex {
+        + .d-flex {
           margin-top: 10px;
         }
       }
@@ -1700,7 +1681,6 @@
       .card-body {
         table {
           tr {
-
             th,
             td {
               &:nth-child(3) {
@@ -1742,7 +1722,7 @@
                 min-width: 160px;
               }
 
-              &:nth-child(n+2) {
+              &:nth-child(n + 2) {
                 min-width: 60px;
               }
             }
@@ -1778,7 +1758,6 @@
       table {
         tr {
           td {
-
             &:first-child,
             &:nth-child(4) {
               min-width: 170px;
@@ -1796,7 +1775,7 @@
 
         th,
         td {
-          &:nth-child(n+2) {
+          &:nth-child(n + 2) {
             min-width: 120px;
           }
 
@@ -1817,7 +1796,7 @@
 
     .activity-timeline {
       .d-flex {
-        +.d-flex {
+        + .d-flex {
           margin-top: 34px;
         }
       }
@@ -1896,7 +1875,6 @@
 
 @media only screen and (max-width: 991px) {
   .dashboard-2 {
-
     .goal-view,
     .product-slider {
       .card-header {
@@ -1951,7 +1929,7 @@
           top: 34px;
         }
 
-        +.d-flex {
+        + .d-flex {
           margin-top: 20px;
         }
       }
@@ -1985,7 +1963,6 @@
   }
 
   .dashboard-2 {
-
     .order-card,
     .best-seller {
       table {
@@ -2001,7 +1978,7 @@
 
     .activity-timeline {
       .d-flex {
-        +.d-flex {
+        + .d-flex {
           margin-top: 24px;
         }
       }
@@ -2041,7 +2018,7 @@
           display: block;
 
           li {
-            +li {
+            + li {
               margin-top: 15px;
 
               &::before {

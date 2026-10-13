@@ -1,54 +1,54 @@
 .container {
-    background-color: white;
-    padding: 1.5rem;
-    border-radius: 30px;
-    box-shadow: 0 0 2px rgba(128, 128, 128, 0.336);
-    margin-top: 1rem;
-    height: 100%;
+  background-color: white;
+  padding: 1.5rem;
+  border-radius: 30px;
+  box-shadow: 0 0 2px rgba(128, 128, 128, 0.336);
+  margin-top: 1rem;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+
+  .top {
     display: flex;
-    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    row-gap: 1rem;
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(128, 128, 128, 0.205);
 
-    .top {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        flex-wrap: wrap;
-        row-gap: 1rem;
-        margin-bottom: 1rem;
-        padding-bottom: 1rem;
-        border-bottom: 1px solid rgba(128, 128, 128, 0.205);
+    .left {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
 
-        .left {
-            display: flex;
-            align-items: center;
-            gap: 1.5rem;
-
-            h3 {
-                font-size: 1.5rem;
-                font-weight: 500;
-            }
-        }
+      h3 {
+        font-size: 1.5rem;
+        font-weight: 500;
+      }
     }
+  }
 
-    .table {
-        padding: 2rem 8px;
-        height: 100%;
-        overflow-y: auto;
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
-        gap: 1.5rem;
+  .table {
+    padding: 2rem 8px;
+    height: 100%;
+    overflow-y: auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+    gap: 1.5rem;
 
-        .recItem {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 1rem;
+    .recItem {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
 
-            input[type="checkbox"] {
-                height: 20px;
-                width: 20px;
-                cursor: pointer;
-            }
-        }
+      input[type="checkbox"] {
+        height: 20px;
+        width: 20px;
+        cursor: pointer;
+      }
     }
+  }
 }

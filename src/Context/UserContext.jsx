@@ -4,8 +4,7 @@ import { createContext } from "react";
 
 // axios.defaults.timeout = 10000;
 // axios.defaults.timeoutErrorMessage = "Server Timeout."
-axios.defaults.withCredentials = true
-
+axios.defaults.withCredentials = true;
 
 // axios.interceptors.response.use(
 //     response => {
@@ -24,139 +23,135 @@ axios.defaults.withCredentials = true
 //     }
 // );
 
-
 // Initial value for UserContext to avoid undefined errors
 const initialUserContext = {
-    userDetails: null,
-    setUserDetails: () => { },
-    selectedAccount: null,
-    setselectedAccount: () => { },
-    userWallets: [],
-    setUserWallets: () => { },
-    token: '',
-    authHeader: {},
-    beneficiaries: [],
-    setBeneficiaries: () => { },
-    userTransactions: [],
-    setUserTransactions: () => { },
-    searchQuery: '',
-    setSearchQuery: () => { },
-    apiDates: null,
-    setApiDates: () => { },
-    userSecurityQues: [],
-    referralLink: '',
-    userSessions: [],
-    allowedFeatures: null,
-    verifyToken: () => { },
-    userWithdrawals: undefined,
-    setUserWithdrawals: () => { },
-    allowedWithdrawals: null,
-    registeredBeneficiaries: [],
-    profileCompleted: null,
-    allowedCountries: [],
-    userPortfolio: [],
-    profileIncompleteReason: '',
-    setUserPortfolio: () => { },
-    setUserVideos: () => { },
-    getUserVideos: () => { },
-    userVideos: [],
-    checkRegisteredBenficiaries: () => { },
-    getAllActiveCountries: () => { },
-    getUserWallets: () => { },
-    getUserBeneficiaries: () => { },
-    getUserDocuments: () => { },
-    checkAuth: () => { },
-    getSecurityQuestions: () => { },
-    getInvitationLink: () => { },
-    getSessions: () => { },
-    profileCompletedPercentage: 0,
-    getWithdrawals: () => { },
-    getReferralCommission: () => { },
-    totalReferralAmount: 0,
-    validateSendingLimits: () => false,
-    validateReceivingLimits: () => false,
-    validateTransactionsCount: () => false,
-    profileLockTIme: 0,
-    setProfileLockTime: () => { },
-    showInactivityModal: false,
-    setShowInactivityModal: () => { },
-    is30Days: false,
-    setIs30Days: () => { },
-    threeDaysReminder: false,
-    set3DaysReminder: () => { },
-    is30DaysInfo: false,
-    setIs30DaysInfo: () => { },
-    threeDaysReminderInfo: false,
-    set3DaysReminderInfo: () => { },
-    clearData: () => { },
-    croppedImages: {
-        profileDP: '',
-        profileBanner: '',
-        paDP: '',
-        paBanner: '',
-    },
-    updateCoordinates: () => { },
-    setCroppedImages: () => { },
-    missingTabsData: [],
-    setMissingTabsData: () => { },
-    setAvailable: () => { },
-    available: 0,
-    setBlocked: () => { },
-    blocked: 0,
-    processReceivingNonIpFunds: () => { },
-    showAnotherLoginModal: false,
-    setShowAnotherLoginModal: () => { },
-    setAgentDetails: () => { },
-    agentDetails: null,
-    setIsAgentLogin: () => { },
-    isAgentLogin: false,
-    cryptoWithdrawals: 0,
-    isSidebarOpen: true,
-    setIsSidebarOpen: () => {}
+  userDetails: null,
+  setUserDetails: () => {},
+  selectedAccount: null,
+  setselectedAccount: () => {},
+  userWallets: [],
+  setUserWallets: () => {},
+  token: "",
+  authHeader: {},
+  beneficiaries: [],
+  setBeneficiaries: () => {},
+  userTransactions: [],
+  setUserTransactions: () => {},
+  searchQuery: "",
+  setSearchQuery: () => {},
+  apiDates: null,
+  setApiDates: () => {},
+  userSecurityQues: [],
+  referralLink: "",
+  userSessions: [],
+  allowedFeatures: null,
+  verifyToken: () => {},
+  userWithdrawals: undefined,
+  setUserWithdrawals: () => {},
+  allowedWithdrawals: null,
+  registeredBeneficiaries: [],
+  profileCompleted: null,
+  allowedCountries: [],
+  userPortfolio: [],
+  profileIncompleteReason: "",
+  setUserPortfolio: () => {},
+  setUserVideos: () => {},
+  getUserVideos: () => {},
+  userVideos: [],
+  checkRegisteredBenficiaries: () => {},
+  getAllActiveCountries: () => {},
+  getUserWallets: () => {},
+  getUserBeneficiaries: () => {},
+  getUserDocuments: () => {},
+  checkAuth: () => {},
+  getSecurityQuestions: () => {},
+  getInvitationLink: () => {},
+  getSessions: () => {},
+  profileCompletedPercentage: 0,
+  getWithdrawals: () => {},
+  getReferralCommission: () => {},
+  totalReferralAmount: 0,
+  validateSendingLimits: () => false,
+  validateReceivingLimits: () => false,
+  validateTransactionsCount: () => false,
+  profileLockTIme: 0,
+  setProfileLockTime: () => {},
+  showInactivityModal: false,
+  setShowInactivityModal: () => {},
+  is30Days: false,
+  setIs30Days: () => {},
+  threeDaysReminder: false,
+  set3DaysReminder: () => {},
+  is30DaysInfo: false,
+  setIs30DaysInfo: () => {},
+  threeDaysReminderInfo: false,
+  set3DaysReminderInfo: () => {},
+  clearData: () => {},
+  croppedImages: {
+    profileDP: "",
+    profileBanner: "",
+    paDP: "",
+    paBanner: "",
+  },
+  updateCoordinates: () => {},
+  setCroppedImages: () => {},
+  missingTabsData: [],
+  setMissingTabsData: () => {},
+  setAvailable: () => {},
+  available: 0,
+  setBlocked: () => {},
+  blocked: 0,
+  processReceivingNonIpFunds: () => {},
+  showAnotherLoginModal: false,
+  setShowAnotherLoginModal: () => {},
+  setAgentDetails: () => {},
+  agentDetails: null,
+  setIsAgentLogin: () => {},
+  isAgentLogin: false,
+  cryptoWithdrawals: 0,
+  isSidebarOpen: true,
+  setIsSidebarOpen: () => {},
 };
 
 const createImage = (url) =>
-    new Promise((resolve, reject) => {
-        const image = new Image()
-        image.crossOrigin = 'anonymous'
-        image.referrerPolicy = 'no-referrer'
-        image.addEventListener('load', () => resolve(image))
-        image.addEventListener('error', (error) => reject(error))
-        image.src = url
-    })
+  new Promise((resolve, reject) => {
+    const image = new Image();
+    image.crossOrigin = "anonymous";
+    image.referrerPolicy = "no-referrer";
+    image.addEventListener("load", () => resolve(image));
+    image.addEventListener("error", (error) => reject(error));
+    image.src = url;
+  });
 
 export const getCroppedImg = async (imageSrc, pixelCrop) => {
-    const image = await createImage(imageSrc)
-    const canvas = document.createElement('canvas')
-    const ctx = canvas.getContext('2d')
+  const image = await createImage(imageSrc);
+  const canvas = document.createElement("canvas");
+  const ctx = canvas.getContext("2d");
 
-    canvas.width = pixelCrop.width
-    canvas.height = pixelCrop.height
+  canvas.width = pixelCrop.width;
+  canvas.height = pixelCrop.height;
 
-    ctx.drawImage(
-        image,
-        pixelCrop.x,
-        pixelCrop.y,
-        pixelCrop.width,
-        pixelCrop.height,
-        0,
-        0,
-        pixelCrop.width,
-        pixelCrop.height
-    )
+  ctx.drawImage(
+    image,
+    pixelCrop.x,
+    pixelCrop.y,
+    pixelCrop.width,
+    pixelCrop.height,
+    0,
+    0,
+    pixelCrop.width,
+    pixelCrop.height,
+  );
 
-    return new Promise((resolve) => {
-        canvas.toBlob((blob) => {
-            resolve(blob)
-        }, 'image/jpeg')
-    })
-}
-export const UserContext = createContext(initialUserContext)
+  return new Promise((resolve) => {
+    canvas.toBlob((blob) => {
+      resolve(blob);
+    }, "image/jpeg");
+  });
+};
+export const UserContext = createContext(initialUserContext);
 
 export const authHeader = {
-    "Authorization": `Bearer ${localStorage.getItem("token")}`,
-    "source": "user"
-}
-
-
-
+  Authorization: `Bearer ${localStorage.getItem("token")}`,
+  source: "user",
+};

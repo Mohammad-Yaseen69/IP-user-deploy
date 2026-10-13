@@ -1,39 +1,38 @@
 .container {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1rem 0;
+  cursor: pointer;
+
+  input {
+    min-width: 60px;
+    cursor: pointer;
+  }
+
+  .userDetails {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+    img {
+      width: 30px;
+      height: 30px;
+      object-fit: contain;
+    }
+
+    p {
+      padding-bottom: 0;
+      margin-bottom: 0;
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+  }
+
+  .right {
     display: flex;
     align-items: center;
     gap: 1.5rem;
-    padding: 1rem 0;
-    cursor: pointer;
-
-
-    input {
-        min-width: 60px;
-        cursor: pointer;
-    }
-
-    .userDetails {
-        flex: 1;
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-
-        img {
-            width: 30px;
-            height: 30px;
-            object-fit: contain;
-        }
-
-        p {
-            padding-bottom: 0;
-            margin-bottom: 0;
-            font-size: .9rem;
-            font-weight: 500;
-        }
-    }
-
-    .right {
-        display: flex;
-        align-items: center;
-        gap: 1.5rem;
-    }
+  }
 }

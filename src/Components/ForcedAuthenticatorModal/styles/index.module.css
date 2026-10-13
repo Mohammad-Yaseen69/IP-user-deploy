@@ -1,72 +1,72 @@
 .modalHeader {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem 1.5rem;
-    border-bottom: 1px solid #E9E9E9;
-    background: #FAFAFA;
-    position: relative;
-    z-index: 1055;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid #e9e9e9;
+  background: #fafafa;
+  position: relative;
+  z-index: 1055;
 }
 
 .modalTitle {
-    margin: 0;
-    font-size: 1.15rem;
-    font-weight: 700;
-    color: #333333;
-    font-family: Manrope, sans-serif;
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #333333;
+  font-family: Manrope, sans-serif;
 }
 
 .topActions {
-    display: flex;
-    align-items: center;
-    gap: 1.25rem;
-    position: relative;
-    z-index: 1060;
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  position: relative;
+  z-index: 1060;
 }
 
 .actionItem {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    cursor: pointer;
-    transition: opacity 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
 }
 
 .actionItem:hover {
-    opacity: 0.8;
+  opacity: 0.8;
 }
 
 .actionItem span {
-    color: #555555;
-    font-size: 0.9rem;
-    font-weight: 600;
+  color: #555555;
+  font-size: 0.9rem;
+  font-weight: 600;
 }
 
 .langWrapper {
-    position: relative;
-    display: flex;
-    align-items: center;
+  position: relative;
+  display: flex;
+  align-items: center;
 }
 
 .btnPrimary {
-    background: linear-gradient(to right bottom, #e64067, #5926f0, #4828a0);
-    border: none;
-    outline: none;
-    border-radius: 10px;
-    color: #FFFFFF;
-    font-weight: 700;
-    padding: 10px 24px;
-    font-size: 14px;
-    cursor: pointer;
-    transition: opacity 0.2s ease;
+  background: linear-gradient(to right bottom, #e64067, #5926f0, #4828a0);
+  border: none;
+  outline: none;
+  border-radius: 10px;
+  color: #ffffff;
+  font-weight: 700;
+  padding: 10px 24px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
 }
 
 .btnPrimary:hover:not(:disabled) {
-    opacity: 0.9;
+  opacity: 0.9;
 }
 
 .btnPrimary:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
+  opacity: 0.6;
+  cursor: not-allowed;
 }
