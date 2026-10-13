@@ -146,10 +146,10 @@ const Stats = ({ currentWallet }) => {
         setIsLoading(false)
     };
     useEffect(() => {
-        if (currentWallet?.wallet_id) {
+        if (currentWallet) {
             fetchData();
         }
-    }, [currentWallet?.wallet_id]);
+    }, [currentWallet]);
 
 
     useEffect(() => {

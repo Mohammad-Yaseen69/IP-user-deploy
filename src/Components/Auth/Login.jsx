@@ -1198,7 +1198,7 @@ const Login = ({ country, setIsLoginForm, }) => {
                                             </InputAdornment>
                                         ),
                                         endAdornment: (
-                                            <InputAdornment onClick={() => setShowPassword(prev => !prev)} position="end">
+                                            <InputAdornment onClick={() => setShowPassword(prev => !prev)} position="end" className={styles.inputAdornment}>
                                                 {showPassword ?
                                                     <EyeOff size={20} />
                                                     :

@@ -431,7 +431,7 @@ const ReviewStep = ({ onSubmit, onBack, allData = {}, onNext, userType, currentS
                                 />
                                     :    
                             <div className={styles.infoBox}>
-                                <span className={styles.infoIcon}>ⓘ</span>
+                                <span className={styles.infoIcon}><AlertCircle color='white' size={15} /></span>
                                 <p>
                                     {t("You won't be charged now. There's no pricing to accept at this stage, our team confirms your eligibility and sends a personalized offer with the applicable terms and next steps.")}
                                 </p>

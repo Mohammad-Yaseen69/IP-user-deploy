@@ -512,7 +512,7 @@ const Signup = ({ country, setIsLoginForm, setHideLogo, handleStepChange }) => {
                                         <form className={styles.registerForm} onSubmit={clickHandler}>
                                             <div className={styles.registerFormTop}>
                                                 <h1>{t("How will you use InstaPay?")}</h1>
-                                                <p>{t("Pick one to start. The steps after this are tailored to your choice.")}</p>
+                                                {data.step === 1 && <p>{t("Pick one to start. The steps after this are tailored to your choice.")}</p>}
                                             </div>
                                             <div className={styles.right} style={{ height: "100%" }}>
                                                 <div>

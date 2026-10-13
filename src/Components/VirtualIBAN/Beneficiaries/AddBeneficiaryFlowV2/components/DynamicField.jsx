@@ -71,7 +71,6 @@ const datePickerInputProps = {
         border: 'none',
         boxShadow: 'none',
         padding: '0 10px',
-        minHeight: '40px',
         fontWeight: 500,
     },
 };
@@ -82,7 +81,6 @@ const datePickerInnerInputProps = {
         border: 'none',
         boxShadow: 'none',
         padding: '2px 0px',
-        minHeight: '40px',
     },
 };
 
@@ -264,6 +262,7 @@ const DynamicField = ({
             placeholder={def.placeholder}
             disabled={disabled}
             inputMode={def.type === 'tel' ? 'tel' : undefined}
+            maxLength={def.maxLength}
             error={error}
             hint={def.hint}
         />

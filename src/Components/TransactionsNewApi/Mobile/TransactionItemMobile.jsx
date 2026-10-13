@@ -96,7 +96,7 @@ const TransactionItemMobile = ({ item, activeItem, setActiveItem, index, fromRef
 
     const internationalReceiver = useMemo(() => {
         if (!item?.beneficiary) return null;
-        return beneficiaries.filter(benef => benef?._id === item?.beneficiary)?.[0]
+        return beneficiaries.filter(benef => benef?._id === item?.beneficiary)?.[0] || item?.beneficiaryDetails
     }, [beneficiaries, item])
 
     const externalStatusDescription = useMemo(() => {
