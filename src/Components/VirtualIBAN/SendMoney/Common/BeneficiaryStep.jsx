@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Plus, Search } from "react-feather";
+import { Filter, Plus, Search, Sliders } from "react-feather";
 import styles from "./BeneficiaryStep.module.css";
 import {
   getBeneficiaryName,
@@ -9,6 +9,22 @@ import {
   getBeneficiaryId,
   getBeneficiaryAccountCount,
 } from "./beneficiaryHelpers";
+
+const TYPE_OPTIONS = [
+  { value: "all", label: "All" },
+  { value: "individual", label: "Individual" },
+  { value: "business", label: "Business" },
+];
+
+const SORT_OPTIONS = [
+  { value: "name_asc", label: "Name (A-Z)" },
+  { value: "name_desc", label: "Name (Z-A)" },
+  { value: "date_desc", label: "Date (Newest first)" },
+  { value: "date_asc", label: "Date (Oldest first)" },
+  { value: "type", label: "Type" },
+];
+
+const getCreatedAt = (b) => new Date(b?.createdAt || 0).getTime();
 
 const BeneficiaryStep = ({
   beneficiaries = [],
@@ -20,12 +36,43 @@ const BeneficiaryStep = ({
 }) => {
   const { t } = useTranslation();
   const [query, setQuery] = useState("");
+  const [typeFilter, setTypeFilter] = useState("all");
+  const [sortBy, setSortBy] = useState("name_asc");
+  const [openMenu, setOpenMenu] = useState(null);
+  const filtered = useMemo(() => {
+    const q = query.trim().toLowerCase();
 
-  const filtered = (beneficiaries || []).filter((b) =>
-    `${getBeneficiaryName(b)} ${getBeneficiarySubtitle(b)}`
-      .toLowerCase()
-      .includes(query.toLowerCase()),
-  );
+    const list = (beneficiaries || []).filter((b) => {
+      if (typeFilter === "business" && b?.beneficiary_type !== "business")
+        return false;
+      if (typeFilter === "individual" && b?.beneficiary_type === "business")
+        return false;
+
+      if (!q) return true;
+      return `${getBeneficiaryName(b)} ${getBeneficiarySubtitle(b)}`
+        .toLowerCase()
+        .includes(q);
+    });
+
+    return [...list].sort((a, b) => {
+      if (sortBy === "date_desc" || sortBy === "date_asc") {
+        const diff = getCreatedAt(a) - getCreatedAt(b);
+        return sortBy === "date_desc" ? -diff : diff;
+      }
+      if (sortBy === "type") {
+        return (a?.beneficiary_type || "").localeCompare(
+          b?.beneficiary_type || "",
+        );
+      }
+      const cmp = (getBeneficiaryName(a) || "").localeCompare(
+        getBeneficiaryName(b) || "",
+      );
+      return sortBy === "name_desc" ? -cmp : cmp;
+    });
+  }, [beneficiaries, query, typeFilter, sortBy]);
+
+  const toggleMenu = (name) =>
+    setOpenMenu((prev) => (prev === name ? null : name));
 
   return (
     <div className={styles.beneficiaryStep}>
@@ -49,6 +96,62 @@ const BeneficiaryStep = ({
           placeholder={t("Search beneficiaries")}
         />
       </label>
+
+      <div className={styles.toolbarRow}>
+        <div className={styles.dropdown}>
+          <button
+            type="button"
+            className={styles.toolbarBtn}
+            onClick={() => toggleMenu("filter")}
+          >
+            <Filter size={14} /> {t("Filter")}
+          </button>
+          {openMenu === "filter" && (
+            <div className={styles.menu}>
+              {TYPE_OPTIONS.map((o) => (
+                <button
+                  key={o.value}
+                  type="button"
+                  className={`${styles.menuItem} ${typeFilter === o.value ? styles.menuItemActive : ""}`}
+                  onClick={() => {
+                    setTypeFilter(o.value);
+                    setOpenMenu(null);
+                  }}
+                >
+                  {t(o.label)}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <div className={styles.dropdown}>
+          <button
+            type="button"
+            className={styles.toolbarBtn}
+            onClick={() => toggleMenu("sort")}
+          >
+            <Sliders size={14} /> {t("Sort")}
+          </button>
+          {openMenu === "sort" && (
+            <div className={styles.menu}>
+              {SORT_OPTIONS.map((o) => (
+                <button
+                  key={o.value}
+                  type="button"
+                  className={`${styles.menuItem} ${sortBy === o.value ? styles.menuItemActive : ""}`}
+                  onClick={() => {
+                    setSortBy(o.value);
+                    setOpenMenu(null);
+                  }}
+                >
+                  {t(o.label)}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
 
       <div className={styles.beneficiaryList}>
         {filtered.length === 0 && (

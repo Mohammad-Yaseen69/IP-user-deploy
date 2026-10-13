@@ -6,29 +6,31 @@ import axios from "axios";
 import { UserContext } from "../../Context/UserContext";
 import { toast } from "react-toastify";
 
-const DeleteBeneficiary = ({ isOpen, toggle, benef }) => {
+const DeleteBeneficiary = ({ isOpen, toggle, benef, onDeleted }) => {
   const { t } = useTranslation();
   const [isDeleting, setIsDeleting] = useState(false);
   const { userDetails, authHeader, getUserBeneficiaries, setBeneficiaries } =
     useContext(UserContext);
 
   const deleteBeneficiary = async () => {
+    if (!benef?._id) return;
     setIsDeleting(true);
     try {
-      const res = await axios.delete(
+      await axios.delete(
         `${import.meta.env.VITE_IP_DEV_API}/api/beneficiary/delete-beneficiary/${benef._id}/${userDetails?._id}`,
         {
           headers: authHeader,
         },
       );
       // console.log(decryptData(res.data.data))
-      setBeneficiaries((prev) => prev.filter((i) => i._id !== benef._id));
+      setBeneficiaries?.((prev) => prev.filter((i) => i._id !== benef._id));
+      onDeleted?.(benef._id);
       toggle();
     } catch (error) {
       // console.log(decryptData(error?.response?.data?.data))
-      toast.error("Something went wrong while deleting the beneficiary!");
+      toast.error(t("Something went wrong while deleting the beneficiary!"));
     } finally {
-      getUserBeneficiaries();
+      getUserBeneficiaries?.();
       setIsDeleting(false);
     }
   };

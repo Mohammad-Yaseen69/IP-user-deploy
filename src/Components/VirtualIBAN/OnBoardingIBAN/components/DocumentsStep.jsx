@@ -256,14 +256,14 @@ const DocumentsStep = ({
         ) : (
           <>
             <span
-              className={`${styles.required} ${isPOF ? styles.pof : ""}`}
+              className={`${isRequired ? styles.required : styles.optional} ${isPOF ? styles.pof : ""}`}
               style={
-                isRequired && err(key, true)
+                isRequired && err(isPOF ? IBAN_POA_SLOT : key, true)
                   ? { backgroundColor: "#ff000021", color: "red" }
                   : {}
               }
             >
-              {t(isPOF ? "ANY ONE" : "REQUIRED")}
+              {t(isPOF ? "ANY ONE" : isRequired ? "REQUIRED" : "OPTIONAL")}
             </span>
             <button
               type="button"
@@ -287,10 +287,6 @@ const DocumentsStep = ({
     );
   };
 
-  const handleContinue = () => {
-    if (validate()) onNext({ files }, "documents");
-  };
-
   const isDocProvided = (key) =>
     Boolean(files[key]) || isKeyVerifiedFromKyb(key);
   const isDocsValid =
@@ -299,6 +295,12 @@ const DocumentsStep = ({
         ? IBAN_POA_DOC_KEYS.some(isDocProvided)
         : isDocProvided(k),
     ) && !Object.values(uploadingKeys).some(Boolean);
+
+  const handleContinue = () => {
+    validate();
+    if (isDocsValid) onNext({ files }, "documents");
+  };
+
   return (
     <div className={styles.onboardingLayout}>
       <div>

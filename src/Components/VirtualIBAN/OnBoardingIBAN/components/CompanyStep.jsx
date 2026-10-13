@@ -385,24 +385,7 @@ const CompanyStep = ({
                 <label className={styles.inputLabel}>
                   {t("DATE OF INCORPORATION")}
                 </label>
-
-                <input
-                  style={{
-                    padding: "14.5px 14px 14.5px 12.5px",
-                    ...err("dateOfIncorporation"),
-                  }}
-                  type="date"
-                  className={styles.textInput}
-                  value={form.dateOfIncorporation || ""}
-                  onChange={set("dateOfIncorporation")}
-                  max={new Date().toISOString().split("T")[0]}
-                  disabled={Boolean(
-                    userDetails?.company?.date_of_incorporation,
-                  )}
-                  readOnly={Boolean(
-                    userDetails?.company?.date_of_incorporation,
-                  )}
-                />
+                <DateField />
               </div>
 
               <div className={styles.twoInputRow}>
@@ -424,24 +407,7 @@ const CompanyStep = ({
                   <label className={styles.inputLabel}>
                     {t("Incorporated")}
                   </label>
-
-                  <input
-                    style={{
-                      padding: "14.5px 14px 14.5px 12.5px",
-                      ...err("dateOfIncorporation"),
-                    }}
-                    type="date"
-                    className={styles.textInput}
-                    value={form.dateOfIncorporation || ""}
-                    onChange={set("dateOfIncorporation")}
-                    max={new Date().toISOString().split("T")[0]}
-                    disabled={Boolean(
-                      userDetails?.company?.date_of_incorporation,
-                    )}
-                    readOnly={Boolean(
-                      userDetails?.company?.date_of_incorporation,
-                    )}
-                  />
+                  <DateField isMobile={true} />
                 </div>
               </div>
               <div className={styles.inputGroup}>

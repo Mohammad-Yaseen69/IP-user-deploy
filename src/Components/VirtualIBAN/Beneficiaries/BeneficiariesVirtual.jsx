@@ -22,6 +22,7 @@ import TopRight from "../../topRight";
 import AddBeneficiaryModal from "./Modals/AddBeneficiaryModal";
 import DynamicChannelModal from "./Modals/DynamicChannelModal";
 import AddBeneficiaryFlowV2 from "./AddBeneficiaryFlowV2";
+import DeleteBeneficiary from "../../Beneficiaries/DeleteBeneficiary";
 import { USE_NEW_BENEFICIARY_FLOW } from "./AddBeneficiaryFlowV2/constants";
 import { useNavigate } from "react-router";
 import { useQuery } from "@tanstack/react-query";
@@ -68,6 +69,8 @@ const BeneficiariesVirtual = () => {
   const [isChannelModalOpen, setIsChannelModalOpen] = useState(false);
   const [beneficiaryToEdit, setBeneficiaryToEdit] = useState(null);
   const [channelModalBeneficiary, setChannelModalBeneficiary] = useState(null);
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+  const [beneficiaryToDelete, setBeneficiaryToDelete] = useState(null);
 
   const {
     data: rawData,
@@ -142,6 +145,19 @@ const BeneficiariesVirtual = () => {
     beneficiaries.find((b) => b._id === selectedBeneficiaryId) ||
     filteredBeneficiaries[0] ||
     beneficiaries[0];
+
+  const openDeleteBeneficiary = (beneficiary) => {
+    if (!beneficiary) return;
+    setBeneficiaryToDelete(beneficiary);
+    setIsDeleteOpen(true);
+  };
+
+  const handleBeneficiaryDeleted = (deletedId) => {
+    if (selectedBeneficiaryId === deletedId) {
+      setSelectedBeneficiaryId(null);
+    }
+    refetch();
+  };
 
   const handleCopy = (text) => {
     if (!text) return;
@@ -445,6 +461,15 @@ const BeneficiariesVirtual = () => {
                               >
                                 <Edit3 size={isMobile ? 13 : 16} />
                               </button>
+                              <button
+                                className={styles.deleteIconButton}
+                                onClick={() =>
+                                  openDeleteBeneficiary(activeBeneficiary)
+                                }
+                                title={t("Delete Beneficiary")}
+                              >
+                                <Trash2 size={13} />
+                              </button>
                             </div>
                           )}
                         </div>
@@ -478,6 +503,21 @@ const BeneficiariesVirtual = () => {
                           title={t("Edit Beneficiary")}
                         >
                           <Edit3 size={16} />
+                        </button>
+                        <button
+                          style={{
+                            border: "none",
+                            background: "transparent",
+                            color: "#EF4444",
+                            cursor: "pointer",
+                            padding: "4px",
+                          }}
+                          onClick={() =>
+                            openDeleteBeneficiary(activeBeneficiary)
+                          }
+                          title={t("Delete Beneficiary")}
+                        >
+                          <Trash2 size={16} />
                         </button>
                       </div>
                     )}
@@ -929,6 +969,16 @@ const BeneficiariesVirtual = () => {
           onSaveSuccess={() => refetch()}
         />
       )}
+
+      <DeleteBeneficiary
+        isOpen={isDeleteOpen}
+        toggle={() => {
+          setIsDeleteOpen(false);
+          setBeneficiaryToDelete(null);
+        }}
+        benef={beneficiaryToDelete}
+        onDeleted={handleBeneficiaryDeleted}
+      />
     </div>
   );
 };
