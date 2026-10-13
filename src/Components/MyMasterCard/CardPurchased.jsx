@@ -1092,10 +1092,10 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
                                         <img src={Gpay} alt="" />
                                         <h3>{t('Add to Google Pay')}</h3>
                                     </div>
-                                    <div onClick={() => window.open("https://www.samsung.com/us/support/answer/ANS10002609", "_blank", "noopener,noreferrer")} className={styles.option}>
+                                    {/* <div onClick={() => window.open("https://www.samsung.com/us/support/answer/ANS10002609", "_blank", "noopener,noreferrer")} className={styles.option}>
                                         <img src={Samsung} alt="" />
                                         <h3>{t('Add to Samsung Wallet')}</h3>
-                                    </div>
+                                    </div> */}
                                 </div>
                             </div>
                         </div>
