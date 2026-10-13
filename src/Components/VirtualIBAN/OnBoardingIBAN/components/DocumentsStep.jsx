@@ -226,10 +226,12 @@ const DocumentsStep = ({ onNext, onBack, onChange, onUploadDraftFile, userType, 
                     </span>
                 ) : (
                     <>
-                        <span
-                  className={`${styles.required} ${isPOF ? styles.pof : ''}`}
-                                          style={isRequired && err(key,true) ? { backgroundColor:  '#ff000021', color: 'red' } : {}}
-                  >{t(isPOF ? 'ANY ONE' : 'REQUIRED')}</span>
+                    <span
+                        className={`${isRequired ? styles.required : styles.optional} ${isPOF ? styles.pof : ''}`}
+                        style={isRequired && err(isPOF? IBAN_POA_SLOT : key,true) ? { backgroundColor:  '#ff000021', color: 'red' } : {}}
+                    >
+                    {t(isPOF ? 'ANY ONE' : (isRequired ? 'REQUIRED' : 'OPTIONAL'))}
+                    </span>
                         <button type="button" className={styles.uploadBtn} onClick={() => openFilePicker(key)}>
                             <Upload size={10} /> {t('Upload')}
                         </button>
@@ -246,14 +248,16 @@ const DocumentsStep = ({ onNext, onBack, onChange, onUploadDraftFile, userType, 
         )
     }
 
-     const handleContinue = () => {
-       if (validate()) onNext({ files }, 'documents')
-    }
-
     const isDocProvided = (key) => Boolean(files[key]) || isKeyVerifiedFromKyb(key)
     const isDocsValid = requiredDocKeys.every(k => (
         k === IBAN_POA_SLOT ? IBAN_POA_DOC_KEYS.some(isDocProvided) : isDocProvided(k)
     )) && !Object.values(uploadingKeys).some(Boolean)
+
+    const handleContinue = () => {
+        validate();
+       if (isDocsValid) onNext({ files }, 'documents')
+    }
+
     return (
         <div className={styles.onboardingLayout}>
             <div>
