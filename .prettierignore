@@ -1,0 +1,11 @@
+dist
+node_modules
+package-lock.json
+public
+coverage
+*.svg
+*.min.js
+*.min.css
+
+# Binary .lottie archive with a .json extension
+src/Components/PaymentsNewer/InternationalFlow/files/fail_lottie.json

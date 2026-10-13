@@ -90,8 +90,9 @@ strong {
   }
 }
 $alert-name: primary, secondary, success, danger, warning, info, light, dark;
-$alert-color: $primary-color, $secondary-color, $success-color, $danger-color,
-  $warning-color, $info-color, $light-color, $dark-color;
+$alert-color:
+  $primary-color, $secondary-color, $success-color, $danger-color, $warning-color, $info-color,
+  $light-color, $dark-color;
 @each $var in $alert-name {
   $i: index($alert-name, $var);
   .alert-#{$var} {

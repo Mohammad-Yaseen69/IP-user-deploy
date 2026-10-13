@@ -1,12 +1,12 @@
 .container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 1.5rem;
 
-    .top {
-        margin-bottom: 2rem;
-        display: flex;
-        gap: 1rem;
-    }
+  .top {
+    margin-bottom: 2rem;
+    display: flex;
+    gap: 1rem;
+  }
 }

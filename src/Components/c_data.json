@@ -60,20 +60,9 @@
     "license": "Public domain"
   },
   {
-    "required_receiving_entity_fields": [
-      "lastname",
-      "firstname",
-      "country_iso_code"
-    ],
-    "required_sending_entity_fields": [
-      "lastname",
-      "firstname",
-      "code",
-      "country_iso_code"
-    ],
-    "credit_party_identifiers_accepted": [
-      "iban"
-    ],
+    "required_receiving_entity_fields": ["lastname", "firstname", "country_iso_code"],
+    "required_sending_entity_fields": ["lastname", "firstname", "code", "country_iso_code"],
+    "credit_party_identifiers_accepted": ["iban"],
     "credit_party_information": [],
     "credit_party_verification": [],
     "url": "/wiki/Andorra",
@@ -137,10 +126,7 @@
       "id_type",
       "id_number"
     ],
-    "credit_party_identifiers_accepted": [
-      "cbu",
-      "account_type"
-    ],
+    "credit_party_identifiers_accepted": ["cbu", "account_type"],
     "credit_party_information": [],
     "credit_party_verification": [],
     "url": "/wiki/Argentina",
@@ -192,10 +178,7 @@
       "address",
       "city"
     ],
-    "credit_party_identifiers_accepted": [
-      "bank_account_number",
-      "bsb_number"
-    ],
+    "credit_party_identifiers_accepted": ["bank_account_number", "bsb_number"],
     "credit_party_information": [],
     "credit_party_verification": [],
     "url": "/wiki/Australia",
@@ -220,9 +203,7 @@
       "address",
       "city"
     ],
-    "credit_party_identifiers_accepted": [
-      "iban"
-    ],
+    "credit_party_identifiers_accepted": ["iban"],
     "credit_party_information": [],
     "credit_party_verification": [],
     "url": "/wiki/Austria",
@@ -268,10 +249,7 @@
     "license": "Public domain"
   },
   {
-    "required_receiving_entity_fields": [
-      "lastname",
-      "firstname"
-    ],
+    "required_receiving_entity_fields": ["lastname", "firstname"],
     "required_sending_entity_fields": [
       "lastname",
       "firstname",
@@ -280,17 +258,9 @@
       "address",
       "city"
     ],
-    "credit_party_identifiers_accepted": [
-      "bank_account_number",
-      "branch_number",
-      "swift_bic_code"
-    ],
-    "credit_party_information": [
-      "bank_account_number"
-    ],
-    "credit_party_verification": [
-      "bank_account_number"
-    ],
+    "credit_party_identifiers_accepted": ["bank_account_number", "branch_number", "swift_bic_code"],
+    "credit_party_information": ["bank_account_number"],
+    "credit_party_verification": ["bank_account_number"],
     "url": "/wiki/Bangladesh",
     "alpha3": "BGD",
     "name": "Bangladesh",
@@ -337,9 +307,7 @@
       "address",
       "city"
     ],
-    "credit_party_identifiers_accepted": [
-      "iban"
-    ],
+    "credit_party_identifiers_accepted": ["iban"],
     "credit_party_information": [],
     "credit_party_verification": [],
     "url": "/wiki/Belgium",
@@ -361,20 +329,9 @@
     "license": "Public domain"
   },
   {
-    "required_receiving_entity_fields": [
-      "lastname",
-      "firstname",
-      "country_iso_code"
-    ],
-    "required_sending_entity_fields": [
-      "lastname",
-      "firstname",
-      "code",
-      "country_iso_code"
-    ],
-    "credit_party_identifiers_accepted": [
-      "iban"
-    ],
+    "required_receiving_entity_fields": ["lastname", "firstname", "country_iso_code"],
+    "required_sending_entity_fields": ["lastname", "firstname", "code", "country_iso_code"],
+    "credit_party_identifiers_accepted": ["iban"],
     "credit_party_information": [],
     "credit_party_verification": [],
     "url": "/wiki/Benin",
@@ -408,10 +365,7 @@
     "license": "Public domain"
   },
   {
-    "required_receiving_entity_fields": [
-      "lastname",
-      "firstname"
-    ],
+    "required_receiving_entity_fields": ["lastname", "firstname"],
     "required_sending_entity_fields": [
       "lastname",
       "firstname",
@@ -419,10 +373,7 @@
       "country_iso_code",
       "id_number"
     ],
-    "credit_party_identifiers_accepted": [
-      "bank_account_number",
-      "account_type"
-    ],
+    "credit_party_identifiers_accepted": ["bank_account_number", "account_type"],
     "credit_party_information": [],
     "credit_party_verification": [],
     "url": "/wiki/Bolivia",
@@ -468,22 +419,9 @@
     "license": "Public domain"
   },
   {
-    "required_receiving_entity_fields": [
-      "lastname",
-      "firstname",
-      "id_number"
-    ],
-    "required_sending_entity_fields": [
-      "lastname",
-      "firstname",
-      "code",
-      "country_iso_code"
-    ],
-    "credit_party_identifiers_accepted": [
-      "bank_account_number",
-      "branch_number",
-      "account_type"
-    ],
+    "required_receiving_entity_fields": ["lastname", "firstname", "id_number"],
+    "required_sending_entity_fields": ["lastname", "firstname", "code", "country_iso_code"],
+    "credit_party_identifiers_accepted": ["bank_account_number", "branch_number", "account_type"],
     "credit_party_information": [],
     "credit_party_verification": [],
     "url": "/wiki/Brazil",
@@ -532,9 +470,7 @@
       "address",
       "city"
     ],
-    "credit_party_identifiers_accepted": [
-      "iban"
-    ],
+    "credit_party_identifiers_accepted": ["iban"],
     "credit_party_information": [],
     "credit_party_verification": [],
     "url": "/wiki/Bulgaria",
@@ -544,20 +480,9 @@
     "license": "Public domain"
   },
   {
-    "required_receiving_entity_fields": [
-      "lastname",
-      "firstname",
-      "country_iso_code"
-    ],
-    "required_sending_entity_fields": [
-      "lastname",
-      "firstname",
-      "code",
-      "country_iso_code"
-    ],
-    "credit_party_identifiers_accepted": [
-      "iban"
-    ],
+    "required_receiving_entity_fields": ["lastname", "firstname", "country_iso_code"],
+    "required_sending_entity_fields": ["lastname", "firstname", "code", "country_iso_code"],
+    "credit_party_identifiers_accepted": ["iban"],
     "credit_party_information": [],
     "credit_party_verification": [],
     "url": "/wiki/Burkina_Faso",
@@ -567,12 +492,7 @@
     "license": "Public domain"
   },
   {
-    "required_receiving_entity_fields": [
-      "lastname",
-      "firstname",
-      "address",
-      "msisdn"
-    ],
+    "required_receiving_entity_fields": ["lastname", "firstname", "address", "msisdn"],
     "required_sending_entity_fields": [
       "lastname",
       "firstname",
@@ -581,9 +501,7 @@
       "address",
       "msisdn"
     ],
-    "credit_party_identifiers_accepted": [
-      "bank_account_number"
-    ],
+    "credit_party_identifiers_accepted": ["bank_account_number"],
     "credit_party_information": [],
     "credit_party_verification": [],
     "url": "/wiki/Burundi",
@@ -605,10 +523,7 @@
     "license": "Public domain"
   },
   {
-    "required_receiving_entity_fields": [
-      "lastname",
-      "firstname"
-    ],
+    "required_receiving_entity_fields": ["lastname", "firstname"],
     "required_sending_entity_fields": [
       "lastname",
       "firstname",
@@ -616,9 +531,7 @@
       "country_iso_code",
       "address"
     ],
-    "credit_party_identifiers_accepted": [
-      "bank_account_number"
-    ],
+    "credit_party_identifiers_accepted": ["bank_account_number"],
     "credit_party_information": [],
     "credit_party_verification": [],
     "url": "/wiki/Cambodia",
@@ -640,20 +553,9 @@
     "license": "Public domain"
   },
   {
-    "required_receiving_entity_fields": [
-      "lastname",
-      "firstname"
-    ],
-    "required_sending_entity_fields": [
-      "lastname",
-      "firstname",
-      "code",
-      "country_iso_code"
-    ],
-    "credit_party_identifiers_accepted": [
-      "routing_code",
-      "account_number"
-    ],
+    "required_receiving_entity_fields": ["lastname", "firstname"],
+    "required_sending_entity_fields": ["lastname", "firstname", "code", "country_iso_code"],
+    "credit_party_identifiers_accepted": ["routing_code", "account_number"],
     "credit_party_information": [],
     "credit_party_verification": [],
     "url": "/wiki/Canada",
@@ -715,10 +617,7 @@
       "id_type",
       "id_number"
     ],
-    "credit_party_identifiers_accepted": [
-      "bank_account_number",
-      "account_type"
-    ],
+    "credit_party_identifiers_accepted": ["bank_account_number", "account_type"],
     "credit_party_information": [],
     "credit_party_verification": [],
     "url": "/wiki/Chile",
@@ -783,10 +682,7 @@
       "city",
       "msisdn"
     ],
-    "credit_party_identifiers_accepted": [
-      "bank_account_number",
-      "account_type"
-    ],
+    "credit_party_identifiers_accepted": ["bank_account_number", "account_type"],
     "credit_party_information": [],
     "credit_party_verification": [],
     "url": "/wiki/Colombia",
@@ -820,20 +716,9 @@
     "license": "Public domain"
   },
   {
-    "required_receiving_entity_fields": [
-      "lastname",
-      "firstname",
-      "country_iso_code"
-    ],
-    "required_sending_entity_fields": [
-      "lastname",
-      "firstname",
-      "code",
-      "country_iso_code"
-    ],
-    "credit_party_identifiers_accepted": [
-      "bank_account_number"
-    ],
+    "required_receiving_entity_fields": ["lastname", "firstname", "country_iso_code"],
+    "required_sending_entity_fields": ["lastname", "firstname", "code", "country_iso_code"],
+    "credit_party_identifiers_accepted": ["bank_account_number"],
     "credit_party_information": [],
     "credit_party_verification": [],
     "url": "/wiki/Democratic_Republic_of_the_Congo",
@@ -855,13 +740,7 @@
     "license": "Public domain"
   },
   {
-    "required_receiving_entity_fields": [
-      "lastname",
-      "firstname",
-      "msisdn",
-      "id_type",
-      "id_number"
-    ],
+    "required_receiving_entity_fields": ["lastname", "firstname", "msisdn", "id_type", "id_number"],
     "required_sending_entity_fields": [
       "lastname",
       "firstname",
@@ -870,9 +749,7 @@
       "address",
       "city"
     ],
-    "credit_party_identifiers_accepted": [
-      "iban"
-    ],
+    "credit_party_identifiers_accepted": ["iban"],
     "credit_party_information": [],
     "credit_party_verification": [],
     "url": "/wiki/Costa_Rica",
@@ -882,20 +759,9 @@
     "license": "Public domain"
   },
   {
-    "required_receiving_entity_fields": [
-      "lastname",
-      "firstname",
-      "country_iso_code"
-    ],
-    "required_sending_entity_fields": [
-      "lastname",
-      "firstname",
-      "code",
-      "country_iso_code"
-    ],
-    "credit_party_identifiers_accepted": [
-      "iban"
-    ],
+    "required_receiving_entity_fields": ["lastname", "firstname", "country_iso_code"],
+    "required_sending_entity_fields": ["lastname", "firstname", "code", "country_iso_code"],
+    "credit_party_identifiers_accepted": ["iban"],
     "credit_party_information": [],
     "credit_party_verification": [],
     "url": "/wiki/Ivory_Coast",
@@ -920,9 +786,7 @@
       "address",
       "city"
     ],
-    "credit_party_identifiers_accepted": [
-      "iban"
-    ],
+    "credit_party_identifiers_accepted": ["iban"],
     "credit_party_information": [],
     "credit_party_verification": [],
     "url": "/wiki/Croatia",
@@ -971,9 +835,7 @@
       "address",
       "city"
     ],
-    "credit_party_identifiers_accepted": [
-      "iban"
-    ],
+    "credit_party_identifiers_accepted": ["iban"],
     "credit_party_information": [],
     "credit_party_verification": [],
     "url": "/wiki/Cyprus",
@@ -998,9 +860,7 @@
       "address",
       "city"
     ],
-    "credit_party_identifiers_accepted": [
-      "iban"
-    ],
+    "credit_party_identifiers_accepted": ["iban"],
     "credit_party_information": [],
     "credit_party_verification": [],
     "url": "/wiki/Czech_Republic",
@@ -1025,9 +885,7 @@
       "address",
       "city"
     ],
-    "credit_party_identifiers_accepted": [
-      "iban"
-    ],
+    "credit_party_identifiers_accepted": ["iban"],
     "credit_party_information": [],
     "credit_party_verification": [],
     "url": "/wiki/Denmark",
@@ -1068,16 +926,8 @@
       "id_type",
       "id_number"
     ],
-    "required_sending_entity_fields": [
-      "lastname",
-      "firstname",
-      "code",
-      "country_iso_code"
-    ],
-    "credit_party_identifiers_accepted": [
-      "bank_account_number",
-      "account_type"
-    ],
+    "required_sending_entity_fields": ["lastname", "firstname", "code", "country_iso_code"],
+    "credit_party_identifiers_accepted": ["bank_account_number", "account_type"],
     "credit_party_information": [],
     "credit_party_verification": [],
     "url": "/wiki/Dominican_Republic",
@@ -1095,16 +945,8 @@
       "id_type",
       "id_number"
     ],
-    "required_sending_entity_fields": [
-      "lastname",
-      "firstname",
-      "code",
-      "country_iso_code"
-    ],
-    "credit_party_identifiers_accepted": [
-      "bank_account_number",
-      "account_type"
-    ],
+    "required_sending_entity_fields": ["lastname", "firstname", "code", "country_iso_code"],
+    "credit_party_identifiers_accepted": ["bank_account_number", "account_type"],
     "credit_party_information": [],
     "credit_party_verification": [],
     "url": "/wiki/Ecuador",
@@ -1114,12 +956,7 @@
     "license": "Public domain"
   },
   {
-    "required_receiving_entity_fields": [
-      "lastname",
-      "firstname",
-      "address",
-      "country_iso_code"
-    ],
+    "required_receiving_entity_fields": ["lastname", "firstname", "address", "country_iso_code"],
     "required_sending_entity_fields": [
       "lastname",
       "firstname",
@@ -1131,11 +968,7 @@
       "id_number",
       "date_of_birth"
     ],
-    "credit_party_identifiers_accepted": [
-      "iban",
-      "swift_bic_code",
-      "bank_account_number"
-    ],
+    "credit_party_identifiers_accepted": ["iban", "swift_bic_code", "bank_account_number"],
     "credit_party_information": [],
     "credit_party_verification": [],
     "url": "/wiki/Egypt",
@@ -1145,22 +978,9 @@
     "license": "Public domain"
   },
   {
-    "required_receiving_entity_fields": [
-      "lastname",
-      "firstname",
-      "country_iso_code",
-      "msisdn"
-    ],
-    "required_sending_entity_fields": [
-      "lastname",
-      "firstname",
-      "code",
-      "country_iso_code"
-    ],
-    "credit_party_identifiers_accepted": [
-      "bank_account_number",
-      "account_type"
-    ],
+    "required_receiving_entity_fields": ["lastname", "firstname", "country_iso_code", "msisdn"],
+    "required_sending_entity_fields": ["lastname", "firstname", "code", "country_iso_code"],
+    "credit_party_identifiers_accepted": ["bank_account_number", "account_type"],
     "credit_party_information": [],
     "credit_party_verification": [],
     "url": "/wiki/El_Salvador",
@@ -1209,9 +1029,7 @@
       "address",
       "city"
     ],
-    "credit_party_identifiers_accepted": [
-      "iban"
-    ],
+    "credit_party_identifiers_accepted": ["iban"],
     "credit_party_information": [],
     "credit_party_verification": [],
     "url": "/wiki/Estonia",
@@ -1233,27 +1051,11 @@
     "license": "Public domain"
   },
   {
-    "required_receiving_entity_fields": [
-      "lastname",
-      "firstname",
-      "msisdn"
-    ],
-    "required_sending_entity_fields": [
-      "lastname",
-      "firstname",
-      "code",
-      "country_iso_code"
-    ],
-    "credit_party_identifiers_accepted": [
-      "bank_account_number",
-      "entity_tt_id"
-    ],
-    "credit_party_information": [
-      "bank_account_number"
-    ],
-    "credit_party_verification": [
-      "bank_account_number"
-    ],
+    "required_receiving_entity_fields": ["lastname", "firstname", "msisdn"],
+    "required_sending_entity_fields": ["lastname", "firstname", "code", "country_iso_code"],
+    "credit_party_identifiers_accepted": ["bank_account_number", "entity_tt_id"],
+    "credit_party_information": ["bank_account_number"],
+    "credit_party_verification": ["bank_account_number"],
     "url": "/wiki/Ethiopia",
     "alpha3": "ETH",
     "name": "Ethiopia",
@@ -1312,9 +1114,7 @@
       "address",
       "city"
     ],
-    "credit_party_identifiers_accepted": [
-      "iban"
-    ],
+    "credit_party_identifiers_accepted": ["iban"],
     "credit_party_information": [],
     "credit_party_verification": [],
     "url": "/wiki/Finland",
@@ -1339,9 +1139,7 @@
       "address",
       "city"
     ],
-    "credit_party_identifiers_accepted": [
-      "iban"
-    ],
+    "credit_party_identifiers_accepted": ["iban"],
     "credit_party_information": [],
     "credit_party_verification": [],
     "url": "/wiki/France",
@@ -1387,19 +1185,9 @@
     "license": "Public domain"
   },
   {
-    "required_receiving_entity_fields": [
-      "lastname",
-      "firstname"
-    ],
-    "required_sending_entity_fields": [
-      "lastname",
-      "firstname",
-      "code",
-      "country_iso_code"
-    ],
-    "credit_party_identifiers_accepted": [
-      "bank_account_number"
-    ],
+    "required_receiving_entity_fields": ["lastname", "firstname"],
+    "required_sending_entity_fields": ["lastname", "firstname", "code", "country_iso_code"],
+    "credit_party_identifiers_accepted": ["bank_account_number"],
     "credit_party_information": [],
     "credit_party_verification": [],
     "url": "/wiki/Gambia",
@@ -1409,10 +1197,7 @@
     "license": "Public domain"
   },
   {
-    "required_receiving_entity_fields": [
-      "lastname",
-      "firstname"
-    ],
+    "required_receiving_entity_fields": ["lastname", "firstname"],
     "required_sending_entity_fields": [
       "lastname",
       "firstname",
@@ -1422,10 +1207,7 @@
       "id_type",
       "id_number"
     ],
-    "credit_party_identifiers_accepted": [
-      "iban",
-      "bank_account_number"
-    ],
+    "credit_party_identifiers_accepted": ["iban", "bank_account_number"],
     "credit_party_information": [],
     "credit_party_verification": [],
     "url": "/wiki/Georgia_(country)",
@@ -1450,9 +1232,7 @@
       "address",
       "city"
     ],
-    "credit_party_identifiers_accepted": [
-      "iban"
-    ],
+    "credit_party_identifiers_accepted": ["iban"],
     "credit_party_information": [],
     "credit_party_verification": [],
     "url": "/wiki/Germany",
@@ -1462,25 +1242,11 @@
     "license": "Public domain"
   },
   {
-    "required_receiving_entity_fields": [
-      "lastname",
-      "firstname"
-    ],
-    "required_sending_entity_fields": [
-      "lastname",
-      "firstname",
-      "code",
-      "country_iso_code"
-    ],
-    "credit_party_identifiers_accepted": [
-      "bank_account_number"
-    ],
-    "credit_party_information": [
-      "bank_account_number"
-    ],
-    "credit_party_verification": [
-      "bank_account_number"
-    ],
+    "required_receiving_entity_fields": ["lastname", "firstname"],
+    "required_sending_entity_fields": ["lastname", "firstname", "code", "country_iso_code"],
+    "credit_party_identifiers_accepted": ["bank_account_number"],
+    "credit_party_information": ["bank_account_number"],
+    "credit_party_verification": ["bank_account_number"],
     "url": "/wiki/Ghana",
     "alpha3": "GHA",
     "name": "Ghana",
@@ -1515,9 +1281,7 @@
       "address",
       "city"
     ],
-    "credit_party_identifiers_accepted": [
-      "iban"
-    ],
+    "credit_party_identifiers_accepted": ["iban"],
     "credit_party_information": [],
     "credit_party_verification": [],
     "url": "/wiki/Greece",
@@ -1638,9 +1402,7 @@
       "address",
       "msisdn"
     ],
-    "credit_party_identifiers_accepted": [
-      "bank_account_number"
-    ],
+    "credit_party_identifiers_accepted": ["bank_account_number"],
     "credit_party_information": [],
     "credit_party_verification": [],
     "url": "/wiki/Haiti",
@@ -1662,20 +1424,9 @@
     "license": "Public domain"
   },
   {
-    "required_receiving_entity_fields": [
-      "lastname",
-      "firstname",
-      "country_iso_code"
-    ],
-    "required_sending_entity_fields": [
-      "lastname",
-      "firstname",
-      "code",
-      "country_iso_code"
-    ],
-    "credit_party_identifiers_accepted": [
-      "iban"
-    ],
+    "required_receiving_entity_fields": ["lastname", "firstname", "country_iso_code"],
+    "required_sending_entity_fields": ["lastname", "firstname", "code", "country_iso_code"],
+    "credit_party_identifiers_accepted": ["iban"],
     "credit_party_information": [],
     "credit_party_verification": [],
     "url": "/wiki/Vatican_City",
@@ -1685,22 +1436,9 @@
     "license": "Public domain"
   },
   {
-    "required_receiving_entity_fields": [
-      "lastname",
-      "firstname",
-      "country_iso_code",
-      "msisdn"
-    ],
-    "required_sending_entity_fields": [
-      "lastname",
-      "firstname",
-      "code",
-      "country_iso_code"
-    ],
-    "credit_party_identifiers_accepted": [
-      "bank_account_number",
-      "account_type"
-    ],
+    "required_receiving_entity_fields": ["lastname", "firstname", "country_iso_code", "msisdn"],
+    "required_sending_entity_fields": ["lastname", "firstname", "code", "country_iso_code"],
+    "credit_party_identifiers_accepted": ["bank_account_number", "account_type"],
     "credit_party_information": [],
     "credit_party_verification": [],
     "url": "/wiki/Honduras",
@@ -1729,10 +1467,7 @@
       "id_country_iso_code",
       "id_number"
     ],
-    "credit_party_identifiers_accepted": [
-      "bank_account_number",
-      "branch_number"
-    ],
+    "credit_party_identifiers_accepted": ["bank_account_number", "branch_number"],
     "credit_party_information": [],
     "credit_party_verification": [],
     "url": "/wiki/Hong_Kong",
@@ -1757,9 +1492,7 @@
       "address",
       "city"
     ],
-    "credit_party_identifiers_accepted": [
-      "iban"
-    ],
+    "credit_party_identifiers_accepted": ["iban"],
     "credit_party_information": [],
     "credit_party_verification": [],
     "url": "/wiki/Hungary",
@@ -1784,9 +1517,7 @@
       "address",
       "city"
     ],
-    "credit_party_identifiers_accepted": [
-      "iban"
-    ],
+    "credit_party_identifiers_accepted": ["iban"],
     "credit_party_information": [],
     "credit_party_verification": [],
     "url": "/wiki/Iceland",
@@ -1796,10 +1527,7 @@
     "license": "Public domain"
   },
   {
-    "required_receiving_entity_fields": [
-      "lastname",
-      "firstname"
-    ],
+    "required_receiving_entity_fields": ["lastname", "firstname"],
     "required_sending_entity_fields": [
       "lastname",
       "firstname",
@@ -1807,10 +1535,7 @@
       "country_iso_code",
       "address"
     ],
-    "credit_party_identifiers_accepted": [
-      "bank_account_number",
-      "ifs_code"
-    ],
+    "credit_party_identifiers_accepted": ["bank_account_number", "ifs_code"],
     "credit_party_information": [],
     "credit_party_verification": [],
     "url": "/wiki/India",
@@ -1820,25 +1545,11 @@
     "license": "Public domain"
   },
   {
-    "required_receiving_entity_fields": [
-      "lastname",
-      "firstname"
-    ],
-    "required_sending_entity_fields": [
-      "lastname",
-      "firstname",
-      "code",
-      "country_iso_code"
-    ],
-    "credit_party_identifiers_accepted": [
-      "bank_account_number"
-    ],
-    "credit_party_information": [
-      "bank_account_number"
-    ],
-    "credit_party_verification": [
-      "bank_account_number"
-    ],
+    "required_receiving_entity_fields": ["lastname", "firstname"],
+    "required_sending_entity_fields": ["lastname", "firstname", "code", "country_iso_code"],
+    "credit_party_identifiers_accepted": ["bank_account_number"],
+    "credit_party_information": ["bank_account_number"],
+    "credit_party_verification": ["bank_account_number"],
     "url": "/wiki/Indonesia",
     "alpha3": "IDN",
     "name": "Indonesia",
@@ -1885,9 +1596,7 @@
       "address",
       "city"
     ],
-    "credit_party_identifiers_accepted": [
-      "iban"
-    ],
+    "credit_party_identifiers_accepted": ["iban"],
     "credit_party_information": [],
     "credit_party_verification": [],
     "url": "/wiki/Republic_of_Ireland",
@@ -1909,21 +1618,9 @@
     "license": "Public domain"
   },
   {
-    "required_receiving_entity_fields": [
-      "lastname",
-      "firstname"
-    ],
-    "required_sending_entity_fields": [
-      "lastname",
-      "firstname",
-      "code",
-      "country_iso_code"
-    ],
-    "credit_party_identifiers_accepted": [
-      "iban",
-      "bank_account_number",
-      "branch_number"
-    ],
+    "required_receiving_entity_fields": ["lastname", "firstname"],
+    "required_sending_entity_fields": ["lastname", "firstname", "code", "country_iso_code"],
+    "credit_party_identifiers_accepted": ["iban", "bank_account_number", "branch_number"],
     "credit_party_information": [],
     "credit_party_verification": [],
     "url": "/wiki/Israel",
@@ -1948,9 +1645,7 @@
       "address",
       "city"
     ],
-    "credit_party_identifiers_accepted": [
-      "iban"
-    ],
+    "credit_party_identifiers_accepted": ["iban"],
     "credit_party_information": [],
     "credit_party_verification": [],
     "url": "/wiki/Italy",
@@ -1960,13 +1655,7 @@
     "license": "Public domain"
   },
   {
-    "required_receiving_entity_fields": [
-      "lastname",
-      "firstname",
-      "address",
-      "city",
-      "msisdn"
-    ],
+    "required_receiving_entity_fields": ["lastname", "firstname", "address", "city", "msisdn"],
     "required_sending_entity_fields": [
       "lastname",
       "firstname",
@@ -1975,11 +1664,7 @@
       "address",
       "city"
     ],
-    "credit_party_identifiers_accepted": [
-      "bank_account_number",
-      "branch_number",
-      "account_type"
-    ],
+    "credit_party_identifiers_accepted": ["bank_account_number", "branch_number", "account_type"],
     "credit_party_information": [],
     "credit_party_verification": [],
     "url": "/wiki/Jamaica",
@@ -2012,10 +1697,7 @@
       "address",
       "city"
     ],
-    "credit_party_identifiers_accepted": [
-      "bank_account_number",
-      "branch_number"
-    ],
+    "credit_party_identifiers_accepted": ["bank_account_number", "branch_number"],
     "credit_party_information": [],
     "credit_party_verification": [],
     "url": "/wiki/Japan",
@@ -2037,10 +1719,7 @@
     "license": "Public domain"
   },
   {
-    "required_receiving_entity_fields": [
-      "lastname",
-      "firstname"
-    ],
+    "required_receiving_entity_fields": ["lastname", "firstname"],
     "required_sending_entity_fields": [
       "lastname",
       "firstname",
@@ -2052,13 +1731,9 @@
       "beneficiary_relationship",
       "middlename"
     ],
-    "credit_party_identifiers_accepted": [
-      "iban"
-    ],
+    "credit_party_identifiers_accepted": ["iban"],
     "credit_party_information": [],
-    "credit_party_verification": [
-      "iban"
-    ],
+    "credit_party_verification": ["iban"],
     "url": "/wiki/Jordan",
     "alpha3": "JOR",
     "name": "Jordan",
@@ -2078,19 +1753,9 @@
     "license": "Public domain"
   },
   {
-    "required_receiving_entity_fields": [
-      "lastname",
-      "firstname"
-    ],
-    "required_sending_entity_fields": [
-      "lastname",
-      "firstname",
-      "code",
-      "country_iso_code"
-    ],
-    "credit_party_identifiers_accepted": [
-      "bank_account_number"
-    ],
+    "required_receiving_entity_fields": ["lastname", "firstname"],
+    "required_sending_entity_fields": ["lastname", "firstname", "code", "country_iso_code"],
+    "credit_party_identifiers_accepted": ["bank_account_number"],
     "credit_party_information": [],
     "credit_party_verification": [],
     "url": "/wiki/Kenya",
@@ -2136,12 +1801,7 @@
     "license": "Public domain"
   },
   {
-    "required_receiving_entity_fields": [
-      "lastname",
-      "firstname",
-      "address",
-      "country_iso_code"
-    ],
+    "required_receiving_entity_fields": ["lastname", "firstname", "address", "country_iso_code"],
     "required_sending_entity_fields": [
       "lastname",
       "firstname",
@@ -2149,9 +1809,7 @@
       "country_iso_code",
       "address"
     ],
-    "credit_party_identifiers_accepted": [
-      "iban"
-    ],
+    "credit_party_identifiers_accepted": ["iban"],
     "credit_party_information": [],
     "credit_party_verification": [],
     "url": "/wiki/Kuwait",
@@ -2200,9 +1858,7 @@
       "address",
       "city"
     ],
-    "credit_party_identifiers_accepted": [
-      "iban"
-    ],
+    "credit_party_identifiers_accepted": ["iban"],
     "credit_party_information": [],
     "credit_party_verification": [],
     "url": "/wiki/Latvia",
@@ -2260,20 +1916,9 @@
     "license": "Public domain"
   },
   {
-    "required_receiving_entity_fields": [
-      "lastname",
-      "firstname",
-      "country_iso_code"
-    ],
-    "required_sending_entity_fields": [
-      "lastname",
-      "firstname",
-      "code",
-      "country_iso_code"
-    ],
-    "credit_party_identifiers_accepted": [
-      "iban"
-    ],
+    "required_receiving_entity_fields": ["lastname", "firstname", "country_iso_code"],
+    "required_sending_entity_fields": ["lastname", "firstname", "code", "country_iso_code"],
+    "credit_party_identifiers_accepted": ["iban"],
     "credit_party_information": [],
     "credit_party_verification": [],
     "url": "/wiki/Liechtenstein",
@@ -2298,9 +1943,7 @@
       "address",
       "city"
     ],
-    "credit_party_identifiers_accepted": [
-      "iban"
-    ],
+    "credit_party_identifiers_accepted": ["iban"],
     "credit_party_information": [],
     "credit_party_verification": [],
     "url": "/wiki/Lithuania",
@@ -2325,9 +1968,7 @@
       "address",
       "city"
     ],
-    "credit_party_identifiers_accepted": [
-      "iban"
-    ],
+    "credit_party_identifiers_accepted": ["iban"],
     "credit_party_information": [],
     "credit_party_verification": [],
     "url": "/wiki/Luxembourg",
@@ -2361,26 +2002,11 @@
     "license": "Public domain"
   },
   {
-    "required_receiving_entity_fields": [
-      "lastname",
-      "firstname",
-      "msisdn"
-    ],
-    "required_sending_entity_fields": [
-      "lastname",
-      "firstname",
-      "code",
-      "country_iso_code"
-    ],
-    "credit_party_identifiers_accepted": [
-      "bank_account_number"
-    ],
-    "credit_party_information": [
-      "bank_account_number"
-    ],
-    "credit_party_verification": [
-      "bank_account_number"
-    ],
+    "required_receiving_entity_fields": ["lastname", "firstname", "msisdn"],
+    "required_sending_entity_fields": ["lastname", "firstname", "code", "country_iso_code"],
+    "credit_party_identifiers_accepted": ["bank_account_number"],
+    "credit_party_information": ["bank_account_number"],
+    "credit_party_verification": ["bank_account_number"],
     "url": "/wiki/Malawi",
     "alpha3": "MWI",
     "name": "Malawi",
@@ -2388,12 +2014,7 @@
     "license": "Public domain"
   },
   {
-    "required_receiving_entity_fields": [
-      "lastname",
-      "firstname",
-      "address",
-      "country_iso_code"
-    ],
+    "required_receiving_entity_fields": ["lastname", "firstname", "address", "country_iso_code"],
     "required_sending_entity_fields": [
       "lastname",
       "firstname",
@@ -2405,9 +2026,7 @@
       "city",
       "id_number"
     ],
-    "credit_party_identifiers_accepted": [
-      "bank_account_number"
-    ],
+    "credit_party_identifiers_accepted": ["bank_account_number"],
     "credit_party_information": [],
     "credit_party_verification": [],
     "url": "/wiki/Malaysia",
@@ -2429,20 +2048,9 @@
     "license": "Public domain"
   },
   {
-    "required_receiving_entity_fields": [
-      "lastname",
-      "firstname",
-      "country_iso_code"
-    ],
-    "required_sending_entity_fields": [
-      "lastname",
-      "firstname",
-      "code",
-      "country_iso_code"
-    ],
-    "credit_party_identifiers_accepted": [
-      "iban"
-    ],
+    "required_receiving_entity_fields": ["lastname", "firstname", "country_iso_code"],
+    "required_sending_entity_fields": ["lastname", "firstname", "code", "country_iso_code"],
+    "credit_party_identifiers_accepted": ["iban"],
     "credit_party_information": [],
     "credit_party_verification": [],
     "url": "/wiki/Mali",
@@ -2467,9 +2075,7 @@
       "address",
       "city"
     ],
-    "credit_party_identifiers_accepted": [
-      "iban"
-    ],
+    "credit_party_identifiers_accepted": ["iban"],
     "credit_party_information": [],
     "credit_party_verification": [],
     "url": "/wiki/Malta",
@@ -2491,25 +2097,11 @@
     "license": "Public domain"
   },
   {
-    "required_receiving_entity_fields": [
-      "lastname",
-      "firstname"
-    ],
-    "required_sending_entity_fields": [
-      "lastname",
-      "firstname",
-      "code",
-      "country_iso_code"
-    ],
-    "credit_party_identifiers_accepted": [
-      "bank_account_number"
-    ],
-    "credit_party_information": [
-      "bank_account_number"
-    ],
-    "credit_party_verification": [
-      "bank_account_number"
-    ],
+    "required_receiving_entity_fields": ["lastname", "firstname"],
+    "required_sending_entity_fields": ["lastname", "firstname", "code", "country_iso_code"],
+    "credit_party_identifiers_accepted": ["bank_account_number"],
+    "credit_party_information": ["bank_account_number"],
+    "credit_party_verification": ["bank_account_number"],
     "url": "/wiki/Mauritania",
     "alpha3": "MRT",
     "name": "Mauritania",
@@ -2529,19 +2121,9 @@
     "license": "Public domain"
   },
   {
-    "required_receiving_entity_fields": [
-      "lastname",
-      "firstname"
-    ],
-    "required_sending_entity_fields": [
-      "lastname",
-      "firstname",
-      "code",
-      "country_iso_code"
-    ],
-    "credit_party_identifiers_accepted": [
-      "clabe"
-    ],
+    "required_receiving_entity_fields": ["lastname", "firstname"],
+    "required_sending_entity_fields": ["lastname", "firstname", "code", "country_iso_code"],
+    "credit_party_identifiers_accepted": ["clabe"],
     "credit_party_information": [],
     "credit_party_verification": [],
     "url": "/wiki/Mexico",
@@ -2563,12 +2145,7 @@
     "license": "Public domain"
   },
   {
-    "required_receiving_entity_fields": [
-      "lastname",
-      "firstname",
-      "country_iso_code",
-      "id_number"
-    ],
+    "required_receiving_entity_fields": ["lastname", "firstname", "country_iso_code", "id_number"],
     "required_sending_entity_fields": [
       "lastname",
       "firstname",
@@ -2577,9 +2154,7 @@
       "address",
       "city"
     ],
-    "credit_party_identifiers_accepted": [
-      "iban"
-    ],
+    "credit_party_identifiers_accepted": ["iban"],
     "credit_party_information": [],
     "credit_party_verification": [],
     "url": "/wiki/Moldova",
@@ -2589,20 +2164,9 @@
     "license": "Public domain"
   },
   {
-    "required_receiving_entity_fields": [
-      "lastname",
-      "firstname",
-      "country_iso_code"
-    ],
-    "required_sending_entity_fields": [
-      "lastname",
-      "firstname",
-      "code",
-      "country_iso_code"
-    ],
-    "credit_party_identifiers_accepted": [
-      "iban"
-    ],
+    "required_receiving_entity_fields": ["lastname", "firstname", "country_iso_code"],
+    "required_sending_entity_fields": ["lastname", "firstname", "code", "country_iso_code"],
+    "credit_party_identifiers_accepted": ["iban"],
     "credit_party_information": [],
     "credit_party_verification": [],
     "url": "/wiki/Monaco",
@@ -2612,19 +2176,9 @@
     "license": "Public domain"
   },
   {
-    "required_receiving_entity_fields": [
-      "lastname",
-      "firstname"
-    ],
-    "required_sending_entity_fields": [
-      "lastname",
-      "firstname",
-      "code",
-      "country_iso_code"
-    ],
-    "credit_party_identifiers_accepted": [
-      "bank_account_number"
-    ],
+    "required_receiving_entity_fields": ["lastname", "firstname"],
+    "required_sending_entity_fields": ["lastname", "firstname", "code", "country_iso_code"],
+    "credit_party_identifiers_accepted": ["bank_account_number"],
     "credit_party_information": [],
     "credit_party_verification": [],
     "url": "/wiki/Mongolia",
@@ -2658,10 +2212,7 @@
     "license": "Public domain"
   },
   {
-    "required_receiving_entity_fields": [
-      "lastname",
-      "firstname"
-    ],
+    "required_receiving_entity_fields": ["lastname", "firstname"],
     "required_sending_entity_fields": [
       "lastname",
       "firstname",
@@ -2674,10 +2225,7 @@
       "id_number",
       "id_expiration_date"
     ],
-    "credit_party_identifiers_accepted": [
-      "bank_account_number",
-      "iban"
-    ],
+    "credit_party_identifiers_accepted": ["bank_account_number", "iban"],
     "credit_party_information": [],
     "credit_party_verification": [],
     "url": "/wiki/Morocco",
@@ -2687,10 +2235,7 @@
     "license": "Public domain"
   },
   {
-    "required_receiving_entity_fields": [
-      "lastname",
-      "firstname"
-    ],
+    "required_receiving_entity_fields": ["lastname", "firstname"],
     "required_sending_entity_fields": [
       "lastname",
       "firstname",
@@ -2699,9 +2244,7 @@
       "date_of_birth",
       "country_of_birth_iso_code"
     ],
-    "credit_party_identifiers_accepted": [
-      "bank_account_number"
-    ],
+    "credit_party_identifiers_accepted": ["bank_account_number"],
     "credit_party_information": [],
     "credit_party_verification": [],
     "url": "/wiki/Mozambique",
@@ -2711,10 +2254,7 @@
     "license": "Public domain"
   },
   {
-    "required_receiving_entity_fields": [
-      "lastname",
-      "firstname"
-    ],
+    "required_receiving_entity_fields": ["lastname", "firstname"],
     "required_sending_entity_fields": [
       "lastname",
       "firstname",
@@ -2723,15 +2263,9 @@
       "address",
       "city"
     ],
-    "credit_party_identifiers_accepted": [
-      "bank_account_number"
-    ],
-    "credit_party_information": [
-      "bank_account_number"
-    ],
-    "credit_party_verification": [
-      "bank_account_number"
-    ],
+    "credit_party_identifiers_accepted": ["bank_account_number"],
+    "credit_party_information": ["bank_account_number"],
+    "credit_party_verification": ["bank_account_number"],
     "url": "/wiki/Myanmar",
     "alpha3": "MMR",
     "name": "Myanmar",
@@ -2763,10 +2297,7 @@
     "license": "Public domain"
   },
   {
-    "required_receiving_entity_fields": [
-      "lastname",
-      "firstname"
-    ],
+    "required_receiving_entity_fields": ["lastname", "firstname"],
     "required_sending_entity_fields": [
       "lastname",
       "firstname",
@@ -2774,9 +2305,7 @@
       "country_iso_code",
       "address"
     ],
-    "credit_party_identifiers_accepted": [
-      "bank_account_number"
-    ],
+    "credit_party_identifiers_accepted": ["bank_account_number"],
     "credit_party_information": [],
     "credit_party_verification": [],
     "url": "/wiki/Nepal",
@@ -2801,9 +2330,7 @@
       "address",
       "city"
     ],
-    "credit_party_identifiers_accepted": [
-      "iban"
-    ],
+    "credit_party_identifiers_accepted": ["iban"],
     "credit_party_information": [],
     "credit_party_verification": [],
     "url": "/wiki/Kingdom_of_the_Netherlands",
@@ -2825,11 +2352,7 @@
     "license": "Creative Commons Attribution-Share Alike 4.0 International"
   },
   {
-    "required_receiving_entity_fields": [
-      "lastname",
-      "firstname",
-      "address"
-    ],
+    "required_receiving_entity_fields": ["lastname", "firstname", "address"],
     "required_sending_entity_fields": [
       "lastname",
       "firstname",
@@ -2838,9 +2361,7 @@
       "address",
       "city"
     ],
-    "credit_party_identifiers_accepted": [
-      "bank_account_number"
-    ],
+    "credit_party_identifiers_accepted": ["bank_account_number"],
     "credit_party_information": [],
     "credit_party_verification": [],
     "url": "/wiki/New_Zealand",
@@ -2874,10 +2395,7 @@
     "license": "Public domain"
   },
   {
-    "required_receiving_entity_fields": [
-      "lastname",
-      "firstname"
-    ],
+    "required_receiving_entity_fields": ["lastname", "firstname"],
     "required_sending_entity_fields": [
       "lastname",
       "firstname",
@@ -2885,15 +2403,9 @@
       "country_iso_code",
       "address"
     ],
-    "credit_party_identifiers_accepted": [
-      "bank_account_number"
-    ],
-    "credit_party_information": [
-      "bank_account_number"
-    ],
-    "credit_party_verification": [
-      "bank_account_number"
-    ],
+    "credit_party_identifiers_accepted": ["bank_account_number"],
+    "credit_party_information": ["bank_account_number"],
+    "credit_party_verification": ["bank_account_number"],
     "url": "/wiki/Nigeria",
     "alpha3": "NGA",
     "name": "Nigeria",
@@ -2964,9 +2476,7 @@
       "address",
       "city"
     ],
-    "credit_party_identifiers_accepted": [
-      "iban"
-    ],
+    "credit_party_identifiers_accepted": ["iban"],
     "credit_party_information": [],
     "credit_party_verification": [],
     "url": "/wiki/Norway",
@@ -2988,28 +2498,11 @@
     "license": "Public domain"
   },
   {
-    "required_receiving_entity_fields": [
-      "lastname",
-      "firstname"
-    ],
-    "required_sending_entity_fields": [
-      "lastname",
-      "firstname",
-      "code",
-      "country_iso_code"
-    ],
-    "credit_party_identifiers_accepted": [
-      "bank_account_number",
-      "iban"
-    ],
-    "credit_party_information": [
-      "bank_account_number",
-      "iban"
-    ],
-    "credit_party_verification": [
-      "bank_account_number",
-      "iban"
-    ],
+    "required_receiving_entity_fields": ["lastname", "firstname"],
+    "required_sending_entity_fields": ["lastname", "firstname", "code", "country_iso_code"],
+    "credit_party_identifiers_accepted": ["bank_account_number", "iban"],
+    "credit_party_information": ["bank_account_number", "iban"],
+    "credit_party_verification": ["bank_account_number", "iban"],
     "url": "/wiki/Pakistan",
     "alpha3": "PAK",
     "name": "Pakistan",
@@ -3093,10 +2586,7 @@
       "id_type",
       "id_number"
     ],
-    "credit_party_identifiers_accepted": [
-      "bank_account_number",
-      "account_type"
-    ],
+    "credit_party_identifiers_accepted": ["bank_account_number", "account_type"],
     "credit_party_information": [],
     "credit_party_verification": [],
     "url": "/wiki/Peru",
@@ -3106,10 +2596,7 @@
     "license": "Public domain"
   },
   {
-    "required_receiving_entity_fields": [
-      "lastname",
-      "firstname"
-    ],
+    "required_receiving_entity_fields": ["lastname", "firstname"],
     "required_sending_entity_fields": [
       "lastname",
       "firstname",
@@ -3118,9 +2605,7 @@
       "address",
       "city"
     ],
-    "credit_party_identifiers_accepted": [
-      "bank_account_number"
-    ],
+    "credit_party_identifiers_accepted": ["bank_account_number"],
     "credit_party_information": [],
     "credit_party_verification": [],
     "url": "/wiki/Philippines",
@@ -3157,9 +2642,7 @@
       "address",
       "city"
     ],
-    "credit_party_identifiers_accepted": [
-      "iban"
-    ],
+    "credit_party_identifiers_accepted": ["iban"],
     "credit_party_information": [],
     "credit_party_verification": [],
     "url": "/wiki/Poland",
@@ -3184,9 +2667,7 @@
       "address",
       "city"
     ],
-    "credit_party_identifiers_accepted": [
-      "iban"
-    ],
+    "credit_party_identifiers_accepted": ["iban"],
     "credit_party_information": [],
     "credit_party_verification": [],
     "url": "/wiki/Portugal",
@@ -3208,12 +2689,7 @@
     "license": "Public domain"
   },
   {
-    "required_receiving_entity_fields": [
-      "lastname",
-      "firstname",
-      "address",
-      "country_iso_code"
-    ],
+    "required_receiving_entity_fields": ["lastname", "firstname", "address", "country_iso_code"],
     "required_sending_entity_fields": [
       "lastname",
       "firstname",
@@ -3221,9 +2697,7 @@
       "country_iso_code",
       "address"
     ],
-    "credit_party_identifiers_accepted": [
-      "iban"
-    ],
+    "credit_party_identifiers_accepted": ["iban"],
     "credit_party_information": [],
     "credit_party_verification": [],
     "url": "/wiki/Qatar",
@@ -3248,9 +2722,7 @@
       "address",
       "city"
     ],
-    "credit_party_identifiers_accepted": [
-      "iban"
-    ],
+    "credit_party_identifiers_accepted": ["iban"],
     "credit_party_information": [],
     "credit_party_verification": [],
     "url": "/wiki/Romania",
@@ -3272,19 +2744,9 @@
     "license": "Public domain"
   },
   {
-    "required_receiving_entity_fields": [
-      "lastname",
-      "firstname"
-    ],
-    "required_sending_entity_fields": [
-      "lastname",
-      "firstname",
-      "code",
-      "country_iso_code"
-    ],
-    "credit_party_identifiers_accepted": [
-      "bank_account_number"
-    ],
+    "required_receiving_entity_fields": ["lastname", "firstname"],
+    "required_sending_entity_fields": ["lastname", "firstname", "code", "country_iso_code"],
+    "credit_party_identifiers_accepted": ["bank_account_number"],
     "credit_party_information": [],
     "credit_party_verification": [],
     "url": "/wiki/Rwanda",
@@ -3378,20 +2840,9 @@
     "license": "Public domain"
   },
   {
-    "required_receiving_entity_fields": [
-      "lastname",
-      "firstname",
-      "country_iso_code"
-    ],
-    "required_sending_entity_fields": [
-      "lastname",
-      "firstname",
-      "code",
-      "country_iso_code"
-    ],
-    "credit_party_identifiers_accepted": [
-      "iban"
-    ],
+    "required_receiving_entity_fields": ["lastname", "firstname", "country_iso_code"],
+    "required_sending_entity_fields": ["lastname", "firstname", "code", "country_iso_code"],
+    "credit_party_identifiers_accepted": ["iban"],
     "credit_party_information": [],
     "credit_party_verification": [],
     "url": "/wiki/San_Marino",
@@ -3413,20 +2864,9 @@
     "license": "Public domain"
   },
   {
-    "required_receiving_entity_fields": [
-      "lastname",
-      "firstname",
-      "country_iso_code"
-    ],
-    "required_sending_entity_fields": [
-      "lastname",
-      "firstname",
-      "code",
-      "country_iso_code"
-    ],
-    "credit_party_identifiers_accepted": [
-      "iban"
-    ],
+    "required_receiving_entity_fields": ["lastname", "firstname", "country_iso_code"],
+    "required_sending_entity_fields": ["lastname", "firstname", "code", "country_iso_code"],
+    "credit_party_identifiers_accepted": ["iban"],
     "credit_party_information": [],
     "credit_party_verification": [],
     "url": "/wiki/Senegal",
@@ -3472,21 +2912,9 @@
     "license": "Public domain"
   },
   {
-    "required_receiving_entity_fields": [
-      "lastname",
-      "firstname"
-    ],
-    "required_sending_entity_fields": [
-      "lastname",
-      "firstname",
-      "code",
-      "country_iso_code"
-    ],
-    "credit_party_identifiers_accepted": [
-      "bank_account_number",
-      "msisdn",
-      "account_number"
-    ],
+    "required_receiving_entity_fields": ["lastname", "firstname"],
+    "required_sending_entity_fields": ["lastname", "firstname", "code", "country_iso_code"],
+    "credit_party_identifiers_accepted": ["bank_account_number", "msisdn", "account_number"],
     "credit_party_information": [],
     "credit_party_verification": [],
     "url": "/wiki/Singapore",
@@ -3523,9 +2951,7 @@
       "address",
       "city"
     ],
-    "credit_party_identifiers_accepted": [
-      "iban"
-    ],
+    "credit_party_identifiers_accepted": ["iban"],
     "credit_party_information": [],
     "credit_party_verification": [],
     "url": "/wiki/Slovakia",
@@ -3550,9 +2976,7 @@
       "address",
       "city"
     ],
-    "credit_party_identifiers_accepted": [
-      "iban"
-    ],
+    "credit_party_identifiers_accepted": ["iban"],
     "credit_party_information": [],
     "credit_party_verification": [],
     "url": "/wiki/Slovenia",
@@ -3586,12 +3010,7 @@
     "license": "Public domain"
   },
   {
-    "required_receiving_entity_fields": [
-      "lastname",
-      "firstname",
-      "msisdn",
-      "email"
-    ],
+    "required_receiving_entity_fields": ["lastname", "firstname", "msisdn", "email"],
     "required_sending_entity_fields": [
       "lastname",
       "firstname",
@@ -3599,9 +3018,7 @@
       "country_iso_code",
       "address"
     ],
-    "credit_party_identifiers_accepted": [
-      "bank_account_number"
-    ],
+    "credit_party_identifiers_accepted": ["bank_account_number"],
     "credit_party_information": [],
     "credit_party_verification": [],
     "url": "/wiki/South_Africa",
@@ -3650,9 +3067,7 @@
       "address",
       "city"
     ],
-    "credit_party_identifiers_accepted": [
-      "iban"
-    ],
+    "credit_party_identifiers_accepted": ["iban"],
     "credit_party_information": [],
     "credit_party_verification": [],
     "url": "/wiki/Spain",
@@ -3662,19 +3077,9 @@
     "license": "Public domain"
   },
   {
-    "required_receiving_entity_fields": [
-      "lastname",
-      "firstname"
-    ],
-    "required_sending_entity_fields": [
-      "lastname",
-      "firstname",
-      "code",
-      "country_iso_code"
-    ],
-    "credit_party_identifiers_accepted": [
-      "bank_account_number"
-    ],
+    "required_receiving_entity_fields": ["lastname", "firstname"],
+    "required_sending_entity_fields": ["lastname", "firstname", "code", "country_iso_code"],
+    "credit_party_identifiers_accepted": ["bank_account_number"],
     "credit_party_information": [],
     "credit_party_verification": [],
     "url": "/wiki/Sri_Lanka",
@@ -3735,9 +3140,7 @@
       "address",
       "city"
     ],
-    "credit_party_identifiers_accepted": [
-      "iban"
-    ],
+    "credit_party_identifiers_accepted": ["iban"],
     "credit_party_information": [],
     "credit_party_verification": [],
     "url": "/wiki/Sweden",
@@ -3762,9 +3165,7 @@
       "address",
       "city"
     ],
-    "credit_party_identifiers_accepted": [
-      "iban"
-    ],
+    "credit_party_identifiers_accepted": ["iban"],
     "credit_party_information": [],
     "credit_party_verification": [],
     "url": "/wiki/Switzerland",
@@ -3798,25 +3199,11 @@
     "license": "Public domain"
   },
   {
-    "required_receiving_entity_fields": [
-      "lastname",
-      "firstname"
-    ],
-    "required_sending_entity_fields": [
-      "lastname",
-      "firstname",
-      "code",
-      "country_iso_code"
-    ],
-    "credit_party_identifiers_accepted": [
-      "bank_account_number"
-    ],
-    "credit_party_information": [
-      "bank_account_number"
-    ],
-    "credit_party_verification": [
-      "bank_account_number"
-    ],
+    "required_receiving_entity_fields": ["lastname", "firstname"],
+    "required_sending_entity_fields": ["lastname", "firstname", "code", "country_iso_code"],
+    "credit_party_identifiers_accepted": ["bank_account_number"],
+    "credit_party_information": ["bank_account_number"],
+    "credit_party_verification": ["bank_account_number"],
     "url": "/wiki/Tanzania",
     "alpha3": "TZA",
     "name": "United Republic of Tanzania",
@@ -3824,10 +3211,7 @@
     "license": "Public domain"
   },
   {
-    "required_receiving_entity_fields": [
-      "lastname",
-      "firstname"
-    ],
+    "required_receiving_entity_fields": ["lastname", "firstname"],
     "required_sending_entity_fields": [
       "lastname",
       "firstname",
@@ -3840,13 +3224,9 @@
       "date_of_birth",
       "country_of_birth_iso_code"
     ],
-    "credit_party_identifiers_accepted": [
-      "bank_account_number"
-    ],
+    "credit_party_identifiers_accepted": ["bank_account_number"],
     "credit_party_information": [],
-    "credit_party_verification": [
-      "bank_account_number"
-    ],
+    "credit_party_verification": ["bank_account_number"],
     "url": "/wiki/Thailand",
     "alpha3": "THA",
     "name": "Thailand",
@@ -3866,20 +3246,9 @@
     "license": "Public domain"
   },
   {
-    "required_receiving_entity_fields": [
-      "lastname",
-      "firstname",
-      "country_iso_code"
-    ],
-    "required_sending_entity_fields": [
-      "lastname",
-      "firstname",
-      "code",
-      "country_iso_code"
-    ],
-    "credit_party_identifiers_accepted": [
-      "iban"
-    ],
+    "required_receiving_entity_fields": ["lastname", "firstname", "country_iso_code"],
+    "required_sending_entity_fields": ["lastname", "firstname", "code", "country_iso_code"],
+    "credit_party_identifiers_accepted": ["iban"],
     "credit_party_information": [],
     "credit_party_verification": [],
     "url": "/wiki/Togo",
@@ -3925,19 +3294,9 @@
     "license": "Public domain"
   },
   {
-    "required_receiving_entity_fields": [
-      "lastname",
-      "firstname"
-    ],
-    "required_sending_entity_fields": [
-      "lastname",
-      "firstname",
-      "code",
-      "country_iso_code"
-    ],
-    "credit_party_identifiers_accepted": [
-      "account_number"
-    ],
+    "required_receiving_entity_fields": ["lastname", "firstname"],
+    "required_sending_entity_fields": ["lastname", "firstname", "code", "country_iso_code"],
+    "credit_party_identifiers_accepted": ["account_number"],
     "credit_party_information": [],
     "credit_party_verification": [],
     "url": "/wiki/Tunisia",
@@ -3947,20 +3306,9 @@
     "license": "Public domain"
   },
   {
-    "required_receiving_entity_fields": [
-      "lastname",
-      "firstname",
-      "country_iso_code"
-    ],
-    "required_sending_entity_fields": [
-      "lastname",
-      "firstname",
-      "code",
-      "country_iso_code"
-    ],
-    "credit_party_identifiers_accepted": [
-      "iban"
-    ],
+    "required_receiving_entity_fields": ["lastname", "firstname", "country_iso_code"],
+    "required_sending_entity_fields": ["lastname", "firstname", "code", "country_iso_code"],
+    "credit_party_identifiers_accepted": ["iban"],
     "credit_party_information": [],
     "credit_party_verification": [],
     "url": "/wiki/Turkey",
@@ -4042,23 +3390,9 @@
     "license": "Public domain"
   },
   {
-    "required_receiving_entity_fields": [
-      "lastname",
-      "firstname",
-      "country_iso_code"
-    ],
-    "required_sending_entity_fields": [
-      "lastname",
-      "firstname",
-      "code",
-      "country_iso_code"
-    ],
-    "credit_party_identifiers_accepted": [
-      "iban",
-      "swift_bic_code",
-      "sort_code",
-      "account_number"
-    ],
+    "required_receiving_entity_fields": ["lastname", "firstname", "country_iso_code"],
+    "required_sending_entity_fields": ["lastname", "firstname", "code", "country_iso_code"],
+    "credit_party_identifiers_accepted": ["iban", "swift_bic_code", "sort_code", "account_number"],
     "credit_party_information": [],
     "credit_party_verification": [],
     "url": "/wiki/United_Kingdom",
@@ -4140,25 +3474,11 @@
     "license": "Public domain"
   },
   {
-    "required_receiving_entity_fields": [
-      "lastname",
-      "firstname"
-    ],
-    "required_sending_entity_fields": [
-      "lastname",
-      "firstname",
-      "code",
-      "country_iso_code"
-    ],
-    "credit_party_identifiers_accepted": [
-      "bank_account_number"
-    ],
-    "credit_party_information": [
-      "bank_account_number"
-    ],
-    "credit_party_verification": [
-      "bank_account_number"
-    ],
+    "required_receiving_entity_fields": ["lastname", "firstname"],
+    "required_sending_entity_fields": ["lastname", "firstname", "code", "country_iso_code"],
+    "credit_party_identifiers_accepted": ["bank_account_number"],
+    "credit_party_information": ["bank_account_number"],
+    "credit_party_verification": ["bank_account_number"],
     "url": "/wiki/Vietnam",
     "alpha3": "VNM",
     "name": "Viet Nam",
@@ -4288,9 +3608,7 @@
       "country_iso_code",
       "address"
     ],
-    "credit_party_identifiers_accepted": [
-      "iban"
-    ],
+    "credit_party_identifiers_accepted": ["iban"],
     "credit_party_information": [],
     "credit_party_verification": [],
     "url": "",

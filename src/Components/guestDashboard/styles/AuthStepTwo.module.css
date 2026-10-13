@@ -1,145 +1,143 @@
 .centerText {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+
+  h1 {
+    color: var(--text-primary, #1b1f2a);
     text-align: center;
+    font-family: Inter;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 120%;
+    letter-spacing: -0.72px;
+  }
 
-    h1 {
-        color: var(--text-primary, #1B1F2A);
-        text-align: center;
-        font-family: Inter;
-        font-size: 24px;
-        font-style: normal;
-        font-weight: 600;
-        line-height: 120%;
-        letter-spacing: -0.72px;
-    }
-
-    p {
-        color: var(--text-secondary, #6E7687);
-        text-align: center;
-        font-family: Inter;
-        font-size: 14px;
-        font-style: normal;
-        font-weight: 500;
-        line-height: 150%;
-        letter-spacing: -0.42px;
-    }
+  p {
+    color: var(--text-secondary, #6e7687);
+    text-align: center;
+    font-family: Inter;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 150%;
+    letter-spacing: -0.42px;
+  }
 }
 
 .lockIcon {
-    font-size: 28px;
-    margin-bottom: 10px;
+  font-size: 28px;
+  margin-bottom: 10px;
 }
 
 .emailRow {
-    margin-top: 8px;
-    color: #111C2D;
-    text-align: center;
-    font-family: Inter;
-    font-size: 16px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: 150%;
-    letter-spacing: -0.48px;
+  margin-top: 8px;
+  color: #111c2d;
+  text-align: center;
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 150%;
+  letter-spacing: -0.48px;
 }
 
 .changeText {
-    margin-left: 5px;
-    color: var(--primary, #5926F0);
-    cursor: pointer;
+  margin-left: 5px;
+  color: var(--primary, #5926f0);
+  cursor: pointer;
 }
 
 .otpContainer {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin: 20px 0;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin: 20px 0;
 }
 
 .otpInput {
-    width: 45px;
-    height: 50px;
-    text-align: center;
-    font-size: 18px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    outline: none;
+  width: 45px;
+  height: 50px;
+  text-align: center;
+  font-size: 18px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  outline: none;
 }
 
 .otpInput:focus {
-    border-color: #6c63ff;
+  border-color: #6c63ff;
 }
 
 .resendText {
-    color: #434656;
-    text-align: center;
-    font-family: Inter;
-    font-size: 14px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 150%;
-    letter-spacing: -0.42px;
+  color: #434656;
+  text-align: center;
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 150%;
+  letter-spacing: -0.42px;
 }
 
 .resendText span {
-    color: var(--primary, #5926F0);
-    text-align: center;
-    font-family: Inter;
-    font-size: 14px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: 150%;
-    letter-spacing: -0.42px;
+  color: var(--primary, #5926f0);
+  text-align: center;
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 150%;
+  letter-spacing: -0.42px;
 }
 
 .logo {
-    margin-top: 30px;
+  margin-top: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 30px;
+
+  img {
     display: flex;
-    justify-content: center;
+    width: 140px;
+    height: 39.293px;
     align-items: center;
-    margin-bottom: 30px;
-
-    img {
-        display: flex;
-        width: 140px;
-        height: 39.293px;
-        align-items: center;
-        gap: 8.443px;
-        aspect-ratio: 140.00/39.29;
-
-    }
-
+    gap: 8.443px;
+    aspect-ratio: 140/39.29;
+  }
 }
 
 .verifyBtn {
-    width: 100%;
-    margin-top: 15px;
-    padding: 12px;
-    border-radius: var(--sm, 6px);
-    background: var(--Primary-600---Base, #4A32E3);
-    color: white;
-    border: none;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 5px;
-    cursor: pointer;
-    margin-top: 50px;
+  width: 100%;
+  margin-top: 15px;
+  padding: 12px;
+  border-radius: var(--sm, 6px);
+  background: var(--Primary-600---Base, #4a32e3);
+  color: white;
+  border: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+  margin-top: 50px;
 }
 
 .logoContainer {
-    display: flex;
-    width: 50px;
-    height: 50px;
-    justify-content: center;
-    align-items: center;
-    border-radius: 20px;
-    border: 1px solid var(--border-subtle, #E1E5EE);
+  display: flex;
+  width: 50px;
+  height: 50px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 20px;
+  border: 1px solid var(--border-subtle, #e1e5ee);
 
-    img {
-        border-radius: var(--lg, 14px);
-        background: blue/blue-50;
-    }
+  img {
+    border-radius: var(--lg, 14px);
+    background: blue/blue-50;
+  }
 }

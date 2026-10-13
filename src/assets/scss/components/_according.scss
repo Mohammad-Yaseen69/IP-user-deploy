@@ -2,10 +2,10 @@
     03. According CSS start
 ==========================**/
 .default-according {
-  &.style-1.faq-accordion{
-    >div{
-      .faq-title{
-        &:first-child{
+  &.style-1.faq-accordion {
+    > div {
+      .faq-title {
+        &:first-child {
           margin: 0;
           display: none;
         }
@@ -17,9 +17,10 @@
     box-shadow: none !important;
     border: 1px solid $light-gray;
     overflow: hidden;
-    .bg-primary, .bg-secondary{
-      &.card-header{
-        button.btn-link{
+    .bg-primary,
+    .bg-secondary {
+      &.card-header {
+        button.btn-link {
           color: $white;
         }
       }
@@ -77,12 +78,12 @@
     }
   }
 }
-.faq-accordion{
-  &.default-according{
-    .card{
-      .card-body{
-        &.animate-chk{
-          ~ button{
+.faq-accordion {
+  &.default-according {
+    .card {
+      .card-body {
+        &.animate-chk {
+          ~ button {
             border-radius: 0 0 20px 20px;
           }
         }
