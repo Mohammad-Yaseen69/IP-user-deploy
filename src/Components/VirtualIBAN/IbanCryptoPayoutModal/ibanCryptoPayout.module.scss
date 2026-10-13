@@ -1,0 +1,221 @@
+.field {
+  margin-top: 16px;
+}
+
+.fieldLabel {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font-family: Inter, sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+.fieldHint {
+  font-size: 12px;
+  font-weight: 500;
+  color: #6e7687;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.chip {
+  border: 1px solid #e1e5ee;
+  background: #fff;
+  border-radius: 8px;
+  padding: 7px 14px;
+  font-family: Inter, sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: #333;
+  cursor: pointer;
+  transition: 200ms;
+
+  &:hover {
+    border-color: #c9b9ff;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+}
+
+.chipActive {
+  border-color: #5926f0;
+  background: #5926f0;
+  color: #fff;
+}
+
+.walletList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.walletOption {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: 100%;
+  text-align: left;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid #e1e5ee;
+  background: #fff;
+  cursor: pointer;
+  transition: 200ms;
+
+  strong {
+    font-family: Inter, sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: #333;
+  }
+
+  small {
+    font-family: Inter, sans-serif;
+    font-size: 12px;
+    color: #6e7687;
+  }
+}
+
+.walletOptionActive {
+  border-color: #5926f0;
+  background: #f7f4ff;
+}
+
+.addressBox {
+  border: 1px solid #e1e5ee;
+  border-radius: 10px;
+  background: #fff;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.addressValue {
+  font-family: "SFMono-Regular", Menlo, monospace;
+  font-size: 12px;
+  color: #333;
+  word-break: break-all;
+}
+
+.addressMeta {
+  font-family: Inter, sans-serif;
+  font-size: 12px;
+  color: #6e7687;
+}
+
+.ok {
+  color: #067647;
+  font-weight: 600;
+}
+
+.bad {
+  color: #d92d20;
+  font-weight: 600;
+}
+
+.errorBox {
+  margin-top: 12px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: #fef3f2;
+  border: 1px solid #fecdca;
+  font-family: Inter, sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  color: #b42318;
+  line-height: 1.5;
+}
+
+.linkBtn {
+  border: none;
+  background: transparent;
+  padding: 0;
+  margin-left: 4px;
+  font-family: Inter, sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  color: #5926f0;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.dangerBox {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 16px;
+  border-radius: 8px;
+  background: #fef3f2;
+  border: 1px solid #fecdca;
+  margin-top: 12px;
+  font-family: Inter, sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  color: #b42318;
+  line-height: 1.5;
+}
+
+.confirmRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid #e1e5ee;
+  border-radius: 10px;
+  background: #fff;
+  margin-top: 12px;
+  cursor: pointer;
+
+  input {
+    margin-top: 2px;
+    width: 16px;
+    height: 16px;
+    accent-color: #5926f0;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+
+  span {
+    font-family: Inter, sans-serif;
+    font-size: 13px;
+    color: #333;
+    line-height: 1.5;
+  }
+}
+
+.mono {
+  font-family: "SFMono-Regular", Menlo, monospace;
+}
+
+.statusPill {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-family: Inter, sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  background: #fffbeb;
+  color: #b45309;
+}
+
+.statusCompleted {
+  background: #ecfdf3;
+  color: #067647;
+}
+
+.statusFailed {
+  background: #fef3f2;
+  color: #b42318;
+}

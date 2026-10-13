@@ -1,74 +1,82 @@
-import { useNavigate } from "react-router"
-import styles from "./styles/International.module.css"
-import { useTranslation } from "react-i18next"
-import { useContext, useEffect, useState } from "react"
-import { ChevronLeft } from "react-feather"
-import TopIcon from "./files/Top"
-import { UserContext } from "../../../Context/UserContext"
-import QRFlow from "../QRFlow"
+import { useNavigate } from "react-router";
+import styles from "./styles/International.module.css";
+import { useTranslation } from "react-i18next";
+import { useContext, useEffect, useState } from "react";
+import { ChevronLeft } from "react-feather";
+import TopIcon from "./files/Top";
+import { UserContext } from "../../../Context/UserContext";
+import QRFlow from "../QRFlow";
 
-const QRPayment = ({ step, setStep, setCurrentFlow, setSendPaymentType, sendPaymentType, setAction }) => {
-    const { t } = useTranslation()
-    const navigate = useNavigate()
-    const [confirmed, setConfirmed] = useState(false)
-    const { userWallets, userDetails } = useContext(UserContext)
-    const [wallet, setWallet] = useState(null)
-    const [currency, setCurrency] = useState("USD")
-    const [amount, setAmount] = useState("100.00")
-    const [reason, setReason] = useState("")
-    const [comment, setComment] = useState("")
-    const [files, setFiles] = useState([])
+const QRPayment = ({
+  step,
+  setStep,
+  setCurrentFlow,
+  setSendPaymentType,
+  sendPaymentType,
+  setAction,
+}) => {
+  const { t } = useTranslation();
+  const navigate = useNavigate();
+  const [confirmed, setConfirmed] = useState(false);
+  const { userWallets, userDetails } = useContext(UserContext);
+  const [wallet, setWallet] = useState(null);
+  const [currency, setCurrency] = useState("USD");
+  const [amount, setAmount] = useState("100.00");
+  const [reason, setReason] = useState("");
+  const [comment, setComment] = useState("");
+  const [files, setFiles] = useState([]);
 
+  useEffect(() => {
+    setWallet("");
+    setCurrency("USD");
+    setAmount("100.00");
+    setReason("");
+    setComment("");
+    setFiles([]);
+    setConfirmed(false);
+  }, [sendPaymentType]);
 
+  const [codeType, setCodeType] = useState("sms");
 
-    useEffect(() => {
-        setWallet("")
-        setCurrency("USD")
-        setAmount("100.00")
-        setReason("")
-        setComment("")
-        setFiles([])
-        setConfirmed(false)
-    }, [sendPaymentType])
-
-    const [codeType, setCodeType] = useState("sms")
-
-    useEffect(() => {
-        setCodeType(userDetails?.tfa ? "authenticator" : "sms")
-    }, [userDetails])
-    return (
-        <div className={styles.container}>
-            <div className={styles.top}>
-                <button className={styles.back_btn} disabled={step === 6 && confirmed} onClick={() => {
-                    if (step === 7) {
-                        setStep(1)
-                        setCurrentFlow("")
-                        setSendPaymentType("")
-                        setAction("")
-                        navigate("/payments")
-                    }
-                    else {
-                        if (step === 3) {
-                            setCurrentFlow("")
-                            setSendPaymentType("")
-                        }
-                        setStep(prev => prev - 1)
-                    }
-                }}>
-                    <ChevronLeft />
-                </button>
-                <h5>{t("QR Code Payment").toUpperCase()}</h5>
-                <div>
-                    <TopIcon fill={step > 3 ? "#5926f0" : "black"} />
-                </div>
-            </div>
-            <QRFlow
-                sendPaymentType={sendPaymentType}
-                setIsWallet={() => { }}
-                setSendPaymentType={setSendPaymentType}
-                setStep={setStep}
-            />
-            {/* {
+  useEffect(() => {
+    setCodeType(userDetails?.tfa ? "authenticator" : "sms");
+  }, [userDetails]);
+  return (
+    <div className={styles.container}>
+      <div className={styles.top}>
+        <button
+          className={styles.back_btn}
+          disabled={step === 6 && confirmed}
+          onClick={() => {
+            if (step === 7) {
+              setStep(1);
+              setCurrentFlow("");
+              setSendPaymentType("");
+              setAction("");
+              navigate("/payments");
+            } else {
+              if (step === 3) {
+                setCurrentFlow("");
+                setSendPaymentType("");
+              }
+              setStep((prev) => prev - 1);
+            }
+          }}
+        >
+          <ChevronLeft />
+        </button>
+        <h5>{t("QR Code Payment").toUpperCase()}</h5>
+        <div>
+          <TopIcon fill={step > 3 ? "#5926f0" : "black"} />
+        </div>
+      </div>
+      <QRFlow
+        sendPaymentType={sendPaymentType}
+        setIsWallet={() => {}}
+        setSendPaymentType={setSendPaymentType}
+        setStep={setStep}
+      />
+      {/* {
                 step < 6
                 &&
                 <div style={{ marginTop: "1.5rem", display: "flex", justifyContent: "center" }}>
@@ -184,8 +192,8 @@ const QRPayment = ({ step, setStep, setCurrentFlow, setSendPaymentType, sendPaym
                     />
                 }
             </div> */}
-        </div>
-    )
-}
+    </div>
+  );
+};
 
-export default QRPayment
+export default QRPayment;

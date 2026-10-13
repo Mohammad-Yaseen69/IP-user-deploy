@@ -1,37 +1,67 @@
-import React from 'react'
-import { useTranslation } from 'react-i18next'
-import { Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap'
+import React from "react";
+import { useTranslation } from "react-i18next";
+import { Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
 
 const VpnModal = ({ showNoticeModal }) => {
-    const { t } = useTranslation()
-    const noticeMessage = `It appears that your connection is being made through a VPN, proxy, or TOR network. For security and compliance reasons, please disable any such services and refresh the page to continue using InstaPay.`;
+  const { t } = useTranslation();
+  const noticeMessage = `It appears that your connection is being made through a VPN, proxy, or TOR network. For security and compliance reasons, please disable any such services and refresh the page to continue using InstaPay.`;
 
-    return (
-        <Modal isOpen={showNoticeModal}>
-            <ModalHeader>
-                <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="49" height="48" viewBox="0 0 49 48" fill="none">
-                        <path d="M24.1519 18V26M24.1519 34H24.1719M21.3825 7.78342L4.93272 36.1967C4.02031 37.7726 3.5641 38.5606 3.63153 39.2074C3.69034 39.7715 3.98588 40.2841 4.4446 40.6176C4.97051 41 5.88104 41 7.70209 41H40.6016C42.4227 41 43.3332 41 43.8591 40.6176C44.3178 40.2841 44.6134 39.7715 44.6722 39.2074C44.7396 38.5606 44.2834 37.7726 43.371 36.1967L26.9212 7.78341C26.0121 6.21309 25.5575 5.42793 24.9645 5.16422C24.4471 4.93419 23.8566 4.93419 23.3393 5.16422C22.7462 5.42793 22.2916 6.21309 21.3825 7.78342Z" stroke="red" strokeWidth="4" strokeLinecap="round" />
-                    </svg>
-                    <h4 style={{ fontSize: "22px", fontWeight: 700, marginBottom: "0", color: "red" }}>{t("Notice")}</h4>
-                </div>
-            </ModalHeader>
-            <ModalBody>
-                <p style={{ fontWeight: 600, fontSize: "15px", marginBottom: "15px" }}>
-                    {t(noticeMessage)}
-                </p>
-                <p style={{ fontWeight: 600, fontSize: "15px", marginBottom: "0px" }}>
-                    {t("Thank you for your understanding.")}
-                </p>
+  return (
+    <Modal isOpen={showNoticeModal}>
+      <ModalHeader>
+        <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="49"
+            height="48"
+            viewBox="0 0 49 48"
+            fill="none"
+          >
+            <path
+              d="M24.1519 18V26M24.1519 34H24.1719M21.3825 7.78342L4.93272 36.1967C4.02031 37.7726 3.5641 38.5606 3.63153 39.2074C3.69034 39.7715 3.98588 40.2841 4.4446 40.6176C4.97051 41 5.88104 41 7.70209 41H40.6016C42.4227 41 43.3332 41 43.8591 40.6176C44.3178 40.2841 44.6134 39.7715 44.6722 39.2074C44.7396 38.5606 44.2834 37.7726 43.371 36.1967L26.9212 7.78341C26.0121 6.21309 25.5575 5.42793 24.9645 5.16422C24.4471 4.93419 23.8566 4.93419 23.3393 5.16422C22.7462 5.42793 22.2916 6.21309 21.3825 7.78342Z"
+              stroke="red"
+              strokeWidth="4"
+              strokeLinecap="round"
+            />
+          </svg>
+          <h4
+            style={{
+              fontSize: "22px",
+              fontWeight: 700,
+              marginBottom: "0",
+              color: "red",
+            }}
+          >
+            {t("Notice")}
+          </h4>
+        </div>
+      </ModalHeader>
+      <ModalBody>
+        <p style={{ fontWeight: 600, fontSize: "15px", marginBottom: "15px" }}>
+          {t(noticeMessage)}
+        </p>
+        <p style={{ fontWeight: 600, fontSize: "15px", marginBottom: "0px" }}>
+          {t("Thank you for your understanding.")}
+        </p>
+      </ModalBody>
+      <ModalFooter>
+        <button
+          style={{
+            borderRadius: "8px",
+            backgroundColor: "#5926f0",
+            fontWeight: 600,
+            border: "none",
+            outline: "none",
+            color: "white",
+            padding: "10px 20px",
+          }}
+          onClick={() => window.location.reload()}
+        >
+          {t("Refresh Page")}
+        </button>
+      </ModalFooter>
+    </Modal>
+  );
+};
 
-            </ModalBody>
-            <ModalFooter>
-                <button style={{ borderRadius: "8px", backgroundColor: "#5926f0", fontWeight: 600, border: "none", outline: "none", color: "white", padding: "10px 20px" }} onClick={() => window.location.reload()}>
-                    {t("Refresh Page")}
-                </button>
-            </ModalFooter>
-        </Modal>
-    )
-}
-
-export default VpnModal
+export default VpnModal;

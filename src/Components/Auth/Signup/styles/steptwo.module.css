@@ -1,90 +1,91 @@
 .container {
-    display: flex;
-    flex-direction: column;
-    gap: 1.3rem;
-    margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.3rem;
+  margin-bottom: 1rem;
 }
 
 .inp {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 
-.inp>label {
-    color: #0C0A20;
-    font-family: Inter;
-    font-size: 14px;
-    font-weight: 500;
-    line-height: 150%;
-    letter-spacing: -0.42px;
+.inp > label {
+  color: #0c0a20;
+  font-family: Inter;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 150%;
+  letter-spacing: -0.42px;
 }
 
 .dp {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
 }
 
 .dp img {
-    width: 3.5rem;
-    height: 3.5rem;
-    border-radius: 12px;
-    border: 1px solid rgba(0, 0, 0, 0.25);
-    box-shadow: 0px 3.239px 21.137px 0px rgba(89, 38, 240, 0.09);
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.25);
+  box-shadow: 0px 3.239px 21.137px 0px rgba(89, 38, 240, 0.09);
 }
 
 .dp label {
-    border-radius: 8px;
-    border: 1px solid #BEBEBE;
-    display: flex;
-    padding: 12px;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    color: #000;
-    leading-trim: both;
-    text-edge: cap;
-    font-family: Manrope;
-    font-size: 12px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: 150%;
-    margin-bottom: 0;
+  cursor: pointer;
+  border-radius: 8px;
+  border: 1px solid #bebebe;
+  display: flex;
+  padding: 12px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  color: #000;
+  leading-trim: both;
+  text-edge: cap;
+  font-family: Manrope;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 150%;
+  margin-bottom: 0;
 }
 
 .inp input,
 .inp select {
-    border-radius: 6px;
-    border: 1px solid #E4E3E5;
-    background: #FFF;
-    box-shadow: 0 1px 1.5px 0 rgba(44, 54, 53, 0.03);
-    display: flex;
-    height: 48px;
-    padding: 8px 12px;
-    align-items: center;
-    gap: 12px;
+  border-radius: 6px;
+  border: 1px solid #e4e3e5;
+  background: #fff;
+  box-shadow: 0 1px 1.5px 0 rgba(44, 54, 53, 0.03);
+  display: flex;
+  height: 48px;
+  padding: 8px 12px;
+  align-items: center;
+  gap: 12px;
 }
 
 .inp input:focus,
 .inp input:focus-within {
-    border-radius: 8px;
-    border: 2px solid #5926F0;
-    background: #FFF;
+  border-radius: 8px;
+  border: 2px solid #5926f0;
+  background: #fff;
 }
 
 .selectedCountry {
-    gap: 12px !important;
-    img {
-        width: 35px;
-        height: 25px;
-        box-shadow: none !important;
-    }
+  gap: 12px !important;
+  img {
+    width: 35px;
+    height: 25px;
+    box-shadow: none !important;
+  }
 
-    span {
-        color: #0C0A20;
-        font-family: Inter;
-        font-size: 16px;
-        font-weight: 400 !important;
-        letter-spacing: -0.48px;
-    }
+  span {
+    color: #0c0a20;
+    font-family: Inter;
+    font-size: 16px;
+    font-weight: 400 !important;
+    letter-spacing: -0.48px;
+  }
 }

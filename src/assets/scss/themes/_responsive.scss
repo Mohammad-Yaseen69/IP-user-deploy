@@ -77,7 +77,6 @@
       .rdt_TableHead {
         .rdt_TableHeadRow {
           .rdt_TableCol {
-
             &:nth-child(2),
             &:nth-child(5) {
               min-width: 210px;
@@ -88,7 +87,6 @@
 
       .rdt_TableBody {
         .rdt_TableCell {
-
           &:nth-child(2),
           &:nth-child(5) {
             min-width: 210px;
@@ -275,7 +273,7 @@
   // search
   .search-page {
     .search-vid-block {
-      >div {
+      > div {
         margin-top: 30px;
       }
     }
@@ -283,7 +281,6 @@
 }
 
 @media screen and (max-width: 1600px) {
-
   // ecommece page
   .grid-options {
     ul {
@@ -347,7 +344,6 @@
 }
 
 @media screen and (max-width: 1550px) and (min-width: 1200px) {
-
   .docs-buttons,
   .docs-toggles {
     flex: 0 0 100%;
@@ -531,8 +527,8 @@
                   .simplebar-content-wrapper {
                     .simplebar-content {
                       .menu-box {
-                        >ul {
-                          >li {
+                        > ul {
+                          > li {
                             a {
                               svg {
                                 margin-right: 15px;
@@ -591,7 +587,7 @@
 
   .custom-card {
     .card-footer {
-      >div {
+      > div {
         padding: 12px;
 
         h3 {
@@ -866,7 +862,7 @@
           li {
             font-size: 13px;
 
-            &:nth-child(n+2) {
+            &:nth-child(n + 2) {
               margin-left: 3px;
               padding-left: 3px;
             }
@@ -938,9 +934,9 @@
                   .simplebar-content-wrapper {
                     .simplebar-content {
                       .menu-box {
-                        >ul {
-                          >li {
-                            font-size: .7rem;
+                        > ul {
+                          > li {
+                            font-size: 0.7rem;
 
                             .sidebar-link {
                               display: flex;
@@ -976,7 +972,7 @@
           margin-top: 81px;
           margin-left: 280px;
 
-          ~.footer {
+          ~ .footer {
             margin-left: 255px;
           }
         }
@@ -1009,7 +1005,6 @@
 }
 
 @media (max-width: 1280px) {
-
   .img-gallery-set1,
   .img-gallery-set5 {
     display: none;
@@ -1081,7 +1076,7 @@
     .left-menu-header {
       ul.header-left {
         li {
-          +li {
+          + li {
             padding-left: 20px;
           }
         }
@@ -1091,7 +1086,6 @@
 }
 
 @media screen and (max-width: 1366px) and (min-width: 1200px) {
-
   .mega-inline,
   .mega-vertical {
     .d-flex {
@@ -1119,7 +1113,7 @@
       .blog-details {
         .blog-social {
           li {
-            &:nth-child(n+2) {
+            &:nth-child(n + 2) {
               padding-left: 6px;
               margin-left: 6px;
             }
@@ -1180,7 +1174,6 @@
 
   .pagination-page {
     .card {
-
       .card-body,
       .card-header {
         padding: 28px 22px;
@@ -1303,7 +1296,6 @@
 
   .social-app-profile {
     .card {
-
       .card-header,
       .card-body {
         padding: 20px;
@@ -1443,7 +1435,6 @@
   .blog-box {
     .blog-details-second {
       .blog-post-date {
-
         .blg-month,
         .blg-date {
           width: 42px;
@@ -1473,7 +1464,7 @@
   .learning-block {
     .upcoming-course {
       .d-flex {
-        +.d-flex {
+        + .d-flex {
           margin-top: 10px;
         }
       }
@@ -1505,7 +1496,7 @@
 
   .custom-card {
     .card-footer {
-      >div {
+      > div {
         padding: 10px 0;
       }
     }
@@ -1533,7 +1524,7 @@
     }
 
     .card-footer {
-      >div {
+      > div {
         h3 {
           font-size: 16px;
         }
@@ -1842,8 +1833,8 @@
     .page-header {
       .header-wrapper {
         .nav-right {
-          >ul {
-            >li {
+          > ul {
+            > li {
               &.serchinput {
                 .Typeahead-menu {
                   .ProfileCard {
@@ -1899,7 +1890,7 @@
   // alert page
   .alert-dismissible {
     strong {
-      &~p {
+      & ~ p {
         display: inline;
       }
     }
@@ -1908,7 +1899,7 @@
   .map-js-height {
     height: 350px;
 
-    >div {
+    > div {
       height: 350px !important;
     }
   }
@@ -2041,7 +2032,7 @@
       display: block;
       text-align: right;
 
-      >div {
+      > div {
         padding-left: 0;
         padding-right: 0;
       }
@@ -2100,7 +2091,6 @@
     table {
       &.column-selector {
         tbody {
-
           td,
           th {
             &.select-checkbox {
@@ -2200,7 +2190,6 @@
   }
 
   .page-body-wrapper {
-
     .page-body,
     footer {
       margin-left: 0 !important;
@@ -2339,7 +2328,7 @@
           }
         }
 
-        >.mobile-toggle {
+        > .mobile-toggle {
           cursor: pointer;
           display: flex;
           align-items: center;
@@ -2362,7 +2351,7 @@
 
   .md-sidebar {
     .md-sidebar-toggle {
-      ~.job-left-aside {
+      ~ .job-left-aside {
         margin-top: 0;
       }
     }
@@ -2435,7 +2424,7 @@
     .mega-menu-container {
       .mega-box {
         .svg-icon {
-          ~div {
+          ~ div {
             h6 {
               display: none;
             }
@@ -2492,9 +2481,9 @@
     }
   }
 
-  .link-section>div {
+  .link-section > div {
     &.active {
-      >h6 {
+      > h6 {
         &:before {
           content: "\f107";
           transition: content 0.3s ease;
@@ -2502,7 +2491,7 @@
       }
     }
 
-    >h6 {
+    > h6 {
       position: relative;
 
       &:before {
@@ -2544,7 +2533,7 @@
       .mega-box {
         flex-basis: auto;
 
-        &+.mega-box {
+        & + .mega-box {
           border-left: 0px;
           padding-left: 15px;
         }
@@ -2592,7 +2581,7 @@
       }
 
       .card-footer {
-        >div {
+        > div {
           h3 {
             font-size: 18px;
           }
@@ -2611,7 +2600,7 @@
     }
 
     .card-footer {
-      >div {
+      > div {
         h3 {
           font-size: 18px;
         }
@@ -2679,7 +2668,7 @@
     .owl-carousel {
       .product-box {
         &.row {
-          >div {
+          > div {
             width: 100%;
           }
         }
@@ -2704,7 +2693,7 @@
   .typography {
     .row {
       div {
-        &+div {
+        & + div {
           margin-top: 30px;
         }
       }
@@ -2714,8 +2703,8 @@
   .listing {
     .card-body {
       .row {
-        >div {
-          &+div {
+        > div {
+          & + div {
             margin-top: 30px;
           }
         }
@@ -2729,7 +2718,7 @@
 
   .img-cropper {
     .docs-toggles {
-      >.dropdown {
+      > .dropdown {
         margin-bottom: 0;
       }
     }
@@ -2765,7 +2754,7 @@
     &.dataTables_wrapper {
       div {
         &.dataTables_paginate {
-          &~.dataTables_filter {
+          & ~ .dataTables_filter {
             display: block;
             width: 100%;
             margin-top: 20px;
@@ -2850,7 +2839,6 @@
 
   // blog
   .blog-list .blog-details {
-
     p,
     hr {
       display: block;
@@ -2934,8 +2922,8 @@
   .product-table {
     table.dataTable {
       thead {
-        >tr {
-          >th {
+        > tr {
+          > th {
             padding-right: 50px;
           }
         }
@@ -3124,7 +3112,7 @@
   }
 
   .learning-block {
-    >div {
+    > div {
       &:first-child {
         order: 2;
       }
@@ -3166,7 +3154,7 @@
   }
 
   input[type="checkbox"].tui-full-calendar-checkbox-round {
-    +span {
+    + span {
       margin-right: 3px;
     }
   }
@@ -3203,7 +3191,7 @@
   .user-card {
     .custom-card {
       .card-footer {
-        >div {
+        > div {
           padding: 10px;
         }
       }
@@ -3242,8 +3230,8 @@
     .page-header {
       .header-wrapper {
         .nav-right {
-          >ul {
-            >li {
+          > ul {
+            > li {
               &.maximize {
                 display: none !important;
               }
@@ -3288,7 +3276,6 @@
 }
 
 @media only screen and (max-width: 991px) {
-
   // timeline page
   .vertical-timeline-element-subtitle {
     font-size: 18px;
@@ -3320,7 +3307,7 @@
 
   .color-ribbon {
     .row {
-      >div {
+      > div {
         margin-bottom: 0;
       }
     }
@@ -3329,11 +3316,11 @@
   .jkanban-container {
     .kanban-container {
       .kanban-drag {
-        >div {
+        > div {
           width: 400px;
           flex-wrap: wrap;
 
-          >div {
+          > div {
             flex-wrap: wrap;
 
             .react-kanban-column {
@@ -3368,7 +3355,6 @@
 
   .page-wrapper {
     .card {
-
       .card-header,
       .card-body,
       .card-footer {
@@ -3530,8 +3516,8 @@
             width: 160px;
           }
 
-          >ul {
-            >li {
+          > ul {
+            > li {
               width: 35px;
               height: 35px;
 
@@ -3641,7 +3627,6 @@
 
   #aniimated-thumbnials {
     figure {
-
       &:nth-child(12),
       &:nth-child(11),
       &:nth-child(10),
@@ -3675,7 +3660,6 @@
   // datatable css
   table {
     &.dataTable {
-
       &.fixedHeader-locked,
       &.fixedHeader-floating {
         left: 0 !important;
@@ -3769,14 +3753,14 @@
 
   .search-page {
     .info-block {
-      +.info-block {
+      + .info-block {
         padding-top: 20px;
         margin-top: 20px;
       }
     }
 
     #video-links {
-      .embed-responsive+.embed-responsive {
+      .embed-responsive + .embed-responsive {
         margin-top: 20px;
       }
     }
@@ -3808,7 +3792,6 @@
   }
 
   .timeline-content {
-
     p,
     .comments-box {
       margin-top: 20px;
@@ -3835,14 +3818,14 @@
   }
 
   .details-about {
-    +.details-about {
+    + .details-about {
       margin-top: 20px;
     }
   }
 
   .activity-log {
     .my-activity {
-      +.my-activity {
+      + .my-activity {
         margin-top: 20px;
       }
     }
@@ -4003,7 +3986,7 @@
   .owl-theme {
     .owl-nav {
       &.disabled {
-        &+.owl-dots {
+        & + .owl-dots {
           margin-bottom: -10px;
           margin-top: 15px;
         }
@@ -4132,7 +4115,7 @@
           padding: 11px 18px;
         }
 
-        +li {
+        + li {
           a {
             padding-left: 65px;
           }
@@ -4167,7 +4150,7 @@
   }
 
   .tab-content {
-    ~.nav-tabs {
+    ~ .nav-tabs {
       &.border-tab {
         margin-top: 20px;
       }
@@ -4194,7 +4177,7 @@
     margin-bottom: -20px;
 
     a {
-      >div {
+      > div {
         margin-bottom: 20px;
       }
     }
@@ -4278,7 +4261,7 @@
 
   // summer-note page
   .click2edit {
-    &~.note-editor {
+    & ~ .note-editor {
       &.note-frame {
         margin-bottom: 20px;
       }
@@ -4352,8 +4335,8 @@
     .page-header {
       .header-wrapper {
         .nav-right {
-          >ul {
-            >li {
+          > ul {
+            > li {
               .profile-media {
                 .flex-grow-1 {
                   display: none;
@@ -4425,7 +4408,7 @@
 
   .starter-kit-fix {
     .starter-main {
-      >div {
+      > div {
         &:last-child {
           .card {
             margin-bottom: 40px;
@@ -4547,7 +4530,7 @@
     .owl-carousel {
       .product-box {
         &.row {
-          >div {
+          > div {
             width: auto;
           }
         }
@@ -4565,7 +4548,7 @@
     .form-group:not(.form-control-search) {
       width: 100%;
 
-      +.form-group {
+      + .form-group {
         margin-top: 10px;
       }
 
@@ -4728,7 +4711,7 @@
     }
 
     .card-footer {
-      >div {
+      > div {
         padding-top: 10px;
         padding-bottom: 10px;
         padding-right: 10px;
@@ -4840,7 +4823,6 @@
   // icon-compact layout page
   .my-gallery {
     figure {
-
       &:nth-child(9),
       &:nth-child(10) {
         margin-bottom: 20px;
@@ -4859,7 +4841,7 @@
   // calendar page
   .calendar-basic {
     .lnb-calendars {
-      >div {
+      > div {
         padding: 12px 0;
       }
     }
@@ -4877,7 +4859,6 @@
     }
 
     .fc-events-container {
-
       h6,
       .checkbox {
         text-align: right;
@@ -4928,17 +4909,17 @@
       }
 
       .fc-toolbar {
-        >div {
+        > div {
           display: block !important;
           float: none !important;
         }
 
-        >* {
+        > * {
           :first-child {
             font-size: 18px;
           }
 
-          >* {
+          > * {
             float: none !important;
           }
         }
@@ -5050,7 +5031,7 @@
       .call-content {
         min-height: 445px;
 
-        >div {
+        > div {
           height: auto;
         }
       }
@@ -5244,7 +5225,7 @@
   // search page //
   .search-page {
     .search-vid-block {
-      >div {
+      > div {
         &:nth-child(n + 2) {
           margin-top: 20px;
         }
@@ -5369,7 +5350,7 @@
     .icon-popup {
       display: flex;
 
-      >.icon-last {
+      > .icon-last {
         margin-top: 15px;
 
         .form-inline {
@@ -5604,7 +5585,6 @@
 
   // gallery page
   .lg-outer {
-
     .lg-actions .lg-next,
     .lg-actions .lg-prev {
       top: 48%;
@@ -5727,19 +5707,17 @@
   }
 
   .dropdown-basic {
-
     .dropdown,
     .btn-group {
-
-      +.dropdown,
-      +.btn-group {
+      + .dropdown,
+      + .btn-group {
         margin-left: 8px;
       }
     }
   }
 
   .pricing-col {
-    >div {
+    > div {
       margin-bottom: 20px;
     }
   }
@@ -5759,7 +5737,7 @@
   }
 
   .browse {
-    >div {
+    > div {
       margin-bottom: 15px;
     }
   }
@@ -5789,8 +5767,8 @@
           flex: 0 0 70%;
           max-width: 70%;
 
-          >ul {
-            >li {
+          > ul {
+            > li {
               &.maximize {
                 display: none !important;
               }
@@ -5820,7 +5798,7 @@
 
   input[type="checkbox"] {
     &.tui-full-calendar-checkbox-round {
-      &+span {
+      & + span {
         width: 12px;
         height: 12px;
         margin-top: 2px;
@@ -5891,8 +5869,8 @@
     .page-header {
       .header-wrapper {
         .nav-right {
-          >ul {
-            >li {
+          > ul {
+            > li {
               width: 30px;
               height: 30px;
             }
@@ -5909,8 +5887,8 @@
 
   .date-picker {
     .theme-form {
-      >.row {
-        >div {
+      > .row {
+        > div {
           &:last-child {
             margin-top: 0;
           }
@@ -5921,10 +5899,10 @@
 
   .form-bookmark {
     .row {
-      >div {
+      > div {
         .row {
-          >.col-sm-6 {
-            +.col-sm-6 {
+          > .col-sm-6 {
+            + .col-sm-6 {
               margin-top: 10px;
             }
           }
@@ -5976,7 +5954,7 @@
       }
     }
 
-    >div {
+    > div {
       width: 100%;
       text-align: center;
       padding: 15px;
@@ -6011,7 +5989,7 @@
   // dashboard
   .custom-card {
     .card-footer {
-      >div {
+      > div {
         h6 {
           font-weight: 600;
         }
@@ -6105,7 +6083,7 @@
       .btn {
         width: 100%;
 
-        +.btn {
+        + .btn {
           margin-left: 0;
           margin-top: 5px;
         }
@@ -6123,7 +6101,7 @@
           }
         }
 
-        &+li {
+        & + li {
           margin-left: 5px;
         }
       }
@@ -6194,7 +6172,7 @@
 
   .page-wrapper {
     .page-body-wrapper {
-      .page-title>.row {
+      .page-title > .row {
         .col-6 {
           &:first-child {
             display: block;
@@ -6264,7 +6242,7 @@
         padding: 12px 15px !important;
 
         .nav-right {
-          >ul {
+          > ul {
             top: 58px;
 
             .search-form {
@@ -6284,7 +6262,7 @@
             }
           }
 
-          >ul {
+          > ul {
             li {
               .flag-icon {
                 font-size: 14px !important;
@@ -6308,7 +6286,6 @@
 
           .notification-dropdown {
             &.onhover-show-div {
-
               &:before,
               &:after {
                 left: 24px !important;
@@ -6468,7 +6445,6 @@
     }
 
     .blog-details {
-
       p,
       .single-blog-content-top {
         margin-top: 15px;
@@ -6663,7 +6639,6 @@
 
   #aniimated-thumbnials {
     figure {
-
       &:nth-child(12),
       &:nth-child(11),
       &:nth-child(10),
@@ -6800,7 +6775,6 @@
   }
 
   .timeline-content {
-
     p,
     .comments-box {
       margin-top: 15px;
@@ -6860,7 +6834,7 @@
     }
   }
 
-  .details-about+.details-about {
+  .details-about + .details-about {
     margin-top: 15px;
   }
 
@@ -6884,7 +6858,7 @@
 
   .activity-log {
     .my-activity {
-      +.my-activity {
+      + .my-activity {
         margin-top: 15px;
       }
     }
@@ -7050,7 +7024,7 @@
   }
 
   .tab-content {
-    ~.nav-tabs {
+    ~ .nav-tabs {
       &.border-tab {
         margin-top: 10px;
       }
@@ -7161,11 +7135,11 @@
 
   div {
     &.table-responsive {
-      >div {
+      > div {
         &.dataTables_wrapper {
-          >div {
+          > div {
             &.row {
-              >div {
+              > div {
                 &[class^="col-"] {
                   &:last-child {
                     padding-left: 0 !important;
@@ -7195,7 +7169,6 @@
 
       table {
         &.dataTable {
-
           th,
           td {
             padding: 0.5rem;
@@ -7292,7 +7265,7 @@
   }
 
   .gallery {
-    >a {
+    > a {
       margin-bottom: 15px;
       text-align: center;
     }
@@ -7316,7 +7289,6 @@
     .page-body-wrapper {
       .default-according {
         .card {
-
           .card-header,
           .card-body,
           .card-footer {
@@ -7359,8 +7331,9 @@
 
   /* alert responsive css start here */
   $alert-name: primary, secondary, success, danger, warning, info, light, dark;
-  $alert-color: var(--theme-default), $secondary-color, $success-color,
-    $danger-color, $warning-color, $info-color, $light-color, $dark-color;
+  $alert-color:
+    var(--theme-default), $secondary-color, $success-color, $danger-color, $warning-color,
+    $info-color, $light-color, $dark-color;
 
   @each $var in $alert-name {
     $i: index($alert-name, $var);
@@ -7648,7 +7621,7 @@
 
   // summer-note page
   .click2edit {
-    &~.note-editor {
+    & ~ .note-editor {
       &.note-frame {
         margin-bottom: 15px;
       }
@@ -7676,7 +7649,7 @@
   // gallery-with-description page
   .gallery-with-description {
     a {
-      >div {
+      > div {
         margin-bottom: 15px;
       }
     }
@@ -7699,7 +7672,6 @@
 
   .translate_wrapper.active {
     .more_lang {
-
       &:before,
       &:after {
         display: none;
@@ -7730,7 +7702,6 @@
       .nav-right {
         &.right-header {
           ul {
-
             &.chat-dropdown,
             &.notification-dropdown,
             &.message-dropdown {
@@ -7782,7 +7753,6 @@
   }
 
   .dropdown-basic {
-
     .dropstart-content,
     .dropup-content,
     .dropend-content {
@@ -7837,8 +7807,8 @@
   .jkanban-container {
     .kanban-container {
       .kanban-drag {
-        >div {
-          >div {
+        > div {
+          > div {
             margin-bottom: -5px;
           }
         }
@@ -7978,8 +7948,8 @@
                 .simplebar-content-wrapper {
                   .simplebar-content {
                     .menu-box {
-                      >ul {
-                        >li {
+                      > ul {
+                        > li {
                           .sidebar-link:before {
                             left: 8px;
                             width: 30px;
@@ -8058,7 +8028,7 @@
   .email-wrap {
     .email-wrapper {
       .emailread-group {
-        &:nth-child(n+2) {
+        &:nth-child(n + 2) {
           padding-top: 18px;
           margin-top: 18px;
         }
@@ -8183,8 +8153,8 @@
       width: 140px;
       padding: 0.7rem 0;
 
-      >li {
-        >.header-level-sub-menu {
+      > li {
+        > .header-level-sub-menu {
           padding: 0.7rem 0;
           width: 120px;
           left: 140px;
@@ -8199,7 +8169,6 @@
 
   .box-layout {
     &.page-wrapper {
-
       .set-col-6,
       .set-col-3,
       .set-col-7,
@@ -8243,7 +8212,7 @@
       }
     }
 
-    >div:not(.chart-clock-main) {
+    > div:not(.chart-clock-main) {
       canvas {
         width: 245px !important;
         height: 245px !important;
@@ -8256,7 +8225,7 @@
       .btn {
         width: 100%;
 
-        &+.btn {
+        & + .btn {
           margin-top: 10px;
         }
       }
@@ -8331,8 +8300,8 @@
         }
       }
 
-      >span {
-        &+span {
+      > span {
+        & + span {
           display: none;
         }
       }
@@ -8706,8 +8675,8 @@
     }
 
     span {
-      +span {
-        +span {
+      + span {
+        + span {
           padding: 15px;
         }
       }
@@ -8962,7 +8931,7 @@
 
   .starter-kit-fix {
     .starter-main {
-      >div {
+      > div {
         &:last-child {
           .card {
             margin-bottom: 32px;
@@ -9183,7 +9152,7 @@
   .user-card {
     .custom-card {
       .card-footer {
-        >div {
+        > div {
           h3 {
             font-size: 16px;
           }
@@ -9287,7 +9256,7 @@
   .map-js-height {
     height: 250px;
 
-    >div {
+    > div {
       height: 250px !important;
     }
   }
@@ -9318,7 +9287,7 @@
   // dashboard defalt
   .custom-card {
     .card-footer {
-      >div {
+      > div {
         h6 {
           font-size: 12px;
 
@@ -9589,7 +9558,7 @@
   .comment-box {
     .comment-social {
       li {
-        &:nth-child(n+2) {
+        &:nth-child(n + 2) {
           margin-left: 10px;
           padding-left: 10px;
         }

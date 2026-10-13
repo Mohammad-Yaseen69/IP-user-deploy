@@ -63,7 +63,7 @@ export const typesData = [
 const StepFour = ({
   data,
   dataHandler,
-  callback = () => { },
+  callback = () => {},
   loading = false,
   error = "",
   filteringValue = "dummy",
@@ -82,7 +82,7 @@ const StepFour = ({
     retry: 3,
   });
 
-  console.log(data?.mobile_wallet_services)
+  console.log(data?.mobile_wallet_services);
   const types = useMemo(() => {
     if (data?.mobile_wallet_services?.length > 0) {
       console.log(typesData, data.mobile_wallet_services);
@@ -139,7 +139,7 @@ const StepFour = ({
           <>
             <FeesComponent error={error} data={data} />
             {data.payment_type?.value === "paypal" &&
-              !data?.exchange_rate?.paypal?.paypal_currency_supported ? (
+            !data?.exchange_rate?.paypal?.paypal_currency_supported ? (
               <>
                 <div
                   style={{
@@ -164,9 +164,7 @@ const StepFour = ({
                       letterSpacing: "-0.28px",
                     }}
                   >
-                    <strong>
-                      {data?.exchange_rate?.paypal?.fee?.currency}
-                    </strong>{" "}
+                    <strong>{data?.exchange_rate?.paypal?.fee?.currency}</strong>{" "}
                     {t("is not supported by Paypal,")} <strong>{t("USD")}</strong>
                     {t("will be used as the default currency.")}
                   </span>
@@ -214,12 +212,15 @@ const StepFour = ({
                       }}
                     >
                       1.00 {data?.exchange_rate?.paypal?.fee?.currency} ={" "}
-                      {Number(
-                        data?.exchange_rate?.paypal?.paypal_rate?.value,
-                      )?.toLocaleString("en-US", {
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 4,
-                      })}{" "}{t("USD")}</strong>
+                      {Number(data?.exchange_rate?.paypal?.paypal_rate?.value)?.toLocaleString(
+                        "en-US",
+                        {
+                          minimumFractionDigits: 2,
+                          maximumFractionDigits: 4,
+                        },
+                      )}{" "}
+                      {t("USD")}
+                    </strong>
                   </div>
                   <div
                     style={{
@@ -253,12 +254,15 @@ const StepFour = ({
                         letterSpacing: "-0.8px",
                       }}
                     >
-                      {Number(
-                        data?.exchange_rate?.paypal?.paypal_converted?.value,
-                      )?.toLocaleString("en-US", {
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 2,
-                      })}{" "}{t("USD")}</strong>
+                      {Number(data?.exchange_rate?.paypal?.paypal_converted?.value)?.toLocaleString(
+                        "en-US",
+                        {
+                          minimumFractionDigits: 2,
+                          maximumFractionDigits: 2,
+                        },
+                      )}{" "}
+                      {t("USD")}
+                    </strong>
                   </div>
                 </div>
               </>
@@ -290,7 +294,9 @@ const StepFour = ({
             .filter(
               (i) =>
                 i.value !== filteringValue &&
-                (methods?.includes(i.value) || methods?.includes(i?.api_val) || i.value === "wallet"),
+                (methods?.includes(i.value) ||
+                  methods?.includes(i?.api_val) ||
+                  i.value === "wallet"),
             )
             .map((item) => (
               <div
@@ -311,15 +317,12 @@ const StepFour = ({
                 <img src={item.icon} alt="" className={styles.icon} loading="lazy" />
                 <span>
                   {t(item.name)}
-                  {item.value === "mobile" &&
-                    data?.mobile_wallet_services?.length > 0 ? (
+                  {item.value === "mobile" && data?.mobile_wallet_services?.length > 0 ? (
                     <>
                       <br />
                       (
                       <TypingSpan
-                        words={data.mobile_wallet_services.map(
-                          (item) => item?.name ?? "",
-                        )}
+                        words={data.mobile_wallet_services.map((item) => item?.name ?? "")}
                       />
                       )
                     </>
@@ -328,18 +331,10 @@ const StepFour = ({
                   )}
                 </span>
 
-                {item.status === "Coming Soon" ? (
-                  <div>({t(item.status)})</div>
-                ) : (
-                  ""
-                )}
+                {item.status === "Coming Soon" ? <div>({t(item.status)})</div> : ""}
                 {item.status === "Active" ? (
                   data.payment_type?.name === item?.name ? (
-                    <Check
-                      color="green"
-                      size={24}
-                      style={{ marginLeft: "auto" }}
-                    />
+                    <Check color="green" size={24} style={{ marginLeft: "auto" }} />
                   ) : (
                     <img
                       src={i}
@@ -348,7 +343,6 @@ const StepFour = ({
                       width={"35px"}
                       height={"35px"}
                       style={{
-
                         objectFit: "contain",
                         marginLeft: "auto",
                       }}

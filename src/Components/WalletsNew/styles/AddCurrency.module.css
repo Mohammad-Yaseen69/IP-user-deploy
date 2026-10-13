@@ -1,177 +1,181 @@
 .content {
-    border-radius: 2rem !important;
+  border-radius: 2rem !important;
 }
 
 .container {
-    display: flex;
-    padding: 2.3rem;
-    gap: 3rem;
+  display: flex;
+  padding: 2.3rem;
+  gap: 3rem;
 }
 
 .left {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 .left h1 {
-    color: #5926F0;
-    font-family: Manrope;
-    font-size: 14px;
-    font-style: normal;
-    font-weight: 800;
-    line-height: normal;
-    letter-spacing: 5.04px;
-    text-transform: uppercase;
-    margin-bottom: .8rem;
+  color: #5926f0;
+  font-family: Manrope;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 800;
+  line-height: normal;
+  letter-spacing: 5.04px;
+  text-transform: uppercase;
+  margin-bottom: 0.8rem;
 }
 
 .left h2 {
-    color: #000;
-    font-family: Manrope;
-    font-size: 24px;
-    font-style: normal;
-    font-weight: 800;
-    line-height: 130%;
-    letter-spacing: -0.48px;
-    margin-bottom: 1.25rem;
+  color: #000;
+  font-family: Manrope;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 800;
+  line-height: 130%;
+  letter-spacing: -0.48px;
+  margin-bottom: 1.25rem;
 }
 
 .left p {
-    color: #8D8D8D;
-    font-family: Manrope;
-    font-size: 14px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: 170%;
+  color: #8d8d8d;
+  font-family: Manrope;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 170%;
 }
 
 .right {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 1.6rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1.6rem;
 }
 
 .currencies {
-    display: flex;
-    flex-direction: column;
-    gap: 18px;
-    padding: 18px 18px 0;
-    min-height: 400px;
-    max-height: 470px;
-    overflow-y: auto;
-    overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 18px 18px 0;
+  min-height: 400px;
+  max-height: 470px;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .currency {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    color: #000;
-    font-family: Manrope;
-    font-size: 18px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: 157%;
-    letter-spacing: -0.18px;
-    background-color: #eeeeee;
-    padding: 12px 18px;
-    border-radius: 7px;
-    cursor: pointer;
-    position: relative;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  color: #000;
+  font-family: Manrope;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 157%;
+  letter-spacing: -0.18px;
+  background-color: #eeeeee;
+  padding: 12px 18px;
+  border-radius: 7px;
+  cursor: pointer;
+  position: relative;
 }
 
 .currency img {
-    height: 30px;
-    width: 30px;
-    object-fit: cover;
-    border-radius: 8px;
+  height: 30px;
+  width: 30px;
+  object-fit: cover;
+  border-radius: 8px;
 }
 
 .currency.active {
-    background: linear-gradient(0deg, rgba(0, 0, 0, 0.40) 0%, rgba(0, 0, 0, 0.40) 100%), linear-gradient(277deg, #E64067 -9.52%, #5926F0 62.22%, #4828A0 119.38%);
-    color: white;
-    background-blend-mode: overlay, normal;
-    box-shadow: 0px 4.5px 5.3px -5.409px rgba(89, 38, 240, 0.04);
+  background:
+    linear-gradient(0deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.4) 100%),
+    linear-gradient(277deg, #e64067 -9.52%, #5926f0 62.22%, #4828a0 119.38%);
+  color: white;
+  background-blend-mode: overlay, normal;
+  box-shadow: 0px 4.5px 5.3px -5.409px rgba(89, 38, 240, 0.04);
 }
 
 .currency.disabled {
-    cursor: not-allowed;
-    opacity: .6;
-    transition: 250ms;
+  cursor: not-allowed;
+  opacity: 0.6;
+  transition: 250ms;
 }
 
 .currency.disabled::before {
-    content: attr(data-content);
-    position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-    background-color: #ffffff91;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    backdrop-filter: blur(10px);
-    opacity: 0;
-    transition: 250ms;
+  content: attr(data-content);
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background-color: #ffffff91;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  backdrop-filter: blur(10px);
+  opacity: 0;
+  transition: 250ms;
 }
 
 .currency.disabled:hover::before,
 .currency.disabled:hover {
-    opacity: 1;
+  opacity: 1;
 }
 
 .buttons {
-    display: flex;
-    align-items: center;
-    gap: 2.5rem;
-    justify-content: flex-end;
+  display: flex;
+  align-items: center;
+  gap: 2.5rem;
+  justify-content: flex-end;
 }
 
 .t_btn {
-    all: unset;
-    color: #8D8D8D;
-    text-align: right;
-    font-family: Manrope;
-    font-size: 14px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: 170%;
+  all: unset;
+  color: #8d8d8d;
+  text-align: right;
+  font-family: Manrope;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 170%;
 }
 
 .f_btn {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    border-radius: 6px;
-    background: linear-gradient(0deg, rgba(0, 0, 0, 0.40) 0%, rgba(0, 0, 0, 0.40) 100%), linear-gradient(277deg, #E64067 -9.52%, #5926F0 62.22%, #4828A0 119.38%);
-    background-blend-mode: overlay, normal;
-    box-shadow: 0px 4.5px 5.3px -5.409px rgba(89, 38, 240, 0.04);
-    border: none;
-    outline: none;
-    padding: 12px 18px;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  border-radius: 6px;
+  background:
+    linear-gradient(0deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.4) 100%),
+    linear-gradient(277deg, #e64067 -9.52%, #5926f0 62.22%, #4828a0 119.38%);
+  background-blend-mode: overlay, normal;
+  box-shadow: 0px 4.5px 5.3px -5.409px rgba(89, 38, 240, 0.04);
+  border: none;
+  outline: none;
+  padding: 12px 18px;
 }
 
 .f_btn img {
-    width: 22px;
-    object-fit: contain;
-    height: 21.712px;
-    flex-shrink: 0;
+  width: 22px;
+  object-fit: contain;
+  height: 21.712px;
+  flex-shrink: 0;
 }
 
 .f_btn span {
-    color: #FFF;
-    font-family: Manrope;
-    font-size: 17.31px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: normal;
+  color: #fff;
+  font-family: Manrope;
+  font-size: 17.31px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
 }
 
 @media screen and (max-width: 800px) {
-    .left {
-        display: none;
-    }
+  .left {
+    display: none;
+  }
 }

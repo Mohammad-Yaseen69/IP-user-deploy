@@ -1,12 +1,21 @@
-import { useEffect, useState } from 'react';
-import CryptoJS from 'crypto-js';
+import { useEffect, useState } from "react";
+import CryptoJS from "crypto-js";
 
-
-const TrustpaymentPage = ({ transaction, type = "add_fund", url, paymentWithSavedCard = false, tokenUrl = undefined, isPartner }) => {
+const TrustpaymentPage = ({
+  transaction,
+  type = "add_fund",
+  url,
+  paymentWithSavedCard = false,
+  tokenUrl = undefined,
+  isPartner,
+}) => {
   const [token, setToken] = useState(null);
 
-  const webhook_url = url ?? (paymentWithSavedCard ? `${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/confirm-pan-transaction/${transaction?.transaction_id}` : `${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/payment${type === "add_fund" ? "" : isPartner ? "-partner-kyc" : type === 'kyc_fee' ? "-kyc" : "-kyb"}-confirmation/${transaction?.transaction_id}`)
-
+  const webhook_url =
+    url ??
+    (paymentWithSavedCard
+      ? `${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/confirm-pan-transaction/${transaction?.transaction_id}`
+      : `${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/payment${type === "add_fund" ? "" : isPartner ? "-partner-kyc" : type === "kyc_fee" ? "-kyc" : "-kyb"}-confirmation/${transaction?.transaction_id}`);
 
   useEffect(() => {
     // const createJWT = (header, payload, secret) => {
@@ -41,10 +50,10 @@ const TrustpaymentPage = ({ transaction, type = "add_fund", url, paymentWithSave
     //   return jwtToken;
     // };
 
-    setToken(transaction?.trustPaymentToken ?? transaction?.token)
-  }, [])
+    setToken(transaction?.trustPaymentToken ?? transaction?.token);
+  }, []);
 
-  console.log(token)
+  console.log(token);
   const htmlString = `
     <html>
       <head>
@@ -77,19 +86,17 @@ const TrustpaymentPage = ({ transaction, type = "add_fund", url, paymentWithSave
   `;
   // console.log(htmlString)
 
-  console.log(tokenUrl ? tokenUrl(token) : webhook_url)
+  console.log(tokenUrl ? tokenUrl(token) : webhook_url);
   useEffect(() => {
     if (token && htmlString) {
       // const newTab = window.open()
-      console.log(htmlString)
-      window.document.write(htmlString)
+      console.log(htmlString);
+      window.document.write(htmlString);
       // navigate("/")
     }
-  }, [htmlString, token])
+  }, [htmlString, token]);
 
-  return (
-    ""
-  );
+  return "";
 };
 
 export default TrustpaymentPage;

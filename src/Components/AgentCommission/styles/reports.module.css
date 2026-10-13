@@ -1,459 +1,454 @@
 .container {
-    padding: 24px;
-    min-height: 100vh;
-    font-family: 'Inter', sans-serif;
-    background-color: #F8F9FC;
+  padding: 24px;
+  min-height: 100vh;
+  font-family: "Inter", sans-serif;
+  background-color: #f8f9fc;
 }
 
 .top {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  position: relative;
 }
 
 .headerTitle h1 {
-    color: #5626e6;
-    font-size: 40px;
-    font-weight: 700;
-    margin: 0;
+  color: #5626e6;
+  font-size: 40px;
+  font-weight: 700;
+  margin: 0;
 }
 
 .headerTitle p {
-    color: #868686;
-    font-size: 14px;
-    font-weight: 400;
-    margin: 0;
+  color: #868686;
+  font-size: 14px;
+  font-weight: 400;
+  margin: 0;
 }
 
 .main {
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
-    max-width: 1400px;
-    margin-top: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  max-width: 1400px;
+  margin-top: 24px;
 }
 
 .sectionCard {
-    background: #FFFFFF;
-    border: 1px solid #EBE8F5;
-    border-radius: 14px;
-    box-shadow: 0px 1px 2px 0px rgba(15, 11, 31, 0.04);
-    padding: 24px;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
+  background: #ffffff;
+  border: 1px solid #ebe8f5;
+  border-radius: 14px;
+  box-shadow: 0px 1px 2px 0px rgba(15, 11, 31, 0.04);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
 .sectionHeader {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
 }
 
 .sectionHeaderLeft {
-    display: flex;
-    align-items: center;
-    gap: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .sectionTitle {
-    color: #1B1F2A;
-    font-size: 18px;
-    font-weight: 600;
-    margin: 0;
-    line-height: 24px;
+  color: #1b1f2a;
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0;
+  line-height: 24px;
 }
 
 .sectionTitleSub {
-    color: #9C97B3;
-    font-size: 14px;
-    font-weight: 600;
-    margin: 0;
-    line-height: 20px;
+  color: #9c97b3;
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0;
+  line-height: 20px;
 }
 
 .stableBadge {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    padding: 4px 10px;
-    border-radius: 100px;
-    background: #10B981;
-    color: #F8F9FC;
-    font-size: 11px;
-    font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 100px;
+  background: #10b981;
+  color: #f8f9fc;
+  font-size: 11px;
+  font-weight: 500;
 }
 
 .dropdownBtn {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    padding: 6px 12px;
-    background: #F3F3F4;
-    border: none;
-    border-radius: 6px;
-    color: #1A144F;
-    font-size: 12px;
-    font-weight: 500;
-    cursor: pointer;
-    font-family: 'Inter', sans-serif;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: #f3f3f4;
+  border: none;
+  border-radius: 6px;
+  color: #1a144f;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: "Inter", sans-serif;
 }
 
-
 .topGrid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-    align-items: stretch;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  align-items: stretch;
 }
 
 .barChartWrap {
-    width: 100%;
-    flex: 1;
-    min-height: 220px;
+  width: 100%;
+  flex: 1;
+  min-height: 220px;
 }
 
 .donutBody {
-    display: flex;
-    align-items: center;
-    gap: 24px;
-    width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  width: 100%;
 }
 
 .donutChartArea {
-    width: 140px;
-    height: 140px;
-    flex-shrink: 0;
+  width: 140px;
+  height: 140px;
+  flex-shrink: 0;
 }
 
 .productGrid {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
 }
 
 .productItem {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 10px 14px;
-    background: #F8F9FC;
-    border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  background: #f8f9fc;
+  border-radius: 6px;
 }
 
 .productLeft {
-    display: flex;
-    align-items: center;
-    gap: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .productDot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    flex-shrink: 0;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
 }
 
 .productName {
-    color: #151514;
-    font-size: 14px;
-    font-weight: 500;
+  color: #151514;
+  font-size: 14px;
+  font-weight: 500;
 }
 
 .productPrice {
-    color: #1F1F21;
-    font-size: 14px;
-    font-weight: 600;
+  color: #1f1f21;
+  font-size: 14px;
+  font-weight: 600;
 }
 
-
 .middleGrid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-    align-items: stretch;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  align-items: stretch;
 }
 
 .rankingTableWrap {
-    width: 100%;
-    overflow-x: auto;
+  width: 100%;
+  overflow-x: auto;
 }
 
 .rankingTable {
-    width: 100%;
-    border-collapse: collapse;
+  width: 100%;
+  border-collapse: collapse;
 }
 
 .rankingTable thead tr {
-    background: #EFF1F6;
+  background: #eff1f6;
 }
 
 .rankingTable th {
-    padding: 10px 20px;
-    color: #6E7687;
-    font-size: 14px;
-    font-weight: 500;
-    text-align: left;
-    white-space: nowrap;
+  padding: 10px 20px;
+  color: #6e7687;
+  font-size: 14px;
+  font-weight: 500;
+  text-align: left;
+  white-space: nowrap;
 }
 
 .rankingTable th:first-child {
-    border-radius: 6px 0 0 6px;
+  border-radius: 6px 0 0 6px;
 }
 
 .rankingTable th:last-child {
-    border-radius: 0 6px 6px 0;
+  border-radius: 0 6px 6px 0;
 }
 
 .rankingTable td {
-    padding: 14px 20px;
-    color: #151514;
-    font-size: 14px;
-    font-weight: 500;
-    border-bottom: 1px solid #EAECF0;
+  padding: 14px 20px;
+  color: #151514;
+  font-size: 14px;
+  font-weight: 500;
+  border-bottom: 1px solid #eaecf0;
 }
 
 .rankingTable tbody tr:last-child td {
-    border-bottom: none;
+  border-bottom: none;
 }
 
 .agentCell {
-    display: flex;
-    align-items: center;
-    gap: 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
 .agentAvatar {
-    width: 28px;
-    height: 28px;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 11px;
-    font-weight: 800;
-    flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 800;
+  flex-shrink: 0;
 }
 
 .avatarPurple {
-    background: #F1E9FB;
-    color: #7C3AED;
+  background: #f1e9fb;
+  color: #7c3aed;
 }
 
 .avatarDeepPurple {
-    background: #A88BFF;
-    color: #F2EEFF;
+  background: #a88bff;
+  color: #f2eeff;
 }
 
 .avatarCyan {
-    background: #DFF5FA;
-    color: #0E7490;
+  background: #dff5fa;
+  color: #0e7490;
 }
 
 .riskRows {
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
 }
 
 .riskRow {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 
 .riskRowTop {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .riskLabel {
-    color: #1B1F2A;
-    font-size: 14px;
-    font-weight: 600;
+  color: #1b1f2a;
+  font-size: 14px;
+  font-weight: 600;
 }
 
 .riskBadge {
-    padding: 2px 8px;
-    border-radius: 6px;
-    font-size: 11px;
-    font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 800;
 }
 
 .riskBadgeLow {
-    background: #6EE7B7;
-    color: #047857;
+  background: #6ee7b7;
+  color: #047857;
 }
 
 .riskBadgeStandard {
-    background: #F2EEFF;
-    color: #4C1ED1;
+  background: #f2eeff;
+  color: #4c1ed1;
 }
 
 .riskBadgeMedium {
-    background: #FFF8EC;
-    color: #6B5900;
+  background: #fff8ec;
+  color: #6b5900;
 }
 
 .riskBadgeHigh {
-    background: #FFD0D0;
-    color: #B91C1C;
+  background: #ffd0d0;
+  color: #b91c1c;
 }
 
 .riskBarTrack {
-    width: 100%;
-    height: 8px;
-    background: #F3F3F4;
-    border-radius: 9px;
-    overflow: hidden;
+  width: 100%;
+  height: 8px;
+  background: #f3f3f4;
+  border-radius: 9px;
+  overflow: hidden;
 }
 
 .riskBarFill {
-    height: 100%;
-    border-radius: 9px;
+  height: 100%;
+  border-radius: 9px;
 }
 
 .bgGreen {
-    background: #10B981;
+  background: #10b981;
 }
 
 .bgPurple {
-    background: #5926F0;
+  background: #5926f0;
 }
 
 .bgYellow {
-    background: #B5860A;
+  background: #b5860a;
 }
 
 .bgRed {
-    background: #EF4444;
+  background: #ef4444;
 }
 
-
 .statementsTableWrap {
-    width: 100%;
-    overflow-x: auto;
+  width: 100%;
+  overflow-x: auto;
 }
 
 .statementsTable {
-    width: 100%;
-    border-collapse: collapse;
+  width: 100%;
+  border-collapse: collapse;
 }
 
 .statementsTable thead tr {
-    background: #EFF1F6;
+  background: #eff1f6;
 }
 
 .statementsTable th {
-    padding: 10px 20px;
-    color: #6E7687;
-    font-size: 12px;
-    font-weight: 600;
-    text-align: left;
-    text-transform: uppercase;
-    white-space: nowrap;
+  padding: 10px 20px;
+  color: #6e7687;
+  font-size: 12px;
+  font-weight: 600;
+  text-align: left;
+  text-transform: uppercase;
+  white-space: nowrap;
 }
 
 .statementsTable th:first-child {
-    border-radius: 6px 0 0 6px;
+  border-radius: 6px 0 0 6px;
 }
 
 .statementsTable th:last-child {
-    border-radius: 0 6px 6px 0;
-    text-align: right;
+  border-radius: 0 6px 6px 0;
+  text-align: right;
 }
 
 .statementsTable td {
-    padding: 14px 20px;
-    color: #151514;
-    font-size: 14px;
-    font-weight: 500;
-    border-bottom: 1px solid #EAECF0;
+  padding: 14px 20px;
+  color: #151514;
+  font-size: 14px;
+  font-weight: 500;
+  border-bottom: 1px solid #eaecf0;
 }
 
 .statementsTable tbody tr:last-child td {
-    border-bottom: none;
+  border-bottom: none;
 }
 
 .actionGroup {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
 }
 
 .btnGenerate {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    padding: 6px 12px;
-    background: #4A32E3;
-    color: #FFFFFF;
-    border: none;
-    border-radius: 6px;
-    font-size: 12px;
-    font-weight: 500;
-    cursor: pointer;
-    font-family: 'Inter', sans-serif;
-    transition: background 0.15s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: #4a32e3;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: "Inter", sans-serif;
+  transition: background 0.15s ease;
 }
 
 .btnGenerate:hover {
-    background: #3B26BF;
+  background: #3b26bf;
 }
 
 .btnFormat {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    padding: 6px 12px;
-    background: #F3F3F4;
-    color: #1A144F;
-    border: none;
-    border-radius: 6px;
-    font-size: 12px;
-    font-weight: 500;
-    cursor: pointer;
-    font-family: 'Inter', sans-serif;
-    transition: background 0.15s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: #f3f3f4;
+  color: #1a144f;
+  border: none;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: "Inter", sans-serif;
+  transition: background 0.15s ease;
 }
 
 .btnFormat:hover {
-    background: #EBE8F5;
+  background: #ebe8f5;
 }
 
-
 @media (max-width: 1050px) {
+  .topGrid,
+  .middleGrid {
+    grid-template-columns: 1fr;
+  }
 
-    .topGrid,
-    .middleGrid {
-        grid-template-columns: 1fr;
-    }
+  .donutBody {
+    flex-direction: column;
+    align-items: stretch;
+  }
 
-    .donutBody {
-        flex-direction: column;
-        align-items: stretch;
-    }
-
-    .donutChartArea {
-        align-self: center;
-    }
+  .donutChartArea {
+    align-self: center;
+  }
 }
 
 @media (max-width: 600px) {
-    .container {
-        padding: 12px;
-    }
+  .container {
+    padding: 12px;
+  }
 
-    .sectionCard {
-        padding: 16px;
-    }
+  .sectionCard {
+    padding: 16px;
+  }
 
-    .actionGroup {
-        flex-wrap: wrap;
-    }
+  .actionGroup {
+    flex-wrap: wrap;
+  }
 }

@@ -1,12 +1,15 @@
-import React from 'react'
-import { useParams } from 'react-router'
+import React from "react";
+import { useParams } from "react-router";
 
 const CardPayment = () => {
-    const { status, token } = useParams()
+  const { status, token } = useParams();
 
-    return (
-        <div>{status}{token}</div>
-    )
-}
+  return (
+    <div>
+      {status}
+      {token}
+    </div>
+  );
+};
 
-export default CardPayment
+export default CardPayment;

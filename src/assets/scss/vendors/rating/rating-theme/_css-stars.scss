@@ -1,7 +1,6 @@
 @import "variables.scss";
 
 .br-theme-css-stars {
-
   .br-widget {
     height: 28px;
     white-space: nowrap;
@@ -38,12 +37,10 @@
       cursor: default;
     }
   }
-
 }
 
 @media print {
   .br-theme-css-stars {
-
     .br-widget {
       a:after {
         content: "\2606";
@@ -56,6 +53,5 @@
         color: black;
       }
     }
-
   }
 }

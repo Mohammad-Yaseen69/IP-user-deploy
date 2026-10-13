@@ -107,8 +107,8 @@
               .simplebar-content-wrapper {
                 .simplebar-content {
                   .menu-box {
-                    >ul {
-                      >li {
+                    > ul {
+                      > li {
                         .sidebar-link {
                           &.sidebar-title {
                             &.active {
@@ -121,7 +121,6 @@
                               }
                             }
                           }
-
                         }
                       }
                     }
@@ -161,8 +160,8 @@
                 .simplebar-content-wrapper {
                   .simplebar-content {
                     .menu-box {
-                      >ul {
-                        >li {
+                      > ul {
+                        > li {
                           .sidebar-link {
                             padding: 12px 22px;
 
@@ -202,8 +201,8 @@
               .simplebar-content-wrapper {
                 .simplebar-content {
                   .menu-box {
-                    >ul {
-                      >li {
+                    > ul {
+                      > li {
                         .sidebar-link {
                           padding: 12px 0;
 
@@ -364,7 +363,7 @@
       }
 
       .onhover-show-div.bookmark-flip {
-        &:nth-child(n+2) {
+        &:nth-child(n + 2) {
           &:hover {
             i {
               color: $theme-body-font-color;
@@ -487,7 +486,7 @@
         .left-menu-header {
           .onhover-dropdown {
             &:hover {
-              >ul.onhover-show-div {
+              > ul.onhover-show-div {
                 visibility: unset;
                 display: block;
                 opacity: 1;
@@ -500,8 +499,8 @@
       .nav-right {
         justify-content: flex-end;
 
-        >ul {
-          >li {
+        > ul {
+          > li {
             width: 40px;
             height: 40px;
             border-radius: 10px;
@@ -527,7 +526,6 @@
                 background-color: transparent;
 
                 .Typeahead-menu {
-
                   svg,
                   i {
                     stroke: $theme-body-font-color !important;
@@ -537,7 +535,7 @@
               }
             }
 
-            &:nth-child(n+2) {
+            &:nth-child(n + 2) {
               &:hover {
                 background-color: $primary-color;
 
@@ -625,12 +623,12 @@
           }
         }
 
-        >ul {
+        > ul {
           display: flex;
           align-items: center;
           justify-content: flex-end;
 
-          >li {
+          > li {
             padding: 6px 10px;
             margin-right: 8px;
             display: inline-block;
@@ -683,9 +681,8 @@
 
         .onhover-dropdown {
           &:hover {
-
-            >div.onhover-show-div,
-            >ul.onhover-show-div {
+            > div.onhover-show-div,
+            > ul.onhover-show-div {
               top: 45px;
               visibility: unset;
               display: block;
@@ -806,7 +803,7 @@
               letter-spacing: 0.3px;
             }
 
-            &+li {
+            & + li {
               padding-top: 15px;
               padding-bottom: 0px;
               border-top: 1px solid $light-gray;
@@ -829,7 +826,7 @@
               }
 
               .flex-grow-1 {
-                >span {
+                > span {
                   letter-spacing: 0.8px;
                   padding-right: 10px;
                   display: inline-block;
@@ -877,7 +874,7 @@
                   stroke: $primary-color;
                   position: absolute;
                   top: 50%;
-                  transform: translate(-50%, -50%)
+                  transform: translate(-50%, -50%);
                 }
               }
 
@@ -886,7 +883,7 @@
               }
             }
 
-            &+li {
+            & + li {
               padding: 15px;
 
               p {
@@ -947,7 +944,7 @@
               }
             }
 
-            &+li {
+            & + li {
               padding: 15px;
 
               p {
@@ -1056,7 +1053,7 @@
     .page-title {
       padding-bottom: $page-title-padding;
 
-      >.row {
+      > .row {
         .col-6 {
           &:first-child {
             display: flex;
@@ -1106,7 +1103,7 @@
         }
 
         .breadcrumb-item {
-          &+.breadcrumb-item {
+          & + .breadcrumb-item {
             &:before {
               content: $breadcrumb-content;
               font-family: $font-awesome;
@@ -1181,7 +1178,7 @@
         line-height: inherit;
         top: 90px;
         background-color: $body-color;
-        box-shadow: 0px 9px 24px rgba($semi-dark, 0.10);
+        box-shadow: 0px 9px 24px rgba($semi-dark, 0.1);
         overflow-x: hidden;
         z-index: 2;
         overflow-y: visible;
@@ -1256,7 +1253,6 @@
                 ul.sidebar-submenu {
                   li {
                     a {
-
                       &.active,
                       &:hover {
                         color: $white;
@@ -1275,24 +1271,23 @@
               .simplebar-mask {
                 .simplebar-content-wrapper {
                   .simplebar-content {
-
                     // width: 100vw;
-                    >li {
+                    > li {
                       &:first-child {
                         display: none !important;
                       }
                     }
 
                     .menu-box {
-                      >ul {
-                        >li {
+                      > ul {
+                        > li {
                           position: relative;
                           padding-top: 10px;
                           padding-bottom: 10px;
 
                           &:hover {
-                            >a {
-                              >span {
+                            > a {
+                              > span {
                                 color: $white;
                                 transition: all 0.3s ease;
                               }
@@ -1316,7 +1311,7 @@
                             }
                           }
 
-                          >a {
+                          > a {
                             display: block;
                             color: $theme-body-font-color;
                             line-height: 23px;
@@ -1562,7 +1557,7 @@
 
           .activity-timeline {
             .d-flex {
-              +.d-flex {
+              + .d-flex {
                 margin-top: 30px;
               }
             }
@@ -1600,8 +1595,8 @@
                 .simplebar-content-wrapper {
                   .simplebar-content {
                     .menu-box {
-                      >ul {
-                        >li {
+                      > ul {
+                        > li {
                           .sidebar-submenu {
                             li {
                               a {
@@ -1629,7 +1624,6 @@
       .sidebar-links {
         .menu-box {
           .sidebar-link {
-
             &.active,
             &:hover {
               .sidebar-submenu {
@@ -1744,8 +1738,8 @@
                           margin-left: 15px;
                           margin-right: 15px;
 
-                          >ul {
-                            >li {
+                          > ul {
+                            > li {
                               .sidebar-submenu {
                                 a {
                                   display: none;
@@ -1754,7 +1748,7 @@
                             }
                           }
 
-                          >li {
+                          > li {
                             max-width: 86px;
                             margin: 0;
                             transition: all 0.3s ease;
@@ -1809,8 +1803,8 @@
                             margin-right: unset;
                             margin-left: unset;
 
-                            >ul {
-                              >li {
+                            > ul {
+                              > li {
                                 .sidebar-submenu {
                                   a {
                                     display: block;
@@ -1820,7 +1814,7 @@
                             }
                           }
 
-                          >li {
+                          > li {
                             transition: all 0.3s ease;
 
                             .sidebar-submenu {
@@ -1829,7 +1823,7 @@
                               }
                             }
 
-                            >a {
+                            > a {
                               padding: 12px 15px;
                               transition: all 0.3s ease;
 
@@ -1864,13 +1858,13 @@
               transform: translate(183px);
             }
 
-            ~.page-body,
-            ~footer {
+            ~ .page-body,
+            ~ footer {
               margin-left: 140px;
               transition: 0.5s;
             }
 
-            ~.footer-fix {
+            ~ .footer-fix {
               width: calc(100% - 90px);
             }
 
@@ -1882,7 +1876,7 @@
                   .simplebar-mask {
                     .simplebar-content-wrapper {
                       .simplebar-content {
-                        >li {
+                        > li {
                           .sidebar-link {
                             &::before {
                               right: 20px;
@@ -1904,7 +1898,7 @@
                 .sidebar-list {
                   .sidebar-title {
                     &.active {
-                      ~.sidebar-submenu {
+                      ~ .sidebar-submenu {
                         display: none;
                       }
                     }
@@ -1919,7 +1913,6 @@
           }
 
           .sidebar-main {
-
             .left-arrow,
             .right-arrow {
               display: none;
@@ -1945,7 +1938,6 @@
                     margin-top: 2px;
                     color: $white;
                     // white-space: nowrap;
-
                   }
 
                   &.link-nav {
@@ -1997,8 +1989,8 @@
                           margin-bottom: unset;
                         }
 
-                        >ul {
-                          >li {
+                        > ul {
+                          > li {
                             display: block;
                             width: 100%;
                             position: relative;
@@ -2047,7 +2039,7 @@
                                 margin-right: 18px;
                                 vertical-align: bottom;
                                 float: none;
-                                stroke-Width: 2.3px;
+                                stroke-width: 2.3px;
                                 color: $white;
                                 transition: all 0.3s ease;
                               }
@@ -2065,7 +2057,6 @@
                                   display: none;
                                 }
                               }
-
                             }
 
                             .sidebar-submenu {
@@ -2076,7 +2067,7 @@
                               padding: 0;
                               position: relative !important;
 
-                              >li {
+                              > li {
                                 a {
                                   padding-left: 55px !important;
                                   font-weight: 400;
@@ -2101,7 +2092,7 @@
 
                               li {
                                 &:hover {
-                                  >a {
+                                  > a {
                                     color: $white;
                                     transition: all 0.3s ease;
 
@@ -2114,7 +2105,7 @@
 
                                 .submenu-tittle {
                                   &.active {
-                                    ~.nav-sub-childmenu {
+                                    ~ .nav-sub-childmenu {
                                       display: block;
                                     }
                                   }
@@ -2178,10 +2169,9 @@
                             }
 
                             // Recursion Css Start //
-                            >.sidebar-submenu {
-
+                            > .sidebar-submenu {
                               &,
-                              li>.sidebar-submenu {
+                              li > .sidebar-submenu {
                                 height: 0;
                                 opacity: 0;
                                 visibility: hidden;
@@ -2189,10 +2179,9 @@
                             }
 
                             &.active {
-                              >.sidebar-submenu {
-
+                              > .sidebar-submenu {
                                 &,
-                                li.active>.sidebar-submenu {
+                                li.active > .sidebar-submenu {
                                   height: auto;
                                   opacity: 1;
                                   visibility: visible;
@@ -2204,7 +2193,7 @@
                             &.mega-menu {
                               .sidebar-title {
                                 &.active {
-                                  ~.mega-menu-container {
+                                  ~ .mega-menu-container {
                                     display: block !important;
                                   }
                                 }
@@ -2310,11 +2299,11 @@
 
                               &:before {
                                 position: absolute;
-                                content: '';
+                                content: "";
                                 width: 90%;
                                 min-width: 45px;
                                 height: 100%;
-                                background: var(--COLORS-Primary-Alpha-10, rgba(89, 38, 240, 0.10));
+                                background: var(--COLORS-Primary-Alpha-10, rgba(89, 38, 240, 0.1));
                                 top: 0px;
                                 left: 10px;
                                 transition: 0.8s;
@@ -2352,13 +2341,13 @@
                                 }
 
                                 span {
-                                  color: #5926F0;
+                                  color: #5926f0;
                                   transition: all 0.3s ease;
                                 }
                               }
 
                               span {
-                                color: #848484
+                                color: #848484;
                               }
                             }
                           }
@@ -2447,7 +2436,7 @@
                 .simplebar-mask {
                   .simplebar-content-wrapper {
                     .simplebar-content {
-                      >li {
+                      > li {
                         .mega-menu-container {
                           right: -18%;
                           width: 91%;
@@ -2476,7 +2465,7 @@
                 .simplebar-mask {
                   .simplebar-content-wrapper {
                     .simplebar-content {
-                      >li {
+                      > li {
                         .mega-menu-container {
                           right: -54%;
                           width: 75%;
@@ -2500,10 +2489,11 @@
           .simplebar-mask {
             .simplebar-content-wrapper {
               .simplebar-content {
-                >li {
+                > li {
                   margin-right: 8px;
 
-                  &.menu-box {}
+                  &.menu-box {
+                  }
                 }
               }
             }
@@ -2533,8 +2523,8 @@
     .page-header {
       .header-wrapper {
         .nav-right {
-          >ul {
-            >li {
+          > ul {
+            > li {
               &:first-child {
                 width: 210px !important;
               }
@@ -2549,7 +2539,7 @@
     .left-menu-header {
       ul.header-left {
         li {
-          &:nth-child(n+2) {
+          &:nth-child(n + 2) {
             &::before {
               display: none;
             }
@@ -2600,7 +2590,7 @@
         li {
           padding: 0;
 
-          +li {
+          + li {
             padding-left: 32px;
           }
         }
@@ -2618,7 +2608,7 @@
                 .simplebar-mask {
                   .simplebar-content-wrapper {
                     .simplebar-content {
-                      >li {
+                      > li {
                         .mega-menu-container {
                           right: -49%;
                           width: 70%;
@@ -2654,8 +2644,8 @@
     .page-header {
       .header-wrapper {
         .nav-right {
-          >ul {
-            >li {
+          > ul {
+            > li {
               padding: 6px;
             }
           }
@@ -2696,7 +2686,7 @@
                 .simplebar-mask {
                   .simplebar-content-wrapper {
                     .simplebar-content {
-                      >li {
+                      > li {
                         .mega-menu-container {
                           right: -35%;
                           width: 56%;
@@ -2738,7 +2728,7 @@
               .simplebar-mask {
                 .simplebar-content-wrapper {
                   .simplebar-content {
-                    >li {
+                    > li {
                       .sidebar-submenu {
                         width: 200px;
                         opacity: 0;
@@ -2830,7 +2820,6 @@
 }
 
 @media only screen and (min-width: 768px) {
-
   // material icon css
   .page-wrapper {
     &.material-icon {
@@ -2849,7 +2838,7 @@
         color: rgba($white, 0.8);
 
         &:hover {
-          >svg {
+          > svg {
             color: $white !important;
             stroke: $white !important;
           }
@@ -2866,18 +2855,18 @@
 
         .header-wrapper {
           .nav-right {
-            >ul {
-              >li {
+            > ul {
+              > li {
                 color: $white;
 
                 .notification-box,
-                >a {
-                  >svg {
+                > a {
+                  > svg {
                     stroke: $white;
                   }
                 }
 
-                >svg {
+                > svg {
                   stroke: $white;
                 }
               }
@@ -2925,7 +2914,7 @@
 
         div.sidebar-wrapper {
           &.close_icon {
-            ~.page-body {
+            ~ .page-body {
               padding-left: 15px;
               margin: 0 auto !important;
             }
@@ -2947,7 +2936,7 @@
                 color: rgba($white, 0.6);
               }
 
-              +.breadcrumb-item {
+              + .breadcrumb-item {
                 &::before {
                   color: rgba($white, 0.8);
                 }
@@ -2966,7 +2955,7 @@
       .page-body-wrapper {
         div.sidebar-wrapper {
           .logo-wrapper {
-            +.logo-wrapper {
+            + .logo-wrapper {
               display: block;
             }
           }
@@ -3048,8 +3037,8 @@
             }
           }
 
-          >ul {
-            >li {
+          > ul {
+            > li {
               .badge {
                 font-size: 10px;
               }
@@ -3066,8 +3055,8 @@
     .page-header {
       .header-wrapper {
         .nav-right {
-          >ul {
-            >li {
+          > ul {
+            > li {
               margin-right: 0;
             }
           }
@@ -3088,7 +3077,7 @@
                 }
               }
 
-              +li {
+              + li {
                 padding: 10px;
               }
             }
@@ -3145,7 +3134,6 @@
   }
 }
 
-
 .sidebar-main .sidebar-links .sidebar-link {
   display: flex !important;
   align-items: center !important;
@@ -3164,14 +3152,12 @@
   }
 }
 
-
-
 .sidebar-main .sidebar-links .sidebar-link {
   display: flex !important;
   align-items: center !important;
   flex-wrap: nowrap !important;
   width: 100%;
-  
+
   svg {
     flex-shrink: 0;
   }
