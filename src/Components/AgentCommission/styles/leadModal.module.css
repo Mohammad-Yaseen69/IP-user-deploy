@@ -1,227 +1,231 @@
 .modalPaper {
-    width: 580px;
-    max-width: 95vw;
-    border-radius: 16px !important;
-    padding: 28px !important;
-    background-color: #FFFFFF !important;
-    box-shadow: 0px 20px 25px -5px rgba(0, 0, 0, 0.1), 0px 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
-    font-family: 'Inter', sans-serif !important;
-    overflow-y: auto !important;
+  width: 580px;
+  max-width: 95vw;
+  border-radius: 16px !important;
+  padding: 28px !important;
+  background-color: #ffffff !important;
+  box-shadow:
+    0px 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0px 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
+  font-family: "Inter", sans-serif !important;
+  overflow-y: auto !important;
 }
 
 .backdrop {
-    background-color: rgba(0, 0, 0, 0.5) !important;
-    backdrop-filter: blur(2px) !important;
+  background-color: rgba(0, 0, 0, 0.5) !important;
+  backdrop-filter: blur(2px) !important;
 }
 
 .modalContent {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    padding: 0 !important;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 0 !important;
 }
 
 .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .title {
-    font-size: 20px;
-    font-weight: 600;
-    color: #1B1F2A;
-    font-family: 'Inter', sans-serif;
-    margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: #1b1f2a;
+  font-family: "Inter", sans-serif;
+  margin: 0;
 }
 
 .closeBtn {
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    color: #6B7280;
-    padding: 4px;
-    border-radius: 6px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background-color 0.2s ease;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: #6b7280;
+  padding: 4px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease;
 }
 
 .closeBtn:hover {
-    background-color: #F3F4F6;
+  background-color: #f3f4f6;
 }
 
 .entityToggleContainer {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-    background-color: #F8F9FC;
-    padding: 4px;
-    border-radius: 10px;
-    border: 1px solid #EBE8F5;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  background-color: #f8f9fc;
+  padding: 4px;
+  border-radius: 10px;
+  border: 1px solid #ebe8f5;
 }
 
 .entityTab {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 10px 14px;
-    border-radius: 8px;
-    cursor: pointer;
-    background-color: transparent;
-    border: 1px solid transparent;
-    transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 10px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  background-color: transparent;
+  border: 1px solid transparent;
+  transition: all 0.2s ease;
 }
 
 .entityTabActive {
-    background-color: #FFFFFF;
-    border: 1px solid #5926F0;
-    box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
+  background-color: #ffffff;
+  border: 1px solid #5926f0;
+  box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .tabTitle {
-    font-size: 14px;
-    font-weight: 600;
-    color: #667085;
-    font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: #667085;
+  font-family: "Inter", sans-serif;
 }
 
 .tabTitleActive {
-    color: #101828;
+  color: #101828;
 }
 
 .tabSubtitle {
-    font-size: 12px;
-    font-weight: 500;
-    color: #6E7687;
-    font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  color: #6e7687;
+  font-family: "Inter", sans-serif;
 }
 
 .form {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
 .fieldGroup {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 
 .fieldLabel {
-    font-size: 14px;
-    font-weight: 500;
-    color: #6E7687;
-    font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: #6e7687;
+  font-family: "Inter", sans-serif;
 }
 
 .inputControl {
-    width: 100%;
+  width: 100%;
 }
 
 .inputControl :global(.MuiOutlinedInput-root) {
-    border-radius: 8px;
-    background-color: #FFFFFF;
-    font-family: 'Inter', sans-serif;
-    font-size: 14px;
+  border-radius: 8px;
+  background-color: #ffffff;
+  font-family: "Inter", sans-serif;
+  font-size: 14px;
 }
 
 .inputControl :global(.MuiOutlinedInput-notchedOutline) {
-    border-color: #E7E9E9 !important;
+  border-color: #e7e9e9 !important;
 }
 
 .inputControl:hover :global(.MuiOutlinedInput-notchedOutline) {
-    border-color: #5926F0 !important;
+  border-color: #5926f0 !important;
 }
 
 .inputControl :global(.Mui-focused .MuiOutlinedInput-notchedOutline) {
-    border-color: #5926F0 !important;
+  border-color: #5926f0 !important;
 }
 
 .hintRow {
-    display: flex;
-    align-items: center;
-    gap: 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .hintIcon {
-    color: #9AA3B2;
+  color: #9aa3b2;
 }
 
 .hintText {
-    font-size: 13px;
-    font-weight: 500;
-    color: #9AA3B2;
-    font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: #9aa3b2;
+  font-family: "Inter", sans-serif;
 }
 
 .infoNoticeBox {
-    background-color: #F2EEFF;
-    border-radius: 10px;
-    padding: 12px 16px;
-    border: 1px solid #EBE8F5;
+  background-color: #f2eeff;
+  border-radius: 10px;
+  padding: 12px 16px;
+  border: 1px solid #ebe8f5;
 }
 
 .infoNoticeText {
-    font-size: 12px;
-    font-weight: 500;
-    color: #5926F0;
-    font-family: 'Inter', sans-serif;
-    line-height: 1.5;
-    margin: 0;
+  font-size: 12px;
+  font-weight: 500;
+  color: #5926f0;
+  font-family: "Inter", sans-serif;
+  line-height: 1.5;
+  margin: 0;
 }
 
 .checkboxRow {
-    background-color: #EFF1F6;
-    border-radius: 8px;
-    padding: 10px 14px;
-    display: flex;
-    align-items: center;
+  background-color: #eff1f6;
+  border-radius: 8px;
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
 }
 
 .checkboxControl {
-    margin: 0 !important;
-    gap: 8px;
+  margin: 0 !important;
+  gap: 8px;
 }
 
 .checkboxLabel {
-    font-size: 14px;
-    font-weight: 500;
-    color: #1B1F2A;
-    font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: #1b1f2a;
+  font-family: "Inter", sans-serif;
 }
 
 .submitBtn {
-    height: 48px;
-    width: 100%;
-    background-color: #4A32E3;
-    border-radius: 8px;
-    border: none;
-    color: #FFFFFF;
-    font-size: 16px;
-    font-weight: 500;
-    font-family: 'Inter', sans-serif;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+  height: 48px;
+  width: 100%;
+  background-color: #4a32e3;
+  border-radius: 8px;
+  border: none;
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 500;
+  font-family: "Inter", sans-serif;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition:
+    background-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .submitBtn:hover {
-    background-color: #3B25C4;
-    box-shadow: 0px 4px 12px rgba(74, 50, 227, 0.25);
+  background-color: #3b25c4;
+  box-shadow: 0px 4px 12px rgba(74, 50, 227, 0.25);
 }
 
 .placeholderText {
-    color: #9E9DA6;
+  color: #9e9da6;
 }
 
 .flagOption {
-    display: flex;
-    align-items: center;
-    gap: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }

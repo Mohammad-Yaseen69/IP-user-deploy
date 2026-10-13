@@ -1,251 +1,253 @@
 .modalBox {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 100%;
-    max-width: 550px;
-    max-height: 90vh;
-    background: #FFFFFF;
-    border-radius: 14px;
-    box-shadow: 0px 12px 32px -4px rgba(24, 26, 38, 0.08), 0px 4px 12px rgba(24, 26, 38, 0.03);
-    padding: 24px;
-    box-sizing: border-box;
-    outline: none;
-    font-family: 'Inter', sans-serif;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  max-width: 550px;
+  max-height: 90vh;
+  background: #ffffff;
+  border-radius: 14px;
+  box-shadow:
+    0px 12px 32px -4px rgba(24, 26, 38, 0.08),
+    0px 4px 12px rgba(24, 26, 38, 0.03);
+  padding: 24px;
+  box-sizing: border-box;
+  outline: none;
+  font-family: "Inter", sans-serif;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
 .modalHeader {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    border-bottom: 1px solid #F2F4F7;
-    padding-bottom: 16px;
-    flex-shrink: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  border-bottom: 1px solid #f2f4f7;
+  padding-bottom: 16px;
+  flex-shrink: 0;
 }
 
 .headerLeft {
-    display: flex;
-    align-items: center;
-    gap: 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
 .iconCircle {
-    display: flex;
-    width: 40px;
-    height: 40px;
-    justify-content: center;
-    align-items: center;
-    border-radius: 11px;
-    background: #4F46E5;
-    box-shadow: 0 8px 18px -6px rgba(79, 70, 229, 0.45);
+  display: flex;
+  width: 40px;
+  height: 40px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 11px;
+  background: #4f46e5;
+  box-shadow: 0 8px 18px -6px rgba(79, 70, 229, 0.45);
 }
 
 .headerTitles h2 {
-    color: #171522;
-    font-size: 16px;
-    font-style: normal;
-    font-weight: 700;
-    line-height: 150%;
-    letter-spacing: -0.48px;
-    margin: 0 0 2px 0;
+  color: #171522;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 150%;
+  letter-spacing: -0.48px;
+  margin: 0 0 2px 0;
 }
 
 .headerTitles p {
-    color: #8B88A0;
-    margin: 0px;
-    font-size: 12px;
-    font-style: normal;
-    font-weight: 500;
-    line-height: 150%;
-    letter-spacing: -0.36px;
+  color: #8b88a0;
+  margin: 0px;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 150%;
+  letter-spacing: -0.36px;
 }
 
 .closeBtn {
-    color: #98A2B3 !important;
-    padding: 4px !important;
+  color: #98a2b3 !important;
+  padding: 4px !important;
 }
 
 .closeBtn:hover {
-    color: #344054 !important;
+  color: #344054 !important;
 }
 
 .modalForm {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-    min-height: 0;
-    overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
 }
 
 .modalBody {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    padding: 20px 4px 10px 0;
-    overflow-y: auto;
-    flex: 1;
-    min-height: 0;
-    scrollbar-width: thin;
-    scrollbar-color: #E5E7EB transparent;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px 4px 10px 0;
+  overflow-y: auto;
+  flex: 1;
+  min-height: 0;
+  scrollbar-width: thin;
+  scrollbar-color: #e5e7eb transparent;
 }
 
 .inputGroup {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
 }
 
 .fieldLabel {
-    font-size: 13px;
-    color: #344054;
-    font-weight: 600;
+  font-size: 13px;
+  color: #344054;
+  font-weight: 600;
 }
 
 .optionalText {
-    color: #8B88A0;
-    font-weight: 400;
-    font-size: 12px;
-    margin-left: 4px;
+  color: #8b88a0;
+  font-weight: 400;
+  font-size: 12px;
+  margin-left: 4px;
 }
 
 .selectRenderValue {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 5px 10px;
-    color: #101828;
-    font-size: 14px;
-    font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 5px 10px;
+  color: #101828;
+  font-size: 14px;
+  font-weight: 500;
 }
 
 .customMenuItem {
-    display: flex !important;
-    align-items: center !important;
-    gap: 12px !important;
-    padding: 12px 16px !important;
-    font-size: 14px !important;
-    color: #344054 !important;
-    font-family: 'Inter', sans-serif !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  padding: 12px 16px !important;
+  font-size: 14px !important;
+  color: #344054 !important;
+  font-family: "Inter", sans-serif !important;
 }
 
 .customMenuItem:hover {
-    background-color: #F4F3FF !important;
-    color: #4F46E5 !important;
+  background-color: #f4f3ff !important;
+  color: #4f46e5 !important;
 }
 
 .menuIcon {
-    flex-shrink: 0;
+  flex-shrink: 0;
 }
 
 .infoBanner {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    background: #EEF2FF;
-    border-radius: 8px;
-    padding: 12px;
-    color: #312E81;
-    font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #eef2ff;
+  border-radius: 8px;
+  padding: 12px;
+  color: #312e81;
+  font-size: 13px;
 }
 
 .infoIcon {
-    color: #4F46E5;
-    flex-shrink: 0;
+  color: #4f46e5;
+  flex-shrink: 0;
 }
 
 .modalFooter {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 12px;
-    padding-top: 16px;
-    border-top: 1px solid #F2F4F7;
-    flex-shrink: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 12px;
+  padding-top: 16px;
+  border-top: 1px solid #f2f4f7;
+  flex-shrink: 0;
 }
 
 .backButton {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    border: none;
-    border-radius: 8px;
-    background: #F3F3F4;
-    padding: 10px 16px;
-    color: #344054;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.2s ease;
-    font-family: 'Inter', sans-serif;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 8px;
+  background: #f3f3f4;
+  padding: 10px 16px;
+  color: #344054;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  font-family: "Inter", sans-serif;
 }
 
 .backButton:hover {
-    background: #E2E8F0;
+  background: #e2e8f0;
 }
 
 .saveButton {
-    width: 45%;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    background: #4F46E5;
-    border: 1px solid #4F46E5;
-    border-radius: 8px;
-    padding: 10px 24px;
-    color: #FFFFFF;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.2s ease;
-    font-family: 'Inter', sans-serif;
-    box-shadow: 0 4px 12px -4px rgba(79, 70, 229, 0.4);
+  width: 45%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #4f46e5;
+  border: 1px solid #4f46e5;
+  border-radius: 8px;
+  padding: 10px 24px;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  font-family: "Inter", sans-serif;
+  box-shadow: 0 4px 12px -4px rgba(79, 70, 229, 0.4);
 }
 
 .saveButton:hover {
-    background: #4338CA;
+  background: #4338ca;
 }
 
 @media screen and (max-width: 600px) {
-    .modalBox {
-        max-width: 90%;
-        padding: 0px;
-    }
+  .modalBox {
+    max-width: 90%;
+    padding: 0px;
+  }
 
-    .modalHeader,
-    .modalBody,
-    .modalFooter {
-        padding: 20px;
-    }
+  .modalHeader,
+  .modalBody,
+  .modalFooter {
+    padding: 20px;
+  }
 
-    .headerTitles {
-        p {
-            font-size: 12px !important;
-        }
+  .headerTitles {
+    p {
+      font-size: 12px !important;
     }
+  }
 
-    .fieldLabel {
-        font-size: 10px;
-        font-weight: 600;
-        color: #9793A8;
-        text-transform: uppercase;
-        margin: 0;
-    }
+  .fieldLabel {
+    font-size: 10px;
+    font-weight: 600;
+    color: #9793a8;
+    text-transform: uppercase;
+    margin: 0;
+  }
 
-    .saveButton,
-    .backButton {
-        width: fit-content;
-        padding: 7px 20px;
-        background-color: #7040FF;
-        height: fit-content;
-    }
+  .saveButton,
+  .backButton {
+    width: fit-content;
+    padding: 7px 20px;
+    background-color: #7040ff;
+    height: fit-content;
+  }
 
-    .backButton {
-        background-color: #F3F3F4;
-        color: #344054;
-    }
+  .backButton {
+    background-color: #f3f3f4;
+    color: #344054;
+  }
 }

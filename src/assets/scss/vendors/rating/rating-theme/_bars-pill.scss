@@ -1,9 +1,8 @@
 @import "variables";
 @import "mixins";
-@import '../../../utils/variables.scss';
+@import "../../../utils/variables.scss";
 
 .br-theme-bars-pill {
-
   .br-widget {
     white-space: nowrap;
 
@@ -53,12 +52,10 @@
       }
     }
   }
-
 }
 
 @media print {
   .br-theme-bars-pill {
-
     .br-widget {
       a {
         border: 1px solid lighten(black, 70%);
@@ -79,6 +76,5 @@
         border-left: 1px solid black;
       }
     }
-
   }
 }

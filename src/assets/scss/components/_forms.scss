@@ -1,22 +1,22 @@
 /**=====================
     14. Form CSS Start
 ==========================**/
-.form-validate{
-  form{
-    label{
+.form-validate {
+  form {
+    label {
       font-weight: 500;
     }
   }
 }
-form{
-  &.form.theme-form{
-    input[type="file"]{
+form {
+  &.form.theme-form {
+    input[type="file"] {
       padding: 6px 12px;
     }
   }
-  &.was-validated{
-    .custom-file{
-      label{
+  &.was-validated {
+    .custom-file {
+      label {
         display: none;
       }
     }
@@ -33,7 +33,7 @@ form{
       span {
         width: 100%;
       }
-      span.input-group-text{
+      span.input-group-text {
         width: auto;
       }
     }
@@ -63,15 +63,15 @@ form{
   }
 }
 .form-control-plaintext {
-  &.form-control{
+  &.form-control {
     padding: 0.375rem 0;
     background-color: transparent;
     border: solid transparent;
     border-width: 1px 0;
   }
 }
-form{
-  label{
+form {
+  label {
     font-weight: 500;
   }
 }

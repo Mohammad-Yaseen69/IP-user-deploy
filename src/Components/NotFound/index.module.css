@@ -1,73 +1,73 @@
 .container {
-    height: 75vh;
-    min-height: 550px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    padding: 1rem;
+  height: 75vh;
+  min-height: 550px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding: 1rem;
 }
 
 .content {
-    width: 100%;
-    max-width: 450px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  width: 100%;
+  max-width: 450px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .content img {
-    width: 100%;
-    object-fit: contain;
-    min-width: 280px;
+  width: 100%;
+  object-fit: contain;
+  min-width: 280px;
 }
 
 .content h5 {
-    color: #000;
-    leading-trim: both;
-    text-edge: cap;
-    font-family: Manrope;
-    font-size: 2rem;
-    font-style: normal;
-    font-weight: 800;
-    line-height: normal;
-    letter-spacing: -1.8px;
-    text-align: center;
-    margin-bottom: 0;
-    margin-top: .5rem;
+  color: #000;
+  leading-trim: both;
+  text-edge: cap;
+  font-family: Manrope;
+  font-size: 2rem;
+  font-style: normal;
+  font-weight: 800;
+  line-height: normal;
+  letter-spacing: -1.8px;
+  text-align: center;
+  margin-bottom: 0;
+  margin-top: 0.5rem;
 }
 
 .content span {
-    color: rgba(0, 0, 0, 0.60);
-    text-align: center;
-    leading-trim: both;
-    text-edge: cap;
-    font-family: Manrope;
-    font-size: 1rem;
-    font-style: normal;
-    font-weight: 400;
-    line-height: normal;
-    letter-spacing: -0.32px;
-    text-align: center;
+  color: rgba(0, 0, 0, 0.6);
+  text-align: center;
+  leading-trim: both;
+  text-edge: cap;
+  font-family: Manrope;
+  font-size: 1rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  letter-spacing: -0.32px;
+  text-align: center;
 }
 
 .content button {
-    margin-top: 1.25rem;
-    border: none;
-    outline: none;
-    border-radius: var(--Line-height-12-18, 18px);
-    background: linear-gradient(180deg, #5926F0 0%, #33168A 100%);
-    padding: .65rem 1rem;
-    color: #FFF;
-    text-align: center;
-    leading-trim: both;
-    text-edge: cap;
-    font-variant-numeric: lining-nums proportional-nums;
-    font-family: Manrope;
-    font-size: .85rem;
-    font-style: normal;
-    font-weight: 700;
-    line-height: normal;
-    letter-spacing: -0.28px;
-    text-align: center;
+  margin-top: 1.25rem;
+  border: none;
+  outline: none;
+  border-radius: var(--Line-height-12-18, 18px);
+  background: linear-gradient(180deg, #5926f0 0%, #33168a 100%);
+  padding: 0.65rem 1rem;
+  color: #fff;
+  text-align: center;
+  leading-trim: both;
+  text-edge: cap;
+  font-variant-numeric: lining-nums proportional-nums;
+  font-family: Manrope;
+  font-size: 0.85rem;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  letter-spacing: -0.28px;
+  text-align: center;
 }

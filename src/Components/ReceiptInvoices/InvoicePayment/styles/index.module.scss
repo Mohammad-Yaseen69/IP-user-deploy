@@ -1,1294 +1,1287 @@
 .container {
-    display: inline-flex;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  min-height: 100vh;
+
+  .sub_container {
+    display: flex;
+    width: 900px;
     justify-content: center;
-    align-items: center;
-    width: 100%;
-    min-height: 100vh;
+    align-items: flex-start;
+    gap: 22.682px;
+    border-radius: 16px;
+    background: #f8f8f8;
+    flex-direction: row;
 
-    .sub_container {
+    .left {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      flex: 1;
+      align-self: stretch;
+      gap: 40px;
+
+      .buttons {
         display: flex;
-        width: 900px;
-        justify-content: center;
-        align-items: flex-start;
-        gap: 22.682px;
-        border-radius: 16px;
-        background: #F8F8F8;
-        flex-direction: row;
+        flex-direction: column;
+        align-items: center;
+        gap: 32px;
+        align-self: stretch;
+        padding: 20px 0px 20px 20px;
 
-        .left {
+        > div:nth-child(1) {
+          display: grid;
+          gap: 12px;
+          width: 100%;
+
+          button {
+            border-radius: var(--rad-med, 8px);
+            backdrop-filter: blur(2px);
             display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            flex: 1;
-            align-self: stretch;
-            gap: 40px;
-
-            .buttons {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                gap: 32px;
-                align-self: stretch;
-                padding: 20px 0px 20px 20px;
-
-                >div:nth-child(1) {
-                    display: grid;
-                    gap: 12px;
-                    width: 100%;
-
-                    button {
-                        border-radius: var(--rad-med, 8px);
-                        backdrop-filter: blur(2px);
-                        display: flex;
-                        padding: 12px;
-                        justify-content: center;
-                        align-items: center;
-                        gap: 10px;
-                        align-self: stretch;
-                        font-weight: 600;
-                        border: none;
-                    }
-                }
-
-            }
-
-        }
-
-        .right {
-            display: flex;
-            flex: 1.3;
-            padding: 22.682px;
-            flex-direction: column;
+            padding: 12px;
+            justify-content: center;
             align-items: center;
-            gap: 16px;
-            flex-shrink: 0;
-
-            .top {
-                display: flex;
-                padding: 0 7.561px;
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 15.316px;
-                align-self: stretch;
-
-
-                .top_content {
-                    display: flex;
-                    justify-content: space-between;
-                    align-items: center;
-                    align-self: stretch;
-
-
-                    h1 {
-                        color: #000;
-                        leading-trim: both;
-                        text-edge: cap;
-                        font-size: 15.487px;
-                        font-style: normal;
-                        font-weight: 800;
-                        line-height: 15.487px;
-                        /* 100% */
-                        letter-spacing: -0.31px;
-                    }
-                }
-            }
-
-            .details {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                gap: 15px;
-                align-self: stretch;
-
-                >div {
-                    display: flex;
-                    flex-direction: column;
-                    align-items: center;
-                    gap: 6px;
-                    align-self: stretch;
-
-                    span {
-                        color: var(--COLORS-Neutral-600, #8E8E8E);
-                        font-size: 14px;
-                        font-style: normal;
-                        font-weight: 700;
-                    }
-
-                    h2 {
-                        color: var(--COLORS-Neutral-1000, #333);
-                        font-size: 16px;
-                        font-style: normal;
-                        font-weight: 700;
-                    }
-
-
-                    h4 {
-                        color: var(--COLORS-Tertiary-300, #6039CD);
-                        font-size: 16px;
-                        font-style: normal;
-                        font-weight: 700;
-                        text-decoration-line: underline;
-                        text-decoration-style: solid;
-                        text-decoration-skip-ink: none;
-                        text-decoration-thickness: 9%;
-                        text-underline-offset: auto;
-                        text-underline-position: from-font;
-                        border-bottom: 0px;
-                    }
-
-                    p {
-                        color: var(--COLORS-Neutral-1000, #333);
-                        text-align: center;
-                        leading-trim: both;
-                        text-edge: cap;
-                        font-family: Manrope;
-                        font-size: 13px;
-                        font-style: normal;
-                        font-weight: 600;
-                        line-height: 18.902px;
-                        /* 145.4% */
-                        letter-spacing: -0.13px;
-                        border-bottom: 0px;
-                    }
-                }
-            }
-
-            .amount {
-                display: flex;
-                padding: 15px;
-                flex-direction: column;
-                justify-content: center;
-                align-items: center;
-                gap: 12.682px;
-                align-self: stretch;
-                border-radius: 7.561px;
-                background: #FFF;
-
-                span {
-                    color: var(--COLORS-Neutral-600, #8E8E8E);
-                    font-size: 14px;
-                    font-style: normal;
-                    font-weight: 700;
-                }
-
-                h1 {
-                    margin-bottom: 0px;
-                    color: #000;
-                    font-size: 36px;
-                    font-style: normal;
-                    font-weight: 700;
-                    line-height: 43.475px;
-                    /* 120.763% */
-                    letter-spacing: -1.08px;
-
-                }
-            }
+            gap: 10px;
+            align-self: stretch;
+            font-weight: 600;
+            border: none;
+          }
         }
+      }
     }
 
+    .right {
+      display: flex;
+      flex: 1.3;
+      padding: 22.682px;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      flex-shrink: 0;
 
+      .top {
+        display: flex;
+        padding: 0 7.561px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15.316px;
+        align-self: stretch;
+
+        .top_content {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          align-self: stretch;
+
+          h1 {
+            color: #000;
+            leading-trim: both;
+            text-edge: cap;
+            font-size: 15.487px;
+            font-style: normal;
+            font-weight: 800;
+            line-height: 15.487px;
+            /* 100% */
+            letter-spacing: -0.31px;
+          }
+        }
+      }
+
+      .details {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+        align-self: stretch;
+
+        > div {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 6px;
+          align-self: stretch;
+
+          span {
+            color: var(--COLORS-Neutral-600, #8e8e8e);
+            font-size: 14px;
+            font-style: normal;
+            font-weight: 700;
+          }
+
+          h2 {
+            color: var(--COLORS-Neutral-1000, #333);
+            font-size: 16px;
+            font-style: normal;
+            font-weight: 700;
+          }
+
+          h4 {
+            color: var(--COLORS-Tertiary-300, #6039cd);
+            font-size: 16px;
+            font-style: normal;
+            font-weight: 700;
+            text-decoration-line: underline;
+            text-decoration-style: solid;
+            text-decoration-skip-ink: none;
+            text-decoration-thickness: 9%;
+            text-underline-offset: auto;
+            text-underline-position: from-font;
+            border-bottom: 0px;
+          }
+
+          p {
+            color: var(--COLORS-Neutral-1000, #333);
+            text-align: center;
+            leading-trim: both;
+            text-edge: cap;
+            font-family: Manrope;
+            font-size: 13px;
+            font-style: normal;
+            font-weight: 600;
+            line-height: 18.902px;
+            /* 145.4% */
+            letter-spacing: -0.13px;
+            border-bottom: 0px;
+          }
+        }
+      }
+
+      .amount {
+        display: flex;
+        padding: 15px;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 12.682px;
+        align-self: stretch;
+        border-radius: 7.561px;
+        background: #fff;
+
+        span {
+          color: var(--COLORS-Neutral-600, #8e8e8e);
+          font-size: 14px;
+          font-style: normal;
+          font-weight: 700;
+        }
+
+        h1 {
+          margin-bottom: 0px;
+          color: #000;
+          font-size: 36px;
+          font-style: normal;
+          font-weight: 700;
+          line-height: 43.475px;
+          /* 120.763% */
+          letter-spacing: -1.08px;
+        }
+      }
+    }
+  }
 }
 
-
 .actions {
+  display: flex;
+  padding: 11.341px;
+  align-items: center;
+  flex-direction: column;
+  gap: 15px;
+  border: none;
+  justify-content: center;
+  outline: none;
+  align-self: stretch;
+
+  .button {
     display: flex;
     padding: 11.341px;
     align-items: center;
-    flex-direction: column;
     gap: 15px;
     border: none;
-    justify-content: center;
     outline: none;
     align-self: stretch;
+    border-radius: 8.993px;
+    background: #5926f0;
+    box-shadow: 0 3.443px 28.402px 0 rgba(0, 0, 0, 0.09);
+    cursor: pointer;
 
-    .button {
-        display: flex;
-        padding: 11.341px;
-        align-items: center;
-        gap: 15px;
-        border: none;
-        outline: none;
-        align-self: stretch;
-        border-radius: 8.993px;
-        background: #5926F0;
-        box-shadow: 0 3.443px 28.402px 0 rgba(0, 0, 0, 0.09);
-        cursor: pointer;
+    div {
+      width: 30.243px;
+      height: 30.243px;
+      flex-shrink: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 3.78px;
+      background:
+        radial-gradient(
+          124.63% 259.09% at 48.48% 152.15%,
+          rgba(230, 64, 103, 0.1) 0%,
+          rgba(89, 38, 240, 0.1) 55.65%,
+          rgba(72, 40, 160, 0.1) 100%
+        ),
+        #fff;
 
-        div {
-            width: 30.243px;
-            height: 30.243px;
-            flex-shrink: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border-radius: 3.78px;
-            background: radial-gradient(124.63% 259.09% at 48.48% 152.15%, rgba(230, 64, 103, 0.10) 0%, rgba(89, 38, 240, 0.10) 55.65%, rgba(72, 40, 160, 0.10) 100%), #FFF;
-
-            img {
-                width: 22px;
-            }
-        }
-
-        span {
-            color: #000;
-            font-size: 15px;
-            font-style: normal;
-            font-weight: 600;
-        }
+      img {
+        width: 22px;
+      }
     }
+
+    span {
+      color: #000;
+      font-size: 15px;
+      font-style: normal;
+      font-weight: 600;
+    }
+  }
 }
 
 .actions.plans {
-    display: grid;
-    margin: 10px 0 30px 0;
-    grid-template-columns: 1fr 1fr 1fr;
+  display: grid;
+  margin: 10px 0 30px 0;
+  grid-template-columns: 1fr 1fr 1fr;
 }
 
 .overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(0deg, rgba(0, 0, 0, 0.80) 0%, rgba(0, 0, 0, 0.80) 100%);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.8) 100%);
 }
 
-
 .paidInvoice {
-    width: 100%;
-    padding: 24px;
-    text-align: center;
-    background-color: #10a510;
-    margin: 2rem 0;
+  width: 100%;
+  padding: 24px;
+  text-align: center;
+  background-color: #10a510;
+  margin: 2rem 0;
 
-    p {
-        font-size: 16px;
-        color: white;
-        margin-bottom: 0px;
-        font-weight: 600;
-    }
+  p {
+    font-size: 16px;
+    color: white;
+    margin-bottom: 0px;
+    font-weight: 600;
+  }
 }
 
 @media screen and (max-width: 1200px) {
-    .container {
-
-        .sub_container {
-            width: 90%;
-        }
+  .container {
+    .sub_container {
+      width: 90%;
     }
+  }
 }
 
 @media screen and (max-width: 1000px) {
-    .container {
+  .container {
+    .sub_container {
+      width: 100%;
+      flex-direction: column;
+      height: 100%;
 
-        .sub_container {
-            width: 100%;
-            flex-direction: column;
-            height: 100%;
+      .right {
+        background: #ececec;
+        margin: 20px auto;
+        border-radius: 12px;
+        width: 90%;
+      }
 
-            .right {
-                background: #ececec;
-                margin: 20px auto;
-                border-radius: 12px;
-                width: 90%;
-            }
+      .left {
+        .buttons {
+          padding: 20px;
 
-            .left {
-                .buttons {
-                    padding: 20px;
-
-                    >div:nth-child(2) {
-                        display: none;
-                    }
-                }
-            }
+          > div:nth-child(2) {
+            display: none;
+          }
         }
+      }
     }
+  }
 }
 
 .directCard {
-    width: 100%;
-    min-height: 698px;
-    display: grid;
-    grid-template-columns: 300px minmax(0, 1fr);
-    border-radius: 16px;
-    overflow: hidden;
-    background: #fff;
-    box-shadow: 0 18px 60px rgba(15, 23, 42, 0.18);
+  width: 100%;
+  min-height: 698px;
+  display: grid;
+  grid-template-columns: 300px minmax(0, 1fr);
+  border-radius: 16px;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 18px 60px rgba(15, 23, 42, 0.18);
 }
 
 .directCardLeft {
-    min-height: 698px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    padding: 28px 24px;
-    border-right: 1px solid #e9e9ee;
-    background: #fbfbfd;
+  min-height: 698px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 28px 24px;
+  border-right: 1px solid #e9e9ee;
+  background: #fbfbfd;
 }
 
 .directCardInvoiceBlock {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
 .directCardLogoRow {
-    min-height: 51px;
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    border-bottom: 1px solid #eeeeef;
+  min-height: 51px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  border-bottom: 1px solid #eeeeef;
 
-    img {
-        width: 109px;
-        height: auto;
-        object-fit: contain;
-    }
+  img {
+    width: 109px;
+    height: auto;
+    object-fit: contain;
+  }
 
-    span {
-        height: 20px;
-        display: inline-flex;
-        align-items: center;
-        padding: 0 9px;
-        border-radius: 999px;
-        color: #5926f0;
-        background: rgba(89, 38, 240, 0.1);
-        font-size: 11px;
-        font-weight: 800;
-        text-transform: uppercase;
-    }
+  span {
+    height: 20px;
+    display: inline-flex;
+    align-items: center;
+    padding: 0 9px;
+    border-radius: 999px;
+    color: #5926f0;
+    background: rgba(89, 38, 240, 0.1);
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+  }
 }
 
 .directCardDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+
+  > div {
     display: flex;
     flex-direction: column;
-    gap: 14px;
+    gap: 3px;
+  }
 
-    >div {
-        display: flex;
-        flex-direction: column;
-        gap: 3px;
-    }
+  span {
+    color: #8e8e8e;
+    font-size: 13px;
+    font-weight: 700;
+  }
 
-    span {
-        color: #8e8e8e;
-        font-size: 13px;
-        font-weight: 700;
-    }
+  strong {
+    color: #333;
+    font-size: 15px;
+    font-weight: 800;
+    line-height: 1.4;
+    word-break: break-word;
+  }
 
-    strong {
-        color: #333;
-        font-size: 15px;
-        font-weight: 800;
-        line-height: 1.4;
-        word-break: break-word;
-    }
-
-    .invoiceId {
-        color: #6039cd;
-        text-decoration: underline;
-        text-underline-offset: 3px;
-    }
+  .invoiceId {
+    color: #6039cd;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
 }
 
 .directCardAmountBlock {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
 .feeBox {
-    padding: 17px;
-    border-radius: 8px;
-    border-bottom: 1px solid #ececf1;
-    background: #fff;
+  padding: 17px;
+  border-radius: 8px;
+  border-bottom: 1px solid #ececf1;
+  background: #fff;
 
-    >div {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 20px;
-        margin-bottom: 8px;
-    }
-
-    span {
-        color: #697386;
-        font-size: 12px;
-        font-weight: 700;
-    }
-
-    strong {
-        color: #111827;
-        font-size: 12px;
-        font-weight: 800;
-        white-space: nowrap;
-    }
-
-    .totalRow {
-        margin: 12px 0 0;
-        padding: 9px 12px;
-        border: 1px solid #dfd8ff;
-        border-radius: 7px;
-        background: #fbfaff;
-
-        span,
-        strong {
-            color: #161616;
-            font-size: 13px;
-        }
-    }
-}
-
-.amountDue {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-
-    span {
-        color: #8e8e8e;
-        font-size: 13px;
-        font-weight: 800;
-    }
-
-    strong {
-        display: flex;
-        align-items: flex-start;
-        gap: 8px;
-        color: #111827;
-        font-size: 30px;
-        font-weight: 900;
-        line-height: 1;
-
-        small {
-            padding-top: 12px;
-            color: #111827;
-            font-size: 14px;
-            font-weight: 900;
-        }
-    }
-}
-
-.directCardRight {
-    min-height: 698px;
-    display: flex;
-    flex-direction: column;
-    background: #fff;
-}
-
-.directCardHeader {
-    height: 99px;
+  > div {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 24px;
-    border-bottom: 1px solid #f0f0f1;
+    gap: 20px;
+    margin-bottom: 8px;
+  }
+
+  span {
+    color: #697386;
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  strong {
+    color: #111827;
+    font-size: 12px;
+    font-weight: 800;
+    white-space: nowrap;
+  }
+
+  .totalRow {
+    margin: 12px 0 0;
+    padding: 9px 12px;
+    border: 1px solid #dfd8ff;
+    border-radius: 7px;
+    background: #fbfaff;
+
+    span,
+    strong {
+      color: #161616;
+      font-size: 13px;
+    }
+  }
+}
+
+.amountDue {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  span {
+    color: #8e8e8e;
+    font-size: 13px;
+    font-weight: 800;
+  }
+
+  strong {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    color: #111827;
+    font-size: 30px;
+    font-weight: 900;
+    line-height: 1;
+
+    small {
+      padding-top: 12px;
+      color: #111827;
+      font-size: 14px;
+      font-weight: 900;
+    }
+  }
+}
+
+.directCardRight {
+  min-height: 698px;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+}
+
+.directCardHeader {
+  height: 99px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24px;
+  border-bottom: 1px solid #f0f0f1;
 }
 
 .merchant {
-    display: flex;
-    align-items: center;
-    gap: 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
 .avatar {
-    width: 48px;
-    height: 48px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    border-radius: 50%;
-    background: #efeafd;
-    color: #5926f0;
-    font-weight: 900;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 50%;
+  background: #efeafd;
+  color: #5926f0;
+  font-weight: 900;
 
-    img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
 }
 
 .merchantName {
-    display: flex;
-    align-items: center;
-    gap: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 
-    h3 {
-        max-width: 270px;
-        margin: 0;
-        color: #202020;
-        font-size: 19px;
-        font-weight: 900;
-        line-height: 1.35;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
+  h3 {
+    max-width: 270px;
+    margin: 0;
+    color: #202020;
+    font-size: 19px;
+    font-weight: 900;
+    line-height: 1.35;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 
-    svg {
-        color: #22c55e;
-        flex-shrink: 0;
-    }
+  svg {
+    color: #22c55e;
+    flex-shrink: 0;
+  }
 }
 
 .merchantMeta {
-    display: flex;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 1px;
+
+  span {
+    color: #6b7280;
+    font-size: 13px;
+    font-weight: 700;
+  }
+
+  img {
+    width: 16px;
+    height: 11px;
+    border-radius: 2px;
+    box-shadow: 0 0 3px rgba(0, 0, 0, 0.18);
+  }
+
+  .badge {
+    height: 20px;
+    display: inline-flex;
     align-items: center;
-    gap: 8px;
-    margin-top: 1px;
-
-    span {
-        color: #6b7280;
-        font-size: 13px;
-        font-weight: 700;
-    }
-
-    img {
-        width: 16px;
-        height: 11px;
-        border-radius: 2px;
-        box-shadow: 0 0 3px rgba(0, 0, 0, .18);
-    }
-
-    .badge {
-        height: 20px;
-        display: inline-flex;
-        align-items: center;
-        padding: 0 8px;
-        border-radius: 999px;
-        background: #f1eff8;
-        color: #5926f0;
-        font-size: 11px;
-        font-weight: 900;
-    }
+    padding: 0 8px;
+    border-radius: 999px;
+    background: #f1eff8;
+    color: #5926f0;
+    font-size: 11px;
+    font-weight: 900;
+  }
 }
 
 .directCardBody {
-    flex: 1;
-    padding: 24px;
+  flex: 1;
+  padding: 24px;
 }
 
 .directCardForm {
-    max-width: 470px;
+  max-width: 470px;
 }
 
 .formHeading {
-    margin-bottom: 24px;
+  margin-bottom: 24px;
 
-    h2 {
-        margin: 0;
-        color: #151515;
-        font-size: 22px;
-        font-weight: 900;
-        line-height: 1.25;
-    }
+  h2 {
+    margin: 0;
+    color: #151515;
+    font-size: 22px;
+    font-weight: 900;
+    line-height: 1.25;
+  }
 
-    p {
-        margin: 3px 0 0;
-        color: #7a7f8c;
-        font-size: 14px;
-        font-weight: 700;
-    }
+  p {
+    margin: 3px 0 0;
+    color: #7a7f8c;
+    font-size: 14px;
+    font-weight: 700;
+  }
 }
 
 .inlineLoader {
-    width: 100%;
-    min-height: 230px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  width: 100%;
+  min-height: 230px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .errorText {
-    margin-top: 12px;
-    color: #dc2626;
-    font-size: 13px;
-    font-weight: 800;
+  margin-top: 12px;
+  color: #dc2626;
+  font-size: 13px;
+  font-weight: 800;
 }
 
 .missingFields {
-    max-width: 470px;
-    padding: 20px;
-    border-radius: 10px;
-    border: 1px solid #fecaca;
-    background: #fff7f7;
+  max-width: 470px;
+  padding: 20px;
+  border-radius: 10px;
+  border: 1px solid #fecaca;
+  background: #fff7f7;
 
-    h3 {
-        margin: 0 0 8px;
-        color: #991b1b;
-        font-size: 17px;
-        font-weight: 900;
-    }
+  h3 {
+    margin: 0 0 8px;
+    color: #991b1b;
+    font-size: 17px;
+    font-weight: 900;
+  }
 
-    p {
-        margin: 0 0 12px;
-        color: #7f1d1d;
-        font-size: 13px;
-        font-weight: 700;
-    }
+  p {
+    margin: 0 0 12px;
+    color: #7f1d1d;
+    font-size: 13px;
+    font-weight: 700;
+  }
 
-    ul {
-        margin: 0;
-        padding-left: 18px;
-    }
+  ul {
+    margin: 0;
+    padding-left: 18px;
+  }
 
-    li {
-        color: #7f1d1d;
-        font-size: 13px;
-        font-weight: 800;
-    }
+  li {
+    color: #7f1d1d;
+    font-size: 13px;
+    font-weight: 800;
+  }
 }
 
 .directCardFooter {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 12px;
-    padding: 0 24px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 0 24px 24px;
 }
 
 .payButton,
 .secondaryButton {
-    min-height: 44px;
-    border: none;
-    outline: none;
-    border-radius: 8px;
-    font-size: 14px;
-    font-weight: 900;
-    cursor: pointer;
+  min-height: 44px;
+  border: none;
+  outline: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 900;
+  cursor: pointer;
 
-    &:disabled {
-        cursor: not-allowed;
-        opacity: .55;
-    }
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
+  }
 }
 
 .payButton {
-    width: 100%;
-    max-width: 470px;
-    color: #fff;
-    background: #5926f0;
-    box-shadow: 0 4px 22px rgba(89, 38, 240, .22);
+  width: 100%;
+  max-width: 470px;
+  color: #fff;
+  background: #5926f0;
+  box-shadow: 0 4px 22px rgba(89, 38, 240, 0.22);
 }
 
 .secondaryButton {
-    padding: 0 18px;
-    color: #111827;
-    background: #eeeeee;
+  padding: 0 18px;
+  color: #111827;
+  background: #eeeeee;
 }
 
 .directCardPaid {
-    width: 100%;
-    min-height: 360px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    background: #fff;
+  width: 100%;
+  min-height: 360px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background: #fff;
 
-    h3 {
-        margin: 0;
-        color: #16a34a;
-        font-size: 22px;
-        font-weight: 900;
-    }
+  h3 {
+    margin: 0;
+    color: #16a34a;
+    font-size: 22px;
+    font-weight: 900;
+  }
 }
 
 @media screen and (max-width: 860px) {
-    .directCard {
-        grid-template-columns: 1fr;
-    }
+  .directCard {
+    grid-template-columns: 1fr;
+  }
 
-    .directCardLeft,
-    .directCardRight {
-        min-height: auto;
-    }
+  .directCardLeft,
+  .directCardRight {
+    min-height: auto;
+  }
 
-    .directCardLeft {
-        gap: 28px;
-        border-right: none;
-        border-bottom: 1px solid #e9e9ee;
-    }
+  .directCardLeft {
+    gap: 28px;
+    border-right: none;
+    border-bottom: 1px solid #e9e9ee;
+  }
 
-    .directCardHeader {
-        height: auto;
-        align-items: flex-start;
-    }
+  .directCardHeader {
+    height: auto;
+    align-items: flex-start;
+  }
 
-    .merchantName h3 {
-        max-width: 190px;
-    }
+  .merchantName h3 {
+    max-width: 190px;
+  }
 
-    .directCardForm,
-    .missingFields {
-        max-width: none;
-    }
+  .directCardForm,
+  .missingFields {
+    max-width: none;
+  }
 
-    .directCardFooter {
-        flex-direction: column-reverse;
-        align-items: stretch;
-    }
+  .directCardFooter {
+    flex-direction: column-reverse;
+    align-items: stretch;
+  }
 
-    .payButton {
-        max-width: none;
-    }
+  .payButton {
+    max-width: none;
+  }
 }
 
 .directCardPage {
-    min-height: 100vh;
-    padding: 72px 20px 64px;
-    overflow: hidden;
-    background: #f5f6f8 !important;
+  min-height: 100vh;
+  padding: 72px 20px 64px;
+  overflow: hidden;
+  background: #f5f6f8 !important;
 }
 
 .directCardShell {
-    width: 820px !important;
-    max-width: calc(100vw - 40px);
-    padding: 0 !important;
-    border: none !important;
-    border-radius: 10px !important;
-    background: transparent !important;
-    box-shadow: none !important;
-    overflow: visible !important;
-    z-index: 2;
+  width: 820px !important;
+  max-width: calc(100vw - 40px);
+  padding: 0 !important;
+  border: none !important;
+  border-radius: 10px !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  overflow: visible !important;
+  z-index: 2;
 }
 
 .directCardWatermark {
-    position: fixed;
-    left: -22px;
-    right: -22px;
-    bottom: -72px;
-    z-index: 0;
-    color: rgba(89, 38, 240, .028);
-    font-size: clamp(120px, 24vw, 330px);
-    font-weight: 900;
-    line-height: .8;
-    letter-spacing: -18px;
-    pointer-events: none;
-    user-select: none;
-    white-space: nowrap;
+  position: fixed;
+  left: -22px;
+  right: -22px;
+  bottom: -72px;
+  z-index: 0;
+  color: rgba(89, 38, 240, 0.028);
+  font-size: clamp(120px, 24vw, 330px);
+  font-weight: 900;
+  line-height: 0.8;
+  letter-spacing: -18px;
+  pointer-events: none;
+  user-select: none;
+  white-space: nowrap;
 }
 
 .directCard {
-    min-height: 608px;
-    grid-template-columns: 281px 1fr;
-    gap: 13px;
-    border-radius: 0;
-    overflow: visible;
-    background: transparent;
-    box-shadow: none;
+  min-height: 608px;
+  grid-template-columns: 281px 1fr;
+  gap: 13px;
+  border-radius: 0;
+  overflow: visible;
+  background: transparent;
+  box-shadow: none;
 }
 
 .directCardLeft {
-    min-height: 608px;
-    padding: 28px 24px;
-    border-radius: var(--lg, 14px);
-    border: 1px solid #E5E7EB;
-    background: linear-gradient(180deg, #F2EEFF 0%, rgba(242, 238, 255, 0.00) 100%);
+  min-height: 608px;
+  padding: 28px 24px;
+  border-radius: var(--lg, 14px);
+  border: 1px solid #e5e7eb;
+  background: linear-gradient(180deg, #f2eeff 0%, rgba(242, 238, 255, 0) 100%);
 }
 
 .directCardLogoRow {
-    min-height: 49px;
-    padding-bottom: 18px;
-    border-bottom: 1px solid #e1dced;
+  min-height: 49px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid #e1dced;
 
-    img {
-        width: 101px;
-    }
+  img {
+    width: 101px;
+  }
 
-    span {
-        height: auto;
-        padding: 0;
-        border-radius: 0;
-        background: transparent;
-        color: #111827;
-        font-size: 8px;
-        font-weight: 800;
-    }
+  span {
+    height: auto;
+    padding: 0;
+    border-radius: 0;
+    background: transparent;
+    color: #111827;
+    font-size: 8px;
+    font-weight: 800;
+  }
 }
 
 .directCardDetails {
-    gap: 18px;
-    margin-top: 2px;
+  gap: 18px;
+  margin-top: 2px;
 
-    span {
-        color: #6E7687;
-        font-size: 14px;
-        font-style: normal;
-        font-weight: 500;
-        line-height: 150%;
-        letter-spacing: -0.42px;
-    }
+  span {
+    color: #6e7687;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 150%;
+    letter-spacing: -0.42px;
+  }
 
-    strong {
-        color: #111827;
-        font-size: 12px;
-        font-weight: 800;
-        line-height: 1.28;
-    }
+  strong {
+    color: #111827;
+    font-size: 12px;
+    font-weight: 800;
+    line-height: 1.28;
+  }
 
-    .invoiceId {
-        color: #5926F0;
+  .invoiceId {
+    color: #5926f0;
 
-        font-size: 14px;
-        font-style: normal;
-        font-weight: 600;
-        line-height: 150%;
-        letter-spacing: -0.42px;
-        text-decoration: none;
-    }
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 150%;
+    letter-spacing: -0.42px;
+    text-decoration: none;
+  }
 }
 
 .directCardAmountBlock {
-    gap: 25px;
+  gap: 25px;
 }
 
 .feeBox {
-    padding: 16px;
-    border-radius: var(--md, 10px);
-    border: 1px solid #E8E8F0;
-    background: #F4F5F8;
+  padding: 16px;
+  border-radius: var(--md, 10px);
+  border: 1px solid #e8e8f0;
+  background: #f4f5f8;
 
-    >div {
-        margin-bottom: 10px;
-    }
+  > div {
+    margin-bottom: 10px;
+  }
+
+  span,
+  strong {
+    font-size: 10px;
+  }
+
+  span {
+    color: #6b6b80;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+  }
+
+  strong {
+    color: #111827;
+    font-weight: 800;
+  }
+
+  .totalRow {
+    display: flex;
+    padding: 8px 11px;
+    justify-content: space-between;
+    align-items: center;
+    align-self: stretch;
+    border-radius: 8px;
+    border: 1px solid #d4c5fc;
+    background: #f0ebff;
 
     span,
     strong {
-        font-size: 10px;
+      font-size: 11px;
+      color: #5926f0;
+      font-style: normal;
+      font-weight: 900;
+      line-height: normal;
     }
-
-    span {
-        color: #6B6B80;
-        font-size: 12px;
-        font-style: normal;
-        font-weight: 400;
-        line-height: normal;
-    }
-
-    strong {
-        color: #111827;
-        font-weight: 800;
-    }
-
-    .totalRow {
-        display: flex;
-        padding: 8px 11px;
-        justify-content: space-between;
-        align-items: center;
-        align-self: stretch;
-        border-radius: 8px;
-        border: 1px solid #D4C5FC;
-        background: #F0EBFF;
-
-        span,
-        strong {
-            font-size: 11px;
-            color: #5926F0;
-            font-style: normal;
-            font-weight: 900;
-            line-height: normal;
-        }
-    }
+  }
 }
 
 .amountDue {
-    gap: 8px;
+  gap: 8px;
 
-    span {
-        color: #8a8fa0;
-        font-size: 10px;
-        font-weight: 700;
-        text-transform: uppercase;
+  span {
+    color: #8a8fa0;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+
+  strong {
+    color: #1f2937;
+    font-size: 30px;
+    letter-spacing: -1px;
+
+    small {
+      padding-top: 13px;
+      color: #667085;
+      font-size: 17px;
     }
-
-    strong {
-        color: #1f2937;
-        font-size: 30px;
-        letter-spacing: -1px;
-
-        small {
-            padding-top: 13px;
-            color: #667085;
-            font-size: 17px;
-        }
-    }
+  }
 }
 
 .directCardRight {
-    min-height: 608px;
-    gap: 13px;
-    background: transparent;
+  min-height: 608px;
+  gap: 13px;
+  background: transparent;
 }
 
 .payerPanel,
 .cardPanel {
-    overflow: hidden;
-    border: 1px solid #dfe3ea;
-    border-radius: 10px;
-    background: #fff;
-    box-shadow: 0 1px 2px rgba(16, 24, 40, .03);
+  overflow: hidden;
+  border: 1px solid #dfe3ea;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 1px 2px rgba(16, 24, 40, 0.03);
 }
 
 .directCardHeader {
-    display: flex;
-    height: 99px;
-    padding: var(--md, 16px) var(--lg, 24px);
-    justify-content: space-between;
-    align-items: center;
-    align-self: stretch;
-    background: var(--bg-elevated, #F8F9FC);
+  display: flex;
+  height: 99px;
+  padding: var(--md, 16px) var(--lg, 24px);
+  justify-content: space-between;
+  align-items: center;
+  align-self: stretch;
+  background: var(--bg-elevated, #f8f9fc);
 }
 
 .merchant {
-    gap: 13px;
+  gap: 13px;
 }
 
 .avatar {
-    width: var(--xxl, 48px);
-    height: 48px;
-    aspect-ratio: 1/1;
-    border-radius: var(--md, 10px);
-    background: linear-gradient(135deg, #ed1c24, #d30018);
-    color: #fff;
+  width: var(--xxl, 48px);
+  height: 48px;
+  aspect-ratio: 1/1;
+  border-radius: var(--md, 10px);
+  background: linear-gradient(135deg, #ed1c24, #d30018);
+  color: #fff;
 }
 
 .merchantName {
-    h3 {
-        max-width: 230px;
-        color: #000;
+  h3 {
+    max-width: 230px;
+    color: #000;
 
-        font-size: 18px;
-        font-style: normal;
-        font-weight: 600;
-        line-height: 150%;
-    }
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 150%;
+  }
 
-    svg {
-        width: 15px;
-        height: 15px;
-        color: #7c4dff;
-        fill: #7c4dff;
-    }
+  svg {
+    width: 15px;
+    height: 15px;
+    color: #7c4dff;
+    fill: #7c4dff;
+  }
 }
 
 .merchantMeta {
-    gap: 7px;
+  gap: 7px;
 
-    span {
-        color: #6E7687;
-        font-size: 12px;
-        font-style: normal;
-        font-weight: 500;
-        line-height: normal;
-        letter-spacing: -0.36px;
-    }
+  span {
+    color: #6e7687;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    letter-spacing: -0.36px;
+  }
 
-    img {
-        width: 13px;
-        height: 9px;
-        box-shadow: none;
-    }
+  img {
+    width: 13px;
+    height: 9px;
+    box-shadow: none;
+  }
 
-    .badge {
-        color: #976600;
-        font-size: 11px;
-        font-style: normal;
-        font-weight: var(--font-weight-medium, 500);
-        line-height: var(--line-height-body-sm, 20px);
-        letter-spacing: -0.33px;
-        display: flex;
-        height: 20px;
-        padding: 8px;
-        align-items: center;
-        gap: 6px;
-        border-radius: 100px;
-        background: var(--Alert-Warning-0, #FFF7EA);
-    }
+  .badge {
+    color: #976600;
+    font-size: 11px;
+    font-style: normal;
+    font-weight: var(--font-weight-medium, 500);
+    line-height: var(--line-height-body-sm, 20px);
+    letter-spacing: -0.33px;
+    display: flex;
+    height: 20px;
+    padding: 8px;
+    align-items: center;
+    gap: 6px;
+    border-radius: 100px;
+    background: var(--Alert-Warning-0, #fff7ea);
+  }
 }
 
 .merchantActions {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 88px;
+
+  button {
     display: flex;
-    flex-direction: column;
-    gap: 6px;
-    width: 88px;
+    width: 96px;
+    height: var(--lg, 24px);
+    padding: var(--sm, 8px) var(--md, 16px);
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    border-radius: var(--sm, 6px);
+    background: var(--Primary-600---Base, #4a32e3);
+    color: var(--Greyscale-0, #fff);
+    text-align: center;
+    border: none;
+    font-size: 11px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    letter-spacing: -0.33px;
+    cursor: pointer;
 
-    button {
-        display: flex;
-        width: 96px;
-        height: var(--lg, 24px);
-        padding: var(--sm, 8px) var(--md, 16px);
-        justify-content: center;
-        align-items: center;
-        gap: 8px;
-        border-radius: var(--sm, 6px);
-        background: var(--Primary-600---Base, #4A32E3);
-        color: var(--Greyscale-0, #FFF);
-        text-align: center;
-        border: none;
-        font-size: 11px;
-        font-style: normal;
-        font-weight: 500;
-        line-height: normal;
-        letter-spacing: -0.33px;
-        cursor: pointer;
-
-        &:nth-child(2) {
-            background: #f4f5f7;
-            color: #1f2937;
-        }
+    &:nth-child(2) {
+      background: #f4f5f7;
+      color: #1f2937;
     }
+  }
 }
 
 .payerTitle,
 .cardPanelTitle {
-    padding: 14px 20px;
-    border-top: 1px solid #eceff4;
-    border-bottom: 1px solid #eceff4;
-    color: #111827;
-    font-size: 12px;
-    font-weight: 900;
+  padding: 14px 20px;
+  border-top: 1px solid #eceff4;
+  border-bottom: 1px solid #eceff4;
+  color: #111827;
+  font-size: 12px;
+  font-weight: 900;
 }
 
 .cardPanelTitle {
-    border-top: none;
+  border-top: none;
 }
 
 .payerIdentity {
-    display: grid;
-    grid-template-columns: 34px 1fr auto;
-    align-items: center;
-    gap: 12px;
-    padding: 18px 20px;
-    border-bottom: 1px solid #eceff4;
+  display: grid;
+  grid-template-columns: 34px 1fr auto;
+  align-items: center;
+  gap: 12px;
+  padding: 18px 20px;
+  border-bottom: 1px solid #eceff4;
 
-    strong {
-        display: block;
-        color: #111827;
-        font-size: 12px;
-        font-weight: 900;
-        line-height: 1.2;
-    }
+  strong {
+    display: block;
+    color: #111827;
+    font-size: 12px;
+    font-weight: 900;
+    line-height: 1.2;
+  }
 
-    span {
-        color: #7a8190;
-        font-size: 10px;
-        font-weight: 600;
-    }
+  span {
+    color: #7a8190;
+    font-size: 10px;
+    font-weight: 600;
+  }
 }
 
 .payerAvatar {
-    width: 34px;
-    height: 34px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    background: #5926f0;
-    color: #fff;
-    font-size: 11px;
-    font-weight: 900;
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #5926f0;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 900;
 }
 
 .verifiedBadge {
-    height: 18px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0 9px;
-    border-radius: 999px;
-    background: #ddf8e7;
-    color: #087443 !important;
-    font-size: 9px !important;
-    font-weight: 900 !important;
+  height: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 9px;
+  border-radius: 999px;
+  background: #ddf8e7;
+  color: #087443 !important;
+  font-size: 9px !important;
+  font-weight: 900 !important;
 
-    &::before {
-        content: "";
-        width: 5px;
-        height: 5px;
-        margin-right: 5px;
-        border-radius: 50%;
-        background: #12b76a;
-    }
+  &::before {
+    content: "";
+    width: 5px;
+    height: 5px;
+    margin-right: 5px;
+    border-radius: 50%;
+    background: #12b76a;
+  }
 }
 
 .payerGrid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
 
-    >div {
-        min-height: 63px;
-        padding: 15px 20px;
-        border-right: 1px solid #eceff4;
-        border-bottom: 1px solid #eceff4;
+  > div {
+    min-height: 63px;
+    padding: 15px 20px;
+    border-right: 1px solid #eceff4;
+    border-bottom: 1px solid #eceff4;
 
-        &:nth-child(2n) {
-            border-right: none;
-        }
-
-        &:nth-last-child(-n + 2) {
-            border-bottom: none;
-        }
+    &:nth-child(2n) {
+      border-right: none;
     }
 
-    span {
-        display: block;
-        margin-bottom: 4px;
-        color: var(--text-secondary, #6E7687);
-        font-family: Inter;
-        font-size: 12px;
-        font-style: normal;
-        font-weight: 500;
-        line-height: normal;
-        letter-spacing: -0.36px;
+    &:nth-last-child(-n + 2) {
+      border-bottom: none;
     }
+  }
 
-    strong {
-        color: #3D3D4E;
-        font-family: Inter;
-        font-size: 14px;
-        font-style: normal;
-        font-weight: 600;
-        line-height: 150%;
-        letter-spacing: -0.42px;
-    }
+  span {
+    display: block;
+    margin-bottom: 4px;
+    color: var(--text-secondary, #6e7687);
+    font-family: Inter;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    letter-spacing: -0.36px;
+  }
+
+  strong {
+    color: #3d3d4e;
+    font-family: Inter;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 150%;
+    letter-spacing: -0.42px;
+  }
 }
 
 .cardPanel {
-    min-height: 343px;
+  min-height: 343px;
 }
 
 .directCardBody {
-    padding: 18px 20px 0;
+  padding: 18px 20px 0;
 }
 
 .directCardForm {
-    max-width: none;
+  max-width: none;
 }
 
 .directCardForm :global(label) {
-    color: #1f2937 !important;
-    font-size: 10px !important;
-    font-weight: 800 !important;
-    margin-bottom: 8px !important;
+  color: #1f2937 !important;
+  font-size: 10px !important;
+  font-weight: 800 !important;
+  margin-bottom: 8px !important;
 }
 
 .directCardForm :global(input),
 .directCardForm [contenteditable="true"] {
-    min-height: 40px !important;
-    border-radius: 7px !important;
-    border: 1px solid #e4e7ec !important;
-    background: #fff !important;
-    color: #111827 !important;
-    font-size: 12px !important;
+  min-height: 40px !important;
+  border-radius: 7px !important;
+  border: 1px solid #e4e7ec !important;
+  background: #fff !important;
+  color: #111827 !important;
+  font-size: 12px !important;
 }
 
 .directCardForm :global(p) {
-    font-size: 10px !important;
+  font-size: 10px !important;
 }
 
 .directCardFooter {
-    padding: 12px 20px 20px;
+  padding: 12px 20px 20px;
 }
 
 .payButton {
-    max-width: none;
-    min-height: 42px;
-    border-radius: 7px;
-    background: linear-gradient(90deg, #5926f0, #6d2df6);
-    font-size: 12px;
+  max-width: none;
+  min-height: 42px;
+  border-radius: 7px;
+  background: linear-gradient(90deg, #5926f0, #6d2df6);
+  font-size: 12px;
 }
 
 .secondaryButton {
-    min-width: 86px;
-    min-height: 42px;
-    border-radius: 7px;
-    font-size: 12px;
+  min-width: 86px;
+  min-height: 42px;
+  border-radius: 7px;
+  font-size: 12px;
 }
 
 @media screen and (max-width: 900px) {
-    .directCardPage {
-        padding: 24px 12px;
-    }
+  .directCardPage {
+    padding: 24px 12px;
+  }
 
-    .directCardShell {
-        max-width: calc(100vw - 24px);
-    }
+  .directCardShell {
+    max-width: calc(100vw - 24px);
+  }
 
-    .directCard {
-        grid-template-columns: 1fr;
-    }
+  .directCard {
+    grid-template-columns: 1fr;
+  }
 
-    .directCardLeft {
-        min-height: auto;
-    }
+  .directCardLeft {
+    min-height: auto;
+  }
 
-    .directCardRight {
-        min-height: auto;
-    }
+  .directCardRight {
+    min-height: auto;
+  }
 }
 
 @media (max-width: 700px) {
-    .directCard {
-        flex-direction: column;
-        gap: 0px;
-    }
+  .directCard {
+    flex-direction: column;
+    gap: 0px;
+  }
 
-    .directCardLeft {
-        border-top-left-radius: 10px !important;
-        border-top-right-radius: 10px !important;
+  .directCardLeft {
+    border-top-left-radius: 10px !important;
+    border-top-right-radius: 10px !important;
+  }
 
-    }
+  .directCardLeft,
+  .directCardRight {
+    width: 100%;
+    border-radius: 0px;
+  }
 
-    .directCardLeft,
-    .directCardRight {
-        width: 100%;
-        border-radius: 0px;
+  .directCardRight {
+    gap: 0px;
+  }
 
-    }
+  .cardPanel {
+    border-bottom-left-radius: 10px !important;
+    border-bottom-right-radius: 10px !important;
+  }
 
-    .directCardRight {
-        gap: 0px;
-    }
+  .payerPanel,
+  .cardPanel {
+    width: 100%;
+    border-radius: 0px;
+  }
 
-    .cardPanel {
-        border-bottom-left-radius: 10px !important;
-        border-bottom-right-radius: 10px !important;
-    }
+  .directCardHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+    height: auto;
+  }
 
-    .payerPanel,
-    .cardPanel {
-        width: 100%;
-        border-radius: 0px;
-    }
+  .merchantActions {
+    width: 100%;
+    flex-direction: column;
+  }
 
-    .directCardHeader {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 1rem;
-        height: auto;
-    }
+  .merchantActions button {
+    width: 100%;
+  }
 
-    .merchantActions {
-        width: 100%;
-        flex-direction: column;
-    }
+  .payerGrid {
+    grid-template-columns: 1fr;
+  }
 
-    .merchantActions button {
-        width: 100%;
-    }
+  .directCardFooter {
+    flex-direction: column;
+  }
 
-    .payerGrid {
-        grid-template-columns: 1fr;
-    }
-
-    .directCardFooter {
-        flex-direction: column;
-    }
-
-    .directCardFooter button {
-        width: 100%;
-    }
+  .directCardFooter button {
+    width: 100%;
+  }
 }

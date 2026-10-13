@@ -1,154 +1,151 @@
 .container {
-    padding: 24px;
-    min-height: 100vh;
-    font-family: 'Inter', sans-serif;
+  padding: 24px;
+  min-height: 100vh;
+  font-family: "Inter", sans-serif;
 }
 
 .top {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    position: relative;
-    margin: 0px;
-    padding: 0px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  position: relative;
+  margin: 0px;
+  padding: 0px;
 }
 
 .mobileTop {
-    display: none;
+  display: none;
 }
 
 .headerTitle {
-
-    margin: 0px;
-    padding: 0px;
+  margin: 0px;
+  padding: 0px;
 }
 
 .headerTitle h1 {
-    color: #5626e6;
-    font-size: 40px;
-    font-style: normal;
-    font-weight: 700;
-    margin: 0px;
-    padding: 0px;
+  color: #5626e6;
+  font-size: 40px;
+  font-style: normal;
+  font-weight: 700;
+  margin: 0px;
+  padding: 0px;
 }
 
 .headerTitle p {
-    color: #868686;
-    font-size: 14px;
-    font-weight: 400;
-    margin: 0px;
-    padding: 0px;
+  color: #868686;
+  font-size: 14px;
+  font-weight: 400;
+  margin: 0px;
+  padding: 0px;
 }
 
 .topright {
-    margin-top: 100px;
+  margin-top: 100px;
 }
 
 .main {
-    height: auto;
-    padding: var(--md, 16px);
-    align-items: flex-start;
-    gap: var(--lg, 24px);
-    align-self: stretch;
-    border-radius: var(--md, 10px);
-    background: #FFF;
+  height: auto;
+  padding: var(--md, 16px);
+  align-items: flex-start;
+  gap: var(--lg, 24px);
+  align-self: stretch;
+  border-radius: var(--md, 10px);
+  background: #fff;
 }
 
 .topPanel {
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-    background: var(--card-bg);
-    border: 1px solid var(--border-color);
-    overflow: hidden;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  overflow: hidden;
 }
 
-
-
 .section {
-    display: flex;
-    padding-top: var(--md, 16px);
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
-    align-self: stretch;
+  display: flex;
+  padding-top: var(--md, 16px);
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  align-self: stretch;
 }
 
 .tabContent {
-    display: flex;
-    flex-direction: column;
-    gap: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
 }
 
 @media (max-width: 900px) {
-    .container {
-        padding: 16px 16px;
-    }
+  .container {
+    padding: 16px 16px;
+  }
 
-    .topPanel {
-        flex-direction: column;
-        gap: 16px;
-    }
+  .topPanel {
+    flex-direction: column;
+    gap: 16px;
+  }
 
-    .panelDivider {
-        width: 100%;
-        height: 1px;
-        margin: 0;
-    }
+  .panelDivider {
+    width: 100%;
+    height: 1px;
+    margin: 0;
+  }
 }
 
 @media (max-width: 600px) {
-    .container {
-        padding: 0px;
-        gap: 14px;
+  .container {
+    padding: 0px;
+    gap: 14px;
+  }
+
+  .mobileTop {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 15px 20px 20px;
+
+    .headerTitle {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+
+      svg {
+        color: #17151f;
+      }
+
+      h1 {
+        font-size: 16px;
+        color: #141220;
+        font-weight: 700;
+      }
     }
 
-    .mobileTop {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 20px 15px 20px 20px;
-
-        .headerTitle {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-
-            svg {
-                color: #17151F;
-            }
-
-            h1 {
-                font-size: 16px;
-                color: #141220;
-                font-weight: 700;
-            }
-        }
-
-        .saveButton {
-            padding: 5px 8px;
-            color: var(--Greyscale-0, #FFF);
-            background: var(--Primary-600---Base, #4A32E3);
-            font-family: Inter;
-            font-size: 13px;
-            font-weight: 600;
-            border: none;
-            border-radius: 100px;
-        }
-
-        .saveButton:disabled {
-            background-color: #F3F3F7;
-            color: #65627A;
-        }
-
-        .mobileTopRight {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+    .saveButton {
+      padding: 5px 8px;
+      color: var(--Greyscale-0, #fff);
+      background: var(--Primary-600---Base, #4a32e3);
+      font-family: Inter;
+      font-size: 13px;
+      font-weight: 600;
+      border: none;
+      border-radius: 100px;
     }
 
-    .top {
-        display: none;
+    .saveButton:disabled {
+      background-color: #f3f3f7;
+      color: #65627a;
     }
+
+    .mobileTopRight {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+  }
+
+  .top {
+    display: none;
+  }
 }

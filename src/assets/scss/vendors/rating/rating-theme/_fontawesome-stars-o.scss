@@ -1,12 +1,11 @@
 @import "variables";
-@import '../../../utils/variables.scss';
+@import "../../../utils/variables.scss";
 
 .br-theme-fontawesome-stars-o {
-
   .br-widget {
     height: 28px;
     white-space: nowrap;
-  
+
     a {
       font: normal normal normal 20px/1 FontAwesome;
       text-rendering: auto;
@@ -16,22 +15,22 @@
     }
 
     a:after {
-      content: '\f006';
+      content: "\f006";
       color: $star-default;
     }
 
     a.br-active:after {
-      content: '\f005';
+      content: "\f005";
       color: var(--theme-default);
     }
 
     a.br-selected:after {
-      content: '\f005';
+      content: "\f005";
       color: var(--theme-default);
     }
 
     a.br-fractional:after {
-      content: '\f123';
+      content: "\f123";
       color: var(--theme-default);
     }
 
@@ -54,31 +53,28 @@
       -webkit-transform: scaleX(-1);
       filter: FlipH;
       -ms-filter: "FlipH";
-    }    
+    }
   }
-
 }
 
 @media print {
   .br-theme-fontawesome-stars-o {
-
     .br-widget {
       a:after {
-        content: '\f006';
+        content: "\f006";
         color: black;
       }
 
       a.br-active:after,
       a.br-selected:after {
-        content: '\f005';
+        content: "\f005";
         color: black;
       }
 
       a.br-fractional:after {
-        content: '\f123';
+        content: "\f123";
         color: black;
       }
     }
-
   }
 }

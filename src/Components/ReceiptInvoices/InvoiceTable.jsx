@@ -24,7 +24,6 @@ const InvoiceTable = ({ filteredInvoices, setEditModal }) => {
   const width = useWindowWidth();
   const [menuOpenFor, setMenuOpenFor] = useState(null);
 
-
   return (
     <div className={styles.tableWrapper}>
       <div className={styles.table}>
@@ -37,16 +36,10 @@ const InvoiceTable = ({ filteredInvoices, setEditModal }) => {
               {t("S.No")}
             </div>
           )}
-          <div
-            style={{ flex: width <= 700 ? 0.25 : 0.18 }}
-            className={styles.th}
-          >
+          <div style={{ flex: width <= 700 ? 0.25 : 0.18 }} className={styles.th}>
             {t("Date")}
           </div>
-          <div
-            style={{ flex: width <= 700 ? 0.40 : 0.24 }}
-            className={styles.th}
-          >
+          <div style={{ flex: width <= 700 ? 0.4 : 0.24 }} className={styles.th}>
             {t("Title")}
           </div>
           {width > 700 && (
@@ -56,7 +49,7 @@ const InvoiceTable = ({ filteredInvoices, setEditModal }) => {
           )}
 
           <div
-            style={{ flex: width <= 700 ? 0.20 : 0.12 }}
+            style={{ flex: width <= 700 ? 0.2 : 0.12 }}
             className={`${styles.th} ${styles.amount}`}
           >
             {t("Amount")}
@@ -81,7 +74,7 @@ const InvoiceTable = ({ filteredInvoices, setEditModal }) => {
 
         {filteredInvoices.map((inv, idx) => {
           const sn = idx + 1;
-          inv.status = inv.status === "accepted" ? "Completed" : service_name_formatter(inv.status)
+          inv.status = inv.status === "accepted" ? "Completed" : service_name_formatter(inv.status);
           const badgeClass =
             inv.status === "Completed"
               ? styles.badgeAccepted

@@ -1,257 +1,264 @@
 .body {
-    padding: 24px;
-    display: flex;
-    background-color: #fafafa;
+  padding: 24px;
+  display: flex;
+  background-color: #fafafa;
 }
 
 .left {
-    padding: 1rem;
-    flex: 1;
-    min-width: 210px;
+  padding: 1rem;
+  flex: 1;
+  min-width: 210px;
 }
 
 .left h5 {
-    color: #000;
-    leading-trim: both;
-    text-edge: cap;
-    font-family: Manrope;
-    font-size: 24px;
-    font-style: normal;
-    font-weight: 800;
-    line-height: 130%;
-    letter-spacing: -0.48px;
+  color: #000;
+  leading-trim: both;
+  text-edge: cap;
+  font-family: Manrope;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 800;
+  line-height: 130%;
+  letter-spacing: -0.48px;
 }
 
 .right {
-    border-radius: 8px;
-    background: #FFF;
-    padding: 1.2rem;
-    flex: 2;
-    min-width: 420px;
-    display: flex;
-    flex-direction: column;
-    gap: 1.3rem;
+  border-radius: 8px;
+  background: #fff;
+  padding: 1.2rem;
+  flex: 2;
+  min-width: 420px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.3rem;
 }
 
 .right label {
-    color: #545454;
-    leading-trim: both;
-    text-edge: cap;
-    font-family: Manrope;
-    font-size: 16px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: 150%;
-    /* 24px */
+  color: #545454;
+  leading-trim: both;
+  text-edge: cap;
+  font-family: Manrope;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 150%;
+  /* 24px */
 }
 
 .inputs {
-    display: flex;
-    gap: .65rem;
+  display: flex;
+  gap: 0.65rem;
 }
 
 .inputs input {
-    border: none;
-    outline: none;
-    border-radius: 8px;
-    border: 1.5px solid #5926F0;
-    background: #FFF;
-    box-shadow: 0px 4px 4.5px 0px rgba(0, 0, 0, 0.06), 0px 0px 4px 6px #FDFDFD inset;
-    height: 45px;
-    width: 45px;
-    text-align: center;
+  border: none;
+  outline: none;
+  border-radius: 8px;
+  border: 1.5px solid #5926f0;
+  background: #fff;
+  box-shadow:
+    0px 4px 4.5px 0px rgba(0, 0, 0, 0.06),
+    0px 0px 4px 6px #fdfdfd inset;
+  height: 45px;
+  width: 45px;
+  text-align: center;
 }
 
 .resend_and_switch {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
 }
 
 .resend_and_switch span {
-    color: #BFBFBF;
-    text-align: center;
-    leading-trim: both;
-    text-edge: cap;
-    font-family: Manrope;
-    font-size: 12px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: 150%;
-    /* 18px */
-    letter-spacing: -0.24px;
+  color: #bfbfbf;
+  text-align: center;
+  leading-trim: both;
+  text-edge: cap;
+  font-family: Manrope;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 150%;
+  /* 18px */
+  letter-spacing: -0.24px;
 }
 
 .resend_and_switch button {
-    border: none;
-    outline: none;
-    border-radius: 4px;
-    background: rgba(0, 0, 0, 0.04);
-    padding: .4rem 1rem;
-    color: #5926F0;
-    leading-trim: both;
-    text-edge: cap;
-    font-family: Manrope;
-    font-size: 12px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: normal;
-    letter-spacing: -0.24px;
-    text-decoration-line: underline;
+  border: none;
+  outline: none;
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.04);
+  padding: 0.4rem 1rem;
+  color: #5926f0;
+  leading-trim: both;
+  text-edge: cap;
+  font-family: Manrope;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  letter-spacing: -0.24px;
+  text-decoration-line: underline;
 }
 
 .otpMethodsWrap {
-    display: flex;
-    flex-direction: column;
-    gap: .7rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
 }
 
-.otpMethodsWrap>.resend_and_switch {
-    display: block;
+.otpMethodsWrap > .resend_and_switch {
+  display: block;
 }
 
-.otpMethodsWrap>.resend_and_switch span {
-    color: #545454;
-    font-size: 13px;
+.otpMethodsWrap > .resend_and_switch span {
+  color: #545454;
+  font-size: 13px;
 }
 
 .otpMethods {
-    display: flex;
-    flex-wrap: wrap;
-    gap: .6rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
 }
 
 .otpMethod {
-    display: flex;
-    align-items: center;
-    gap: .5rem;
-    border: 1.5px solid rgba(0, 0, 0, 0.08);
-    outline: none;
-    background: #FFF;
-    border-radius: 8px;
-    padding: .55rem 1rem;
-    color: #545454;
-    font-family: Manrope;
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: border-color .15s ease, color .15s ease, background .15s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  border: 1.5px solid rgba(0, 0, 0, 0.08);
+  outline: none;
+  background: #fff;
+  border-radius: 8px;
+  padding: 0.55rem 1rem;
+  color: #545454;
+  font-family: Manrope;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    border-color 0.15s ease,
+    color 0.15s ease,
+    background 0.15s ease;
 }
 
 .otpMethod:hover {
-    border-color: #5926F0;
-    color: #5926F0;
+  border-color: #5926f0;
+  color: #5926f0;
 }
 
 .selectedOtpMethod,
 .selectedOtpMethod:hover {
-    border-color: #5926F0;
-    background: rgba(89, 38, 240, 0.06);
-    color: #5926F0;
+  border-color: #5926f0;
+  background: rgba(89, 38, 240, 0.06);
+  color: #5926f0;
 }
 
 .buttons {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 1rem;
-    margin-top: 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 2rem;
 }
 
 .buttons button {
-    border-radius: 8px;
-    background: linear-gradient(0deg, rgba(0, 0, 0, 0.50) 0%, rgba(0, 0, 0, 0.50) 100%), linear-gradient(259deg, #E64067 8.36%, #5926F0 54.71%, #4828A0 91.64%);
-    background-blend-mode: soft-light, normal;
-    border: none;
-    outline: none;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    padding: .8rem 1.5rem;
-    color: #FFF;
-    leading-trim: both;
-    text-edge: cap;
-    font-family: Manrope;
-    font-size: 18px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: normal;
-    letter-spacing: -0.36px;
+  border-radius: 8px;
+  background:
+    linear-gradient(0deg, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0.5) 100%),
+    linear-gradient(259deg, #e64067 8.36%, #5926f0 54.71%, #4828a0 91.64%);
+  background-blend-mode: soft-light, normal;
+  border: none;
+  outline: none;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.8rem 1.5rem;
+  color: #fff;
+  leading-trim: both;
+  text-edge: cap;
+  font-family: Manrope;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  letter-spacing: -0.36px;
 }
 
 .buttons button.cancel {
-    all: unset;
-    cursor: pointer;
-    color: #575757;
-    text-align: center;
-    leading-trim: both;
-    text-edge: cap;
-    font-family: Manrope;
-    font-size: 16px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: 150%;
-    cursor: pointer;
-    /* 24px */
+  all: unset;
+  cursor: pointer;
+  color: #575757;
+  text-align: center;
+  leading-trim: both;
+  text-edge: cap;
+  font-family: Manrope;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 150%;
+  cursor: pointer;
+  /* 24px */
 }
 
 .buttons button:disabled {
-    opacity: .7;
+  opacity: 0.7;
 }
 
 @media screen and (max-width: 1000px) {
-    .body {
-        flex-direction: column;
-        padding: 0px;
-    }
+  .body {
+    flex-direction: column;
+    padding: 0px;
+  }
 
-    .left {
-        text-align: center;
-        padding: 1rem;
-    }
+  .left {
+    text-align: center;
+    padding: 1rem;
+  }
 
-    .left h5 {
-        margin-top: .5rem;
-        margin-bottom: 0;
-        font-size: 1.2rem;
-    }
+  .left h5 {
+    margin-top: 0.5rem;
+    margin-bottom: 0;
+    font-size: 1.2rem;
+  }
 
-    .right {
-        align-items: center;
-        min-width: 100%;
-        padding: 1.2rem .7rem;
-    }
+  .right {
+    align-items: center;
+    min-width: 100%;
+    padding: 1.2rem 0.7rem;
+  }
 
-    .resend_and_switch {
-        flex-direction: column;
-        margin-top: 3.5rem;
-        width: 100%;
-    }
+  .resend_and_switch {
+    flex-direction: column;
+    margin-top: 3.5rem;
+    width: 100%;
+  }
 
-    .resend_and_switch button {
-        width: 100%;
-        padding: .8rem;
-        font-size: 1rem;
-    }
+  .resend_and_switch button {
+    width: 100%;
+    padding: 0.8rem;
+    font-size: 1rem;
+  }
 
-    .otpMethodsWrap>.resend_and_switch {
-        margin-top: 0;
-    }
+  .otpMethodsWrap > .resend_and_switch {
+    margin-top: 0;
+  }
 
-    .otpMethods {
-        width: 100%;
-    }
+  .otpMethods {
+    width: 100%;
+  }
 
-    .otpMethod {
-        flex: 1;
-        justify-content: center;
-    }
+  .otpMethod {
+    flex: 1;
+    justify-content: center;
+  }
 
-    .buttons {
-        width: 100%;
-    }
+  .buttons {
+    width: 100%;
+  }
 
-    .buttons button {
-        padding: .4rem 1.5rem;
-    }
+  .buttons button {
+    padding: 0.4rem 1.5rem;
+  }
 }

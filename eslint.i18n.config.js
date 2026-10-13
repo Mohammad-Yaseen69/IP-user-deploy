@@ -7,11 +7,7 @@ export default [
     files: ["**/*.{js,jsx,tsx}"],
 
     // ✅ ADD HERE
-    ignores: [
-      "src/Data/**",
-      "src/mock/**",
-      "src/demo/**"
-    ],
+    ignores: ["src/Data/**", "src/mock/**", "src/demo/**"],
 
     languageOptions: {
       ecmaVersion: "latest",
@@ -33,9 +29,16 @@ export default [
         {
           markupOnly: true,
           ignoreAttribute: [
-            "data-testid", "to", "src", "alt",
-            "href", "className", "id", "key",
-            "value", "placeholder" // also add this 🔥
+            "data-testid",
+            "to",
+            "src",
+            "alt",
+            "href",
+            "className",
+            "id",
+            "key",
+            "value",
+            "placeholder", // also add this 🔥
           ],
         },
       ],
