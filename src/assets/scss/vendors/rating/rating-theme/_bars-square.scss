@@ -1,9 +1,8 @@
 @import "variables";
 @import "mixins";
-@import '../../../utils/variables.scss';
+@import "../../../utils/variables.scss";
 
 .br-theme-bars-square {
-
   .br-widget {
     height: 40px;
     white-space: nowrap;
@@ -36,7 +35,7 @@
       text-align: center;
       font-weight: 600;
       display: block;
-      padding: .5em 0;
+      padding: 0.5em 0;
       color: #646464;
     }
   }
@@ -52,12 +51,10 @@
       }
     }
   }
-
 }
 
 @media print {
   .br-theme-bars-square {
-
     .br-widget {
       a {
         border: 2px solid lighten(black, 70%);
@@ -70,6 +67,5 @@
         }
       }
     }
-
   }
 }

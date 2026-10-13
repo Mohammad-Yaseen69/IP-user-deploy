@@ -1,57 +1,57 @@
 .container {
-    display: flex;
-    flex-direction: column;
-    gap: 1.3rem;
-    margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.3rem;
+  margin-bottom: 1rem;
 }
 
 .inp {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
-.inp>label {
-    margin-bottom: 0;
-    color: #0C0A20;
-    font-family: Inter;
-    font-size: 14px;
-    font-weight: 500;
-    line-height: 150%;
-    letter-spacing: -0.42px;
+.inp > label {
+  margin-bottom: 0;
+  color: #0c0a20;
+  font-family: Inter;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 150%;
+  letter-spacing: -0.42px;
 }
 
 .inp input {
-    border-radius: 6px;
-    border: 1px solid #E4E3E5;
-    background: #FFF;
-    box-shadow: 0 1px 1.5px 0 rgba(44, 54, 53, 0.03);
-    height: 48px;
-    padding: 8px 12px;
-    outline: none;
+  border-radius: 6px;
+  border: 1px solid #e4e3e5;
+  background: #fff;
+  box-shadow: 0 1px 1.5px 0 rgba(44, 54, 53, 0.03);
+  height: 48px;
+  padding: 8px 12px;
+  outline: none;
 }
 
 .inp input:focus,
 .inp input:focus-within {
-    border: 1px solid #5926F0;
+  border: 1px solid #5926f0;
 }
 
 .info {
-    border-radius: 7.295px;
-    background: #FFF8E1;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    padding: .5rem 1rem;
+  border-radius: 7.295px;
+  background: #fff8e1;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.5rem 1rem;
 }
 
 .info span {
-    color: #FFAA29;
-    leading-trim: both;
-    text-edge: cap;
-    font-family: Manrope;
-    font-size: 12.767px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: 130%;
+  color: #ffaa29;
+  leading-trim: both;
+  text-edge: cap;
+  font-family: Manrope;
+  font-size: 12.767px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 130%;
 }

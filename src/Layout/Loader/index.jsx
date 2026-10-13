@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import load from "../../assets/load.gif"
+import load from "../../assets/load.gif";
 
 const Loader = () => {
   const [show, setShow] = useState(false);
@@ -21,7 +21,11 @@ const Loader = () => {
       <div className="dot"> </div>
       <div className="dot"></div> */}
       <div style={{ height: "500px", width: "500px" }}>
-        <img src={load} alt="Loader" style={{ height: "100%", width: "100%", objectFit: "cover" }} />
+        <img
+          src={load}
+          alt="Loader"
+          style={{ height: "100%", width: "100%", objectFit: "cover" }}
+        />
       </div>
     </div>
   );

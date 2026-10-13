@@ -2,7 +2,8 @@
     32. Header CSS Start
 ==========================**/
 /**======Main Header css Start ======**/
-.toggle-sidebar , .back-btn {
+.toggle-sidebar,
+.back-btn {
   position: absolute;
   right: 30px;
   top: 30px;
@@ -71,17 +72,17 @@
   }
 }
 /*=======Mega menu css start=======*/
-.right-header{
+.right-header {
   .input-group {
     padding: 5px 15px;
     border-radius: 10px;
     background-color: $body-color;
-    .Typeahead-menu{
+    .Typeahead-menu {
       overflow: hidden scroll;
       max-height: 315px;
-      .ProfileCard{
+      .ProfileCard {
         padding: 8px;
-        &:hover{
+        &:hover {
           background-color: $body-color;
         }
       }
@@ -94,15 +95,15 @@
         height: 40px;
         width: 40px;
         margin-right: 5px;
-          &:before{
-            position: absolute;
-            content: "";
-            width: 1px;
-            height: 15px;
-            background-color: rgba($theme-body-font-color, 0.2);
-            top: 18px;
-            left: 42px;
-          }
+        &:before {
+          position: absolute;
+          content: "";
+          width: 1px;
+          height: 15px;
+          background-color: rgba($theme-body-font-color, 0.2);
+          top: 18px;
+          left: 42px;
+        }
         i {
           color: $theme-body-font-color;
         }
@@ -123,31 +124,31 @@
     }
   }
 }
-.page-wrapper{
-  &.horizontal-wrapper{
-    .page-header{
-      .header-wrapper{
+.page-wrapper {
+  &.horizontal-wrapper {
+    .page-header {
+      .header-wrapper {
         padding: 18px 20px 18px 30px;
-        .header-logo-wrapper{
-          .logo-header-main{
+        .header-logo-wrapper {
+          .logo-header-main {
             display: block;
           }
         }
       }
     }
   }
-  &.compact-wrapper{
-    .page-header{
-      .header-wrapper{
-        .header-logo-wrapper{
-          .logo-header-main{
+  &.compact-wrapper {
+    .page-header {
+      .header-wrapper {
+        .header-logo-wrapper {
+          .logo-header-main {
             display: none;
           }
         }
       }
     }
   }
-}  
+}
 .left-header {
   display: flex;
   .left-menu-header {
@@ -208,9 +209,9 @@
             }
           }
         }
-        &:hover{
-          span.f-w-600{
-            &::before{
+        &:hover {
+          span.f-w-600 {
+            &::before {
               width: 120px;
               transition: all 0.5s ease-in;
             }
@@ -226,13 +227,13 @@
             left: -9px;
             width: 50px;
             height: 24px;
-            background-color: rgba($primary-color , 0.2);
+            background-color: rgba($primary-color, 0.2);
             border-radius: 4px;
             z-index: -1;
             transition: all 0.5s ease-in-out;
           }
         }
-        &:nth-child(n+2){
+        &:nth-child(n + 2) {
           &::before {
             position: absolute;
             content: "";

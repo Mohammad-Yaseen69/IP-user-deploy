@@ -1,585 +1,577 @@
 .onboardingLayout {
-    display: flex;
-    gap: 32px;
-    width: 100%;
-    flex-direction: column;
-    flex: 1;
-    min-height: 0;
-    animation: fadeIn 0.3s ease;
-    padding: var(--lg, 24px);
-    background-color: #fff;
-    border-radius: 10px;
+  display: flex;
+  gap: 32px;
+  width: 100%;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  animation: fadeIn 0.3s ease;
+  padding: var(--lg, 24px);
+  background-color: #fff;
+  border-radius: 10px;
 }
 
 .mainArea {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
-    min-width: 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  min-width: 0;
 }
 
 .onboardingFormOwnership {
-    width: 100%;
-    background: #ffffff;
-    box-sizing: border-box;
+  width: 100%;
+  background: #ffffff;
+  box-sizing: border-box;
 }
 
 .navigationFooter {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding-top: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 4px;
 }
 
 .backButton {
-    display: flex;
-    width: 110px;
-    height: 48px;
-    padding: 0 var(--md, 16px);
-    align-items: center;
-    gap: 8px;
-    border-radius: var(--sm, 6px);
-    background: var(--Greyscale-15, #F3F3F4);
-    color: var(--Primary-900, #1A144F);
-    text-align: center;
-    font-size: 16px;
-    font-style: normal;
-    font-weight: 500;
-    line-height: normal;
-    letter-spacing: -0.48px;
-    border: none;
+  display: flex;
+  width: 110px;
+  height: 48px;
+  padding: 0 var(--md, 16px);
+  align-items: center;
+  gap: 8px;
+  border-radius: var(--sm, 6px);
+  background: var(--Greyscale-15, #f3f3f4);
+  color: var(--Primary-900, #1a144f);
+  text-align: center;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  letter-spacing: -0.48px;
+  border: none;
 }
 
 .backButton:hover {
-    border-color: #4A32E3;
-    color: #4A32E3;
-    background: rgba(74, 50, 227, 0.04);
+  border-color: #4a32e3;
+  color: #4a32e3;
+  background: rgba(74, 50, 227, 0.04);
 }
 
 .continueButton {
-    display: flex;
-    width: 352px;
-    height: 48px;
-    padding: 0 var(--md, 16px);
-    justify-content: center;
-    align-items: center;
-    gap: 8px;
-    border-radius: var(--sm, 6px);
-    background: var(--Primary-600---Base, #4A32E3);
-    color: var(--Greyscale-0, #FFF);
-    text-align: center;
-    font-size: 16px;
-    font-style: normal;
-    font-weight: 500;
-    line-height: normal;
-    letter-spacing: -0.48px;
-    border: none;
+  display: flex;
+  width: 352px;
+  height: 48px;
+  padding: 0 var(--md, 16px);
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  border-radius: var(--sm, 6px);
+  background: var(--Primary-600---Base, #4a32e3);
+  color: var(--Greyscale-0, #fff);
+  text-align: center;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  letter-spacing: -0.48px;
+  border: none;
 }
 
 .continueButton:hover {
-    background: #3927C5;
-    transform: translateY(-1px);
+  background: #3927c5;
+  transform: translateY(-1px);
 }
 
-
-
 .headerTitle {
-    display: flex;
-    justify-content: start;
-    align-items: center;
-    gap: 10px;
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  gap: 10px;
 
-    .cont {
-        display: flex;
-        width: 34px;
-        height: 34px;
-        justify-content: center;
-        align-items: center;
-        border-radius: 10px;
-        background: linear-gradient(135deg, #4A32E3 0%, #5926F0 100%);
-    }
+  .cont {
+    display: flex;
+    width: 34px;
+    height: 34px;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #4a32e3 0%, #5926f0 100%);
+  }
 }
 
 .header2 {
-    display: flex;
-    justify-content: start;
-    align-items: start;
-    flex-direction: column;
-    gap: 10px;
+  display: flex;
+  justify-content: start;
+  align-items: start;
+  flex-direction: column;
+  gap: 10px;
 
-    .cont2 {
-        display: flex;
-        justify-content: center;
-        align-items: start;
-        flex-direction: row;
-        gap: 10px;
-    }
+  .cont2 {
+    display: flex;
+    justify-content: center;
+    align-items: start;
+    flex-direction: row;
+    gap: 10px;
+  }
 }
 
 .header h3 {
-    margin: 0;
-    font-size: 20px;
-    font-weight: 700;
-    color: #1A144F;
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  color: #1a144f;
 }
 
 .header p {
-    margin-top: 6px;
-    font-size: 13px;
-    color: #8D8AA8;
-    line-height: 1.5;
-    margin: 0;
+  margin-top: 6px;
+  font-size: 13px;
+  color: #8d8aa8;
+  line-height: 1.5;
+  margin: 0;
 }
 
 .planIcon {
-    width: 42px;
-    height: 42px;
-    border-radius: 10px;
-    background: #6C47FF;
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  background: #6c47ff;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .paymentMethods {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 14px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
 }
 
 .paymentCard {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 14px;
-    background: #fff;
-    border: 1px solid #e5e7eb;
-    border-radius: 12px;
-    cursor: pointer;
-    transition: .2s;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: 0.2s;
 }
 
 .paymentCard h5 {
-    margin: 0;
-    font-size: 14px;
-    font-weight: 600;
-    color: #111827;
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #111827;
 }
 
 .paymentCard span {
-    display: block;
-    margin-top: 2px;
-    font-size: 12px;
-    color: #8b8fa3;
-
+  display: block;
+  margin-top: 2px;
+  font-size: 12px;
+  color: #8b8fa3;
 }
 
 .paymentIcon {
-    width: 32px;
-    height: 32px;
-    border-radius: 8px;
-    background: #f5f6fb;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #6b7280;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: #f5f6fb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6b7280;
 }
 
 .activePayment {
-    border: 2px solid #5b3df5;
+  border: 2px solid #5b3df5;
 }
 
 .activePayment .paymentIcon {
-    background: #5b3df5;
-    color: #fff;
+  background: #5b3df5;
+  color: #fff;
 }
 
 .summary {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
 .summaryRow {
-    display: flex;
-    justify-content: space-between;
-    align-items: start;
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
 }
 
 .summaryRow span {
-    font-size: 14px;
-    color: #6b7280;
+  font-size: 14px;
+  color: #6b7280;
 }
 
 .summaryRow strong {
-    font-size: 14px;
-    color: #111827;
-    font-weight: 600;
+  font-size: 14px;
+  color: #111827;
+  font-weight: 600;
 }
 
 .dueCard {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 18px 22px;
-    border-radius: 12px;
-    background: #f3efff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 22px;
+  border-radius: 12px;
+  background: #f3efff;
 }
 
 .dueCard span {
-    font-size: 15px;
-    font-weight: 600;
-    color: #111827;
+  font-size: 15px;
+  font-weight: 600;
+  color: #111827;
 }
 
 .dueCard h3 {
-    margin: 0;
-    color: #5b3df5;
-    font-size: 30px;
-    font-weight: 700;
+  margin: 0;
+  color: #5b3df5;
+  font-size: 30px;
+  font-weight: 700;
 }
 
 .paymentSection {
-    display: grid;
-    grid-template-columns: 1fr 260px;
-    gap: 20px;
-    align-items: start;
+  display: grid;
+  grid-template-columns: 1fr 260px;
+  gap: 20px;
+  align-items: start;
 }
 
 .leftSide {
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
 }
 
 .leftSide label {
-    font-size: 11px;
-    color: #9ca3af;
-    font-weight: 700;
-    letter-spacing: .06em;
+  font-size: 11px;
+  color: #9ca3af;
+  font-weight: 700;
+  letter-spacing: 0.06em;
 }
 
 .assetSelector {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
 }
 
 .assetCard {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    background: #f7f7fb;
-    border: 1px solid #ececf2;
-    border-radius: 12px;
-    padding: 14px;
-    cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #f7f7fb;
+  border: 1px solid #ececf2;
+  border-radius: 12px;
+  padding: 14px;
+  cursor: pointer;
 }
 
 .assetCard h5 {
-    margin: 0;
-    font-size: 14px;
-    color: #111827;
+  margin: 0;
+  font-size: 14px;
+  color: #111827;
 }
 
 .assetCard span {
-    display: block;
-    margin-top: 3px;
-    font-size: 12px;
-    color: #8b8fa3;
+  display: block;
+  margin-top: 3px;
+  font-size: 12px;
+  color: #8b8fa3;
 }
 
 .assetIcon {
-    width: 26px;
-    height: 26px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .activeAsset {
-    background: #fff;
-    border: 2px solid #5b3df5;
+  background: #fff;
+  border: 2px solid #5b3df5;
 }
 
 .networkSelector {
-    height: 48px;
-    border-radius: 10px;
-    border: 1px solid #e5e7eb;
-    background: #fff;
-    padding: 0 16px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    cursor: pointer;
+  height: 48px;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+  background: #fff;
+  padding: 0 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
 }
 
 .networkSelector span {
-    color: #374151;
-    font-size: 14px;
+  color: #374151;
+  font-size: 14px;
 }
 
 .infoRows {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
 .infoRow {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 4px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 0;
 }
 
 .infoRow span {
-    font-size: 14px;
-    color: #6b7280;
+  font-size: 14px;
+  color: #6b7280;
 }
 
 .infoRow strong {
-    font-size: 15px;
-    font-weight: 600;
-    color: #111827;
+  font-size: 15px;
+  font-weight: 600;
+  color: #111827;
 }
 
 .purple {
-    color: #5b3df5 !important;
+  color: #5b3df5 !important;
 }
 
 .warning {
-    display: flex;
-    gap: 12px;
-    align-items: flex-start;
-    padding: 14px 16px;
-    background: #fff8e6;
-    border: 1px solid #fde68a;
-    border-radius: 12px;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 14px 16px;
+  background: #fff8e6;
+  border: 1px solid #fde68a;
+  border-radius: 12px;
 }
 
 .warning span {
-    font-size: 18px;
-    line-height: 1;
+  font-size: 18px;
+  line-height: 1;
 }
 
 .warning p {
-    margin: 0;
-    font-size: 13px;
-    color: #8a6d1f;
-    line-height: 20px;
+  margin: 0;
+  font-size: 13px;
+  color: #8a6d1f;
+  line-height: 20px;
 }
 
 .rightSide {
-    display: flex;
-    flex-direction: column;
-
+  display: flex;
+  flex-direction: column;
 }
 
 .qrCard {
-    width: 100%;
-    padding: 18px;
-    background: #fff;
-    border: 1px solid #e5e7eb;
-    border-radius: 14px;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
+  width: 100%;
+  padding: 18px;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
 .qrBox {
-    width: 170px;
-    height: 170px;
-    margin: 0 auto;
-    padding: 10px;
-    border-radius: 12px;
-    background: radial-gradient(263.92% 122.73% at 47.67% 100%,
-            #ffffff 0%,
-            #5926f0 55.29%,
-            #4828a0 100%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  width: 170px;
+  height: 170px;
+  margin: 0 auto;
+  padding: 10px;
+  border-radius: 12px;
+  background: radial-gradient(
+    263.92% 122.73% at 47.67% 100%,
+    #ffffff 0%,
+    #5926f0 55.29%,
+    #4828a0 100%
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .qrBox::before {
-    content: "";
-    width: 100%;
-    height: 100%;
-    border-radius: 8px;
-    background: repeating-linear-gradient(45deg,
-            #ececec,
-            #ececec 10px,
-            #fafafa 10px,
-            #fafafa 20px);
+  content: "";
+  width: 100%;
+  height: 100%;
+  border-radius: 8px;
+  background: repeating-linear-gradient(45deg, #ececec, #ececec 10px, #fafafa 10px, #fafafa 20px);
 }
 
 .qrCard label {
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: .06em;
-    color: #9ca3af;
-    text-align: center;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: #9ca3af;
+  text-align: center;
 }
 
 .addressBox {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-    border: 1px solid #e5e7eb;
-    border-radius: 10px;
-    padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 10px 12px;
 }
 
 .addressBox span {
-    flex: 1;
-    font-size: 12px;
-    color: #374151;
-    word-break: break-all;
+  flex: 1;
+  font-size: 12px;
+  color: #374151;
+  word-break: break-all;
 }
 
 .addressBox button {
-    width: 34px;
-    height: 34px;
-    border: none;
-    background: #f5f6fb;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
+  width: 34px;
+  height: 34px;
+  border: none;
+  background: #f5f6fb;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
 }
 
 .awaiting {
-    display: flex;
-    align-items: center;
-    width: 100%;
-    gap: 8px;
-    color: #4A32E3;
-    text-align: center;
-    font-family: Inter;
-    font-size: 11.5px;
-    font-style: normal;
-    font-weight: 700;
-    line-height: normal;
-    margin-top: 10px;
-    justify-content: center;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 8px;
+  color: #4a32e3;
+  text-align: center;
+  font-family: Inter;
+  font-size: 11.5px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  margin-top: 10px;
+  justify-content: center;
 }
 
-
 .navigationFooter {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 16px;
-    margin-top: 32px;
-    padding-top: 24px;
-    border-top: 1px solid #ececf2;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid #ececf2;
 }
 
 .backButton {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 12px 20px;
-    border-radius: 10px;
-    border: 1px solid #d1d5db;
-    background: #fff;
-    color: #374151;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  border-radius: 10px;
+  border: 1px solid #d1d5db;
+  background: #fff;
+  color: #374151;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
 }
 
 .continueButton {
-    padding: 12px 28px;
-    border: none;
-    border-radius: 10px;
-    background: #5b3df5;
-    color: #fff;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
+  padding: 12px 28px;
+  border: none;
+  border-radius: 10px;
+  background: #5b3df5;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
 }
 
 .continueButton:hover {
-    opacity: .95;
+  opacity: 0.95;
 }
 
 @media (max-width: 992px) {
-    .onboardingLayout > div {
-        grid-template-columns: 1fr !important;
-    }
+  .onboardingLayout > div {
+    grid-template-columns: 1fr !important;
+  }
 
-    .paymentMethods {
-        grid-template-columns: repeat(2, 1fr);
-    }
+  .paymentMethods {
+    grid-template-columns: repeat(2, 1fr);
+  }
 
-    .paymentSection {
-        grid-template-columns: 1fr;
-    }
+  .paymentSection {
+    grid-template-columns: 1fr;
+  }
 
-    .qrCard {
-        max-width: 420px;
-    }
+  .qrCard {
+    max-width: 420px;
+  }
 }
 
 @media (max-width: 640px) {
+  .paymentMethods,
+  .assetSelector {
+    grid-template-columns: 1fr;
+  }
 
-    .paymentMethods,
-    .assetSelector {
-        grid-template-columns: 1fr;
+  .dueCard {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .navigationFooter {
+    flex-direction: column;
+  }
+
+  .backButton,
+  .continueButton {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .paymentCard {
+    border: 1px solid #e1e5ee;
+    background: #f8f9fc;
+
+    svg {
+      color: #6e7687;
+      width: 15px;
+      height: 15px;
     }
 
-    .dueCard {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 10px;
+    h5 {
+      font-weight: 700;
+      font-size: 13.5px;
     }
-
-    .navigationFooter {
-        flex-direction: column;
+    span {
+      color: #6e7687;
     }
+  }
 
-    .backButton,
-    .continueButton {
-        width: 100%;
-        justify-content: center;
+  .activePayment {
+    border: 1px solid #5926f0;
+    background: #f5f2ff;
+
+    svg {
+      color: #ffffff;
     }
+  }
 
-    .paymentCard {
-        border: 1px solid #E1E5EE;
-        background: #F8F9FC;
-
-        svg {
-            color: #6E7687;
-            width: 15px;
-            height: 15px;
-        }
-
-        h5 {
-            font-weight: 700;
-            font-size: 13.5px;
-        }
-        span{
-            color: #6E7687;
-        }
-    }
-
-    .activePayment {
-        border: 1px solid #5926F0;
-        background: #F5F2FF;
-
-        svg {
-            color: #FFFFFF;
-        }
-    }
-
-    .paymentIcon {
-        border-radius: 9px;
-        background: #F2EEFF;
-    }
+  .paymentIcon {
+    border-radius: 9px;
+    background: #f2eeff;
+  }
 }

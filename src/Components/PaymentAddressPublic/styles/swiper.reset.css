@@ -1,13 +1,9 @@
 .p-swiper-videos-123 .swiper-wrapper {
-    height: 235px !important;
+  height: 235px !important;
 }
 
-
-
-
 @media (min-width: 1000px) and (max-width: 1450px) {
-    .p-swiper-videos-123 .swiper-wrapper {
-        height: 180px !important;
-    }
-
+  .p-swiper-videos-123 .swiper-wrapper {
+    height: 180px !important;
+  }
 }

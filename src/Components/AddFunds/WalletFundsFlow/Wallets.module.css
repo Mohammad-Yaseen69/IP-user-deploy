@@ -1,71 +1,71 @@
 .container {
-    display: flex;
-    flex-direction: column;
-    gap: 1.1rem;
-    max-height: 550px;
-    overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+  max-height: 550px;
+  overflow-y: auto;
 }
 
 .card {
-    border-radius: var(--8, 8px);
-    background: #FAFAFA;
-    padding: .7rem;
-    display: flex;
-    cursor: pointer;
-    justify-content: space-between;
-    gap: 1rem;
+  border-radius: var(--8, 8px);
+  background: #fafafa;
+  padding: 0.7rem;
+  display: flex;
+  cursor: pointer;
+  justify-content: space-between;
+  gap: 1rem;
 }
 
 .left {
-    flex: 1;
+  flex: 1;
 }
 
 .left h5 {
-    color: var(--colour-of-country-names, #000);
-    leading-trim: both;
-    text-edge: cap;
-    font-family: Manrope;
-    font-size: 1rem;
-    font-style: normal;
-    font-weight: 800;
-    line-height: normal;
-    letter-spacing: -0.5px;
-    margin-bottom: .7rem;
+  color: var(--colour-of-country-names, #000);
+  leading-trim: both;
+  text-edge: cap;
+  font-family: Manrope;
+  font-size: 1rem;
+  font-style: normal;
+  font-weight: 800;
+  line-height: normal;
+  letter-spacing: -0.5px;
+  margin-bottom: 0.7rem;
 }
 
 .badge {
-    border-radius: 4px;
-    background: rgba(89, 38, 240, 0.12);
-    padding: .3rem .8rem;
-    color: #5926F0;
-    font-family: Manrope;
-    font-size: .7rem;
-    font-style: normal;
-    font-weight: 700;
-    line-height: normal;
-    width: fit-content;
+  border-radius: 4px;
+  background: rgba(89, 38, 240, 0.12);
+  padding: 0.3rem 0.8rem;
+  color: #5926f0;
+  font-family: Manrope;
+  font-size: 0.7rem;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  width: fit-content;
 }
 
 .active {
-    box-shadow: 0px 2px 20.1px 0px rgba(89, 38, 240, 0.20);
-    border: 2px solid #5726ea;
+  box-shadow: 0px 2px 20.1px 0px rgba(89, 38, 240, 0.2);
+  border: 2px solid #5726ea;
 }
 
 .card_view {
-    flex: 1;
-    min-width: 250px;
+  flex: 1;
+  min-width: 250px;
 }
 
 @media screen and (max-width: 1000px) {
-    .card {
-        flex-direction: column;
-        gap: 1.5rem;
-    }
+  .card {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
 
-    .left {
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-        justify-content: space-between;
-    }
+  .left {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    justify-content: space-between;
+  }
 }
