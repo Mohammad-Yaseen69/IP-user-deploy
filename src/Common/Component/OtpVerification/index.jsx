@@ -337,7 +337,7 @@ const CardOtp = ({
                             </div>
                         )}
 
-                        <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '1rem' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '1rem', gap: '20px' }}>
                             {showBackButton && (
                                 <button type="button" onClick={() => { resetIdempotency(); onBack() }} style={{ border: 'none', outline: 'none', background: '#fff', color: '#000', borderRadius: '6px', display: 'flex', alignItems: 'center', fontSize: '18px' }}>
                                     <ChevronLeft size={24} />{t('Back')}

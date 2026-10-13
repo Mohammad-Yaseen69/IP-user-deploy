@@ -1228,6 +1228,8 @@ const SwiftTransfer = forwardRef(({ isOpen = true, toggle, selectedIban, availab
                         resendHandler={handleSendOtp}
                         authType={authType}
                         setAuthType={setAuthType}
+                        onBack={handleBack}
+                        showBackButton={true}
                         methods={otpMethods}
                     />
                 )
